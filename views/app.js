@@ -14,8 +14,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
         $rootScope.navBarTitle = 'exambazaar';
         $http.defaults.headers.post["Content-Type"] = "application/json";
         if($cookies.getObject('location')){
-            $scope.location = $cookies.getObject('location');
-            
+            $scope.location = $cookies.getObject('location'); 
         }
         
         $scope.login = function(){
