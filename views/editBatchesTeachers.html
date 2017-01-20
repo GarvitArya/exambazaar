@@ -1,0 +1,79 @@
+<style>
+md-select {
+    display: inline-block;
+    margin-top: 2px;
+    width: 100%;
+}
+
+</style>
+<div class="container">
+    <div class="row">
+        <h4 class="md-subhead text-primary">{{institute.basic.name}} - Edit Batches and Teachers <span class="badge">{{batches.length}}</span></h4>
+        
+        
+        <div class="col-md-12" >
+            
+        <div  class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="md-subhead text">
+                Assign Class Teachers
+                </h4>
+            </div>
+            <div class="panel-body">
+                
+                
+                <table ng-table="showbatchesteachers" class="table">
+                <tr>
+                    <td>Batch</td>
+                    <td>Class Teacher</td>
+                </tr>
+                <tr ng-repeat="batch in batches | orderBy:['grade','section']">
+                    <td>
+                        <h6 class="md-subhead text-primary">
+                        {{batch.name}}
+                        </h6>
+                    </td>
+                    <!--<td>
+                    <div flex>
+                    
+                        
+                    <h6 class="md-subhead text-primary">
+                    <a ui-sref="teacher({ teacherId:{{'batch.batchTeacher._id'}} })">
+                    {{batch.batchTeacher.basic.salutation}}
+                    {{batch.batchTeacher.basic.firstName}}
+                    {{batch.batchTeacher.basic.middleName}}
+                    {{batch.batchTeacher.basic.lastName}}
+                    </a>
+                    </h6>
+                    </div>
+                    </td>-->
+                    
+                    <td>
+                    
+                    <div flex>
+                    
+                    <md-select ng-model="batch.batchTeacher._id" placeholder="Assign or Change Class Teacher">
+                    <md-option ng-repeat="teacher in teachers | orderBy:'basic.firstName'" ng-value="teacher._id">
+                    {{teacher.basic.salutation}}
+                    {{teacher.basic.firstName}}
+                    {{teacher.basic.middleName}}
+                    {{teacher.basic.lastName}}
+                    </md-option>
+                    </md-select>
+
+                    </div>
+                    </td>
+                </tr>
+                    
+            </table>
+            </div>
+        </div>
+            <!--<md-button class="md-raised md-primary" ui-sref="institute({ instituteId:{{'institute._id'}} })">Cancel</md-button>-->
+            <md-button class="md-raised md-primary" ng-click="saveClassTeachers()">Save</md-button>
+            
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,65 @@
+<div class="container">
+<md-divider></md-divider>
+<div class ="row hidden-md hidden-lg">
+    <div layout="row" layout-align="center center">
+        <small>
+            <a ui-sref="student({ studentId:{{'student._id'}} })">Main</a> | 
+            <a ui-sref="student-attendance({ studentId:{{'student._id'}} })">Attendance</a> | 
+            <a ui-sref="student-subjects({ studentId:{{'student._id'}} })">Subjects</a> | 
+            <a ui-sref="student-class({ studentId:{{'student._id'}} })">Class</a> | 
+            <a ui-sref="student-profile({ studentId:{{'student._id'}} })">Profile</a>
+        </small>
+    </div>
+</div>
+<md-divider></md-divider>
+<div class="row top-buffer">
+    <div class="col-xs-12 col-md-6" ng-repeat="subject in student.batch.subjects | orderBy:'_globalSubject.name'">
+        <div  class="panel panel-default" >
+            <!--<div class="panel-heading">
+
+            </div>-->
+        <div class="panel-body">
+            <small>
+            <span class="text">
+                {{$index + 1}}. 
+                {{subject._globalSubject.name}}
+                <br/>
+            </span>
+            <md-divider></md-divider>
+            <div layout="row">
+                <span class="pull-left text-primary">
+                    <span>
+                        Teacher: 
+                        {{subject._teacher.basic.firstName}}
+                        {{subject._teacher.basic.middleName}}
+                        {{subject._teacher.basic.lastName}}
+                    </span>
+                    <span ng-if="subject._secondTeacher">
+                        &amp; {{subject._secondTeacher.basic.firstName}}
+                        {{subject._secondTeacher.basic.middleName}}
+                        {{subject._secondTeacher.basic.lastName}}
+                    </span>
+
+                </span>
+            </div>
+            <div layout="row">
+                <a ng-click="showHideExams(subject)">Exams <span class="badge">{{subject._exams.length}}</span></a>
+            </div>
+            <div ng-repeat= "exam in subject._exams | orderBy:'info.date'" ng-show="subject.showExams">
+                <span class="text-primary">{{exam.info.name}}</span> {{exam.info.date | date}} 
+                <span ng-if="exam.eval.score">
+                    Scored <strong>{{exam.eval.score}}</strong> out of <strong>{{exam.eval._exam.info.maxMarks}}</strong> (Perecentage: {{100*exam.eval.score/exam.eval._exam.info.maxMarks}}%) <a ui-sref="eval({ evalId:{{'exam.eval._id'}} })">Result & Analysis</a>
+                </span>
+            </div>
+            
+            </small>   
+        </div>
+        </div>
+    </div>
+    
+</div>
+    <!--<div layout="row">
+        Evals: {{eval}}
+    </div>
+    -->
+</div>

@@ -1,0 +1,62 @@
+<style>
+    .teacherTile{
+        min-height:40vh;
+        display: flex;
+        align-items: center;
+        text-align: center;
+    }
+</style>
+
+<div class="container" id="addTeacherForm">
+    <div class ="row">
+        <div class="alert alert-success" ng-if="sessionuser.nLogins < 100">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Hi {{teacher.basic.firstName}}!</strong>  You are new here, I will help you get used to the interface. Look out for popups.
+        </div>
+        <div class="alert alert-info" ng-if="sessionuser.nLogins < 100 && teacher.batches.length > 0">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <small>
+            As you are the Class Teacher of <strong>{{teacher.batches[0].name}}</strong>. You can mark its attendance here.
+            <button type="button" class="btn btn-warning" ui-sref="batch-attendance({ batchId:{{'teacher.batches[0]._id'}} })">Attendance</button>
+            <br/>
+            <span ng-if="teacher.subjects.length > 0">
+                
+                And your subject classes
+                <!--<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2" role="group" aria-label="First group" ng-repeat="subject in teacher.subjects">
+                        <button type="button" class="btn btn-secondary">{{subject._batch.name}}
+                    ({{subject._globalSubject.name}})</button>
+                    </div>
+                </div>-->
+                <a ng-repeat="subject in teacher.subjects" ui-sref="subject({ subjectId:{{'subject._id'}} })">
+                    {{subject._batch.name}}
+                    ({{subject._globalSubject.name}})
+                </a>
+            </span>
+            </small>
+        </div>
+    </div>
+    <div layout = "row top-buffer">
+        <div  class="panel panel-default col-xs-6 col-sm-6 col-md-4 col-lg-4" id="teacherTile">
+            <div class="panel-body">
+                <div layout="row text-center" layout-align="center center">
+                <h4>
+                <a ui-sref="teacher-batches({ teacherId:{{'teacher._id'}} })">Attendance</a>
+                </h4>
+                </div>
+            </div>
+        </div>
+        <div  class="panel panel-default col-xs-6 col-sm-6 col-md-4 col-lg-4" id="teacherTile">
+            <div class="panel-body">
+                <div layout="row text-center" layout-align="center center">
+                <h4>
+                <a ui-sref="teacher-batches({ teacherId:{{'teacher._id'}} })">Classes</a>
+                </h4>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<style>
+    .studentTile{
+        min-height:15vh;
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+<div class="container viewport">
+    <md-divider></md-divider>
+    <div class ="row hidden-md hidden-lg">
+        <div layout="row" layout-align="center center">
+            <small>
+                <a ui-sref="student({ studentId:{{'student._id'}} })">Main</a> | 
+                <a ui-sref="student-attendance({ studentId:{{'student._id'}} })">Attendance</a> | 
+                <a ui-sref="student-subjects({ studentId:{{'student._id'}} })">Subjects</a> | 
+                <a ui-sref="student-class({ studentId:{{'student._id'}} })">Class</a> | 
+                <a ui-sref="student-profile({ studentId:{{'student._id'}} })">Profile</a>
+            </small>
+        </div>
+    </div>
+    <md-divider></md-divider>
+    <div class="row top-buffer">
+    <div class="col-md-12">
+        <h6 class="text-primary">All Students in {{student.batch.name}} <strong><small>{{student.batch.students.length}} students</small></strong></h6>
+        <md-divider></md-divider>
+        <div ng-repeat="batchstudent in student.batch.students | orderBy:'basic.firstName'" class="col-xs-6 col-sm-6 col-md-2 col-lg-2 studentTile">
+            <div class="centerbox text-center">
+                <span ng-if="!batchstudent.imageUrl">
+                <small>
+                <h5 class="text">{{batchstudent.basic.firstName}} {{batchstudent.basic.lastName | limitTo:1}}.</h5>
+                
+                </small>
+                </span>
+                <span ng-if="batchstudent.imageUrl">
+                <img  ng-src="{{batchstudent.imageUrl}}" height = "65" alt="{{batchstudent.basic.firstName}} {{batchstudent.basic.lastName}}" >
+                
+                </span>
+            </div>
+            <md-divider></md-divider>
+            <md-tooltip >
+                {{batchstudent.basic.firstName}}
+                {{batchstudent.basic.middleName}}
+                {{batchstudent.basic.lastName}}
+            </md-tooltip>
+        </div>
+        
+        
+        <!--<md-grid-list
+            md-cols-xs="1" md-cols-sm="4" md-cols-md="6" md-cols-gt-md="12"
+            md-row-height-gt-md="1:1" md-row-height="2:2">
+        <md-grid-tile ng-repeat="batchstudent in student.batch.students" md-colspan="1" >
+            <span class="thumbnail" ng-if="{{batchstudent.imageUrl}}"> 
+            <img  ng-src="{{batchstudent.imageUrl}}" height = "65" alt="{{batchstudent.basic.firstName}} {{batchstudent.basic.lastName}}" >
+            <span ng-if="{{!batchstudent.imageUrl}}">
+                {{batchstudent.basic.firstName}}
+                {{batchstudent.basic.middleName}}
+                {{batchstudent.basic.lastName}}
+            </span>
+            <md-tooltip >
+            {{batchstudent.basic.firstName}} {{batchstudent.basic.lastName}}
+          </md-tooltip>
+            </span>
+        </md-grid-tile>
+        </md-grid-list> -->
+    </div>
+    </div>
+</div>

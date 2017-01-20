@@ -1,0 +1,50 @@
+<div class="container">
+    <h4 class="md-headline text">Add Global Subject</h4>
+    
+    <div class="row">
+    <div class="col-md-4">
+        <md-content flex layout-padding>
+        <h6 class="md-subhead text-primary">Global Subjects</h6>
+            <span ng-repeat = "myglobalSubject in globalSubjects | orderBy:'name'"><small>{{myglobalSubject.name}}</small><br/></span>
+        </md-content>
+    </div>
+    <div class="col-md-8" id="addGlobalSubjectForm">
+    <md-content flex layout-padding>
+        <small>
+        
+        <form name="globalSubjectForm" >
+        <div layout="column" >
+            <h6 class="md-subhead text-primary">Global Subject</h6>
+            
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Institute Type</label>
+                    <input ng-model="globalSubject.instituteType">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Affilation</label>
+                    <input ng-model="globalSubject.affiliation">
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Name</label>
+                    <input required ng-model="globalSubject.name">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Code</label>
+                    <input ng-model="globalSubject.code">
+                </md-input-container>
+            </div>
+            <md-button class="md-raised md-primary" ng-click="addGlobalSubject()" ng-disabled="globalSubjectForm.$invalid">Add GlobalSubject</md-button>
+
+            </div>
+            </form>
+            </small>
+        </md-content>
+        </div>
+    </div>
+</div>
+<div>
+    {{ServerResponse}}
+</div>

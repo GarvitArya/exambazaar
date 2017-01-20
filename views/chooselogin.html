@@ -1,0 +1,73 @@
+<div class="container">
+    
+    
+    <div class="row">
+        <h6 class="md-subhead text text-center">Select profile to log into</h6>
+        <div layout="row" layout-xs="column" layout-margin  layout-align="center" >
+            
+        <div  class="panel panel-default" ng-repeat="admin in user._admin" ng-click="setUser(admin)">
+            <div class="panel-heading">
+                <h4 class="md-subhead text">
+                    <!--<a ui-sref="teacher({ teacherId:{{'teacher._id'}} })" >-->
+                    
+                    {{admin.basic.firstName}}
+                    {{admin.basic.middleName}}
+                    {{admin.basic.lastName}}
+                    
+                </h4>
+            </div>
+            <div class="panel-body">
+                <h6 class="md-subhead text-primary">
+                    <div ng-if="admin.imageUrl">
+                        <img ng-src="{{admin.imageUrl}}" height="65">
+                    </div>
+                </h6>
+            </div> 
+        </div>    
+        <div  class="panel panel-default" ng-repeat="teacher in user._teacher" ng-click="setUser(teacher)">
+            <div class="panel-heading">
+                <h4 class="md-subhead text">
+                    <!--<a ui-sref="teacher({ teacherId:{{'teacher._id'}} })" >-->
+                    <!--<a ng-click="setUser(teacher)" >-->
+                    {{teacher.basic.firstName}}
+                    {{teacher.basic.middleName}}
+                    {{teacher.basic.lastName}}
+                    
+                </h4>
+            </div>
+            <div class="panel-body" ui-sref="teacher({ teacherId:{{'teacher._id'}} })">
+                <h6 class="md-subhead text-primary">
+                    <div ng-if="teacher.imageUrl">
+                        <img ng-src="{{teacher.imageUrl}}" height="65">
+                    </div>
+                    <div ng-if="teacher.batches.length>0">
+                        <p ng-repeat="batch in teacher.batches">
+                            {{batch}}
+                        </p>
+                    </div>
+                </h6>
+            </div> 
+        </div>
+        <div class="panel panel-default" ng-repeat="student in user._student" ng-click="setUser(student)">
+            <div class="panel-heading">
+                <h4 class="md-subhead text">
+                    <!--<a ui-sref="student({ studentId:{{'student._id'}} })" >-->
+                    
+                    {{student.basic.firstName}}
+                    {{student.basic.middleName}}
+                    {{student.basic.lastName}}
+                    
+                </h4>
+            </div>
+            <div class="panel-body" ui-sref="student({ studentId:{{'student._id'}} })">
+                <h6 class="md-subhead text">
+                    <div ng-if="student.imageUrl">
+                        <img ng-src="{{student.imageUrl}}" height="65">
+                    </div>
+                    
+                </h6>
+            </div> 
+        </div>
+    </div>
+    </div>
+</div>

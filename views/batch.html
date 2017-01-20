@@ -1,0 +1,87 @@
+<style>
+    .top-buffer { margin-top:20px; }
+    .q1{
+        fill: #FFB6C1;
+        background-color:#FFB6C1;
+    }
+    .q2{
+        fill: #BDFCC9;
+        background-color:#BDFCC9;
+    }
+</style>
+<div class="container">
+    <h4 class="md-headline text">{{batch.name}}</h4>
+    <h6 class="md-subhead text-primary">Class Teacher - {{batch.batchTeacher.basic.firstName}} {{batch.batchTeacher.basic.lastName}}</h6>
+    
+    <md-content flex layout-padding >
+        
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="Attendance" layout-align="left end">
+                <md-button class="md-raised md-primary" ui-sref="batch-attendance({ batchId:{{'batch._id'}} })">Mark Attendance</md-button>
+            </md-tab>
+            
+            <md-tab label="subjects">
+            <table ng-table="showsubjects" class="table" ng-if="batch.subjects.length > 0">
+                <tr>
+                    <td><strong>Subject</strong></td>
+                    <td>Subject Teacher</td>
+                </tr>
+              <tr ng-repeat="subject in batch.subjects" flex-gt-sm class="md-primary">
+                
+                    <td><strong>
+                        <a ui-sref="subject({ subjectId:{{'subject._id'}} })">
+                        {{subject._globalSubject.name}}
+                        </a>    
+                    </strong></td>
+                    <td>
+                        {{subject._teacher.basic.firstName}}
+                        {{subject._teacher.basic.lastName}}
+                    </td>
+                </tr>
+            </table>
+                <div flex ng-if="batch.subjects.length == 0">
+                    <h6 class="md-subhead text">
+                        This batch has no subjects linked to it.
+                    </h6>
+                    
+                    <md-button class="md-raised md-primary" ui-sref="editSubjectTeachers({ instituteId:{{'institute'}} })">Add Subjects</md-button>
+                    
+                </div>
+            
+            </md-tab>
+            
+            <md-tab label="students">
+              <div ng-repeat="student in batch.students" flex-gt-sm class="md-primary">
+                <img ng-src="{{student.account.imageUrl}}" height = "50">
+                <small>
+                {{student.basic.firstName}} {{student.basic.lastName}}
+                </small>
+            </div>
+            </md-tab>
+            
+            <md-tab label="calendar" layout-align="left end">
+                <div class="container">
+                    <div class="row" ng-show="!batch.batchCalendar">
+                        
+                        <md-button class="md-raised md-primary" ui-sref="batchCalendar({ batchId:{{'batch._id'}} })">Create Batch Calendar</md-button>
+                        <p class="text">
+                            {{batch.name}} does not have a class specific calendar set up.
+                        </p>
+                        
+                        
+                    </div>
+                </div>
+                    
+                    
+                <small>
+                </small>
+            </md-tab>
+            
+        </md-tabs>
+        
+        
+    </md-content>
+    
+    
+    
+</div>

@@ -1,0 +1,177 @@
+<style>
+    .center-block {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.input-group .icon-addon .form-control {
+    border-radius: 0;
+}
+
+.icon-addon {
+    position: relative;
+    color: #555;
+    display: block;
+}
+
+.icon-addon:after,
+.icon-addon:before {
+    display: table;
+    content: " ";
+}
+
+.icon-addon:after {
+    clear: both;
+}
+
+.icon-addon.addon-md .glyphicon,
+.icon-addon .glyphicon, 
+.icon-addon.addon-md .fa,
+.icon-addon .fa {
+    position: absolute;
+    z-index: 2;
+    left: 10px;
+    font-size: 14px;
+    width: 20px;
+    margin-left: -2.5px;
+    text-align: center;
+    padding: 10px 0;
+    top: 1px
+}
+
+.icon-addon.addon-lg .form-control {
+    line-height: 1.33;
+    height: 46px;
+    font-size: 18px;
+    padding: 10px 16px 10px 40px;
+}
+
+.icon-addon.addon-sm .form-control {
+    height: 30px;
+    padding: 5px 10px 5px 28px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.icon-addon.addon-lg .fa,
+.icon-addon.addon-lg .glyphicon {
+    font-size: 18px;
+    margin-left: 0;
+    left: 11px;
+    top: 4px;
+}
+
+.icon-addon.addon-md .form-control,
+.icon-addon .form-control {
+    padding-left: 30px;
+    float: left;
+    font-weight: normal;
+}
+
+.icon-addon.addon-sm .fa,
+.icon-addon.addon-sm .glyphicon {
+    margin-left: 0;
+    font-size: 12px;
+    left: 5px;
+    top: -1px
+}
+
+.icon-addon .form-control:focus + .glyphicon,
+.icon-addon:hover .glyphicon,
+.icon-addon .form-control:focus + .fa,
+.icon-addon:hover .fa {
+    color: #2580db;
+}
+    
+    
+.dropdown-menu {
+    width: 200%; 
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 20px;
+    left:auto; /* added */
+}
+
+
+.btn{
+ width: 100%;
+}
+</style>
+<md-content class="md-padding">
+    <div class="container">
+    
+    <div class="row">
+        <!--<md-button class="md-raised md-primary" ui-sref="addStudent({ instituteId:{{'institute._id'}} })">Add Student</md-button>-->
+        <div class="form-group">
+            <div class="row">
+            <div class="col-md-2 dropdown pull-left hidden-xs">
+                  <a class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   Select Batch
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" ng-repeat="gradeBatch in gradeBatches | orderBy:'grade'" ng-click="quickLink(gradeBatch.name)">{{gradeBatch.name}} | 
+                      </a>
+                  </div>
+            </div>
+            <div class="col-md-8 icon-addon addon-md">
+                <input type="search" placeholder="Search Students, Parents, Mobile Numbers" class="form-control" id="searchText" ng-model="searchText">
+                <label for="searchText" class="glyphicon glyphicon-search" rel="tooltip" title="searchText"></label>
+            </div>
+            
+            
+            <div class="col-md-2 hidden-xs">
+                <md-button class="md-raised md-primary pull-right" ui-sref="bulkAddStudents({ instituteId:{{'institute._id'}} })">Bulk Add Students</md-button>
+            </div>
+                
+                
+            </div>
+            <div layout="row">
+                <small class="text-muted">displaying {{filtered.length}} students</small>
+            </div>
+            
+        </div>
+        
+    </div>    
+    
+    <div class="row">
+        <table class="table table-striped table-hover">
+            <tr>
+                <td><strong>Batch</strong></td>
+                <td class="hidden-xs"><strong>Enrollment No.</strong></td>
+                <td><strong>Student</strong></td>
+                <td><strong>Parent</strong></td>
+                <td><strong>Mobile</strong></td>
+                <td class="hidden-xs"><strong>Photo</strong></td>
+            </tr>
+            <tr ng-repeat="student in institute.students | orderBy:['batch.grade','batch.section'] | filter:filterText as filtered">
+                 <td>{{student.batch.name}}</td>
+                 <td class="hidden-xs">{{student.enrollmentNo}}</td>
+                <td>
+                    <a ui-sref="student({ studentId:{{'student._id'}} })">
+                        {{student.basic.firstName}}
+                        {{student.basic.middleName}}
+                        {{student.basic.lastName}}
+                    </a></td>
+                <td>
+                    {{student.parents[0].basic.salutation}} 
+                    {{student.parents[0].basic.firstName}} 
+                    {{student.parents[0].basic.middleName}} 
+                    {{student.parents[0].basic.lastName}}
+                </td>
+                
+                <td>{{student.contact.mobile}}</td>
+                <td ng-if="student.imageUrl" class="hidden-xs">
+                    <img ng-src="{{student.imageUrl}}" height = "65">
+                </td>
+                
+                <!--<td title="'Parent Mobile'">
+                    {{student.parents[0].contact.mobile}}
+                </td>-->
+             <md-divider ng-if="!$last"></md-divider>
+            </tr>
+        </table>
+    </div>
+    
+    </div>
+    </md-content>

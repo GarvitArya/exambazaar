@@ -1,0 +1,166 @@
+<style>
+    .top-buffer { margin-top:20px; }
+    
+    .input-group .icon-addon .form-control {
+    border-radius: 0;
+}
+
+.icon-addon {
+    position: relative;
+    color: #555;
+    display: block;
+}
+
+.icon-addon:after,
+.icon-addon:before {
+    display: table;
+    content: " ";
+}
+
+.icon-addon:after {
+    clear: both;
+}
+
+.icon-addon.addon-md .glyphicon,
+.icon-addon .glyphicon, 
+.icon-addon.addon-md .fa,
+.icon-addon .fa {
+    position: absolute;
+    z-index: 2;
+    left: 10px;
+    font-size: 14px;
+    width: 20px;
+    margin-left: -2.5px;
+    text-align: center;
+    padding: 10px 0;
+    top: 1px
+}
+
+.icon-addon.addon-lg .form-control {
+    line-height: 1.33;
+    height: 46px;
+    font-size: 18px;
+    padding: 10px 16px 10px 40px;
+}
+
+.icon-addon.addon-sm .form-control {
+    height: 30px;
+    padding: 5px 10px 5px 28px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.icon-addon.addon-lg .fa,
+.icon-addon.addon-lg .glyphicon {
+    font-size: 18px;
+    margin-left: 0;
+    left: 11px;
+    top: 4px;
+}
+
+.icon-addon.addon-md .form-control,
+.icon-addon .form-control {
+    padding-left: 30px;
+    float: left;
+    font-weight: normal;
+}
+
+.icon-addon.addon-sm .fa,
+.icon-addon.addon-sm .glyphicon {
+    margin-left: 0;
+    font-size: 12px;
+    left: 5px;
+    top: -1px
+}
+
+.icon-addon .form-control:focus + .glyphicon,
+.icon-addon:hover .glyphicon,
+.icon-addon .form-control:focus + .fa,
+.icon-addon:hover .fa {
+    color: #2580db;
+}
+    
+    
+</style>
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
+<div class="container">
+    <div class="row top-buffer">
+        <span ng-repeat="city in cities">
+            <a ui-sref="providers({ city:{{'city'}} })">{{city}} | </a>
+        </span>
+    </div>
+    <div class="row top-buffer">
+        <md-button class="md-raised md-primary" ng-click="geturl()">Coaching Adda URLs</md-button>
+        <md-button class="md-raised md-primary" ng-click="geturl2()">Target Study URLs</md-button>
+        <md-button class="md-raised md-primary" ng-click="getclusterUrls()">Target Study Cluster URLs</md-button>
+        <md-button class="md-raised md-primary" ng-click="getTargetStudyUrlsList()">Get Target Study List</md-button>
+        <md-button class="md-raised md-primary" ng-click="getTargetStudyurl()">Fill Target Study</md-button>
+        <md-button class="md-raised md-primary" ng-click="removeDuplicates()">Remove Duplicates</md-button>
+        <md-button class="md-raised md-primary" ng-click="getAllExams()">Get Exams</md-button>
+        {{count}} {{currUrl}}
+    </div>
+    <div class="row top-buffer">
+        <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange}"
+           row-headers="false"
+           min-spare-rows="1"
+           datarows="urls"
+           >
+            <hot-column data="url" title="'Urls'" size="100"></hot-column>
+        </hot-table>
+    </div>
+    
+    <div class = "row top-buffer">
+        <div layout="row">
+        <div class="col-md-8 icon-addon addon-md">
+            <input type="search" placeholder="Search by name" class="form-control" id="searchText" ng-model="searchText">
+            <label for="searchText" class="glyphicon glyphicon-search" rel="tooltip" title="searchText"></label>
+        </div>
+        </div>
+        <div layout="row">
+            <small class="text-primary" ng-if="searchText"><a ng-click="clearFilter()">Clear</a></small>
+            <small class="text-muted">  displaying {{filtered.length}} providers in <span class="text-primary">{{city}}</span></small>
+        </div>
+    
+    </div>
+    <md-divider></md-divider>
+    <!-- orderBy:'-coursesOffered.length'-->
+    <div class="row top-buffer">
+        <div ng-repeat="provider in providersList | orderBy:'name' | filter:filterText as filtered" class="col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <small>
+            
+            <div class="col-md-2 col-sm-2 col-xs-2">
+                <strong>{{provider.name}}</strong>
+            </div>
+            <div class="col-md-1 col-sm-1 col-xs-1">
+                {{provider.students}}
+            </div>
+            <div class="col-md-3 col-sm-4 col-xs-4">
+                {{provider.address}}
+            </div>
+            <div class="col-md-3 col-sm-5 col-xs-5">
+                <span ng-repeat="course in provider.coursesOffered">
+                    <a ng-click="setFilter(course)">
+                        {{course}}
+                    </a>
+                     | 
+                </span>
+            </div>
+            <div class="col-md-2 hidden-sm hidden-xs">
+                {{provider.phone}}
+            </div>
+            <div class="col-md-1 hidden-sm hidden-xs">
+                <a ng-href="{{provider.website}}" target="_blank">
+                    Url
+                </a>
+                
+            </div>
+            <md-divider></md-divider>
+            </small>
+        </div>
+        </div>
+    
+    
+    </div>
+    
+</div>

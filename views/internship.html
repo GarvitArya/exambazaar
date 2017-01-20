@@ -1,0 +1,150 @@
+<style>
+    .top-buffer { margin-top:20px; }
+    .top-buffer2 { margin-top:10px; }
+    
+    .input-group .icon-addon .form-control {
+    border-radius: 0;
+    }
+    #apply {
+        margin:30px 0px 0px 0px;
+    }
+</style>
+<div class="container">
+<div class="row top-buffer">
+    <h4 class="text-primary">
+    BUSINESS DEVELOPMENT INTERNSHIP
+    </h4>
+    <h5>
+    <strong>MARKETING & SALES </strong>
+    </h5>
+</div>
+<md-divider></md-divider>
+<div class="row" ng-show="submitted">
+    <br/>
+    <br/>
+    <br/>
+    <h6 class="text">
+        Thank you {{applicant.name}}!
+        <br/>
+        Your application has been submitted. We will get back to you as soon as possible.
+    </h6>
+    
+</div>
+<div class="row" ng-show="!submitted">
+   
+       
+<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">    
+    
+    <div class="row top-buffer">
+        <h6 class="text-primary">
+        <strong>DESCRIPTION</strong>
+        </h6>
+    </div>
+    <div class="row">
+        <span class="h6">
+            Educhronicle.com is looking for a qualified intern to join the marketing/advertising team. Our marketing department reaches out to education providers and builds partnership to generate leads for them. We are seeking an intern who can participate in various stages of our business development drive.
+        </span>
+    </div>
+    <div class="row">
+        <span class="h6">
+            The intern should be prepared to work in a fast-paced team environment, and will finish the internship having gained broad experience in various aspects of marketing from the founder (IIT Bombay & IIM Bangalore Alumni) with over 5 years of international work experience.
+        </span>
+    </div>
+    <md-divider></md-divider>
+    <div class="row top-buffer">
+        <h6 class="text-primary">
+        <strong>RESPONSIBILITIES</strong>
+        </h6>
+    </div>
+    <div class="row">
+        <span class="h6">
+            <ul>
+                <li ng-repeat="responsibility in responsibilities">
+                    {{responsibility}}
+                </li>
+            </ul>
+        </span>
+    </div>
+    <md-divider></md-divider>
+    <div class="row top-buffer">
+        <h6 class="text-primary">
+        <strong>REQUIREMENTS</strong>
+        </h6>
+    </div>
+    <div class="row">
+        <span class="h6">
+            Educhronicle.com is looking to build a team of 5 students in Jaipur who is majoring in Sales, Marketing or Advertising. Individual(s) should have:
+            <ul>
+            <li ng-repeat="requirement in requirements">
+                {{requirement}}
+            </li>
+        </ul>
+        </span>
+    </div>
+    <md-divider></md-divider>
+    <div class="row top-buffer">
+        <h6 class="text-primary">
+        <strong>MAJORS</strong>
+        </h6>
+    </div>
+    <div class="row">
+        <span class="h6">
+            Marketing, Sales, Advertising
+        </span>
+    </div>
+    <md-divider></md-divider>
+    <div class="row top-buffer">
+        <h6 class="text-primary">
+        <strong>DETAILS</strong>
+        </h6>
+    </div>
+    <div class="row">
+        <span class="h6">
+            Location: Jaipur<br/>
+            Hours/week: 20<br/>
+            Start Date: Immediately<br/>
+        </span>
+    </div>
+    <md-divider></md-divider>
+</div>
+<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+    <div class="row" id="apply">
+        <form name="applicantForm" >
+        <div  class="panel panel-default">
+            <div class="panel-heading">
+                <h6 class="text-primary"><strong>APPLY NOW</strong></h6>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Name</label>
+                    <input required ng-model="applicant.name">
+                </md-input-container>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Email</label>
+                    <input required ng-model="applicant.email">
+                </md-input-container>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Mobile</label>
+                    <input required ng-model="applicant.mobile">
+                </md-input-container>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <label>Resume</label>
+                    <input type="file" nv-file-select uploader="uploader" >
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 top-buffer">
+                    <md-button class="md-raised md-primary" ng-click="submit()" ng-disabled="applicantForm.$invalid">Submit</md-button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>   
+    
+</div>
+</div>

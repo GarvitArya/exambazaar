@@ -1,0 +1,131 @@
+<style>
+md-select {
+    display: inline-block;
+    margin-top: 2px;
+    width: 100%;
+}
+
+</style>
+<div class="container">
+    <small>
+    <div class="row">
+    <h4 class="md-subhead text-primary">{{institute.basic.name}} - Edit Batches and Teachers <span class="badge">{{batches.length}}</span></h4>
+        
+    <md-input-container class="md-block" flex-gt-sm>
+    <md-select required ng-model="filterbatch" placeholder="Select Batch">
+    <md-option ng-repeat="batch in batches | orderBy:'name'" ng-value="batch._id">
+    {{batch.name}}
+    </md-option>
+    </md-select>
+    </md-input-container> 
+        
+    <div class="col-md-12" >
+    <div  class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="md-subhead text">
+        Assign Subject Teachers
+        </h4>
+    </div>
+    <div>
+        
+    </div>
+    <div class="panel-body">
+        <table ng-table="showbatchesteachers" class="table">
+        <tr>
+            <td>Batch</td>
+            <td>Class Teacher</td>
+            <td>Assign Subject Teacher</td>
+        </tr>
+        <tr ng-repeat="batch in batches | orderBy:['grade','section'] | filter:filterbatch">
+            <td>
+                <h6 class="md-subhead text">
+                {{batch.name}}
+                </h6>
+            </td>
+            <td>
+            <div flex>
+            <h6 class="md-subhead text-primary">
+            <a ui-sref="teacher({ teacherId:{{'batch.batchTeacher._id'}} })">
+            {{batch.batchTeacher.basic.salutation}}
+            {{batch.batchTeacher.basic.firstName}}
+            {{batch.batchTeacher.basic.middleName}}
+            {{batch.batchTeacher.basic.lastName}}
+            </a>
+            </h6>
+            </div>
+            </td>
+            
+            <td>
+        
+                
+                <div layout ="column">
+                    
+                <fieldset  data-ng-repeat="subjectTeacher in batch.subjectTeachers">
+                <div layout="row">
+                    <div flex>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <md-select required ng-model="subjectTeacher.subject._id" placeholder="Select Subject">
+                            <md-option ng-repeat="subject in subjects | orderBy:'name'" ng-value="subject._id" >{{subject.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    </div>
+                    <div flex>
+                    <md-input-container class="md-block" flex-gt-sm>  
+                        <md-select required ng-model="subjectTeacher.teacher" placeholder="Select Subject Teacher">
+                            <md-option ng-repeat="teacher in teachers | orderBy:'basic.firstName'" ng-value="teacher._id" >{{teacher.basic.firstName}} {{teacher.basic.lastName}}
+                            </md-option>
+                            <!--| filter:subjectTeacher.subject-->
+                        </md-select>
+                    </md-input-container>
+                        
+                    <md-input-container class="md-block" flex-gt-sm>  
+                        <md-select required ng-model="subjectTeacher.secondTeacher" placeholder="Select Second Subject Teacher">
+                            <md-option value="{{null}}">
+                                None
+                              </md-option>
+                            <md-option ng-repeat="teacher in teachers | orderBy:'basic.firstName'" ng-value="teacher._id" >{{teacher.basic.firstName}} {{teacher.basic.lastName}}
+                            </md-option>
+                            <!--| filter:subjectTeacher.subject-->
+                        </md-select>
+                    </md-input-container>
+                    </div>
+                    <div flex>  
+                    <md-input-container class="md-block" flex-gt-sm>
+                    <button class="remove"  ng-click="removeSecondTeacher( subjectTeacher)" ng-show="$last">x Second Teacher</button>
+                        
+                    <button class="remove"  ng-click="showConfirm($event,batch, subjectTeacher)" ng-show="$last">x</button>
+                    </md-input-container>
+                    </div>
+                    
+                    
+               </div>
+                    
+                </fieldset>
+                    
+                    <!--ng-show="$last"-->
+                    <div class="row">
+                    <md-button class="md-raised md-default"   ng-click="addNewChoice(batch)">Add Subjects</md-button>
+                    </div>
+                </div>
+                
+                
+
+            </td>
+        </tr>
+
+    </table>
+    </div>
+    </div>
+        
+        <md-button class="md-raised md-primary" ng-click="saveSubjectTeachers()" >Save Subjects</md-button>
+        
+        
+
+    </div>
+    </div>
+        </small>
+</div>
+
+
+

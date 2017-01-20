@@ -1,0 +1,165 @@
+<style>
+    .top-buffer { margin-top:20px; }
+    #chartdiv {
+      width: 100%;
+      min-height: 50vh;
+    }
+    #chartdiv1 {
+      width: 100%;
+      min-height: 20vh;
+    }
+    .vcenter{
+        align-items: center;
+    }
+</style>
+<div class="container">
+    <div class ="row hidden-md hidden-lg">
+        <div layout="row" layout-align="center center">
+            <small>
+                <a ui-sref="student({ studentId:{{'student._id'}} })">Main</a> | 
+                <a ui-sref="student-attendance({ studentId:{{'student._id'}} })">Attendance</a> | 
+                <a ui-sref="student-subjects({ studentId:{{'student._id'}} })">Subjects</a> | 
+                <a ui-sref="student-class({ studentId:{{'student._id'}} })">Class</a> | 
+                <a ui-sref="student-profile({ studentId:{{'student._id'}} })">Profile</a>
+            </small>
+        </div>
+    </div>
+    <div  class="panel panel-default" >
+    <div class="panel-body">
+    <div layout="row" class="top-buffer">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <span class="text-primary"><strong>{{exam._subject._batch.name}} </strong></span>
+            <br/>
+            <span class="text"> {{exam._subject._globalSubject.name}}</span>
+            
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="pull-right">
+                Teacher: 
+                <span class="text-primary">
+                    {{exam._subject._teacher.basic.firstName}}
+                    {{exam._subject._teacher.basic.middleName}}
+                    {{exam._subject._teacher.basic.lastName}}
+                </span>
+                <span class="text-primary" ng-if="exam._subject._secondTeacher">
+                    &  {{exam._subject._secondTeacher.basic.firstName}}
+                    {{exam._subject._secondTeacher.basic.middleName}}
+                    {{exam._subject._secondTeacher.basic.lastName}}
+                </span>
+            </div>
+        </div>
+        
+    </div>
+    <md-divider></md-divider>
+    
+    <div layout="row" class="top-buffer">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            Exam: <span class="text">{{exam.info.name}} </span>
+            <br/>
+            Date: <span class="text">{{exam.info.date | date}} </span>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="pull-right">
+            Weightage: <span class="text">{{exam.info.weightage}}% </span>
+            <br/>
+            Maximum Marks: <span class="text">{{exam.info.maxMarks}} </span>
+            
+            </div>
+            
+        </div>
+    </div>
+        
+    <md-divider></md-divider>
+    <div class="row top-buffer">
+        
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            
+            <div layout="column" class="top-buffer" layout-align="center center">
+            <div layout="row">
+            <h4 class="text-primary">
+                Quartile {{studentEval.quartile}} out of 4
+            </h4><br/>    
+            </div>
+            <div layout="row">
+            <h6 class="text-primary">
+                {{studentEval._student.basic.firstName}}'s Score ({{studentEval.score}} out of {{maxMarks}})
+            </h6>
+            </div>    
+            </div>
+            <div layout="row">
+            <div id="chartdiv1"></div>
+            </div>
+            
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 vcenter text-center">
+            <div class="row top-buffer">
+            <h4 class="text-primary">
+                Feedback
+            </h4>
+            </div>
+            <div layout="row" layout-align="center center">
+            <h6 class="text">
+                <span class="text-primary">
+                    {{exam._subject._teacher.basic.firstName}}
+                    {{exam._subject._teacher.basic.middleName}}
+                    {{exam._subject._teacher.basic.lastName}}
+                </span>
+                <span class="text-primary" ng-if="exam._subject._secondTeacher">
+                    &  {{exam._subject._secondTeacher.basic.firstName}}
+                    {{exam._subject._secondTeacher.basic.middleName}}
+                    {{exam._subject._secondTeacher.basic.lastName}} say
+                </span>
+                <span class="text-primary" ng-if="!exam._subject._secondTeacher">
+                     says
+                </span>
+            </h6>
+            </div>
+            <div class="row" >
+                <small>
+                    {{studentEval.feedback}}
+                </small>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 vcenter text-center">
+            <div class="row top-buffer">
+            <h4 class="text-primary">
+                Class Stats
+            </h4>
+            </div>
+            <div layout="row" layout-align="center center">
+            <h6 class="text">
+                {{exam._subject._batch.name}} (Students present: {{presentEvals.length}}<span ng-if="absentEvals.length>0">, Absent: {{absentEvals.length}}</span>)
+            </h6>
+            </div>
+            
+            <div class="row" >
+                <small>
+                    <table width="80%">
+                    <tr>
+                        <td>Max Score</td>
+                        <td>{{analysis.max}}</td>
+                    </tr>
+                    <tr>
+                        <td>Min Score</td>
+                        <td>{{analysis.min}}</td>
+                    </tr>
+                    <tr>
+                        <td>Mean Score</td>
+                        <td>{{analysis.mean}}</td>
+                    </tr>
+                    <tr>
+                        <td>Median Score</td>
+                        <td>{{analysis.median}}</td>
+                    </tr>
+                    
+                    </table>
+                </small>
+            </div>
+        </div>
+    </div>
+    
+        
+    </div>
+    </div>
+    
+</div>

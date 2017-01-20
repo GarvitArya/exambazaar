@@ -1,0 +1,75 @@
+<style>
+.date-picker-row {
+    margin-left: -15px;
+    position: relative;
+    min-height: 60px;
+}
+
+.date-picker-row label {
+    position: absolute;
+    top: -10px;
+    left: 50px;
+    color: rgba(0, 0, 0, 0.541176);
+    font-size: 12px;
+}
+
+.date-picker-row .md-datepicker-input-container {
+    margin-left: 0;
+}
+</style>
+<div class="container">
+    <md-content flex layout-padding>
+    <div class="col-md-4">
+        {{selectedDate}}
+        {{msg}}
+    <div  class="panel panel-default" >
+        <div class="panel-heading">
+            <h6 class="md-subhead text-primary">Add Event</h6>
+        </div>
+        <div class="panel-body">
+        <div class="row">
+            <p>
+                Event Date
+                <md-datepicker required ng-model="eventDate" md-placeholder="Date"></md-datepicker>
+            </p>
+            <!--<div flex-gt-sm class="date-picker-row">
+                <label for="email" translate>Calendar Date</label>
+                <md-datepicker ng-model="eventDate" md-placeholder="Calendar Date"></md-datepicker>
+            </div>-->
+            
+        </div>
+        <div class="row">
+            <md-calendar ng-model="birthday"></md-calendar>    
+        </div>
+        </div>
+        
+    </div>
+        
+    <div layout-gt-sm="row">
+    
+        </div>
+        
+    </div>
+    <div class="col-md-8">
+    <calendar-md id="calendar-demo"
+                        flex layout layout-fill
+                        calendar-direction="direction"
+                        on-prev-month="prevMonth"
+                        on-next-month="nextMonth"
+                        on-day-click="dayClick"
+                        title-format="'MMMM y'"
+                        ng-model='selectedDate'
+                        day-format="dayFormat"
+                        day-label-format="'EEE'"
+                        day-label-tooltip-format="'EEEE'"
+                        day-tooltip-format="'fullDate'"
+                        week-starts-on="weekStartsOn"
+                        start-Date-of-month="1"
+                        no-of-days="30"
+                        tooltips="true"
+                        day-content="setDayContent"
+                        disable-future-selection="disableFutureDates"></calendar-md>
+    </div>
+        
+    </md-content>
+</div>

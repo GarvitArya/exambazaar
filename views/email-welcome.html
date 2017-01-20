@@ -1,0 +1,97 @@
+<style>
+    p {
+    text-align: justify;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <a class="text-primary">
+                <h4 class="md-headline text"><img src="logo/1.PNG" height="25"> <span class="pull-right">educhronicle.com</span></h4>
+                </a>
+            </div>
+            <md-divider></md-divider>
+            <div class="row">
+                <br/>
+                <h6 class="md-subhead text">
+                    Dear {{saluation}}
+                {{parent.basic.firstName}}
+                {{parent.basic.lastName}},
+                </h6><br/>
+                <p>
+                Congratulations on another monumental step into the increasing digital, hassle-free world. We assure you that we shall make this an <b>incredibly easy, fast and efficient experience for you.</b>
+                </p>
+                <p>
+                <span class="text-primary">{{institute.basic.name}}</span> is now powered by Educhronicle.com! Now keep <span class="text-primary">{{student.basic.firstName}} {{student.basic.lastName}}'s</span> school progress at your fingertips.
+                </p>
+            </div>
+            <md-divider></md-divider>
+            <div class="row">
+                <table class="table">
+                    <tr>
+                        <td>Student</td>
+                        <td><img height="50" ng-src="{{student.account.imageUrl}}">
+                            {{student.basic.firstName}} {{student.basic.lastName}} 
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td>School</td>
+                        <td>{{institute.basic.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Class</td>
+                        <td>{{batch.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Registered Mobile</td>
+                        <td>{{student.contact.mobile}}</td>
+                    </tr>
+                    <tr>
+                        <td>Registered Mobile</td>
+                        <td>{{student.contact.email}}</td>
+                    </tr>
+                </table>
+            </div>
+            <md-divider></md-divider>
+            <div class="row">
+                <br/>
+                <p>
+                Here are a few of the countless ways you will benefit from Educhronicle
+                </p>
+                <p>
+                <p>
+                    <span class="text-primary">#1 Attendance Records</span> - Did {{student.basic.firstName}} miss school again? Don't worry, we got it covered.
+                </p>
+                <p>
+                    <span class="text-primary">#2 Academic Performance</span> - Be the first to know when {{student.basic.firstName}} gets an 'A' on {{hisher}} Summer Project.
+                </p>
+                <p>
+                    <span class="text-primary">#3 Extracurricular Interests</span> - Is {{student.basic.firstName}} {{thenext}} Nurture {{hisher}} interests outside academics.
+                </p>
+                <p>
+                    <span class="text-primary">#4 Real Time Communication with Teachers</span> - Do not miss out on any information about {{student.basic.firstName}} again - Exam timetables, Sports Day schedules, {{student.basic.firstName}}'s timeless memories, anything!
+                </p>
+                <md-divider></md-divider>
+                <br/>
+                <p>
+                We look forward to engaging with you to best serve your child's interests. Your digital schooling cosmos awaits.
+                </p>
+                <br/>
+                <h6 class="md-subhead text">
+                    Regards<br/>
+                    Educhronicle Team
+                </h6>
+                
+            </div>
+            <div class="row">
+                
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+</div>

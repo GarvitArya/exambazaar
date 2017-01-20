@@ -1,0 +1,40 @@
+<div class="container">
+    <h4 class="md-headline text">Add Global Fee Item</h4>
+    
+    <div class="row">
+    <div class="col-md-4">
+        <md-content flex layout-padding>
+        <h6 class="md-subhead text-primary">Global Fee Items</h6>
+            <span ng-repeat = "myglobaFeeItem in globalFeeItems | orderBy:'name'"><small>{{myglobaFeeItem.type}}: {{myglobaFeeItem.name}}</small><br/></span>
+        </md-content>
+    </div>
+    <div class="col-md-8" id="addGlobalFeeItemForm">
+    <md-content flex layout-padding>
+        <small>
+        
+        <form name="globalFeeItemForm" >
+        <div layout="column" >
+            <h6 class="md-subhead text-primary">Global Fee Item</h6>
+            
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Type</label>
+                    <input ng-model="globalFeeItem.type">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Name</label>
+                    <input ng-model="globalFeeItem.name">
+                </md-input-container>
+            </div>
+            <md-button class="md-raised md-primary" ng-click="addGlobalFeeItem()" ng-disabled="globalFeeItemForm.$invalid">Add Global Fee Item</md-button>
+
+            </div>
+            </form>
+            </small>
+        </md-content>
+        </div>
+    </div>
+</div>
+<div>
+    {{ServerResponse}}
+</div>

@@ -1,0 +1,131 @@
+<style>
+    #subject{
+        border-style: solid;
+        border-color: #99ccff;
+        min-height: 100px;
+        width: 100%;
+        display: block;
+        text-align: center;
+        padding: 10px;
+        margin: 10px;
+    }
+    .top-buffer { margin-top:20px; }
+    .bottom-buffer { margin-bottom:20px; }
+    .q1{
+        fill: #FFB6C1;
+    }
+    .q2{
+        fill: #BDFCC9;
+    }
+    .q3{
+        fill: #111;
+    }
+    .flexbox {
+     display:flex;
+     justify-content:center;
+     align-items: center;
+     flex-flow: column;
+    }
+</style>
+
+<md-content flex layout-padding>
+<div class="container">
+    
+    
+    <div class ="row">
+        <div class="alert alert-info" ng-if="!student.imageUrl">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Hi, {{student.basic.firstName}}!</strong>  You have not added your profile pic. Add now!
+
+            <input type="file" nv-file-select uploader="uploader" class="pull-right">
+        </div>
+    </div>
+    <md-divider></md-divider>
+    <div class ="row hidden-md hidden-lg">
+        <div layout="row" layout-align="center center">
+            
+                <a ui-sref="student({ studentId:{{'student._id'}} })">Main</a> | 
+                <a ui-sref="student-attendance({ studentId:{{'student._id'}} })">Attendance</a> | 
+                <a ui-sref="student-subjects({ studentId:{{'student._id'}} })">Subjects</a> | 
+                <a ui-sref="student-class({ studentId:{{'student._id'}} })">Class</a> | 
+                <a ui-sref="student-profile({ studentId:{{'student._id'}} })">Profile</a>
+            
+        </div>
+    </div>
+    <md-divider></md-divider>
+    <div class="row top-buffer bottom-buffer">
+        <div layout="row">
+        <div class="col-xs-2 col-sm-2 col-md-2" >
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4" >
+            <div class="row">
+            <strong>
+            {{student.basic.firstName}}
+            {{student.basic.middleName}}
+            {{student.basic.lastName}}
+            </strong>
+            </div>
+            <div class="row">
+            Parent: 
+            {{student.parents[0].basic.firstName}}
+            {{student.parents[0].basic.middleName}}
+            {{student.parents[0].basic.lastName}}
+            </div>
+            <div class="row">
+            Mobile: 
+            {{student.parents[0].contact.mobile}}
+            </div>
+            <div class="row">
+                <img ng-if="student.imageUrl" ng-src="{{student.imageUrl}}" height="65">
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 pull-right" layout-align="center center">
+            <span class="text" align="right">
+                <strong>
+                {{student._institute.basic.name}}
+                </strong><br/>
+                Class {{student.batch.name}}<br/>
+                Class Teacher: 
+                {{student.batch.batchTeacher.basic.firstName}}
+                {{student.batch.batchTeacher.basic.middleName}}
+                {{student.batch.batchTeacher.basic.lastName}}
+
+            </span>
+        </div>
+        </div>
+    </div>
+    
+    <!--<md-divider></md-divider>
+    
+    <div class="row top-buffer" align="center">
+        <div layout="row" layout-align="center center">
+            <h6 class="md-subhead text-primary">{{student.basic.firstName }}'s Attendance</h6>
+        </div>
+        <div ng-show="showButtons" layout="row" layout-align="center center">
+            <md-button id="previous-sm" >
+                <i class="glyphicon glyphicon-chevron-left" aria-hidden="true"></i>    
+            </md-button>
+            <md-button  id="next-sm" >
+                <i class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>       
+            </md-button>
+        </div>
+        <div layout="row" layout-align="center center">
+            <div class="hidden-xs hidden-sm col-md-1 ">
+                <md-button id="previous-lg" >
+                <i class="glyphicon glyphicon-chevron-left" aria-hidden="true"></i>    
+                </md-button>
+            </div>
+            
+            <div class="col-xs-12 col-md-10" id="cal-heatmap"></div>
+            <div class="hidden-xs hidden-sm col-md-1">
+                <md-button  id="next-lg" >
+                <i class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>       
+                </md-button>
+            </div>
+        </div> 
+    </div>
+    <md-divider></md-divider>-->
+    {{notification}}
+    
+</div>
+</md-content>

@@ -1,0 +1,70 @@
+<div class="container">
+    <h4>{{institute.basic.name}} - Batch Information</h4>
+    <md-content flex layout-padding>
+        
+        <small>
+        <form name="batchForm" >
+        <div layout="column">
+            <h6 class="md-subhead text-primary">Grade and Section</h6>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>  
+                    <md-select required ng-model="batch.grade" placeholder="Select Grade">
+                        <md-option ng-repeat="grade in grades" ng-value="grade" >{{grade}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>  
+                    <md-select required ng-model="batch.section" placeholder="Section Name">
+                        <md-option ng-repeat="section in sections" ng-value="section" >{{section}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Batch Name</label>
+                    <input required ng-model="batch.name">
+                </md-input-container>
+            </div>
+        <h6 class="md-subhead text-primary">Add Class Teacher</h6>
+            
+        <md-input-container class="md-block" flex-gt-sm>  
+            <md-select ng-model="batch.batchTeacher" placeholder="Select Class Teacher">
+                <md-option ng-repeat="teacher in teachers | orderBy:'basic.firstName'" ng-value="teacher._id" >{{teacher.basic.firstName}} {{teacher.basic.lastName}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+        
+        <h6 class="md-subhead text-primary">Add Subjects</h6>
+        
+        <md-button class="md-raised md-warn"  ng-click="addNewChoice()">Add Subject</md-button>
+        <div layout ="column">
+        <fieldset  data-ng-repeat="subjectTeacher in subjectTeachers">
+        <div layout="row">
+            <md-input-container class="md-block" flex-gt-sm>  
+                <md-select required ng-model="subjectTeacher.subject" placeholder="Select Subject">
+                    <md-option ng-repeat="subject in subjects" ng-value="subject._id" >{{subject.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-block" flex-gt-sm>  
+                <md-select required ng-model="subjectTeacher.teacher" placeholder="Select Subject Teacher">
+                    <md-option ng-repeat="teacher in teachers " ng-value="teacher._id" >{{teacher.basic.firstName}} {{teacher.basic.lastName}}
+                    </md-option>
+                    <!--| filter:subjectTeacher.subject-->
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-block" flex-gt-sm>
+            <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+            </md-input-container>
+           </div>
+        </fieldset>
+        </div>
+        
+         
+        
+        <md-button class="md-raised md-primary" ng-click="addBatch()" ng-disabled="batchForm.$invalid">Add Batch</md-button>
+        
+            </div>
+        </form>
+    </small>
+    </md-content>
+</div>

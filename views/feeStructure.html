@@ -1,0 +1,108 @@
+
+<div class="container">
+<h4 class="md-headline text">{{institute.basic.name}} - Fee Structure</h4>
+    
+<div class="row">
+    <div layout="row">
+        
+    <div class="col-md-3">
+    <h6 class="md-subhead text-primary">Add School's Fee Headers</h6>
+    <md-input-container class="md-block" flex-gt-sm>
+        <div class="flex" ng-repeat="globalFeeItem in globalFeeItems | orderBy:'name'">
+        <md-checkbox  ng-model="instituteFeeItems[globalFeeItem._id]" aria-label="Checkbox">{{globalFeeItem.name}}
+        </md-checkbox>
+        </div>
+        
+    </md-input-container>
+    </div>
+        
+    <div class="col-md-9">
+        <h6 class="md-subhead text-primary">
+            Fee Installments
+            
+        </h6>
+        <md-content flex layout-padding>
+        
+        <form name="feeStructureForm" >
+        <div layout ="column">
+
+        <fieldset  data-ng-repeat="installment in installments">
+        <div  class="panel panel-default" >
+        <div class="panel-heading">
+            <h6 class="md-subhead text">Fee Installment {{$index+1}}</h6>
+        </div>
+        <div class="panel-body">
+        <div layout="column" id="installment">
+        <div layout="row">
+        <table ng-table="showinstallment" class="table">
+        <tr>
+            <td><strong>Type</strong></td>
+            <td><strong>Name</strong></td>
+            <td><strong>Start Date</strong></td>
+            <td><strong>Due Date</strong></td>
+        </tr>
+        <tr>
+            <td>
+                <md-input-container class="md-block" flex-gt-sm>  
+                <md-select required ng-model="installment.type" placeholder="Select Type">
+                    <md-option ng-repeat="installmentType in installmentTypes " ng-value="installmentType" >{{installmentType}}
+                    </md-option>
+                </md-select>
+                </md-input-container>
+            </td>
+            <td>
+                <md-input-container class="md-block" flex-gt-sm>
+                <label>Name</label>
+                <input ng-model="installment.name">
+                </md-input-container>
+            </td>
+            <td>
+                <md-input-container class="md-block" flex-gt-sm>  
+                <div layout="row">
+                    <md-datepicker ng-model="installment.startDate" md-placeholder="Start Date"></md-datepicker>
+                </div>
+                </md-input-container>
+            </td>
+            <td>
+                <md-input-container class="md-block" flex-gt-sm>  
+                <div layout="row">
+                    <md-datepicker required ng-model="installment.dueDate" md-placeholder="Due Date"></md-datepicker>
+                </div>
+                </md-input-container>
+            </td>
+        </tr>
+        </table>
+        </div>
+            <!--<button class="remove" ng-show="$last" ng-click="removeChoice()">Remove this installment</button>-->
+            <div layout="row">
+            <md-button class="md-raised md-warn" ng-show="$last" ng-click="addNewChoice()">Add Installment</md-button>
+            <md-button class="remove" ng-show="$last" ng-click="removeChoice()">Remove this installment</md-button>
+            </div>
+       </div>
+    </div>
+    </div>
+        </fieldset>
+        </div>
+
+<!-- <br/>
+        {{installments}}  
+<br/>
+            {{instituteFeeItems}} 
+            -->
+           
+    </form>
+    </md-content>
+    </div>
+    </div>
+        
+    <div class="row">
+    <div class="col-md-12">
+    <md-button class="md-raised md-primary" ng-click="addFeeStructure()" ng-disabled="feeStructureForm.$invalid">Save Fee Structure</md-button>
+    </div>
+    </div>
+
+</div>
+</div>
+<div>
+    {{ServerResponse}}
+</div>

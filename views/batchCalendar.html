@@ -1,0 +1,77 @@
+<div class="container">
+    <h4>{{batch.name}} - Calendar</h4>
+    <md-content flex layout-padding>
+        
+        <small>
+        <form name="calendarForm" >
+        <div layout="column">
+            
+        <h6 class="md-subhead text-primary">Academic Calendar details</h6>
+        <div layout="row" ng-show="setRange">
+            <div class="col-md-4">
+                <h6 class="md-subhead text">Start Date</h6>
+                <md-datepicker required ng-model="startDate" md-placeholder="Start Date">Start Date</md-datepicker>
+            </div>
+            <div class="col-md-4">
+                <h6 class="md-subhead text">End Date</h6>
+                <md-datepicker required ng-model="endDate" md-placeholder="End Date"></md-datepicker>
+            </div>
+            <div class="col-md-4">
+                <h6 class="md-subhead text">Weekend Holidays</h6>
+                <md-checkbox  ng-model="saturdayHoliday" aria-label="Checkbox">Saturday Holiday
+                </md-checkbox>
+                <md-checkbox  ng-model="sundayHoliday" aria-label="Checkbox">Sunday Holiday
+                </md-checkbox>
+            </div>
+            <md-button class="md-raised md-primary" ng-click="askHolidays()" ng-disabled="calendarForm.$invalid">Next</md-button>
+        </div>
+        
+        <!--<time am-time-ago="startDate"></time> 
+            {{startDate | amCalendar }}-->
+        <div layout="column" ng-show="markHolidays">
+            <h6 class="md-subhead text-primary">Mark Holidays</h6>
+            <table ng-table="showholidays"   class="table">
+            <tr ng-repeat="day in days | orderBy:'date'">
+                <td title="'Date'">
+                <span class="md-subhead text">{{day.date | amDateFormat:'MMM DD YYYY' }}</span>
+                </td>
+                
+                <td title="'Holiday'">
+                <div class="row">
+                <span class="md-subhead text">
+                <md-checkbox  ng-model="day.academicHoliday" aria-label="Checkbox">Mark Holiday
+                </md-checkbox>
+                    
+                <md-input-container class="md-block" flex-gt-sm ng-show="day.academicHoliday">
+                <label>Holiday Reason (optional)</label>
+                <input ng-model="day.academicHolidayDesc" size="10">
+                </md-input-container>
+                </span>
+                
+                </div>
+                </td>
+                
+                <td title="'School Event'">
+                <div class="row">
+                <span class="md-subhead text">
+                <md-checkbox  ng-model="day.eventDay" aria-label="Checkbox">Mark School Event
+                </md-checkbox>
+                    
+                <md-input-container class="md-block" flex-gt-sm ng-show="day.eventDay">
+                <label>Description (optional)</label>
+                <input ng-model="day.eventDayDesc" size="10">
+                </md-input-container>
+                </span>
+                
+                </div>
+                </td>
+            </tr>
+            </table>
+            <md-button class="md-raised md-primary" ng-click="saveInstituteCalendar()" ng-disabled="calendarForm.$invalid">Save Calendar</md-button>
+        </div>
+            
+        </div>
+    </form>
+    </small>
+    </md-content>
+</div>

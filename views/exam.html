@@ -1,0 +1,85 @@
+<style>
+    .top-buffer { margin-top:20px; }
+    #feedbackBox {
+        min-width: 100%;
+        box-shadow: 0 0 1px rgba(34, 25, 25, 0.4);
+        font-size: 1em;
+    }
+</style>
+<div class="container">
+    
+    <div class="row">
+    <div class="row">
+    <h6 class="md-subhead text-primary">
+        {{exam._subject._batch.name}} {{exam._subject._globalSubject.name}}    
+    </h6>
+    <h6 class="md-subhead text">
+        {{exam.info.name}} <small>{{exam.info.date | date}}</small>
+    </h6>
+    </div>
+    <md-divider></md-divider>
+    <div class="row top-buffer">
+        <div layout="row" layout-align="center center">
+        <form name="evalForm" class="col-md-12">
+        <div class="row">
+            <strong>
+            <div class="col-md-1 col-sm-2 col-xs-2">
+            No.
+            </div>
+            <div class="col-md-2 col-sm-6 col-xs-6" >
+            Student
+            </div>
+            <div class="col-md-1 col-sm-4 col-xs-4">
+                Absent
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-4">
+                Score
+            </div>
+            <div class="col-md-6 col-sm-4 col-xs-4">
+                Feedback
+            </div>
+            </strong>
+        </div>
+        <md-divider></md-divider>
+        <div ng-repeat="studentEval in studentEvals | orderBy: ['_student.basic.firstName','_student.basic.lastName']"  >
+        
+        <div layout="row" layout-align="center center">
+            <div class="col-md-1 col-sm-2 col-xs-2">
+            {{$index + 1}}
+            </div>
+            <div class="col-md-2 col-sm-6 col-xs-6" >
+            {{studentEval._student.basic.firstName}}
+            {{studentEval._student.basic.middleName}}
+            {{studentEval._student.basic.lastName}}
+            </div>
+            <div class="col-md-1 col-sm-4 col-xs-4">
+                
+                <md-checkbox ng-model="studentEval.absent" aria-label="Absent">
+                    Absent?
+                </md-checkbox>
+               
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-4">
+                <small>
+                <input name="studentEval.score" ng-model="studentEval.score" ng-disabled='studentEval.absent' size='5'>
+                <span ng-show="exam">
+                / {{exam.info.maxMarks}}
+                </span>
+                </small>
+            </div>
+            <div class="col-md-6 col-sm-4 col-xs-4">
+                <small>
+                
+                <textarea rows="2" id="feedbackBox" name="studentEval.feedback" ng-model="studentEval.feedback" ng-disabled='studentEval.absent'></textarea>
+                </small>
+            </div>
+            
+        </div>
+        <md-divider></md-divider>
+        </div>
+        <md-button class="md-raised md-primary" ng-click="saveExamEvaluations()" ng-disabled="evalForm.$invalid">Save Evaluation</md-button>
+        </form>
+        </div>
+    </div>
+    </div>
+</div>

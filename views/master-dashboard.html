@@ -1,0 +1,93 @@
+
+<div class="container">
+    <div class="row">
+        <!--<h6 class="text-primary">Dashboard</h6>-->
+        <div layout="row" layout-xs="column" layout-margin  layout-align="center" >
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Users</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <div>
+                            <font size="10" class="text-primary" >{{usersCount}}</font>
+                        </div>
+                        <div>
+                            <strong>Verfied:</strong><br/>
+                            <font size="10" class="text-primary" >{{verifiedUsersCount}}</font>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Institutes</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{institutesList.length}}</font>
+                    </div>
+                    <p ng-repeat="institute in institutesList | orderBy:'basic.name'">
+                        <small>{{institute.basic.name}}
+                        </small>
+                    </p>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Students</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{studentsCount}}</font>
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Teachers</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{teachersCount}}</font>
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Parents</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{parentsCount}}</font>
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Admins</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{adminsCount}}</font>
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Master Users</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{mastersCount}}</font>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <md-divider></md-divider>
+    </div>
+</div>
+
+
+

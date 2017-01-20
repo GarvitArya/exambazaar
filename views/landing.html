@@ -1,0 +1,48 @@
+<style>
+    div { 
+        background-color: rgba(255, 255, 255, 0.6);
+        text-align: center;
+    }
+    #cell{
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    #circle {
+        width: 100px;
+        height: 100px;
+        
+        background: #fff;
+        border: solid;
+        border-color: #40a2e8;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        display: table-cell; 
+        vertical-align: middle;
+    }
+    
+    
+</style>
+
+<div class="container">
+    <!--hide-xs hide-sm show-md show-lg-->
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h4 class="text">What are you looking to study?</h4>
+            <md-divider></md-divider>
+        </div>
+        
+        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2" ng-repeat="category in categories" id="cell">
+            <div id="circle">
+                
+                    {{category}}
+                
+            </div>
+            
+        </div>
+    </div>
+    
+    
+    <md-divider></md-divider>
+    
+</div>

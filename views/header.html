@@ -1,0 +1,150 @@
+<style>
+.glyphicon.glyphicon-bell {
+    font-size: 25px;
+}
+
+</style>
+<div class="alert alert-danger alert-dismissible" role="alert" ng-if="message !=''">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>{{message}}</strong>
+</div>
+<nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+<div class="container-fluid">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        </button>
+
+        <a class="navbar-brand" href="#" class="text-primary">
+            <span>
+                <img src="images/logo/logo.png" height="30">
+                <span class="text-primary">ExamBazaar</span>
+            </span>
+        </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+        <!--<ul class="nav navbar-nav" ng-show="!sessionuser" hide-xs>
+        <li><a href="#section-0" du-smooth-scroll du-scrollspy offset="65">Digitise</a></li>
+        <li><a href="#section-1" du-smooth-scroll du-scrollspy offset="65">Features</a></li>
+        <li><a href="#section-2" du-smooth-scroll du-scrollspy offset="65">Grow</a></li>
+        <li><a ui-sref="internship">Internship</a></li>
+        </ul>-->
+
+        <form class="navbar-form navbar-right" ng-submit="login()" ng-show="!sessionuser">
+        <div class="form-group">
+        <input type="text" placeholder="Mobile" class="form-control" ng-model="login.mobile" size="10" >
+        </div>
+        <div class="form-group">
+        <input type="password" placeholder="Password" class="form-control" ng-model="login.password" size="12">
+        </div>
+        <button type="submit" class="btn btn-success">Sign in</button>
+        </form>
+        <ul class="nav navbar-nav navbar-right" ng-show="sessionuser">
+            
+        <li><a href="#/" ng-click="logout()">Logout</a></li>
+        </ul>
+        
+        <!-- Header for usertype Master User -->
+        <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
+        <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.masterId'}} })">Home</a></li>
+        <li><a ui-sref="master-institutes({ masterId:{{'sessionuser.masterId'}} })">Institutes</a></li>
+        <li><a ui-sref="master-addInstitute({ masterId:{{'sessionuser.masterId'}} })">Add Institute</a></li>
+        
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a ui-sref="master-addGlobalSubject({ masterId:{{'sessionuser.masterId'}} })">Add Global Subject</a></li>
+            <li><a ui-sref="master-addGlobalFeeItem({ masterId:{{'sessionuser.masterId'}} })">Add Global Fee Item</a></li>
+            <li><a ui-sref="invalidusers({ masterId:{{'sessionuser.masterId'}} })">Delete Invalid Users</a></li>
+            <li><a ui-sref="mergeUsers({ masterId:{{'sessionuser.masterId'}} })">Merge Users</a></li>
+            <li><a ui-sref="master-manageBatchStudents({ masterId:{{'sessionuser.masterId'}} })">Manage Batch Students</a></li>
+            <li><a ui-sref="master-manageInstituteStudents({ masterId:{{'sessionuser.masterId'}} })">Manage Institute Students</a></li>
+            <li><a ui-sref="invalidParents({ masterId:{{'sessionuser.masterId'}} })">Manage Invalid Parents</a></li>
+            <li><a ui-sref="invalidTeachers({ masterId:{{'sessionuser.masterId'}} })">Manage Invalid Teachers</a></li>
+            <li><a ui-sref="addMaster">Add Master User</a></li>  
+              
+              
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a ui-sref="providers({ city:'Jaipur' })">Coaching Adda</a></li>
+            <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Target Study</a></li>
+          </ul>
+        </li>
+        <li><a ui-sref="master-analytics({ masterId:{{'sessionuser.masterId'}} })">Analytics</a></li>
+            <!-- masterId:{{'sessionuser.masterId'}}, -->
+        </ul>
+        
+        <!-- Header for usertype Admin -->
+        <ul class="nav navbar-nav" ng-show="sessionuser.userType=='Admin'">
+        <li><a ui-sref="admin({ adminId:{{'sessionuser.adminId'}} })">Home</a></li>
+        </ul>
+        
+        <ul class="nav navbar-nav navbar-right" ng-if="sessionuser.basic">
+            
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{sessionuser.basic.firstName}}
+            {{sessionuser.basic.lastName | limitTo: 1}}
+              <span class="badge">
+                {{notification.unread.length}}
+              </span>
+              <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li ng-repeat="unread in notification.unread">
+                <a ng-click="markRead(unread)">
+                <strong>
+                    {{unread.forDate | date}} {{unread.text}}
+                    </strong>
+                </a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li ng-repeat="read in notification.read">
+                <a ng-click="#">
+                
+                    {{read.forDate | date}} {{read.text}}
+                </a>
+            </li>
+          </ul>
+        </li>    
+        <!--
+        <li><a href="#/">
+            {{sessionuser.basic.firstName}}
+            {{sessionuser.basic.lastName | limitTo: 1}}
+            
+        </a></li>
+        <li>
+            <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>
+            
+        </li>-->
+        <li><span>
+            <img height="65" ng-src="{{sessionuser.imageUrl}}">
+        </span></li>
+        </ul>
+        
+        
+        <!-- Header for usertype Student -->
+        <ul class="nav navbar-nav" ng-show="sessionuser.userType=='Student'">
+            <li><a ui-sref="student({ studentId:{{'sessionuser.studentId'}} })">Home</a></li>
+            <li><a ui-sref="student-attendance({ studentId:{{'sessionuser.studentId'}} })">Attendance</a></li>
+            <li><a ui-sref="student-subjects({ studentId:{{'sessionuser.studentId'}} })">Subjects</a></li>
+            <li><a ui-sref="student-class({ studentId:{{'sessionuser.studentId'}} })">Class</a></li>
+            <!--<li><a href="#/">Result</a></li>
+            <li><a href="#/">Co-curricular</a></li>-->
+            <li><a ui-sref="student-profile({ studentId:{{'sessionuser.studentId'}} })">Profile</a></li>
+        </ul>
+        
+        
+        <!-- Header for usertype Teacher -->
+        <ul class="nav navbar-nav" ng-show="sessionuser.userType=='Teacher'">
+            <li><a ui-sref="teacher-batches({ teacherId:{{'sessionuser.teacherId'}} })">Classes</a></li>
+        </ul>
+        {{position}}
+        
+    </div><!--/.nav-collapse -->
+</div><!--/.container-fluid -->
+</nav>

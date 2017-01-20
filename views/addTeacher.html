@@ -1,0 +1,121 @@
+<div class="container">
+    <h4 class="md-headline text">{{institute.basic.name}} - Add teacher</h4>
+    
+    <div class="row">
+    <div class="col-md-4">
+        <md-content flex layout-padding>
+        <h6 class="md-subhead text-primary">Teachers</h6>
+            <span ng-repeat = "teacher in institute.teachers | orderBy:'firstName'"><small>{{teacher.basic.firstName}} {{teacher.basic.lastName}}</small><br/></span>
+        </md-content>
+    </div>
+    <div class="col-md-8" id="addTeacherForm" ng-controller="teacherController">
+    <md-content flex layout-padding>
+        <small>
+        
+        <form name="teacherForm" >
+        <div layout="column" >
+            <!--<h6 class="md-subhead text-primary">Teacher Subject</h6>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>  
+                    <md-select ng-model="teacher.teaching.primarySubject" placeholder="Primary Subject">
+                        <md-option ng-repeat="subject in subjects | orderBy:'name'" ng-value="subject._id" >{{subject.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>-->
+            <h6 class="md-subhead text-primary">Teacher Information</h6>
+            <div layout="row">
+                <!--<md-input-container class="md-block" flex-gt-sm>  
+                    <md-select ng-model="teacher.basic.salutation" placeholder="Title">
+                        <md-option ng-repeat="salutation in salutations" ng-value="salutation" >{{salutation}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>-->
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Name</label>
+                    <input required ng-model="teacher.basic.name">
+                </md-input-container>
+                <!--<md-input-container class="md-block" flex-gt-sm>
+                    <label>First Name</label>
+                    <input required ng-model="teacher.basic.firstName">
+                     <div ng-messages="teacherForm.institute.name.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Last Name</label>
+                    <input required ng-model="teacher.basic.lastName">
+                     <div ng-messages="teacherForm.institute.name.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>-->
+                <md-input-container class="md-block" flex-gt-sm>  
+                    <md-select required ng-model="teacher.basic.gender" placeholder="Gender">
+                        <md-option ng-repeat="gender in genders" ng-value="gender" >{{gender}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>   
+            <div layout="row">
+                <md-datepicker required ng-model="teacher.basic.dob" md-placeholder="Date of Birth"></md-datepicker>
+            </div>
+            <br/>
+            <br/>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Mobile <small>{{teacher.contact.mobile.length}}/10</small></label>
+                    <input required ng-model="teacher.contact.mobile" ng-minlength="10" ng-maxlength="10">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Email</label>
+                    <input type="Email" ng-model="teacher.contact.email">
+                </md-input-container>
+            </div>
+            <!--<div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Address - Street</label>
+                    <input ng-model="teacher.address.street">
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>City</label>
+                    <input ng-model="teacher.address.city">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Pin Code</label>
+                    <input ng-model="teacher.address.pincode">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Landline</label>
+                    <input ng-model="teacher.address.tel">
+                </md-input-container>
+            </div>-->
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Address</label>
+                    <input ng-model="teacher.address">
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                <label for="profilepic">Add Photo</label><br>
+                <button onclick="document.getElementById('fileUpload').click()">Upload Image</button>
+                <input id="fileUpload" style="visibility: collapse; width: 0px;" type="file" onchange="uploadTeacherProfilePic(this.files[0])">
+                <img id="imgsrc" height="100" >
+            </md-input-container>
+            </div>
+            
+            
+            <md-button class="md-raised md-primary" ng-click="addTeacher()" ng-disabled="teacherForm.$invalid">Add Teacher</md-button>
+
+    </div>
+    </form>
+    </small>
+    </md-content>
+    </div>
+    </div>
+</div>
+<div>
+    {{ServerResponse}}
+</div>

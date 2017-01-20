@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<meta charset="utf8">
+<title>Upload Image</title>
+<button onclick="document.querySelector('input').click()">Upload Image</button>
+<input style="visibility: collapse; width: 0px;" type="file" onchange="upload(this.files[0])">
+<script>
+    function upload(file) {
+        if (!file || !file.type.match(/image.*/)) return;
+        document.body.className = "uploading";
+        var fd = new FormData();
+        fd.append("image", file);
+        fd.append("key", "af50a3b4cbd19b2374985ef0d9cf7cf7eda869b7");
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://api.imgur.com/3/image.json");
+        xhr.onload = function() {
+            var imageUrl = JSON.parse(xhr.responseText).data.link;
+            document.querySelector("#link").href = JSON.parse(xhr.responseText).data.link;
+            document.querySelector("#imgsrc").src = JSON.parse(xhr.responseText).data.link;
+            document.body.className = "uploaded";
+        }
+        xhr.setRequestHeader('Authorization', 'Client-ID 809d940c20a3a96');
+        xhr.send(fd);
+    }
+</script>
+
+<style>
+    body {text-align: center; padding-top: 20px;}
+    #link, p , div {display: none}
+    div {display: inline-block;}
+    .uploading div {display: none}
+    .uploaded div {display: none}
+    .uploading p {display: inline}
+    .uploaded #link {display: inline}
+    em {position: absolute; bottom: 0; right: 0}
+</style>
+
+<p>Uploading...</p>
+<a id="link">It's online!!!</a>
+<img id="imgsrc" height="100" >
+

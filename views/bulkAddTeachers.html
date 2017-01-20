@@ -1,0 +1,21 @@
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
+<div class="container">
+    <h4 class="md-headline text-primary">{{institute.basic.name}} - Bulk Add Teachers</h4>
+    <h6 class="md-subhead text">Paste Data Below</h6>
+<div layout="row">
+<hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange}"
+           row-headers="false"
+           min-spare-rows="5"
+           datarows="teachers"
+           >
+    <hot-column data="contact.mobile" title="'Mobile'"></hot-column>
+    <hot-column data="basic.name" title="'Name'"></hot-column>
+    <hot-column data="basic.gender" title="'Gender'"></hot-column>
+    <hot-column data="basic.dob" title="'Date of Birth'" ng-show='showdob'></hot-column>
+    <hot-column data="address" title="'Address'" width="150"></hot-column>
+</hot-table>
+
+
+</div>
+    <md-button class="md-raised md-primary" ng-click="addBulkTeachers()">Add Teachers</md-button>
+</div>

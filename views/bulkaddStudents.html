@@ -1,0 +1,36 @@
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
+<div class="container">
+    <h4 class="md-headline text-primary">{{institute.basic.name}} - Bulk Add Students</h4>
+    <form name="bulkAddStudentForm" >
+    
+    <h6 class="md-subhead text">Select Batch</h6>
+    <md-select  ng-model="thisbatch" placeholder="Select Batch to Add To">
+    <md-option ng-repeat="batch in batches | orderBy:'name'" ng-value="batch._id">
+    {{batch.name}}
+    </md-option>
+    </md-select>
+    <h6 class="md-subhead text">Paste Data Below</h6>
+    <h6 class="md-subhead text-danger" ng-show="showStatus">You are looking to add {{students.length-5}} students right now</h6>
+    
+<div layout="row">
+<hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange}"
+           row-headers="false"
+           min-spare-rows="5"
+           datarows="students"
+           >
+    <hot-column data="batchName" title="'Batch Name<br/>(eg. 1 A, 10 Sci.)'"></hot-column>
+    <hot-column data="enrollmentNo" title="'School Enrollment Id<br/>(eg. Scholar Id, Student Id)'"></hot-column>
+    <hot-column data="basic.name" title="'Student Name'"></hot-column>
+    <hot-column data="basic.gender" title="'Student Gender'"></hot-column>
+    <hot-column data="basic.dob" title="'Date of Birth'"></hot-column>
+    <hot-column data="parent.basic.name" title="'Parent Name'"></hot-column>
+    <hot-column data="contact.mobile" title="'Registered Mobile<br/>(eg. Parent Mobile)'"></hot-column>
+    <hot-column data="address" title="'Address'" width="150"></hot-column>
+</hot-table>
+
+
+</div>
+    <md-button class="md-raised md-primary" ng-click="addBulkStudents()" ng-disabled="bulkAddStudentForm.$invalid">Add Students</md-button>
+    
+    </form>
+</div>
