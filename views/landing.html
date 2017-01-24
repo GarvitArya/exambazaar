@@ -8,15 +8,14 @@
         margin-bottom: 20px;
     }
     #circle {
-        width: 100px;
-        height: 100px;
-        
+        width: 120px;
+        height: 120px;
         background: #fff;
         border: solid;
         border-color: #40a2e8;
-        -moz-border-radius: 50px;
-        -webkit-border-radius: 50px;
-        border-radius: 50px;
+        -moz-border-radius: 60px;
+        -webkit-border-radius: 60px;
+        border-radius: 60px;
         display: table-cell; 
         vertical-align: middle;
     }
@@ -36,11 +35,9 @@
             <md-divider></md-divider>
         </div>
         
-        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2" ng-repeat="category in categories" id="cell">
+        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2" ng-repeat="category in categories" id="cell">
             <div id="circle">
-                
                     {{category}}
-                
             </div>
             
         </div>
