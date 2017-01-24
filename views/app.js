@@ -57,9 +57,63 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
             });
           };
         
-        $scope.categories = ["School", "Engineering", "Medical", "MBA", "Law", "Foreign Education", "Civil Services", "SPSC",  "Defense", "Insurance", "CA", "Bank"];
-        //, "Fashion Technology, Design & Hotel Management"
-        //"Educational",
+        $scope.categories = [
+            {
+            name: "School",
+            sub: "NTSE, NSE, KVPY, IMO, NSO and more"
+            },
+            {
+            name: "Engineering",
+            sub: "JEE Main, JEE Advanced, BITSAT, NATA, GATE and more"
+            },
+            {
+            name: "Medical",
+            sub: "AIIMS, NEET UG, JIPMER, AFMC, PGIMER and more"
+            },
+            {
+            name: "MBA",
+            sub: "CAT, XAT, CMAT, SNAP and more"
+            },
+            {
+            name: "Law",
+            sub: "CLAT, AILET, LSAT, CBS and more"
+            },
+            {
+            name: "Foreign Education",
+            sub: "IELTS, GRE, GMAT, SAT, TOEFL and more"
+            },
+            {
+            name: "Civil Services",
+            sub: "IPS Ltd. Competitive Exam, UPSC CAPF Exam, IES/ISS Exam, IFS Exam, SCRA and more"
+            },
+            {
+            name: "SPSC",
+            sub: "SSC CPO (S.I) Exam, SSC CGLE, SSC JE, SSC CHSL Exam, SSC CMLE and more"
+            },
+            {
+            name: "Defense",
+            sub: "CDS Exam, NDA Exam, AFCAT, I.A.F. Exam, I.N.A Exam and more"
+            },
+            {
+            name: "Insurance",
+            sub: "IRDA Exam, G.I.C Exam, LIC, L.I.C D.O and more"
+            },
+            {
+            name: "CA",
+            sub: "CA CPT, CA IPCC, CA Final, CS Foundation Exam and more"
+            },
+            {
+            name: "Bank",
+            sub: "Bank Clerical Exam, Bank PO Exam, RBI Exam, SBI PO Exam, IBPS Clerk CWE and more"
+            },
+        ];
+        /*
+            
+            {
+            name: "Educational",
+            sub: "UGC NET, SET, CTET, B.Ed. Entrance, ARS NET and more"
+            },
+        */
     };
         
     exambazaar.service('InstituteService', ['$http', function($http) {

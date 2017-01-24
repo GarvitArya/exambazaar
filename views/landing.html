@@ -7,7 +7,7 @@
         margin-top: 20px;
         margin-bottom: 20px;
     }
-    #circle {
+    #mdCategory {
         width: 120px;
         height: 120px;
         background: #fff;
@@ -18,32 +18,59 @@
         border-radius: 60px;
         display: table-cell; 
         vertical-align: middle;
+        
+        -webkit-animation-delay: 1s; /* Safari 4.0 - 8.0 */
+        -webkit-animation-duration: 2s; /* Safari 4.0 - 8.0 */
+        animation-delay: 1s;
+        animation-duration: 2s;
     }
-    #circle:hover {
+    #mdCategory:hover {
         background: #40a2e8;
         color: #fff;
         font-weight: bold;
     }
-    
+    #smCategory {
+        background: #fff;
+        border: solid;
+        border-color: #40a2e8;
+        display: table-cell; 
+        vertical-align: middle;
+        text-align: center;
+        width: 100%;
+        
+        -webkit-animation-delay: 1s; /* Safari 4.0 - 8.0 */
+        -webkit-animation-duration: 2s; /* Safari 4.0 - 8.0 */
+        animation-delay: 1s;
+        animation-duration: 2s;
+    }
+    #smCategory:hover {
+        background: #40a2e8;
+        color: #fff;
+        font-weight: bold;
+    }
 </style>
 
 <div class="container">
-    <!--hide-xs hide-sm show-md show-lg-->
+    <!--hidden-xs hidden-sm show-md show-lg-->
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <h4 class="text">What are you looking to study?</h4>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce">
+            <h4 class="text">Start your test prep today, <span class="text-primary">what are you looking to study?</span></h4><br/>
             <md-divider></md-divider>
         </div>
         
-        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2" ng-repeat="category in categories" id="cell">
-            <div id="circle">
-                    {{category}}
+        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2" ng-repeat="category in categories" id="cell">
+            <div id="mdCategory" class="hidden-xs hidden-sm show-md show-lg animated fadeIn">
+                {{category.name}}
+                <md-tooltip>{{category.sub}}</md-tooltip>
             </div>
-            
+            <div id="smCategory" class="show-xs show-sm hidden-md hidden-lg animated fadeIn">
+                {{category.name}}
+                <md-tooltip>{{category.sub}}</md-tooltip>
+            </div>
         </div>
     </div>
     
     
     <md-divider></md-divider>
-    {{location}}
+    <!--{{location}}-->
 </div>
