@@ -56,55 +56,79 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
               $state.go('main');
             });
           };
-        
+        $scope.showSubCategories = 0;
+        $scope.category = '';
+        $scope.setCategory = function(category){
+            $scope.showSubCategories = 1;
+            $scope.category = category;
+            
+            
+        };
+        $scope.unsetCategory = function(){
+            $scope.showSubCategories = 0;
+            $scope.category = '';
+        };
         $scope.categories = [
             {
             name: "School",
-            sub: "NTSE, NSE, KVPY, IMO, NSO and more"
+            sub: "NTSE, NSE, KVPY, IMO, NSO and more",
+            subcategory:["NTSE", "NSE", "KVPY", "IMO", "NSO"]
             },
             {
             name: "Engineering",
-            sub: "JEE Main, JEE Advanced, BITSAT, NATA, GATE and more"
+            sub: "JEE Main, JEE Advanced, BITSAT, NATA, GATE and more",
+            subcategory:["JEE Main", "JEE Advanced", "BITSAT", "NATA", "GATE"]
             },
             {
             name: "Medical",
-            sub: "AIIMS, NEET UG, JIPMER, AFMC, PGIMER and more"
+            sub: "AIIMS, NEET UG, JIPMER, AFMC, PGIMER and more",
+            subcategory:["AIIMS", "NEET UG", "JIPMER", "AFMC", "PGIMER"]
+            
             },
             {
             name: "MBA",
-            sub: "CAT, XAT, CMAT, SNAP and more"
+            sub: "CAT, XAT, CMAT, SNAP and more",
+            subcategory:["CAT", "XAT", "CMAT", "SNAP"]
             },
             {
             name: "Law",
-            sub: "CLAT, AILET, LSAT, CBS and more"
+            sub: "CLAT, AILET, LSAT, CBS and more",
+            subcategory:["CLAT", "AILET", "LSAT", "CBS"]
             },
             {
             name: "Foreign Education",
-            sub: "IELTS, GRE, GMAT, SAT, TOEFL and more"
+            sub: "IELTS, GRE, GMAT, SAT, TOEFL and more",
+            subcategory:["IELTS", "GRE", "GMAT", "SAT", "TOEFL"]
             },
             {
             name: "Civil Services",
-            sub: "IPS Ltd. Competitive Exam, UPSC CAPF Exam, IES/ISS Exam, IFS Exam, SCRA and more"
+            sub: "IPS Ltd. Competitive Exam, UPSC CAPF Exam, IES/ISS Exam, IFS Exam, SCRA and more",
+            subcategory:["IPS Ltd. Competitive Exam", "UPSC CAPF Exam", "IES/ISS Exam", "IFS Exam", "SCRA"]
             },
             {
             name: "SPSC",
-            sub: "SSC CPO (S.I) Exam, SSC CGLE, SSC JE, SSC CHSL Exam, SSC CMLE and more"
+            sub: "SSC CPO (S.I) Exam, SSC CGLE, SSC JE, SSC CHSL Exam, SSC CMLE and more",
+            subcategory:["SSC CPO (S.I) Exam", "SSC CGLE", "SSC JE", "SSC CHSL Exam", "SSC CMLE"]
             },
             {
             name: "Defense",
-            sub: "CDS Exam, NDA Exam, AFCAT, I.A.F. Exam, I.N.A Exam and more"
+            sub: "CDS Exam, NDA Exam, AFCAT, I.A.F. Exam, I.N.A Exam and more",
+            subcategory:["CDS Exam", "NDA Exam", "AFCAT", "I.A.F. Exam", "I.N.A Exam"]
             },
             {
             name: "Insurance",
-            sub: "IRDA Exam, G.I.C Exam, LIC, L.I.C D.O and more"
+            sub: "IRDA Exam, G.I.C Exam, LIC, L.I.C D.O and more",
+            subcategory:["IRDA Exam", "G.I.C Exam", "LIC", "L.I.C D.O"]
             },
             {
             name: "CA",
-            sub: "CA CPT, CA IPCC, CA Final, CS Foundation Exam and more"
+            sub: "CA CPT, CA IPCC, CA Final, CS Foundation Exam and more",
+            subcategory:["CA CPT", "CA IPCC", "CA Final", "CS Foundation Exam"]
             },
             {
             name: "Bank",
-            sub: "Bank Clerical Exam, Bank PO Exam, RBI Exam, SBI PO Exam, IBPS Clerk CWE and more"
+            sub: "Bank Clerical Exam, Bank PO Exam, RBI Exam, SBI PO Exam, IBPS Clerk CWE and more",
+            subcategory:["Bank Clerical Exam", "Bank PO Exam", "RBI Exam", "SBI PO Exam", "IBPS Clerk CWE"]
             },
         ];
         /*
