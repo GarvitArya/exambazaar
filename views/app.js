@@ -61,10 +61,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
         $scope.setCategory = function(category){
             $scope.showSubCategories = 1;
             $scope.category = category;
-            
-            
         };
         $scope.unsetCategory = function(){
+            
             $scope.showSubCategories = 0;
             $scope.category = '';
         };
