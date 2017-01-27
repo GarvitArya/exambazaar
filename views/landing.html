@@ -4,8 +4,26 @@
         text-align: center;
     }
     #cell{
-        margin-top: 20px;
-        margin-bottom: 20px;
+        min-height: 30vh;
+    }
+    #category{
+        min-height: 80vh;
+        
+    }
+    #categoryHeader{
+        min-height: 20vh;
+        display: table-cell; 
+        vertical-align: middle;    
+    }
+    #categoryList{
+        min-height: 60vh;    
+        display: table-cell; 
+        vertical-align: middle;    
+    }
+    #subcategory{
+        min-height: 80vh;
+        display: table-cell; 
+        vertical-align: middle;
     }
     #mdCategory {
         width: 120px;
@@ -52,38 +70,40 @@
 
 <div class="container">
     <!--hidden-xs hidden-sm show-md show-lg-->
-    <div class="row" ng-hide="showSubCategories">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce">
+    <div class="row" ng-hide="showSubCategories" id="category">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce" id="categoryHeader">
             <h4 class="text">Start your test prep today, <span class="text-primary">what are you looking to study?</span></h4><br/>
             <md-divider></md-divider>
         </div>
-        
-        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2" ng-repeat="category in categories" id="cell" ng-click="setCategory(category)">
-            <div id="mdCategory" class="hidden-xs hidden-sm show-md show-lg animated fadeIn">
+        <div class="container" id="categoryList">
+        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2" ng-repeat="category in categories" id="cell" >
+            <div id="mdCategory" class="hidden-xs hidden-sm show-md show-lg animated fadeIn" ng-click="setCategory(category)">
                 <h6>{{category.name}}</h6>
                 <md-tooltip>{{category.sub}}</md-tooltip>
             </div>
-            <div id="smCategory" class="show-xs show-sm hidden-md hidden-lg animated fadeIn">
+            <div id="smCategory" class="show-xs show-sm hidden-md hidden-lg animated fadeIn" ng-click="setCategory(category)">
                 <h6>{{category.name}}</h6>
                 <md-tooltip>{{category.sub}}</md-tooltip>
                 <md-divider></md-divider>
             </div>
         </div>
+        </div>
     </div>
-    <div class="row" ng-hide="!showSubCategories">
+    <div class="row" ng-hide="!showSubCategories" id="subcategory">
         <div class="row">
 
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated pulse">
             <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
             <i class="fa fa-arrow-left fa-2x" aria-hidden="true" ng-click="unsetCategory()"></i>
             </div>
-            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" id="categoryHeader">
             <h4 class="text">What within <span class="text-primary">{{category.name}}</span>?</h4>
             </div>
             
         </div>
             <md-divider></md-divider>
         </div>
+        <div class="container" id="categoryList">
         <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2" ng-repeat="subcat in category.subcategory" id="cell">
             <div id="mdCategory" class="text-center hidden-xs hidden-sm show-md show-lg animated fadeIn">
                 <h6>{{subcat}}</h6>
@@ -94,6 +114,7 @@
                 <!--<md-tooltip>{{category.sub}}</md-tooltip>-->
                 <md-divider></md-divider>
             </div>
+        </div>
         </div>
     </div>
     
