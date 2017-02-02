@@ -46,6 +46,12 @@
             
         <li><a href="#/" ng-click="logout()">Logout</a></li>
         </ul>
+        <ul class="nav navbar-nav">
+        <li><a ui-sref="internship">
+            Internship
+            </a></li>
+        </ul>
+        
         <!-- Header for usertype Master User -->
         <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
         <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>

@@ -184,6 +184,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
         };
     }]);
     
+    exambazaar.service('MasterService', ['$http', function($http) {
+        
+        this.addIntern = function(intern) {
+            return $http.post('/api/masters/addIntern/',intern);
+        };
+        
+    }]);    
+        
     exambazaar.service('StudentService', ['$http', function($http) {
         this.saveStudent = function(student) {
             return $http.post('/api/students/save', student);
@@ -484,6 +492,61 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
             };
     }]);
     
+    exambazaar.controller("internshipController", 
+        [ '$scope', 'FileUploader','MasterService',function($scope,FileUploader,MasterService){
+            $scope.submitted = 0;
+            var uploader = $scope.uploader = new FileUploader({
+            url: 'https://file.io',
+            /*alias: 'image',
+            headers: {
+                Authorization: 'Client-ID a1dc6fb18b097c6',
+            },*/
+            autoUpload: true
+            });
+            uploader.onSuccessItem = function(fileItem, response, status, headers) {
+                //console.info('onSuccessItem', fileItem, response, status, headers);
+                var link = response.link;
+                //alert(JSON.stringify(response.link));
+                console.info('Resume added');
+                if(link){
+                    $scope.applicant.resume = link;
+                }
+            };
+            
+            $scope.submit = function(){
+                if($scope.applicant.resume){
+                    console.info("Ready to add to database");
+                    MasterService.addIntern($scope.applicant).success(function (data, status, headers) {
+                        console.info("Done");
+                        //alert("Thank you, your application has been submitted");
+                        $scope.submitted = 1;
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error!!!");
+                        alert("Something went wrong. Instead email you candidacy to gaurav@educhronicle.com");
+                    });
+                }else{
+                    alert('Add Resume or wait for it to upload before submitting');
+                }
+            };
+            
+            $scope.responsibilities = [
+                'Assist in building partnership with education providers and pitching our product over phone',
+                'Organizing and attending meetings with external parties to discuss strategic collaboration',
+                'Perform analysis of marketing and sales data and effectiveness of business develop efforts',
+                'Assist in the distribution and delivery of marketing material',
+                'Prepare presentations (pitch and marketing material)',
+                'Generate leads for the business to grow',
+                'If required, visit education providers on field and present company marketing material',
+                'Maintain tracking report of public relations activity'
+            ];
+            $scope.requirements = [
+                'Excellent verbal and written communication skills, with extensive knowledge of social media',
+                'Proficient in Microsoft PowerPoint, Word and Excel',
+                'Good organizational and execution skills, focus on detail',
+                'Strong team player who can work independently'
+            ];
+    }]);
 
     exambazaar.controller("masterController", 
     [ '$scope', 'thismaster', function($scope, thismaster){
