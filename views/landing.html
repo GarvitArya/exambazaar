@@ -48,14 +48,7 @@
         font-weight: bold;
     }
     #smCategory {
-        background: #fff;
-        border: solid;
-        border-color: #40a2e8;
-        display: table-cell; 
-        vertical-align: middle;
-        text-align: center;
-        width: 100%;
-        
+    
         -webkit-animation-delay: 1s; /* Safari 4.0 - 8.0 */
         -webkit-animation-duration: 2s; /* Safari 4.0 - 8.0 */
         animation-delay: 1s;
@@ -77,15 +70,27 @@
         </div>
         <div class="container" id="categoryList">
         <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2" ng-repeat="category in categories" id="cell" >
+            
+            
             <div id="mdCategory" class="hidden-xs hidden-sm show-md show-lg animated fadeIn" ng-click="setCategory(category)">
                 <h6>{{category.name}}</h6>
                 <md-tooltip>{{category.sub}}</md-tooltip>
             </div>
-            <div id="smCategory" class="show-xs show-sm hidden-md hidden-lg animated fadeIn" ng-click="setCategory(category)">
+            
+            <div  id="smCategory" class="panel panel-default show-xs show-sm hidden-md hidden-lg animated fadeIn" ng-click="setCategory(category)">
+            <div class="panel-body">
+                <div class="row">
+                    <h6>{{category.name}}</h6>
+                    <md-tooltip>{{category.sub}}</md-tooltip>
+                </div>
+            </div>
+            </div>
+            
+            <!--<div id="smCategory" class="show-xs show-sm hidden-md hidden-lg animated fadeIn" ng-click="setCategory(category)">
                 <h6>{{category.name}}</h6>
                 <md-tooltip>{{category.sub}}</md-tooltip>
                 <md-divider></md-divider>
-            </div>
+            </div>-->
         </div>
         </div>
     </div>

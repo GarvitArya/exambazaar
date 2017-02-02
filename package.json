@@ -36,6 +36,7 @@
     "forever-monitor": "^1.7.1",
     "google-auth-library": "^0.9.10",
     "googleapis": "^14.2.0",
+    "hover.css": "^2.0.2",
     "imgur": "^0.2.0",
     "mathjs": "^3.8.1",
     "md-data-table": "^2.1.0",

@@ -48,53 +48,59 @@ app.use(passport.session());
 app.use(flash());
 
 var routes = require('./app/routes.js')(app, passport); 
-var institutes = require('./app/institutes.js',institutes); 
+//var institutes = require('./app/institutes.js',institutes); 
 var providers = require('./app/providers.js',providers); 
 var targetStudyProviders = require('./app/targetStudyProviders.js',targetStudyProviders); 
-var teachers = require('./app/teachers.js',teachers); 
-var admins = require('./app/admins.js',admins); 
 var masters = require('./app/masters.js',masters); 
-var batches = require('./app/batches.js',batches); 
-var students = require('./app/students.js',students); 
-var parents = require('./app/parents.js',parents); 
-var subjects = require('./app/subjects.js',subjects); 
-var exams = require('./app/exams.js',exams); 
-var evals = require('./app/evals.js',evals); 
+//var admins = require('./app/admins.js',admins); 
+//var students = require('./app/students.js',students); 
+
 var users = require('./app/users.js',users); 
-var calendars = require('./app/users.js',calendars); 
-var days = require('./app/users.js',days); 
-var notifications = require('./app/notifications.js',days); 
-var transportVehicles = require('./app/transportVehicles.js',transportVehicles); 
+
+var notifications = require('./app/notifications.js',notifications); 
+
 var emails = require('./app/emails.js',emails); 
 var smss = require('./app/smss.js',smss); 
-var profilePics = require('./app/profilePics.js',profilePics); 
-var otps = require('./app/otps.js',otps); 
-var globalSubjects = require('./app/globalSubjects.js',globalSubjects); 
-var globalFeeItems = require('./app/globalFeeItems.js',globalFeeItems); 
 
-app.use('/api/institutes', institutes);
+var otps = require('./app/otps.js',otps); 
+
+//var teachers = require('./app/teachers.js',teachers); 
+//var batches = require('./app/batches.js',batches); 
+//var parents = require('./app/parents.js',parents); 
+//var subjects = require('./app/subjects.js',subjects); 
+//var exams = require('./app/exams.js',exams); 
+//var evals = require('./app/evals.js',evals); 
+//var calendars = require('./app/users.js',calendars); 
+//var days = require('./app/users.js',days); 
+//var transportVehicles = require('./app/transportVehicles.js',transportVehicles); 
+//var profilePics = require('./app/profilePics.js',profilePics); 
+//var globalSubjects = require('./app/globalSubjects.js',globalSubjects); 
+//var globalFeeItems = require('./app/globalFeeItems.js',globalFeeItems); 
+
 app.use('/api/providers', providers);
 app.use('/api/targetStudyProviders', targetStudyProviders);
-app.use('/api/teachers', teachers);
-app.use('/api/admins', admins);
+//app.use('/api/admins', admins);
 app.use('/api/masters', masters);
-app.use('/api/batches', batches);
-app.use('/api/students', students);
-app.use('/api/parents', parents);
-app.use('/api/subjects', subjects);
-app.use('/api/exams', exams);
-app.use('/api/evals', evals);
+//app.use('/api/students', students);
 app.use('/api/users', users);
-app.use('/api/calendars', calendars);
-app.use('/api/days', days);
 app.use('/api/notifications', notifications);
-app.use('/api/transportVehicles', transportVehicles);
 app.use('/api/emails', emails);
 app.use('/api/smss', smss);
-app.use('/api/profilePics', profilePics);
 app.use('/api/otps', otps);
-app.use('/api/globalSubjects', globalSubjects);
-app.use('/api/globalFeeItems', globalFeeItems);
+
+//app.use('/api/institutes', institutes);
+//app.use('/api/teachers', teachers);
+//app.use('/api/batches', batches);
+//app.use('/api/parents', parents);
+//app.use('/api/subjects', subjects);
+//app.use('/api/exams', exams);
+//app.use('/api/evals', evals);
+//app.use('/api/calendars', calendars);
+//app.use('/api/days', days);
+//app.use('/api/transportVehicles', transportVehicles);
+//app.use('/api/profilePics', profilePics);
+//app.use('/api/globalSubjects', globalSubjects);
+//app.use('/api/globalFeeItems', globalFeeItems);
 
 app.use(function(req, res, next) {
     var err = new Error('Not Found');

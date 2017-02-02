@@ -1,5 +1,6 @@
 // load the things we need
 var mongoose = require('mongoose');
+var Moment = require('moment');
 var bcrypt   = require('bcrypt-nodejs');
 var Schema = mongoose.Schema;
 var passportLocalMongoose = require('passport-local-mongoose');
@@ -7,19 +8,26 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
-    userType : String,
-    firstName : String,
-    mobile : { type: String},
-    verified : { type: String, default: "False"},
+    userType : String, //student or master
     password : String,
-    _student: [{ type: Schema.ObjectId, ref: 'student' }],
-    _teacher: [{ type: Schema.ObjectId, ref: 'teacher' }],
-    _admin: [{ type: Schema.ObjectId, ref: 'admin' }],
-    _master: { type: Schema.ObjectId, ref: 'master' },
-    _institute: { type: Schema.ObjectId, ref: 'institute' },
-    logins:[{type: Date, default: Date.now}],
+    basic: {
+        name: {type: String},
+        gender: {type: String},
+        dob: { type: Date}
+    },
+    location: [{
+        lat:{type: String},
+        long:{type: String}
+    }],
+    interest:{
+       category: [{type: String}],
+       exam: [{type: String}],
+    },
+    mobile : { type: String,required: true,unique:true },
+    email : { type: String},
+    verified : { type: String, default: "False"},
     _created: { type: Date, default: Date.now },
-    _merged: { type: Boolean, default: false}
+    logins:[{type: Date}] //,required: true
 });
 userSchema.plugin(passportLocalMongoose);
 

@@ -82,14 +82,13 @@
     
     
 </style>
-<link rel="stylesheet" media="screen" href="handsontable.full.css">
 <div class="container">
     <div class="row top-buffer">
         <span ng-repeat="city in cities">
             <a ui-sref="providers({ city:{{'city'}} })">{{city}} | </a>
         </span>
     </div>
-    <div class="row top-buffer">
+    <!--<div class="row top-buffer">
         <md-button class="md-raised md-primary" ng-click="geturl()">Coaching Adda URLs</md-button>
         <md-button class="md-raised md-primary" ng-click="geturl2()">Target Study URLs</md-button>
         <md-button class="md-raised md-primary" ng-click="getclusterUrls()">Target Study Cluster URLs</md-button>
@@ -98,16 +97,8 @@
         <md-button class="md-raised md-primary" ng-click="removeDuplicates()">Remove Duplicates</md-button>
         <md-button class="md-raised md-primary" ng-click="getAllExams()">Get Exams</md-button>
         {{count}} {{currUrl}}
-    </div>
-    <div class="row top-buffer">
-        <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange}"
-           row-headers="false"
-           min-spare-rows="1"
-           datarows="urls"
-           >
-            <hot-column data="url" title="'Urls'" size="100"></hot-column>
-        </hot-table>
-    </div>
+    </div>-->
+    
     
     <div class = "row top-buffer">
         <div layout="row">

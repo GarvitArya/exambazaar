@@ -12,6 +12,7 @@ mongoose.Promise = require('bluebird');
 
 //to get all providers
 router.get('/:city', function(req, res) {
+    console.log('-----------------------------');
     var city = req.params.city;
     console.log("City is: "+city);
     provider.find({"address" : {$regex : ".*" + city + ".*"}}, {name:1 , address:1, coursesOffered:1, phone:1, website:1, students:1},function(err, docs) {

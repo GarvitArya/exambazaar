@@ -3,16 +3,9 @@ var mongoose = require('mongoose');
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var Schema = mongoose.Schema;
-var addressSchema = mongoose.Schema({
-    street: {type: String,required: true},
-    city: {type: String,required: true},
-    pincode: {type: String,required: true},
-    tel: {type: String,required: false}
-});
 
 var masterSchema = mongoose.Schema({
     basic: {
-        saluation: {type: String},
         firstName: {type: String,required: true},
         lastName: {type: String,required: true},
         middleName: {type: String},
@@ -27,7 +20,6 @@ var masterSchema = mongoose.Schema({
         imageUrl: {type: String},
         lastLogin: { type: Date, default: Date.now }
     },
-    address : addressSchema,
     logins:[{type: 'Moment',required: true}],
     _created: { type: Date, default: Date.now }
     //to add education

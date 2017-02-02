@@ -46,27 +46,13 @@
             
         <li><a href="#/" ng-click="logout()">Logout</a></li>
         </ul>
-        
         <!-- Header for usertype Master User -->
         <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
-        <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.masterId'}} })">Home</a></li>
-        <li><a ui-sref="master-institutes({ masterId:{{'sessionuser.masterId'}} })">Institutes</a></li>
-        <li><a ui-sref="master-addInstitute({ masterId:{{'sessionuser.masterId'}} })">Add Institute</a></li>
-        
+        <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a ui-sref="master-addGlobalSubject({ masterId:{{'sessionuser.masterId'}} })">Add Global Subject</a></li>
-            <li><a ui-sref="master-addGlobalFeeItem({ masterId:{{'sessionuser.masterId'}} })">Add Global Fee Item</a></li>
-            <li><a ui-sref="invalidusers({ masterId:{{'sessionuser.masterId'}} })">Delete Invalid Users</a></li>
-            <li><a ui-sref="mergeUsers({ masterId:{{'sessionuser.masterId'}} })">Merge Users</a></li>
-            <li><a ui-sref="master-manageBatchStudents({ masterId:{{'sessionuser.masterId'}} })">Manage Batch Students</a></li>
-            <li><a ui-sref="master-manageInstituteStudents({ masterId:{{'sessionuser.masterId'}} })">Manage Institute Students</a></li>
-            <li><a ui-sref="invalidParents({ masterId:{{'sessionuser.masterId'}} })">Manage Invalid Parents</a></li>
-            <li><a ui-sref="invalidTeachers({ masterId:{{'sessionuser.masterId'}} })">Manage Invalid Teachers</a></li>
-            <li><a ui-sref="addMaster">Add Master User</a></li>  
-              
-              
+            <li><a ui-sref="addMaster">Add Master User</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -76,20 +62,14 @@
             <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Target Study</a></li>
           </ul>
         </li>
-        <li><a ui-sref="master-analytics({ masterId:{{'sessionuser.masterId'}} })">Analytics</a></li>
-            <!-- masterId:{{'sessionuser.masterId'}}, -->
+        
         </ul>
         
-        <!-- Header for usertype Admin -->
-        <ul class="nav navbar-nav" ng-show="sessionuser.userType=='Admin'">
-        <li><a ui-sref="admin({ adminId:{{'sessionuser.adminId'}} })">Home</a></li>
-        </ul>
         
         <ul class="nav navbar-nav navbar-right" ng-if="sessionuser.basic">
             
         <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{sessionuser.basic.firstName}}
-            {{sessionuser.basic.lastName | limitTo: 1}}
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{sessionuser.basic.name}}
               <span class="badge">
                 {{notification.unread.length}}
               </span>
@@ -127,23 +107,6 @@
         </ul>
         
         
-        <!-- Header for usertype Student -->
-        <ul class="nav navbar-nav" ng-show="sessionuser.userType=='Student'">
-            <li><a ui-sref="student({ studentId:{{'sessionuser.studentId'}} })">Home</a></li>
-            <li><a ui-sref="student-attendance({ studentId:{{'sessionuser.studentId'}} })">Attendance</a></li>
-            <li><a ui-sref="student-subjects({ studentId:{{'sessionuser.studentId'}} })">Subjects</a></li>
-            <li><a ui-sref="student-class({ studentId:{{'sessionuser.studentId'}} })">Class</a></li>
-            <!--<li><a href="#/">Result</a></li>
-            <li><a href="#/">Co-curricular</a></li>-->
-            <li><a ui-sref="student-profile({ studentId:{{'sessionuser.studentId'}} })">Profile</a></li>
-        </ul>
-        
-        
-        <!-- Header for usertype Teacher -->
-        <ul class="nav navbar-nav" ng-show="sessionuser.userType=='Teacher'">
-            <li><a ui-sref="teacher-batches({ teacherId:{{'sessionuser.teacherId'}} })">Classes</a></li>
-        </ul>
-        {{position}}
         
     </div><!--/.nav-collapse -->
 </div><!--/.container-fluid -->

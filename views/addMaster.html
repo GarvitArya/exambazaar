@@ -1,34 +1,19 @@
 <div class="container">
-    <h4>Add EduChronice.com SuperUsers</h4>
+    <h4>Add Exam Bazaar SuperUsers</h4>
     
     <div class="row">
 
     <div class="col-md-12" id="addMasterForm">
     <md-content flex layout-padding>
         <small>
-        <md-subheader class="md-primary">Super User Information {{master._id}}</md-subheader>
+        <md-subheader class="md-primary">Super User Information</md-subheader>
         <form name="masterForm" >
         <div layout="column" >
             <div layout="row">
-                <md-input-container class="md-block" flex-gt-sm>  
-                    <md-select ng-model="master.basic.salutation" placeholder="Title">
-                        <md-option ng-repeat="salutation in salutations" ng-value="salutation" >{{salutation}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>
+                
                 <md-input-container class="md-block" flex-gt-sm>
-                    <label>First Name</label>
-                    <input required ng-model="master.basic.firstName">
-                     <div ng-messages="masterForm.institute.name.$error">
-                        <div ng-message="required">This is required.</div>
-                    </div>
-                </md-input-container>
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>Last Name</label>
-                    <input required ng-model="master.basic.lastName">
-                     <div ng-messages="masterForm.institute.name.$error">
-                        <div ng-message="required">This is required.</div>
-                    </div>
+                    <label>Name</label>
+                    <input required ng-model="master.basic.name">
                 </md-input-container>
                 <md-input-container class="md-block" flex-gt-sm>  
                     <md-select required ng-model="master.basic.gender" placeholder="Gender">
@@ -37,9 +22,6 @@
                     </md-select>
                 </md-input-container>
             </div>   
-            <div layout="row">
-                <md-datepicker required ng-model="master.basic.dob" md-placeholder="Date of Birth"></md-datepicker>
-            </div>
             <div layout="row">
                 <md-input-container class="md-block" flex-gt-sm>
                     <label>Mobile <small>{{master.contact.mobile.length}}/10</small></label>
@@ -52,33 +34,12 @@
             </div>
             <div layout="row">
                 <md-input-container class="md-block" flex-gt-sm>
-                <label for="profilepic">Add Photo</label><br>
-                <button onclick="document.getElementById('fileUpload').click()">Upload Image</button>
-                <input id="fileUpload" style="visibility: collapse; width: 0px;" type="file" onchange="uploadMasterProfilePic(this.files[0])">
-                <img id="imgsrc" height="100" >
-            </md-input-container>
+                    <label>Password</label>
+                    <input required ng-model="master.password">
+                </md-input-container>
             </div>
             
-            <div layout="row">
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>Address - Street</label>
-                    <input required ng-model="master.address.street">
-                </md-input-container>
-            </div>
-            <div layout="row">
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>City</label>
-                    <input required ng-model="master.address.city">
-                </md-input-container>
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>Pin Code</label>
-                    <input required ng-model="master.address.pincode">
-                </md-input-container>
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>Landline</label>
-                    <input ng-model="master.address.tel">
-                </md-input-container>
-            </div>
+            
             <md-button class="md-raised md-primary" ng-click="addMaster()" ng-disabled="masterForm.$invalid">Add Master</md-button>
 
     </div>

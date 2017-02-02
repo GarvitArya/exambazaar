@@ -42,14 +42,14 @@ router.post('/generate', function(req, res) {
         if (err) return console.error(err);
         console.log("OTP " + this_OTP.otp + " created for user " + this_OTP._user);
         //now send sms
-        var message = this_OTP.otp + " is the OTP for your user verification. It expires in 30 mins.\nEduChronicle.com";
+        var message = this_OTP.otp + " is the OTP for your user verification. It expires in 30 mins.\nExamBazaar.com";
         
         //console.log(message.length + " " + message);
         var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
         url += this_OTP.mobile;
         url += "&message=";
         url += message;
-        url += "&sender=EDUCNC&type=3";
+        url += "&sender=EXMBZR&type=3";
         res.json(this_OTP);
         //console.log(url);
         request({
