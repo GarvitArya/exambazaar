@@ -20,13 +20,12 @@
             <h4 class="text">What within <span class="text-primary">{{category.displayname}}?</span>
             </h4>
         </div>
-        
         <div ng-repeat="subcategory in category.subcategory">
-            <div  class="panel panel-default col-xs-6 col-sm-6 col-md-3 col-lg-3 " id="subcategory">
-                <div class="panel-body">
+            <div  class="panel panel-default col-xs-12 col-sm-12 col-md-3 col-lg-3" id="subcategory">
+                <div class="panel-body" ng-click="goToCity(subcategory)">
                     <div class="hvr-underline-from-left">
                         <strong>
-                            <h6 class="text-primary text-center">{{subcategory}}</h6>
+                            <h6 class="text-primary text-center">{{subcategory.displayname}}</h6>
                         </strong>
                     </div>
                     

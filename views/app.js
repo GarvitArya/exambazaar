@@ -1,4 +1,4 @@
-var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessages','ngTable','ngAria','material.svgAssetsCache','angular-loading-bar', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','ngHandsontable','geolocation','ngGeolocation']);
+var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation']);
 //,'ngHandsontable''ngHandsontable',
     (function() {
     'use strict';
@@ -39,81 +39,138 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
             },
         */
     };
-    
-        exambazaar.constant('categories',[
+    exambazaar.constant('cities',['Jaipur','Hyderabad','Noida','Ajmer','Alwar','Kota','Bikaner','Ganganagar','Sikar','Bhilwara','Juhnjhunu','New Delhi','Delhi','Lucknow','Indore','Bhopal','Roorkee','Thrissur','Mohali','Patiala','Ahmedabad','Vadodara','Surat','Rajkot','Ghaziabad','Agra','Dehradun','Meerut','Allahabad','Amritsar','Bangalore','Guwahati','Kolkata','Gwalior','Pune','Trivandrum','Mumbai','Rohtak','Nasik','Kurukshetra','Shimla','Kanpur','Ludhiana','Coimbatore','Ambala','Mathura','Patna','Mysore','Chandigarh','Chennai','Vishakhapatnam','Vellore']);
+    exambazaar.constant('categories',[
             {
             displayname: "School",
             name: "school",
             sub: "NTSE, NSE, KVPY, IMO, NSO and more",
-            subcategory:["NTSE", "NSE", "KVPY", "IMO", "NSO"]
+            subcategory:[
+                {name:"ntse", displayname:"NTSE"}
+                ] // "NSE", "KVPY", "IMO", "NSO"
             },
             {
             displayname: "Engineering",
             name: "engineering",
             sub: "JEE Main, JEE Advanced, BITSAT, NATA, GATE and more",
-            subcategory:["JEE Main", "JEE Advanced", "BITSAT", "NATA", "GATE"]
+            subcategory:[
+                {name:"jee", displayname:"JEE Main & Advanced"},
+                {name:"bitsat", displayname:"BITSAT"},
+                {name:"nata", displayname:"NATA"},
+                {name:"gate", displayname:"GATE"}
+                ]
             },
             {
             displayname: "Medical",
             name: "medical",
             sub: "AIIMS, NEET UG, JIPMER, AFMC, PGIMER and more",
-            subcategory:["AIIMS", "NEET UG", "JIPMER", "AFMC", "PGIMER"]
+            subcategory:[
+                {name:"aipmt", displayname:"NEET UG"},
+                {name:"aiims", displayname:"AIIMS"},
+                {name:"afmc", displayname:"AFMC"}
+                //"NEET UG","AIIMS","AFMC","Manipal PMT","GPAT"
+                ] //"JIPMER","PGIMER"
             
+            },
+            {
+            displayname: "CA & CS",
+            name: "cacs",
+            sub: "CA CPT, CA IPCC, CA Final, CS Foundation Exam and more",
+            subcategory:[
+                {name:"ca cpt", displayname:"CA CPT"},
+                {name:"cs foundation exam", displayname:"CS Foundation Exam"}
+                ]//"CA IPCC","CA Final",
             },
             {
             displayname: "MBA",
             name: "mba",
             sub: "CAT, XAT, CMAT, SNAP and more",
-            subcategory:["CAT", "XAT", "CMAT", "SNAP"]
+            subcategory:[
+                {name:"cat", displayname:"CAT"},
+                /*{name:"cmat", displayname:"CMAT"},*/
+                {name:"xat", displayname:"XAT"},
+                {name:"snap", displayname:"SNAP"}
+                ]//"CAT", "XAT", "CMAT", "SNAP"
             },
             {
             displayname: "Law",
             name: "law",
             sub: "CLAT, AILET, LSAT, CBS and more",
-            subcategory:["CLAT", "AILET", "LSAT", "CBS"]
+            subcategory:[
+                {name:"clat", displayname:"CLAT"},
+                {name:"ailet", displayname:"AILET"},
+                {name:"lsat", displayname:"LSAT"}
+                ]//"CBS"
             },
             {
             displayname: "Foreign Education",
             name: "foreigneducation",
             sub: "IELTS, GRE, GMAT, SAT, TOEFL and more",
-            subcategory:["IELTS", "GRE", "GMAT", "SAT", "TOEFL"]
+            subcategory:[
+                {name:"sat", displayname:"SAT"},
+                {name:"gmat", displayname:"GMAT"},
+                {name:"gre", displayname:"GRE"},
+                {name:"ielts", displayname:"IELTS"},
+                {name:"toefl", displayname:"TOEFL"}
+                ]
             },
             {
             displayname: "Civil Services",
             name: "civilservices",
-            sub: "IPS Ltd. Competitive Exam, UPSC CAPF Exam, IES/ISS Exam, IFS Exam, SCRA and more",
-            subcategory:["IPS Ltd. Competitive Exam", "UPSC CAPF Exam", "IES/ISS Exam", "IFS Exam", "SCRA"]
+            sub: "CSE, IPS Ltd. Competitive Exam, UPSC CAPF Exam, IES/ISS Exam, IFS Exam, SCRA and more",
+            subcategory:[
+                {name:"Civil Services Exam", displayname:"Civil Services Exam"},
+                {name:"ies/iss exam", displayname:"IES/ISS Exam"},
+                {name:"ifs exam", displayname:"IFS Exam"}
+                ]
             },
             {
             displayname: "SSC",
             name: "ssc",
             sub: "SSC CPO (S.I) Exam, SSC CGLE, SSC JE, SSC CHSL Exam, SSC CMLE and more",
-            subcategory:["SSC CPO (S.I) Exam", "SSC CGLE", "SSC JE", "SSC CHSL Exam", "SSC CMLE"]
-            },
-            {
-            displayname: "Defense",
-            name: "defense",
-            sub: "CDS Exam, NDA Exam, AFCAT, I.A.F. Exam, I.N.A Exam and more",
-            subcategory:["CDS Exam", "NDA Exam", "AFCAT", "I.A.F. Exam", "I.N.A Exam"]
-            },
-            {
-            displayname: "Insurance",
-            name: "insurance",
-            sub: "IRDA Exam, G.I.C Exam, LIC, L.I.C D.O and more",
-            subcategory:["IRDA Exam", "G.I.C Exam", "LIC", "L.I.C D.O"]
-            },
-            {
-            displayname: "CA",
-            name: "ca",
-            sub: "CA CPT, CA IPCC, CA Final, CS Foundation Exam and more",
-            subcategory:["CA CPT", "CA IPCC", "CA Final", "CS Foundation Exam"]
+            subcategory:[
+                {name:"ssc cpo", displayname:"SSC CPO (S.I) Exam"},
+                {name:"ssc cgle", displayname:"SSC CGLE"},
+                {name:"ssc je", displayname:"SSC JE"},
+                {name:"ssc chsl", displayname:"SSC CHSL Exam"},
+                {name:"ssc cmle", displayname:"SSC CMLE"}
+                ]
             },
             {
             displayname: "Bank",
             name: "bank",
             sub: "Bank Clerical Exam, Bank PO Exam, RBI Exam, SBI PO Exam, IBPS Clerk CWE and more",
-            subcategory:["Bank Clerical Exam", "Bank PO Exam", "RBI Exam", "SBI PO Exam", "IBPS Clerk CWE"]
+            subcategory:[
+                {name:"Bank Clerical Exam", displayname:"Bank Clerical Exam"},
+                {name:"Bank PO Exam", displayname:"Bank PO Exam"},
+                {name:"RBI Exam", displayname:"RBI Exam"},
+                {name:"SBI PO Exam", displayname:"SBI PO Exam"},
+                {name:"IBPS Clerk CWE", displayname:"IBPS Clerk CWE"}
+                ]
             },
+            {
+            displayname: "Defense",
+            name: "defense",
+            sub: "CDS Exam, NDA Exam, AFCAT, I.A.F. Exam, I.N.A Exam and more",
+            subcategory:[
+                {name:"cds exam", displayname:"CDS Exam"},
+                {name:"nda exam", displayname:"NDA Exam"},
+                {name:"afcat", displayname:"AFCAT"},
+                {name:"i.a.f. exam", displayname:"I.A.F. Exam"},
+                {name:"i.n.a exam", displayname:"I.N.A Exam"}
+                ]
+            },
+            {
+            displayname: "Insurance",
+            name: "insurance",
+            sub: "IRDA Exam, G.I.C Exam, LIC, L.I.C D.O and more",
+            subcategory:[
+                {name:"IRDA Exam", displayname:"IRDA Exam"},
+                {name:"G.I.C Exam", displayname:"G.I.C Exam"},
+                {name:"LIC", displayname:"LIC"},
+                {name:"L.I.C D.O", displayname:"L.I.C D.O"}
+                ]
+            }
         ]
        );
         
@@ -235,7 +292,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
         };
     }]); 
     exambazaar.controller("categoryController", 
-        [ '$scope','$stateParams','$cookies','categories', function($scope,$stateParams,$cookies,categories){
+        [ '$scope','$stateParams','$cookies','$state','categories', function($scope,$stateParams,$cookies,$state,categories){
         
         //console.info(JSON.stringify(categories));
         $scope.categoryName = $stateParams.categoryName;
@@ -253,8 +310,43 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
             });
         }
             
+        $scope.goToCity = function(subcategory){ 
+            $cookies.putObject('subcategory', subcategory);
+            $state.go('city');
+        };
+            
     }]); 
         
+    exambazaar.controller("cityController", 
+        [ '$scope','$stateParams','$cookies','$state','cities', function($scope,$stateParams,$cookies,$state,cities){
+        
+        $scope.cities = cities;
+        $scope.category = {};
+        $scope.subcategory = [];
+            
+        if($cookies.getObject('category')){
+            $scope.category = $cookies.getObject('category');
+            
+            if($cookies.getObject('subcategory')){
+                $scope.subcategory = $cookies.getObject('subcategory');
+                //console.info($scope.subcategory);
+            }else{
+                //alert(JSON.stringify($scope.category));
+                $state.go('category', {categoryName: $scope.category.name});
+            }
+            
+        }else{
+            $state.go('main');
+        }
+            
+        
+        $scope.showCoaching = function(city){ 
+            $cookies.putObject('city', city);
+            $state.go('findCoaching', {cityName: city});
+        };
+            
+    }]);    
+    
     exambazaar.controller("masterDashboardController", 
         [ '$scope','usersCount','verifiedUsersCount', function($scope, usersCount,verifiedUsersCount){
             
@@ -570,6 +662,31 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
         });
     }]);
     
+    exambazaar.controller("getCityController", 
+    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies', function($scope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies){
+        if($cookies.getObject('location')){
+            $scope.location = $cookies.getObject('location');
+        }
+        $scope.filterText = '';
+        if($cookies.getObject('subcategory')){
+            $scope.subcategory = $cookies.getObject('subcategory');
+            $scope.searchText = $scope.subcategory.name;
+            $scope.filterText = $scope.subcategory.name;
+        }
+        $scope.providersList = targetStudyProvidersList.data;
+        $scope.cities = cities;
+        $scope.city = $stateParams.cityName;
+        
+        
+        $scope.setFilter = function(text){
+            $scope.searchText = text;
+        };
+        $scope.clearFilter = function(text){
+            $scope.searchText = '';
+        };
+        
+        
+    }]); 
     exambazaar.controller("getTargetStudyCoachingController", 
     [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities','$timeout','$state','$stateParams', '$cookies', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies){
         if($cookies.getObject('location')){
@@ -802,7 +919,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
             var saveMaster = UserService.saveUser($scope.master).success(function (data, status, headers) {
                 var masterId = data;
             $scope.formmessage = "Master " + $scope.master.basic.firstName + " " + $scope.master.basic.lastName + " saved!";
-            $state.go('master', {masterId: masterId});
+            $state.go('master-dashboard', {masterId: masterId});
+                
             })
             .error(function (data, status, header, config) {
                 console.info('Error ' + data + ' ' + status);
@@ -912,6 +1030,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
                 'body':{
                     templateUrl: 'category.html',
                     controller: 'categoryController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
+        .state('city', {
+            url: '/city',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'city.html',
+                    controller: 'cityController'
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -1220,7 +1354,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
             }
         })
         .state('providers', {
-            url: '/coaching/:city', //masterId?
+            url: '/coaching/cAdda/:city', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -1263,6 +1397,31 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngMessa
                 'footer': {
                     templateUrl: 'footer.html'
                 }
+            }
+        })
+    
+        .state('findCoaching', {
+            url: '/findCoaching/:cityName', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'coaching.html',
+                    controller: 'getCityController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {  
+                    return targetStudyProviderService.getProviders($stateParams.cityName);
+                }],
+                provider: function() { return {}; }
+                
             }
         })
         .state('targetStudyProviders', {

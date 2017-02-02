@@ -1,0 +1,67 @@
+<style>
+    .top-buffer{
+        margin-top: 25px;
+        margin-bottom: 25px;
+    }
+    #landingPage{
+        min-height: 80vh;
+    }
+</style>
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
+<div class="container">
+    <div class="column" id="landingPage">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce text-center top-buffer" id="pageHeader">
+        <h4 class="text"><span class="text-primary">{{filtered.length}}</span> {{subcategory.displayname}} prep institutes in <span class="text-primary"> {{city}}</span>
+        </h4>
+    </div>
+    
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered">
+        <div  class="panel panel-default" id="subcategory">
+            <div class="panel-heading">
+                <strong><h6 class="text-primary">{{provider.name}}</h6></strong>
+            </div>
+            <md-divider></md-divider>
+            <div class="panel-body">
+                <div class="container">
+                    <div class="row">
+                        Address: {{provider.address | limitTo: 70}}
+                    </div>
+                    <!--<div class="row">
+                        Courses: 
+                        <span ng-repeat="course in provider.coursesOffered">
+                            {{course}}
+                        <span ng-if="!$last"> | </span>
+                        </span>
+                    </div>-->
+                    <div class="row" ng-if="provider.phone.length > 0">
+                        Phones: 
+                        <span ng-repeat="phone in provider.phone track by $index">
+                            {{phone}}
+                            <span ng-if="!$last">, </span>
+                        </span>
+                    </div>
+                    <div class="row" ng-if="provider.mobile.length > 0">
+                        Mobiles: 
+                        <span ng-repeat="mobile in provider.mobile track by $index">
+                            {{mobile}}
+                            <span ng-if="!$last">, </span>
+                        </span>
+                    </div>
+                    <div class="row" ng-if="provider.website">
+                        Website: 
+                        <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
+                            {{provider.website}}
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>    
+        
+        
+    
+    
+</div>
+</div>

@@ -6,27 +6,26 @@
     #landingPage{
         min-height: 80vh;
     }
-    #category{
+    #subcategory{
         text-align: center;
-        min-height: 15vh;
+        min-height: 5vh;
     }
     
-    
-
     
 </style>
 <div class="container">
     <div class="column" id="landingPage">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce text-center top-buffer" id="pageHeader">
-            <h4 class="text">Start your test prep today, <span class="text-primary">what are you looking to study?</span>
+            <h4 class="text">Where do you want to <span class="text-primary">study for {{subcategory.displayname}}?</span>
             </h4>
         </div>
-        <div ng-repeat="category in categories">
-            <div  class="panel panel-default col-xs-12 col-sm-12 col-md-3 col-lg-3 " id="category" ng-click="goToCategory(category)">
-                <div class="panel-body">
+        
+        <div ng-repeat="city in cities">
+            <div  class="panel panel-default col-xs-6 col-sm-6 col-md-2 col-lg-2 " id="subcategory">
+                <div class="panel-body" ng-click="showCoaching(city)">
                     <div class="hvr-underline-from-left">
                         <strong>
-                            <h6 class="text-primary text-center">{{category.displayname}}</h6>
+                            <h6 class="text-primary text-center">{{city}}</h6>
                         </strong>
                     </div>
                     
