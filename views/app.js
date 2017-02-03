@@ -295,7 +295,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
     }]); 
     exambazaar.controller("categoryController", 
-        [ '$scope','$stateParams','$cookies','$state','categories', function($scope,$stateParams,$cookies,$state,categories){
+        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope', function($scope,$stateParams,$cookies,$state,categories,$rootScope){
         
         //console.info(JSON.stringify(categories));
         $scope.categoryName = $stateParams.categoryName;
@@ -309,10 +309,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             categories.forEach(function(thisCategory, categoryIndex){
             if(thisCategory.name == $scope.categoryName){
                 $scope.category = thisCategory;
+                
             }
             });
         }
-            
+        $rootScope.pageTitle = $scope.category.displayname + ' deals at Exam Bazaar';    
         $scope.goToCity = function(subcategory){ 
             $cookies.putObject('subcategory', subcategory);
             $state.go('city');
@@ -321,7 +322,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
         
     exambazaar.controller("cityController", 
-        [ '$scope','$stateParams','$cookies','$state','cities', function($scope,$stateParams,$cookies,$state,cities){
+        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope', function($scope,$stateParams,$cookies,$state,cities,$rootScope){
         
         $scope.cities = cities;
         $scope.category = {};
@@ -342,7 +343,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $state.go('main');
         }
             
-        
+        $rootScope.pageTitle = $scope.subcategory.displayname + ' deals at Exam Bazaar'; 
+            
         $scope.showCoaching = function(city){ 
             $cookies.putObject('city', city);
             $state.go('findCoaching', {cityName: city});
@@ -357,6 +359,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.verifiedUsersCount = verifiedUsersCount.data;
     }]);
     
+    exambazaar.controller("seocontroller", ['$rootScope', function($rootScope){
+        $rootScope.pageTitle = "Exambazaar: Exclusive Deals and Videos for test preparation";
+    }]);
         
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state','$cookies','$http','UserService','NotificationService','StudentService','geolocation','$geolocation', function($scope,$rootScope,$state,$cookies,$http,UserService,NotificationService,StudentService,geolocation,$geolocation){
@@ -595,8 +600,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);
     
     exambazaar.controller("internshipController", 
-        [ '$scope', 'FileUploader','MasterService',function($scope,FileUploader,MasterService){
+        [ '$scope','$rootScope', 'FileUploader','MasterService',function($scope,$rootScope,FileUploader,MasterService){
             $scope.submitted = 0;
+            $rootScope.pageTitle = 'Internships at Exam Bazaar'; 
+            
             var uploader = $scope.uploader = new FileUploader({
             url: 'https://file.io',
             /*alias: 'image',
@@ -673,7 +680,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);
     
     exambazaar.controller("getCityController", 
-    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies', function($scope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies){
+    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies){
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location');
         }
@@ -686,7 +693,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.providersList = targetStudyProvidersList.data;
         $scope.cities = cities;
         $scope.city = $stateParams.cityName;
-        
+        $rootScope.pageTitle = $scope.city + ": " + $scope.subcategory.displayname + " institutes around you";
         
         $scope.setFilter = function(text){
             $scope.searchText = text;
@@ -699,16 +706,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
     
     exambazaar.controller("showCoachingController", 
-    [ '$scope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies', function($scope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies){
+    [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies){
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location');
         }
         if($cookies.getObject('subcategory')){
             $scope.subcategory = $cookies.getObject('subcategory');
         }
+        if($cookies.getObject('city')){
+            $scope.city = $cookies.getObject('city');
+        }
         $scope.provider = thisProvider.data;
         
-        
+        $rootScope.pageTitle = $scope.provider.name + ": " + $scope.subcategory.displayname + " preparation in " + $scope.city;
         
         
     }]); 
@@ -2297,7 +2307,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     })();
 
 exambazaar.run(function($rootScope) {
-    $rootScope.navBarTitle = 'exambazaar.com';
+    $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
     $rootScope.imageUrl = '';
     //moment.tz.link("Asia/Calcutta|Asia/Kolkata");
