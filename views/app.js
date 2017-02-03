@@ -40,137 +40,139 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         */
     };
     exambazaar.constant('cities',['Jaipur','Hyderabad','Noida','Ajmer','Alwar','Kota','Bikaner','Ganganagar','Sikar','Bhilwara','Juhnjhunu','New Delhi','Delhi','Lucknow','Indore','Bhopal','Roorkee','Thrissur','Mohali','Patiala','Ahmedabad','Vadodara','Surat','Rajkot','Ghaziabad','Agra','Dehradun','Meerut','Allahabad','Amritsar','Bangalore','Guwahati','Kolkata','Gwalior','Pune','Trivandrum','Mumbai','Rohtak','Nasik','Kurukshetra','Shimla','Kanpur','Ludhiana','Coimbatore','Ambala','Mathura','Patna','Mysore','Chandigarh','Chennai','Vishakhapatnam','Vellore']);
+    
     exambazaar.constant('categories',[
-            {
-            displayname: "School",
-            name: "school",
-            sub: "NTSE, NSE, KVPY, IMO, NSO and more",
-            subcategory:[
-                {name:"ntse", displayname:"NTSE"}
-                ] // "NSE", "KVPY", "IMO", "NSO"
-            },
-            {
-            displayname: "Engineering",
-            name: "engineering",
-            sub: "JEE Main, JEE Advanced, BITSAT, NATA, GATE and more",
-            subcategory:[
-                {name:"jee", displayname:"JEE Main & Advanced"},
-                {name:"bitsat", displayname:"BITSAT"},
-                {name:"nata", displayname:"NATA"},
-                {name:"gate", displayname:"GATE"}
-                ]
-            },
-            {
-            displayname: "Medical",
-            name: "medical",
-            sub: "AIIMS, NEET UG, JIPMER, AFMC, PGIMER and more",
-            subcategory:[
-                {name:"aipmt", displayname:"NEET UG"},
-                {name:"aiims", displayname:"AIIMS"},
-                {name:"afmc", displayname:"AFMC"}
-                //"NEET UG","AIIMS","AFMC","Manipal PMT","GPAT"
-                ] //"JIPMER","PGIMER"
-            
-            },
-            {
-            displayname: "CA & CS",
-            name: "cacs",
-            sub: "CA CPT, CA IPCC, CA Final, CS Foundation Exam and more",
-            subcategory:[
-                {name:"ca cpt", displayname:"CA CPT"},
-                {name:"cs foundation exam", displayname:"CS Foundation Exam"}
-                ]//"CA IPCC","CA Final",
-            },
-            {
-            displayname: "MBA",
-            name: "mba",
-            sub: "CAT, XAT, CMAT, SNAP and more",
-            subcategory:[
-                {name:"cat", displayname:"CAT"},
-                /*{name:"cmat", displayname:"CMAT"},*/
-                {name:"xat", displayname:"XAT"},
-                {name:"snap", displayname:"SNAP"}
-                ]//"CAT", "XAT", "CMAT", "SNAP"
-            },
-            {
-            displayname: "Law",
-            name: "law",
-            sub: "CLAT, AILET, LSAT, CBS and more",
-            subcategory:[
-                {name:"clat", displayname:"CLAT"},
-                {name:"ailet", displayname:"AILET"},
-                {name:"lsat", displayname:"LSAT"}
-                ]//"CBS"
-            },
-            {
-            displayname: "Foreign Education",
-            name: "foreigneducation",
-            sub: "IELTS, GRE, GMAT, SAT, TOEFL and more",
-            subcategory:[
-                {name:"sat", displayname:"SAT"},
-                {name:"gmat", displayname:"GMAT"},
-                {name:"gre", displayname:"GRE"},
-                {name:"ielts", displayname:"IELTS"},
-                {name:"toefl", displayname:"TOEFL"}
-                ]
-            },
-            {
-            displayname: "Civil Services",
-            name: "civilservices",
-            sub: "CSE, IPS Ltd. Competitive Exam, UPSC CAPF Exam, IES/ISS Exam, IFS Exam, SCRA and more",
-            subcategory:[
-                {name:"Civil Services Exam", displayname:"Civil Services Exam"},
-                {name:"ies/iss exam", displayname:"IES/ISS Exam"},
-                {name:"ifs exam", displayname:"IFS Exam"}
-                ]
-            },
-            {
-            displayname: "SSC",
-            name: "ssc",
-            sub: "SSC CPO (S.I) Exam, SSC CGLE, SSC JE, SSC CHSL Exam, SSC CMLE and more",
-            subcategory:[
-                {name:"ssc cpo", displayname:"SSC CPO (S.I) Exam"},
-                {name:"ssc cgle", displayname:"SSC CGLE"},
-                {name:"ssc je", displayname:"SSC JE"},
-                {name:"ssc chsl", displayname:"SSC CHSL Exam"},
-                {name:"ssc cmle", displayname:"SSC CMLE"}
-                ]
-            },
-            {
-            displayname: "Bank",
-            name: "bank",
-            sub: "Bank Clerical Exam, Bank PO Exam, RBI Exam, SBI PO Exam, IBPS Clerk CWE and more",
-            subcategory:[
-                {name:"Bank Clerical Exam", displayname:"Bank Clerical Exam"},
-                {name:"Bank PO Exam", displayname:"Bank PO Exam"},
-                {name:"RBI Exam", displayname:"RBI Exam"},
-                {name:"SBI PO Exam", displayname:"SBI PO Exam"},
-                {name:"IBPS Clerk CWE", displayname:"IBPS Clerk CWE"}
-                ]
-            },
-            {
-            displayname: "Defense",
-            name: "defense",
-            sub: "CDS Exam, NDA Exam, AFCAT, I.A.F. Exam, I.N.A Exam and more",
-            subcategory:[
-                {name:"cds exam", displayname:"CDS Exam"},
-                {name:"nda exam", displayname:"NDA Exam"},
-                {name:"afcat", displayname:"AFCAT"},
-                {name:"i.a.f. exam", displayname:"I.A.F. Exam"},
-                {name:"i.n.a exam", displayname:"I.N.A Exam"}
-                ]
-            },
-            {
-            displayname: "Insurance",
-            name: "insurance",
-            sub: "IRDA Exam, G.I.C Exam, LIC, L.I.C D.O and more",
-            subcategory:[
-                {name:"IRDA Exam", displayname:"IRDA Exam"},
-                {name:"G.I.C Exam", displayname:"G.I.C Exam"},
-                {name:"LIC", displayname:"LIC"},
-                {name:"L.I.C D.O", displayname:"L.I.C D.O"}
-                ]
-            }
+        
+        {
+        displayname: "Engineering",
+        name: "engineering",
+        sub: "JEE Main, JEE Advanced, BITSAT, NATA, GATE and more",
+        subcategory:[
+            {name:"jee", displayname:"JEE Main & Advanced"},
+            {name:"bitsat", displayname:"BITSAT"},
+            {name:"nata", displayname:"NATA"},
+            {name:"gate", displayname:"GATE"}
+            ]
+        },
+        {
+        displayname: "Medical",
+        name: "medical",
+        sub: "AIIMS, NEET UG, JIPMER, AFMC, PGIMER and more",
+        subcategory:[
+            {name:"aipmt", displayname:"NEET UG"},
+            {name:"aiims", displayname:"AIIMS"},
+            {name:"afmc", displayname:"AFMC"}
+            //"NEET UG","AIIMS","AFMC","Manipal PMT","GPAT"
+            ] //"JIPMER","PGIMER"
+
+        },
+        {
+        displayname: "CA & CS",
+        name: "cacs",
+        sub: "CA CPT, CA IPCC, CA Final, CS Foundation Exam and more",
+        subcategory:[
+            {name:"ca cpt", displayname:"CA CPT"},
+            {name:"cs foundation exam", displayname:"CS Foundation Exam"}
+            ]//"CA IPCC","CA Final",
+        },
+        {
+        displayname: "School",
+        name: "school",
+        sub: "NTSE, NSE, KVPY, IMO, NSO and more",
+        subcategory:[
+            {name:"ntse", displayname:"NTSE"}
+            ] // "NSE", "KVPY", "IMO", "NSO"
+        },
+        {
+        displayname: "MBA",
+        name: "mba",
+        sub: "CAT, XAT, CMAT, SNAP and more",
+        subcategory:[
+            {name:"cat", displayname:"CAT"},
+            /*{name:"cmat", displayname:"CMAT"},*/
+            {name:"xat", displayname:"XAT"},
+            {name:"snap", displayname:"SNAP"}
+            ]//"CAT", "XAT", "CMAT", "SNAP"
+        },
+        {
+        displayname: "Law",
+        name: "law",
+        sub: "CLAT, AILET, LSAT, CBS and more",
+        subcategory:[
+            {name:"clat", displayname:"CLAT"},
+            {name:"ailet", displayname:"AILET"},
+            {name:"lsat", displayname:"LSAT"}
+            ]//"CBS"
+        },
+        {
+        displayname: "Foreign Education",
+        name: "foreigneducation",
+        sub: "IELTS, GRE, GMAT, SAT, TOEFL and more",
+        subcategory:[
+            {name:"sat", displayname:"SAT"},
+            {name:"gmat", displayname:"GMAT"},
+            {name:"gre", displayname:"GRE"},
+            {name:"ielts", displayname:"IELTS"},
+            {name:"toefl", displayname:"TOEFL"}
+            ]
+        },
+        {
+        displayname: "Civil Services",
+        name: "civilservices",
+        sub: "CSE, IPS Ltd. Competitive Exam, UPSC CAPF Exam, IES/ISS Exam, IFS Exam, SCRA and more",
+        subcategory:[
+            {name:"Civil Services Exam", displayname:"Civil Services Exam"},
+            {name:"ies/iss exam", displayname:"IES/ISS Exam"},
+            {name:"ifs exam", displayname:"IFS Exam"}
+            ]
+        },
+        {
+        displayname: "SSC",
+        name: "ssc",
+        sub: "SSC CPO (S.I) Exam, SSC CGLE, SSC JE, SSC CHSL Exam, SSC CMLE and more",
+        subcategory:[
+            {name:"ssc cpo", displayname:"SSC CPO (S.I) Exam"},
+            {name:"ssc cgle", displayname:"SSC CGLE"},
+            {name:"ssc je", displayname:"SSC JE"},
+            {name:"ssc chsl", displayname:"SSC CHSL Exam"},
+            {name:"ssc cmle", displayname:"SSC CMLE"}
+            ]
+        },
+        {
+        displayname: "Bank",
+        name: "bank",
+        sub: "Bank Clerical Exam, Bank PO Exam, RBI Exam, SBI PO Exam, IBPS Clerk CWE and more",
+        subcategory:[
+            {name:"Bank Clerical Exam", displayname:"Bank Clerical Exam"},
+            {name:"Bank PO Exam", displayname:"Bank PO Exam"},
+            {name:"RBI Exam", displayname:"RBI Exam"},
+            {name:"SBI PO Exam", displayname:"SBI PO Exam"},
+            {name:"IBPS Clerk CWE", displayname:"IBPS Clerk CWE"}
+            ]
+        },
+        {
+        displayname: "Defense",
+        name: "defense",
+        sub: "CDS Exam, NDA Exam, AFCAT, I.A.F. Exam, I.N.A Exam and more",
+        subcategory:[
+            {name:"cds exam", displayname:"CDS Exam"},
+            {name:"nda exam", displayname:"NDA Exam"},
+            {name:"afcat", displayname:"AFCAT"},
+            {name:"i.a.f. exam", displayname:"I.A.F. Exam"},
+            {name:"i.n.a exam", displayname:"I.N.A Exam"}
+            ]
+        },
+        {
+        displayname: "Insurance",
+        name: "insurance",
+        sub: "IRDA Exam, G.I.C Exam, LIC, L.I.C D.O and more",
+        subcategory:[
+            {name:"IRDA Exam", displayname:"IRDA Exam"},
+            {name:"G.I.C Exam", displayname:"G.I.C Exam"},
+            {name:"LIC", displayname:"LIC"},
+            {name:"L.I.C D.O", displayname:"L.I.C D.O"}
+            ]
+        }
         ]
        );
         

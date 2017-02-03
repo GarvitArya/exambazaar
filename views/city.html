@@ -16,22 +16,15 @@
 <div class="container">
     <div class="column" id="landingPage">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce text-center top-buffer" id="pageHeader">
-            <h4 class="text">Where do you want to <span class="text-primary">study for {{subcategory.displayname}}?</span>
+            <h4 class="text md-display-3">Where do you want to <span class="text-primary">study for {{subcategory.displayname}}?</span>
             </h4>
+            <md-divider></md-divider>
         </div>
         
-        <div ng-repeat="city in cities">
-            <div  class="panel panel-default col-xs-6 col-sm-6 col-md-2 col-lg-2 " id="subcategory">
-                <div class="panel-body" ng-click="showCoaching(city)">
-                    <div class="hvr-underline-from-left">
-                        <strong>
-                            <h6 class="text-primary text-center">{{city}}</h6>
-                        </strong>
-                    </div>
-                    
-                </div>
-            </div>
-            
+        <div ng-repeat="city in cities" ng-click="showCoaching(city)">
+            <span  class="col-xs-6 col-sm-6 col-md-2 col-lg-2 hvr-underline-from-left">
+                <h6 class="text-center md-title">{{city}}</h6>
+            </span> 
         </div>
         
     </div>

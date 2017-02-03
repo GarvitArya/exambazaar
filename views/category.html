@@ -17,7 +17,7 @@
 <div class="container">
     <div class="column" id="landingPage">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce text-center top-buffer" id="pageHeader">
-            <h4 class="text">What within <span class="text-primary">{{category.displayname}}?</span>
+            <h4 class="text md-display-3">What are you preparing for <span class="text-primary">in {{category.displayname}}?</span>
             </h4>
         </div>
         <div ng-repeat="subcategory in category.subcategory">
@@ -25,7 +25,7 @@
                 <div class="panel-body" ng-click="goToCity(subcategory)">
                     <div class="hvr-underline-from-left">
                         <strong>
-                            <h6 class="text-primary text-center">{{subcategory.displayname}}</h6>
+                            <h6 class="text text-center md-title">{{subcategory.displayname}}</h6>
                         </strong>
                     </div>
                     
