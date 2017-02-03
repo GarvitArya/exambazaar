@@ -22,16 +22,13 @@
             </div>
             <div  class="panel panel-default">
                 <div class="panel-heading">
-                    <strong>Institutes</strong>
+                    <strong>Coaching Institutes</strong>
                 </div>
                 <div class="panel-body">
                     <div layout-align="center">
-                        <font size="10" class="text-primary" >{{institutesList.length}}</font>
+                        <font size="10" class="text-primary" >{{coachingCount}}</font>
                     </div>
-                    <p ng-repeat="institute in institutesList | orderBy:'basic.name'">
-                        <small>{{institute.basic.name}}
-                        </small>
-                    </p>
+                    
                 </div>
             </div>
             <div  class="panel panel-default">

@@ -215,6 +215,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getProvider = function(coachingId) {
             return $http.get('/api/targetStudyProviders/coaching/'+coachingId, {coachingId: coachingId});
         };
+        this.getCount = function() {
+            return $http.get('/api/targetStudyProviders/count');
+        };
         this.getCities = function() {
             return $http.get('/api/targetStudyProviders/cities');
         };
@@ -353,9 +356,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
     
     exambazaar.controller("masterDashboardController", 
-        [ '$scope','usersCount','verifiedUsersCount', function($scope, usersCount,verifiedUsersCount){
+        [ '$scope','usersCount','verifiedUsersCount','coachingCount', function($scope, usersCount,verifiedUsersCount,coachingCount){
             
             $scope.usersCount = usersCount.data;
+            $scope.coachingCount = coachingCount.data;
             $scope.verifiedUsersCount = verifiedUsersCount.data;
     }]);
     
@@ -1501,6 +1505,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 verifiedUsersCount: ['UserService',
                     function(UserService) {
                     return UserService.getVerfiedUsersCount();
+                }],
+                coachingCount: ['targetStudyProviderService',
+                    function(targetStudyProviderService) {
+                    return targetStudyProviderService.getCount();
                 }]
             }
         })

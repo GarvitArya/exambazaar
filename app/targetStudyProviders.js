@@ -21,6 +21,14 @@ router.get('/cities', function(req, res) {
     });
 });
 
+router.get('/count', function(req, res) {
+    targetStudyProvider.count({}, function(err, docs) {
+    if (!err){ 
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    });
+});
 router.get('/city/:city', function(req, res) {
     var city = req.params.city;
     console.log("City is: "+city);
