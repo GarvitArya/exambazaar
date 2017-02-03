@@ -32,6 +32,15 @@ router.get('/city/:city', function(req, res) {
     }); //.limit(500)
 });
 
+router.get('/coaching/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    //console.log(coachingId);
+    targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, docs) {
+    if (!err){
+        res.json(docs);
+    } else {throw err;}
+    }); //.limit(500)
+});
 
 router.get('/setRank0', function(req, res) {
     console.log("Starting now");

@@ -212,6 +212,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             //alert(city);
             return $http.get('/api/targetStudyProviders/city/'+city, {city: city});
         };
+        this.getProvider = function(coachingId) {
+            return $http.get('/api/targetStudyProviders/coaching/'+coachingId, {coachingId: coachingId});
+        };
         this.getCities = function() {
             return $http.get('/api/targetStudyProviders/cities');
         };
@@ -457,8 +460,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         };
                         console.info(JSON.stringify(sessionuser));
                         $cookies.putObject('sessionuser', sessionuser);
+                        //alert($state.current.name);
                         
-                        $state.go('master-dashboard', {masterId: sessionuser.masterId});
+                        if($state.current.name == 'main'){
+                            $state.go('master-dashboard', {masterId: sessionuser.masterId});
+                        }else{
+                            $state.reload();
+                        }
                         
                         
                     }else{
@@ -486,7 +494,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.logout = function(){
             $cookies.remove('sessionuser');
             $http.post('/logout');
-            $state.go("main", {}, {reload: true});
+            $state.reload();
+            //$state.go("main", {}, {reload: true});
         };
             
     }]); 
@@ -580,7 +589,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $cookies.remove('sessionuser');
                 //$http.post('/logout');
             //alert("Logging out now");
-                $state.go("main", {}, {reload: true});
+                $state.reload();
+                //$state.go("main", {}, {reload: true});
             };
     }]);
     
@@ -684,6 +694,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.clearFilter = function(text){
             $scope.searchText = '';
         };
+        
+        
+    }]); 
+    
+    exambazaar.controller("showCoachingController", 
+    [ '$scope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies', function($scope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies){
+        if($cookies.getObject('location')){
+            $scope.location = $cookies.getObject('location');
+        }
+        if($cookies.getObject('subcategory')){
+            $scope.subcategory = $cookies.getObject('subcategory');
+        }
+        $scope.provider = thisProvider.data;
+        
+        
         
         
     }]); 
@@ -1052,6 +1077,54 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }
             }
         })
+        .state('findCoaching', {
+            url: '/findCoaching/:cityName', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'coaching.html',
+                    controller: 'getCityController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {  
+                    return targetStudyProviderService.getProviders($stateParams.cityName);
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('showCoaching', {
+            url: '/showCoaching/:coachingId', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'showCoaching.html',
+                    controller: 'showCoachingController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisProvider: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {  
+                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
         .state('privacy', {
             url: '/privacy',
             views: {
@@ -1061,6 +1134,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 },
                 'body':{
                     templateUrl: 'privacyPolicy.html',
+                    controller: 'headerController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
+        .state('about', {
+            url: '/about',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'aboutus.html',
                     controller: 'headerController'
                 },
                 'footer': {
@@ -1156,59 +1245,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 institute: function() { return {}; }
             }
         })
-        .state('editBatchesTeachers', {
-            url: '/:instituteId/editBatchesTeachers',
-            views: {
-                'header':{
-                    templateUrl: 'header.html',
-                    controller: 'headerController'
-                },
-                'body':{
-                    templateUrl: 'editBatchesTeachers.html',
-                    controller: 'editBatchesTeachersCtrl'
-                },
-                'footer': {
-                    templateUrl: 'footer.html'
-                }
-            },
-            resolve: {
-                thisinstitute: ['InstituteService', '$stateParams',
-                    function(InstituteService,$stateParams) {
-                    return InstituteService.getInstitute($stateParams.instituteId);
-                        
-                }],
-                institute: function() { return {}; }
-            }
-        })
-        .state('editSubjectTeachers', {
-            url: '/:instituteId/editSubjectTeachers',
-            views: {
-                'header':{
-                    templateUrl: 'header.html',
-                    controller: 'headerController'
-                },
-                'body':{
-                    templateUrl: 'editSubjectTeachers.html',
-                    controller: 'editSubjectTeachersCtrl'
-                },
-                'footer': {
-                    templateUrl: 'footer.html'
-                }
-            },
-            resolve: {
-                thisinstitute: ['InstituteService', '$stateParams',
-                    function(InstituteService,$stateParams) {
-                    return InstituteService.getInstitute($stateParams.instituteId);
-                        
-                }],
-                institute: function() { return {}; },
-                thisglobalSubjects: ['globalSubjectService', '$stateParams',
-                    function(globalSubjectService,$stateParams){
-                    return globalSubjectService.getglobalSubjects();
-                }],
-                globalSubject: function() { return {}; }
-            }
-        })
         
         .state('instituteCalendar', {
             url: '/:instituteId/instituteCalendar',
@@ -1283,52 +1319,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
     
-        .state('teacher', {
-            url: '/teacher/:teacherId/main',
-            views: {
-                'header':{
-                    templateUrl: 'header.html',
-                    controller: 'headerController'
-                },
-                'body':{
-                    templateUrl: 'teacher.html',
-                    controller: 'teacherController',
-                },
-                'footer': {
-                    templateUrl: 'footer.html'
-                }
-            },
-            resolve: {
-                thisteacher: ['TeacherService', '$stateParams',
-                    function(TeacherService,$stateParams){
-                    return TeacherService.getBasicTeacher($stateParams.teacherId);
-                }],
-                teacher: function() { return {}; }
-            }
-        })
-        .state('teacher-batches', {
-            url: '/teacher/:teacherId/batches',
-            views: {
-                'header':{
-                    templateUrl: 'header.html',
-                    controller: 'headerController'
-                },
-                'body':{
-                    templateUrl: 'teacher-batches.html',
-                    controller: 'teacherController',
-                },
-                'footer': {
-                    templateUrl: 'footer.html'
-                }
-            },
-            resolve: {
-                thisteacher: ['TeacherService', '$stateParams',
-                    function(TeacherService,$stateParams){
-                    return TeacherService.getTeacher($stateParams.teacherId);
-                }],
-                teacher: function() { return {}; }
-            }
-        })
         .state('master', {
             url: '/master/:masterId/main',
             views: {
@@ -1400,30 +1390,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
     
-        .state('findCoaching', {
-            url: '/findCoaching/:cityName', //masterId?
-            views: {
-                'header':{
-                    templateUrl: 'header.html',
-                    controller: 'headerController'
-                },
-                'body':{
-                    templateUrl: 'coaching.html',
-                    controller: 'getCityController',
-                },
-                'footer': {
-                    templateUrl: 'footer.html'
-                }
-            },
-            resolve: {
-                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProviders($stateParams.cityName);
-                }],
-                provider: function() { return {}; }
-                
-            }
-        })
+        
         .state('targetStudyProviders', {
             url: '/coaching/tStudy/:city', //masterId?
             views: {

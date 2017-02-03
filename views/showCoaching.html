@@ -1,0 +1,55 @@
+
+<div class="container-fluid">
+    <md-content flex layout-padding>
+    
+    <div layout="row" layout-xs="column" layout-margin layout-padding>
+        <div  class="panel panel-default" >
+            <div class="panel-heading">
+                <h4 class="text-primary">{{provider.name}}</h4>
+            </div>
+            <md-divider></md-divider>
+            <div class="panel-body">
+                <div class="container">
+                    <div class="row">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}}
+                    </div>
+                    <div class="row" ng-if="provider.phone.length > 0">
+                        <i class="fa fa-phone" aria-hidden="true"></i>
+                        <span ng-repeat="phone in provider.phone track by $index">
+                            {{phone}}
+                            <span ng-if="!$last">, </span>
+                        </span>
+                    </div>
+                    <div class="row" ng-if="provider.mobile.length > 0">
+                        <i class="fa fa-mobile" aria-hidden="true"></i>
+                        <span ng-repeat="mobile in provider.mobile track by $index">
+                            {{mobile}}
+                            <span ng-if="!$last">, </span>
+                        </span>
+                    </div>
+                    <div class="row">
+                        Courses: 
+                        <span ng-repeat="course in provider.coursesOffered">
+                            {{course}}
+                        <span ng-if="!$last"> | </span>
+                        </span>
+                    </div>
+                    <div class="row" ng-if="provider.website">
+                        Website: 
+                        <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
+                            {{provider.website}}
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        
+    </div>
+    
+    
+   
+    </md-content>
+    
+</div>
