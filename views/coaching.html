@@ -13,7 +13,7 @@
         <h4 class="text md-display-3"><span class="text-primary">{{filtered.length}}</span> {{subcategory.displayname}} prep institutes in <span class="text-primary"> {{city}}</span>
         </h4>
     </div>
-    
+    <div class="row row-eq-height">
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered">
         <div  class="panel panel-default" id="subcategory">
             <div class="panel-heading">
@@ -60,6 +60,7 @@
         </div>
 
     </div>  
-
     </div>
+        
+    </div>    
     </div>
