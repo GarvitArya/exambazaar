@@ -109,3 +109,16 @@ app.use(function(req, res, next) {
 });
 app.listen(port);
 console.log('The magic happens on port ' + port);
+
+
+var SitemapGenerator = require('sitemap-generator');
+
+var generator = new SitemapGenerator('http://exambazaar.com', {
+  restrictToBasepath: false,
+  stripQuerystring: true,
+});
+
+generator.on('done', function (sitemap) {
+  console.log(sitemap); // => prints xml sitemap
+});
+generator.start();

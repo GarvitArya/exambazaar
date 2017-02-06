@@ -25,11 +25,11 @@
             </h4>
         </div>
         <div ng-repeat="category in categories">
-            <div  class="panel col-xs-12 col-sm-12 col-md-3 col-lg-3 " id="category" ng-click="goToCategory(category)">
+            <div  class="panel col-xs-12 col-sm-12 col-md-3 col-lg-3 " id="category">
                 <div class="panel-body">
                     <div class="hvr-underline-from-left">
                         <strong>
-                            <h6 class="text-center md-title">{{category.displayname}}</h6>
+                            <a ng-click="goToCategory(category)"><h6 class="text-center md-title">{{category.displayname}}</h6></a>
                         </strong>
                     </div>
                     
