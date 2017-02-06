@@ -6,54 +6,75 @@
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>http://localhost:8000/#/category/engineering</loc>
+        <loc>http://exambazaar.com/#/category/engineering</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>http://localhost:8000/#/category/medical</loc>
+        <loc>http://exambazaar.com/#/category/medical</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>http://localhost:8000/#/category/cacs</loc>
+        <loc>http://exambazaar.com/#/category/cacs</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>http://localhost:8000/#/category/school</loc>
+        <loc>http://exambazaar.com/#/category/school</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>http://localhost:8000/#/category/engineering</loc>
+        <loc>http://exambazaar.com/#/category/mba</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>http://localhost:8000/#/category/engineering</loc>
+        <loc>http://exambazaar.com/#/category/law</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>http://localhost:8000/#/category/engineering</loc>
+        <loc>http://exambazaar.com/#/category/foreigneducation</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>http://localhost:8000/#/category/engineering</loc>
+        <loc>http://exambazaar.com/#/category/civilservices</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>http://localhost:8000/#/category/engineering</loc>
+        <loc>http://exambazaar.com/#/category/ssc</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>http://localhost:8000/#/category/engineering</loc>
+        <loc>http://exambazaar.com/#/category/bank</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
+    <url>
+        <loc>http://exambazaar.com/#/category/defense</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>http://exambazaar.com/#/category/insurance</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>http://exambazaar.com/#/city</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>http://exambazaar.com/#/findCoaching/Hyderabad</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
     
 </urlset> 
