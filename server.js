@@ -58,10 +58,8 @@ var masters = require('./app/masters.js',masters);
 var users = require('./app/users.js',users); 
 
 var notifications = require('./app/notifications.js',notifications); 
-
 var emails = require('./app/emails.js',emails); 
-var smss = require('./app/smss.js',smss); 
-
+var smss = require('./app/smss.js',smss);
 var otps = require('./app/otps.js',otps); 
 
 //var teachers = require('./app/teachers.js',teachers); 
@@ -102,9 +100,10 @@ app.use('/api/otps', otps);
 //app.use('/api/globalSubjects', globalSubjects);
 //app.use('/api/globalFeeItems', globalFeeItems);
 
+
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
-    //console.log(req);
+    console.log(req);
     err.status = 404;
     next(err);
 });

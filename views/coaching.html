@@ -17,9 +17,9 @@
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered">
         <div  class="panel panel-default" id="subcategory">
             <div class="panel-heading">
-                <strong><h5 class="text-primary hvr-underline-from-left"><span ui-sref="showCoaching({ coachingId:{{'provider._id'}} })">
+                <strong><h5 class="text-primary hvr-underline-from-left"><a ui-sref="showCoaching({ coachingId:{{'provider._id'}} })">
                     {{provider.name}}
-                    </span></h5></strong>
+                    </a></h5></strong>
             </div>
             <md-divider></md-divider>
             <div class="panel-body">

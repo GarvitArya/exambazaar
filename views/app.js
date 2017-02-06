@@ -2312,6 +2312,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });
             //$locationProvider.html5Mode(true).hashPrefix('#');
             //$locationProvider.html5Mode(true);
+            
         });
         
     })();
