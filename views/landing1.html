@@ -9,13 +9,11 @@
     #category{
         text-align: center;
         min-height: 15vh;
-        padding: 10px;
+        padding: 0px;
     }
     #pageHeader{
         
     }
-    
-
     
 </style>
 <div class="container">
@@ -25,7 +23,8 @@
             </h4>
         </div>
         <div ng-repeat="category in categories">
-            <div  class="panel col-xs-12 col-sm-12 col-md-3 col-lg-3 " id="category" ng-click="goToCategory(category)">
+            <div  class="panel col-xs-12 col-sm-12 col-md-3 col-lg-3 " id="category" ui-sref="category({ categoryName:{{'category.name'}} })">
+                <!-- ng-click="goToCategory(category)"-->
                 <div class="panel-body">
                     <div class="hvr-underline-from-left">
                         <strong>

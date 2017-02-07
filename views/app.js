@@ -314,7 +314,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             categories.forEach(function(thisCategory, categoryIndex){
             if(thisCategory.name == $scope.categoryName){
                 $scope.category = thisCategory;
-                
+                //$cookies.putObject('category', thisCategory);
             }
             });
         }
@@ -327,10 +327,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
         
     exambazaar.controller("cityController", 
-        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope', function($scope,$stateParams,$cookies,$state,cities,$rootScope){
+        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories){
         
         $scope.cities = cities;
         $scope.category = {};
+        $scope.categoryName = $stateParams.categoryName;
+        $scope.subCategoryName = $stateParams.subCategoryName;
+            
         $scope.subcategory = [];
             
         if($cookies.getObject('category')){
@@ -345,7 +348,24 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
             
         }else{
-            $state.go('main');
+            categories.forEach(function(thisCategory, categoryIndex){
+            if(thisCategory.name == $scope.categoryName){
+                $scope.category = thisCategory;
+            }
+            });
+            $scope.category.subcategory.forEach(function(thisSubCategory, SubCategoryIndex){
+            if(thisSubCategory.name == $scope.subCategoryName){
+                $scope.subcategory = thisSubCategory;
+            }
+            });
+            
+            if(!$scope.category){
+                $state.go('main');
+            }
+            if(!$scope.subcategory){
+                $state.go('main');
+            }
+            //$state.go('main');
         }
             
         $rootScope.pageTitle = $scope.subcategory.displayname + ' deals at Exam Bazaar'; 
@@ -357,6 +377,57 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]);    
     
+    exambazaar.controller("findCoachingController", 
+    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','categories', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,categories){
+        $scope.categoryName = $stateParams.categoryName;
+        $scope.subCategoryName = $stateParams.subCategoryName;
+        $scope.city = $stateParams.cityName;
+        
+        categories.forEach(function(thisCategory, categoryIndex){
+            if(thisCategory.name == $scope.categoryName){
+                $scope.category = thisCategory;
+            }
+        });
+        $scope.category.subcategory.forEach(function(thisSubCategory, SubCategoryIndex){
+        if(thisSubCategory.name == $scope.subCategoryName){
+            $scope.subcategory = thisSubCategory;
+            $scope.searchText = $scope.subcategory.name;
+            $scope.filterText = $scope.subcategory.name;
+        }
+        });
+        
+        $scope.providersList = targetStudyProvidersList.data;
+        $scope.cities = cities;
+        $rootScope.pageTitle = $scope.city + ": " + $scope.subcategory.displayname + " institutes around you";
+        
+        $scope.setFilter = function(text){
+            $scope.searchText = text;
+        };
+        $scope.clearFilter = function(text){
+            $scope.searchText = '';
+        };
+        
+        
+    }]); 
+    
+    exambazaar.controller("showCoachingController", 
+    [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies){
+        if($cookies.getObject('location')){
+            $scope.location = $cookies.getObject('location');
+        }
+        if($cookies.getObject('subcategory')){
+            $scope.subcategory = $cookies.getObject('subcategory');
+        }
+        if($cookies.getObject('city')){
+            $scope.city = $cookies.getObject('city');
+        }
+        $scope.provider = thisProvider.data;
+        
+        $rootScope.pageTitle = $scope.provider.name + ": " + $scope.subcategory.displayname + " preparation in " + $scope.city;
+        
+        
+    }]);    
+        
     exambazaar.controller("masterDashboardController", 
         [ '$scope','usersCount','verifiedUsersCount','coachingCount', function($scope, usersCount,verifiedUsersCount,coachingCount){
             
@@ -685,49 +756,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });
     }]);
     
-    exambazaar.controller("getCityController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies){
-        if($cookies.getObject('location')){
-            $scope.location = $cookies.getObject('location');
-        }
-        $scope.filterText = '';
-        if($cookies.getObject('subcategory')){
-            $scope.subcategory = $cookies.getObject('subcategory');
-            $scope.searchText = $scope.subcategory.name;
-            $scope.filterText = $scope.subcategory.name;
-        }
-        $scope.providersList = targetStudyProvidersList.data;
-        $scope.cities = cities;
-        $scope.city = $stateParams.cityName;
-        $rootScope.pageTitle = $scope.city + ": " + $scope.subcategory.displayname + " institutes around you";
-        
-        $scope.setFilter = function(text){
-            $scope.searchText = text;
-        };
-        $scope.clearFilter = function(text){
-            $scope.searchText = '';
-        };
-        
-        
-    }]); 
-    
-    exambazaar.controller("showCoachingController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies){
-        if($cookies.getObject('location')){
-            $scope.location = $cookies.getObject('location');
-        }
-        if($cookies.getObject('subcategory')){
-            $scope.subcategory = $cookies.getObject('subcategory');
-        }
-        if($cookies.getObject('city')){
-            $scope.city = $cookies.getObject('city');
-        }
-        $scope.provider = thisProvider.data;
-        
-        $rootScope.pageTitle = $scope.provider.name + ": " + $scope.subcategory.displayname + " preparation in " + $scope.city;
-        
-        
-    }]); 
+     
     exambazaar.controller("getTargetStudyCoachingController", 
     [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities','$timeout','$state','$stateParams', '$cookies', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies){
         if($cookies.getObject('location')){
@@ -1062,7 +1091,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         .state('category', {
-            url: '/category/:categoryName',
+            url: '/:categoryName',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -1078,7 +1107,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         .state('city', {
-            url: '/city',
+            url: '/:categoryName/:subCategoryName/',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -1094,7 +1123,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         .state('findCoaching', {
-            url: '/findCoaching/:cityName', //masterId?
+            url: '/:categoryName/:subCategoryName/:cityName', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -1102,7 +1131,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 },
                 'body':{
                     templateUrl: 'coaching.html',
-                    controller: 'getCityController',
+                    controller: 'findCoachingController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'

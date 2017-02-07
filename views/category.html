@@ -22,7 +22,8 @@
         </div>
         <div ng-repeat="subcategory in category.subcategory">
             <div  class="panel panel-default col-xs-12 col-sm-12 col-md-3 col-lg-3" id="subcategory">
-                <div class="panel-body" ng-click="goToCity(subcategory)">
+                <div class="panel-body" ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">
+                    <!--  ng-click="goToCity(subcategory)"-->
                     <div class="hvr-underline-from-left">
                         <strong>
                             <h6 class="text text-center md-title">{{subcategory.displayname}}</h6>

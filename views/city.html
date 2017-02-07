@@ -21,7 +21,8 @@
             <md-divider></md-divider>
         </div>
         
-        <div ng-repeat="city in cities" ng-click="showCoaching(city)">
+        <div ng-repeat="city in cities" ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">
+            <!-- ng-click="showCoaching(city)"-->
             <span  class="col-xs-6 col-sm-6 col-md-2 col-lg-2 hvr-underline-from-left">
                 <h6 class="text-center md-title">{{city}}</h6>
             </span> 
