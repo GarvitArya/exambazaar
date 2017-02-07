@@ -1,42 +1,62 @@
 <style>
     .top-buffer{
-        margin-top: 25px;
-        margin-bottom: 25px;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
     #landingPage{
-        min-height: 80vh;
+        min-height: 85vh;
     }
     #category{
         text-align: center;
         min-height: 15vh;
         padding: 0px;
-    }
-    #pageHeader{
+        border: white;
+        background-color: rgba(255,255,255,1);
         
     }
+    #categoryFont{
+        color: white;
+        min-width: 200px;
+        border-style: solid;
+        border-width: 3px;
+        background-color: rgba(0,0,0,0.5);
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-right: 5px;
+        padding: 5px;
+    }
+    #categoryBorder{
+        
+    }
+    #headerFont{
+        color: white;
+    }
+    #pageHeader{
+        background-color: rgba(0,0,0,0.5);
+    }
+    a:hover{
+        text-decoration: none;
+    }
+    
     
 </style>
-<div class="container">
-    <div class="column" id="landingPage">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce text-center top-buffer" id="pageHeader">
-            <h4 class="text md-display-3">Start your test prep today, <span class="text-primary">what are you looking to study?</span>
-            </h4>
+<div>
+<div class="container" >
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="landingPage">
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 animated bounce top-buffer" id="pageHeader">
+            <h1 class="md-display-2" id="headerFont"><span class="text"><strong>START YOUR EXAM PREP HERE</strong></span>
+            </h1>
         </div>
-        <div ng-repeat="category in categories">
-            <div  class="panel col-xs-12 col-sm-12 col-md-3 col-lg-3 " id="category" ui-sref="category({ categoryName:{{'category.name'}} })">
-                <!-- ng-click="goToCategory(category)"-->
-                <div class="panel-body">
-                    <div class="hvr-underline-from-left">
-                        <strong>
-                            <h6 class="text-center md-title">{{category.displayname}}</h6>
-                        </strong>
-                    </div>
-                    
-                </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        
+        <div ng-repeat="category in categories" >
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="categoryBorder">
+            
+            <a class="md-subhead text-center hvr-sweep-to-right " id="categoryFont" ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname}}</a>
             </div>
             
         </div>
-        
+        </div>
     </div>
     
     

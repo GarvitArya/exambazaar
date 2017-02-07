@@ -1,12 +1,14 @@
-<head><title>{{provider.name}}</title></head>
-
-<div class="container-fluid">
-    <md-content flex layout-padding>
-    
-    <div layout="row" layout-xs="column" >
+<style>
+    #landingPage{
+        min-height: 85vh; 
+    }
+</style>
+<div>
+<div class="container" id="landingPage">
+    <div layout="row" layout-xs="column" layout-margin layout-padding>
         <div  class="panel panel-default" >
             <div class="panel-heading">
-                <h4 class="text-primary">{{provider.name}} in {{city}}</h4>
+                <h1 class="text md-title">{{provider.name}}<!-- in {{city}}--></h1>
             </div>
             <md-divider></md-divider>
             <div class="panel-body">
@@ -44,13 +46,8 @@
                 </div>
                 
             </div>
-        </div>
-        
+        </div> 
         
     </div>
-    
-    
-   
-    </md-content>
-    
+</div>  
 </div>

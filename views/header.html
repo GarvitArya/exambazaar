@@ -1,14 +1,18 @@
 <style>
-.glyphicon.glyphicon-bell {
-    font-size: 25px;
-}
 
+    /*#mainNav{
+        background-color:#404040;
+        color: white;
+    }*/
+    #logo{
+        
+    }
 </style>
 <div class="alert alert-danger alert-dismissible" role="alert" ng-if="message !=''">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>{{message}}</strong>
 </div>
-<nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top " role="navigation" id="mainNav">
 <div class="container-fluid">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -18,9 +22,9 @@
         <span class="icon-bar"></span>
         </button>
 
-        <a class="navbar-brand" href="#" class="text-primary">
+        <a class="navbar-brand" href="#" class="text-primary" id="logo">
             <span>
-                <img src="images/logo/logo.png" height="30">
+                <img src="images/logo/logo5.png" height="22">
                 <!--<span class="text-primary">ExamBazaar</span>-->
             </span>
         </a>
@@ -49,7 +53,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right md-subhead">
             <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Careers<span class="caret"></span></a>
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="mainNav">Careers<span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li class="md-subhead"><a ui-sref='about'>About Us</a></li>
                 <li><a ui-sref="internship" class="md-subhead">Internship</a></li>

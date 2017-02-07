@@ -27,6 +27,12 @@
         body{ 
             padding-top:70px; 
             background-color: whitesmoke; 
+            
+        }
+        #fullPage{
+            background-image: url("images/background/background-min.jpeg");
+            background-size:     cover;
+            background-position: center center;     
         }
         .md-datepicker-button {
           display: none;
@@ -96,7 +102,7 @@
     <body >
     <div layout="column" >
         <div ui-view="header" layout="row" flex></div>
-        <div ui-view="body" layout="row" flex></div>
+        <div ui-view="body" layout="row" flex id="fullPage"></div>
         <div ui-view="footer" layout="row" flex></div>
     </div>
 
