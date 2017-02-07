@@ -411,16 +411,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
     
     exambazaar.controller("showCoachingController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies){
-        if($cookies.getObject('location')){
-            $scope.location = $cookies.getObject('location');
+    [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies','categories', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies,categories){
+        $scope.categoryName = $stateParams.categoryName;
+        $scope.subCategoryName = $stateParams.subCategoryName;
+        $scope.city = $stateParams.cityName;
+        
+        categories.forEach(function(thisCategory, categoryIndex){
+            if(thisCategory.name == $scope.categoryName){
+                $scope.category = thisCategory;
+            }
+        });
+        $scope.category.subcategory.forEach(function(thisSubCategory, SubCategoryIndex){
+        if(thisSubCategory.name == $scope.subCategoryName){
+            $scope.subcategory = thisSubCategory;
         }
-        if($cookies.getObject('subcategory')){
-            $scope.subcategory = $cookies.getObject('subcategory');
-        }
-        if($cookies.getObject('city')){
-            $scope.city = $cookies.getObject('city');
-        }
+        });
+        
         $scope.provider = thisProvider.data;
         
         $rootScope.pageTitle = $scope.provider.name + ": " + $scope.subcategory.displayname + " preparation in " + $scope.city;
@@ -1147,7 +1153,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         .state('showCoaching', {
-            url: '/showCoaching/:coachingId', //masterId?
+            url: '/:categoryName/:subCategoryName/:cityName/:coachingId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
