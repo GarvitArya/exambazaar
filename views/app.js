@@ -974,7 +974,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
         }]);
     
-        exambazaar.controller("addMasterController", 
+    exambazaar.controller("addMasterController", 
         [ '$scope', 'UserService','$http','$state', function($scope, UserService,$http,$state){
         $scope.genders = ["Female", "Male"];
         $scope.master = {
@@ -1002,7 +1002,72 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 console.info('Error ' + data + ' ' + status);
             });
             };
-        }]);        
+    }]);        
+    exambazaar.controller("sitemapController", 
+        [ '$scope','$http','$state','cities', function($scope,$http,$state,cities){
+        $scope.urlpart1 = 'http://www.exambazaar.com/#/main/';
+        $scope.urlpart2 = [
+            'engineering/jee/',
+            'engineering/bitsat/',
+            'engineering/nata/',
+            'engineering/gate/',
+            'medical/aipmt/',
+            'medical/aiims/',
+            'medical/afmc/',
+            'cacs/ca%20cpt/',
+            'cacs/cs%20foundation%20exam/',
+            'school/ntse/',
+            'mba/cat/',
+            'mba/xat/',
+            'mba/snap/',
+            'law/clat/',
+            'law/ailet/',
+            'law/lsat/',
+            'foreigneducation/sat/',
+            'foreigneducation/gmat/',
+            'foreigneducation/gre/',
+            'foreigneducation/ielts/',
+            'foreigneducation/toefl/',
+            'ssc/ssc%20cpo/',
+            'ssc/ssc%20cgle/',
+            'ssc/ssc%20je/',
+            'ssc/ssc%20chsl/',
+            'ssc/ssc%20cmle/',
+            'bank/Bank%20Clerical%20Exam/',
+            'bank/Bank%20PO%20Exam/',
+            'bank/RBI%20Exam/',
+            'bank/SBI%20PO%20Exam/',
+            'bank/IBPS%20Clerk%20CWE/',
+            'defense/cds%20exam/',
+            'defense/nda%20exam/',
+            'defense/afcat/',
+            'defense/i.a.f.%20exam/',
+            'defense/i.n.a%20exam/',
+            'insurance/IRDA%20Exam/',
+            'insurance/G.I.C%20Exam/',
+            'insurance/LIC/',
+            'insurance/L.I.C%20D.O/'
+        ];
+        $scope.urls = [];
+        
+        $scope.urlpart2.forEach(function(thisurl, urlIndex){
+            var newUrl = '<url><loc>' + $scope.urlpart1 + thisurl+'</loc><changefreq>daily</changefreq><priority>1.0</priority></url>';
+            $scope.urls.push(newUrl);
+        });
+        cities.forEach(function(thisCity, cityIndex){
+            $scope.urlpart2.forEach(function(thisurl, urlIndex){
+                var newUrl = '<url><loc>' + $scope.urlpart1 + thisurl + thisCity+'</loc><changefreq>daily</changefreq><priority>0.7</priority></url>';
+                $scope.urls.push(newUrl);
+            });
+            
+        });
+            
+        
+        
+        $scope.generateSitemap = function () {
+           
+        };
+    }]);       
         
         
     exambazaar.controller("emailController", 
@@ -2031,6 +2096,24 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             resolve: {
             }
         })
+        .state('sitemap', {
+            url: '/sitemap',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'generateSitemap.html',
+                    controller: 'sitemapController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+            }
+        })
         .state('addStudent', {
             url: '/:instituteId/addStudent',
             views: {
@@ -2347,7 +2430,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });
             //$locationProvider.html5Mode(true).hashPrefix('#');
             //$locationProvider.html5Mode(true);
-            
+            //$locationProvider.hashPrefix("!");
         });
         
     })();
