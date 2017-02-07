@@ -1097,7 +1097,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         .state('category', {
-            url: '/:categoryName',
+            url: '/main/:categoryName',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -1113,7 +1113,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         .state('city', {
-            url: '/:categoryName/:subCategoryName/',
+            url: '/main/:categoryName/:subCategoryName/',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -1129,7 +1129,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         .state('findCoaching', {
-            url: '/:categoryName/:subCategoryName/:cityName', //masterId?
+            url: '/main/:categoryName/:subCategoryName/:cityName', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -1153,7 +1153,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         .state('showCoaching', {
-            url: '/:categoryName/:subCategoryName/:cityName/:coachingId', //masterId?
+            url: '/main/:categoryName/:subCategoryName/:cityName/:coachingId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
