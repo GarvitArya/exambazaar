@@ -113,7 +113,7 @@ console.log('The magic happens on port ' + port);
 
 var SitemapGenerator = require('sitemap-generator');
 
-var generator = new SitemapGenerator('http://exambazaar.com', {
+var generator = new SitemapGenerator('http://www.exambazaar.com', {
   restrictToBasepath: false,
   stripQuerystring: true,
 });
