@@ -397,6 +397,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });
         
         $scope.providersList = targetStudyProvidersList.data;
+        
+        $scope.providersList.forEach(function(thisProvider, providerIndex){
+            thisProvider.showDetails = false;
+            if(providerIndex==0){
+                thisProvider.showDetails = true;
+            }
+        });
+        
+        $scope.showCoaching = function(provider){
+            $scope.providersList.forEach(function(thisProvider, providerIndex){
+                thisProvider.showDetails = false;
+            });
+            provider.showDetails = true;
+        };
         $scope.cities = cities;
         $rootScope.pageTitle = $scope.city + ": " + $scope.subcategory.displayname + " institutes around you";
         

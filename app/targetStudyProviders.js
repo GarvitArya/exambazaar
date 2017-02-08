@@ -32,7 +32,7 @@ router.get('/count', function(req, res) {
 router.get('/city/:city', function(req, res) {
     var city = req.params.city;
     console.log("City is: "+city);
-    targetStudyProvider.find({"city" : city}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1},function(err, docs) {
+    targetStudyProvider.find({"city" : city}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1},{sort: '-rank'},function(err, docs) {
     if (!err){ 
         //console.log(docs);
         res.json(docs);

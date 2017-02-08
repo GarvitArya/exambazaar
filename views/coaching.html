@@ -1,13 +1,77 @@
 <style>
-    .top-buffer{
-        margin-top: 25px;
-        margin-bottom: 25px;
+    
+    .bs-callout {
+        padding: 10px;
+        border: 1px solid #eee;
+        border-left-width: 5px;
+        border-radius: 3px;
+        
     }
-    #landingPage{
-        min-height: 80vh;
+    *.bs-callout:empty {
+       padding: 20px;
+       margin: 0px;
+       border: none;   
+    }
+    .bs-callout h4 {
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+    .bs-callout p:last-child {
+        margin-bottom: 0;
+    }
+    .bs-callout code {
+        border-radius: 3px;
+    }
+    .bs-callout+.bs-callout {
+        margin-top: -5px;
+    }
+    .bs-callout-default {
+        border-left-color: #777;
+    }
+    .bs-callout-default h4 {
+        color: #777;
+    }
+    .bs-callout-primary {
+        border-left-color: #428bca;
+    }
+    .bs-callout-primary h4 {
+        color: #428bca;
+    }
+    .bs-callout-success {
+        border-left-color: #5cb85c;
+    }
+    .bs-callout-success h4 {
+        color: #5cb85c;
+    }
+    .bs-callout-danger {
+        border-left-color: #d9534f;
+    }
+    .bs-callout-danger h4 {
+        color: #d9534f;
+    }
+    .bs-callout-warning {
+        border-left-color: #f0ad4e;
+    }
+    .bs-callout-warning h4 {
+        color: #f0ad4e;
+    }
+    .bs-callout-info {
+        border-left-color: #5bc0de;
+    }
+    .bs-callout-info h4 {
+        color: #5bc0de;
+    }
+    
+    
+    
+    
+    
+    .top-buffer{
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
     #pageHeader{
-        background-color: rgba(0,0,0,0.5);
+        
     }
     #headerFont{
         color: white;
@@ -18,75 +82,92 @@
     #coachingHeader{
         color: black;
     }
+    #coachingDetails{
+        background-color: white;
+        height: 100%;
+    }
+    #knowmore{
+        width:100%;
+    }
     
+    
+   
 </style>
 <div id="fullPageGradient">
 
 <div class="container" layout-margin layout-padding>
     <div class="column" id="landingPage">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce top-buffer" id="pageHeader">
-        <h1 class="text md-display-1" id="headerFont"><strong>{{filtered.length}} {{subcategory.displayname}} PREP INSTITUTES IN {{city | uppercase}}</strong>
-        </h1>
+        <h4 class="text md-display-1" id="headerFont"><strong>{{filtered.length}} {{subcategory.displayname}} prep institutes in {{city }}</strong>
+        </h4>
     </div>
     <div class="row">
-    <div ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
+    <div ng-repeat="provider in providersList | orderBy:['-rank'] | filter:filterText as filtered">
+        <div class="row" >
         
-            <!--<div class="column">
-                <div class="">
-                    <strong><h1 class="md-subhead text-primary hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingFont">
-                    {{provider.name}}
-                    </a></h1></strong>
-                
-                </div>
-                
-            </div>-->
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" >
         
-        <div  class="panel panel-default" id="subcategory">
+        <div  class="panel panel-default" id="subcategory" ng-click="showCoaching(provider)">
             <div class="panel-heading">
-                <strong><h5 class="text hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
-                    {{provider.name}}
-                    </a></h5></strong>
+                <strong><h1 class="md-subhead text hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
+                    {{$index + 1}}. {{provider.name}}
+                </a></h1></strong>
             </div>
             <md-divider></md-divider>
             <div class="panel-body">
                 
-                    <div layout="row">
+                    <div layout="row" ng-if="provider.address">
                         Address: {{provider.address | limitTo: 70}}
                     </div>
-                    <!--<div layout="row">
-                        Courses: 
-                        <span ng-repeat="course in provider.coursesOffered">
-                            {{course}}
-                        <span ng-if="!$last"> | </span>
-                        </span>
-                    </div>
-                    <div layout="row" ng-if="provider.phone.length > 0">
-                        Phones: 
-                        <span ng-repeat="phone in provider.phone track by $index">
-                            {{phone}}
-                            <span ng-if="!$last">, </span>
-                        </span>
-                    </div>
-                    <div layout="row" ng-if="provider.mobile.length > 0">
-                        Mobiles: 
-                        <span ng-repeat="mobile in provider.mobile track by $index">
-                            {{mobile}}
-                            <span ng-if="!$last">, </span>
-                        </span>
-                    </div>
-                    
-                    <div layout="row" ng-if="provider.website">
-                        Website:  
-                        <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
-                            {{provider.website}}
-                        </a>
-                    </div>
-                    -->
             </div>  
             </div>
         </div>
+        <div class="bs-callout bs-callout-success col-xs-12 col-sm-6 col-md-6 col-lg-6 " ng-show="provider.showDetails" id="coachingDetails" >
+            <div layout="column" layout-align="center left">
+            <div layout="row">
+                <h4 class="md-subhead text hvr-underline-from-left">
+                    {{provider.name}}
+                 </h4>
+            </div>
+            <md-divider></md-divider>
+            <div layout="row">
+                Courses: 
+                <span ng-repeat="course in provider.coursesOffered">
+                    {{course}}
+                <span ng-if="!$last"> | </span>
+                </span>
+            </div>
+            <div layout="row" ng-if="provider.phone.length > 0">
+                Phones: 
+                <span ng-repeat="phone in provider.phone track by $index">
+                    {{phone}}
+                    <span ng-if="!$last">, </span>
+                </span>
+            </div>
+            <div layout="row" ng-if="provider.mobile.length > 0">
+                Mobiles: 
+                <span ng-repeat="mobile in provider.mobile track by $index">
+                    {{mobile}}
+                    <span ng-if="!$last">, </span>
+                </span>
+            </div>
 
+            <div layout="row" ng-if="provider.website">
+                Website:  
+                <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
+                    {{provider.website}}
+                </a>
+            </div>
+            <md-divider></md-divider>
+            <div class="row text-center"  >
+                <button type="button" class="btn btn-success" id="knowmore" ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
+                <span class="md-subhead text"><strong>KNOW MORE</strong>
+                </span>
+                </button>
+            </div>
+        </div>
+        </div>
+        </div>
     </div>  
     </div>
         
