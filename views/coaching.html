@@ -15,18 +15,25 @@
     a:hover{
         text-decoration: none;
     }
+    #coachingFont{
+        color: black;
+    }
+    
 </style>
-<div class="container">
+<div id="fullPageGradient">
+
+<div class="container" layout-margin layout-padding>
     <div class="column" id="landingPage">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce top-buffer" id="pageHeader">
         <h1 class="text md-display-1" id="headerFont"><strong>{{filtered.length}} {{subcategory.displayname}} PREP INSTITUTES IN {{city | uppercase}}</strong>
         </h1>
     </div>
-    <div class="row row-eq-height">
-    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered">
-        <div  class="panel panel-default" id="subcategory">
+    <div class="row">
+    <div ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered">
+        
+        <div  class="panel panel-default col-xs-12 col-sm-12 col-md-6 col-lg-6" id="subcategory" ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })">
             <div class="panel-heading">
-                <strong><h5 class="text-primary hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })">
+                <strong><h5 class="text hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingFont">
                     {{provider.name}}
                     </a></h5></strong>
             </div>
@@ -42,7 +49,7 @@
                             {{course}}
                         <span ng-if="!$last"> | </span>
                         </span>
-                    </div>-->
+                    </div>
                     <div layout="row" ng-if="provider.phone.length > 0">
                         Phones: 
                         <span ng-repeat="phone in provider.phone track by $index">
@@ -57,19 +64,20 @@
                             <span ng-if="!$last">, </span>
                         </span>
                     </div>
+                   
                     <div layout="row" ng-if="provider.website">
-                        Website: 
+                        Website:  
                         <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
                             {{provider.website}}
                         </a>
                     </div>
-
-                
+                     -->
+            </div>  
             </div>
         </div>
 
     </div>  
     </div>
-        
-    </div>    
+          
     </div>
+</div>

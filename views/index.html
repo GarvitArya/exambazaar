@@ -5,7 +5,7 @@
     
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>{{pageTitle}}</title>
+    <title ng-bind="pageTitle"></title>
     <!--<base href="/exambazaar">-->
     <meta name="fragment" content="!" />
 <!-- <title>Exambazaar: Exclusive Deals and Videos for test preparation</title>-->
@@ -26,13 +26,20 @@
     <style>
         body{ 
             padding-top:70px; 
-            background-color: whitesmoke; 
-            
         }
-        #fullPage{
+        #landingPage{
+            min-height: 85vh;
+        }
+        #fullPageBackground{
             background-image: url("images/background/background-min.jpeg");
             background-size:     cover;
             background-position: center center;     
+        }
+        .black-chrome-gradient {background: -webkit-linear-gradient(90deg, #1C1C1C 10%, #494949 90%); background: -moz-linear-gradient(90deg, #1C1C1C 10%, #494949 90%); background: linear-gradient(90deg, #1C1C1C 10%, #494949 90%);}
+        .trust-blue-gradient {background: -webkit-linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* FF3.6+ */ background: linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* W3C */ }
+        .classy-subtle-dark-gray-gradient { background: -webkit-linear-gradient(90deg,#383836 10%,#4a4a4a 90%); background: linear-gradient(90deg,#383836 10%,#4a4a4a 90%); }
+        #fullPageGradient { 
+            background: -webkit-linear-gradient(90deg,#383836 10%,#4a4a4a 90%); background: linear-gradient(90deg,#383836 10%,#4a4a4a 90%);
         }
         .md-datepicker-button {
           display: none;
@@ -101,9 +108,9 @@
     
     <body >
     <div layout="column" >
-        <div ui-view="header" layout="row" flex></div>
-        <div ui-view="body" layout="row" flex id="fullPage"></div>
-        <div ui-view="footer" layout="row" flex></div>
+        <div ui-view="header" ></div>
+        <div ui-view="body"></div>
+        <div ui-view="footer" ></div>
     </div>
 
     
