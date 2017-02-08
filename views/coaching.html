@@ -15,7 +15,7 @@
     a:hover{
         text-decoration: none;
     }
-    #coachingFont{
+    #coachingHeader{
         color: black;
     }
     
@@ -30,10 +30,21 @@
     </div>
     <div class="row">
     <div ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
         
-        <div  class="panel panel-default col-xs-12 col-sm-12 col-md-6 col-lg-6" id="subcategory" ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })">
+            <!--<div class="column">
+                <div class="">
+                    <strong><h1 class="md-subhead text-primary hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingFont">
+                    {{provider.name}}
+                    </a></h1></strong>
+                
+                </div>
+                
+            </div>-->
+        
+        <div  class="panel panel-default" id="subcategory">
             <div class="panel-heading">
-                <strong><h5 class="text hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingFont">
+                <strong><h5 class="text hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
                     {{provider.name}}
                     </a></h5></strong>
             </div>
@@ -64,20 +75,21 @@
                             <span ng-if="!$last">, </span>
                         </span>
                     </div>
-                   
+                    
                     <div layout="row" ng-if="provider.website">
                         Website:  
                         <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
                             {{provider.website}}
                         </a>
                     </div>
-                     -->
+                    -->
             </div>  
             </div>
         </div>
 
     </div>  
     </div>
-          
+        
+    </div>    
     </div>
 </div>
