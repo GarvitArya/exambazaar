@@ -1,0 +1,30 @@
+<style>
+    .top-buffer { margin-top:20px; }
+    
+    
+</style>
+<div class="container">
+    <!--<div class="row top-buffer">
+        {{provider}}
+    </div>-->
+    <div class="column top-buffer">
+        <div class="row">
+            <table style="width:100%">
+                <tr ng-repeat="(key, value) in provider" ng-if="key!='_id' && key != '__v' && key != '_created' && key != 'targetStudyWebsite'">
+                    <td> {{key}} </td> 
+                    <td> 
+                        <input ng-model="provider[key]" size="100">
+                    </td>
+                </tr>
+            
+            </table>
+            
+        </div>
+        <div class="row top-buffer">
+            <md-button class="md-raised md-primary" ng-click="saveCoaching()">Save</md-button>
+        </div>
+        
+    </div>
+    
+    
+</div>

@@ -5,12 +5,12 @@
         border: 1px solid #eee;
         border-left-width: 5px;
         border-radius: 3px;
-        
     }
     *.bs-callout:empty {
        padding: 20px;
        margin: 0px;
-       border: none;   
+       border: none;
+        
     }
     .bs-callout h4 {
         margin-top: 0;
@@ -42,6 +42,7 @@
     }
     .bs-callout-success h4 {
         color: #5cb85c;
+        
     }
     .bs-callout-danger {
         border-left-color: #d9534f;
@@ -71,7 +72,7 @@
         margin-bottom: 10px;
     }
     #pageHeader{
-        
+        background-color: rgba(0,0,0,0.5);
     }
     #headerFont{
         color: white;
@@ -79,58 +80,79 @@
     a:hover{
         text-decoration: none;
     }
-    #coachingHeader{
-        color: black;
-    }
+    
     #coachingDetails{
         background-color: white;
+        background-color: rgba(0,0,0,0.25);
+        color: whitesmoke;
+        border: none;
         height: 100%;
         margin-bottom: 20px;
+    }
+    #coachingHeader{
+        color: whitesmoke;
     }
     #knowmore{
         width:100%;
     }
+    #fullPageGradient1{
+        
+    }
+    #subcategory{
+        height: 100%;
+    }
+.blend-gradient {
+  background: -webkit-linear-gradient(90deg, rgb(156, 160, 164), rgb(128, 131, 134));
+  background: linear-gradient(90deg, rgb(156, 160, 164), rgb(128, 131, 134));
+}
+    .highlight{
+        border-style: solid;
+        border-width: 3px;
+        border-color: limegreen;
+    }
     
     
-   
+    
+    
+    
 </style>
 <div id="fullPageGradient">
 
 <div class="container" layout-margin layout-padding>
     <div class="column" id="landingPage">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce top-buffer" id="pageHeader">
-        <h4 class="text md-display-1" id="headerFont"><strong>{{filtered.length}} {{subcategory.displayname}} prep institutes in {{city }}</strong>
+        <h4 class="text md-display-1" id="headerFont"><strong>{{providersList.length}} {{subcategory.displayname}} prep institutes in {{city }}</strong>
         </h4>
     </div>
     <div class="row">
-    <div ng-repeat="provider in providersList | orderBy:['-rank'] | filter:filterText as filtered">
+    <div ng-repeat="provider in providersList | orderBy:['-rank'] ">
         <div class="row" >
         
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" >
+        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
         
-        <div  class="panel panel-default" id="subcategory" ng-click="showCoaching(provider)">
-            <div class="panel-heading">
-                <strong><h1 class="md-subhead text hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
-                    {{$index + 1}}. {{provider.name}}
-                </a></h1></strong>
-            </div>
-            <md-divider></md-divider>
+        <div  class="panel panel-default" id="subcategory" ng-click="showCoaching(provider)" data-ng-class="{'highlight':provider.showDetails}">
             <div class="panel-body">
+                <strong><h1 class="md-subhead text hvr-underline-from-left"><!--<a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">-->
+                    {{$index + 1}}. {{provider.name}}
+                </h1></strong>
                 
-                    <div layout="row" ng-if="provider.address">
-                        Address: {{provider.address | limitTo: 70}}
-                    </div>
-            </div>  
+            </div>
+            
             </div>
         </div>
-        <div class="bs-callout bs-callout-success col-xs-12 col-sm-6 col-md-6 col-lg-6 " ng-show="provider.showDetails" id="coachingDetails">
+        <div class="bs-callout bs-callout-success col-xs-12 col-sm-8 col-md-8 col-lg-8 " ng-show="provider.showDetails" id="coachingDetails">
             <div layout="column" layout-align="center left">
+            
             <div layout="row">
-                <h4 class="md-subhead text hvr-underline-from-left">
-                    {{provider.name}}
-                 </h4>
+                <h6 class="md-subhead text" id="coachingHeader">
+                    <strong>{{provider.name | uppercase}}</strong>
+                 </h6>
             </div>
             <md-divider></md-divider>
+            <div layout="row" ng-if="provider.address">
+                Address: {{provider.address}}, {{provider.city}} - {{provider.pincode}}
+            </div>
+            
             <div layout="row">
                 Courses: 
                 <span ng-repeat="course in provider.coursesOffered">
@@ -166,11 +188,28 @@
                 </span>
                 </button>
             </div>
+            <div>
+                
+                
+            </div>
         </div>
         </div>
         </div>
     </div>  
     </div>
+        
+    <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 top-buffer" id="mapAll">
+        <div map-lazy-load="http://maps.google.com/maps/api/js?key=AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4">
+
+            <ng-map center="{{city}}" zoom="15" >
+                <marker ng-repeat = "provider in providersList" position="{{provider.mapAddress}}"
+                  title="{{provider.mapAddress}}"
+                  animation="Animation.BOUNCE"
+                  centered="true"></marker>
+            </ng-map>
+        </div> 
+    </div>-->
+        
         
     </div>    
     </div>

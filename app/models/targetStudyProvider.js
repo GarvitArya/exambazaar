@@ -9,6 +9,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     targetStudyWebsite: String,
     website: String,
     address: String,
+    area: String,
     city: String,
     state: String,
     pincode: String,

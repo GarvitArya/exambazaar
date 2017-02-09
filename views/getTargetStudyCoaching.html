@@ -91,9 +91,9 @@
         <span ng-repeat="city in cities">
             <a ui-sref="targetStudyProviders({ city:{{'city'}} })">{{city}} | </a>
         </span>
-        <!--<md-button class="md-raised md-primary" ng-click="removeDuplicates()">Remove Duplicates</md-button>
+        <!--<md-button class="md-raised md-primary" ng-click="removeDuplicates()">Remove Duplicates</md-button>-->
         <md-button class="md-raised md-primary" ng-click="cleanTargetstudyurls()">Clean Websites</md-button>
-        <md-button class="md-raised md-primary" ng-click="rank0()">Set Rank 0</md-button>
+        <!--<md-button class="md-raised md-primary" ng-click="rank0()">Set Rank 0</md-button>
         <md-button class="md-raised md-primary" ng-click="getAllCourses()">All Courses</md-button>-->
     </div>
     <div class="row">
@@ -141,7 +141,7 @@
             <small>
             
             <div class="col-md-2 col-sm-2 col-xs-2">
-                <a ng-click="setFilter(provider.name)">
+                <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })">
                 <strong>{{provider.name}}</strong>
                 </a>
             </div>

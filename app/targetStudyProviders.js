@@ -32,14 +32,60 @@ router.get('/count', function(req, res) {
 router.get('/city/:city', function(req, res) {
     var city = req.params.city;
     console.log("City is: "+city);
-    targetStudyProvider.find({"city" : city}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1},{sort: '-rank'},function(err, docs) {
+    targetStudyProvider.find({"city" : city}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, docs) {
     if (!err){ 
         //console.log(docs);
         res.json(docs);
     } else {throw err;}
     }); //.limit(500)
 });
-
+router.post('/cityCourse', function(req, res) {
+    var cityCourse = req.body;
+    //var cityCourse = req.params.cityCourse;
+    console.log("cityCourse is : "+JSON.stringify(cityCourse));
+    var city = cityCourse.city;
+    var course = cityCourse.course;
+     
+    console.log("City is: "+city);
+    console.log("Course is: "+course);
+    targetStudyProvider.find({"city" : city,"coursesOffered" : { $elemMatch : { $regex : course, $options : 'i' } }}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, docs) {
+    if (!err){ 
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    }); //.limit(500)
+});
+router.post('/savecoaching', function(req, res) {
+    var thisProvider = req.body.targetStudyProvider;
+    var coachingId = thisProvider._id;
+    
+    targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, oldProvider) {
+    if (!err){
+        
+        //oldProvider = thisProvider;
+        console.log("New Coaching is: " + JSON.stringify(thisProvider));
+        for (var property in thisProvider) {
+            oldProvider[property] = thisProvider[property];
+            console.log(oldProvider[property]);
+            if (oldProvider.hasOwnProperty(property)) {
+                
+                // do stuff
+            }
+        }
+        console.log("Coaching is: " + JSON.stringify(oldProvider));
+        
+        //save the changes
+        oldProvider.save(function(err, thisprovider) {
+            if (err) return console.error(err);
+            console.log(thisprovider._id + " saved!");
+            res.json('Done');
+        });
+        
+        
+        
+    } else {throw err;}
+    }); //.limit(500)
+});
 router.get('/coaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     //console.log(coachingId);
@@ -49,6 +95,9 @@ router.get('/coaching/:coachingId', function(req, res) {
     } else {throw err;}
     }); //.limit(500)
 });
+
+
+
 
 router.get('/setRank0', function(req, res) {
     console.log("Starting now");
@@ -135,8 +184,19 @@ router.get('/downrank/:targetStudyProviderId', function(req, res) {
 router.get('/cleanTargetstudyurls', function(req, res) {
     var allproviders =  targetStudyProvider.find({}, { website:1, name:1, city:1},function(err, allproviders) {
     if (!err){
+        console.log('Here');
          allproviders.forEach(function(thisprovider, index){
            
+            ///img/bullets/box-orange-arrow.gif 
+            //console.log('Provider ' + thisprovider._id);
+            if( thisprovider.logo=="/img/bullets/box-orange-arrow.gif" || thisprovider.logo=="//img/bullets/box-orange-arrow.gif"){
+                thisprovider.logo = "";
+                console.log('Provider ' + thisprovider._id);
+                thisprovider.save(function(err, thisprovider) {
+                    if (err) return console.error(err);
+                    console.log("Logo removed for: " + thisprovider._id);
+                });
+            }
             if(thisprovider.website){
                 if(thisprovider.website.indexOf("https://targetstudy.com") != -1){
                     console.log("Removing website " + thisprovider.website + " for " + thisprovider.name + ", " + thisprovider.city);

@@ -2,19 +2,65 @@
     .top-buffer{
         margin-top:30px;
     }
+    #map{
+        width: 95%;
+        margin-top:20px;
+    }
+    #logo{
+        margin-right: 20px;
+    }
+    #logoImage{
+        min-height: 30px;
+        max-height: 50px;
+    }
 </style>
 <div id="fullPageGradient">
 <div class="container" id="landingPage" layout-margin layout-padding>
     <div class="row top-buffer">
         <div  class="panel panel-default" >
             <div class="panel-heading">
-                <h1 class="text md-title">{{provider.name}}<!-- in {{city}}--></h1>
+                <h1 class="text md-title">{{provider.name}}
+                <span ng-if="editable"><small>
+                    <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })">
+                        Edit
+                    </a>
+                </small></span>
+                    
+                <span ng-if="provider.logo && provider.logo!='/img/bullets/box-orange-arrow.gif'" class="pull-left" id="logo">
+                    <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImage"/>
+                </span>
+                </h1>
+                
+                <div class="container">
+                <div class="row md-subhead">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}} {{provider.pincode}} | 
+                    <span ng-if="!showMap"><a ng-click="flipMap()">
+                        Show on Map
+                    </a></span>
+                    <span ng-if="showMap"><a ng-click="flipMap()">
+                        Hide Map
+                    </a></span>
+                </div>
+                </div>
             </div>
             <md-divider></md-divider>
             <div class="panel-body">
-                <div class="container">
-                    <div class="row">
-                        <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}}
+                <div class="container md-subhead">
+                    
+                    <div class="row" id="map" ng-show="showMap">
+                    
+                    <div map-lazy-load="http://maps.google.com/maps/api/js?key=AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4">
+
+                        <ng-map center="{{provider.mapAddress}}" zoom="15" >
+                            <!-- tilt="45"
+    map-type-id="SATELLITE"-->
+                            <marker position="{{provider.mapAddress}}"
+                              title="{{provider.mapAddress}}"
+                              animation="Animation.BOUNCE"
+                              centered="true"></marker>
+                        </ng-map>
+                        <!--<br/>Address : <input ng-model="provider.mapAddress" size="100" />-->
+                    </div>  
                     </div>
                     <div class="row" ng-if="provider.phone.length > 0">
                         <i class="fa fa-phone" aria-hidden="true"></i>
@@ -42,7 +88,9 @@
                         <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
                             {{provider.website}}
                         </a>
-                    </div>
+                    </div >
+                    
+                    
                 </div>
                 
             </div>
