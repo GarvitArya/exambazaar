@@ -1,0 +1,42 @@
+<style>
+    .top-buffer { margin-top:20px; }
+   
+</style>
+<div class="container">
+    <div class="row top-buffer">
+        {{filtered.length}} Providers
+    </div>
+    <div class="row top-buffer">
+        Starts with: <input ng-model="startsWith" size="50">
+        <md-button class="md-raised md-primary" ng-click="startsWithProviders()">Edit Starts With</md-button>
+        <a ng-click="clear()">Clear</a>
+    </div>
+    
+    <md-divider></md-divider>
+    
+    <div class="row top-buffer">
+        <div ng-repeat="provider in providersList | orderBy: 'name' | filter:startsWith as filtered" class="col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <small>
+            
+            <div class="col-md-5">
+                <a ng-click="setStartsWith(provider.name)">
+                <strong>{{provider.name}}</strong>
+                </a>
+            </div>
+            <div class="col-md-1">
+                <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" target="_blank">
+                Edit
+                </a>
+            </div>
+            <div class="col-md-6">
+                {{provider.address}}
+            </div>
+            </small>
+        </div>
+        </div>
+    
+    
+    </div>
+    
+</div>

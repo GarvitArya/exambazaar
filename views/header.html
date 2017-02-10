@@ -37,8 +37,8 @@
         <li><a ui-sref="internship">Internship</a></li>
         </ul>-->
         
-        
-        <form class="navbar-form navbar-right" ng-submit="login()" ng-show="!sessionuser">
+        <div class="navbar-right">
+        <form class="navbar-form animated fadeIn" ng-submit="login()" ng-show="!sessionuser && showLogin">
         <div class="form-group">
         <input type="text" placeholder="Mobile" class="form-control" ng-model="login.mobile" size="10" >
         </div>
@@ -46,12 +46,18 @@
         <input type="password" placeholder="Password" class="form-control" ng-model="login.password" size="12">
         </div>
         <button type="submit" class="btn btn-success">Sign in</button>
+        
         </form>
+        <form class="navbar-form" ng-show="!showLogin">
+            <button type="submit" class="btn btn-primary" ng-click = "showLoginForm()" ng-show="!showLogin && !sessionuser">Log in</button>
+        </form>
+            
+        </div>
         <ul class="nav navbar-nav navbar-right" ng-show="sessionuser">
             
         <li><a href="#/" ng-click="logout()">Logout</a></li>
         </ul>
-        <ul class="nav navbar-nav navbar-right md-subhead">
+        <ul class="nav navbar-nav navbar-left md-subhead">
             <li class="dropdown">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="mainNav">Careers<span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -73,6 +79,7 @@
           <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a ui-sref="addMaster">Add Master User</a></li>
+            <li><a ui-sref="providersWithAreas">Provider Name Change</a></li>
             <li><a ui-sref="sitemap">Generate Sitemap</a></li>
           </ul>
         </li>

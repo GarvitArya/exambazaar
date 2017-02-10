@@ -64,16 +64,6 @@
     }
     
     
-    
-    
-    
-    .top-buffer{
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-    #pageHeader{
-        background-color: rgba(0,0,0,0.5);
-    }
     #headerFont{
         color: white;
     }
@@ -120,6 +110,13 @@
 
 <div class="container" layout-margin layout-padding>
     <div class="column" id="landingPage">
+        
+    <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12" id="breadcrumb"><small>
+        <span><a ui-sref="main">EXAMBAZAAR</a></span>
+        <span> / <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
+        <span> / <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{subcategory.displayname | uppercase}}</a></span>
+        <span> / {{city | uppercase}}</span>
+    </small></div>
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce top-buffer" id="pageHeader">
         <h4 class="text md-display-1" id="headerFont"><strong>{{providersList.length}} {{subcategory.displayname}} prep institutes in {{city }}</strong>
         </h4>

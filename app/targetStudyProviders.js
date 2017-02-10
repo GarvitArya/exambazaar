@@ -39,6 +39,43 @@ router.get('/city/:city', function(req, res) {
     } else {throw err;}
     }); //.limit(500)
 });
+
+router.get('/providersWithAreas', function(req, res) {
+    targetStudyProvider.find({"name" : {$regex : ".*-.*"}}, {name:1 , address:1},function(err, docs) {
+    if (!err){ 
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    }); //.limit(500)
+});
+
+
+router.get('/changeProvidersStartingWith/:startsWith', function(req, res) {
+    var startsWith = req.params.startsWith;
+    console.log("Starts with is: "+startsWith);
+    targetStudyProvider.find({"name" : {$regex : ".*"+startsWith+".*"}}, {name:1 , website:1},function(err, allProviders) {
+    if (!err){ 
+        
+        allProviders.forEach(function(thisprovider, index){
+            var splitPoint = thisprovider.name.indexOf('-');
+            if(splitPoint!= -1){
+                var oldName = thisprovider.name;
+                var newName = thisprovider.name.substring(0,splitPoint).trim();
+                
+                thisprovider.name = newName;
+                thisprovider.save(function(err, thisprovider) {
+                    if (err) return console.error(err);
+                    console.log(oldName + " changed to " + newName);
+                });
+            }
+            
+        });
+        
+        res.json('Done');
+    } else {throw err;}
+    }); //.limit(500)
+});
+
 router.post('/cityCourse', function(req, res) {
     var cityCourse = req.body;
     //var cityCourse = req.params.cityCourse;

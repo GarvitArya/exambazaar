@@ -1,6 +1,6 @@
 <style>
     .top-buffer{
-        margin-top:30px;
+        margin-top:40px;
     }
     #map{
         width: 95%;
@@ -16,6 +16,14 @@
 </style>
 <div id="fullPageGradient">
 <div class="container" id="landingPage" layout-margin layout-padding>
+    <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12" id="breadcrumb"><small>
+        <span><a ui-sref="main">EXAMBAZAAR</a></span>
+        <span> / <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
+        <span> / <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{subcategory.displayname | uppercase}}</a></span>
+        <span> / <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{city | uppercase}}</a></span>
+        <span> / {{provider.name | uppercase}}
+        </span>
+    </small></div>
     <div class="row top-buffer">
         <div  class="panel panel-default" >
             <div class="panel-heading">

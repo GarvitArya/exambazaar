@@ -27,6 +27,13 @@
         body{ 
             padding-top:70px; 
         }
+        #headerFont{
+            color: white;
+        }
+        #pageHeader{
+            background-color: rgba(0,0,0,0.5);
+        }
+        
         #landingPage{
             min-height: 85vh;
         }
@@ -45,9 +52,6 @@
         #fullPageGradient { 
             background: -webkit-linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
   background: linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
-        }
-        .md-datepicker-button {
-          display: none;
         }
         
         @font-face{
@@ -79,7 +83,19 @@
         [x-ng-click] {
             cursor: pointer;
         }
-        .top-buffer { margin-top:20px; }
+        
+        #breadcrumb{
+            color:whitesmoke;
+            margin-top: 10px;
+        }
+        #breadcrumb a{
+            color:whitesmoke;
+            text-decoration: underline;
+        }
+        .top-buffer { 
+            margin-top:20px;
+            margin-bottom:20px;
+        }
         /*em {position: absolute; bottom: 0; right: 0}*/
     </style>
     
@@ -159,12 +175,23 @@
     <script src="https://rawgithub.com/arunisrael/angularjs-geolocation/master/dist/angularjs-geolocation.min.js"></script>
     <script src="ngGeolocation.min.js"></script>
         
-    <script src="angular-vertilize.min.js"></script>
     <!-- Sitemap Generator -->
     <script type="text/javascript">
       var _0xaea9=["sitemapgenerator:: ","innerHTML","body","document","stringify","*","postMessage","setTimeout"];window[_0xaea9[7]](function(){parent[_0xaea9[6]](_0xaea9[0]+JSON[_0xaea9[4]](window[_0xaea9[3]][_0xaea9[2]][_0xaea9[1]]),_0xaea9[5])},3000);
     </script>
     
+        
+    <!-- Start of LiveChat (www.livechatinc.com) code -->
+    <script type="text/javascript">
+        window.__lc = window.__lc || {};
+        window.__lc.license = 8611944;
+        (function() {
+        var lc = document.createElement('script'); lc.type = 'text/javascript'; lc.async = true;
+        lc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.livechatinc.com/tracking.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(lc, s);
+        })();
+    </script>
+    <!-- End of LiveChat code -->
     
 </body>
 </html>

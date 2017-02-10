@@ -1,12 +1,5 @@
 <style>
-    .top-buffer{
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-    #landingPage{
-        min-height: 85vh;
-        
-    }
+    
     #category{
         text-align: center;
         min-height: 15vh;
@@ -33,9 +26,6 @@
     #headerFont{
         color: white;
     }
-    #pageHeader{
-        background-color: rgba(0,0,0,0.5);
-    }
     a:hover{
         text-decoration: none;
     }
@@ -43,7 +33,13 @@
 </style>
 <div id="fullPageBackground">
 <div class="container">
+    
     <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="landingPage">
+        <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12" id="breadcrumb"><small>
+            <span><a ui-sref="main">EXAMBAZAAR</a></span>
+            <span> / {{category.displayname | uppercase}}</span>
+        </small></div>
+        
         <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 animated bounce top-buffer" id="pageHeader">
             <h1 class="text md-display-2" id="headerFont"><strong>WHAT IN {{category.displayname | uppercase}}?</strong>
             </h1>
