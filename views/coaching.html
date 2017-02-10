@@ -165,10 +165,10 @@
                 </span>
             </div>
             <div layout="row" ng-if="provider.mobile.length > 0">
-                Mobiles: 
+                Mobiles:
                 <span ng-repeat="mobile in provider.mobile track by $index">
                     {{mobile}}
-                    <span ng-if="!$last">, </span>
+                    <span ng-if="!$last">,&nbsp;</span>
                 </span>
             </div>
 
