@@ -82,13 +82,12 @@ router.post('/cityCourse', function(req, res) {
     console.log("cityCourse is : "+JSON.stringify(cityCourse));
     var city = cityCourse.city;
     var course = cityCourse.course;
-     
+    
     console.log("City is: "+city);
     console.log("Course is: "+course);
-    targetStudyProvider.find({"city" : city,"coursesOffered" : { $elemMatch : { $regex : course, $options : 'i' } }}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, docs) {
-    if (!err){ 
-        //console.log(docs);
-        res.json(docs);
+    targetStudyProvider.find({"city" : city,"coursesOffered" : { $elemMatch : { $regex : course, $options : 'i' } }}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, providerList) {
+    if (!err){
+        res.json(providerList);
     } else {throw err;}
     }); //.limit(500)
 });

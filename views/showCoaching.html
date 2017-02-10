@@ -80,7 +80,7 @@
                     <div class="row" ng-if="provider.mobile.length > 0">
                         <i class="fa fa-mobile" aria-hidden="true"></i>
                         <span ng-repeat="mobile in provider.mobile track by $index">
-                            {{mobile}}
+                            <a ng-href="tel:{{mobile}}">{{mobile}}</a>
                             <span ng-if="!$last">, </span>
                         </span>
                     </div>
