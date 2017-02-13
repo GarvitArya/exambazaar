@@ -312,6 +312,63 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.post('/api/profilePics/add', profilePic);
         };
     }]); 
+        
+        
+    exambazaar.controller("signupController", 
+        [ '$scope','$stateParams','$cookies','$state','OTPService','UserService', function($scope,$stateParams,$cookies,$state,OTPService,UserService){
+        
+        $scope.button1 = "Start";
+        $scope.button2 = "Verify";
+        $scope.button3 = "Finish";
+        $scope.step1 = true;
+        $scope.step2 = false;
+        $scope.step3 = false;
+        $scope.verifyPhone = function(){
+            $scope.step1 = false;
+            $scope.step2 = true;
+            $scope.enterOTP = false;
+            $scope.generateUserOTP();
+            
+        };
+        $scope.verifyOTP = function(){
+            if($scope.newUser.OTP == $scope.setOTP){
+                $scope.step2 = false;
+                $scope.step3 = true;
+            }else{
+                $scope.OTPmessage = 'The OTP you have entered is incorrect.';
+            }
+        };
+        $scope.addUser = function(){
+            $scope.newUser.userType = 'Student';
+            $scope.newUser.verified = true;
+            var saveUser = UserService.saveUser($scope.newUser).success(function (data, status, headers) {
+                var userId = data;
+                $state.go('main');
+                
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+        };
+        $scope.generateUserOTP = function(){
+               
+                var thisOTP = {
+                    mobile:$scope.newUser.contact.mobile,
+                    otp: generateOtp(),
+                    reason : 'Signup'
+                };
+                OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
+                    $scope.enterOTP = true;
+                    $scope.setOTP = data.otp;
+                    console.info("OTP sent to mobile " + thisOTP.mobile);
+                })
+                .error(function (data, status, header, config) {
+                    
+                });
+                $scope.OTPgenerated=true;
+        };
+            
+    }]); 
     exambazaar.controller("categoryController", 
         [ '$scope','$stateParams','$cookies','$state','categories','$rootScope', function($scope,$stateParams,$cookies,$state,categories,$rootScope){
         
@@ -390,7 +447,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]);    
     
-    exambazaar.controller("findCoachingController", 
+    exambazaar.controller("coachingController", 
     [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','categories', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,categories){
        
         
@@ -413,6 +470,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });
         
         $scope.providersList = targetStudyProvidersList.data;
+        $scope.uniqueProviders = [];
+        $scope.uniqueProviderInstitutes = [];
+        $scope.providersList.forEach(function(thisProvider, providerIndex){
+            var position = $scope.uniqueProviders.indexOf(thisProvider.name);
+            if(position==-1){
+                $scope.uniqueProviders.push(thisProvider.name);
+                $scope.uniqueProviderInstitutes.push([thisProvider]);
+            }else{
+                $scope.uniqueProviderInstitutes[position].push(thisProvider);
+            }
+        });
+        
+        
         
         $scope.providersList.forEach(function(thisProvider, providerIndex){
             thisProvider.mapAddress = thisProvider.name + ', ' + thisProvider.address + ', ' + thisProvider.city + ' ' + thisProvider.pincode;
@@ -581,14 +651,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 .error(function (data, status, header, config) {
                     alert(status + " " + data);    
                 });
-                
-                
                 UserService.getUser(user._id).success(function (data, status, headers) {
                     var fulluser = data;
                     var sessionuser;
                     //user.verified="true";
-                    if(user.verified=="true"){
-                        console.info('User type: ' + user.userType);
+                    //console.log(user.verified);
+                    if(user.verified===true){
+                        console.info('User type is: ' + user.userType);
                         
                         sessionuser = {
                             userId: fulluser._id,
@@ -599,7 +668,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                             email: fulluser.email,
                             nLogins: fulluser.logins.length
                         };
-                        console.info(JSON.stringify(sessionuser));
+                        //console.info(JSON.stringify(sessionuser));
                         $cookies.putObject('sessionuser', sessionuser);
                         //alert($state.current.name);
                         
@@ -704,7 +773,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.privacyPolicy=false;
                 $scope.acceptPrivacyPolicy=true;
             }
-        }
+        };
         $scope.setNewPassword = function(){
             //alert($scope.password);
            var userPassword = {
@@ -1280,6 +1349,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }
             }
         })
+        .state('signup', {
+                url: '/signup',
+                views: {
+                    'header':{
+                        templateUrl: 'header.html',
+                        controller: 'headerController'
+                    },
+                    'body':{
+                        templateUrl: 'signup.html',
+                        controller: 'signupController'
+                    },
+                    'footer': {
+                        templateUrl: 'footer.html'
+                    }
+                }
+            })
         .state('category', {
             url: '/main/:categoryName',
             views: {
@@ -1321,7 +1406,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 },
                 'body':{
                     templateUrl: 'coaching.html',
-                    controller: 'findCoachingController',
+                    controller: 'coachingController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'

@@ -45,11 +45,12 @@
         <div class="form-group">
         <input type="password" placeholder="Password" class="form-control" ng-model="login.password" size="12">
         </div>
-        <button type="submit" class="btn btn-success">Sign in</button>
-        
+        <button type="submit" class="btn btn-success">Log in</button>
+        <button type="submit" class="btn btn-primary" ui-sref="signup">Sign up</button>
         </form>
         <form class="navbar-form" ng-show="!showLogin">
             <button type="submit" class="btn btn-primary" ng-click = "showLoginForm()" ng-show="!showLogin && !sessionuser">Log in</button>
+            
         </form>
             
         </div>

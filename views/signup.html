@@ -1,0 +1,157 @@
+<style>
+    #top-buffer{
+        margin-top: 20px;
+    }
+    #top-buffer1{
+        margin-top: 50px;
+    }
+    .whiteFont{
+        color: whitesmoke;
+    }
+    #leftSection{
+        border-right: 2px solid;
+        border-color: whitesmoke;
+    }
+    #categoryBorder{
+        
+    }
+    
+    a:hover{
+        text-decoration: none;
+    }
+    
+    #pageHeader{
+        background-color: rgba(0,0,0,0.5);
+        min-height: 70vh;
+    }
+
+    span.step {
+        background: green;
+        border-radius: 0.8em;
+        -moz-border-radius: 0.8em;
+        -webkit-border-radius: 0.8em;
+        color: #ffffff;
+        display: inline-block;
+        font-weight: bold;
+        line-height: 1.6em;
+        margin-right: 5px;
+        text-align: center;
+        width: 1.6em; 
+    }
+    
+    
+    
+</style>
+<div id="fullPageGradient">
+<div class="container" >
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="landingPage">
+        <div class="hidden-xs hidden-sm col-md-1 col-lg-1 top-buffer">
+            
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 animated fadeIn top-buffer" id="pageHeader">
+            <h1 class="md-display-1 text-center hidden-xs hidden-sm" id="headerFont"><span class="text"><strong>LOGIN TO EXAMBAZAAR.COM</strong></span>
+            </h1>
+            <h1 class="md-headline text-center hidden-md hidden-lg" id="headerFont"><span class="text"><strong>LOGIN TO EXAMBAZAAR.COM</strong></span>
+            </h1>
+            <h6>
+            
+            <div layout= "row" id ="top-buffer" layout-margin layout-padding>
+                <div class="hidden-xs hidden-sm col-md-4 col-lg-4" id="leftSection">
+                    <div layout="row" layout-align="start center">
+                        <h6 class="md-subhead whiteFont">
+                        Why Sign up?<br/><br/>
+                        <p><span class="step">1</span> Search & compare</p>
+                        <p><span class="step">2</span> Exclusive Discounts</p>
+                        <p><span class="step">3</span> Class Photos & Videos</p>
+                        <p><span class="step">4</span> Alerts about your Exam</p>
+                        </h6>
+                    </div>
+                    
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                <h6 class="hidden-xs hidden-sm md-subhead text-center whiteFont">
+                    Find options tailored just for you
+                </h6>
+                <h6 class="hidden-md hidden-lg text-center whiteFont">
+                    Find options tailored just for you
+                </h6>
+                <div layout="row" layout-align="center center" ng-show ="step1">
+                    <form name="signUpForm">
+                    <div class="input-group input-group-lg hidden-sm hidden-xs" id= "top-buffer1">
+                    <span class="input-group-addon whiteFont" id="sizing-addon1">+91</span>
+                    <input ng-model="newUser.contact.mobile" type="text" class="form-control whiteFont" size="10" placeholder="Mobile" aria-describedby="sizing-addon1" autofocus required>
+                    <span class="input-group-btn">
+                        <button class="btn btn-warning" type="button" ng-click="verifyPhone()" ng-disabled="signUpForm.$invalid">{{button1}}</button>
+                    </span>
+                    </div>
+                    </form>
+                    
+                    <form name="mobileSignUpForm">
+                    <div class="input-group input-group-sm hidden-md hidden-lg" id= "top-buffer1">
+                    <span class="input-group-addon whiteFont" id="sizing-addon1">+91</span>
+                    <input ng-model="newUser.contact.mobile" type="text" class="form-control whiteFont" size="10" placeholder="Mobile" aria-describedby="sizing-addon1" autofocus required ng-minlength="10" ng-maxlength="10">
+                    <span class="input-group-btn">
+                        <button class="btn btn-warning" type="button" ng-click="verifyPhone()" ng-disabled="mobileSignUpForm.$invalid">{{button1}}</button>
+                    </span>
+                    </div>
+                    </form>   
+                    
+                </div>
+                <div layout="row" layout-align="center center" ng-show="step2">
+                    <form name="OTPVerifyForm">
+                    <h6 class="text-center whiteFont">
+                        To verify your login, we have sent an OTP (one time password) to your mobile number <span class="text-primary">{{newUser.contact.mobile}}</span>
+                    </h6>
+                    <div class="input-group input-group-lg" id= "top-buffer1">
+                    <span class="input-group-addon whiteFont" id="sizing-addon1"><strong>OTP</strong></span>
+                    <input ng-model="newUser.OTP" type="text" class="form-control whiteFont" size="4" placeholder="4 digit OTP" aria-describedby="sizing-addon1" autofocus required>
+                    <span class="input-group-btn">
+                        <button class="btn btn-warning" type="button" ng-click="verifyOTP()" ng-disabled="OTPVerifyForm.$invalid">{{button2}}</button>
+                    </span>
+                    </div>
+                    <p class="text-center whiteFont" id="OTPmessage">
+                        <small>
+                            {{OTPmessage}}
+                        </small>
+                    </p>
+                    </form> 
+                </div>
+                    
+                <div layout="column" layout-align="center center" ng-show="step3">
+                    <form name="namePasswordForm">
+                    <h6 class="text-center whiteFont">
+                        Name & password
+                    </h6>
+                    <div class="input-group input-group" id= "top-buffer1">
+                    <span class="input-group-addon whiteFont" id="sizing-addon1"><strong>Name</strong></span>
+                    <input ng-model="newUser.basic.name" type="text" class="form-control whiteFont" placeholder="Full Name" aria-describedby="sizing-addon1" autofocus required>
+                    </div>
+                    <div class="input-group input-group">
+                    <span class="input-group-addon whiteFont" id="sizing-addon1"><strong>Password  </strong></span>
+                    <input ng-model="newUser.password" type="password" class="form-control whiteFont" placeholder="Choose a password" aria-describedby="sizing-addon1" required>
+                    </div>
+                    <div layout="row">
+                    <span class="input-group-btn top-buffer1">
+                        <button class="btn btn-warning" type="button" ng-click="addUser()" ng-disabled="namePasswordForm.$invalid">{{button3}}</button>
+                    </span>
+                    </div>
+                    </form> 
+                </div>    
+            </div>
+                
+            </div>
+            
+                
+                
+            </h6>
+            
+        </div>
+        
+        <div class="hidden-xs hidden-sm col-md-1 col-lg-1 top-buffer">
+            
+        </div>
+        
+    </div>
+    
+    
+</div>

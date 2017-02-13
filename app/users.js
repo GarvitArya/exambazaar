@@ -23,7 +23,7 @@ router.post('/save', function(req, res) {
     var existingUser = user.findOne({ 'mobile': mobileNumber },function (err, existingUser) {
         var hash = bcrypt.hashSync(thisUser.password, bcrypt.genSaltSync(10));
         var this_user = new user({
-            userType : 'Master',
+            userType : thisUser.userType,
             password : hash,
             basic: {
                 name: thisUser.basic.name,
@@ -32,6 +32,7 @@ router.post('/save', function(req, res) {
             },
             mobile: thisUser.contact.mobile,
             email: thisUser.contact.email,
+            verified: thisUser.verified
         });
         this_user.save(function(err, this_user) {
             if (err) return console.error(err);

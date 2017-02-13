@@ -17,6 +17,7 @@ moment().format();
 //to add a user
 router.post('/generate', function(req, res) {
     var thisOTP = req.body.otp;
+    console.log(JSON.stringify(req.body));
     var thisMobile = req.body.mobile;
     var thisUser = req.body._user;
     var thisFirstName = req.body.firstName;
@@ -25,7 +26,7 @@ router.post('/generate', function(req, res) {
     var expiry_time = moment().add(30, 'm');
     //console.log(generated_time.format() + " " + expiry_time.format());
     
-    otp.remove({'_user': thisUser}, function(err) {
+    otp.remove({'mobile': thisMobile}, function(err) {
         if (!err) {}
         else {}
     });

@@ -25,7 +25,7 @@ var userSchema = mongoose.Schema({
     },
     mobile : { type: String,required: true,unique:true },
     email : { type: String},
-    verified : { type: String, default: "False"},
+    verified : { type: Boolean, default: false},
     _created: { type: Date, default: Date.now },
     logins:[{type: Date}] //,required: true
 });
