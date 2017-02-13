@@ -864,14 +864,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
             
             $scope.responsibilities = [
-                'Assist in building partnership with education providers and pitching our product over phone',
-                'Organizing and attending meetings with external parties to discuss strategic collaboration',
-                'Perform analysis of marketing and sales data and effectiveness of business develop efforts',
-                'Assist in the distribution and delivery of marketing material',
-                'Prepare presentations (pitch and marketing material)',
-                'Generate leads for the business to grow',
-                'If required, visit education providers on field and present company marketing material',
-                'Maintain tracking report of public relations activity'
+                'Building partnerships & collating further information about education providers',
+                'Assisting in the preparation, distribution and delivery of marketing material',
+                'Growing the business through social media and traditional expansion means',
+                'Receiving feedback from users and developing techniques to improve the service consequently'
             ];
             $scope.requirements = [
                 'Excellent verbal and written communication skills, with extensive knowledge of social media',

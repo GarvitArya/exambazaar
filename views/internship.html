@@ -1,6 +1,7 @@
 <style>
-    .top-buffer { margin-top:20px; }
+    .top-buffer { margin-top:10px; }
     .top-buffer2 { margin-top:10px; }
+    .top-buffer2 { margin-top:30px; }
     
     .input-group .icon-addon .form-control {
     border-radius: 0;
@@ -15,11 +16,11 @@
 </style>
 <div class="container" id="landingPage"  layout-margin layout-padding>
 <div class="row top-buffer">
-    <h4 class="text-primary">
-    BUSINESS DEVELOPMENT INTERNSHIP
-    </h4>
+    <h3 class="text-primary"><strong>
+    INTERNSHIP
+    </strong></h3>
     <h5>
-    <strong>MARKETING & SALES </strong>
+    <strong>MARKETING</strong>
     </h5>
 </div>
 <md-divider></md-divider>
@@ -40,86 +41,77 @@
 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">    
     
     <div class="row top-buffer">
-        <h6 class="text-primary">
-        <strong>DESCRIPTION</strong>
-        </h6>
+        <h4 class="text-primary">
+        <strong>ABOUT US</strong>
+        </h4>
     </div>
     <div class="row">
         <span class="h6">
-            ExamBazaar.com is looking for a qualified intern to join the marketing/advertising team. Our marketing department reaches out to education providers and builds partnership to generate leads for them. We are seeking an intern who can participate in various stages of our business development drive.
+            Exambazaar.com is India’s biggest and largest education discovery platform which provides comprehensive information for test prep for entrance exams, colleges, courses, universities and career options in India. You can find information about more than 100 exams and how to prepare for them. Students can also find exclusive videos and photographs of thousands of coaching institutes in every nook and corner of India. We currently cover 93 cities across India with over 30,000 education providers and are looking to expand.
         </span>
     </div>
-    <br/>
-    <div class="row">
-        <span class="h6">
-            The intern should be prepared to work in a fast-paced team environment, and will finish the internship having gained broad experience in various aspects of marketing from the founders (IIT Bombay, Delhi & IIM Bangalore Alumni) with over 5 years of international work experience.
-        </span>
-    </div>
-    <md-divider></md-divider>
     <div class="row top-buffer">
-        <h6 class="text-primary">
-        <strong>RESPONSIBILITIES</strong>
-        </h6>
+        <h4 class="text-primary">
+        <strong>ABOUT INTERNSHIP</strong>
+        </h4>
     </div>
     <div class="row">
         <span class="h6">
-            <ul>
-                <li ng-repeat="responsibility in responsibilities">
-                    {{responsibility}}
-                </li>
-            </ul>
+            We are looking for ambitious interns to help us grow the business further to reach students all across India contemplating their next big step. The role will involve a mix of marketing, sales and business development elements which will give you a huge opportunity to learn multiple business skills directly from the founders (IITB, IITD & IIM Bangalore Alumni with 9 years of international work ex) and get hands-on experience that will boost for your future career remarkably. We do not expect any prior experience and will help and guide in your tasks, however we do expect abundant enthusiasm and a keen desire to learn. We are also looking to hire full time soon, so this can be your opportunity to bag an envious full time job!
+        </span>
+        <br/>
+        <br/>
+        <span class="h6">
+            <p>
+            You will work on several exciting tasks: 
+            </p>
+            
+            <p>1. Building partnerships & collating further information about education providers </p>
+            <p>2. Assisting in the preparation, distribution and delivery of marketing material</p>
+            <p>3. Growing the business through social media and traditional expansion means</p>
+            <p>4. Receiving feedback from users and developing techniques to improve the service consequently</p>
+            
+            <p class="text-primary"><strong>
+                # of Internships available: 4
+            </strong></p>        
         </span>
     </div>
-    <md-divider></md-divider>
     <div class="row top-buffer">
-        <h6 class="text-primary">
-        <strong>REQUIREMENTS</strong>
-        </h6>
+        <h4 class="text-primary">
+        <strong>PERKS</strong>
+        </h4>
     </div>
     <div class="row">
         <span class="h6">
-            ExamBazaar.com is looking to build a team of 5 students in Jaipur who is majoring in Sales, Marketing or Advertising. Individual(s) should have:
-            <ul>
-            <li ng-repeat="requirement in requirements">
-                {{requirement}}
-            </li>
-        </ul>
+            Certificate, Letter of recommendation, Flexible work hours, Informal dress code, Free snacks & beverages.
         </span>
+        <p class="text-primary"><strong>
+            Stipend: Rs. 4000 / month
+        </strong></p> 
     </div>
-    <md-divider></md-divider>
+    
     <div class="row top-buffer">
-        <h6 class="text-primary">
-        <strong>MAJORS</strong>
-        </h6>
-    </div>
-    <div class="row">
-        <span class="h6">
-            Marketing, Sales, Advertising
-        </span>
-    </div>
-    <md-divider></md-divider>
-    <div class="row top-buffer">
-        <h6 class="text-primary">
+        <h4 class="text-primary">
         <strong>DETAILS</strong>
-        </h6>
+        </h4>
     </div>
     <div class="row">
         <span class="h6">
-            Location: Jaipur<br/>
+            Location: Work from home<br/>
             Hours/week: 20<br/>
             Start Date: Immediately<br/>
         </span>
     </div>
-    <md-divider></md-divider>
 </div>
 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
     <div class="row" id="apply">
         <form name="applicantForm" >
         <div  class="panel panel-default">
             <div class="panel-heading">
-                <h6 class="text-primary"><strong>APPLY NOW</strong></h6>
+                <h4 class="text-primary"><strong>APPLY NOW</strong></h4>
             </div>
             <div class="panel-body">
+                <div layout="column">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                 <md-input-container class="md-block" flex-gt-sm>
                     <label>Name</label>
@@ -142,8 +134,10 @@
                     <label>Resume</label>
                     <input type="file" nv-file-select uploader="uploader" >
                 </div>
-                <div class="col-md-12 col-sm-12 col-xs-12 top-buffer">
+                
+                <div layout="row" layout-margin layout-padding layout-align="center center">
                     <md-button class="md-raised md-primary" ng-click="submit()" ng-disabled="applicantForm.$invalid">Submit</md-button>
+                </div>
                 </div>
             </div>
         </div>

@@ -22,11 +22,17 @@
                     <td>email</td>
                     <td><input ng-model="provider.email" size="100"></td>
                 </tr>
+                 <tr id="addRow">
+                    <td>tgt study</td>
+                    <td><a ng-href="{{provider.targetStudyWebsite}}" target="_blank">TS URL
+                        </a>
+                        </td>
+                </tr>
             </table>
             
         </div>
         <div class="row top-buffer">
-            <md-button class="md-raised md-primary" ng-click="saveCoaching()">Save</md-button>
+            <md-button type="submit" class="md-raised md-primary" ng-click="saveCoaching()">Save</md-button>
         </div>
         
     </div>
