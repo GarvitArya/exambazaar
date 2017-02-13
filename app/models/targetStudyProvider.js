@@ -8,6 +8,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     name: {type: String,required: true},
     targetStudyWebsite: String,
     website: String,
+    email: String,
     address: String,
     area: String,
     city: String,

@@ -199,7 +199,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.post('/api/users/updatePassword',userPassword);
         };
     }]);
-    
+    exambazaar.service('ExamService', ['$http', function($http) {
+        this.saveExam = function(exam) {
+            return $http.post('/api/exams/save', exam);
+        };
+        this.getExam = function(examId) {
+            return $http.get('/api/exams/edit/'+examId, {examId: examId});
+        };
+        this.getExams = function() {
+            return $http.get('/api/exams');
+        };
+        
+    }]);
     exambazaar.service('ProviderService', ['$http', function($http) {
         this.getProviders = function(city) {
             //alert(city);
@@ -250,6 +261,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.logoService = function() {
             return $http.get('/api/targetStudyProviders/logoService');
+        };
+        this.UniqueLogoService = function() {
+            return $http.get('/api/targetStudyProviders/UniqueLogoService');
         };
         this.getAllCourses = function() {
             return $http.get('/api/targetStudyProviders/getAllCourses');
@@ -993,6 +1007,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 console.info("Error ");
             });
         };
+        $scope.UniqueLogoService = function(){
+            
+            $scope.showlogos = true;
+            targetStudyProviderService.UniqueLogoService().success(function (data, status, headers) {
+                $scope.uniquelogos = data;
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
         $scope.getAllCourses = function(){
             targetStudyProviderService.getAllCourses().success(function (data, status, headers) {
                 console.info("Done");
@@ -1174,7 +1198,23 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
             };
         }]);
-    
+    exambazaar.controller("addExamController", 
+        [ '$scope',  'examList','ExamService','$http','$state', function($scope, examList, ExamService,$http,$state){
+        $scope.exams = examList.data;
+            console.info(examList.data);
+        $scope.addExam = function () {
+            var saveExam = ExamService.saveExam($scope.exam).success(function (data, status, headers) {
+               //$state.go('master-dashboard', {masterId: masterId});
+            
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+        };
+        $scope.setExam = function(exam){
+            $scope.exam = exam;
+        };
+    }]);  
     exambazaar.controller("addMasterController", 
         [ '$scope', 'UserService','$http','$state', function($scope, UserService,$http,$state){
         $scope.genders = ["Female", "Male"];
@@ -2347,6 +2387,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     return InstituteService.getInstitute($stateParams.instituteId);
                 }],
                 institute: function() { return {}; }
+            }
+        })
+        .state('addExam', {
+            url: '/addExam',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'addExam.html',
+                    controller: 'addExamController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                exam: function() { return {}; }
             }
         })
         .state('addMaster', {

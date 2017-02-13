@@ -102,7 +102,7 @@ router.post('/savecoaching', function(req, res) {
         console.log("New Coaching is: " + JSON.stringify(thisProvider));
         for (var property in thisProvider) {
             oldProvider[property] = thisProvider[property];
-            console.log(oldProvider[property]);
+            //console.log(oldProvider[property]);
             if (oldProvider.hasOwnProperty(property)) {
                 
                 // do stuff
@@ -174,6 +174,17 @@ router.get('/logoService', function(req, res) {
     }
     });
 });
+
+router.get('/UniqueLogoService', function(req, res) {
+    console.log("Getting all logos");
+    targetStudyProvider.distinct( "oldlogo",function(err, docs) {
+    if (!err){ 
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    });
+});
+
 
 router.get('/getAllCourses', function(req, res) {
     //console.log("Starting now");

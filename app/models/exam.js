@@ -3,15 +3,22 @@ var Schema = mongoose.Schema;
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var examSchema = mongoose.Schema({
-    _subject: { type: Schema.ObjectId, required: true,ref: 'subject' },
-    info: {
-        name: {type: String,required: true},    
-        type: {type: String,required: true},  
-        date: {type: Date,required: true},  
-        maxMarks: {type: Number},  
-        weightage: {type: Number,required: true}  
-    },
-    _evals: [{ type: Schema.ObjectId, ref: 'eval' }]
+    name: {type: String,required: true,unique:true},    
+    what: {type: String},
+    brochure: {type: String},
+    website: {type: String},
+    appear: {type: String},
+    registration: {type: String},
+    dates: {type: String},
+    syllabus: {type: String},
+    pattern: {type: String},
+    preparation: {type: String},
+    studysource: {type: String},
+    previouspapers: {type: String},
+    qualify: {type: String},
+    colleges: {type: String},
+    doubts: {type: String}
+    
 });
 examSchema.plugin(deepPopulate);
 module.exports = mongoose.model('exam', examSchema);

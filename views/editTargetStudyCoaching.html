@@ -1,6 +1,8 @@
 <style>
     .top-buffer { margin-top:20px; }
-    
+    #addRow{
+        color: blue;
+    }
     
 </style>
 <div class="container">
@@ -16,12 +18,14 @@
                     <input ng-model="provider[key]" size="100">
                     </td>
                 </tr>
-            
+                <tr id="addRow">
+                    <td>email</td>
+                    <td><input ng-model="provider.email" size="100"></td>
+                </tr>
             </table>
             
         </div>
         <div class="row top-buffer">
-            <md-button class="md-raised md-primary" ng-click="saveCoaching()">Save</md-button>
             <md-button class="md-raised md-primary" ng-click="saveCoaching()">Save</md-button>
         </div>
         

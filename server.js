@@ -61,12 +61,12 @@ var notifications = require('./app/notifications.js',notifications);
 var emails = require('./app/emails.js',emails); 
 var smss = require('./app/smss.js',smss);
 var otps = require('./app/otps.js',otps); 
-
+var exams = require('./app/exams.js',exams); 
 //var teachers = require('./app/teachers.js',teachers); 
 //var batches = require('./app/batches.js',batches); 
 //var parents = require('./app/parents.js',parents); 
 //var subjects = require('./app/subjects.js',subjects); 
-//var exams = require('./app/exams.js',exams); 
+
 //var evals = require('./app/evals.js',evals); 
 //var calendars = require('./app/users.js',calendars); 
 //var days = require('./app/users.js',days); 
@@ -85,13 +85,13 @@ app.use('/api/notifications', notifications);
 app.use('/api/emails', emails);
 app.use('/api/smss', smss);
 app.use('/api/otps', otps);
-
+app.use('/api/exams', exams);
 //app.use('/api/institutes', institutes);
 //app.use('/api/teachers', teachers);
 //app.use('/api/batches', batches);
 //app.use('/api/parents', parents);
 //app.use('/api/subjects', subjects);
-//app.use('/api/exams', exams);
+
 //app.use('/api/evals', evals);
 //app.use('/api/calendars', calendars);
 //app.use('/api/days', days);

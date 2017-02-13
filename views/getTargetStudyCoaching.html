@@ -95,6 +95,7 @@
         <md-button class="md-raised md-primary" ng-click="removeDuplicates()">Remove Duplicates</md-button>
         <md-button class="md-raised md-primary" ng-click="cleanTargetstudyurls()">Clean Websites</md-button>
         <md-button class="md-raised md-primary" ng-click="logoService()">Logo Service</md-button>
+        <md-button class="md-raised md-primary" ng-click="UniqueLogoService()">Unique Logo</md-button>
         <!--<md-button class="md-raised md-primary" ng-click="rank0()">Set Rank 0</md-button>
         <md-button class="md-raised md-primary" ng-click="getAllCourses()">All Courses</md-button>-->
     </div>
@@ -122,7 +123,7 @@
         </hot-table>
     </div>-->
     
-    <div class = "row top-buffer">
+    <div class = "row top-buffer" >
         <div layout="row">
         <div class="col-md-8 icon-addon addon-md">
             <input type="search" placeholder="Search by name" class="form-control" id="searchText" ng-model="searchText">
@@ -137,7 +138,7 @@
     </div>
     <md-divider></md-divider>
     <!-- orderBy:'-coursesOffered.length'-->
-    <div class="row top-buffer">
+    <div class="row top-buffer" ng-show="!showlogos">
         <div ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered" class="col-md-12 col-sm-12 col-xs-12">
         <div class="row">
             <small>
@@ -193,7 +194,12 @@
         </div>
         </div>
     
-    
+        
     </div>
-    
+    <div class="row">
+            <div ng-repeat="logo in uniquelogos">
+                {{logo}}
+            </div>
+        
+        </div>
 </div>
