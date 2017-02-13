@@ -152,6 +152,29 @@ router.get('/setRank0', function(req, res) {
     });
 });
 
+router.get('/logoService', function(req, res) {
+    console.log("Logo Service Starting now");
+    var allproviders =  targetStudyProvider.find({}, {logo:1, oldlogo:1},function(err, allproviders) {
+    if (!err){
+         allproviders.forEach(function(thisprovider, index){
+            //console.log(index);
+            //console.log(thisprovider);
+            if(thisprovider.logo){
+                if(thisprovider.logo.indexOf('http') != -1){
+                    if(thisprovider.logo != 'https://targetstudy.com/tools/ge.php')
+                    thisprovider.oldlogo = thisprovider.logo;
+                }
+            }
+                
+            thisprovider.save(function(err, thisprovider) {
+                if (err) return console.error(err);
+                console.log(thisprovider._id + " saved!");
+            });
+         });
+    }
+    });
+});
+
 router.get('/getAllCourses', function(req, res) {
     //console.log("Starting now");
     var allCourses = [];

@@ -248,6 +248,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.rank0 = function() {
             return $http.get('/api/targetStudyProviders/setRank0');
         };
+        this.logoService = function() {
+            return $http.get('/api/targetStudyProviders/logoService');
+        };
         this.getAllCourses = function() {
             return $http.get('/api/targetStudyProviders/getAllCourses');
         };
@@ -547,7 +550,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.provider = thisProvider.data;
         
         if($scope.provider.pincode){
-            $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.city + ' ' + $scope.provider.pincode;
+            $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' +
+            $scope.provider.city + ' ' +
+            $scope.provider.pincode;
         }else{
             $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' + $scope.provider.city;   
         }
@@ -974,6 +979,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         $scope.rank0 = function(){
             targetStudyProviderService.rank0().success(function (data, status, headers) {
+                console.info("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
+        $scope.logoService = function(){
+            targetStudyProviderService.logoService().success(function (data, status, headers) {
                 console.info("Done");
             })
             .error(function (data, status, header, config) {

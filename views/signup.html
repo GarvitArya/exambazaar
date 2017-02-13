@@ -81,7 +81,7 @@
                     <span class="input-group-addon whiteFont" id="sizing-addon1">+91</span>
                     <input ng-model="newUser.contact.mobile" type="text" class="form-control whiteFont" size="10" placeholder="Mobile" aria-describedby="sizing-addon1" autofocus required>
                     <span class="input-group-btn">
-                        <button class="btn btn-warning" type="button" ng-click="verifyPhone()" ng-disabled="signUpForm.$invalid">{{button1}}</button>
+                        <button class="btn btn-warning" type="submit" ng-click="verifyPhone()" ng-disabled="signUpForm.$invalid">{{button1}}</button>
                     </span>
                     </div>
                     </form>
@@ -91,7 +91,7 @@
                     <span class="input-group-addon whiteFont" id="sizing-addon1">+91</span>
                     <input ng-model="newUser.contact.mobile" type="text" class="form-control whiteFont" size="10" placeholder="Mobile" aria-describedby="sizing-addon1" autofocus required ng-minlength="10" ng-maxlength="10">
                     <span class="input-group-btn">
-                        <button class="btn btn-warning" type="button" ng-click="verifyPhone()" ng-disabled="mobileSignUpForm.$invalid">{{button1}}</button>
+                        <button class="btn btn-warning" type="submit" ng-click="verifyPhone()" ng-disabled="mobileSignUpForm.$invalid">{{button1}}</button>
                     </span>
                     </div>
                     </form>   
@@ -106,7 +106,7 @@
                     <span class="input-group-addon whiteFont" id="sizing-addon1"><strong>OTP</strong></span>
                     <input ng-model="newUser.OTP" type="text" class="form-control whiteFont" size="4" placeholder="4 digit OTP" aria-describedby="sizing-addon1" autofocus required>
                     <span class="input-group-btn">
-                        <button class="btn btn-warning" type="button" ng-click="verifyOTP()" ng-disabled="OTPVerifyForm.$invalid">{{button2}}</button>
+                        <button class="btn btn-warning" type="submit" ng-click="verifyOTP()" ng-disabled="OTPVerifyForm.$invalid" autofocus>{{button2}}</button>
                     </span>
                     </div>
                     <p class="text-center whiteFont" id="OTPmessage">
@@ -124,15 +124,15 @@
                     </h6>
                     <div class="input-group input-group" id= "top-buffer1">
                     <span class="input-group-addon whiteFont" id="sizing-addon1"><strong>Name</strong></span>
-                    <input ng-model="newUser.basic.name" type="text" class="form-control whiteFont" placeholder="Full Name" aria-describedby="sizing-addon1" autofocus required>
+                    <input ng-model="newUser.basic.name" type="text" class="form-control whiteFont" placeholder="Full Name" aria-describedby="sizing-addon1" autofocus required autocomplete="off">
                     </div>
                     <div class="input-group input-group">
-                    <span class="input-group-addon whiteFont" id="sizing-addon1"><strong>Password  </strong></span>
+                    <span class="input-group-addon whiteFont" id="sizing-addon1" autocomplete="off"><strong>Password  </strong></span>
                     <input ng-model="newUser.password" type="password" class="form-control whiteFont" placeholder="Choose a password" aria-describedby="sizing-addon1" required>
                     </div>
-                    <div layout="row">
+                    <div layout="row" layout-margin layout-padding>
                     <span class="input-group-btn top-buffer1">
-                        <button class="btn btn-warning" type="button" ng-click="addUser()" ng-disabled="namePasswordForm.$invalid">{{button3}}</button>
+                        <button class="btn btn-warning" type="submit" ng-click="addUser()" ng-disabled="namePasswordForm.$invalid">{{button3}}</button>
                     </span>
                     </div>
                     </form> 

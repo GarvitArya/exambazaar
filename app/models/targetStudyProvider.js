@@ -14,6 +14,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     state: String,
     pincode: String,
     logo: String,
+    oldlogo: String,
     mobile: [String],
     phone: [String],
     coursesOffered: [String],
