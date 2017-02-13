@@ -244,6 +244,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getCount = function() {
             return $http.get('/api/targetStudyProviders/count');
         };
+        this.getCityCount = function() {
+            return $http.get('/api/targetStudyProviders/cityCount');
+        };
         this.getCities = function() {
             return $http.get('/api/targetStudyProviders/cities');
         };
@@ -415,6 +418,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     exambazaar.controller("cityController", 
         [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories){
+        
+        $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Vadodara","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vellore","Vishakhapatnam"];
         
         $scope.cities = cities;
         $scope.category = {};
@@ -995,6 +1000,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 console.info("Error ");
             });
         };
+        $scope.getCityCount = function(){
+            targetStudyProviderService.getCityCount().success(function (data, status, headers) {
+                console.info("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
+        
         $scope.logoService = function(){
             targetStudyProviderService.logoService().success(function (data, status, headers) {
                 console.info("Done");
@@ -2778,6 +2792,9 @@ exambazaar.run(function($rootScope) {
       //$rootScope.message = 'Logged out.';
       $http.post('/logout');
     };
+    $rootScope.$on('$stateChangeSuccess', function() {
+       document.body.scrollTop = document.documentElement.scrollTop = 0;
+    });
 });
 
 function generateOtp(min, max) {

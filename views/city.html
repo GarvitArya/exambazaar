@@ -27,8 +27,14 @@
         margin-right: 5px;
         padding: 5px;
     }
-    #categoryBorder{
-        
+    #categoryFont2{
+        color: white;
+        border-style: solid;
+        border-width: 2px;
+        background-color: rgba(0,0,0,0.5);
+        margin-top:20px;
+        margin-bottom:20px;
+        padding: 10px;
     }
     #headerFont{
         color: white;
@@ -38,6 +44,9 @@
     }
     a:hover{
         text-decoration: none;
+    }
+    a{
+        color: white;
     }
     #subcategory{
         text-align: center;
@@ -56,18 +65,43 @@
         </small></div>
         
         <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 animated bounce top-buffer" id="pageHeader">
-            <h1 class="text md-display-2" id="headerFont">WHERE DO YOU WANT TO STUDY?
+            <h1 class="text md-display-1" id="headerFont"><strong>WHERE DO YOU WANT TO STUDY?</strong>
             </h1>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div ng-repeat="city in cities">
+        <div class="row">
+        <div ng-repeat="city in rankedCities" ng-if="$index<12">
             <!-- ng-click="showCoaching(city)"-->
-            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" id="categoryBorder">
+            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
                 <a class="md-subhead text-center hvr-sweep-to-right " id="categoryFont" ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">
                     {{city}}
                 </a>
             </div> 
         </div>
+        </div>
+            
+        <div class="row" id="categoryFont2">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+            <span class="md-subhead"><strong>Other Cities</strong></span>
+        </div>
+        <div ng-repeat="city in rankedCities" ng-if="$index>=12" >
+            <!-- ng-click="showCoaching(city)"-->
+            <div class="col-xs-4 col-sm-3 col-md-1 col-lg-1">
+                <a class="text-center hvr-sweep-to-right "  ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">
+                    <small>{{city}}</small>
+                </a>
+            </div> 
+        </div>
+        </div>
+        <!--<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" id="categoryBorder">
+                <md-input-container class="md-block" flex-gt-sm id="categoryFont">
+                    <md-select placeholder="Other Cities" ng-model="otherCity">
+                      <md-option ng-repeat="city in rankedCities" value="{{city}}" ng-if="$index>=12" class="md-subhead">
+                        {{city}}
+                      </md-option>
+                    </md-select>
+                  </md-input-container>
+        </div>-->
         </div>
         
     </div>

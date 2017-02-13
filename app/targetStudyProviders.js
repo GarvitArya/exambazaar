@@ -40,6 +40,34 @@ router.get('/city/:city', function(req, res) {
     }); //.limit(500)
 });
 
+router.get('/cityCount', function(req, res) {
+    //console.log("In city count");
+    var cities = targetStudyProvider.distinct( "city",function(err, cities) {
+    if (!err){
+        var allCityCount = [];
+        cities.forEach(function(thisCity, index){
+            var cityCount = targetStudyProvider.count({"city" : thisCity}, function(err, cityCount) {
+                if (!err){ 
+                    console.log(thisCity + "-" + cityCount);
+                    //res.json(docs);
+                    var thisCityCount = {
+                        city: thisCity,
+                        count: cityCount
+                    };
+                    allCityCount.push(thisCityCount);
+                } else {throw err;}
+            });
+        });
+        /*console.log("Cities are: "+JSON.stringify(cities));
+        allCityCount.forEach(function(thisCityCount, index){
+            console.log(thisCityCount.city + " " + thisCityCount.count); 
+        });*/
+        
+        
+    } else {throw err;}
+    });
+});
+
 router.get('/providersWithAreas', function(req, res) {
     targetStudyProvider.find({"name" : {$regex : ".*-.*"}}, {name:1 , address:1},function(err, docs) {
     if (!err){ 
