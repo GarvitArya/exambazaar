@@ -80,7 +80,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         name: "school",
         sub: "NTSE, NSE, KVPY, IMO, NSO and more",
         subcategory:[
-            {name:"ntse", displayname:"NTSE"}
+            {name:"ntse", displayname:"NTSE",description:"NTSE is a National Level scholarship program to identify and nurture talented students. Close to 500,000 students appear in this scholarship exam every year, and 1000 scholarships are awarded"}
             ] // "NSE", "KVPY", "IMO", "NSO"
         },
         {
