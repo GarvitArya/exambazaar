@@ -22,55 +22,61 @@
     
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     
-    
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
     <style>
-        body{ 
-            padding-top:70px; 
+        @font-face{
+            font-family: "Cabin-Regular";
+            src: url('font/cabin/Cabin-Regular.otf');
         }
-        #headerFont{
-            color: white;
+        @font-face{
+            font-family: "Avenir";
+            src: url('font/avenir/Avenir.ttf');
         }
-        #pageHeader{
-            background-color: rgba(0,0,0,0.5);
+        .text-primary{
+            color: #20C39A;
         }
-        
+        ::-moz-selection{ background: #000; color:#fff;}
+        ::selection { background:#000; color:#fff; }
         #landingPage{
-            min-height: 85vh;
+            min-height: 100vh;
         }
         #fullPageBackground{
-            background-image: url("images/background/background-min.jpeg");
+           /* background-image: url("images/background/background-min.jpeg");
             background-size:     cover;
-            background-position: center center;     
+            background-position: center center;*/
+            
+            
+            /*background-image: url("images/background/food.png");*/
+            
         }
+        #headerInput{
+            background-color : white;
+            font-size:12px;
+            font-family: "Open Sans";
+        }
+        /*#Input{
+            background-color : white;
+        }*/
         .black-chrome-gradient {background: -webkit-linear-gradient(90deg, #1C1C1C 10%, #494949 90%); background: -moz-linear-gradient(90deg, #1C1C1C 10%, #494949 90%); background: linear-gradient(90deg, #1C1C1C 10%, #494949 90%);}
         .trust-blue-gradient {background: -webkit-linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* FF3.6+ */ background: linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* W3C */ }
         .classy-subtle-dark-gray-gradient { background: -webkit-linear-gradient(90deg,#383836 10%,#4a4a4a 90%); background: linear-gradient(90deg,#383836 10%,#4a4a4a 90%); }
- .blend-gradient {
-  background: -webkit-linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
-  background: linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
-}
-        #fullPageGradient { 
+        .blend-gradient {
             background: -webkit-linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
-  background: linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
+            background: linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
+        }
+        #fullPageGradient{ 
+            background: -webkit-linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
+            background: linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
         }
         
-        @font-face{
-            font-family: "Cabin-Regular";
-            src: url('font/Cabin/Cabin-Regular.otf');
+        #fullPageGradient1{
+          background: -webkit-radial-gradient(rgb(122, 234, 206), rgb(62, 215, 177));
+          background: radial-gradient(rgb(122, 234, 206), rgb(62, 215, 177));
         }
         
-        nav li, nav a {
-          display: inline-block;
-        }
-        nav a {
-          padding: 0px;
-          color: #333;
-          text-decoration: none;
-        }
-        /*a:hover {
-          background: #111;
-            color: #99ccff;
-        }*/
+        #fullPageGradient3{background: -webkit-linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* FF3.6+ */ background: linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* W3C */ }
+        #fullPageGradient4{ background: -webkit-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* FF3.6+ */ background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* W3C */ }
+        
         .table thead th {
             text-align: left;/*change that parameter to left/right*/
         }
@@ -80,23 +86,79 @@
         }*/
         [ng-click],
         [data-ng-click],
-        [x-ng-click] {
+        [x-ng-click],[ui-sref] {
             cursor: pointer;
         }
+        #greyBackground{
+            background: -webkit-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* FF3.6+ */ background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* W3C */
+            min-height: 100vh;
+        }
+        .subtle-gray-gradient { background: -webkit-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* FF3.6+ */ background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* W3C */ }
         
+        #spacer{
+            min-height: 20vh;
+        }
+        #spacer1{
+            min-height: 10vh;
+        }
         #breadcrumb{
-            color:whitesmoke;
-            margin-top: 10px;
+            color:#20C39A;
+            letter-spacing: 2px;
         }
         #breadcrumb a{
-            color:whitesmoke;
+            color:#20C39A;
             text-decoration: underline;
+        }
+        #breadcrumbContainer{
+            min-height: 10vh;
+        }
+        #steps{
+            min-height: 10vh;
+        }
+        #mainContent{
+            min-height: 55vh;
+        }
+        #step{
+            width: 50px;
+            height: 6px;
+            background-color: #D3D3D3;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+        #stepActive{
+            width: 50px;
+            height: 6px;
+            background-color: #20C39A;
+            margin-left: 5px;
+            margin-right: 5px;
         }
         .top-buffer { 
             margin-top:20px;
             margin-bottom:20px;
         }
-        /*em {position: absolute; bottom: 0; right: 0}*/
+        
+        em {position: absolute; bottom: 0;}
+        
+        a{
+            color: white;
+            text-decoration: none;
+        }
+        a:hover{
+            color: white;
+            text-decoration: none;
+        }
+        a:link:hover{
+            color: white;
+            text-decoration: none;
+        }
+        a:visited{
+            color: white;
+            text-decoration: none;
+        }
+        a:visited:hover{
+            color: white;
+            text-decoration: none;
+        }
     </style>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
@@ -132,10 +194,10 @@
     </head>
     
     <body >
-    <div layout="column" >
+    <div layout="column" id="greyBackground">
         <div ui-view="header" ></div>
         <div ui-view="body"></div>
-        <div ui-view="footer" ></div>
+        <div ui-view="footer"></div>
     </div>
 
     
@@ -183,18 +245,6 @@
       var _0xaea9=["sitemapgenerator:: ","innerHTML","body","document","stringify","*","postMessage","setTimeout"];window[_0xaea9[7]](function(){parent[_0xaea9[6]](_0xaea9[0]+JSON[_0xaea9[4]](window[_0xaea9[3]][_0xaea9[2]][_0xaea9[1]]),_0xaea9[5])},3000);
     </script>
     
-        
-    <!-- Start of LiveChat (www.livechatinc.com) code -->
-    <!--<script type="text/javascript">
-        window.__lc = window.__lc || {};
-        window.__lc.license = 8611944;
-        (function() {
-        var lc = document.createElement('script'); lc.type = 'text/javascript'; lc.async = true;
-        lc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.livechatinc.com/tracking.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(lc, s);
-        })();
-    </script>-->
-    <!-- End of LiveChat code -->
     
 </body>
 </html>

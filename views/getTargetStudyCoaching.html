@@ -79,11 +79,30 @@
 .icon-addon:hover .fa {
     color: #2580db;
 }
-    
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
     
 </style>
-<link rel="stylesheet" media="screen" href="handsontable.full.css">
 <div class="container">
+    <div id="spacer1">
+    </div>
     <div class="row top-buffer">
         {{providers}}
     </div>
@@ -91,6 +110,8 @@
         <span ng-repeat="city in cities">
             <a ui-sref="targetStudyProviders({ city:{{'city'}} })">{{city}} | </a>
         </span>
+    </div>
+    <div class="row top-buffer">
         <!---->
         <md-button class="md-raised md-primary" ng-click="removeDuplicates()">Remove Duplicates</md-button>
         <md-button class="md-raised md-primary" ng-click="cleanTargetstudyurls()">Clean Websites</md-button>
@@ -100,11 +121,7 @@
         <!--<md-button class="md-raised md-primary" ng-click="rank0()">Set Rank 0</md-button>
         <md-button class="md-raised md-primary" ng-click="getAllCourses()">All Courses</md-button>-->
     </div>
-    <div class="row">
-        <!--{{img_url}}
-        <img ng-src="img_url" ng-if="img_url">
-        <small>Location: {{location}}</small>-->
-    </div>
+    
     <!--<div class="row top-buffer">
         <md-button class="md-raised md-primary" ng-click="geturl()">Coaching Adda URLs</md-button>
         <md-button class="md-raised md-primary" ng-click="geturl2()">Target Study URLs</md-button>
@@ -127,7 +144,7 @@
     <div class = "row top-buffer" >
         <div layout="row">
         <div class="col-md-8 icon-addon addon-md">
-            <input type="search" placeholder="Search by name" class="form-control" id="searchText" ng-model="searchText">
+            <input type="search" placeholder="Search by name" class="form-control" id="Input" ng-model="searchText">
             <label for="searchText" class="glyphicon glyphicon-search" rel="tooltip" title="searchText"></label>
         </div>
         </div>
@@ -137,7 +154,6 @@
         </div>
     
     </div>
-    <md-divider></md-divider>
     <!-- orderBy:'-coursesOffered.length'-->
     <div class="row top-buffer" ng-show="!showlogos">
         <div ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered" class="col-md-12 col-sm-12 col-xs-12">

@@ -3,10 +3,31 @@
         padding: 10px;
         border: 1px solid #ccc; 
     }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
 </style>
 <div class="container">
+    <div id="spacer1">
+    </div>
     <div layout="row" layout-margin layout-padding>
-        <span ng-repeat="existingExam in exams">
+        <span class="md-subhead" ng-repeat="existingExam in exams">
             <a ng-click="setExam(existingExam)">{{existingExam.name}}</a> | 
         </span>
     </div>

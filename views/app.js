@@ -9,8 +9,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .theme("default")
             .primaryPalette("red");
     })
-    .controller('landingController', landingController);
-    function landingController($scope,$window,$http,$state, $document,OTPService,$cookies,categories) {
+    .controller('streamController', streamController);
+    function streamController($scope,$window,$http,$state, $document,OTPService,$cookies,categories) {
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location'); 
         }
@@ -415,7 +415,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
             
     }]); 
+    exambazaar.controller("landingController", 
+        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope', function($scope,$stateParams,$cookies,$state,categories,$rootScope){
         
+        $scope.categoryName = $stateParams.categoryName;
+        $scope.category = {};
+        $scope.subcategory = [];
+            
+        
+        $rootScope.pageTitle = 'Exam Bazaar';    
+        $scope.goToCity = function(subcategory){ 
+            $cookies.putObject('subcategory', subcategory);
+            $state.go('city');
+        };
+            
+    }]); 
     exambazaar.controller("cityController", 
         [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories){
         
@@ -599,6 +613,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
         $scope.showLogin = false;
         $scope.showLoginForm = function(){
+            //alert('Here');
             $scope.showLogin = !$scope.showLogin;
         };
         /*if (navigator.geolocation) {
@@ -1396,6 +1411,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     $urlRouterProvider.otherwise('/main');
     $stateProvider
         //landing page
+        .state('landing', {
+            url: '/getStarted',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'landing.html',
+                    controller: 'landingController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
         .state('main', {
             url: '/main',
             views: {
@@ -1404,8 +1435,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     controller: 'headerController'
                 },
                 'body':{
-                    templateUrl: 'landing1.html',
-                    controller: 'landingController'
+                    templateUrl: 'stream.html',
+                    controller: 'streamController'
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -1976,7 +2007,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 },
                 'body':{
                     templateUrl: 'addInstitute.html',
-                    controller: 'landingController'
+                    controller: 'streamController'
                 },
                 'footer': {
                     templateUrl: 'footer.html'

@@ -79,10 +79,30 @@
 .icon-addon:hover .fa {
     color: #2580db;
 }
-    
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
     
 </style>
 <div class="container">
+    <div id="spacer1">
+    </div>
     <div class="row top-buffer">
         <span ng-repeat="city in cities">
             <a ui-sref="providers({ city:{{'city'}} })">{{city}} | </a>

@@ -1,61 +1,83 @@
 <style>
-    
-    #category{
-        text-align: center;
-        min-height: 15vh;
-        
-        padding: 0px;
-        border: white;
-        background-color: rgba(255,255,255,1);
-        
+    #categories{
+        margin-top: 40px;
     }
     #categoryFont{
+        min-height: 10vh;
         color: white;
-        min-width: 200px;
+        min-width: 175px;
         border-style: solid;
-        border-width: 3px;
-        background-color: rgba(0,0,0,0.5);
-        margin-top: 5px;
-        margin-bottom: 5px;
-        margin-right: 5px;
+        border-radius: 10px;
+        border-width: 1px;
+        background-color: rgba(0,0,0,0.6);
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-right: 0px;
         padding: 5px;
+        letter-spacing: 2px;
+        box-shadow: 1px 1px 1px #6A6968;
+        font-family: "Avenir";
     }
-    #categoryBorder{
-        
+    #categoryFont:hover{
+        background-color: #20C39A;
+        font-weight: 900;
     }
-    #headerFont{
-        color: white;
+    #categoryLink a:hover{
+      padding: 0px;
+      color: white;
+      text-decoration: none;
+    }
+    #pageHeader{
+        color: rgba(0,0,0,0.8);
+        letter-spacing: 4px;
+        font-family: "Avenir";
+    }
+    #pageHeaderFont{
+        border-bottom: solid 3px;
+        border-color: #20C39A;
+        letter-spacing: 4px;
     }
     a:hover{
         text-decoration: none;
     }
-    
-    
-    
 </style>
+
 <div id="fullPageBackground">
 <div class="container">
-    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="landingPage">
-        <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12" id="breadcrumb"><small>
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div id="spacer">
+        </div>
+        <div id="breadcrumbContainer">
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 text-center md-subhead" id="breadcrumb">
             <span><a ui-sref="main">EXAMBAZAAR</a></span>
-            <span> / {{category.displayname | uppercase}}</span>
-        </small></div>
-        
-        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 animated bounce top-buffer" id="pageHeader">
-            <h1 class="text md-display-1" id="headerFont"><strong>WHAT IN {{category.displayname | uppercase}}?</strong>
-            </h1>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-        <div ng-repeat="subcategory in category.subcategory">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="categoryBorder">
-                <md-tooltip>{{subcategory.description}}</md-tooltip>
-                <a class="md-subhead text-center hvr-sweep-to-right " id="categoryFont" ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{subcategory.displayname}}</a>
+            <span> > {{category.displayname | uppercase}}</span>
             </div>
-            
-            
         </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center" id="pageHeader">
+            <span class="text md-title" id="pageHeaderFont"><strong>WHAT IN {{category.displayname | uppercase}}?</strong></span>
+
         </div>
-        
+        <div class="row" id="mainContent">
+            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1" id="categories">
+
+            <div ng-repeat="subcategory in category.subcategory" >
+            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 hvr-bob">
+                <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">
+                    <md-tooltip>{{subcategory.description}}</md-tooltip>
+                    <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })" id="categoryLink">{{subcategory.displayname | uppercase}}
+                    </a>
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>
+        <div layout="row" layout-align="center end" id="steps">
+            <div id="stepActive">
+            </div>
+            <div id="stepActive">
+            </div>
+            <div id="step">
+            </div>
+        </div>
     </div>
-</div>
 </div>

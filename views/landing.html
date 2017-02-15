@@ -1,131 +1,96 @@
 <style>
-    div { 
-        background-color: rgba(255, 255, 255, 0.6);
-        text-align: center;
+    #pageContent{
     }
-    #cell{
-        min-height: 30vh;
+    #categories{
+        margin-top: 30px;
     }
     #category{
-        min-height: 80vh;
+        text-align: center;
+        min-height: 10vh;
+        padding: 0px;
+        border: white;
         
     }
-    #categoryHeader{
-        min-height: 20vh;
-        display: table-cell; 
-        vertical-align: middle;    
-    }
-    #categoryList{
-        min-height: 60vh;    
-        display: table-cell; 
-        vertical-align: middle;    
-    }
-    #subcategory{
-        min-height: 80vh;
-        display: table-cell; 
-        vertical-align: middle;
-    }
-    #mdCategory {
-        width: 120px;
-        height: 120px;
-        background: #fff;
-        border: solid;
-        border-color: #40a2e8;
-        -moz-border-radius: 60px;
-        -webkit-border-radius: 60px;
-        border-radius: 60px;
-        display: table-cell; 
-        vertical-align: middle;
+    #categoryFont{
+        color: white;
+        min-width: 175px;
+        border-style: solid;
+        border-radius: 10px;
+        border-width: 1px;
+        background-color: rgba(0,0,0,0.5);
+        margin-top: 7px;
+        margin-bottom: 7px;
         
-        -webkit-animation-delay: 1s; /* Safari 4.0 - 8.0 */
-        -webkit-animation-duration: 2s; /* Safari 4.0 - 8.0 */
-        animation-delay: 1s;
-        animation-duration: 2s;
+        
+        margin-right: 0px;
+        padding: 5px;
+        letter-spacing: 2px;
+        box-shadow: 1px 1px 1px #6A6968;
+        font-family: "Avenir";
+        
     }
-    #mdCategory:hover {
-        background: #40a2e8;
-        color: #fff;
-        font-weight: bold;
+    #categoryFont:hover{
+        background-color: #20C39A;
+        font-weight: 900;
     }
-    #smCategory {
+    a{
+        color: white;
+        text-decoration: none;
+        
+    }
+    a:hover{
+        color: white;
+    }
+    #categoryLink a:hover{
+      padding: 0px;
+      color: white;
+      text-decoration: none;
+        
+    }
+    #pageHeader{
+        color: rgba(0,0,0,0.8);
+        letter-spacing: 4px;
+        font-family: "Avenir";
+        
+    }
+    #headerFont{
+        border-bottom: solid 3px;
+        border-color: #20C39A;
+        letter-spacing: 4px;
+    }
+    a:hover{
+        text-decoration: none;
+    }
     
-        -webkit-animation-delay: 1s; /* Safari 4.0 - 8.0 */
-        -webkit-animation-duration: 2s; /* Safari 4.0 - 8.0 */
-        animation-delay: 1s;
-        animation-duration: 2s;
-    }
-    #smCategory:hover {
-        background: #40a2e8;
-        color: #fff;
-        font-weight: bold;
-    }
 </style>
-
+<div id="fullPageBackground">
 <div class="container">
-    <!--hidden-xs hidden-sm show-md show-lg-->
-    <div class="row" ng-hide="showSubCategories" id="category">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce" id="categoryHeader">
-            <h4 class="text">Start your test prep today, <span class="text-primary">what are you looking to study?</span></h4><br/>
-            <md-divider></md-divider>
+<div id="pageContent">
+    
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="landingPage">
+        <div id="spacer">
         </div>
-        <div class="container" id="categoryList">
-        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2" ng-repeat="category in categories" id="cell" >
-            
-            
-            <div id="mdCategory" class="hidden-xs hidden-sm show-md show-lg animated fadeIn" ng-click="setCategory(category)">
-                <h6>{{category.name}}</h6>
-                <md-tooltip>{{category.sub}}</md-tooltip>
-            </div>
-            
-            <div  id="smCategory" class="panel panel-default show-xs show-sm hidden-md hidden-lg animated fadeIn" ng-click="setCategory(category)">
-            <div class="panel-body">
-                <div class="row">
-                    <h6>{{category.name}}</h6>
-                    <md-tooltip>{{category.sub}}</md-tooltip>
-                </div>
-            </div>
-            </div>
-            
-            <!--<div id="smCategory" class="show-xs show-sm hidden-md hidden-lg animated fadeIn" ng-click="setCategory(category)">
-                <h6>{{category.name}}</h6>
-                <md-tooltip>{{category.sub}}</md-tooltip>
-                <md-divider></md-divider>
-            </div>-->
-        </div>
-        </div>
-    </div>
-    <div class="row" ng-hide="!showSubCategories" id="subcategory">
-        <div class="row">
+        <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12" id="breadcrumb"><small>
+        &nbsp;
+        </small></div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center" id="pageHeader">
+            <span class="text md-title" id="headerFont"><strong>SELECT YOUR EXAM STREAM</strong></span>
 
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated pulse">
-            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-            <i class="fa fa-arrow-left fa-2x" aria-hidden="true" ng-click="unsetCategory()"></i>
-            </div>
-            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" id="categoryHeader">
-            <h4 class="text">What within <span class="text-primary">{{category.name}}</span>?</h4>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1" id="categories">
+        
+        <div ng-repeat="category in categories" >
+            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 hvr-bob" id="categoryBorder">
+            <div id="categoryFont" class="text-center" ui-sref="category({ categoryName:{{'category.name'}} })">
+                <a ui-sref="category({ categoryName:{{'category.name'}} })" id="categoryLink">{{category.displayname | uppercase}}</a>
             </div>
             
-        </div>
-            <md-divider></md-divider>
-        </div>
-        <div class="container" id="categoryList">
-        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2" ng-repeat="subcat in category.subcategory" id="cell">
-            <div id="mdCategory" class="text-center hidden-xs hidden-sm show-md show-lg animated fadeIn">
-                <h6>{{subcat}}</h6>
-                <!--<md-tooltip>{{category.sub}}</md-tooltip>-->
             </div>
-            <div id="smCategory" class="text-center show-xs show-sm hidden-md hidden-lg animated fadeIn">
-                <h6>{{subcat}}</h6>
-                <!--<md-tooltip>{{category.sub}}</md-tooltip>-->
-                <md-divider></md-divider>
-            </div>
+            
         </div>
         </div>
     </div>
     
-    <md-divider></md-divider>
-    <!--{{location}}-->
-    <!--<div>
-    <iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fbansalkota%2Fvideos%2F705507049469609%2F&show_text=0&width=400" width="400" height="400" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe>
-    </div>-->
+    
+</div>
 </div>

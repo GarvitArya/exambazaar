@@ -1,19 +1,50 @@
 <style>
-
-    /*#mainNav{
-        background-color:#404040;
-        color: white;
-    }*/
     #logo{
+        color:black;
+    }
+    #logo:hover{
+        color:#20C39A;
+    }
+    #headerBar{
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+    .navbar.transparent {
+        border-width: 0px;
+        -webkit-box-shadow: 0px 0px;
+        box-shadow: 0px 0px;
+        background-color: rgba(0,0,0,0.0);
+        background-image: -webkit-gradient(linear, 50.00% 0.00%, 50.00% 100.00%, color-stop( 0% , rgba(0,0,0,0.00)),color-stop( 100% , rgba(0,0,0,0.00)));
+        background-image: -webkit-linear-gradient(270deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+        background-image: linear-gradient(180deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+    }
+    .navbar-brand{
+        font-family: "Avenir";
+        letter-spacing: 4px;
+        font-weight: 900;
         
     }
+    
+    button{
+        background-color: #20C39A;
+        font-family: "Open Sans";
+        color:white;
+    }
+    #headerInput{
+        background-color : white;
+        font-size:12px;
+        font-family: "Open Sans";
+    }
 </style>
+
 <div class="alert alert-danger alert-dismissible" role="alert" ng-if="message !=''">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>{{message}}</strong>
 </div>
-<nav class="navbar navbar-default navbar-fixed-top " role="navigation" id="mainNav">
-<div class="container-fluid">
+<!--transparent-->
+<nav class="navbar navbar-default navbar-fixed-top nav-justified" role="navigation" id="mainNav">
+    
+<div class="row" id="headerBar">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -22,35 +53,26 @@
         <span class="icon-bar"></span>
         </button>
 
-        <a class="navbar-brand" href="#" class="text-primary" id="logo">
-            <span>
-                <img src="images/logo/logo5.png" height="22">
-                <!--<span class="text-primary">ExamBazaar</span>-->
+        <a class="navbar-brand" href="#">
+            <span class="" id="logo">
+                EXAMBAZAAR
             </span>
         </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
-        <!--<ul class="nav navbar-nav" ng-show="!sessionuser" hide-xs>
-        <li><a href="#section-0" du-smooth-scroll du-scrollspy offset="65">Digitise</a></li>
-        <li><a href="#section-1" du-smooth-scroll du-scrollspy offset="65">Features</a></li>
-        <li><a href="#section-2" du-smooth-scroll du-scrollspy offset="65">Grow</a></li>
-        <li><a ui-sref="internship">Internship</a></li>
-        </ul>-->
-        
         <div class="navbar-right">
         <form class="navbar-form animated fadeIn" ng-submit="login()" ng-show="!sessionuser && showLogin">
         <div class="form-group">
-        <input type="text" placeholder="Mobile" class="form-control" ng-model="login.mobile" size="10" >
+        <input type="text" placeholder="Mobile" class="form-control text-center" ng-model="login.mobile" size="15" id="headerInput">
         </div>
         <div class="form-group">
-        <input type="password" placeholder="Password" class="form-control" ng-model="login.password" size="12">
+        <input type="password" placeholder="Password" class="form-control text-center" ng-model="login.password" size="15" id="headerInput">
         </div>
-        <button type="submit" class="btn btn-success">Log in</button>
+        <button type="submit" class="btn">Log in</button>
         <button type="submit" class="btn btn-primary" ui-sref="signup">Sign up</button>
         </form>
         <form class="navbar-form" ng-show="!showLogin">
-            <button type="submit" class="btn btn-primary" ng-click = "showLoginForm()" ng-show="!showLogin && !sessionuser">Log in</button>
-            
+            <button type="submit" class="btn" ng-click = "showLoginForm()" ng-show="!showLogin && !sessionuser">Log in</button>
         </form>
             
         </div>
@@ -58,22 +80,7 @@
             
         <li><a href="#/" ng-click="logout()">Logout</a></li>
         </ul>
-        <ul class="nav navbar-nav navbar-left md-subhead">
-            <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="mainNav">Careers<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li class="md-subhead"><a ui-sref='about'>About Us</a></li>
-                <li><a ui-sref="internship" class="md-subhead">Internship</a></li>
-              </ul>
-            </li>
-        </ul>
-        <!--<ul class="nav navbar-nav">
-        <li><a ui-sref="internship" class="md-subhead">
-            Internship
-            </a></li>
-        </ul>-->
         
-        <!-- Header for usertype Master User -->
         <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
         <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
         <li class="dropdown">
@@ -121,19 +128,7 @@
             </li>
           </ul>
         </li>    
-        <!--
-        <li><a href="#/">
-            {{sessionuser.basic.firstName}}
-            {{sessionuser.basic.lastName | limitTo: 1}}
-            
-        </a></li>
-        <li>
-            <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>
-            
-        </li>-->
-        <li><span>
-            <img height="65" ng-src="{{sessionuser.imageUrl}}">
-        </span></li>
+        
         </ul>
         
         
