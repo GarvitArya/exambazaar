@@ -1,5 +1,161 @@
 <style>
-    
+    #categories{
+        margin-top: 40px;
+    }
+    #categoryFont{
+        min-height: 5vh;
+        color: white;
+        min-width: 175px;
+        border-style: solid;
+        border-radius: 10px;
+        border-width: 1px;
+        background-color: rgba(0,0,0,0.6);
+        margin-top: 7px;
+        margin-bottom: 7px;
+        margin-right: 0px;
+        padding: 5px;
+        letter-spacing: 2px;
+        box-shadow: 1px 1px 1px #6A6968;
+        font-family: "Avenir";
+    }
+    #categoryFont:hover{
+        background-color: #20C39A;
+        font-weight: 900;
+    }
+    #categoryLink a:hover{
+      padding: 0px;
+      color: white;
+      text-decoration: none;
+    }
+    #pageHeader{
+        color: rgba(0,0,0,0.8);
+        letter-spacing: 4px;
+        font-family: "Avenir";
+        margin-top: 10px;
+    }
+    #pageHeaderFont{
+        border-bottom: solid 3px;
+        border-color: #20C39A;
+        letter-spacing: 4px;
+    }
+    a:hover{
+        text-decoration: none;
+    }
+    #breadcrumb{
+        letter-spacing: 0px;
+    }
+</style>
+
+<div id="fullPageContent">
+<div class="container">
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div id="spacer">
+        </div>
+        <div>
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
+            <small>
+            <span><a ui-sref="main">EXAMBAZAAR</a></span>
+            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
+            <span> >> <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
+            <span> >>> {{city | uppercase}}</span>
+            </small>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated fadeIn" id="pageHeader">
+            <span class="text md-title" id="pageHeaderFont"><strong>{{providersList.length}} {{subcategory.displayname | uppercase}} INSTITUTES IN {{city | uppercase}}</strong></span>
+
+        </div>
+        <div class="row" id="mainContent">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
+
+            <div class="row">
+            <div ng-repeat="provider in providersList | orderBy:['-rank'] ">
+            
+                <div class="row" >
+        
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+                <div  class="panel panel-default" id="subcategory" ng-click="showCoaching(provider)" data-ng-class="{'highlight':provider.showDetails}">
+                    <div class="panel-body">
+                        <strong><h1 class="md-subhead text-primary hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
+                            {{$index + 1}}. {{provider.name}}
+                        </h1></strong>
+
+                    </div>
+
+                    </div>
+                </div>
+                <div class="bs-callout bs-callout-success col-xs-12 col-sm-8 col-md-8 col-lg-8 " ng-show="provider.showDetails" id="coachingDetails">
+                    <div layout="column" layout-align="center left">
+
+                    <div layout="row">
+                        <h6 class="md-subhead text" id="coachingHeader">
+                            <strong>{{provider.name | uppercase}}</strong>
+                         </h6>
+                    </div>
+                    <md-divider></md-divider>
+                    <div layout="row" ng-if="provider.address">
+                        Address: {{provider.address}}, {{provider.city}} - {{provider.pincode}}
+                    </div>
+
+                    <div layout="row">
+                        Courses: 
+                        <span ng-repeat="course in provider.coursesOffered">
+                            {{course}}
+                        <span ng-if="!$last"> | </span>
+                        </span>
+                    </div>
+                    <div layout="row" ng-if="provider.phone.length > 0">
+                        Phones: 
+                        <span ng-repeat="phone in provider.phone track by $index">
+                            {{phone}}
+                            <span ng-if="!$last">, </span>
+                        </span>
+                    </div>
+                    <div layout="row" ng-if="provider.mobile.length > 0">
+                        Mobiles:
+                        <span ng-repeat="mobile in provider.mobile track by $index">
+                            {{mobile}}
+                            <span ng-if="!$last">,&nbsp;</span>
+                        </span>
+                    </div>
+
+                    <div layout="row" ng-if="provider.website">
+                        Website:  
+                        <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
+                            {{provider.website}}
+                        </a>
+                    </div>
+                    <md-divider></md-divider>
+                    <div class="row text-center"  >
+                        <button type="button" class="btn btn-success" id="knowmore" ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
+                        <span class="md-subhead text"><strong>KNOW MORE</strong>
+                        </span>
+                        </button>
+                    </div>
+                    <div>
+
+
+                    </div>
+                </div>
+                </div>
+        </div>
+    </div>  
+    </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<style> 
     .bs-callout {
         padding: 10px;
         border: 1px solid #eee;
@@ -38,10 +194,10 @@
         color: #428bca;
     }
     .bs-callout-success {
-        border-left-color: #5cb85c;
+        border-left-color: #20C39A;
     }
     .bs-callout-success h4 {
-        color: #5cb85c;
+        color: #20C39A;
         
     }
     .bs-callout-danger {
@@ -84,21 +240,20 @@
     }
     #knowmore{
         width:100%;
+        background-color: #20C39A;
     }
     #fullPageGradient1{
         
     }
     #subcategory{
         height: 100%;
+        background: black; 
     }
-.blend-gradient {
-  background: -webkit-linear-gradient(90deg, rgb(156, 160, 164), rgb(128, 131, 134));
-  background: linear-gradient(90deg, rgb(156, 160, 164), rgb(128, 131, 134));
-}
+
     .highlight{
         border-style: solid;
         border-width: 3px;
-        border-color: limegreen;
+        border-color: #20C39A;
     }
     
     
@@ -106,7 +261,7 @@
     
     
 </style>
-<div id="fullPageGradient">
+<div>
 
 <div class="container" layout-margin layout-padding>
     <div class="column" id="landingPage">
@@ -121,6 +276,7 @@
         <h4 class="text md-display-1" id="headerFont"><strong>{{providersList.length}} {{subcategory.displayname}} prep institutes in {{city }}</strong>
         </h4>
     </div>
+        
     <div class="row">
     <div ng-repeat="provider in providersList | orderBy:['-rank'] ">
         <div class="row" >
@@ -129,7 +285,7 @@
         
         <div  class="panel panel-default" id="subcategory" ng-click="showCoaching(provider)" data-ng-class="{'highlight':provider.showDetails}">
             <div class="panel-body">
-                <strong><h1 class="md-subhead text hvr-underline-from-left"><!--<a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">-->
+                <strong><h1 class="md-subhead text hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
                     {{$index + 1}}. {{provider.name}}
                 </h1></strong>
                 
@@ -194,44 +350,7 @@
         </div>
     </div>  
     </div>
-        
-    <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 top-buffer" id="mapAll">
-        <div map-lazy-load="http://maps.google.com/maps/api/js?key=AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4">
-
-            <ng-map center="{{city}}" zoom="15" >
-                <marker ng-repeat = "provider in providersList" position="{{provider.mapAddress}}"
-                  title="{{provider.mapAddress}}"
-                  animation="Animation.BOUNCE"
-                  centered="true"></marker>
-            </ng-map>
-        </div> 
-    </div>-->
-    
-        
-    <!--    <div class="row">
-        {{uniqueProviders.length}}
-    </div>
-    <div ng-repeat="uniqueProvider in uniqueProviderInstitutes | orderBy:'-length'" class="row">
-        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-            {{uniqueProvider.length}} {{uniqueProviders[$index]}}
-        </div>
-        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-        
-        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <p ng-repeat="centre in uniqueProvider">
-            {{centre.coursesOffered}}
-            </p>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <p ng-repeat="centre in uniqueProvider">
-            {{centre.address}}
-            </p>
-        </div>
-            
-        
-        </div>
-
-    </div>  -->  
+     
         
     </div>    
     </div>

@@ -418,6 +418,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     exambazaar.controller("landingController", 
         [ '$scope','$stateParams','$cookies','$state','categories','$rootScope', function($scope,$stateParams,$cookies,$state,categories,$rootScope){
         
+        $scope.number = 20;
+        $scope.getNumber = function(num) {
+            //alert('Here');
+            return new Array(num);   
+        }    
+            
         $scope.categoryName = $stateParams.categoryName;
         $scope.category = {};
         $scope.subcategory = [];
@@ -1408,7 +1414,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
       return deferred.promise;
     };
     exambazaar.config(function($stateProvider, $urlRouterProvider,$locationProvider) {
-    $urlRouterProvider.otherwise('/main');
+    $urlRouterProvider.otherwise('/getStarted');
     $stateProvider
         //landing page
         .state('landing', {
@@ -1495,7 +1501,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             url: '/main/:categoryName/:subCategoryName/:cityName', //masterId?
             views: {
                 'header':{
-                    templateUrl: 'header.html',
+                    templateUrl: 'header1.html',
                     controller: 'headerController'
                 },
                 'body':{
@@ -1525,7 +1531,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             url: '/main/:categoryName/:subCategoryName/:cityName/:coachingId', //masterId?
             views: {
                 'header':{
-                    templateUrl: 'header.html',
+                    templateUrl: 'header1.html',
                     controller: 'headerController'
                 },
                 'body':{

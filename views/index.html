@@ -40,9 +40,12 @@
         #landingPage{
             min-height: 100vh;
         }
+        .showBorder{
+            border: solid 3px;
+        }
         #fullPageBackground{
-           /* background-image: url("images/background/background-min.jpeg");
-            background-size:     cover;
+           background-image: url("images/background/patterns/project_papper.png");
+            /*background-size:     cover;
             background-position: center center;*/
             
             
@@ -97,7 +100,7 @@
         .subtle-gray-gradient { background: -webkit-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* FF3.6+ */ background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* W3C */ }
         
         #spacer{
-            min-height: 20vh;
+            min-height: 15vh;
         }
         #spacer1{
             min-height: 10vh;
@@ -160,6 +163,9 @@
             color: white;
             text-decoration: none;
         }
+        #fullPageContent{
+            min-height: 100vh;
+        }
     </style>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
@@ -195,9 +201,10 @@
     </head>
     
     <body >
-    <div layout="column" id="greyBackground">
+    <!--<div layout="column" id="greyBackground">-->
+    <div layout="column">
         <div ui-view="header" ></div>
-        <div ui-view="body"></div>
+        <div ui-view="body" id="fullPageBackground"></div>
         <div ui-view="footer"></div>
     </div>
 
@@ -237,6 +244,7 @@
     <script src="angular-file-upload.min.js"></script>
     <script src="https://rawgithub.com/arunisrael/angularjs-geolocation/master/dist/angularjs-geolocation.min.js"></script>
     <script src="ngGeolocation.min.js"></script>
+    <script src="angular-fullpage.min.js"></script>
         
     <script src="http://maps.google.com/maps/api/js?key=AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4"></script>
           

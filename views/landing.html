@@ -1,6 +1,5 @@
 <style>
-    #pageContent{
-    }
+    
     #categories{
         margin-top: 30px;
     }
@@ -53,44 +52,87 @@
         font-family: "Avenir";
         
     }
-    #headerFont{
+    #leftSectionFont{
+        letter-spacing: 4px;
+        font-family: "Avenir";
         border-bottom: solid 3px;
         border-color: #20C39A;
-        letter-spacing: 4px;
+    }
+    #subheading{
+        letter-spacing: 2px;
+        margin-top: 40px;
+        font-family: "Avenir";
     }
     a:hover{
         text-decoration: none;
     }
+    #leftSection{
+        min-height: 90vh;
+        /*border-right: solid 3px;
+        border-color: #20C39A;*/
+    }
+    #rightSection{
+        padding-top: 50px;
+        min-height: 90vh;
+        /*background-image: url("images/background/background.jpg");
+        background-size:     cover;
+        background-position: center center;*/
+    }
+    #landingPage{
+        min-height: 90vh;
+        
+    }
+    #fullPage{
+        min-height: 100vh;
+        margin: 0px;
+        padding: 0px;
+    }
+    .landingButton{
+        background-color: #20C39A;
+        color: white;
+        margin-top: 25px;
+    }
+    #rightLogo{
+        max-height: 60px;
+        max-width: 120px;
+    }
+    #logoContainer{
+        min-height: 15vh;
+        margin-bottom: 5px;
+    }
     
 </style>
-<div id="fullPageBackground">
-<div class="container">
-<div id="pageContent">
-    
+<div>
+<div class="container-fluid" id="fullPage">
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="spacer1">
+    </div>
+    <div>
     <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="landingPage">
-        <div id="spacer">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 animated fadeIn text-center" >
+        <div layout="column" layout-align="center center" id="leftSection">
+            <span class="text md-display-1" id="leftSectionFont"><strong>SEARCH <span class="hidden-xs">&#8226;</span> COMPARE <span class="hidden-xs">&#8226;</span> APPLY</strong>
+            </span>
+            <span class="md-subhead" id="subheading">
+                BROWSE THROUGH THOUSANDS OF <span class="text-primary">EXAM PREPARATION INSTITUTES</span> OFFERING <span class="text-primary">AMAZING DISCOUNTS</span> AND FIND THE ONE RIGHT FOR <span class="text-primary">YOU</span>
+            </span>
+            <button type="button" class="btn landingButton" ui-sref="main">
+            <span class="md-display-1"><strong>START</strong>
+            <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>    
+            </span>
+            </button>
+            
         </div>
-        <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12" id="breadcrumb"><small>
-        &nbsp;
-        </small></div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center" id="pageHeader">
-            <span class="text md-title" id="headerFont"><strong>SELECT YOUR EXAM STREAM</strong></span>
-
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1" id="categories">
+        <div class="hidden-xs hidden-sm col-md-6 col-lg-6 text-center">
+        <div layout="row" layout-align ="center" id="rightSection">
         
-        <div ng-repeat="category in categories" >
-            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 hvr-bob" id="categoryBorder">
-            <div id="categoryFont" class="text-center" ui-sref="category({ categoryName:{{'category.name'}} })">
-                <a ui-sref="category({ categoryName:{{'category.name'}} })" id="categoryLink">{{category.displayname | uppercase}}</a>
+        <div class="row">
+            <div ng-repeat="i in getNumber(number) track by $index" class="col-md-3 col-lg-3" id="logoContainer">
+                <img ng-src="images/coachinglogo/{{$index+1}}.jpg" id="rightLogo"/>
             </div>
-            
-            </div>
-            
+        </div>
         </div>
         </div>
     </div>
-    
-    
-</div>
+    </div>
 </div>
