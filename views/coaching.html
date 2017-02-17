@@ -116,7 +116,7 @@
         margin-bottom: 20px;
     }
     #coachingHeader{
-        color: whitesmoke;
+        color: #20C39A;
         font-family: "Avenir";
         letter-spacing: 2px;
     }
@@ -182,11 +182,14 @@
                             {{$index + 1}}. {{provider.name | uppercase}}
                         </a>
                         </h1></strong>
-                        <div layout="row" ng-if="provider.website"><small>
-                        Website:&nbsp;<a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
-                            {{provider.website}}
-                        </a></small>
-                    </div>
+                        <div layout="row">
+                        <small>Courses:&nbsp;
+                        <span ng-repeat="course in provider.coursesOffered">
+                            {{course}}
+                        <span ng-if="!$last">&nbsp;|&nbsp;</span>
+                        </span>
+                        </small>
+                        </div>
                     </div>
 
                     </div>
@@ -213,11 +216,11 @@
                         <span ng-if="!$last">&nbsp;|&nbsp;</span>
                         </span>
                     </div>
-                    <!--<div layout="row" ng-if="provider.phone.length > 0">
+                    <div layout="row" ng-if="provider.phone.length > 0">
                         Phones: 
                         <span ng-repeat="phone in provider.phone track by $index">
                             {{phone}}
-                            <span ng-if="!$last">, </span>
+                            <span ng-if="!$last">,&nbsp;</span>
                         </span>
                     </div>
                     <div layout="row" ng-if="provider.mobile.length > 0">
@@ -226,7 +229,7 @@
                             {{mobile}}
                             <span ng-if="!$last">,&nbsp;</span>
                         </span>
-                    </div>-->
+                    </div>
 
                     
                     <md-divider></md-divider>
