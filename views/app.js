@@ -418,7 +418,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     exambazaar.controller("landingController", 
         [ '$scope','$stateParams','$cookies','$state','categories','$rootScope', function($scope,$stateParams,$cookies,$state,categories,$rootScope){
         
-        $scope.number = 20;
+        $scope.number = 24;
         $scope.getNumber = function(num) {
             //alert('Here');
             return new Array(num);   
