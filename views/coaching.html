@@ -182,10 +182,10 @@
                             {{$index + 1}}. {{provider.name | uppercase}}
                         </a>
                         </h1></strong>
-                        <div layout="row" ng-if="provider.website">
+                        <div layout="row" ng-if="provider.website"><small>
                         Website:&nbsp;<a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
                             {{provider.website}}
-                        </a>
+                        </a></small>
                     </div>
                     </div>
 

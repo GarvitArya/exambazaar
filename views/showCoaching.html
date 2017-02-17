@@ -102,6 +102,10 @@
         min-height: 30px;
         max-height: 50px;
     }
+    #logoImagexs{
+        min-height: 20px;
+        max-height: 30px;
+    }
 </style>
 
 <div id="fullPageContent">
@@ -124,21 +128,53 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
                 <div class="row">
                     <div  class="panel panel-default" >
-                        <div class="panel-heading">
-                            <h1 class="text md-title" id="coachingHeader">{{provider.name | uppercase}}
-                            <span ng-if="editable"><small>
-                                <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" id="linkFont">
-                                    Edit
-                                </a>
+                    <div class="panel-heading">
+                    <div class="hidden-xs col-sm-12 col-md-12 col-lg-12">
+                        <h1 class="text md-title" id="coachingHeader">{{provider.name | uppercase}}
+                        <span ng-if="editable"><small>
+                            <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" id="linkFont">
+                                Edit
+                            </a>
+                        </small></span>
+
+                        <span ng-if="provider.oldlogo" class="pull-left" id="logo">
+                            <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImage"/>
+                        </span>
+                        </h1>
+
+                        <div class="container">
+                        <div class="row md-subhead" >
+                            <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}} {{provider.pincode}} | 
+                            <span id="linkFont"><small>
+                            <span ng-if="!showMap"><a ng-click="flipMap()" >
+                                Show on Map
+                            </a></span>
+                            <span ng-if="showMap"><a ng-click="flipMap()">
+                                Hide Map
+                            </a></span>
                             </small></span>
+                            </div>
+                        </div>
 
-                            <span ng-if="provider.oldlogo" class="pull-left" id="logo">
-                                <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImage"/>
-                            </span>
-                            </h1>
-
+                        </div>
+                        <div class="col-xs-12 hidden-sm  hidden-md hidden-lg">
+                        <div class="col-xs-12">
+                        <h1 class="text md-subhead" id="coachingHeader">{{provider.name | uppercase}}
+                        <span ng-if="editable"><small>
+                            <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" id="linkFont">
+                                Edit
+                            </a>
+                        </small></span>
+                        </h1>
+                        </div>
+                        <div class="col-xs-12">
+                        <span ng-if="provider.oldlogo">
+                            <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImagexs"/>
+                        </span>
+                        </div>
+                        <div class="col-xs-12">  
                             <div class="container">
-                            <div class="row md-subhead" >
+                            <div class="row " >
                                 <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}} {{provider.pincode}} | 
                                 <span id="linkFont"><small>
                                 <span ng-if="!showMap"><a ng-click="flipMap()" >
@@ -148,15 +184,19 @@
                                     Hide Map
                                 </a></span>
                                 </small></span>
+                                </div>
                             </div>
-                            </div>
+                        </div>
+                            
+                        </div>
+                        &nbsp;
                         </div>
                         <md-divider></md-divider>
                         <div class="panel-body">
                             <div class="container md-subhead">
 
                                 <div class="row" id="map" ng-show="showMap">
-                                <small>{{provider.mapAddress}}</small>    
+                                <!--<small>{{provider.mapAddress}}</small> -->   
                                 <ng-map center="{{provider.mapAddress}}" zoom="14" >
                                     <!-- tilt="45"
             map-type-id="SATELLITE"-->
@@ -188,10 +228,10 @@
                                     </span>
                                 </div>
                                 <div class="row" ng-if="provider.website">
-                                    Website: 
+                                    <small>Website: 
                                     <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website" id="linkFont">
                                         {{provider.website}}
-                                    </a>
+                                    </a></small>
                                 </div>
 
 
