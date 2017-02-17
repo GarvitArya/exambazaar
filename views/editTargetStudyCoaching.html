@@ -6,10 +6,9 @@
     
 </style>
 <div class="container">
-    <!--<div class="row top-buffer">
-        {{provider}}
-    </div>-->
-    <div class="column top-buffer">
+    <div id="spacer">
+        </div>
+    <div class="column">
         <div class="row">
             <table style="width:100%">
                 <tr ng-repeat="(key, value) in provider" ng-if="key!='_id' && key != '__v' && key != '_created' && key != 'targetStudyWebsite'">

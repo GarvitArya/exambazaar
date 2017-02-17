@@ -44,118 +44,7 @@
     #breadcrumb{
         letter-spacing: 0px;
     }
-</style>
-
-<div id="fullPageContent">
-<div class="container">
-    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div id="spacer">
-        </div>
-        <div>
-            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
-            <small>
-            <span><a ui-sref="main">EXAMBAZAAR</a></span>
-            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
-            <span> >> <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
-            <span> >>> {{city | uppercase}}</span>
-            </small>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated fadeIn" id="pageHeader">
-            <span class="text md-title" id="pageHeaderFont"><strong>{{providersList.length}} {{subcategory.displayname | uppercase}} INSTITUTES IN {{city | uppercase}}</strong></span>
-
-        </div>
-        <div class="row" id="mainContent">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
-
-            <div class="row">
-            <div ng-repeat="provider in providersList | orderBy:['-rank'] ">
-            
-                <div class="row" >
-        
-                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-
-                <div  class="panel panel-default" id="subcategory" ng-click="showCoaching(provider)" data-ng-class="{'highlight':provider.showDetails}">
-                    <div class="panel-body">
-                        <strong><h1 class="md-subhead text-primary hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
-                            {{$index + 1}}. {{provider.name}}
-                        </h1></strong>
-
-                    </div>
-
-                    </div>
-                </div>
-                <div class="bs-callout bs-callout-success col-xs-12 col-sm-8 col-md-8 col-lg-8 " ng-show="provider.showDetails" id="coachingDetails">
-                    <div layout="column" layout-align="center left">
-
-                    <div layout="row">
-                        <h6 class="md-subhead text" id="coachingHeader">
-                            <strong>{{provider.name | uppercase}}</strong>
-                         </h6>
-                    </div>
-                    <md-divider></md-divider>
-                    <div layout="row" ng-if="provider.address">
-                        Address: {{provider.address}}, {{provider.city}} - {{provider.pincode}}
-                    </div>
-
-                    <div layout="row">
-                        Courses: 
-                        <span ng-repeat="course in provider.coursesOffered">
-                            {{course}}
-                        <span ng-if="!$last"> | </span>
-                        </span>
-                    </div>
-                    <div layout="row" ng-if="provider.phone.length > 0">
-                        Phones: 
-                        <span ng-repeat="phone in provider.phone track by $index">
-                            {{phone}}
-                            <span ng-if="!$last">, </span>
-                        </span>
-                    </div>
-                    <div layout="row" ng-if="provider.mobile.length > 0">
-                        Mobiles:
-                        <span ng-repeat="mobile in provider.mobile track by $index">
-                            {{mobile}}
-                            <span ng-if="!$last">,&nbsp;</span>
-                        </span>
-                    </div>
-
-                    <div layout="row" ng-if="provider.website">
-                        Website:  
-                        <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
-                            {{provider.website}}
-                        </a>
-                    </div>
-                    <md-divider></md-divider>
-                    <div class="row text-center"  >
-                        <button type="button" class="btn btn-success" id="knowmore" ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
-                        <span class="md-subhead text"><strong>KNOW MORE</strong>
-                        </span>
-                        </button>
-                    </div>
-                    <div>
-
-
-                    </div>
-                </div>
-                </div>
-        </div>
-    </div>  
-    </div>
-                
-                
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-<style> 
+    
     .bs-callout {
         padding: 10px;
         border: 1px solid #eee;
@@ -219,17 +108,8 @@
         color: #5bc0de;
     }
     
-    
-    #headerFont{
-        color: white;
-    }
-    a:hover{
-        text-decoration: none;
-    }
-    
     #coachingDetails{
-        background-color: white;
-        background-color: rgba(0,0,0,0.25);
+        background-color: rgba(0,0,0,0.6);
         color: whitesmoke;
         border: none;
         height: 100%;
@@ -237,121 +117,136 @@
     }
     #coachingHeader{
         color: whitesmoke;
+        font-family: "Avenir";
+        letter-spacing: 2px;
     }
     #knowmore{
         width:100%;
         background-color: #20C39A;
+        margin-top: 10px;
     }
     #fullPageGradient1{
         
     }
     #subcategory{
         height: 100%;
-        background: black; 
+        background: whitesmoke;
+        
     }
-
+    #subcategory a{
+        color: #5B5B5B;
+    }
     .highlight{
-        border-style: solid;
+        border-bottom: solid;
         border-width: 3px;
         border-color: #20C39A;
+        color: #20C39A;
     }
-    
-    
-    
-    
-    
+    div{
+        font-family: "Avenir";
+    }
 </style>
-<div>
 
-<div class="container" layout-margin layout-padding>
-    <div class="column" id="landingPage">
-        
-    <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12" id="breadcrumb"><small>
-        <span><a ui-sref="main">EXAMBAZAAR</a></span>
-        <span> / <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
-        <span> / <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{subcategory.displayname | uppercase}}</a></span>
-        <span> / {{city | uppercase}}</span>
-    </small></div>
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated bounce top-buffer" id="pageHeader">
-        <h4 class="text md-display-1" id="headerFont"><strong>{{providersList.length}} {{subcategory.displayname}} prep institutes in {{city }}</strong>
-        </h4>
-    </div>
-        
-    <div class="row">
-    <div ng-repeat="provider in providersList | orderBy:['-rank'] ">
-        <div class="row" >
-        
-        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-        
-        <div  class="panel panel-default" id="subcategory" ng-click="showCoaching(provider)" data-ng-class="{'highlight':provider.showDetails}">
-            <div class="panel-body">
-                <strong><h1 class="md-subhead text hvr-underline-from-left"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
-                    {{$index + 1}}. {{provider.name}}
-                </h1></strong>
-                
-            </div>
-            
+<div id="fullPageContent">
+<div class="container">
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div id="spacer">
+        </div>
+        <div>
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
+            <small>
+            <span><a ui-sref="main">EXAMBAZAAR</a></span>
+            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
+            <span> >> <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
+            <span> >>> {{city | uppercase}}</span>
+            </small>
             </div>
         </div>
-        <div class="bs-callout bs-callout-success col-xs-12 col-sm-8 col-md-8 col-lg-8 " ng-show="provider.showDetails" id="coachingDetails">
-            <div layout="column" layout-align="center left">
-            
-            <div layout="row">
-                <h6 class="md-subhead text" id="coachingHeader">
-                    <strong>{{provider.name | uppercase}}</strong>
-                 </h6>
-            </div>
-            <md-divider></md-divider>
-            <div layout="row" ng-if="provider.address">
-                Address: {{provider.address}}, {{provider.city}} - {{provider.pincode}}
-            </div>
-            
-            <div layout="row">
-                Courses: 
-                <span ng-repeat="course in provider.coursesOffered">
-                    {{course}}
-                <span ng-if="!$last"> | </span>
-                </span>
-            </div>
-            <div layout="row" ng-if="provider.phone.length > 0">
-                Phones: 
-                <span ng-repeat="phone in provider.phone track by $index">
-                    {{phone}}
-                    <span ng-if="!$last">, </span>
-                </span>
-            </div>
-            <div layout="row" ng-if="provider.mobile.length > 0">
-                Mobiles:
-                <span ng-repeat="mobile in provider.mobile track by $index">
-                    {{mobile}}
-                    <span ng-if="!$last">,&nbsp;</span>
-                </span>
-            </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated fadeIn" id="pageHeader">
+            <span class="text md-title" id="pageHeaderFont"><strong>{{providersList.length}} {{subcategory.displayname | uppercase}} INSTITUTES IN {{city | uppercase}}</strong></span>
 
-            <div layout="row" ng-if="provider.website">
-                Website:  
-                <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
-                    {{provider.website}}
-                </a>
-            </div>
-            <md-divider></md-divider>
-            <div class="row text-center"  >
-                <button type="button" class="btn btn-success" id="knowmore" ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
-                <span class="md-subhead text"><strong>KNOW MORE</strong>
-                </span>
-                </button>
-            </div>
-            <div>
-                
-                
-            </div>
         </div>
-        </div>
-        </div>
-    </div>  
-    </div>
-     
+        <div class="row" id="mainContent">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
+
+            <div class="row">
+            <div ng-repeat="provider in providersList | orderBy:['-rank'] ">
+            
+                <div class="row" >
         
-    </div>    
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+                <div  class="panel panel-default" id="subcategory" ng-click="showCoaching(provider)">
+                    <div class="panel-body">
+                        <strong><h1 class="md-subhead text-primary" data-ng-class="{'highlight':provider.showDetails}"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
+                            {{$index + 1}}. {{provider.name | uppercase}}
+                        </a>
+                        </h1></strong>
+                        <div layout="row" ng-if="provider.website">
+                        Website:&nbsp;<a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
+                            {{provider.website}}
+                        </a>
+                    </div>
+                    </div>
+
+                    </div>
+                </div>
+                <div class="bs-callout bs-callout-success col-xs-12 col-sm-8 col-md-8 col-lg-8 " ng-show="provider.showDetails" id="coachingDetails">
+                    <div layout="column" layout-align="center left">
+
+                    <div layout="row">
+                        <h6 class="md-subhead text" id="coachingHeader">
+                            <strong>
+                                {{provider.name | uppercase}}
+                            </strong>
+                         </h6>
+                    </div>
+                    <md-divider></md-divider>
+                    <div layout="row" ng-if="provider.address">
+                        Address: {{provider.address}}, {{provider.city}} - {{provider.pincode}}
+                    </div>
+
+                    <div layout="row">
+                        Courses:&nbsp;
+                        <span ng-repeat="course in provider.coursesOffered">
+                            {{course}}
+                        <span ng-if="!$last">&nbsp;|&nbsp;</span>
+                        </span>
+                    </div>
+                    <!--<div layout="row" ng-if="provider.phone.length > 0">
+                        Phones: 
+                        <span ng-repeat="phone in provider.phone track by $index">
+                            {{phone}}
+                            <span ng-if="!$last">, </span>
+                        </span>
+                    </div>
+                    <div layout="row" ng-if="provider.mobile.length > 0">
+                        Mobiles:
+                        <span ng-repeat="mobile in provider.mobile track by $index">
+                            {{mobile}}
+                            <span ng-if="!$last">,&nbsp;</span>
+                        </span>
+                    </div>-->
+
+                    
+                    <md-divider></md-divider>
+                    <div class="row text-center"  >
+                        <button type="button" class="btn btn-success" id="knowmore" ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
+                        <span class="md-subhead text"><strong>KNOW MORE</strong>
+                        </span>
+                        </button>
+                    </div>
+                    <div>
+
+
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>  
+            </div>
+                
+            </div>
+        </div>
     </div>
 </div>
