@@ -210,11 +210,13 @@
                     </div>
 
                     <div layout="row">
+                        <small>
                         Courses:&nbsp;
                         <span ng-repeat="course in provider.coursesOffered">
                             {{course}}
-                        <span ng-if="!$last">&nbsp;|&nbsp;</span>
+                        <span ng-if="!$last">&nbsp;&#8226;&nbsp;</span>
                         </span>
+                        </small>
                     </div>
                     <div layout="row" ng-if="provider.phone.length > 0">
                         Phones: 
