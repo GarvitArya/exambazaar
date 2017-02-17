@@ -437,7 +437,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]); 
     exambazaar.controller("cityController", 
-        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories){
+        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog){
         
         $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Vadodara","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vellore","Vishakhapatnam"];
         
@@ -479,13 +479,25 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
             //$state.go('main');
         }
-            
+        $scope.cancel = function() {
+          $mdDialog.cancel();
+        }; 
         $rootScope.pageTitle = $scope.subcategory.displayname + ' deals at Exam Bazaar'; 
             
         $scope.showCoaching = function(city){ 
             $cookies.putObject('city', city);
             $state.go('findCoaching', {cityName: city});
         };
+        
+        $scope.showPrerenderedDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#myDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+            
             
     }]);    
     
@@ -2811,12 +2823,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });
             //$locationProvider.html5Mode(true).hashPrefix('#');
             //$locationProvider.html5Mode(true);
-            //$locationProvider.hashPrefix("!");
+            $locationProvider.hashPrefix("!");
         });
         
     })();
 
-exambazaar.run(function($rootScope) {
+exambazaar.run(function($rootScope,$mdDialog) {
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
     $rootScope.imageUrl = '';
@@ -2831,6 +2843,7 @@ exambazaar.run(function($rootScope) {
     };
     $rootScope.$on('$stateChangeSuccess', function() {
        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        $mdDialog.hide();
     });
 });
 
