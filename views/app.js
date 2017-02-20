@@ -504,7 +504,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     exambazaar.controller("coachingController", 
     [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','categories', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,categories){
        
-        
+        $scope.editable = false;
+        if($cookies.getObject('sessionuser')){
+            var user = $cookies.getObject('sessionuser');
+            if(user.userType=='Master'){
+                $scope.editable = true;
+            }
+        }
         
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
@@ -576,10 +582,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             var user = $cookies.getObject('sessionuser');
             if(user.userType=='Master'){
                 $scope.editable = true;
-                //alert(JSON.stringify(user));
             }
-            
-            //console.info($scope.subcategory);
         }
         
         
@@ -642,11 +645,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
         }*/
         //geolocation.getLocation().then(function(data){
-        geolocation.getLocation().then(function(data){
+        /*geolocation.getLocation().then(function(data){
             $scope.coords = {lat:data.coords.latitude, long:data.coords.longitude, accuracy:data.coords.accuracy};
             //alert(data.coords.accuracy);
             $cookies.putObject('location', $scope.coords);
-        });
+        });*/
             
             
             

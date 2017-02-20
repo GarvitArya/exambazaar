@@ -2,6 +2,11 @@ var express  = require('express');
 var app      = express();
 var port     = process.env.PORT || 8000;
 var path = require('path');
+
+var childProcess = require( "child_process" );
+var phantomjs = require( "phantomjs" );
+var binPath = phantomjs.path;
+
 var mongoose = require('mongoose');
 var Moment = require('moment');
 require('mongoose-moment')(mongoose);
@@ -99,6 +104,23 @@ app.use('/api/exams', exams);
 //app.use('/api/profilePics', profilePics);
 //app.use('/api/globalSubjects', globalSubjects);
 //app.use('/api/globalFeeItems', globalFeeItems);
+
+
+app.get( "/_escaped_fragment_/*", function( request, response ) {
+    var script = path.join( __dirname, "get_html.js" );
+    var url = "http://exambazaar.com" + request.url.replace( "_escaped_fragment_", "#!" );
+    var childArgs =
+    [
+        script, url
+    ];
+    childProcess.execFile( binPath, childArgs, function( err, stdout, stderr ) {
+        response.writeHead( 200, {
+            "Content-Type": "text/html; charset=UTF-8"
+        } );
+        response.end( "<!doctype html><html>" + stdout + "</html>" );
+    } );
+
+} );
 
 
 app.use(function(req, res, next) {

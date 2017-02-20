@@ -145,6 +145,13 @@
     div{
         font-family: "Avenir";
     }
+    #normal{
+        color: #20C39A;
+        letter-spacing: 0px;
+    }
+    #normal a{
+        color: #20C39A;
+    }
 </style>
 
 <div id="fullPageContent">
@@ -164,7 +171,11 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated fadeIn" id="pageHeader">
             <span class="text md-title" id="pageHeaderFont"><strong>{{providersList.length}} {{subcategory.displayname | uppercase}} INSTITUTES IN {{city | uppercase}}</strong></span>
-
+            <span id="normal" ng-if="editable"><small>
+                <a ui-sref="targetStudyProviders({ city:{{'city'}} })">
+                Edit Ranking
+                </a>
+            </small></span>
         </div>
         <div class="row" id="mainContent">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
