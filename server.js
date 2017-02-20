@@ -3,9 +3,12 @@ var app      = express();
 var port     = process.env.PORT || 8000;
 var path = require('path');
 
+var seo  = require('seo');
+/*
 var childProcess = require( "child_process" );
 var phantomjs = require( "phantomjs" );
 var binPath = phantomjs.path;
+*/
 
 var mongoose = require('mongoose');
 var Moment = require('moment');
@@ -106,9 +109,9 @@ app.use('/api/exams', exams);
 //app.use('/api/globalFeeItems', globalFeeItems);
 
 
-app.get( "/_escaped_fragment_/*", function( request, response ) {
+/*app.get( "/_escaped_fragment_/*", function( request, response ) {
     var script = path.join( __dirname, "get_html.js" );
-    var url = "http://exambazaar.com" + request.url.replace( "_escaped_fragment_", "#!" );
+    var url = "http://localhost:8000" + request.url.replace( "_escaped_fragment_", "#!" );
     var childArgs =
     [
         script, url
@@ -120,7 +123,7 @@ app.get( "/_escaped_fragment_/*", function( request, response ) {
         response.end( "<!doctype html><html>" + stdout + "</html>" );
     } );
 
-} );
+} );*/
 
 
 app.use(function(req, res, next) {
@@ -129,6 +132,18 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+
+app.use(new seo({
+  cacheDirectory: path.resolve(process.cwd(), '.seo-cache'),
+  routes: require('./seo-routes'),
+  requestURL: 'http://exambazaar.com',
+  pageModifier: function (page, callback) {
+    // This function can be used to modify a page before it is cached
+    // `page` is an instance of PhantomJS's Page object. For an example
+    // see `test/middleware.test.js`
+  }
+}).init());
+
 app.listen(port);
 console.log('The magic happens on port ' + port);
 
