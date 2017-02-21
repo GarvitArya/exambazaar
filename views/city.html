@@ -3,7 +3,7 @@
         margin-top: 40px;
     }
     #categoryFont{
-        min-height: 10vh;
+        min-height: 5vh;
         color: white;
         min-width: 175px;
         border-style: solid;
@@ -36,6 +36,14 @@
         border-bottom: solid 3px;
         border-color: #20C39A;
         letter-spacing: 4px;
+    }
+    #otherCitiesFont{
+        color: rgba(0,0,0,0.8);
+        font-family: "Avenir";
+        letter-spacing: 4px;
+    }
+    #otherCitiesContainer{
+        padding-top: 40px;
     }
     a:hover{
         text-decoration: none;
@@ -70,17 +78,11 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center" id="pageHeader">
             <span class="text md-title" id="pageHeaderFont"><strong>SELECT YOUR CITY</strong></span>
-            <div class="row text-center">
-                <md-button class="md-raised" ng-click="showPrerenderedDialog($event)" id="otherCitiesButton">
-                  Other Cities
-                <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
-                </md-button>
-            </div>
         </div>
         <div class="row" id="mainContent">
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1" id="categories">
 
-            <div ng-repeat="city in rankedCities" ng-if="$index<12">
+            <div ng-repeat="city in rankedCities" ng-if="$index<11">
             <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 hvr-bob">
                 <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">
                     <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })" id="categoryLink">{{city | uppercase}}
@@ -88,7 +90,11 @@
                 </div>
             </div>
             </div>
-            
+            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 hvr-bob">
+                <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ng-click="showPrerenderedDialog($event)">
+                    OTHER
+                </div>
+            </div>
             <div style="visibility: hidden">    
             <div class="md-dialog-container" id="myDialog">
               <md-dialog layout-padding>
@@ -98,7 +104,7 @@
                 </p>
                   
                 <p class="text-center">
-                  <span  ng-repeat="city in rankedCities" ng-if="$index>=12">
+                  <span  ng-repeat="city in rankedCities" ng-if="$index>=11">
                       <span class="text md-subhead">
                         <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })" id="otherCategoryLink">{{city | uppercase}}
                         </a>
@@ -107,14 +113,20 @@
                       
                   </span>
                 </p>
-                <p class="text-center" >
-                    
-                </p>
               </md-dialog>
             </div>    
             </div>    
             </div>
+            <!--<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1 text-center" id="otherCitiesContainer">
+                <span class="text md-subhead" ng-click="showPrerenderedDialog($event)" id="otherCitiesFont"><strong>MORE</strong></span>
+                
+                <md-button class="md-raised" ng-click="showPrerenderedDialog($event)" id="otherCitiesButton">
+                  More
+                <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+                </md-button>
+            </div>-->
         </div>
+        
         <div layout="row" layout-align="center end" id="steps">
             <div id="stepActive">
             </div>

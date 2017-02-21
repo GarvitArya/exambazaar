@@ -55,13 +55,15 @@
     #leftSectionFont{
         letter-spacing: 4px;
         font-family: "Avenir";
-        border-bottom: solid 3px;
-        border-color: #20C39A;
+        /*border-bottom: solid 3px;
+        border-color: #20C39A;*/
+        color: white;
     }
     #subheading{
         letter-spacing: 2px;
         margin-top: 40px;
         font-family: "Avenir";
+        color: white;
     }
     a:hover{
         text-decoration: none;
@@ -76,17 +78,21 @@
         padding-top:20px;
     }
     #landingPage{
+        padding-top: 25px;
         min-height: 90vh;
     }
     #fullPage{
         min-height: 100vh;
         margin: 0px;
         padding: 0px;
+        background-image: url("images/background/background.jpg");
+        background-size:     cover;
+        background-position: center center;
     }
     .landingButton{
-        background-color: #20C39A;
-        color: white;
+        color: #20C39A;
         margin-top: 25px;
+        margin-bottom: 25px;
     }
     #rightLogo{
         max-height: 50px;
@@ -108,23 +114,23 @@
     </div>
     <div>
     <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="landingPage">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 animated fadeIn text-center" >
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" >
         <div layout="column" layout-align="center center" id="leftSection">
-            <span class="text md-display-1" id="leftSectionFont"><strong>SEARCH <span class="hidden-xs">&#8226;</span> COMPARE <span class="hidden-xs">&#8226;</span> APPLY</strong>
+            <span class="text md-display-3 animated bounce" id="leftSectionFont"><strong>SEARCH <span class="hidden-xs">&#8226;</span> COMPARE <span class="hidden-xs">&#8226;</span> APPLY</strong>
             </span>
-            <span class="md-subhead" id="subheading">
+            <span class="md-title animated fadeIn" id="subheading">
                 BROWSE THROUGH THOUSANDS OF <span class="text-primary">EXAM PREPARATION INSTITUTES</span> OFFERING <span class="text-primary">AMAZING DISCOUNTS</span> AND FIND THE ONE RIGHT FOR <span class="text-primary">YOU</span>
             </span>
-            <button type="button" class="btn landingButton" ui-sref="main">
-            <span class="md-display-1"><strong>START</strong>
+            <a class="animated pulse landingButton " ui-sref="main">
+            <span class="text-primary md-display-4 landingButton"><!--<strong>START</strong>-->
             <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>    
             </span>
-            </button>
+            </a>
             
         </div>
         </div>
-        <div class="hidden-xs hidden-sm col-md-6 col-lg-6 text-center">
-        <div layout="row" layout-align ="center" id="rightSection">
+        <!--<div class="hidden-xs hidden-sm col-md-6 col-lg-6 text-center" id="rightSection">
+        <div layout="row" layout-align ="center" >
         
         <div class="row">
             <div ng-repeat="i in getNumber(number) track by $index" class="col-md-3 col-lg-3" id="logoContainer">
@@ -133,7 +139,7 @@
             </div>
         </div>
         </div>
-        </div>
+        </div>-->
     </div>
     </div>
 </div>

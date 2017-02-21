@@ -26,16 +26,24 @@
 <div class="container">
     <div id="spacer1">
     </div>
-    <div layout="row" layout-margin layout-padding>
-        <span class="md-subhead" ng-repeat="existingExam in exams">
-            <a ng-click="setExam(existingExam)">{{existingExam.name}}</a> | 
-        </span>
+    <div class="row top-buffer">
+        <div class="col-md-3" ng-repeat="stream in streams">
+            <strong>{{stream.displayname}}</strong><br/>
+            <span class="text" ng-repeat="existingExam in exams" ng-if="existingExam.stream._id == stream._id"><small>
+            <a ng-click="setExam(existingExam)">{{existingExam.displayname}}</a><span ng-if="!$last">, </span>
+            </small></span>
+        </div>
+        <!--<span class="text" ng-repeat="existingExam in exams"><small>
+        <a ng-click="setExam(existingExam)">{{existingExam.displayname}}</a>, 
+        </small></span>-->
     </div>
     
     <md-divider></md-divider>
     
     <div layout="column" layout-margin layout-padding>
-    <h4 class="text-primary md-title">Add Exam</h4>
+    <h4 class="text-primary md-title">Add Exam
+    <md-button class="md-raised md-primary" ng-click="addExam()" ng-disabled="examForm.$invalid">Add/Save Exam</md-button>    
+    </h4>
     <div class="col-md-12" id="addMasterForm">
         <md-content flex layout-padding>
             <form name="examForm" >
@@ -47,77 +55,89 @@
                         <input required ng-model="exam.name">
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>What is {{exam.name}}?</label>
+                        <label>Exam Display Name</label>
+                        <input required ng-model="exam.displayname">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                    <md-select ng-model="exam.stream._id" placeholder="Select the stream of the exam">
+                    <md-option ng-repeat="stream in streams" ng-value="stream._id">
+                    {{stream.displayname}}
+                    </md-option>
+                    </md-select>
+                    </md-input-container>
+                    
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>What is {{exam.displayname}}?</label>
                         <textarea ng-model="exam.what" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>Brochure of {{exam.name}}</label>
+                        <label>Brochure of {{exam.displayname}}</label>
                         <input ng-model="exam.brochure">
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>Website of {{exam.name}}</label>
+                        <label>Website of {{exam.displayname}}</label>
                         <input ng-model="exam.website">
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>Can I appear for {{exam.name}}?</label>
+                        <label>Can I appear for {{exam.displayname}}?</label>
                         <textarea ng-model="exam.appear" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>How do I register for {{exam.name}}?</label>
+                        <label>How do I register for {{exam.displayname}}?</label>
                         <textarea ng-model="exam.registration" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>What are the {{exam.name}} dates?</label>
+                        <label>What are the {{exam.displayname}} dates?</label>
                         <textarea ng-model="exam.dates" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>What is the syllabus for {{exam.name}}?</label>
+                        <label>What is the syllabus for {{exam.displayname}}?</label>
                         <textarea ng-model="exam.syllabus" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>What is the {{exam.name}} pattern?</label>
+                        <label>What is the {{exam.displayname}} pattern?</label>
                         <textarea ng-model="exam.pattern" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>How should I prepare for {{exam.name}}?</label>
+                        <label>How should I prepare for {{exam.displayname}}?</label>
                         <textarea ng-model="exam.preparation" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>From where should I study for {{exam.name}}?</label>
+                        <label>From where should I study for {{exam.displayname}}?</label>
                         <textarea ng-model="exam.studysource" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>Where can I find previous years’ papers of {{exam.name}}?</label>
+                        <label>Where can I find previous years’ papers of {{exam.displayname}}?</label>
                         <textarea ng-model="exam.previouspapers" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>When do I qualify for {{exam.name}}?</label>
+                        <label>When do I qualify for {{exam.displayname}}?</label>
                         <textarea ng-model="exam.qualify" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>What colleges do I get through {{exam.name}}?</label>
+                        <label>What colleges do I get through {{exam.displayname}}?</label>
                         <textarea ng-model="exam.colleges" rows="5">
                         </textarea>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
-                        <label>How should I discuss my doubts for {{exam.name}}?</label>
+                        <label>How should I discuss my doubts for {{exam.displayname}}?</label>
                         <textarea ng-model="exam.doubts" rows="5">
                         </textarea>
                     </md-input-container>
                     
                 </div>   
 
-                <md-button class="md-raised md-primary" ng-click="addExam()" ng-disabled="examForm.$invalid">Add Exam</md-button>
+                <md-button class="md-raised md-primary" ng-click="addExam()" ng-disabled="examForm.$invalid">Add/Save Exam</md-button>
 
             </div>
         </form>
@@ -126,5 +146,5 @@
     </div>
 </div>
 <div>
-    {{ServerResponse}}
+    {{exams}}
 </div>

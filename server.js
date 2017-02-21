@@ -3,7 +3,6 @@ var app      = express();
 var port     = process.env.PORT || 8000;
 var path = require('path');
 
-var seo  = require('seo');
 /*
 var childProcess = require( "child_process" );
 var phantomjs = require( "phantomjs" );
@@ -70,6 +69,7 @@ var emails = require('./app/emails.js',emails);
 var smss = require('./app/smss.js',smss);
 var otps = require('./app/otps.js',otps); 
 var exams = require('./app/exams.js',exams); 
+var streams = require('./app/streams.js',streams); 
 //var teachers = require('./app/teachers.js',teachers); 
 //var batches = require('./app/batches.js',batches); 
 //var parents = require('./app/parents.js',parents); 
@@ -94,6 +94,7 @@ app.use('/api/emails', emails);
 app.use('/api/smss', smss);
 app.use('/api/otps', otps);
 app.use('/api/exams', exams);
+app.use('/api/streams', streams);
 //app.use('/api/institutes', institutes);
 //app.use('/api/teachers', teachers);
 //app.use('/api/batches', batches);
@@ -133,16 +134,6 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-app.use(new seo({
-  cacheDirectory: path.resolve(process.cwd(), '.seo-cache'),
-  routes: require('./seo-routes'),
-  requestURL: 'http://exambazaar.com',
-  pageModifier: function (page, callback) {
-    // This function can be used to modify a page before it is cached
-    // `page` is an instance of PhantomJS's Page object. For an example
-    // see `test/middleware.test.js`
-  }
-}).init());
 
 app.listen(port);
 console.log('The magic happens on port ' + port);

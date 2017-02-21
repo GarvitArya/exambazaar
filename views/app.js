@@ -10,11 +10,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .primaryPalette("red");
     })
     .controller('streamController', streamController);
-    function streamController($scope,$window,$http,$state, $document,OTPService,$cookies,categories) {
+    function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories) {
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location'); 
         }
-
+        $scope.streams = streamList.data;
+        
+        /*
         $scope.showSubCategories = 0;
         $scope.category = '';
         $scope.setCategory = function(category){
@@ -31,7 +33,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $state.go('category', {categoryName: category.name});
         };
         $scope.categories = categories;
-        /*
+        
             
             {
             name: "Educational",
@@ -134,7 +136,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             {name:"ssc cpo", displayname:"SSC CPO (S.I) Exam"},
             {name:"ssc cgle", displayname:"SSC CGLE"},
             {name:"ssc je", displayname:"SSC JE"},
-            {name:"ssc chsl", displayname:"SSC CHSL Exam"},
+            {name:"ssc chsl", displayname:"SSC CHSL"},
             {name:"ssc cmle", displayname:"SSC CMLE"}
             ]
         },
@@ -209,6 +211,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getExams = function() {
             return $http.get('/api/exams');
         };
+        this.getStreamExams = function(streamName) {
+            //alert(streamName);
+            return $http.get('/api/exams/stream/'+streamName, {streamName: streamName});
+        };
+        this.getExamByName = function(examName) {
+            //alert(streamName);
+            return $http.get('/api/exams/exam/'+examName, {examName: examName});
+        };
+        
+    }]);
+    exambazaar.service('StreamService', ['$http', function($http) {
+        this.saveStream = function(stream) {
+            return $http.post('/api/streams/save', stream);
+        };
+        this.getStream = function(streamId) {
+            return $http.get('/api/streams/edit/'+streamId, {streamId: streamId});
+        };
+        this.getStreams = function() {
+            return $http.get('/api/streams');
+        };
+        this.getStreamByName = function(streamName) {
+            return $http.get('/api/streams/stream/'+streamName, {streamName: streamName});
+        };
+        
         
     }]);
     exambazaar.service('ProviderService', ['$http', function($http) {
@@ -390,9 +416,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]); 
     exambazaar.controller("categoryController", 
-        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope', function($scope,$stateParams,$cookies,$state,categories,$rootScope){
+        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','examList', function($scope,$stateParams,$cookies,$state,categories,$rootScope,examList){
         
-        //console.info(JSON.stringify(categories));
+        $scope.exams = examList.data;
+            $scope.categoryName = $stateParams.categoryName;
+        if($scope.exams[0].stream){
+            $scope.category = $scope.exams[0].stream;
+        }
+        
+        
+       
+        /*//console.info(JSON.stringify(categories));
         $scope.categoryName = $stateParams.categoryName;
         $scope.category = {};
         $scope.subcategory = [];
@@ -407,12 +441,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 //$cookies.putObject('category', thisCategory);
             }
             });
-        }
+        }*/
         $rootScope.pageTitle = $scope.category.displayname + ' deals at Exam Bazaar';    
-        $scope.goToCity = function(subcategory){ 
+        /*$scope.goToCity = function(subcategory){ 
             $cookies.putObject('subcategory', subcategory);
             $state.go('city');
-        };
+        };*/
             
     }]); 
     exambazaar.controller("landingController", 
@@ -437,48 +471,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]); 
     exambazaar.controller("cityController", 
-        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog){
+        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog','thisStream','thisExam', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog,thisStream,thisExam){
         
-        $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Vadodara","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vellore","Vishakhapatnam"];
+        $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
         
         $scope.cities = cities;
-        $scope.category = {};
+        $scope.exam = thisExam.data;
+        $scope.category = thisStream.data;
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
+        
+        
+        $scope.subcategory = $scope.exam;
             
-        $scope.subcategory = [];
-            
-        if($cookies.getObject('category')){
-            $scope.category = $cookies.getObject('category');
-            
-            if($cookies.getObject('subcategory')){
-                $scope.subcategory = $cookies.getObject('subcategory');
-                //console.info($scope.subcategory);
-            }else{
-                //alert(JSON.stringify($scope.category));
-                $state.go('category', {categoryName: $scope.category.name});
-            }
-            
-        }else{
-            categories.forEach(function(thisCategory, categoryIndex){
-            if(thisCategory.name == $scope.categoryName){
-                $scope.category = thisCategory;
-            }
-            });
-            $scope.category.subcategory.forEach(function(thisSubCategory, SubCategoryIndex){
-            if(thisSubCategory.name == $scope.subCategoryName){
-                $scope.subcategory = thisSubCategory;
-            }
-            });
-            
-            if(!$scope.category){
-                $state.go('main');
-            }
-            if(!$scope.subcategory){
-                $state.go('main');
-            }
-            //$state.go('main');
-        }
+        
         $scope.cancel = function() {
           $mdDialog.cancel();
         }; 
@@ -502,7 +508,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
     
     exambazaar.controller("coachingController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','categories', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,categories){
+    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam){
        
         $scope.editable = false;
         if($cookies.getObject('sessionuser')){
@@ -516,7 +522,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.subCategoryName = $stateParams.subCategoryName;
         $scope.city = $stateParams.cityName;
         
-        categories.forEach(function(thisCategory, categoryIndex){
+        $scope.category = thisStream.data;
+        $scope.subcategory = thisExam.data;
+        
+        /*categories.forEach(function(thisCategory, categoryIndex){
             if(thisCategory.name == $scope.categoryName){
                 $scope.category = thisCategory;
             }
@@ -527,7 +536,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.searchText = $scope.subcategory.name;
             $scope.filterText = $scope.subcategory.name;
         }
-        });
+        });*/
         
         $scope.providersList = targetStudyProvidersList.data;
         $scope.uniqueProviders = [];
@@ -573,9 +582,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
     
     exambazaar.controller("showCoachingController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies','categories', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies,categories){
-        $scope.categoryName = $stateParams.categoryName;
-        $scope.subCategoryName = $stateParams.subCategoryName;
+    [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies','thisStream','thisExam', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies,thisStream,thisExam){
+        $scope.category = thisStream.data;
+        $scope.subcategory = thisExam.data;
         $scope.city = $stateParams.cityName;
         $scope.editable = false;
         if($cookies.getObject('sessionuser')){
@@ -586,21 +595,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }
         
         
-        categories.forEach(function(thisCategory, categoryIndex){
+        /*categories.forEach(function(thisCategory, categoryIndex){
             if(thisCategory.name == $scope.categoryName){
                 $scope.category = thisCategory;
             }
         });
-        $scope.showMap = false;
-        $scope.flipMap = function(){
-              $scope.showMap = !$scope.showMap;
-        };
+        
         $scope.category.subcategory.forEach(function(thisSubCategory, SubCategoryIndex){
         if(thisSubCategory.name == $scope.subCategoryName){
             $scope.subcategory = thisSubCategory;
         }
-        });
+        });*/
         
+        $scope.showMap = false;
+        $scope.flipMap = function(){
+              $scope.showMap = !$scope.showMap;
+        };
         $scope.provider = thisProvider.data;
         
         if($scope.provider.pincode){
@@ -1245,13 +1255,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
         }]);
     exambazaar.controller("addExamController", 
-        [ '$scope',  'examList','ExamService','$http','$state', function($scope, examList, ExamService,$http,$state){
+        [ '$scope',  'examList','streamList','ExamService','$http','$state', function($scope, examList,streamList, ExamService,$http,$state){
         $scope.exams = examList.data;
-            console.info(examList.data);
+            
+        
+        $scope.streams = streamList.data;
+        //console.info(examList.data);
         $scope.addExam = function () {
             var saveExam = ExamService.saveExam($scope.exam).success(function (data, status, headers) {
                //$state.go('master-dashboard', {masterId: masterId});
-            
+                alert("Exam saved: " + $scope.exam.displayname);
             })
             .error(function (data, status, header, config) {
                 console.info('Error ' + data + ' ' + status);
@@ -1260,7 +1273,24 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.setExam = function(exam){
             $scope.exam = exam;
         };
-    }]);  
+    }]);
+    exambazaar.controller("addStreamController", 
+        [ '$scope',  'streamList','StreamService','$http','$state', function($scope, streamList, StreamService,$http,$state){
+        $scope.streams = streamList.data;
+        console.info(streamList.data);
+        $scope.addStream = function () {
+            var saveStream = StreamService.saveStream($scope.stream).success(function (data, status, headers) {
+               //$state.go('master-dashboard', {masterId: masterId});
+            
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+        };
+        $scope.setStream = function(stream){
+            $scope.stream = stream;
+        };
+    }]);
     exambazaar.controller("addMasterController", 
         [ '$scope', 'UserService','$http','$state', function($scope, UserService,$http,$state){
         $scope.genders = ["Female", "Male"];
@@ -1462,6 +1492,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 'footer': {
                     templateUrl: 'footer.html'
                 }
+            },
+            resolve: {
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
+                stream: function() { return {}; }
             }
         })
         .state('signup', {
@@ -1494,6 +1531,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 'footer': {
                     templateUrl: 'footer.html'
                 }
+            },
+            resolve: {
+                examList: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getStreamExams($stateParams.categoryName);
+                }],
+                exam: function() { return {}; }
             }
         })
         .state('city', {
@@ -1510,7 +1554,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 'footer': {
                     templateUrl: 'footer.html'
                 }
+            },
+            resolve: {
+                thisStream: ['StreamService','$stateParams',
+                    function(StreamService,$stateParams){
+                    return StreamService.getStreamByName($stateParams.categoryName);
+                }],
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamByName($stateParams.subCategoryName);
+                }],
+                exam: function() { return {}; }
             }
+        
+        
         })
         .state('findCoaching', {
             url: '/main/:categoryName/:subCategoryName/:cityName', //masterId?
@@ -1528,6 +1585,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }
             },
             resolve: {
+                thisStream: ['StreamService','$stateParams',
+                    function(StreamService,$stateParams){
+                    return StreamService.getStreamByName($stateParams.categoryName);
+                }],
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamByName($stateParams.subCategoryName);
+                }],
                 targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService,$stateParams) {
                     var cityCourse = {
@@ -1558,6 +1623,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }
             },
             resolve: {
+                thisStream: ['StreamService','$stateParams',
+                    function(StreamService,$stateParams){
+                    return StreamService.getStreamByName($stateParams.categoryName);
+                }],
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamByName($stateParams.subCategoryName);
+                }],
                 thisProvider: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getProvider($stateParams.coachingId);
@@ -2451,6 +2524,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 institute: function() { return {}; }
             }
         })
+        .state('addStream', {
+            url: '/addStream',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'addStream.html',
+                    controller: 'addStreamController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
+                stream: function() { return {}; }
+            }
+        })
         .state('addExam', {
             url: '/addExam',
             views: {
@@ -2470,6 +2566,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 examList: ['ExamService',
                     function(ExamService){
                     return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
                 }],
                 exam: function() { return {}; }
             }

@@ -1,5 +1,5 @@
 {
-  "name": "EduReport.in",
+  "name": "Exambazaar.com",
   "main": "server.js",
   "dependencies": {
     "angular": "^1.5.8",
@@ -70,7 +70,6 @@
     "phantomjs": "^2.1.7",
     "req-flash": "0.0.3",
     "request": "^2.79.0",
-    "seo": "0.0.15",
     "serve-favicon": "^2.3.2",
     "sitemap-generator": "^5.0.1",
     "unirest": "^0.5.1",

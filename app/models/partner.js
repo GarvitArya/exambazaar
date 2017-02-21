@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var Schema = mongoose.Schema;
 
@@ -11,22 +10,36 @@ var personSchema = mongoose.Schema({
     email: {type: String}
 });
 
+var centreSchema = mongoose.Schema({
+    
+});
+
 var educationProviderSchema = mongoose.Schema({
     type: {type: String, default:'Coaching'},
     name: {type: String,required: true},
-    website: String,
-    linkWebsite: String,
-    address: String,
+    logo: String,
+    
+    //basic info
+    address: {type: String,required: true},
     area: String,
     city: String,
     state: String,
     pincode: String,
-    logo: String,
+    
+    //contact info
     mobile: [String],
     phone: [String],
+    website: String,
+    linkWebsite: String,
+    
+    //internal ranking
     rank: {type: Number,default: 0},
+    //facilities
     students: String,
+    outStationStudents: String,
     faculty: String,
+    otherStaff: String,
+    
     coursesOffered: [String],
     facilities_available: [String],
     facilities_unavailable: [String],

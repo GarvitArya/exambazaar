@@ -32,6 +32,10 @@
         letter-spacing: 4px;
         font-family: "Avenir";
         margin-top: 10px;
+        
+        /*background-image: url("images/background/collage.jpg");
+        background-size:     cover;
+        background-position: center center;*/
     }
     #pageHeaderFont{
         border-bottom: solid 3px;
@@ -136,12 +140,19 @@
     #subcategory a{
         color: #5B5B5B;
     }
+    .nohighlight{
+        border-bottom: solid;
+        border-width: 3px;
+        border-color: rgba(0,0,0,0.6);
+        
+    }
     .highlight{
         border-bottom: solid;
         border-width: 3px;
         border-color: #20C39A;
         color: #20C39A;
     }
+    
     div{
         font-family: "Avenir";
     }
@@ -151,6 +162,16 @@
     }
     #normal a{
         color: #20C39A;
+    }
+    #leftTabs{
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        background-color: whitesmoke;
+        border-style: solid;
+        border-radius: 10px;
+        border-width: 2px;
+        border-color: whitesmoke;
     }
 </style>
 
@@ -185,14 +206,15 @@
             
                 <div class="row" >
         
-                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-
-                <div  class="panel panel-default" id="subcategory" ng-click="showCoaching(provider)">
-                    <div class="panel-body">
-                        <strong><h1 class="md-subhead text-primary" data-ng-class="{'highlight':provider.showDetails}"><a ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="leftTabs">
+                <div id="subcategory" ng-click="showCoaching(provider)">
+                    <div >
+                        <strong><span class="md-subhead text-primary nohighlight" data-ng-class="{'highlight':provider.showDetails}">
+<!-- ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })"-->
+                        <a id="coachingHeader">
                             {{$index + 1}}. {{provider.name | uppercase}}
                         </a>
-                        </h1></strong>
+                        </span></strong>
                         <div layout="row">
                         <small>Courses:&nbsp;
                         <span ng-repeat="course in provider.coursesOffered">

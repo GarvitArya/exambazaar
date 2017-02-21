@@ -17,9 +17,10 @@ mongoose.Promise = require('bluebird');
 //to add an exam
 router.post('/save', function(req, res) {
     var thisExam = req.body;
+    var examId = req.body._id;
     var examName = thisExam.name;
     console.log("Exam is: " + JSON.stringify(examName));
-    var existingExam = exam.findOne({ 'name': examName },function (err, existingExam) {
+    var existingExam = exam.findOne({ '_id': examId },function (err, existingExam) {
         if(existingExam){
             for (var property in thisExam) {
                 existingExam[property] = thisExam[property];
@@ -34,6 +35,7 @@ router.post('/save', function(req, res) {
         }else{
            var this_exam = new exam({
                 name : thisExam.name,
+                displayname : thisExam.displayname,
                 what : thisExam.what,
                 brochure : thisExam.brochure,
                 website : thisExam.website,
@@ -58,15 +60,53 @@ router.post('/save', function(req, res) {
     });
 });
 
-//to get all users
+//to get all exams
 router.get('/', function(req, res) {
-    console.log('Here');
-    exam.find({}, function(err, docs) {
-    if (!err){ 
-        console.log(docs);
-        res.json(docs);
-    } else {throw err;}
+    //console.log('Here');
+    exam
+        .find({ })
+        .deepPopulate('stream')
+        .exec(function (err, docs) {
+        if (!err){
+            console.log(docs);
+            res.json(docs);
+        } else {throw err;}
     });
+    
+});
+
+router.get('/stream/:streamName', function(req, res) {
+    var streamName = req.params.streamName;
+    var allExams = exam
+        .find({ })
+        .deepPopulate('stream')
+        .exec(function (err, allExams) {
+        if (!err){
+            var streamExams = [];
+            allExams.forEach(function(thisExam, index){
+                if(thisExam.stream.name == streamName){
+                    streamExams.push(thisExam);
+                }
+            });
+            console.log(streamExams);
+            res.json(streamExams);
+        } else {throw err;}
+    });
+    
+});
+
+router.get('/exam/:examName', function(req, res) {
+    var examName = req.params.examName;
+    var thisExam = exam
+        .findOne({'name': examName})
+        .deepPopulate('stream')
+        .exec(function (err, thisExam) {
+        if (!err){
+            console.log(thisExam);
+            res.json(thisExam);
+        } else {throw err;}
+    });
+    
 });
 
 router.get('/count', function(req, res) {

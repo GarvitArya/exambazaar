@@ -1,0 +1,66 @@
+<style>
+    .md-block{
+        padding: 10px;
+        border: 1px solid #ccc; 
+    }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+</style>
+<div class="container">
+    <div id="spacer1">
+    </div>
+    <div layout="row" layout-margin layout-padding>
+        <span class="md-subhead" ng-repeat="existingStream in streams">
+            <a ng-click="setStream(existingStream)">{{existingStream.displayname}}</a>, 
+        </span>
+    </div>
+    
+    <md-divider></md-divider>
+    
+    <div layout="column" layout-margin layout-padding>
+    <h4 class="text-primary md-title">Add Stream</h4>
+    <div class="col-md-12" id="addMasterForm">
+        <md-content flex layout-padding>
+            <form name="streamForm" >
+            <div layout="column" >
+                <div layout="column">
+
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Stream Name</label>
+                        <input required ng-model="stream.name">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Stream Display Name</label>
+                        <input required ng-model="stream.displayname">
+                    </md-input-container>
+                    
+                </div>   
+
+                <md-button class="md-raised md-primary" ng-click="addStream()" ng-disabled="streamForm.$invalid">Add Stream</md-button>
+
+            </div>
+        </form>
+        </md-content>
+        </div>
+    </div>
+</div>
+<div>
+    {{ServerResponse}}
+</div>
