@@ -15,7 +15,7 @@
         margin-right: 0px;
         padding: 5px;
         letter-spacing: 2px;
-        box-shadow: 1px 1px 1px #6A6968;
+        box-shadow: 2px 2px 2px #6A6968;
         font-family: "Avenir";
     }
     #categoryFont:hover{
@@ -52,8 +52,9 @@
     .bs-callout {
         padding: 10px;
         border: 1px solid #eee;
-        border-left-width: 5px;
-        border-radius: 3px;
+        /*border-left-width: 5px;
+        border-left-color: #20C39A;*/
+        border-radius: 10px;
     }
     *.bs-callout:empty {
        padding: 20px;
@@ -118,6 +119,7 @@
         border: none;
         height: 100%;
         margin-bottom: 20px;
+        
     }
     #coachingHeader{
         color: #20C39A;
@@ -135,14 +137,16 @@
     #subcategory{
         height: 100%;
         background: whitesmoke;
-        
+        padding: 10px;
+        letter-spacing: 2px;
+        min-height: 15vh;
     }
     #subcategory a{
         color: #5B5B5B;
     }
     .nohighlight{
         border-bottom: solid;
-        border-width: 3px;
+        border-width: 1px;
         border-color: rgba(0,0,0,0.6);
         
     }
@@ -164,7 +168,6 @@
         color: #20C39A;
     }
     #leftTabs{
-        padding: 10px;
         margin-top: 10px;
         margin-bottom: 10px;
         background-color: whitesmoke;
@@ -172,6 +175,9 @@
         border-radius: 10px;
         border-width: 2px;
         border-color: whitesmoke;
+        box-shadow: 1px 1px 1px #6A6968;
+        font-family: "Avenir";
+        
     }
 </style>
 
@@ -209,12 +215,13 @@
                 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="leftTabs">
                 <div id="subcategory" ng-click="showCoaching(provider)">
                     <div >
-                        <strong><span class="md-subhead text-primary nohighlight" data-ng-class="{'highlight':provider.showDetails}">
+                        <strong><span class="md-subhead text-primary" data-ng-class="{'highlight':provider.showDetails}">
 <!-- ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })"-->
                         <a id="coachingHeader">
                             {{$index + 1}}. {{provider.name | uppercase}}
                         </a>
                         </span></strong>
+                        <md-divider ng-if="!provider.showDetails"></md-divider>
                         <div layout="row">
                         <small>Courses:&nbsp;
                         <span ng-repeat="course in provider.coursesOffered">
