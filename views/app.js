@@ -1073,9 +1073,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 console.info("Error ");
             });
         };
+        $scope.allCourses = false;
         $scope.getAllCourses = function(){
             targetStudyProviderService.getAllCourses().success(function (data, status, headers) {
                 console.info("Done");
+                $scope.allCourses = true;
+                $scope.courses = data;
             })
             .error(function (data, status, header, config) {
                 console.info("Error ");

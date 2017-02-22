@@ -19,6 +19,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     mobile: [String],
     phone: [String],
     coursesOffered: [String],
+    exams: [{ type: Schema.ObjectId, ref: 'exam' }],
     rank: {type: Number,default: 0},
     _created: { type: Date, default: Date.now }
 });

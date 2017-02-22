@@ -143,7 +143,7 @@
         </hot-table>
     </div>-->
     
-    <div class = "row top-buffer" >
+    <div class = "row top-buffer" ng-if="!allCourses" >
         <div layout="row">
         <div class="col-md-8 icon-addon addon-md">
             <input type="search" placeholder="Search by name" class="form-control" id="Input" ng-model="searchText">
@@ -216,12 +216,18 @@
         
     </div>
     <div class="row">
-            <div ng-repeat="logo in uniquelogos" ng-if="$index>=2500 && $index<3500">
-                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                    <img ng-src="{{logo}}" />
-                </div>
-                
+        <div ng-repeat="logo in uniquelogos" ng-if="$index>=2500 && $index<3500">
+            <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                <img ng-src="{{logo}}" />
             </div>
-        
+
         </div>
+        
+    </div>
+    {{allCourses}}
+    <div class = "row top-buffer" ng-if="allCourses" >
+        <div ng-repeat="course in courses">
+            {{course}}
+        </div>
+    </div>
 </div>

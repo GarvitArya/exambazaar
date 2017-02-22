@@ -36,6 +36,7 @@ router.post('/save', function(req, res) {
            var this_exam = new exam({
                 name : thisExam.name,
                 displayname : thisExam.displayname,
+                stream : thisExam.stream,
                 what : thisExam.what,
                 brochure : thisExam.brochure,
                 website : thisExam.website,
@@ -83,7 +84,9 @@ router.get('/stream/:streamName', function(req, res) {
         .exec(function (err, allExams) {
         if (!err){
             var streamExams = [];
+            console.log(allExams);
             allExams.forEach(function(thisExam, index){
+                console.log(thisExam);
                 if(thisExam.stream.name == streamName){
                     streamExams.push(thisExam);
                 }
