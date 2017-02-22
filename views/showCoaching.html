@@ -113,7 +113,8 @@
     <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div id="spacer">
         </div>
-        <div>
+        <div class="row">
+            <div class="row">
             <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
             <small>
             <span><a ui-sref="main">EXAMBAZAAR</a></span>
@@ -123,122 +124,123 @@
             <span> >>>> {{provider.name | uppercase}}</span>
             </small>
             </div>
+            </div>
         </div>
         <div class="row" id="mainContent">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
                 <div class="row">
-                    <div  class="panel panel-default" >
-                    <div class="panel-heading">
-                    <div class="hidden-xs col-sm-12 col-md-12 col-lg-12">
-                        <h1 class="text md-title" id="coachingHeader">{{provider.name | uppercase}}
-                        <span ng-if="editable"><small>
-                            <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" id="linkFont">
-                                Edit
-                            </a>
+            <div  class="panel panel-default" >
+            <div class="panel-heading">
+            <div class="hidden-xs col-sm-12 col-md-12 col-lg-12">
+                <h1 class="text md-title" id="coachingHeader">{{provider.name | uppercase}}
+                <span ng-if="editable"><small>
+                    <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" id="linkFont">
+                        Edit
+                    </a>
+                </small></span>
+
+                <span ng-if="provider.oldlogo" class="pull-right" id="logo">
+                    <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImage"/>
+                </span>
+                </h1>
+
+                <div class="container">
+                <div class="row md-subhead" >
+                    <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}} {{provider.pincode}} | 
+                    <span id="linkFont"><small>
+                    <span ng-if="!showMap"><a ng-click="flipMap()" >
+                        Show on Map
+                    </a></span>
+                    <span ng-if="showMap"><a ng-click="flipMap()">
+                        Hide Map
+                    </a></span>
+                    </small></span>
+                    </div>
+                </div>
+
+                </div>
+                <div class="col-xs-12 hidden-sm  hidden-md hidden-lg">
+                <div class="col-xs-12">
+                <h1 class="text md-subhead" id="coachingHeader">{{provider.name | uppercase}}
+                <span ng-if="editable"><small>
+                    <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" id="linkFont">
+                        Edit
+                    </a>
+                </small></span>
+                </h1>
+                </div>
+                <div class="col-xs-12">
+                <span ng-if="provider.oldlogo">
+                    <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImagexs"/>
+                </span>
+                </div>
+                <div class="col-xs-12">  
+                    <div class="container">
+                    <div class="row " >
+                        <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}} {{provider.pincode}} | 
+                        <span id="linkFont"><small>
+                        <span ng-if="!showMap"><a ng-click="flipMap()" >
+                            Show on Map
+                        </a></span>
+                        <span ng-if="showMap"><a ng-click="flipMap()">
+                            Hide Map
+                        </a></span>
                         </small></span>
+                        </div>
+                    </div>
+                </div>
 
-                        <span ng-if="provider.oldlogo" class="pull-left" id="logo">
-                            <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImage"/>
-                        </span>
-                        </h1>
+                </div>
+                &nbsp;
+                </div>
+                <md-divider></md-divider>
+                <div class="panel-body">
+                    <div class="container md-subhead">
 
-                        <div class="container">
-                        <div class="row md-subhead" >
-                            <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}} {{provider.pincode}} | 
-                            <span id="linkFont"><small>
-                            <span ng-if="!showMap"><a ng-click="flipMap()" >
-                                Show on Map
-                            </a></span>
-                            <span ng-if="showMap"><a ng-click="flipMap()">
-                                Hide Map
-                            </a></span>
-                            </small></span>
-                            </div>
+                        <div class="row" id="map" ng-show="showMap">
+                        <!--<small>{{provider.mapAddress}}</small> -->   
+                        <ng-map center="{{provider.mapAddress}}" zoom="14" >
+                            <!-- tilt="45"
+    map-type-id="SATELLITE"-->
+                            <marker position="{{provider.mapAddress}}"
+                              title="{{provider.mapAddress}}"
+                              animation="Animation.BOUNCE"
+                              centered="true"></marker>
+                        </ng-map>
                         </div>
-
+                        <div class="row" ng-if="provider.phone.length > 0">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <span ng-repeat="phone in provider.phone track by $index">
+                                {{phone}}
+                                <span ng-if="!$last">, </span>
+                            </span>
                         </div>
-                        <div class="col-xs-12 hidden-sm  hidden-md hidden-lg">
-                        <div class="col-xs-12">
-                        <h1 class="text md-subhead" id="coachingHeader">{{provider.name | uppercase}}
-                        <span ng-if="editable"><small>
-                            <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" id="linkFont">
-                                Edit
-                            </a>
-                        </small></span>
-                        </h1>
+                        <div class="row" ng-if="provider.mobile.length > 0">
+                            <i class="fa fa-mobile" aria-hidden="true"></i>
+                            <span ng-repeat="mobile in provider.mobile track by $index">
+                                <a ng-href="tel:{{mobile}}">{{mobile}}</a>
+                                <span ng-if="!$last">, </span>
+                            </span>
                         </div>
-                        <div class="col-xs-12">
-                        <span ng-if="provider.oldlogo">
-                            <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImagexs"/>
-                        </span>
+                        <div class="row">
+                            Courses: 
+                            <span ng-repeat="course in provider.coursesOffered">
+                                {{course}}
+                            <span ng-if="!$last">&nbsp;&#8226;&nbsp;</span>
+                            </span>
                         </div>
-                        <div class="col-xs-12">  
-                            <div class="container">
-                            <div class="row " >
-                                <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}} {{provider.pincode}} | 
-                                <span id="linkFont"><small>
-                                <span ng-if="!showMap"><a ng-click="flipMap()" >
-                                    Show on Map
-                                </a></span>
-                                <span ng-if="showMap"><a ng-click="flipMap()">
-                                    Hide Map
-                                </a></span>
-                                </small></span>
-                                </div>
-                            </div>
+                        <div class="row" ng-if="provider.website">
+                            <small>Website: 
+                            <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website" id="linkFont">
+                                {{provider.website}}
+                            </a></small>
                         </div>
-                            
-                        </div>
-                        &nbsp;
-                        </div>
-                        <md-divider></md-divider>
-                        <div class="panel-body">
-                            <div class="container md-subhead">
-
-                                <div class="row" id="map" ng-show="showMap">
-                                <!--<small>{{provider.mapAddress}}</small> -->   
-                                <ng-map center="{{provider.mapAddress}}" zoom="14" >
-                                    <!-- tilt="45"
-            map-type-id="SATELLITE"-->
-                                    <marker position="{{provider.mapAddress}}"
-                                      title="{{provider.mapAddress}}"
-                                      animation="Animation.BOUNCE"
-                                      centered="true"></marker>
-                                </ng-map>
-                                </div>
-                                <div class="row" ng-if="provider.phone.length > 0">
-                                    <i class="fa fa-phone" aria-hidden="true"></i>
-                                    <span ng-repeat="phone in provider.phone track by $index">
-                                        {{phone}}
-                                        <span ng-if="!$last">, </span>
-                                    </span>
-                                </div>
-                                <div class="row" ng-if="provider.mobile.length > 0">
-                                    <i class="fa fa-mobile" aria-hidden="true"></i>
-                                    <span ng-repeat="mobile in provider.mobile track by $index">
-                                        <a ng-href="tel:{{mobile}}">{{mobile}}</a>
-                                        <span ng-if="!$last">, </span>
-                                    </span>
-                                </div>
-                                <div class="row">
-                                    Courses: 
-                                    <span ng-repeat="course in provider.coursesOffered">
-                                        {{course}}
-                                    <span ng-if="!$last">&nbsp;&#8226;&nbsp;</span>
-                                    </span>
-                                </div>
-                                <div class="row" ng-if="provider.website">
-                                    <small>Website: 
-                                    <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website" id="linkFont">
-                                        {{provider.website}}
-                                    </a></small>
-                                </div>
 
 
-                            </div>
+                    </div>
 
-                        </div>
-                    </div> 
+                </div>
+            </div> 
 
                 </div>
             

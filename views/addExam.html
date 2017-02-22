@@ -65,7 +65,14 @@
                     </md-option>
                     </md-select>
                     </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Exam Display Rank</label>
+                        <input ng-model="exam.rank">
+                    </md-input-container>
                     
+                    <md-switch ng-model="exam.active" aria-label="Active?">
+                      Active?
+                    </md-switch>
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>What is {{exam.displayname}}?</label>
                         <textarea ng-model="exam.what" rows="5">
@@ -146,5 +153,4 @@
     </div>
 </div>
 <div>
-    {{exams}}
 </div>

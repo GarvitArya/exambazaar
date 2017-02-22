@@ -111,7 +111,7 @@ router.post('/cityCourse', function(req, res) {
     var city = cityCourse.city;
     var course = cityCourse.course;
     
-    /*var examName = course;
+    var examName = course;
     var thisExam = exam
         .findOne({'name': examName})
         .deepPopulate('stream')
@@ -124,14 +124,14 @@ router.post('/cityCourse', function(req, res) {
             } else {throw err;}
             });
         } else {throw err;}
-    });*/
+    });
     
     
-    targetStudyProvider.find({"city" : city,"coursesOffered" : { $elemMatch : { $regex : course, $options : 'i' } }}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, providerList) {
+    /*targetStudyProvider.find({"city" : city,"coursesOffered" : { $elemMatch : { $regex : course, $options : 'i' } }}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, providerList) {
     if (!err){
         res.json(providerList);
     } else {throw err;}
-    });
+    });*/
 });
 router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;
@@ -231,10 +231,10 @@ router.get('/UniqueLogoService', function(req, res) {
 router.get('/getAllCourses', function(req, res) {
     //console.log("Starting now");
     var allCourses = [];
-    var allproviders =  targetStudyProvider.find({}, {coursesOffered:1, exams:1},function(err, allproviders) {
+    var allproviders =  targetStudyProvider.find({}, {coursesOffered:1, exams:1,name:1},function(err, allproviders) {
     if (!err){
         var courseExam = [];
-         allproviders.forEach(function(thisprovider, index){
+         /*allproviders.forEach(function(thisprovider, index){
              //console.log(index);
             //console.log(thisprovider._id);
             
@@ -267,7 +267,7 @@ router.get('/getAllCourses', function(req, res) {
                 }
             });
              
-         });
+         });*/
         var courseExam = [
           {"course":"Bank PO Exam","exam":{"_id":"58ac2c7c7e852a2c401a8c3f","name":"Bank PO Exam","displayname":"Bank PO Exam","__v":0,"stream":{"_id":"58ac22b73cfd4f32bccf8a82","name":"bank","displayname":"Bank","__v":0}}},
 {"course":"LIC AAO Exam","exam":{"_id":"58ac2cfb7e852a2c401a8c4a","name":"LIC AAO Exam","displayname":"LIC","__v":0,"stream":{"_id":"58ac22cf3cfd4f32bccf8a84","name":"insurance","displayname":"Insurance","__v":0}}},
@@ -314,20 +314,42 @@ router.get('/getAllCourses', function(req, res) {
 {"course":"LSAT","exam":{"_id":"58ac28fdb9ae26008828999b","name":"LSAT","displayname":"LSAT","__v":0,"stream":{"_id":"58ac22823cfd4f32bccf8a7e","name":"law","displayname":"Law","__v":0}}},
 {"course":"IRDA Exam","exam":{"_id":"58ac2ce97e852a2c401a8c48","name":"IRDA Exam","displayname":"IRDA Exam","__v":0,"stream":{"_id":"58ac22cf3cfd4f32bccf8a84","name":"insurance","displayname":"Insurance","__v":0}}}  
         ];
-        
+        var excludedList =[
+            '58818debd2a6f324d074b61d',
+            '588b689109f8e092c42ed063',
+            '58864dab10375c21d0dd097e',
+            '58805c0568834500113e40f6',
+            '587f27bf68834500113e3fb4',
+            '588b9073bacc08647c61f7cf',
+            '5889a72564d30a09449ae951',
+            '5888714044b3e649589e3d2e',
+            '5889bb5972b7e80914783924',
+            '5873dc0fdc5b3027b48d817a',
+            '5886d6a5b154802d00bc7b9e',
+            '5888411b4f23586c7c9ea200',
+            '5888c5d0c019b96a88de48b3',
+            '5888849ae5823635d4e92f76',
+        ];
         var courses = courseExam.map(function(a) {return a.course;});
         allproviders.forEach(function(thisprovider, index){
             var thiscourses = thisprovider.coursesOffered;
             thiscourses.forEach(function(thiscourse, courseindex){
                 var examIndex = courses.indexOf(thiscourse);
-                if(examIndex!=-1){
+                /*if(excludedList.indexOf(String(thisprovider._id)) == -1){
+                    console.log('Excluded: ' + thisprovider.name);
+                }*/
+                var indexVal = excludedList.indexOf(String(thisprovider._id));
+                if(examIndex!=-1 && indexVal == -1){
                     var thisCourseExam = courseExam[examIndex];
                     var examId = thisCourseExam.exam._id;
                    // console.log(thiscourse + ' ' + examId);
+                    if(thisprovider._id=='5870f774b2a1c11da874027a'){
+                        console.log(thisprovider.name);
+                    }
                     thisprovider.exams.addToSet(examId);
                     thisprovider.save(function(err, thisprovider) {
                         if (err) return console.error(err);
-                        console.log("Provider saved: " + thisprovider._id);
+                        console.log(index + " Provider saved: " + thisprovider.name + ' ' + thisprovider._id + ' ' + excludedList.indexOf(thisprovider._id));
                     });
                 }else{
                     //console.log('Unlisted Exam is: ' + thiscourse);
@@ -335,11 +357,11 @@ router.get('/getAllCourses', function(req, res) {
             });
         });
         
-        //res.json(courseExam);  
+        res.json(courseExam);  
         //console.log(courseExam.length);
         //console.log(JSON.stringify(courseExam));
         }
-    });
+    });//.limit(20000).skip(000); //
 });
 
 router.get('/uprank/:targetStudyProviderId', function(req, res) {

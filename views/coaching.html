@@ -113,18 +113,14 @@
         color: #5bc0de;
     }
     
-    #coachingDetails{
-        background-color: rgba(0,0,0,0.6);
-        color: whitesmoke;
-        border: none;
-        height: 100%;
-        margin-bottom: 20px;
-        
-    }
+    
     #coachingHeader{
         color: #20C39A;
         font-family: "Avenir";
         letter-spacing: 2px;
+    }
+    #coachingCourses{
+        letter-spacing: 1px;
     }
     #knowmore{
         width:100%;
@@ -134,16 +130,7 @@
     #fullPageGradient1{
         
     }
-    #subcategory{
-        height: 100%;
-        background: whitesmoke;
-        padding: 10px;
-        letter-spacing: 2px;
-        min-height: 15vh;
-    }
-    #subcategory a{
-        color: #5B5B5B;
-    }
+    
     .nohighlight{
         border-bottom: solid;
         border-width: 1px;
@@ -168,16 +155,39 @@
         color: #20C39A;
     }
     #leftTabs{
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
+        font-family: "Avenir";  
+    }
+    #subcategory{
+        height: 100%;
+        background: whitesmoke;
+        padding: 10px;
+        letter-spacing: 2px;
+        min-height: 20vh;
+        margin-right:15px;
+        
         background-color: whitesmoke;
         border-style: solid;
         border-radius: 10px;
         border-width: 2px;
         border-color: whitesmoke;
         box-shadow: 1px 1px 1px #6A6968;
-        font-family: "Avenir";
+    }
+    
+    #rightTabs{
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+        border: none;
+        height: 100%;
+        margin-bottom: 20px;
         
+    }
+    #subcategory a{
+        color: #5B5B5B;
+    }
+    
+    .label-eb{
+        background: #20C39A;
     }
 </style>
 
@@ -186,7 +196,7 @@
     <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div id="spacer">
         </div>
-        <div>
+        <div class="row">
             <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
             <small>
             <span><a ui-sref="main">EXAMBAZAAR</a></span>
@@ -196,6 +206,7 @@
             </small>
             </div>
         </div>
+        <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated fadeIn" id="pageHeader">
             <span class="text md-title" id="pageHeaderFont"><strong>{{providersList.length}} {{subcategory.displayname | uppercase}} INSTITUTES IN {{city | uppercase}}</strong></span>
             <span id="normal" ng-if="editable"><small>
@@ -203,6 +214,7 @@
                 Edit Ranking
                 </a>
             </small></span>
+        </div>
         </div>
         <div class="row" id="mainContent">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
@@ -213,7 +225,7 @@
                 <div class="row" >
         
                 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="leftTabs">
-                <div id="subcategory" ng-click="showCoaching(provider)">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="subcategory" ng-click="showCoaching(provider)">
                     <div >
                         <strong><span class="md-subhead text-primary" data-ng-class="{'highlight':provider.showDetails}">
 <!-- ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })"-->
@@ -222,11 +234,11 @@
                         </a>
                         </span></strong>
                         <md-divider ng-if="!provider.showDetails"></md-divider>
-                        <div layout="row">
-                        <small>Courses:&nbsp;
-                        <span ng-repeat="course in provider.coursesOffered">
+                        <div layout="row" id="coachingCourses">
+                        <small>{{category.displayname}} Courses:&nbsp;
+                        <span ng-repeat="course in provider.coursesOffered" ng-if="streamExams.indexOf(course)!=-1"><span class="label label-default">
                             {{course}}
-                        <span ng-if="!$last">&nbsp;|&nbsp;</span>
+                        </span>&nbsp;
                         </span>
                         </small>
                         </div>
@@ -234,7 +246,7 @@
 
                     </div>
                 </div>
-                <div class="bs-callout bs-callout-success col-xs-12 col-sm-8 col-md-8 col-lg-8 " ng-show="provider.showDetails" id="coachingDetails">
+                <div class="bs-callout bs-callout-success col-xs-12 col-sm-8 col-md-8 col-lg-8 " ng-show="provider.showDetails" id="rightTabs">
                     <div layout="column" layout-align="center left">
 
                     <div layout="row">

@@ -61,7 +61,7 @@
             
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1" id="categories">
 
-            <div ng-repeat="subcategory in exams" >
+            <div ng-repeat="subcategory in exams | orderBy:'-rank'" ng-if="subcategory.active" >
             <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 hvr-bob">
                 <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">
                     <md-tooltip>{{subcategory.description}}</md-tooltip>

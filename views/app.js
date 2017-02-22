@@ -425,7 +425,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }
         
         
-       
         /*//console.info(JSON.stringify(categories));
         $scope.categoryName = $stateParams.categoryName;
         $scope.category = {};
@@ -508,7 +507,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
     
     exambazaar.controller("coachingController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam){
+    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam','streamExams', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams){
        
         $scope.editable = false;
         if($cookies.getObject('sessionuser')){
@@ -524,6 +523,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.category = thisStream.data;
         $scope.subcategory = thisExam.data;
+        $scope.streamExams = streamExams.data.map(function(a) {return a.name;});;
         
         /*categories.forEach(function(thisCategory, categoryIndex){
             if(thisCategory.name == $scope.categoryName){
@@ -1596,6 +1596,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     function(ExamService,$stateParams){
                     return ExamService.getExamByName($stateParams.subCategoryName);
                 }],
+                streamExams: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getStreamExams($stateParams.categoryName);
+                }],
+                
                 targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService,$stateParams) {
                     var cityCourse = {
