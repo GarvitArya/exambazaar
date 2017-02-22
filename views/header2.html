@@ -1,0 +1,143 @@
+<style>
+    #logo{
+        color:white;
+    }
+    #logo:hover{
+        color:#20C39A;
+    }
+    #headerBar{
+        margin-left: 25px;
+        margin-right: 25px;
+        
+    }
+    #headerBar a {
+        color: grey;
+    }
+    .navbar.transparent {
+        border-width: 0px;
+        -webkit-box-shadow: 0px 0px;
+        box-shadow: 0px 0px;
+        background-color: rgba(0,0,0,0.0);
+        background-image: -webkit-gradient(linear, 50.00% 0.00%, 50.00% 100.00%, color-stop( 0% , rgba(0,0,0,0.00)),color-stop( 100% , rgba(0,0,0,0.00)));
+        background-image: -webkit-linear-gradient(270deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+        background-image: linear-gradient(180deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+    }
+    .navbar-brand{
+        font-family: "Avenir";
+        letter-spacing: 4px;
+        font-weight: 900;
+        
+    }
+    
+    button{
+        background-color: #20C39A;
+        font-family: "Open Sans";
+        color:white;
+    }
+    #headerInput{
+        background-color : white;
+        font-size:12px;
+        font-family: "Open Sans";
+    }
+</style>
+
+<div class="alert alert-danger alert-dismissible" role="alert" ng-if="message !=''">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>{{message}}</strong>
+</div>
+<!--transparent-->
+<nav class="navbar transparent navbar-default navbar-fixed-top nav-justified" role="navigation" id="mainNav">
+    
+<div class="row" id="headerBar">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        </button>
+
+        <a class="navbar-brand" href="#">
+            <span class="" id="logo">
+                EXAMBAZAAR
+            </span>
+        </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+        <div class="navbar-right">
+        <form class="navbar-form animated fadeIn" ng-submit="login()" ng-show="!sessionuser && showLogin">
+        <div class="form-group">
+        <input type="text" placeholder="Mobile" class="form-control text-center" ng-model="login.mobile" size="15" id="headerInput">
+        </div>
+        <div class="form-group">
+        <input type="password" placeholder="Password" class="form-control text-center" ng-model="login.password" size="15" id="headerInput">
+        </div>
+        <button type="submit" class="btn">Log in</button>
+        <button type="submit" class="btn btn-primary" ui-sref="signup">Sign up</button>
+        </form>
+        <form class="navbar-form" ng-show="!showLogin">
+            <button type="submit" class="btn" ng-click = "showLoginForm()" ng-show="!showLogin && !sessionuser">Log in</button>
+        </form>
+            
+        </div>
+        <ul class="nav navbar-nav navbar-right" ng-show="sessionuser">
+            
+        <li><a href="#/" ng-click="logout()">Logout</a></li>
+        </ul>
+        
+        <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
+        <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a ui-sref="addMaster">Add Master User</a></li>
+            <li><a ui-sref="addExam">Add Exam</a></li>
+            <li><a ui-sref="addStream">Add Stream</a></li>
+            <li><a ui-sref="providersWithAreas">Provider Name Change</a></li>
+            <li><a ui-sref="sitemap">Generate Sitemap</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a ui-sref="providers({ city:'Jaipur' })">Coaching Adda</a></li>
+            <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Target Study</a></li>
+          </ul>
+        </li>
+        
+        </ul>
+        
+        
+        <ul class="nav navbar-nav navbar-right" ng-if="sessionuser.basic">
+            
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{sessionuser.basic.name}}
+              <span class="badge">
+                {{notification.unread.length}}
+              </span>
+              <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li ng-repeat="unread in notification.unread">
+                <a ng-click="markRead(unread)">
+                <strong>
+                    {{unread.forDate | date}} {{unread.text}}
+                    </strong>
+                </a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li ng-repeat="read in notification.read">
+                <a ng-click="#">
+                
+                    {{read.forDate | date}} {{read.text}}
+                </a>
+            </li>
+          </ul>
+        </li>    
+        
+        </ul>
+        
+        
+        
+    </div><!--/.nav-collapse -->
+</div><!--/.container-fluid -->
+</nav>

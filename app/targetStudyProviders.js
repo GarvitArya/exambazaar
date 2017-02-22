@@ -221,7 +221,7 @@ router.get('/getAllCourses', function(req, res) {
     if (!err){
          allproviders.forEach(function(thisprovider, index){
              //console.log(index);
-            console.log(thisprovider._id);
+            //console.log(thisprovider._id);
             var thiscourses = thisprovider.coursesOffered;
             thiscourses.forEach(function(thiscourse, courseindex){
                 if(allCourses.indexOf(thiscourse)== -1){

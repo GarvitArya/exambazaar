@@ -1466,7 +1466,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             url: '/getStarted',
             views: {
                 'header':{
-                    templateUrl: 'header.html',
+                    templateUrl: 'header2.html',
                     controller: 'headerController'
                 },
                 'body':{
