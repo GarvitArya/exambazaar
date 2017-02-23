@@ -15,8 +15,7 @@ mongoose.Promise = require('bluebird');
 router.get('/cities', function(req, res) {
     console.log("Getting cities");
     targetStudyProvider.distinct( "city",function(err, docs) {
-    if (!err){ 
-        //console.log(docs);
+    if (!err){
         res.json(docs);
     } else {throw err;}
     });
@@ -144,10 +143,8 @@ router.post('/savecoaching', function(req, res) {
         console.log("New Coaching is: " + JSON.stringify(thisProvider));
         for (var property in thisProvider) {
             oldProvider[property] = thisProvider[property];
-            //console.log(oldProvider[property]);
-            if (oldProvider.hasOwnProperty(property)) {
-                
-                // do stuff
+            if(property=='location'){
+                console.log('Yes location is there: ' + thisProvider[property]);
             }
         }
         console.log("Coaching is: " + JSON.stringify(oldProvider));

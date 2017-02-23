@@ -163,7 +163,7 @@
         background: whitesmoke;
         padding: 10px;
         letter-spacing: 2px;
-        min-height: 20vh;
+        min-height: 15vh;
         margin-right:20px;
         
         background-color: whitesmoke;
@@ -208,7 +208,7 @@
         </div>
         <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated fadeIn" id="pageHeader">
-            <span class="text md-title" id="pageHeaderFont"><strong>{{providersList.length}} {{subcategory.displayname | uppercase}} INSTITUTES IN {{city | uppercase}}</strong></span>
+            <span class="text md-title" id="pageHeaderFont"><strong>{{uniqueProviderInstitutes.length}} {{subcategory.displayname | uppercase}} INSTITUTES IN {{city | uppercase}}</strong></span>
             <span id="normal" ng-if="editable"><small>
                 <a ui-sref="targetStudyProviders({ city:{{'city'}} })">
                 Edit Ranking
@@ -220,14 +220,14 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
 
             <div class="row">
-            <div ng-repeat="provider in providersList | orderBy:['-rank'] ">
+            <div ng-repeat="provider in providersList | orderBy:['-nCenters','-rank'] ">
             
                 <div class="row" >
         
                 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="leftTabs">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="subcategory" ng-click="showCoaching(provider)">
                     <div >
-                        <strong><span class="md-subhead text-primary" data-ng-class="{'highlight':provider.showDetails}">
+                        <strong><span class=" text-primary" data-ng-class="{'highlight':provider.showDetails}">
 <!-- ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })"-->
                         <a id="coachingHeader">
                             {{$index + 1}}. {{provider.name | uppercase}}
@@ -305,5 +305,14 @@
                 
             </div>
         </div>
+        <!--<div class="row">
+            {{uniqueProviderInstitutes.length}}
+            <div ng-repeat="uProvider in uniqueProviderInstitutes | orderBy:'-length'">
+                {{uProvider[0].name}} {{uProvider.length}}
+                <span ng-repeat="center in uProvider">
+                    {{center.pincode}}
+                </span>
+            </div>
+        </div>-->
     </div>
 </div>

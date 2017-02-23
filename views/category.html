@@ -17,6 +17,7 @@
         letter-spacing: 2px;
         box-shadow: 1px 1px 1px #6A6968;
         font-family: "Avenir";
+        z-index: 0;
     }
     #categoryFont:hover{
         background-color: #20C39A;
@@ -39,6 +40,9 @@
     }
     a:hover{
         text-decoration: none;
+    }
+    tooltip tip.categoryToolTip {
+        min-width: 300px;
     }
 </style>
 
@@ -63,8 +67,8 @@
 
             <div ng-repeat="subcategory in exams | orderBy:'-rank'" ng-if="subcategory.active" >
             <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 hvr-bob">
-                <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">
-                    <md-tooltip>{{subcategory.description}}</md-tooltip>
+                <div layout="row" layout-align="center center" id="categoryFont" class="text-center categoryToolTip" ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })" >
+                    <!--tooltips tooltip-template="{{subcategory.briefDescription}}"-->
                     <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })" id="categoryLink">{{subcategory.displayname | uppercase}}
                     </a>
                 </div>

@@ -59,6 +59,10 @@
                         <input required ng-model="exam.displayname">
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
+                        <label>Brief Description</label>
+                        <input ng-model="exam.briefDescription">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
                     <md-select ng-model="exam.stream._id" placeholder="Select the stream of the exam">
                     <md-option ng-repeat="stream in streams" ng-value="stream._id">
                     {{stream.displayname}}

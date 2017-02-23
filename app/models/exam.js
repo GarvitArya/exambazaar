@@ -5,6 +5,7 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var examSchema = mongoose.Schema({
     name: {type: String,required: true,unique:true},
     displayname: {type: String},
+    briefDescription: {type: String},
     active: {type: Boolean, default:'false'},
     rank: {type: Number},
     stream: { type: Schema.ObjectId, ref: 'stream' },

@@ -3,12 +3,43 @@
     #addRow{
         color: blue;
     }
-    
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    #locations{
+        margin-bottom:20px;
+    }
 </style>
 <div class="container">
     <div id="spacer">
-        </div>
+    </div>
     <div class="column">
+        <div class="row" ng-if="!provider.location">
+            <md-button class="md-raised md-primary" ng-click="getLocations()" ng-show="showButton">Assign Location</md-button>
+            <div id="locations">
+            <span ng-repeat="location in locations | orderBy:'area'">
+            <span class="badge"  ng-click="setLocation(location)">
+                {{location.area}}
+            </span>&nbsp;
+            </span>
+            </div>
+        </div>
         <div class="row">
             <table style="width:100%">
                 <tr ng-repeat="(key, value) in provider" ng-if="key!='_id' && key != '__v' && key != '_created' && key != 'targetStudyWebsite'">

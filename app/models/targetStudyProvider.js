@@ -11,6 +11,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     email: String,
     address: String,
     area: String,
+    location: { type: Schema.ObjectId, ref: 'location' },
     city: String,
     state: String,
     pincode: String,
