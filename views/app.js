@@ -1007,13 +1007,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         //alert($scope.providersList);
         $scope.cities = targetStudyCities.data;
         $scope.city = $stateParams.city;
-        $scope.filterText = '';
-        $scope.setFilter = function(text){
-            $scope.searchText = text;
-        };
-        $scope.clearFilter = function(text){
-            $scope.searchText = '';
-        };
         
         $scope.uprank = function(provider){
             targetStudyProviderService.uprank(provider._id).success(function (data, status, headers) {
@@ -1032,6 +1025,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .error(function (data, status, header, config) {
                 console.info("Error ");
             });
+        };
+        
+        $scope.filterText = '';
+        $scope.setFilter = function(text){
+            $scope.searchText = text;
+        };
+        $scope.clearFilter = function(text){
+            $scope.searchText = '';
         };
         var tempFilterText = '',
             filterTextTimeout;

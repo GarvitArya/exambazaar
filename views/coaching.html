@@ -220,7 +220,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
 
             <div class="row">
-            <div ng-repeat="provider in providersList | orderBy:['-nCenters','-rank'] ">
+            <div ng-repeat="provider in providersList | orderBy:['-nCenters','name','-rank'] ">
             
                 <div class="row" >
         
@@ -230,7 +230,7 @@
                         <strong><span class=" text-primary" data-ng-class="{'highlight':provider.showDetails}">
 <!-- ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })"-->
                         <a id="coachingHeader">
-                            {{$index + 1}}. {{provider.name | uppercase}}
+                            {{$index + 1}}. {{provider.name | uppercase}} <span class="badge pull-right">{{provider.nCenters}}</span>
                         </a>
                         </span></strong>
                         <md-divider ng-if="!provider.showDetails"></md-divider>

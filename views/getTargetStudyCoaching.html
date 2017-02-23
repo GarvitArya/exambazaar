@@ -146,12 +146,13 @@
     <div class = "row top-buffer" ng-if="!allCourses" >
         <div layout="row">
         <div class="col-md-8 icon-addon addon-md">
-            <input type="search" placeholder="Search by name" class="form-control" id="Input" ng-model="searchText">
+            <input type="search" placeholder="Search by name, courses" class="form-control" id="Input" ng-model="searchText">
             <label for="searchText" class="glyphicon glyphicon-search" rel="tooltip" title="searchText"></label>
         </div>
+            {{filterText}}
         </div>
         <div layout="row">
-            <small class="text-primary" ng-if="searchText"><a ng-click="clearFilter()">Clear</a></small>
+            <small class="text-primary" ng-if="searchText"><a ng-click="clearFilter()">Clear</a></small>&nbsp;
             <small class="text-muted">  displaying {{filtered.length}} providers in <span class="text-primary">{{city}}</span></small>
         </div>
     
@@ -224,7 +225,6 @@
         </div>
         
     </div>
-    {{allCourses}}
     <div class = "row top-buffer" ng-if="allCourses" >
         <div ng-repeat="course in courses">
             {{course}}
