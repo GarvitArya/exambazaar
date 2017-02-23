@@ -994,14 +994,43 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
     }]); 
     exambazaar.controller("getTargetStudyCoachingController", 
-    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities','$timeout','$state','$stateParams', '$cookies', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies){
+    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities','$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog,locationsList){
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location');
             //alert($scope.location);
             /*var latlon = $scope.location.lat + "," + $scope.location.long;
             $scope.img_url = "https://maps.googleapis.com/maps/api/staticmap?center="+latlon+"&zoom=14&size=400x300&sensor=false";*/
         }
-        
+        $scope.locations = locationsList.data;
+        $scope.currProvider = {};
+        $scope.showLocationDialog = function(ev,provider) {
+            $scope.currProvider = provider;
+            $mdDialog.show({
+              contentElement: '#myDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.saveLocation = function(thisLocation){
+            
+            $scope.currProvider.location = thisLocation._id;
+            var saveProvider = {
+                targetStudyProvider:$scope.currProvider
+            };
+            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+                $scope.cancel();
+                //alert("Location Saved");
+                console.info("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+            
+        };
+        $scope.cancel = function() {
+          $mdDialog.cancel();
+        }; 
         
         $scope.providersList = targetStudyProvidersList.data;
         //alert($scope.providersList);
@@ -1037,6 +1066,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var tempFilterText = '',
             filterTextTimeout;
         $scope.$watch('searchText', function (val) {
+            //alert('Here');
             if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
 
             tempFilterText = val;
@@ -2061,6 +2091,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }
             },
             resolve: {
+                locationsList: ['LocationService','$stateParams',
+                    function(LocationService,$stateParams) {
+                    return LocationService.getCityLocations($stateParams.city);
+                }],
                 targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService,$stateParams) {
                     //alert($stateParams.city);    

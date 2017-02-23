@@ -3,82 +3,82 @@
     
     .input-group .icon-addon .form-control {
     border-radius: 0;
-    }
+}
 
-    .icon-addon {
-        position: relative;
-        color: #555;
-        display: block;
-    }
+.icon-addon {
+    position: relative;
+    color: #555;
+    display: block;
+}
 
-    .icon-addon:after,
-    .icon-addon:before {
-        display: table;
-        content: " ";
-    }
+.icon-addon:after,
+.icon-addon:before {
+    display: table;
+    content: " ";
+}
 
-    .icon-addon:after {
-        clear: both;
-    }
+.icon-addon:after {
+    clear: both;
+}
 
-    .icon-addon.addon-md .glyphicon,
-    .icon-addon .glyphicon, 
-    .icon-addon.addon-md .fa,
-    .icon-addon .fa {
-        position: absolute;
-        z-index: 2;
-        left: 10px;
-        font-size: 14px;
-        width: 20px;
-        margin-left: -2.5px;
-        text-align: center;
-        padding: 10px 0;
-        top: 1px
-    }
+.icon-addon.addon-md .glyphicon,
+.icon-addon .glyphicon, 
+.icon-addon.addon-md .fa,
+.icon-addon .fa {
+    position: absolute;
+    z-index: 2;
+    left: 10px;
+    font-size: 14px;
+    width: 20px;
+    margin-left: -2.5px;
+    text-align: center;
+    padding: 10px 0;
+    top: 1px
+}
 
-    .icon-addon.addon-lg .form-control {
-        line-height: 1.33;
-        height: 46px;
-        font-size: 18px;
-        padding: 10px 16px 10px 40px;
-    }
+.icon-addon.addon-lg .form-control {
+    line-height: 1.33;
+    height: 46px;
+    font-size: 18px;
+    padding: 10px 16px 10px 40px;
+}
 
-    .icon-addon.addon-sm .form-control {
-        height: 30px;
-        padding: 5px 10px 5px 28px;
-        font-size: 12px;
-        line-height: 1.5;
-    }
+.icon-addon.addon-sm .form-control {
+    height: 30px;
+    padding: 5px 10px 5px 28px;
+    font-size: 12px;
+    line-height: 1.5;
+}
 
-    .icon-addon.addon-lg .fa,
-    .icon-addon.addon-lg .glyphicon {
-        font-size: 18px;
-        margin-left: 0;
-        left: 11px;
-        top: 4px;
-    }
+.icon-addon.addon-lg .fa,
+.icon-addon.addon-lg .glyphicon {
+    font-size: 18px;
+    margin-left: 0;
+    left: 11px;
+    top: 4px;
+}
 
-    .icon-addon.addon-md .form-control,
-    .icon-addon .form-control {
-        padding-left: 30px;
-        float: left;
-        font-weight: normal;
-    }
+.icon-addon.addon-md .form-control,
+.icon-addon .form-control {
+    padding-left: 30px;
+    float: left;
+    font-weight: normal;
+}
 
-    .icon-addon.addon-sm .fa,
-    .icon-addon.addon-sm .glyphicon {
-        margin-left: 0;
-        font-size: 12px;
-        left: 5px;
-        top: -1px
-    }
+.icon-addon.addon-sm .fa,
+.icon-addon.addon-sm .glyphicon {
+    margin-left: 0;
+    font-size: 12px;
+    left: 5px;
+    top: -1px
+}
 
-    .icon-addon .form-control:focus + .glyphicon,
-    .icon-addon:hover .glyphicon,
-    .icon-addon .form-control:focus + .fa,
-    .icon-addon:hover .fa {
-        color: #2580db;
-    }
+.icon-addon .form-control:focus + .glyphicon,
+.icon-addon:hover .glyphicon,
+.icon-addon .form-control:focus + .fa,
+.icon-addon:hover .fa {
+    color: #2580db;
+}
     a{
         color:#20C39A;
     }
@@ -100,15 +100,6 @@
     }
     #logoContainer{
         max-height: 200px;
-    }
-    #pageHeaderFont{
-        border-bottom: solid 3px;
-        border-color: #20C39A;
-        letter-spacing: 4px;
-    }
-    #otherCategoryLink{
-        color: #20C39A;
-        
     }
 </style>
 <div class="container">
@@ -180,24 +171,20 @@
             <div class="col-md-2 col-sm-4 col-xs-4">
                 {{provider.address}}
             </div>
-            <div class="col-md-1 hidden-sm hidden-xs">
-            <span ng-hide="provider.location" ng-click="showLocationDialog($event,provider)" id="otherCategoryLink"><small>Set Location</small></span>
-            </div>
             <div class="col-md-2 col-sm-5 col-xs-5">
-                <span ng-repeat="exam in provider.exams">
+                <span ng-repeat="course in provider.coursesOffered">
                     <a ng-click="setFilter(course)">
-                        {{exam.displayname}}
+                        {{course}}
                     </a>
                      | 
                 </span>
             </div>
-            <div class="col-md-1 hidden-sm hidden-xs">
+            <div class="col-md-2 hidden-sm hidden-xs">
                 <span ng-repeat="phone in provider.phone track by $index">
                     {{phone}}
                     <span ng-if="!$last">, </span>
                 </span>
-            </div>    
-            
+            </div>
             <div class="col-md-2 hidden-sm hidden-xs">
                 <span ng-repeat="mobile in provider.mobile track by $index">
                     {{mobile}}
@@ -243,30 +230,4 @@
             {{course}}
         </div>
     </div>
-    
-    <div style="visibility: hidden">    
-        <div class="md-dialog-container" id="myDialog">
-          <md-dialog layout-padding>
-            <p class="text-center md-title" id="pageHeaderFont">
-              <span>SELECT LOCATION FOR {{currProvider.name | uppercase}}</span>
-              <span class="pull-right" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
-            </p>
-            <p class="text-center"><small>
-                Provider: {{currProvider.name}}<br/> 
-                Address: {{currProvider.address}}
-            </small></p>  
-            <p class="text-center">
-                
-                <span  ng-repeat="thisLocation in locations | orderBy:'area'">
-                  <span class="text md-subhead">
-                    <a ng-click="saveLocation(thisLocation)" id="otherCategoryLink">{{thisLocation.area| uppercase}}
-                    </a>
-                    <span ng-if="!$last">&nbsp;&#8226;&nbsp;</span>
-                  </span>
-
-                </span>
-            </p>
-          </md-dialog>
-        </div>    
-        </div>
 </div>

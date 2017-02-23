@@ -32,12 +32,24 @@ router.get('/count', function(req, res) {
 router.get('/city/:city', function(req, res) {
     var city = req.params.city;
     console.log("City is: "+city);
-    targetStudyProvider.find({"city" : city}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, docs) {
+    
+    var cityProviders = targetStudyProvider
+        .find({'city': city},{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1})
+        .deepPopulate('exams location')
+        .exec(function (err, cityProviders) {
+        if (!err){
+            
+            console.log(cityProviders);
+            res.json(cityProviders);
+            
+        } else {throw err;}
+    });
+    /*targetStudyProvider.find({"city" : city}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1,exams:1},{sort: '-rank'},function(err, docs) {
     if (!err){ 
         //console.log(docs);
         res.json(docs);
     } else {throw err;}
-    }); //.limit(500)
+    }); //.limit(500)*/
 });
 
 router.get('/cityCount', function(req, res) {
