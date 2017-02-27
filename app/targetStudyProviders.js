@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
+var oldtargetStudyProvider = require('../app/models/oldtargetStudyProvider');
 var exam = require('../app/models/exam');
 var mongoose = require('mongoose');
 var db = mongoose.connection;
@@ -34,7 +35,7 @@ router.get('/city/:city', function(req, res) {
     console.log("City is: "+city);
     
     var cityProviders = targetStudyProvider
-        .find({'city': city},{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1})
+        .find({'city': city, 'exams.0': { $exists: true }, "logo": { $ne: "/img/bullets/box-orange-arrow.gif" } },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1})
         .deepPopulate('exams location')
         .exec(function (err, cityProviders) {
         if (!err){
@@ -176,11 +177,21 @@ router.post('/savecoaching', function(req, res) {
 router.get('/coaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     //console.log(coachingId);
-    targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, docs) {
+    
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': coachingId})
+        .deepPopulate('exams exams.stream location')
+        .exec(function (err, thisProvider) {
+        if (!err){
+            res.json(thisProvider);
+        } else {throw err;}
+    });
+    
+    /*targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}
-    }); //.limit(500)
+    }); //.limit(500)*/
 });
 
 
@@ -424,16 +435,46 @@ router.get('/cleanTargetstudyurls', function(req, res) {
            
             ///img/bullets/box-orange-arrow.gif 
             //console.log('Provider ' + thisprovider._id);
-            if( thisprovider.logo=="/img/bullets/box-orange-arrow.gif" || thisprovider.logo=="//img/bullets/box-orange-arrow.gif"){
+            /*if( thisprovider.logo=="/img/bullets/box-orange-arrow.gif" || thisprovider.logo=="//img/bullets/box-orange-arrow.gif"){
                 thisprovider.logo = "";
                 console.log('Provider ' + thisprovider._id);
                 thisprovider.save(function(err, thisprovider) {
                     if (err) return console.error(err);
                     console.log("Logo removed for: " + thisprovider._id);
                 });
-            }
+            }*/
             if(thisprovider.website){
-                if(thisprovider.website.indexOf("https://targetstudy.com") != -1){
+                
+                
+                /*var oldWebsite = oldtargetStudyProvider
+                    .findOne({'_id': thisprovider._id})
+                    .exec(function (err, oldWebsite) {
+                    if (!err){
+                        console.log(thisprovider.website + " " + oldWebsite.website);
+                        
+                        if(oldWebsite.website !='' && oldWebsite.website != thisprovider.website){
+                            thisprovider.website = oldWebsite.website;
+                            thisprovider.save(function(err, thisprovider) {
+                                if (err) return console.error(err);
+                                console.log(thisprovider._id + " saved!");
+                            });
+                        }
+                        
+                    } else {throw err;}
+                });
+                */
+                var webUrl = thisprovider.website;
+                var lastChar = webUrl.substring(webUrl.length-1, webUrl.length);
+                if(lastChar=='/'){
+                    thisprovider.website = thisprovider.website.substring(0,thisprovider.website.length-1);
+                    console.log(thisprovider.website);
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        console.log(thisprovider._id + " saved!");
+                    });
+                }
+                
+                /*if(thisprovider.website.indexOf("https://targetstudy.com") != -1){
                     console.log("Removing website " + thisprovider.website + " for " + thisprovider.name + ", " + thisprovider.city);
                     thisprovider.website = '';
 
@@ -442,7 +483,7 @@ router.get('/cleanTargetstudyurls', function(req, res) {
                         console.log(thisprovider._id + " saved!");
                     });
 
-                }
+                }*/
                 
                     /*console.log("Null Removing website " + thisprovider.website + " for " + thisprovider.name + ", " + thisprovider.city);
                     thisprovider.website = '';
@@ -454,9 +495,10 @@ router.get('/cleanTargetstudyurls', function(req, res) {
 
                 
             }  
-         });
+         }).limit(2000).skip(6000);
     }
     });
+    res.json('Done');
 });
 
 router.get('/edit/removeDuplicates/:city', function(req, res) {

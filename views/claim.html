@@ -1,0 +1,330 @@
+<style>
+    #categories{
+        margin-top: 40px;
+    }
+    #categoryFont{
+        min-height: 5vh;
+        color: white;
+        min-width: 175px;
+        border-style: solid;
+        border-radius: 10px;
+        border-width: 1px;
+        background-color: rgba(0,0,0,0.6);
+        margin-top: 7px;
+        margin-bottom: 7px;
+        margin-right: 0px;
+        padding: 5px;
+        letter-spacing: 2px;
+        box-shadow: 1px 1px 1px #6A6968;
+        font-family: "Avenir";
+    }
+    #categoryFont:hover{
+        background-color: #20C39A;
+        font-weight: 900;
+    }
+    #categoryLink a:hover{
+      padding: 0px;
+      color: white;
+      text-decoration: none;
+    }
+    #pageHeader{
+        color: rgba(0,0,0,0.8);
+        letter-spacing: 4px;
+        font-family: "Avenir";
+        margin-top: 10px;
+    }
+    #pageHeaderFont{
+        border-bottom: solid 3px;
+        border-color: #20C39A;
+        letter-spacing: 4px;
+    }
+    #pageHeaderFont2{
+        letter-spacing: 0px;    
+    }
+    a:hover{
+        text-decoration: none;
+    }
+    #breadcrumb{
+        letter-spacing: 0px;
+    }
+    
+    
+    #coachingDetails{
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+        border: none;
+        height: 100%;
+        margin-bottom: 20px;
+    }
+    #coachingHeader{
+        font-family: "Avenir";
+        letter-spacing: 2px;
+    }
+    #coachingHeader a{
+        color: #20C39A;
+    }
+    #linkFont{
+        color: #20C39A;
+    }
+    #linkFont a{
+        color: #20C39A;
+    }
+    a{
+        color: #20C39A;
+    }
+    #knowmore{
+        width:100%;
+        background-color: #20C39A;
+        margin-top: 10px;
+    }
+    #subcategory{
+        height: 100%;
+        background: whitesmoke;
+        
+    }
+    #subcategory a{
+        color: #5B5B5B;
+    }
+    .highlight{
+        border-bottom: solid;
+        border-width: 3px;
+        border-color: #20C39A;
+        color: #20C39A;
+    }
+    div{
+        font-family: "Avenir";
+    }
+    #map{
+        width: 95%;
+        margin-top:20px;
+    }
+    #logo{
+        margin-right: 20px;
+    }
+    #logoImage{
+        min-height: 30px;
+        max-height: 50px;
+    }
+    #logoImagexs{
+        min-height: 20px;
+        max-height: 30px;
+    }
+    #getStarted{
+        background: #20C39A;
+    }
+    #leftSection1{
+        border-right: solid;
+        border-width: 1px;
+        border-color: rgba(0,0,0,0.6);
+    }
+</style>
+
+<div id="fullPageContent">
+<div class="container">
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div id="spacer">
+        </div>
+        <!--<div class="row">
+            <div class="row">
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
+            <small>
+            <span><a ui-sref="main">EXAMBAZAAR</a></span>
+            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
+            <span> >> <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
+            <span> >>> <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{city | uppercase}}</a></span>
+            <span> >>>> {{provider.name | uppercase}}</span>
+            </small>
+            </div>
+            </div>
+        </div>-->
+        <div class="row" id="mainContent">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
+            <div class="row">
+            <div  class="panel panel-default" >
+            <div class="panel-heading">
+            <div class="hidden-xs col-sm-12 col-md-12 col-lg-12">
+                <h1 class="text md-title" id="coachingHeader">{{provider.name | uppercase}}
+                <span ng-if="editable"><small>
+                    <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" id="linkFont">
+                        Edit
+                    </a>
+                </small></span>
+                <span class="badge">
+                    <a ng-click="showClaimDialog($event)">
+                        Claim
+                    </a>
+                </span>
+                <span ng-if="provider.oldlogo" class="pull-right" id="logo">
+                    <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImage"/>
+                </span>
+                </h1>
+
+                <div class="container">
+                <div class="row" >
+                    <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}} {{provider.pincode}}&nbsp;
+                    <span id="linkFont"><small>
+                    <span ng-if="!showMap"><a ng-click="flipMap()" >
+                        view on map
+                    </a></span>
+                    <span ng-if="showMap"><a ng-click="flipMap()">
+                        Hide Map
+                    </a></span>
+                    </small></span>
+                    </div>
+                </div>
+
+                </div>
+                <div class="col-xs-12 hidden-sm  hidden-md hidden-lg">
+                <div class="col-xs-12">
+                <h1 class="text md-subhead" id="coachingHeader">{{provider.name | uppercase}}
+                <span ng-if="editable"><small>
+                    <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" id="linkFont">
+                        Edit
+                    </a>
+                </small></span>
+                </h1>
+                </div>
+                <div class="col-xs-12">
+                <span ng-if="provider.oldlogo">
+                    <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImagexs"/>
+                </span>
+                </div>
+                <div class="col-xs-12">  
+                    <div class="container">
+                    <div class="row " >
+                        <i class="fa fa-map-marker" aria-hidden="true"></i> {{provider.address}}, {{provider.city}} {{provider.pincode}} | 
+                        <span id="linkFont"><small>
+                        <span ng-if="!showMap"><a ng-click="flipMap()" >
+                            Show on Map
+                        </a></span>
+                        <span ng-if="showMap"><a ng-click="flipMap()">
+                            Hide Map
+                        </a></span>
+                        </small></span>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+                &nbsp;
+                </div>
+                <md-divider></md-divider>
+                <div class="panel-body">
+                    <div class="container md-subhead">
+
+                        <div class="row" id="map" ng-show="showMap">
+                        <!--<small>{{provider.mapAddress}}</small> -->   
+                        <ng-map center="{{provider.mapAddress}}" zoom="14" >
+                            <!-- tilt="45"
+    map-type-id="SATELLITE"-->
+                            <marker position="{{provider.mapAddress}}"
+                              title="{{provider.mapAddress}}"
+                              animation="Animation.BOUNCE"
+                              centered="true"></marker>
+                        </ng-map>
+                        </div>
+                        <div class="row" ng-if="provider.phone.length > 0">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <span ng-repeat="phone in provider.phone track by $index">
+                                {{phone}}
+                                <span ng-if="!$last">, </span>
+                            </span>
+                        </div>
+                        <div class="row" ng-if="provider.mobile.length > 0">
+                            <i class="fa fa-mobile" aria-hidden="true"></i>
+                            <span ng-repeat="mobile in provider.mobile track by $index">
+                                <a ng-href="tel:{{mobile}}">{{mobile}}</a>
+                                <span ng-if="!$last">, </span>
+                            </span>
+                        </div>
+                        <div class="row">
+                            Courses: 
+                            <span ng-repeat="course in provider.coursesOffered">
+                                {{course}}
+                            <span ng-if="!$last">&nbsp;&#8226;&nbsp;</span>
+                            </span>
+                        </div>
+                        <div class="row" ng-if="provider.website">
+                            <small>Website: 
+                            <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website" id="linkFont">
+                                {{provider.website}}
+                            </a></small>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div> 
+
+                </div>
+            
+                
+            </div>
+        </div>
+    </div>
+    
+    <div style="visibility: hidden">    
+        <div class="md-dialog-container" id="claimDialog">
+          <md-dialog layout-padding>
+            <p class="text-center md-subhead" id="pageHeaderFont">
+                <span>CLAIM THIS LISTING</span>
+              <span class="pull-right" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            </p>
+            
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show ="!started" >
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-center" id="leftSection1">
+                    <span class="pageHeaderFont2 ">
+                    <div layout="row" layout-align="center center">
+                    <span ng-if="provider.oldlogo" class="pull-left" id="logo">
+                        <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImage"/>
+                    </span>
+                    </div>
+                    <span class="text-primary md-subhead">{{provider.name}}</span><br/>
+                    <span ng-if="provider.location.area">   <small>{{provider.location.area}},</small>
+                    </span>
+                    <span ng-if="provider.city">   <small>{{provider.city}}</small>
+                    </span>
+                    </span>
+                </div>
+                <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 text-center">
+                    <span>
+                    <span class="text-primary md-subhead">Do you own this institute?</span><br/>
+                    Claim your listing in order to manage your ExamBazaar.com page. You will get access to a free dashboard where you can upload photos, videos and manage your institute.
+                    </span>
+                </div>
+                
+            </div>
+            
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center md-subhead" ng-show ="!started">
+                <button type="submit" class="btn" ng-click = "getStarted()" id="getStarted">GET STARTED</button>  
+            </div>
+            
+              
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" ng-show ="started">
+                In this step ExamBazaar will send you an SMS on the mobile number listed on this institute. Enter the verification code to claim your institute.
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" ng-show ="started">
+            <form name="claimForm" >
+                <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
+                <md-input-container class="md-block" flex-gt-sm>
+                <md-select required ng-model="verifyMobile" placeholder="Select mobile">
+                <md-option ng-repeat="mobile in provider.mobile" ng-value="mobile">
+                {{mobile}}
+                </md-option>
+                </md-select>
+                </md-input-container>
+                </div>
+                <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
+                <md-button class="md-raised md-primary" ng-click="nextStep()" ng-disabled="claimForm.$invalid">Send OTP</md-button>
+                </div>
+            </form>
+            </div>  
+          </md-dialog>
+        </div>    
+        </div> 
+    
+    
+    
+</div>
+</div>

@@ -189,6 +189,12 @@
     .label-eb{
         background: #20C39A;
     }
+    .btn:active{
+        background: #20C39A;
+    }
+    .btn:selected{
+        background: #20C39A;
+    }
 </style>
 
 <div id="fullPageContent">
@@ -201,8 +207,8 @@
             <small>
             <span><a ui-sref="main">EXAMBAZAAR</a></span>
             <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
-            <span> >> <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
-            <span> >>> {{city | uppercase}}</span>
+            <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
+            <span> > {{city | uppercase}}</span>
             </small>
             </div>
         </div>
@@ -288,7 +294,7 @@
                     
                     <md-divider></md-divider>
                     <div class="row text-center"  >
-                        <button type="button" class="btn btn-success" id="knowmore" ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
+                        <button type="button" class="btn" id="knowmore" ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'provider._id'}} })" id="coachingHeader">
                         <span class="md-subhead text"><strong>KNOW MORE</strong>
                         </span>
                         </button>

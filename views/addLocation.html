@@ -28,8 +28,8 @@
     <div id="spacer1">
     </div>
     <div class="row top-buffer">
-        <div class="col-md-3" ng-repeat="city in cities">
-            <strong>{{city | uppercase}}</strong><br/>
+        <div class="col-md-12" ng-repeat="city in cities">
+            <strong>{{city | uppercase}}</strong>&nbsp;
             <span class="text" ng-repeat="existingLocation in locations" ng-if="existingLocation.city == city"><small>
             <a ng-click="setLocation(existingLocation)">{{existingLocation.area}}</a><span ng-if="!$last">, </span>
             </small></span>

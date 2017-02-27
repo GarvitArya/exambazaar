@@ -158,7 +158,6 @@
             <input type="search" placeholder="Search by name, courses" class="form-control" id="Input" ng-model="searchText">
             <label for="searchText" class="glyphicon glyphicon-search" rel="tooltip" title="searchText"></label>
         </div>
-            {{filterText}}
         </div>
         <div layout="row">
             <small class="text-primary" ng-if="searchText"><a ng-click="clearFilter()">Clear</a></small>&nbsp;
@@ -168,12 +167,12 @@
     </div>
     <!-- orderBy:'-coursesOffered.length'-->
     <div class="row top-buffer" ng-show="!showlogos">
-        <div ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered" class="col-md-12 col-sm-12 col-xs-12">
+        <div ng-repeat="provider in providersList | orderBy:['-email','-rank','name'] | filter:filterText as filtered" class="col-md-12 col-sm-12 col-xs-12">
         <div class="row">
             <small>
             
             <div class="col-md-2 col-sm-2 col-xs-2">
-                <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })">
+                <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" target="_blank">
                 <strong>{{provider.name}}</strong>
                 </a>
             </div>
@@ -181,7 +180,9 @@
                 {{provider.address}}
             </div>
             <div class="col-md-1 hidden-sm hidden-xs">
-            <span ng-hide="provider.location" ng-click="showLocationDialog($event,provider)" id="otherCategoryLink"><small>Set Location</small></span>
+            <span ng-if="!provider.location" ng-click="showLocationDialog($event,provider)" id="otherCategoryLink"><small>Set Location</small></span>
+            <br/>
+            <span ng-show="!provider.email" ng-click="addEmail(provider)" id="otherCategoryLink"><small>Add Email</small></span>    
             </div>
             <div class="col-md-2 col-sm-5 col-xs-5">
                 <span ng-repeat="exam in provider.exams">
@@ -204,6 +205,7 @@
                     <span ng-if="!$last">, </span>
                 </span>
             </div>
+            
             <div class="col-md-1 hidden-sm hidden-xs">
                 <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
                     Url
