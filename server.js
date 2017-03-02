@@ -73,18 +73,8 @@ var exams = require('./app/exams.js',exams);
 var streams = require('./app/streams.js',streams); 
 var locations = require('./app/locations.js',locations); 
 var images = require('./app/images.js',images); 
-//var teachers = require('./app/teachers.js',teachers); 
-//var batches = require('./app/batches.js',batches); 
-//var parents = require('./app/parents.js',parents); 
-//var subjects = require('./app/subjects.js',subjects); 
+var awsCredentials = require('./app/awsCredentials.js',awsCredentials); 
 
-//var evals = require('./app/evals.js',evals); 
-//var calendars = require('./app/users.js',calendars); 
-//var days = require('./app/users.js',days); 
-//var transportVehicles = require('./app/transportVehicles.js',transportVehicles); 
-//var profilePics = require('./app/profilePics.js',profilePics); 
-//var globalSubjects = require('./app/globalSubjects.js',globalSubjects); 
-//var globalFeeItems = require('./app/globalFeeItems.js',globalFeeItems); 
 
 app.use('/api/providers', providers);
 app.use('/api/targetStudyProviders', targetStudyProviders);
@@ -100,38 +90,10 @@ app.use('/api/exams', exams);
 app.use('/api/streams', streams);
 app.use('/api/locations', locations);
 app.use('/api/images', images);
-//app.use('/api/institutes', institutes);
-//app.use('/api/teachers', teachers);
-//app.use('/api/batches', batches);
-//app.use('/api/parents', parents);
-//app.use('/api/subjects', subjects);
-
-//app.use('/api/evals', evals);
-//app.use('/api/calendars', calendars);
-//app.use('/api/days', days);
-//app.use('/api/transportVehicles', transportVehicles);
-//app.use('/api/profilePics', profilePics);
-//app.use('/api/globalSubjects', globalSubjects);
-//app.use('/api/globalFeeItems', globalFeeItems);
+app.use('/api/awsCredentials', awsCredentials);
 
 
-/*app.get( "/_escaped_fragment_/*", function( request, response ) {
-    var script = path.join( __dirname, "get_html.js" );
-    var url = "http://localhost:8000" + request.url.replace( "_escaped_fragment_", "#!" );
-    var childArgs =
-    [
-        script, url
-    ];
-    childProcess.execFile( binPath, childArgs, function( err, stdout, stderr ) {
-        response.writeHead( 200, {
-            "Content-Type": "text/html; charset=UTF-8"
-        } );
-        response.end( "<!doctype html><html>" + stdout + "</html>" );
-    } );
 
-} );*/
-
-const S3_BUCKET = process.env.S3_BUCKET || 'exambazaar';
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     //console.log(req);
@@ -149,7 +111,7 @@ console.log('The magic happens on port ' + port);
 
 var SitemapGenerator = require('sitemap-generator');
 
-var generator = new SitemapGenerator('http://www.exambazaar.com/#/main', {
+var generator = new SitemapGenerator('http://www.exambazaar.com/#!/getStarted', {
   restrictToBasepath: false,
   stripQuerystring: true,
 });

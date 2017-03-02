@@ -5,6 +5,7 @@ var path = require('path');
 var config = require('../config/mydatabase.js');
 var image = require('../app/models/image');
 var s3 = require('../app/models/s3');
+var awsCredential = require('../app/models/awsCredential');
 
 var fs = require('fs');
 var aws = require('aws-sdk');
@@ -16,30 +17,31 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
-aws.config.update({
-    accessKeyId: "AKIAIGYUJGKTAIDG55EQ",
-    secretAccessKey: "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",
-    "region": "ap-south-1"
-});
 
 
 
 
 router.post('/s3Credentials', function(req, res) {
-    var filename = req.body.filename;
-    var contentType = req.body.contentType;
-    if (filename) {
-        var s3Config = {
-          accessKey: 'AKIAJF3I6K6RKBWSLOGQ',
-          secretKey: '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',
-          bucket: 'exambazaar',
-          region: 'ap-south-1'
-        };
-        var filename = crypto.randomBytes(16).toString('hex') + path.extname(filename);
-        res.json(s3.s3Credentials(s3Config, {filename: filename, contentType: contentType}));
-    }else{
-        console.log('No file name');
-    }
+    var s3Config = awsCredential.findOne({active: true}, function(err, s3Config) {
+        if (!err){
+            var filename = req.body.filename;
+            var contentType = req.body.contentType;
+            //console.log(filename);
+            if (filename) {
+                console.log("------New ---------" + JSON.stringify(s3Config));
+                //console.log(filename);
+                //res.json(docs);
+                var filename = crypto.randomBytes(16).toString('hex') + path.extname(filename);
+                res.json(s3.s3Credentials(s3Config, {filename: filename, contentType: contentType}));
+            }else{
+                console.log('No file name');
+            }
+            
+        } else {throw err;}
+    });
+    
+    
+    
     
 });
 router.post('/save', function(req, res) {
@@ -50,7 +52,7 @@ router.post('/save', function(req, res) {
     var fileName = 'file1.png';//req.query['file-name'];
     var fileType = 'image/png';//req.query['file-type'];
     var S3_BUCKET ='exambazaar';
-    console.log(S3_BUCKET);
+    //console.log(S3_BUCKET);
     const s3Params = {
         Bucket: S3_BUCKET,
         Body: thisImage,

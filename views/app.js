@@ -221,6 +221,24 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
     }]);
+    
+    exambazaar.service('AwsCredentialService', ['$http', function($http) {
+        this.saveAwsCredential = function(awsCredential) {
+            return $http.post('/api/awsCredentials/save', awsCredential);
+        };
+        
+        this.getAwsCredential = function(awsCredentialId) {
+            return $http.get('/api/awsCredentials/edit/'+awsCredentialId, {awsCredentialId: awsCredentialId});
+        };
+        this.getActiveAwsCredential = function() {
+            return $http.get('/api/awsCredentials/getOne');
+        };
+        this.getAwsCredentials = function() {
+            return $http.get('/api/awsCredentials');
+        };
+        
+        
+    }]);    
         
     exambazaar.service('LocationService', ['$http', function($http) {
         this.saveLocation = function(location) {
@@ -1064,6 +1082,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     filename: thisFile.name,
                     contentType: thisFile.type
                 };
+                console.info(fileInfo);
                 ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
                 var s3Request = {};
                 var allParams = data.params;
@@ -1443,6 +1462,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     filename: thisFile.name,
                     contentType: thisFile.type
                 };
+                //console.info(JSON.stringify(fileInfo));
                 ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
                 var s3Request = {};
                 var allParams = data.params;
@@ -1469,7 +1489,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.info("Error");
             });    
                     
             });
@@ -1669,6 +1689,27 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
             };
         }]);
+        
+        
+    exambazaar.controller("addAwsCredentialController", 
+        [ '$scope',  'awsCredentialList','AwsCredentialService','$http','$state', function($scope, awsCredentialList, AwsCredentialService,$http,$state){
+        $scope.awsCredentials = awsCredentialList.data;
+        
+        $scope.addAwsCredential = function () {
+            var saveAwsCredential = AwsCredentialService.saveAwsCredential($scope.awsCredential).success(function (data, status, headers) {
+               
+                alert("AWS Credential saved: " + $scope.awsCredential.accessKey);
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+        };
+            
+        
+        $scope.setAwsCredential = function(awsCredential){
+            $scope.awsCredential = awsCredential;
+        };
+    }]);
         
     exambazaar.controller("addLocationController", 
         [ '$scope',  'locationList','cityList','LocationService','$http','$state', function($scope, locationList,cityList, LocationService,$http,$state){
@@ -3090,6 +3131,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     return LocationService.getCities();
                 }],
                 exam: function() { return {}; }
+            }
+        })
+        .state('addAwsCredential', {
+            url: '/addAwsCredential',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'addAwsCredential.html',
+                    controller: 'addAwsCredentialController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                awsCredentialList: ['AwsCredentialService',
+                    function(AwsCredentialService){
+                    return AwsCredentialService.getAwsCredentials();
+                }],
+                awsCredential: function() { return {}; }
             }
         })
         .state('addExam', {
