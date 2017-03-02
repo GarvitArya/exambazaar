@@ -15,6 +15,7 @@ require('mongoose-moment')(mongoose);
 var passport = require('passport');
 var flash        = require('req-flash');
 
+
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
@@ -71,6 +72,7 @@ var otps = require('./app/otps.js',otps);
 var exams = require('./app/exams.js',exams); 
 var streams = require('./app/streams.js',streams); 
 var locations = require('./app/locations.js',locations); 
+var images = require('./app/images.js',images); 
 //var teachers = require('./app/teachers.js',teachers); 
 //var batches = require('./app/batches.js',batches); 
 //var parents = require('./app/parents.js',parents); 
@@ -97,6 +99,7 @@ app.use('/api/otps', otps);
 app.use('/api/exams', exams);
 app.use('/api/streams', streams);
 app.use('/api/locations', locations);
+app.use('/api/images', images);
 //app.use('/api/institutes', institutes);
 //app.use('/api/teachers', teachers);
 //app.use('/api/batches', batches);
@@ -128,13 +131,14 @@ app.use('/api/locations', locations);
 
 } );*/
 
-
+const S3_BUCKET = process.env.S3_BUCKET || 'exambazaar';
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
-    console.log(req);
+    //console.log(req);
     err.status = 404;
     next(err);
 });
+
 
 
 var server = app.listen(port);

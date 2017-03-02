@@ -28,6 +28,27 @@
     #suggestedEmails{
         margin: 10px;
     }
+    
+    #uploadContainer{
+        min-height: 200px;
+        
+    }
+    #upload{
+        min-width: 400px;
+        min-height: 200px;
+        background: white;
+        border: 2px dashed #ccc;
+        font-weight: bold;
+        clear:both;
+    }
+    .thumb{
+        max-height: 100px;
+        max-width: 100px;
+    }
+    #progressBar{
+        max-width: 100px;
+        margin-top: 20px;
+    }
 </style>
 <div class="container">
     <div id="spacer">
@@ -66,20 +87,41 @@
                 
                  <tr id="addRow">
                     <td>tgt study</td>
-                    <td><a ng-href="{{provider.targetStudyWebsite}}" target="_blank">TS URL
+                    <td>
+                        <a ng-href="{{provider.targetStudyWebsite}}" target="_blank">TS URL
                         </a>
-                        </td>
+                    </td>
                 </tr>
             </table>
             
         </div>
-        <div class="row top-buffer">
+        
+        
+    </div>
+    <div class="row top-buffer">
             <md-button type="submit" class="md-raised md-primary" ng-click="saveCoaching()">Save</md-button>
+    </div>
+    <div class="row top-buffer">
+        <div class="text-center" ngf-select="uploadFiles($files)" multiple="multiple" ng-model="files" id="upload">
+        <div class="row text-center">
+            <h4>
+                <i class="fa fa-cloud-upload" aria-hidden="true"></i> 
+                Add photos <span class="badge" ng-if="files.length > 0">{{files.length}}</span>
+            </h4>
+            
         </div>
         
+        </div>
     </div>
-    <div>
-        
+    <div class="row top-buffer" id="upload">
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 text-center" ng-repeat="file in files">
+            <div layout="column" layout-align="center center" id="uploadContainer">
+                <img ngf-thumbnail="file" class="thumb">
+                <md-progress-linear md-mode="determinate" value="{{file.uploadProgress}}" id="progressBar"></md-progress-linear>
+                <span ng-if="file.link">
+                <a ng-href="{{file.link}}" target="_blank">Link</a>
+                </span>
+            </div>
+        </div>
     </div>
-    
 </div>

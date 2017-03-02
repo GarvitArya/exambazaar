@@ -1,4 +1,4 @@
-var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix']);
+var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload']);
 //,'ngHandsontable''ngHandsontable',
     (function() {
     'use strict';
@@ -242,6 +242,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getCities = function() {
             return $http.get('/api/locations/cities/');
         };
+        
+        
+    }]);
+       
+    exambazaar.service('ImageService', ['$http', function($http) {
+        this.saveImage = function(image) {
+            return $http.post('/api/images/save', image);
+        };
+        
+        this.s3Credentials = function(fileInfo) {
+            return $http.post('/api/images/s3Credentials', fileInfo);
+        };
+        
+        this.saveImages = function(newlocations) {
+            return $http.post('/api/images/bulksave', newlocations);
+        };
+        
+        this.getImage = function(imageId) {
+            return $http.get('/api/images/edit/'+imageId, {imageId: imageId});
+        };
+        this.getImages = function() {
+            return $http.get('/api/images');
+        };
+        
         
         
     }]);
@@ -690,6 +714,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });
         
         
+        
+        
+        
         $scope.overviewIcons = [
             {
                 icon:'images/icons/centre.png',
@@ -1025,7 +1052,125 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 'Strong team player who can work independently'
             ];
     }]);
+    exambazaar.controller("accountController", 
+        [ '$scope','$rootScope', 'Upload','ImageService',function($scope,$rootScope,Upload,ImageService){
+            
+        
+         $scope.uploadFiles = function () {
+            var files = $scope.files;
+            if (files && files.length) {
+                files.forEach(function(thisFile, index){
+                var fileInfo = {
+                    filename: thisFile.name,
+                    contentType: thisFile.type
+                };
+                ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                var s3Request = {};
+                var allParams = data.params;
+                for (var key in allParams) {
+                  if (allParams.hasOwnProperty(key)) {
+                    s3Request[key] = allParams[key];
+                  }
+                }
+                s3Request.file = thisFile;
+                    
+                Upload.upload({
+                    url: data.endpoint_url,
+                    data: s3Request
+                }).then(function (resp) {
+                    console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                    thisFile.link = $(resp.data).find('Location').text();
+                    //alert(thisFile.link);
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                    //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
+                });
+                
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });    
+                    
+            });
+            }
+         };
+            
+            
+        $scope.submit = function() {
+          if ($scope.form.file.$valid && $scope.file) {
+            //alert($scope.file.name);
+            var fileInfo = {
+                filename: $scope.file.name,
+                contentType: $scope.file.type
+            };
+            console.info(JSON.stringify(fileInfo));
+            ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                //console.info(data);
+                var s3Request = {
+                };
+                var allParams = data.params;
+                for (var key in allParams) {
+                  if (allParams.hasOwnProperty(key)) {
+                    //console.log(key + " -> " + allParams[key]);
+                    s3Request[key] = allParams[key];
+                  }
+                }
+                s3Request.file = $scope.file;
+                
+                Upload.upload({
+                    url: data.endpoint_url,
+                    data: s3Request
+                }).then(function (resp) {
+                    console.log('Success ' + $scope.file.name + 'uploaded. Response: ' + resp.data);
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    $scope.file.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                    console.log('progress: ' + $scope.file.uploadProgress + '% ' + $scope.file.name);
+                });
+                
+                $scope.upload(s3Request,data.endpoint_url);
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+            
+          }else{
+              alert('Error');
+          }
+        };
 
+        // upload on file select or drop
+        $scope.upload = function (s3Request,url) {
+            console.info(s3Request,url);
+            Upload.upload({
+                url: url,
+                data: s3Request
+            }).then(function (resp) {
+                console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+            }, function (resp) {
+                console.log('Error status: ' + resp.status);
+            }, function (evt) {
+                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                console.log('progress: ' + progressPercentage + '% ' + s3Request.file.name);
+            });
+        };
+        // for multiple files:
+        /*$scope.uploadFiles = function (files) {
+          if (files && files.length) {
+            for (var i = 0; i < files.length; i++) {
+              Upload.upload({..., data: {file: files[i]}, ...});
+            }
+            // or send them all together for HTML5 browsers:
+            Upload.upload({..., data: {file: files}, ...})...;
+          }
+        };*/
+            
+            
+
+    }]);
     exambazaar.controller("masterController", 
     [ '$scope', 'thismaster', function($scope, thismaster){
         $scope.master = thismaster.data; 
@@ -1232,7 +1377,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
     
     exambazaar.controller("editTargetStudyCoachingController", 
-    [ '$scope', 'targetStudyProviderService','LocationService','thisTargetStudyProvider','$state','$stateParams', '$cookies', function($scope, targetStudyProviderService,LocationService,thisTargetStudyProvider,$state,$stateParams, $cookies){
+    [ '$scope','FileUploader', 'targetStudyProviderService','LocationService','thisTargetStudyProvider','$state','$stateParams', '$cookies','ImageService','Upload', function($scope,FileUploader, targetStudyProviderService,LocationService,thisTargetStudyProvider,$state,$stateParams, $cookies,ImageService,Upload){
         
         $scope.provider = thisTargetStudyProvider.data;
         $scope.locations = [];
@@ -1280,6 +1425,47 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.suggestedEmails.push(pName + '@gmail.com');
             $scope.suggestedEmails.push(pName + '@yahoo.com');
         }
+        
+        $scope.uploadFiles = function () {
+            var files = $scope.files;
+            if (files && files.length) {
+            files.forEach(function(thisFile, index){
+                var fileInfo = {
+                    filename: thisFile.name,
+                    contentType: thisFile.type
+                };
+                ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                var s3Request = {};
+                var allParams = data.params;
+                for (var key in allParams) {
+                  if (allParams.hasOwnProperty(key)) {
+                    s3Request[key] = allParams[key];
+                  }
+                }
+                s3Request.file = thisFile;
+                    
+                Upload.upload({
+                    url: data.endpoint_url,
+                    data: s3Request
+                }).then(function (resp) {
+                    console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                    thisFile.link = $(resp.data).find('Location').text();
+                    //alert(thisFile.link);
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                    //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
+                });
+                
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });    
+                    
+            });
+            }
+         };
         $scope.setEmail = function(suggestedEmail){
             if($scope.provider.email){
                 $scope.provider.email += ', ' +suggestedEmail;
@@ -1287,7 +1473,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.provider.email = suggestedEmail;
             }
             
-        }
+        };
+        
         $scope.setLocation = function(location){
             $scope.provider.location = location._id;
         };
@@ -1300,6 +1487,31 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 console.info("Error ");
             });
         };
+        
+        $scope.data = '';
+        $scope.add = function(){
+            var f = document.getElementById('file').files[0],
+            r = new FileReader();
+            r.onloadend = function(e){
+                $scope.Imagedata = e.target.result;
+                
+                //$scope.Imagedata = 'data:image/png;base64,'+$scope.Imagedata;
+                $scope.newImage = {
+                    data: $scope.Imagedata,
+                    contentType: 'image/png'
+                };
+                console.info(JSON.stringify($scope.newImage));
+                ImageService.saveImage($scope.newImage).success(function (data, status, headers) {
+                   console.info('Done'); 
+                })
+                .error(function (data, status, header, config) {
+                    console.info(data);
+                });
+                
+            }
+            r.readAsBinaryString(f);
+        };
+        
         $scope.downrank = function(provider){
             targetStudyProviderService.downrank(provider._id).success(function (data, status, headers) {
                 //alert("Done");
@@ -2180,7 +2392,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }
             }
         })
-        
+        .state('account', {
+            url: '/account', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'account.html',
+                    controller: 'accountController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
         .state('editTargetStudyProvider', {
             url: '/edit/tStudy/:coachingId', //masterId?
             views: {

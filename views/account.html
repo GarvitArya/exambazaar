@@ -1,0 +1,53 @@
+<style>
+    #upload{
+        min-width: 400px;
+        min-height: 200px;
+        background: white;
+        border: 2px dashed #ccc;
+        font-weight: bold;
+    }
+    .thumb{
+        max-height: 100px;
+        max-width: 100px;
+    }
+    #progressBar{
+        max-width: 100px;
+        margin-top: 20px;
+    }
+</style>
+<div class="container">
+    <div id="spacer"></div>
+    <div id="spacer"></div>
+    
+    <form name="form">
+
+<!--
+    Single Image with validations
+    <div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
+    ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"
+    >Select
+    </div>
+<button type="submit" ng-click="submit()">submit</button>
+-->
+        <!--ngf-resize="{width: 100, height: 100}"-->
+     
+    <div class="text-center" ngf-select="uploadFiles($files)" multiple="multiple" ng-model="files" id="upload">
+        <div class="row text-center">
+            <h4>Add photos</h4>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 text-center" ng-repeat="file in files">
+            <div layout="column" layout-align="center center">
+                <img ngf-thumbnail="file" class="thumb">
+                <md-progress-linear md-mode="determinate" value="{{file.uploadProgress}}" id="progressBar"></md-progress-linear>
+            </div>
+        </div>
+    </div>
+    {{files.length}}
+    
+        
+        
+</form>
+    
+    
+    
+</div>

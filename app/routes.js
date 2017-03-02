@@ -11,7 +11,7 @@ module.exports = function(app, passport) {
     app.get('/loggedin', function(req, res) {
       res.send(req.isAuthenticated() ? req.user : '0');
     });
-
+    
     // route to log in
     app.post('/login', passport.authenticate('local-login'), function(req, res) {
       res.send(req.user);

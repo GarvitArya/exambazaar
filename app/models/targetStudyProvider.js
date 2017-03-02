@@ -19,6 +19,15 @@ var targetStudyProviderSchema = mongoose.Schema({
     oldlogo: String,
     mobile: [String],
     phone: [String],
+    faculty:[{
+        name: String,
+        image: String,
+        subject: String,
+        yearsExperience: String,
+        qualification: String,
+        description: String,
+        _added: { type: Date, default: Date.now }
+    }],
     coursesOffered: [String],
     exams: [{ type: Schema.ObjectId, ref: 'exam' }],
     rank: {type: Number,default: 0},
