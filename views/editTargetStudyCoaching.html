@@ -117,6 +117,9 @@
         <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 text-center" ng-repeat="file in files">
             <div layout="column" layout-align="center center" id="uploadContainer">
                 <img ngf-thumbnail="file" class="thumb">
+                <span>
+                    {{file.size | bytes}}
+                </span>
                 <md-progress-linear md-mode="determinate" value="{{file.uploadProgress}}" id="progressBar"></md-progress-linear>
                 <span ng-if="file.link">
                 <a ng-href="{{file.link}}" target="_blank">Link</a>
