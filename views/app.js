@@ -239,7 +239,27 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
     }]);    
+    
+    exambazaar.service('MediaTagService', ['$http', function($http) {
+       
+        this.saveMediaTags = function(mediaTags) {
+            return $http.post('/api/mediaTags/bulksave', mediaTags);
+        };
         
+        this.getMediaTag = function(mediaTagId) {
+            return $http.get('/api/mediaTags/edit/'+mediaTagId, {mediaTagId: mediaTagId});
+        };
+        this.getMediaTagByType = function(mediaType) {
+            return $http.get('/api/mediaTags/mediaType/'+mediaType, {mediaType: mediaType});
+        };
+        this.getMediaTags = function() {
+            return $http.get('/api/mediaTags');
+        };
+        this.getMediaTypes = function() {
+            return $http.get('/api/mediaTags/mediaTypes/');
+        };
+        
+    }]);
     exambazaar.service('LocationService', ['$http', function($http) {
         this.saveLocation = function(location) {
             return $http.post('/api/locations/save', location);
@@ -260,7 +280,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getCities = function() {
             return $http.get('/api/locations/cities/');
         };
-        
         
     }]);
        
@@ -321,6 +340,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getProvidersWithAreas = function() {
             return $http.get('/api/targetStudyProviders/providersWithAreas');
         };
+        
+        this.addFaculty = function(newFacultyForm) {
+            return $http.post('/api/targetStudyProviders/addFaculty',newFacultyForm);
+        };
+        
         this.changeProvidersStartingWith = function(startsWith) {
             return $http.get('/api/targetStudyProviders/changeProvidersStartingWith/'+startsWith, {startsWith: startsWith});
         };
@@ -342,6 +366,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.getCities = function() {
             return $http.get('/api/targetStudyProviders/cities');
+        };
+        this.getWebsites = function() {
+            return $http.get('/api/targetStudyProviders/websites');
         };
         this.uprank = function(targetStudyProviderId) {
             return $http.get('/api/targetStudyProviders/uprank/'+targetStudyProviderId, {targetStudyProviderId: targetStudyProviderId});
@@ -1346,6 +1373,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 console.info("Error ");
             });
         };
+        
+        $scope.getWebsites = function(){
+            alert('Starting');
+            targetStudyProviderService.getWebsites().success(function (data, status, headers) {
+                console.info("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
+        
         $scope.getCityCount = function(){
             targetStudyProviderService.getCityCount().success(function (data, status, headers) {
                 console.info("Done");
@@ -1405,9 +1443,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }
     });
     exambazaar.controller("editTargetStudyCoachingController", 
-    [ '$scope','FileUploader', 'targetStudyProviderService','LocationService','thisTargetStudyProvider','$state','$stateParams', '$cookies','ImageService','Upload', function($scope,FileUploader, targetStudyProviderService,LocationService,thisTargetStudyProvider,$state,$stateParams, $cookies,ImageService,Upload){
-        
+    [ '$scope','FileUploader', 'targetStudyProviderService','LocationService','thisTargetStudyProvider','$state','$stateParams', '$cookies','ImageService','Upload','imageMediaTagList', function($scope,FileUploader, targetStudyProviderService,LocationService,thisTargetStudyProvider,$state,$stateParams, $cookies,ImageService,Upload,imageMediaTagList){
+        console.info(imageMediaTagList.data);
         $scope.provider = thisTargetStudyProvider.data;
+        $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
+        $scope.imageTypes = imageMediaTagList.data.distinctTypes;
+        
+        
         $scope.locations = [];
         $scope.showButton = true;
         $scope.getLocations = function(){
@@ -1454,8 +1496,45 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.suggestedEmails.push(pName + '@yahoo.com');
         }
         
+        $scope.updateFaculties = function(){
+            var files = $scope.files;
+            var nFiles = files.length;
+            var counter = 0;
+            var providerId = $scope.provider._id;
+            
+            files.forEach(function(thisFile, index){
+                //alert(JSON.stringify(thisFile.newFaculty));
+                if(thisFile.newFaculty){
+                    var newFacultyForm ={
+                        faculty: thisFile.newFaculty,
+                        providerId: providerId
+                    };
+                   //alert(JSON.stringify(newFacultyForm)); 
+                    targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
+                        counter = counter + 1;
+                        console.info('Counter is: ' + counter);
+
+
+                        console.info("Faculty added to database " + thisFile.newFaculty.image);
+                        if(counter == nFiles){
+                            $scope.showAddFacultiesForm = true;
+                            //alert('All Done');   
+                        }
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                }
+            });
+            
+        };
+        
         $scope.uploadFiles = function () {
             var files = $scope.files;
+            var nFiles = files.length;
+            $scope.showAddFacultiesForm = false;
+            var providerId = $scope.provider._id;
+            var counter = 0;
             if (files && files.length) {
             files.forEach(function(thisFile, index){
                 var fileInfo = {
@@ -1477,21 +1556,52 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     url: data.endpoint_url,
                     data: s3Request
                 }).then(function (resp) {
-                    console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
-                    thisFile.link = $(resp.data).find('Location').text();
-                    //alert(thisFile.link);
-                }, function (resp) {
-                    console.log('Error status: ' + resp.status);
-                }, function (evt) {
-                    thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
-                    //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
-                });
-                
-            })
-            .error(function (data, status, header, config) {
-                console.info("Error");
-            });    
+                        console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                        thisFile.link = $(resp.data).find('Location').text();
+                        thisFile.newFaculty = {
+                            name: '',
+                            image: thisFile.link,
+                            subject: '',
+                            yearsExperience: '',
+                            qualification: '',
+                            description: ''
+                        };
+                        
+
+                        var newFacultyForm ={
+                            faculty: thisFile.newFaculty,
+                            providerId: providerId
+                        };
+                        targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
+                            counter = counter + 1;
+                            console.info('Counter is: ' + counter);
+                            
+                            
+                            console.info("Faculty added to database " + thisFile.newFaculty.image);
+                            if(counter == nFiles){
+                                $scope.showAddFacultiesForm = true;
+                                //alert('All Done');   
+                            }
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                        
                     
+                        
+                        //alert(thisFile.link);
+                    }, function (resp) {
+                        console.log('Error status: ' + resp.status);
+                    }, function (evt) {
+                        thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                        //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
+                    });
+
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error");
+                });   
+                 
             });
             }
          };
@@ -1710,7 +1820,42 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.awsCredential = awsCredential;
         };
     }]);
-        
+     
+    exambazaar.controller("addMediaTagController", 
+        [ '$scope',  'mediaTagList','mediaTypeList','MediaTagService','$http','$state', function($scope, mediaTagList,mediaTypeList, MediaTagService,$http,$state){
+            
+        $scope.mediaTags = mediaTagList.data;
+        $scope.mediaTypes = mediaTypeList.data;
+        $scope.newmediaTags = [
+            {
+                media: 'Image',
+                type: 'External',
+                subType: 'Institute Logo'
+            }
+        ];
+        $scope.bulkAddMode = false;
+        $scope.setBulkAddMode = function(){
+            $scope.bulkAddMode = !$scope.bulkAddMode;
+        };
+        $scope.addMediaTags = function(){
+            $scope.newmediaTags.pop();
+            $scope.newmediaTags.pop();
+            $scope.newmediaTags.pop();
+            $scope.newmediaTags.pop();
+            $scope.newmediaTags.pop();
+            
+            MediaTagService.saveMediaTags($scope.newmediaTags).success(function (data, status, headers) {
+                alert('MediaTags Saved!');
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error: ' + data);
+                });      
+        };
+        $scope.setMediaTag = function(mediaTag){
+            $scope.mediaTag = mediaTag;
+        };
+    }]); 
+     
     exambazaar.controller("addLocationController", 
         [ '$scope',  'locationList','cityList','LocationService','$http','$state', function($scope, locationList,cityList, LocationService,$http,$state){
         $scope.locations = locationList.data;
@@ -2178,6 +2323,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
             }
         })
+        .state('claim2', {
+            url: '/claim2/:coachingId', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header1.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'claim2.html',
+                    controller: 'claimController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisProvider: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {  
+                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
         .state('privacy', {
             url: '/privacy',
             views: {
@@ -2478,6 +2647,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     function(targetStudyProviderService,$stateParams) {
                     //alert($stateParams.city);    
                     return targetStudyProviderService.getProvider($stateParams.coachingId);
+                }],
+                imageMediaTagList:['MediaTagService','$stateParams',
+                    function(MediaTagService) {  
+                    return MediaTagService.getMediaTagByType('Image');
                 }],
                 provider: function() { return {}; }
                 
@@ -3131,6 +3304,33 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     return LocationService.getCities();
                 }],
                 exam: function() { return {}; }
+            }
+        })
+        .state('addMediaTag', {
+            url: '/addMediaTag',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'addMediaTag.html',
+                    controller: 'addMediaTagController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                mediaTagList: ['MediaTagService',
+                    function(MediaTagService){
+                    return MediaTagService.getMediaTags();
+                }],
+                mediaTypeList: ['MediaTagService',
+                    function(MediaTagService){
+                    return MediaTagService.getMediaTypes();
+                }],
+                mediaTag: function() { return {}; }
             }
         })
         .state('addAwsCredential', {

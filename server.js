@@ -72,6 +72,7 @@ var otps = require('./app/otps.js',otps);
 var exams = require('./app/exams.js',exams); 
 var streams = require('./app/streams.js',streams); 
 var locations = require('./app/locations.js',locations); 
+var mediaTags = require('./app/mediaTags.js',mediaTags); 
 var images = require('./app/images.js',images); 
 var awsCredentials = require('./app/awsCredentials.js',awsCredentials); 
 
@@ -89,6 +90,7 @@ app.use('/api/otps', otps);
 app.use('/api/exams', exams);
 app.use('/api/streams', streams);
 app.use('/api/locations', locations);
+app.use('/api/mediaTags', mediaTags);
 app.use('/api/images', images);
 app.use('/api/awsCredentials', awsCredentials);
 

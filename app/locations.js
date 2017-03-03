@@ -17,9 +17,10 @@ router.post('/save', function(req, res) {
     var thisLocation = req.body;
     var area = thisLocation.area;
     var city = thisLocation.city;
+    var locationId = thisLocation._id;
     console.log("Location is: " + JSON.stringify(thisLocation));
     
-    existingLocation = location.findOne({ 'area': area, 'city': city},function (err, existingLocation) {
+    existingLocation = location.findOne({ '_id': locationId},function (err, existingLocation) {
         if (err) return handleError(err);
         
         if(existingLocation){

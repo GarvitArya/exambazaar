@@ -166,13 +166,13 @@
         <div class="container">
             <div class="row">
             <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
-            <small>
+            <!--<small>
             <span><a ui-sref="main">EXAMBAZAAR</a></span>
             <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
             <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
             <span> > <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{city | uppercase}}</a></span>
             <span> > {{provider.name | uppercase}}</span>
-            </small>
+            </small>-->
             </div>
             </div>
         </div>
@@ -411,63 +411,3 @@
         </div>
     </div>
  </div>
-
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="claimDialog">
-      <md-dialog layout-padding>
-        <p class="text-center md-subhead" id="pageHeaderFont">
-            <span>CLAIM THIS LISTING</span>
-          <span class="pull-right" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
-        </p>
-
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show ="!started" >
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-center" id="leftSection1">
-                <span class="pageHeaderFont2 ">
-                <div layout="row" layout-align="center center">
-                <span ng-if="provider.oldlogo" class="pull-left" id="logo">
-                    <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImage"/>
-                </span>
-                </div>
-                <span class="text-primary md-subhead">{{provider.name}}</span><br/>
-                <span ng-if="provider.location.area">   <small>{{provider.location.area}},</small>
-                </span>
-                <span ng-if="provider.city">   <small>{{provider.city}}</small>
-                </span>
-                </span>
-            </div>
-            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 text-center">
-                <span>
-                <span class="text-primary md-subhead">Do you own this institute?</span><br/>
-                Claim your listing in order to manage your ExamBazaar.com page. You will get access to a free dashboard where you can upload photos, videos and manage your institute.
-                </span>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center md-subhead" ng-show ="!started">
-            <button type="submit" class="btn" ng-click = "getStarted()" id="getStarted">GET STARTED</button>  
-        </div>
-
-
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" ng-show ="started">
-            In this step ExamBazaar will send you an SMS on the mobile number listed on this institute. Enter the verification code to claim your institute.
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" ng-show ="started">
-        <form name="claimForm" >
-            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
-            <md-input-container class="md-block" flex-gt-sm>
-            <md-select required ng-model="verifyMobile" placeholder="Select mobile">
-            <md-option ng-repeat="mobile in provider.mobile" ng-value="mobile">
-            {{mobile}}
-            </md-option>
-            </md-select>
-            </md-input-container>
-            </div>
-            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
-            <md-button class="md-raised md-primary" ng-click="nextStep()" ng-disabled="claimForm.$invalid">Send OTP</md-button>
-            </div>
-        </form>
-        </div>  
-      </md-dialog>
-    </div>    
-    </div> 

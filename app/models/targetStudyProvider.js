@@ -21,11 +21,12 @@ var targetStudyProviderSchema = mongoose.Schema({
     phone: [String],
     faculty:[{
         name: String,
-        image: String,
+        image: {type: String,unique: true},
         subject: String,
         yearsExperience: String,
         qualification: String,
         description: String,
+        tags: [{ type: Schema.ObjectId, ref: 'mediaTag' }],
         _added: { type: Date, default: Date.now }
     }],
     coursesOffered: [String],

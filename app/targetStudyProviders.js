@@ -22,6 +22,19 @@ router.get('/cities', function(req, res) {
     });
 });
 
+
+//to get all providers
+router.get('/websites', function(req, res) {
+    console.log("Getting Websites");
+    targetStudyProvider.distinct( "website",function(err, docs) {
+    if (!err){
+        console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    });
+});
+
+
 router.get('/count', function(req, res) {
     targetStudyProvider.count({}, function(err, docs) {
     if (!err){ 
@@ -79,6 +92,76 @@ router.get('/cityCount', function(req, res) {
         
     } else {throw err;}
     });
+});
+
+
+router.post('/addFaculty', function(req, res) {
+    var newFacultyForm = req.body;
+    var imageUrl = newFacultyForm.faculty.image;
+    var newFaculty = newFacultyForm.faculty;
+    var providerId = newFacultyForm.providerId;
+    
+    
+    console.log('Express received: ' + JSON.stringify(newFacultyForm));
+    var thisProvider = targetStudyProvider
+        .findOne({ _id: providerId }, {faculty:1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            
+            if(thisProvider){
+                var nFaculty = thisProvider.faculty.length;
+                var facultyExists = false;
+                var counter = 0;
+                
+                thisProvider.faculty.forEach(function(thisFaculty, index){
+                counter = counter + 1;
+                if(!facultyExists){
+                
+                if(imageUrl == thisFaculty.image){
+                    facultyExists = true;
+                    console.log(JSON.stringify(newFaculty));     
+                    for (var property in newFaculty) {
+                        thisFaculty[property] = newFaculty[property];
+                    }
+                    thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("Faculty data saved for " + thisProvider._id);
+                        res.json('Done');
+                    });
+                    
+                }    
+                        
+                }
+                if(!facultyExists && counter == nFaculty){
+                    //console.log('----------Here---------');
+                    //create new faculty
+                    thisProvider.faculty.push(newFaculty);
+                    thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("Faculty data saved for " + thisProvider._id);
+                        res.json('Done');
+                    });
+                }
+                });
+                
+                if(nFaculty == 0){
+                    //console.log('----------Here---------');
+                    //create new faculty
+                    thisProvider.faculty.push(newFaculty);
+                    thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("Faculty data saved for " + thisProvider._id);
+                        res.json('Done');
+                    });
+                }
+                
+            }else{
+                console.log('No such provider');
+                res.json('Error');
+            }
+        } else {throw err;}
+    });
+    
 });
 
 router.get('/providersWithAreas', function(req, res) {
@@ -149,25 +232,48 @@ router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;
     var coachingId = thisProvider._id;
     
-    targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, oldProvider) {
+    var oldProvider = targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, oldProvider) {
     if (!err){
         
         //oldProvider = thisProvider;
-        console.log("New Coaching is: " + JSON.stringify(thisProvider));
-        for (var property in thisProvider) {
-            oldProvider[property] = thisProvider[property];
-            if(property=='location'){
-                console.log('Yes location is there: ' + thisProvider[property]);
+        if(oldProvider){
+            console.log("New Coaching is: " + JSON.stringify(thisProvider));
+            for (var property in thisProvider) {
+                oldProvider[property] = thisProvider[property];
+                if(property=='location'){
+                    console.log('Yes location is there: ' + thisProvider[property]);
+                }
             }
+            console.log("Coaching is: " + JSON.stringify(oldProvider));
+
+            //save the changes
+            oldProvider.save(function(err, thisprovider) {
+                if (err) return console.error(err);
+                console.log(thisprovider._id + " saved!");
+                res.json('Done');
+            });
+            
+        }else{
+            //create a new provider
+            console.log("--------New Coaching is: " + JSON.stringify(thisProvider));
+            oldProvider = new targetStudyProvider({});
+            for (var property in thisProvider) {
+                oldProvider[property] = thisProvider[property];
+                if(property=='location'){
+                    console.log('Yes location is there: ' + thisProvider[property]);
+                }
+            }
+            console.log("Coaching is: " + JSON.stringify(oldProvider));
+
+            //save the changes
+            oldProvider.save(function(err, thisprovider) {
+                if (err) return console.error(err);
+                console.log(thisprovider._id + " saved!");
+                res.json('Done');
+            });
+            
         }
-        console.log("Coaching is: " + JSON.stringify(oldProvider));
         
-        //save the changes
-        oldProvider.save(function(err, thisprovider) {
-            if (err) return console.error(err);
-            console.log(thisprovider._id + " saved!");
-            res.json('Done');
-        });
         
         
         

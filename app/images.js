@@ -28,7 +28,7 @@ router.post('/s3Credentials', function(req, res) {
             var contentType = req.body.contentType;
             //console.log(filename);
             if (filename) {
-                console.log("------New ---------" + JSON.stringify(s3Config));
+                //console.log("------New ---------" + JSON.stringify(s3Config));
                 //console.log(filename);
                 //res.json(docs);
                 var filename = crypto.randomBytes(16).toString('hex') + path.extname(filename);
