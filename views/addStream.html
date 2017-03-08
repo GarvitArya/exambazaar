@@ -50,7 +50,9 @@
                         <label>Stream Display Name</label>
                         <input required ng-model="stream.displayname">
                     </md-input-container>
-                    
+                    <md-switch ng-model="stream.active" aria-label="Active?">
+                      Active?
+                    </md-switch>
                 </div>   
 
                 <md-button class="md-raised md-primary" ng-click="addStream()" ng-disabled="streamForm.$invalid">Add Stream</md-button>
