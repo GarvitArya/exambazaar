@@ -95,79 +95,6 @@ router.get('/cityCount', function(req, res) {
 });
 
 
-
-
-router.post('/addResult', function(req, res) {
-    var newResultForm = req.body;
-    var imageUrl = newResultForm.result.image;
-    var newResult = newResultForm.result;
-    var providerId = newResultForm.providerId;
-    console.log('Express received: ' + JSON.stringify(newResultForm));
-    var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {results:1})
-        .exec(function (err, thisProvider) {
-        if (!err){
-            
-            if(thisProvider){
-                var nResult = thisProvider.results.length;
-                var resultExists = false;
-                var counter = 0;
-                thisProvider.results.forEach(function(thisResult, index){
-                counter = counter + 1;
-                if(!resultExists){
-                
-                if(imageUrl == thisResult.image){
-                    resultExists = true;
-                    console.log(JSON.stringify(newResult));     
-                    for (var property in newResult) {
-                        thisResult[property] = newResult[property];
-                    }
-                    thisProvider.save(function(err, thisProvider) {
-                        if (err) return console.error(err);
-                        console.log("Result data saved for " + thisProvider._id);
-                        res.json('Done');
-                    });
-                    
-                }    
-                        
-                }
-                if(!resultExists && counter == nResult){
-                    //console.log('----------Here---------');
-                    //create new result
-                    thisProvider.results.push(newResult);
-                    thisProvider.save(function(err, thisProvider) {
-                        if (err) return console.error(err);
-                        console.log("Result data saved for " + thisProvider._id);
-                        res.json('Done');
-                    });
-                }
-                });
-                
-                if(nResult == 0){
-                    //console.log('----------Here---------');
-                    //create new result
-                    thisProvider.results.push(newResult);
-                    thisProvider.save(function(err, thisProvider) {
-                        if (err) return console.error(err);
-                        console.log("Result data saved for " + thisProvider._id);
-                        res.json('Done');
-                    });
-                }
-                
-            }else{
-                console.log('No such provider');
-                res.json('Error');
-            }
-        } else {throw err;}
-    });
-    
-});
-
-
-
-
-
-
 router.post('/addFaculty', function(req, res) {
     var newFacultyForm = req.body;
     var imageUrl = newFacultyForm.faculty.image;
@@ -546,7 +473,7 @@ router.get('/coaching/:coachingId', function(req, res) {
     
     var thisProvider = targetStudyProvider
         .findOne({'_id': coachingId})
-        .deepPopulate('exams exams.stream location faculty.exams')
+        .deepPopulate('exams exams.stream location')
         .exec(function (err, thisProvider) {
         if (!err){
             res.json(thisProvider);

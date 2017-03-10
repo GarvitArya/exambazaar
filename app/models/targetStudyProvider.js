@@ -8,7 +8,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     name: {type: String,required: true},
     targetStudyWebsite: String,
     website: String,
-    email: [String],
+    email: String,
     address: String,
     area: String,
     location: { type: Schema.ObjectId, ref: 'location' },
@@ -19,29 +19,15 @@ var targetStudyProviderSchema = mongoose.Schema({
     oldlogo: String,
     mobile: [String],
     phone: [String],
-    results:[{
-        exam: {type: Schema.ObjectId, ref: 'exam'},
-        year: {type: String},
-        name: {type: String},
-        category: {type: String},
-        rank: {type: String},
-        percentile: {type: String},
-        percentage: {type: String},
-        active: {type: Boolean,default: true},
-        course: {type: Schema.ObjectId, ref: 'course'},
-        image: {type: String},
-        _added: { type: Date, default: Date.now }
-    }],
     course:[{
-        exam: {type: Schema.ObjectId, ref: 'exam'},
+        exam: {type: String,required: true},
         duration: {type: String},
         name: {type: String,required: true},
         nSeats: {type: String},
         entranceCriteria: {type: String},
         fees: {type: String, required: true},
         mode: {type: String,required: true},
-        eligibility: {type: String, default:''},
-        _added: { type: Date, default: Date.now }
+        eligibility: {type: String, default:''}
     }],
     photo:[{
         image: {type: String,unique: true},
@@ -66,7 +52,6 @@ var targetStudyProviderSchema = mongoose.Schema({
         yearsExperience: String,
         qualification: String,
         description: String,
-        exams: [{ type: Schema.ObjectId, ref: 'exam' }],
         tags: [{ type: Schema.ObjectId, ref: 'mediaTag' }],
         _added: { type: Date, default: Date.now }
         /* 
