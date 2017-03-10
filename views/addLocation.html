@@ -29,10 +29,19 @@
     </div>
     <div class="row top-buffer">
         <div class="col-md-12" ng-repeat="city in cities">
-            <strong>{{city | uppercase}}</strong>&nbsp;
-            <span class="text" ng-repeat="existingLocation in locations" ng-if="existingLocation.city == city"><small>
-            <a ng-click="setLocation(existingLocation)">{{existingLocation.area}}</a><span ng-if="!$last">, </span>
-            </small></span>
+            <div class="row text-center">
+                <strong>{{city | uppercase}}</strong>
+                <span>
+                    {{ (locations | filter : { city: city } : true).length }}
+                </span>
+                
+            </div>
+            <div class="row">
+                <span class="text badge" ng-repeat="existingLocation in locations | orderBy:'area'" ng-if="existingLocation.city == city"><small>
+                <a ng-click="setLocation(existingLocation)" id="badgeLink">{{existingLocation.area}}</a>
+                </small></span>
+            </div>
+            
         </div>
     </div>
     
