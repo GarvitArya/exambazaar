@@ -29,10 +29,7 @@ app.use(favicon('./public/images/logo/favicon.ico'));
 
 var configDB = require('./config/mydatabase.js');
 
-//mongoose.connect(configDB.url);
-mongoose.connect(configDB.url,  { server: { socketOptions: { connectTimeoutMS: 10000 }}}, function(err) { 
-    console.log('Mongo DB Error: ' + err);
-});
+mongoose.connect(configDB.url);
 require('./config/passport')(passport);
 
 app.use(morgan('dev'));
