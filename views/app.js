@@ -1,5 +1,4 @@
-
-var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload','youtube-embed']);
+var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload']);
 //,'ngHandsontable''ngHandsontable',
     (function() {
     'use strict';
@@ -246,6 +245,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.saveMediaTags = function(mediaTags) {
             return $http.post('/api/mediaTags/bulksave', mediaTags);
         };
+        
         this.getMediaTag = function(mediaTagId) {
             return $http.get('/api/mediaTags/edit/'+mediaTagId, {mediaTagId: mediaTagId});
         };
@@ -344,12 +344,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.addFaculty = function(newFacultyForm) {
             return $http.post('/api/targetStudyProviders/addFaculty',newFacultyForm);
         };
-        this.addPhoto = function(newPhotoForm) {
-            return $http.post('/api/targetStudyProviders/addPhoto',newPhotoForm);
-        };
-        this.addVideo = function(newVideoForm) {
-            return $http.post('/api/targetStudyProviders/addVideo',newVideoForm);
-        };
+        
         this.changeProvidersStartingWith = function(startsWith) {
             return $http.get('/api/targetStudyProviders/changeProvidersStartingWith/'+startsWith, {startsWith: startsWith});
         };
@@ -583,7 +578,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.subcategory = $scope.exam;
             
         
-        
+        $scope.cancel = function() {
+          $mdDialog.cancel();
+        }; 
         $rootScope.pageTitle = $scope.subcategory.displayname + ' deals at Exam Bazaar'; 
             
         $scope.showCoaching = function(city){ 
@@ -599,9 +596,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
               clickOutsideToClose: true
             });
         };
-        $scope.cancel = function() {
-          $mdDialog.cancel();
-        };    
+            
             
     }]);    
     
@@ -665,513 +660,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.clearFilter = function(text){
             $scope.searchText = '';
         };
-        
-        
-    }]); 
-    
-    exambazaar.controller("claim2Controller", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'ImageService','Upload','thisProvider','imageMediaTagList','examList','streamList','$state','$stateParams', '$cookies','$mdDialog', function($scope,$rootScope, targetStudyProviderService, ImageService, Upload, thisProvider,imageMediaTagList,examList,streamList, $state,$stateParams, $cookies,$mdDialog){
-        $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
-        $scope.imageTypes = imageMediaTagList.data.distinctTypes;
-        
-        $scope.editable = true;
-        $scope.verifiedUser = true;
-        if($cookies.getObject('sessionuser')){
-            var user = $cookies.getObject('sessionuser');
-            if(user.userType=='Master'){
-                $scope.editable = true;
-                $scope.verifiedUser = true;
-            }
-        }
-        
-        $scope.components = [
-            'Overview',
-            'Exams',
-            'Results',
-            'Courses',
-            'Photos',
-            'Videos',
-            'Faculty',
-            'Location'
-        ];
-        $scope.provider = thisProvider.data;
-        $scope.allExams = examList.data;
-        $scope.allStreams = streamList.data;
-        //console.info($scope.allExams);
-        //console.info($scope.allStreams);
-        
-        
-        
-        $scope.streamIds=[];
-        $scope.streams=[];
-        $scope.provider.exams.forEach(function(thisExam, index){
-            if($scope.streamIds.indexOf(thisExam.stream._id)==-1){
-                $scope.streamIds.push(thisExam.stream._id);
-                $scope.streams.push(thisExam.stream);
-            }
-        });
-        $scope.providerExamIds = $scope.provider.exams.map(function(a) {return a._id;});
-        
-        $scope.addExam = function(exam){
-            if($scope.provider.exams.indexOf(exam) == -1){
-                $scope.provider.exams.push(exam);
-                $scope.providerExamIds = $scope.provider.exams.map(function(a) {return a._id;});
-                $scope.saveProvider();
-            }
-        };
-        $scope.modes=[
-            'Class Room',
-            'Online Classes',
-            'Test Series',
-            'Distance Education',
-            'Satellite Classes'
-        ];
-        $scope.durations=[
-            '1 Year',
-            '2 Year',
-            '3 Months',
-            '6 Months',
-            '9 Months'
-        ];
-        $scope.addingCourse = false;
-        $scope.preAddCourseLength = $scope.provider.course.length;
-        $scope.setCourseDuration = function(course, duration){
-            course.duration = duration;    
-        };
-        $scope.setCourseStudyMode = function(course, mode){
-            course.mode = mode; 
-        };
-        
-        $scope.deleteCourse = function(course){
-            var spliceIndex = -1;
-            $scope.provider.course.forEach(function(thisCourse, index){
-                if(course._id == thisCourse._id){
-                    spliceIndex = index;
-                }
-                if(course.name == thisCourse.name){
-                    spliceIndex = index;
-                }
-            });
-            if(spliceIndex != -1){
-                $scope.provider.course.splice(spliceIndex, 1);
-                $scope.saveProvider();  
-            }
-        };
-        $scope.editCourse = false;
-        $scope.editCourses= function(){
-            $scope.editCourse = true;
-        };
-        $scope.addCourse = function(exam){
-            $scope.preAddCourseLength = $scope.provider.course.length;
-            var newCourse = {
-                exam: exam._id,
-                name:'',
-                fees: '10000',
-                mode: ''
-            };
-            $scope.provider.course.push(newCourse);
-            console.info(JSON.stringify($scope.provider.course));
-            
-        };
-        $scope.removeExam = function(exam){
-            var examIndex = -1;
-            $scope.provider.exams.forEach(function(thisExam, index){
-                if(thisExam._id == exam._id){
-                    examIndex = index;
-                }
-            });
-            //alert(examIndex);
-            if(examIndex != -1){
-                $scope.provider.exams.splice(examIndex, 1);
-                $scope.providerExamIds = $scope.provider.exams.map(function(a) {return a._id;});
-                $scope.saveProvider();
-            }
-        };
-        
-        $scope.deleteFaculty = function(faculty){
-            faculty.active = false;
-            $scope.saveProvider();
-        };
-        
-        $scope.deletePhoto = function(photo){
-            photo.active = false;
-            $scope.saveProvider();
-        };
-        $scope.saveProvider = function(){
-            console.info($scope.provider);
-            var saveProvider = {
-                targetStudyProvider:$scope.provider
-            };
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
-                $scope.showSavedDialog();
-                $state.reload();
-                console.info("Done");
-            })
-            .error(function (data, status, header, config) {
-                console.info("Error ");
-            });
-        };
-        $scope.provider.faculty.forEach(function(thisFaculty, facultyIndex){
-            if(thisFaculty.name || thisFaculty.subject || thisFaculty.yearsExperience || thisFaculty.qualification || thisFaculty.description){
-                thisFaculty.infoAvailable = 1;
-            }else{
-                thisFaculty.infoAvailable = 0;
-            }
-        });
-        
-        $scope.editVideo = false;
-        $scope.preUploadVideoLength = $scope.provider.video.length;
-        $scope.editVideos= function(){
-            $scope.editVideo = true;
-        };
-        $scope.saveVideos= function(){
-            $scope.saveProvider();
-            $scope.editVideo = false;
-            
-        };
-        
-        $scope.addVideos = function(){
-            var newVideo = {
-                link: ''
-            };
-            $scope.provider.video.push(newVideo);
-            $scope.editVideo = true;
-        };
-        $scope.restoreVideo = function(video){
-            video.active = true;
-            $scope.saveProvider();
-        };
-        $scope.deleteVideo = function(video){
-            video.active = false;
-            $scope.saveProvider();
-        };
-        $scope.editPhoto = false;
-        $scope.preUploadPhotoLength = $scope.provider.photo.length;
-        $scope.editPhotos= function(){
-            $scope.editPhoto = true;
-        };
-        $scope.savePhotos= function(){
-            $scope.saveProvider();
-            $scope.editPhoto = false;
-            
-        };
-        $scope.cancelChanges= function(){
-            $state.reload();
-        };
-        
-        
-        $scope.editFaculty = false;
-        $scope.editFaculties= function(){
-            $scope.editFaculty = true;
-        };
-        
-        $scope.saveFaculties= function(){
-            $scope.saveProvider();
-            $scope.editFaculty = false;
-            
-        };
-        
-        $scope.preUploadFacultyLength = $scope.provider.faculty.length;
-        
-        $scope.prevFaculty = function(){
-            var index = $scope.activeFacultyIndex - 1;
-            $scope.changeFacultyImage(index, $scope.provider.faculty.length);
-        };
-         $scope.nextFaculty = function(){
-            var index = $scope.activeFacultyIndex + 1;
-            $scope.changeFacultyImage(index);
-        };
-        $scope.changeFacultyImage = function(index){
-            var arrayLength = $scope.provider.faculty.length
-            if(index >=0 && index < arrayLength){
-                $scope.activeFacultyIndex = index;
-                $scope.activeFaculty = $scope.provider.faculty[index];
-                var indexPair = startEndIndex(index,$scope.provider.faculty.length);
-                $scope.startFacultyIndex = indexPair.start;
-                $scope.endFacultyIndex = indexPair.end;
-            }
-            
-        };
-        function startEndIndex (index, arrayLength){
-            
-            var showLength = 6;
-            var indexPair = {
-                start: 0,
-                end: arrayLength
-            };
-            
-            if(index - showLength/2 <=0){
-                indexPair.start = 0;
-                indexPair.end = Math.min(indexPair.start + showLength, arrayLength);
-            }else{
-                if(index + showLength/2 >= arrayLength){
-                    indexPair.end = arrayLength;
-                    indexPair.start = Math.max(0, indexPair.end - showLength);
-                    
-                }else{
-                    indexPair.start = index -showLength/2;
-                    indexPair.end = Math.min(indexPair.start + showLength, arrayLength);
-                }
-                
-            }
-            return (indexPair);
-        };
-        
-        $scope.prevPhoto = function(){
-            var index = $scope.activePhotoIndex - 1;
-            $scope.changePhotoImage(index, $scope.provider.faculty.length);
-        };
-         $scope.nextPhoto = function(){
-            var index = $scope.activePhotoIndex + 1;
-            $scope.changePhotoImage(index);
-        };
-        $scope.changePhotoImage = function(index){
-            var arrayLength = $scope.provider.photo.length;
-            if(index >=0 && index < arrayLength){
-                $scope.activePhotoIndex = index;
-                $scope.activePhoto = $scope.provider.photo[index];
-                var indexPair = startEndIndex(index, $scope.provider.photo.length);
-                //console.info(JSON.stringify(indexPair));
-                $scope.startPhotoIndex = indexPair.start;
-                $scope.endPhotoIndex = indexPair.end;
-            }
-            
-        };
-        
-        $scope.addPhotoTag = function(tag){
-            //alert(JSON.stringify(tag));
-            if($scope.tagThisPhoto.tags.indexOf(tag._id) == -1){
-                $scope.tagThisPhoto.tags.push(tag._id);
-            }
-            
-        };
-        $scope.addFacultyTag = function(tag){
-            //alert(JSON.stringify(tag));
-            if($scope.tagThisFaculty.tags.indexOf(tag._id) == -1){
-                $scope.tagThisFaculty.tags.push(tag._id);
-            }
-            
-        };
-        $scope.showFacultyTagDialog = function(ev, faculty) {
-            $scope.tagThisFaculty = faculty;
-            $mdDialog.show({
-              contentElement: '#tagFacultyDialog',
-              parent: angular.element(document.body),
-              targetEvent: ev,
-              clickOutsideToClose: true
-            });
-        };
-        
-        $scope.showPhotoTagDialog = function(ev, photo) {
-            $scope.tagThisPhoto = photo;
-            $mdDialog.show({
-              contentElement: '#tagPhotoDialog',
-              parent: angular.element(document.body),
-              targetEvent: ev,
-              clickOutsideToClose: true
-            });
-        };
-        
-        $scope.showSavedDialog = function(ev) {
-            $mdDialog.show({
-              contentElement: '#savedDialog',
-              parent: angular.element(document.body),
-              targetEvent: ev,
-              clickOutsideToClose: true
-            });
-        };
-        $scope.showPhotoDialog = function(ev,index) {
-            $scope.activePhotoIndex = index;
-            $scope.activePhoto = $scope.provider.photo[index];
-            var indexPair = startEndIndex(index, $scope.provider.photo.length);
-            $scope.startPhotoIndex = indexPair.start;
-            $scope.endPhotoIndex = indexPair.end;
-            
-            $mdDialog.show({
-              contentElement: '#photoDialog',
-              parent: angular.element(document.body),
-              targetEvent: ev,
-              clickOutsideToClose: true
-            });
-        };
-        $scope.showFacultyDialog = function(ev,index) {
-            $scope.activeFacultyIndex = index;
-            $scope.activeFaculty = $scope.provider.faculty[index];
-            var indexPair = startEndIndex(index, $scope.provider.faculty.length);
-            $scope.startFacultyIndex = indexPair.start;
-            $scope.endFacultyIndex = indexPair.end;
-            
-            
-            $mdDialog.show({
-              contentElement: '#facultyDialog',
-              parent: angular.element(document.body),
-              targetEvent: ev,
-              clickOutsideToClose: true
-            });
-        };
-        $scope.cancel = function() {
-          $mdDialog.cancel();
-        };    
-        
-        if($scope.provider.pincode){
-            $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' +
-            $scope.provider.city + ' ' +
-            $scope.provider.pincode;
-        }else{
-            $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' + $scope.provider.city;   
-        }
-        
-        $scope.uploadPhotos = function () {
-            var photos = $scope.photos;
-            var nFiles = photos.length;
-            $scope.showAddPhotosForm = false;
-            var providerId = $scope.provider._id;
-            var counter = 0;
-            $scope.photoProgess = 0;
-            if (photos && photos.length) {
-            photos.forEach(function(thisFile, index){
-                
-            var fileInfo = {
-                filename: thisFile.name,
-                contentType: thisFile.type
-            };
-             ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
-            var s3Request = {};
-            var allParams = data.params;
-            for (var key in allParams) {
-              if (allParams.hasOwnProperty(key)) {
-                s3Request[key] = allParams[key];
-              }
-            }
-            s3Request.file = thisFile;
-            Upload.upload({
-                url: data.endpoint_url,
-                data: s3Request
-            }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
-                thisFile.link = $(resp.data).find('Location').text();
-                thisFile.newPhoto = {
-                    image: thisFile.link
-                };
-                var newPhotoForm ={
-                    photo: thisFile.newPhoto,
-                    providerId: providerId
-                }; targetStudyProviderService.addPhoto(newPhotoForm).success(function (data, status, headers) {
-                    counter = counter + 1;
-                    if(counter == nFiles){
-                        $scope.showAddPhotosForm = true;
-                        $scope.preUploadPhotoLength = $scope.provider.photo.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
-                            $scope.provider = refreshedProvider;
-                            $scope.editPhotos();
-                        }).error(function (data, status, header, config) {
-                            console.info("Error ");
-                        });
-                       
-                        
-                        
-                    }
-                })
-                .error(function (data, status, header, config) {
-                    console.info("Error ");
-                });
-                }, function (resp) {
-                    console.log('Error status: ' + resp.status);
-                }, function (evt) {
-                    $scope.photoProgess = 0;
-                    thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
-                    photos.forEach(function(thisFile, index){
-                        $scope.photoProgess += thisFile.uploadProgress;
-                    });
-                    $scope.photoProgess = $scope.photoProgess / nFiles;
-                    //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
-                });
-
-            })
-            .error(function (data, status, header, config) {
-                console.info("Error");
-            });   
-                 
-            });
-            }
-         };
-            
-        $scope.uploadFaculties = function () {
-            var faculties = $scope.faculties;
-            var nFiles = faculties.length;
-            $scope.showAddFacultiesForm = false;
-            var providerId = $scope.provider._id;
-            var counter = 0;
-            $scope.facultyProgess = 0;
-            if (faculties && faculties.length) {
-            faculties.forEach(function(thisFile, index){
-                
-            var fileInfo = {
-                filename: thisFile.name,
-                contentType: thisFile.type
-            };
-            console.log(JSON.stringify(fileInfo)); ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
-            var s3Request = {};
-            var allParams = data.params;
-            for (var key in allParams) {
-              if (allParams.hasOwnProperty(key)) {
-                s3Request[key] = allParams[key];
-              }
-            }
-            s3Request.file = thisFile;
-            Upload.upload({
-                url: data.endpoint_url,
-                data: s3Request
-            }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
-                thisFile.link = $(resp.data).find('Location').text();
-                thisFile.newFaculty = {
-                    image: thisFile.link
-                };
-                var newFacultyForm ={
-                    faculty: thisFile.newFaculty,
-                    providerId: providerId
-                }; targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
-                    counter = counter + 1;
-                    if(counter == nFiles){
-                        $scope.showAddFacultysForm = true;
-                        $scope.preUploadFacultyLength = $scope.provider.faculty.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
-                            $scope.provider = refreshedProvider;
-                            $scope.editFaculties();
-                        }).error(function (data, status, header, config) {
-                            console.info("Error ");
-                        });
-                       
-                        
-                        
-                    }
-                })
-                .error(function (data, status, header, config) {
-                    console.info("Error ");
-                });
-                }, function (resp) {
-                    console.log('Error status: ' + resp.status);
-                }, function (evt) {
-                    $scope.facultyProgess = 0;
-                    thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
-                    faculties.forEach(function(thisFile, index){
-                        $scope.facultyProgess += thisFile.uploadProgress;
-                    });
-                    $scope.facultyProgess = $scope.facultyProgess / nFiles;
-                    
-                });
-
-            })
-            .error(function (data, status, header, config) {
-                console.info("Error");
-            });   
-                 
-            });
-            }
-         };
-        
-        $rootScope.pageTitle = $scope.provider.name;
         
         
     }]); 
@@ -1816,7 +1304,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
             targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.cancel();
-                
+                //alert("Location Saved");
                 console.info("Done");
             })
             .error(function (data, status, header, config) {
@@ -2008,138 +1496,111 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.suggestedEmails.push(pName + '@yahoo.com');
         }
         
-        $scope.uploadPhotos = function () {
-            var photos = $scope.photos;
-            var nFiles = photos.length;
-            $scope.showAddPhotosForm = false;
-            var providerId = $scope.provider._id;
+        $scope.updateFaculties = function(){
+            var files = $scope.files;
+            var nFiles = files.length;
             var counter = 0;
-            if (photos && photos.length) {
-            photos.forEach(function(thisFile, index){
-                
-            var fileInfo = {
-                filename: thisFile.name,
-                contentType: thisFile.type
-            };
-            //console.info(JSON.stringify(fileInfo));
-            ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
-            var s3Request = {};
-            var allParams = data.params;
-            for (var key in allParams) {
-              if (allParams.hasOwnProperty(key)) {
-                s3Request[key] = allParams[key];
-              }
-            }
-            s3Request.file = thisFile;
-            Upload.upload({
-                url: data.endpoint_url,
-                data: s3Request
-            }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
-                thisFile.link = $(resp.data).find('Location').text();
-                thisFile.newPhoto = {
-                    image: thisFile.link
-                };
-                var newPhotoForm ={
-                    photo: thisFile.newPhoto,
-                    providerId: providerId
-                }; targetStudyProviderService.addPhoto(newPhotoForm).success(function (data, status, headers) {
-                    counter = counter + 1;
-                    if(counter == nFiles){
-                        $scope.showAddPhotosForm = true;
-                    }
-                })
-                .error(function (data, status, header, config) {
-                    console.info("Error ");
-                });
-                }, function (resp) {
-                    console.log('Error status: ' + resp.status);
-                }, function (evt) {
-                    thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
-                    //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
-                });
+            var providerId = $scope.provider._id;
+            
+            files.forEach(function(thisFile, index){
+                //alert(JSON.stringify(thisFile.newFaculty));
+                if(thisFile.newFaculty){
+                    var newFacultyForm ={
+                        faculty: thisFile.newFaculty,
+                        providerId: providerId
+                    };
+                   //alert(JSON.stringify(newFacultyForm)); 
+                    targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
+                        counter = counter + 1;
+                        console.info('Counter is: ' + counter);
 
-            })
-            .error(function (data, status, header, config) {
-                console.info("Error");
-            });   
-                 
+
+                        console.info("Faculty added to database " + thisFile.newFaculty.image);
+                        if(counter == nFiles){
+                            $scope.showAddFacultiesForm = true;
+                            //alert('All Done');   
+                        }
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                }
             });
-            }
-         };
+            
+        };
         
-        
-        $scope.uploadFaculties = function () {
-            alert('Here');
-            var faculties = $scope.faculties;
-            var nFiles = faculties.length;
+        $scope.uploadFiles = function () {
+            var files = $scope.files;
+            var nFiles = files.length;
             $scope.showAddFacultiesForm = false;
             var providerId = $scope.provider._id;
             var counter = 0;
-            if (faculties && faculties.length) {
-            faculties.forEach(function(thisFile, index){
-                
-            var fileInfo = {
-                filename: thisFile.name,
-                contentType: thisFile.type
-            };
-            console.info(JSON.stringify(fileInfo));
-            ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
-            var s3Request = {};
-            var allParams = data.params;
-            for (var key in allParams) {
-              if (allParams.hasOwnProperty(key)) {
-                s3Request[key] = allParams[key];
-              }
-            }
-            s3Request.file = thisFile;
-            Upload.upload({
-                url: data.endpoint_url,
-                data: s3Request
-            }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
-                thisFile.link = $(resp.data).find('Location').text();
-                thisFile.newFaculty = {
-                    name: '',
-                    image: thisFile.link,
-                    subject: '',
-                    yearsExperience: '',
-                    qualification: '',
-                    description: ''
+            if (files && files.length) {
+            files.forEach(function(thisFile, index){
+                var fileInfo = {
+                    filename: thisFile.name,
+                    contentType: thisFile.type
                 };
-                var newFacultyForm ={
-                    faculty: thisFile.newFaculty,
-                    providerId: providerId
-                }; targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
-                    counter = counter + 1;
-                    //console.info('Counter is: ' + counter);
-                    //console.info("Faculty added to database " + thisFile.newFaculty.image);
-                    if(counter == nFiles){
-                        $scope.showAddFacultiesForm = true;
-                        $scope.preUploadFacultyLength = $scope.provider.faculty.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
-                            $scope.provider = refreshedProvider;
-                            $scope.editPhotos();
-                        }).error(function (data, status, header, config) {
+                //console.info(JSON.stringify(fileInfo));
+                ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                var s3Request = {};
+                var allParams = data.params;
+                for (var key in allParams) {
+                  if (allParams.hasOwnProperty(key)) {
+                    s3Request[key] = allParams[key];
+                  }
+                }
+                s3Request.file = thisFile;
+                    
+                Upload.upload({
+                    url: data.endpoint_url,
+                    data: s3Request
+                }).then(function (resp) {
+                        console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                        thisFile.link = $(resp.data).find('Location').text();
+                        thisFile.newFaculty = {
+                            name: '',
+                            image: thisFile.link,
+                            subject: '',
+                            yearsExperience: '',
+                            qualification: '',
+                            description: ''
+                        };
+                        
+
+                        var newFacultyForm ={
+                            faculty: thisFile.newFaculty,
+                            providerId: providerId
+                        };
+                        targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
+                            counter = counter + 1;
+                            console.info('Counter is: ' + counter);
+                            
+                            
+                            console.info("Faculty added to database " + thisFile.newFaculty.image);
+                            if(counter == nFiles){
+                                $scope.showAddFacultiesForm = true;
+                                //alert('All Done');   
+                            }
+                        })
+                        .error(function (data, status, header, config) {
                             console.info("Error ");
                         });
                         
-                    }
+                    
+                        
+                        //alert(thisFile.link);
+                    }, function (resp) {
+                        console.log('Error status: ' + resp.status);
+                    }, function (evt) {
+                        thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                        //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
+                    });
+
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
-                });
-                }, function (resp) {
-                    console.log('Error status: ' + resp.status);
-                }, function (evt) {
-                    thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
-                    //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
-                });
-
-            })
-            .error(function (data, status, header, config) {
-                console.info("Error");
-            });   
+                    console.info("Error");
+                });   
                  
             });
             }
@@ -2168,7 +1629,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.data = '';
         $scope.add = function(){
-            var f = document.getElementById('file').faculties[0],
+            var f = document.getElementById('file').files[0],
             r = new FileReader();
             r.onloadend = function(e){
                 $scope.Imagedata = e.target.result;
@@ -2376,18 +1837,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.setBulkAddMode = function(){
             $scope.bulkAddMode = !$scope.bulkAddMode;
         };
-         
-        $scope.addMediaTag = function () {
-            //alert('Here');
-            var saveMediaTag = MediaTagService.saveMediaTags([$scope.mediaTag]).success(function (data, status, headers) {
-               
-                alert("Media Tag saved: " + $scope.mediaTag.media + ' > ' + $scope.mediaTag.type + ' > ' + $scope.mediaTag.subType);
-            })
-            .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
-            });
-        };
-            
         $scope.addMediaTags = function(){
             $scope.newmediaTags.pop();
             $scope.newmediaTags.pop();
@@ -2883,7 +2332,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 },
                 'body':{
                     templateUrl: 'claim2.html',
-                    controller: 'claim2Controller',
+                    controller: 'claimController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -2893,22 +2342,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 thisProvider: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getProvider($stateParams.coachingId);
-                }],
-                imageMediaTagList:['MediaTagService','$stateParams',
-                    function(MediaTagService) {  
-                    return MediaTagService.getMediaTagByType('Image');
-                }],
-                videoMediaTagList:['MediaTagService','$stateParams',
-                    function(MediaTagService) {  
-                    return MediaTagService.getMediaTagByType('Video');
-                }],
-                examList: ['ExamService',
-                    function(ExamService){
-                    return ExamService.getExams();
-                }],
-                streamList: ['StreamService',
-                    function(StreamService){
-                    return StreamService.getStreams();
                 }],
                 provider: function() { return {}; }
                 
@@ -4331,26 +3764,3 @@ function generateOtp(min, max) {
     max = 9999;
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-exambazaar.directive('focusMe', ['$timeout', '$parse', function ($timeout, $parse) {
-    return {
-        //scope: true,   // optionally create a child scope
-        link: function (scope, element, attrs) {
-            var model = $parse(attrs.focusMe);
-            scope.$watch(model, function (value) {
-                //console.log('value=', value);
-                if (value === true) {
-                    $timeout(function () {
-                        element[0].focus();
-                    });
-                }
-            });
-            // to address @blesh's comment, set attribute value to 'false'
-            // on blur event:
-            element.bind('blur', function () {
-                //console.log('blur');
-                /*scope.$apply(model.assign(scope, false));*/
-            });
-        }
-    };
-}]);
