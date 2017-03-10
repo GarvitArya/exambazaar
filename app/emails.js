@@ -1,6 +1,8 @@
 var nodemailer = require('nodemailer');
 var express = require('express');
 var router = express.Router();
+var helper = require('sendgrid').mail;
+var sg = require("sendgrid")("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");
 
 var transporter = nodemailer.createTransport('smtps://gaurav%40educhronicle.com:Amplifier@9@smtp.gmail.com');
 
@@ -59,5 +61,45 @@ router.post('/send', function(req, res) {
             console.log('Password reminder sent');
         }
     });*/
+});
+
+
+router.post('/sendGrid', function(req, res) {
+    var thisEmail = req.body;
+    var from = thisEmail.from;
+    var to = thisEmail.to;
+    var subject = thisEmail.subject;
+    var name = thisEmail.name;
+    var html = thisEmail.html;
+    console.log("To: " + to + " Subject: " + subject);
+    
+    
+    
+    var from_email = new helper.Email(from);
+    var to_email = new helper.Email(to);
+    /*var subject = 'Hello World from the SendGrid Node.js Library!';*/
+    var subject = subject;
+    var content = new helper.Content('text/html', html);
+    var mail = new helper.Mail(from_email, subject, to_email, content);
+    mail.personalizations[0].addSubstitution(
+      new helper.Substitution('-name-', name));
+    
+    mail.setTemplateId('f2c433ee-29cb-4429-8b28-774582fba276');
+
+    
+    
+    var request = sg.emptyRequest({
+      method: 'POST',
+      path: '/v3/mail/send',
+      body: mail.toJSON(),
+    });
+
+    sg.API(request, function(error, response) {
+      console.log(response.statusCode);
+      console.log(response.body);
+      console.log(response.headers);
+      res.json(response);
+    });
+    
 });
 module.exports = router;

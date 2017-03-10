@@ -12,14 +12,7 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
-router.get('/mediaTypes', function(req, res) {
-    mediaTag.distinct("media",function(err, docs) {
-    if (!err){ 
-        //console.log(docs);
-        res.json(docs);
-    } else {throw err;}
-    });
-});
+
 
 
 router.post('/bulksave', function(req, res) {
@@ -94,6 +87,47 @@ router.get('/mediaType/:mediaType', function(req, res) {
     });
 });
 
+router.get('/mediaTypes', function(req, res) {
+    var mediaTypes = mediaTag.distinct("media",function(err, mediaTypes) {
+    if (!err){
+        var mediaMapping =[];
+        var counter=  0;
+        var nMediaTypes = mediaTypes.length;
+        mediaTypes.forEach(function(thisMediaType, index){
+            var mediaTypeTags = mediaTag.find({ media: thisMediaType}, function(err, mediaTypeTags) {
+            if (!err){ 
+                //console.log(docs);
+                var distinctTypes = mediaTag.distinct("type",{media: thisMediaType},function(err, distinctTypes) {
+                if (!err){ 
+                        //console.log(distinctTypes);
+                        var mediaTypeAndTags = {
+                            mediaTypeTags: mediaTypeTags,
+                            distinctTypes: distinctTypes
+                        };
+                        //console.log(JSON.stringify(mediaTypeAndTags));
+                        var mediaMapElement = {
+                            mediaType: thisMediaType,
+                            mediaTypeAndTags: mediaTypeAndTags
+                        };
+                        counter = counter + 1;
+                        mediaMapping.push(mediaMapElement);
+                        if(counter == nMediaTypes){
+                            console.log(JSON.stringify(mediaMapping));
+                            res.json(mediaMapping);
+                        }
+                        //res.json(mediaTypeAndTags);
+                } else {throw err;}
+                });
+
+            } else {throw err;}
+            });
+        
+        });
+        
+        //res.json(mediaTypes);
+    } else {throw err;}
+    });
+});
 //to get a particular mediaTag with _id mediaTagId
 router.get('/edit/:mediaTagId', function(req, res) {
     var mediaTagId = req.params.mediaTagId;
