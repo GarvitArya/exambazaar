@@ -78,6 +78,7 @@ var locations = require('./app/locations.js',locations);
 var mediaTags = require('./app/mediaTags.js',mediaTags); 
 var images = require('./app/images.js',images); 
 var awsCredentials = require('./app/awsCredentials.js',awsCredentials); 
+var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredentials); 
 
 
 app.use('/api/providers', providers);
@@ -96,6 +97,7 @@ app.use('/api/locations', locations);
 app.use('/api/mediaTags', mediaTags);
 app.use('/api/images', images);
 app.use('/api/awsCredentials', awsCredentials);
+app.use('/api/sendGridCredentials', sendGridCredentials);
 
 
 

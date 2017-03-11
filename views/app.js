@@ -233,7 +233,25 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
     }]);
-    
+        
+    exambazaar.service('SendGridService', ['$http', function($http) {
+        this.saveSendGridCredential = function(SendGridCredential) {
+            return $http.post('/api/sendGridCredentials/save', SendGridCredential);
+        };
+        
+        this.getSendGridCredential = function(sendGridCredentialId) {
+            return $http.get('/api/sendGridCredentials/edit/'+sendGridCredentialId, {sendGridCredentialId: sendGridCredentialId});
+        };
+        this.getOneSendGridCredential = function() {
+            return $http.get('/api/sendGridCredentials/getOne');
+        };
+        this.getSendGridCredentials = function() {
+            return $http.get('/api/sendGridCredentials');
+        };
+        
+        
+    }]); 
+        
     exambazaar.service('AwsCredentialService', ['$http', function($http) {
         this.saveAwsCredential = function(awsCredential) {
             return $http.post('/api/awsCredentials/save', awsCredential);
@@ -2732,7 +2750,47 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
         }]);
         
+    
+    exambazaar.controller("addSendGridController", 
+        [ '$scope',  'sendGridCredentialList','SendGridService','$http','$state', function($scope, sendGridCredentialList, SendGridService,$http,$state){
+        $scope.sendGridCredentials = sendGridCredentialList.data;
         
+        $scope.sendGridCredential = {
+            apiKey:'',
+            active: true
+        };
+        $scope.removeEmailTemplate = function(template){
+           /* ABC
+            $scope.sendGridCredential.emailTemplate.forEach(function(thisTemplate, templateIndex){
+                if(thisTemplate.name == template.name && ){
+                    
+                }
+                
+            });*/
+        };
+        $scope.addEmailTemplate = function(){
+            var newTemplate = {
+                name: '',
+                templateKey:''
+            };
+            $scope.sendGridCredential.emailTemplate.push(newTemplate);
+        };
+        $scope.addSendGridCredential = function () {
+            var saveSendGridCredential = SendGridService.saveSendGridCredential($scope.sendGridCredential).success(function (data, status, headers) {
+               
+                alert("SendGrid Credential saved: " + $scope.sendGridCredential.apiKey);
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+        };
+            
+        
+        $scope.setSendGridCredential = function(sendGridCredential){
+            $scope.sendGridCredential = sendGridCredential;
+        };
+    }]);
+    
     exambazaar.controller("addAwsCredentialController", 
         [ '$scope',  'awsCredentialList','AwsCredentialService','$http','$state', function($scope, awsCredentialList, AwsCredentialService,$http,$state){
         $scope.awsCredentials = awsCredentialList.data;
@@ -4306,6 +4364,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     return MediaTagService.getMediaTypes();
                 }],
                 mediaTag: function() { return {}; }
+            }
+        })
+        .state('addSendGridCredential', {
+            url: '/addAwsCredential',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'addSendGrid.html',
+                    controller: 'addSendGridController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                sendGridCredentialList: ['SendGridService',
+                    function(SendGridService){
+                    return SendGridService.getSendGridCredentials();
+                }],
+                sendGridCredential: function() { return {}; }
             }
         })
         .state('addAwsCredential', {

@@ -2,7 +2,8 @@ var nodemailer = require('nodemailer');
 var express = require('express');
 var router = express.Router();
 var helper = require('sendgrid').mail;
-var sg = require("sendgrid")("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");
+var sendGridCredential = require('../app/models/sendGridCredential');
+
 
 var transporter = nodemailer.createTransport('smtps://gaurav%40educhronicle.com:Amplifier@9@smtp.gmail.com');
 
@@ -66,6 +67,7 @@ router.post('/send', function(req, res) {
 
 router.post('/sendGrid', function(req, res) {
     var thisEmail = req.body;
+    var templateId = thisEmail.templateId;
     var from = thisEmail.from;
     var to = thisEmail.to;
     var subject = thisEmail.subject;
@@ -74,32 +76,42 @@ router.post('/sendGrid', function(req, res) {
     console.log("To: " + to + " Subject: " + subject);
     
     
+    var apiKey = sendGridCredential.getOneSendGridCredential
     
-    var from_email = new helper.Email(from);
-    var to_email = new helper.Email(to);
-    /*var subject = 'Hello World from the SendGrid Node.js Library!';*/
-    var subject = subject;
-    var content = new helper.Content('text/html', html);
-    var mail = new helper.Mail(from_email, subject, to_email, content);
-    mail.personalizations[0].addSubstitution(
-      new helper.Substitution('-name-', name));
-    
-    mail.setTemplateId('f2c433ee-29cb-4429-8b28-774582fba276');
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            //console.log(apiKey);
+            var from_email = new helper.Email(from);
+            var to_email = new helper.Email(to);
+            var subject = subject;
+            var content = new helper.Content('text/html', html);
+            var mail = new helper.Mail(from_email, subject, to_email, content);
+            mail.personalizations[0].addSubstitution(
+              new helper.Substitution('-name-', name));
 
-    
-    
-    var request = sg.emptyRequest({
-      method: 'POST',
-      path: '/v3/mail/send',
-      body: mail.toJSON(),
-    });
+            mail.setTemplateId('f2c433ee-29cb-4429-8b28-774582fba276');
+            var request = sg.emptyRequest({
+              method: 'POST',
+              path: '/v3/mail/send',
+              body: mail.toJSON(),
+            });
 
-    sg.API(request, function(error, response) {
-      console.log(response.statusCode);
-      console.log(response.body);
-      console.log(response.headers);
-      res.json(response);
+            sg.API(request, function(error, response) {
+              console.log(response.statusCode);
+              console.log(response.body);
+              console.log(response.headers);
+              res.json(response);
+            });
+            
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
     });
+    
     
 });
 module.exports = router;

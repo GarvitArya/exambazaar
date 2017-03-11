@@ -696,7 +696,7 @@
                 
                 
                 <div class="row" ng-show="editResult">
-                    <div class="hidden-xs col-sm-4 col-md-4 col-lg-4" id="elementBox">
+                    <div class="hidden-xs col-sm-2 col-md-2 col-lg-2" id="elementBox">
 
                         <div id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}" ng-click="showResultDialog($event, $index)" >
                             <div layout="column" layout-align="center center" class="md-headline text-white md-display-2" id="thumbnailText">
@@ -726,7 +726,7 @@
                             </small></span>
                         </div>
                     </div>
-                    <div class="hidden-xs col-sm-8 col-md-8 col-lg-8 text-left" id="elementBox" >
+                    <div class="hidden-xs col-sm-10 col-md-10 col-lg-10 text-left" id="elementBox" >
                         <div layout="column" class="paddingLeft" >
 
                             <div class="row marginTB5">
@@ -1248,20 +1248,20 @@
             
             <div class="row" ng-show="editVideo" id="editSection">
             <form name="editVideoForm">
-            <div class="hidden-xs col-sm-12 col-md-12 col-lg-12" ng-repeat="video in provider.video" id="displayBox" >
+            <div class="hidden-xs col-sm-6 col-md-6 col-lg-6" ng-repeat="video in provider.video" id="displayBox" >
                 <div class="hidden-xs col-sm-6 col-md-6 col-lg-6 text-left" id="elementBox" >
-                    <div layout="column" class="" layout-margin layout-algin="center center">
+                    <div layout="column" class="" layout-align="start center">
                         <div class="row font9">
                             <span>
                                 Video# {{$index + 1}} of {{provider.video.length}}
                             </span>
                             
                         </div>
-                        <div class="row" >
-                                <span ng-if="$index >= preUploadVideoLength" class="badge font9" id="addedButton">
+                        <div class="row" ng-if="$index >= preUploadVideoLength" class="badge font9" id="addedButton" >
+                                <span >
                                     Just Added
                                 </span>
-                            </div>
+                        </div>
                         <div class="row">
                             <input type="text" class="font9 width100"  id="video.link" ng-model="video.link"  placeholder="Add Youtube Link" focus-me="$index == preUploadVideoLength">
                         </div>
@@ -1269,9 +1269,9 @@
                             <textarea class="font9 width100" ng-model="video.description" placeholder="Description of the video" rows="2"></textarea>
                         </div>-->
                         <div class="row font9 top-buffer10">
-                            <span class="badge font9" id="tagHolder" ng-click="showVideoTagDialog($event, video)">
+                            <!--<span class="badge font9" id="tagHolder" ng-click="showVideoTagDialog($event, video)">
                             Add Video Tag
-                            </span>&nbsp;
+                            </span>&nbsp;-->
                             <span class="badge font9" id="deleteButton" ng-click="deleteVideo(video)" ng-if="video.active">
                             Delete
                             </span>
