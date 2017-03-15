@@ -1,0 +1,62 @@
+<div class="container">
+    <div id="spacer">
+    </div>
+    <h4>Add Exam Bazaar Intern</h4>
+    
+    <div class="row">
+
+    <div class="col-md-12" id="addInternForm">
+    <md-content flex layout-padding>
+        <small>
+        <md-subheader class="md-primary">Intern Information</md-subheader>
+        <form name="internForm" >
+        <div layout="column" >
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Name</label>
+                    <input required ng-model="intern.basic.name">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>  
+                    <md-select required ng-model="intern.basic.gender" placeholder="Gender">
+                        <md-option ng-repeat="gender in genders" ng-value="gender" >{{gender}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>  
+                    <md-select required ng-model="intern.userType" placeholder="Intern Type">
+                        <md-option ng-repeat="internType in internTypes" ng-value="internType" >{{internType}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Mobile <small>{{intern.contact.mobile.length}}/10</small></label>
+                    <input required ng-model="intern.contact.mobile" ng-minlength="10" ng-maxlength="10">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Email</label>
+                    <input type="Email" ng-model="intern.contact.email">
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Password</label>
+                    <input required ng-model="intern.password">
+                </md-input-container>
+            </div>
+            
+            
+            <md-button class="md-raised md-primary" ng-click="addIntern()" ng-disabled="internForm.$invalid">Add Intern</md-button>
+
+    </div>
+    </form>
+    </small>
+    </md-content>
+    </div>
+    </div>
+</div>
+<div>
+</div>

@@ -80,20 +80,20 @@
                     <td>email</td>
                     <td><input ng-model="provider.email" size="100"></td>
                 </tr>
-                <tr ng-repeat="(key, value) in provider" ng-if="key!='_id' && key != '__v' && key != '_created' && key != 'targetStudyWebsite'">
+                <tr ng-repeat="(key, value) in provider" ng-if="key!='_id' && key != '__v' && key != '_created' && key != 'targetStudyWebsite' && key != 'logo' && key != 'oldlogo'">
                     <td> {{key}} </td> 
                     <td>
                         <input ng-model="provider[key]" size="100">
                     </td>
                 </tr>
                 
-                 <tr id="addRow">
+                 <!--<tr id="addRow">
                     <td>tgt study</td>
                     <td>
                         <a ng-href="{{provider.targetStudyWebsite}}" target="_blank">TS URL
                         </a>
                     </td>
-                </tr>
+                </tr>-->
             </table>
             
         </div>

@@ -23,10 +23,10 @@ router.post('/save', function(req, res) {
                 existingStream[property] = thisStream[property];
                 //console.log(existingExam[property]);
             }
-            console.log("Stream is: " + JSON.stringify(existingStream));
+            //console.log("Stream is: " + JSON.stringify(existingStream));
             existingStream.save(function(err, existingStream) {
                 if (err) return console.error(err);
-                console.log(existingStream._id + " saved!");
+                //console.log(existingStream._id + " saved!");
                 res.json('Done');
             });
         }else{
@@ -47,7 +47,7 @@ router.get('/', function(req, res) {
     console.log('Here');
     stream.find({}, function(err, docs) {
     if (!err){ 
-        console.log(docs);
+        //console.log(docs);
         res.json(docs);
     } else {throw err;}
     });
@@ -71,7 +71,7 @@ router.get('/edit/:streamId', function(req, res) {
         //.deepPopulate('_master.contact')
         .exec(function (err, docs) {
         if (!err){ 
-            console.log(docs);
+            //console.log(docs);
             res.json(docs);
             //process.exit();
         } else {throw err;}
@@ -86,7 +86,7 @@ router.get('/stream/:streamName', function(req, res) {
         //.deepPopulate('_master.contact')
         .exec(function (err, docs) {
         if (!err){ 
-            console.log(docs);
+            //console.log(docs);
             res.json(docs);
             //process.exit();
         } else {throw err;}

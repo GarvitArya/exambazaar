@@ -17,10 +17,10 @@ mongoose.Promise = require('bluebird');
 
 router.post('/bulksave', function(req, res) {
     var mediaTags = req.body;
-    console.log(JSON.stringify(mediaTags));
+    //console.log(JSON.stringify(mediaTags));
      
     mediaTags.forEach(function(thisMediaTag, index){
-        console.log(" Current MediaTag is "+ index + JSON.stringify(thisMediaTag));
+        //console.log(" Current MediaTag is "+ index + JSON.stringify(thisMediaTag));
         var mediaTagId = thisMediaTag._id;
         var media = thisMediaTag.media;
         var type = thisMediaTag.type;
@@ -33,10 +33,10 @@ router.post('/bulksave', function(req, res) {
                 for (var property in thisMediaTag) {
                     existingMediaTag[property] = thisMediaTag[property];
                 }
-                console.log("MediaTag is: " + JSON.stringify(existingMediaTag));
+                //console.log("MediaTag is: " + JSON.stringify(existingMediaTag));
                 existingMediaTag.save(function(err, existingMediaTag) {
                     if (err) return console.error(err);
-                    console.log(existingMediaTag._id + " saved!");
+                    //console.log(existingMediaTag._id + " saved!");
 
                 });
             }else{
@@ -47,7 +47,7 @@ router.post('/bulksave', function(req, res) {
                 });
                 this_mediaTag.save(function(err, this_mediaTag) {
                     if (err) return console.error(err);
-                    console.log("MediaTag saved with id: " + this_mediaTag._id);
+                    //console.log("MediaTag saved with id: " + this_mediaTag._id);
                     
                 });
             }
@@ -73,12 +73,12 @@ router.get('/mediaType/:mediaType', function(req, res) {
         //console.log(docs);
         var distinctTypes = mediaTag.distinct("type",{media: mediaType},function(err, distinctTypes) {
         if (!err){ 
-                console.log(distinctTypes);
+                //console.log(distinctTypes);
                 var mediaTypeAndTags = {
                     mediaTypeTags: mediaTypeTags,
                     distinctTypes: distinctTypes
                 };
-                console.log(JSON.stringify(mediaTypeAndTags));
+                //console.log(JSON.stringify(mediaTypeAndTags));
                 res.json(mediaTypeAndTags);
         } else {throw err;}
         });
@@ -112,7 +112,7 @@ router.get('/mediaTypes', function(req, res) {
                         counter = counter + 1;
                         mediaMapping.push(mediaMapElement);
                         if(counter == nMediaTypes){
-                            console.log(JSON.stringify(mediaMapping));
+                            //console.log(JSON.stringify(mediaMapping));
                             res.json(mediaMapping);
                         }
                         //res.json(mediaTypeAndTags);
@@ -131,12 +131,12 @@ router.get('/mediaTypes', function(req, res) {
 //to get a particular mediaTag with _id mediaTagId
 router.get('/edit/:mediaTagId', function(req, res) {
     var mediaTagId = req.params.mediaTagId;
-    console.log(mediaTagId);
+    //console.log(mediaTagId);
     mediaTag
         .findOne({ '_id': mediaTagId })
         .exec(function (err, docs) {
         if (!err){
-            console.log(docs);
+            //console.log(docs);
             res.json(docs);
         } else {throw err;}
     });

@@ -83,6 +83,10 @@ var targetStudyProviderSchema = mongoose.Schema({
         note: String,
         _added: { type: Date, default: Date.now }
     }],
+    _saved:[{
+        user: { type: Schema.ObjectId, ref: 'user' },
+        _time: { type: Date, default: Date.now }
+    }],
     _created: { type: Date, default: Date.now }
 });
 

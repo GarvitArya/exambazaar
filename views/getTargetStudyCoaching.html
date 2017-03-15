@@ -111,18 +111,28 @@
         
     }
 </style>
-<div class="container">
+<div class="container" ng-if="showLevel==0">
+    <div id="spacer">
+    </div>
+    <div class="row top-buffer">
+        <h1>
+        You do not have access to view this information. Login above to try again.
+        </h1>
+    </div>
+
+</div>
+<div class="container" ng-if="showLevel>0">
     <div id="spacer1">
     </div>
     <div class="row top-buffer">
         {{providers}}
     </div>
-    <div class="row top-buffer">
+    <div class="row top-buffer" ng-if="showLevel>5">
         <span ng-repeat="city in cities">
             <a ui-sref="targetStudyProviders({ city:{{'city'}} })">{{city}} | </a>
         </span>
     </div>
-    <div class="row top-buffer">
+    <div class="row top-buffer" ng-if="showLevel>5">
         <!---->
         <md-button class="md-raised md-primary" ng-click="removeDuplicates()">Remove Duplicates</md-button>
         <md-button class="md-raised md-primary" ng-click="cleanTargetstudyurls()">Clean Websites</md-button>
@@ -173,7 +183,7 @@
             <small>
             
             <div class="col-md-2 col-sm-2 col-xs-2">
-                <a ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })" target="_blank">
+                <a ui-sref="claim2({ coachingId:{{'provider._id'}} })" target="_blank">
                 <strong>{{provider.name}}</strong>
                 </a>
             </div>
@@ -211,9 +221,9 @@
                 <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
                     Url
                 </a>
-                <a ng-href="{{provider.targetStudyWebsite}}" target="_blank">
+                <!--<a ng-href="{{provider.targetStudyWebsite}}" target="_blank">
                     TS Url
-                </a>
+                </a>-->
                 {{provider.rank}}
             </div>
             <div class="col-md-1 hidden-sm hidden-xs">

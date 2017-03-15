@@ -701,19 +701,59 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
     
     exambazaar.controller("claim2Controller", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'ImageService','LocationService','Upload','thisProvider','imageMediaTagList','examList','streamList','$state','$stateParams', '$cookies','$mdDialog', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, Upload, thisProvider, imageMediaTagList,examList,streamList,  $state,$stateParams, $cookies,$mdDialog){
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'ImageService','LocationService','OTPService','Upload','thisProvider','imageMediaTagList','examList','streamList','$state','$stateParams', '$cookies','$mdDialog', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, Upload, thisProvider, imageMediaTagList,examList,streamList,  $state,$stateParams, $cookies,$mdDialog){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         
-        $scope.editable = true;
-        $scope.verifiedUser = true;
-        if($cookies.getObject('sessionuser')){
-            var user = $cookies.getObject('sessionuser');
-            if(user.userType=='Master'){
-                $scope.editable = true;
-                $scope.verifiedUser = true;
+        
+        $scope.showHeaderLogin = function() {
+            $rootScope.$emit("CallShowLogin", {});
+        };
+        $scope.verifyingOTP = false;
+        $scope.verifyByOTP = function(){
+            $scope.verifyingOTP = true;
+            $scope.nMobiles = $scope.provider.mobile.length;
+            $scope.verifyStep = 1;
+        };
+        $scope.newMobileMode = false;
+        $scope.verifyStep = 0;
+        $scope.addClaimMobile = function(){
+            $scope.newMobileMode = true;
+            $scope.verifyStep = 1;
+        };
+        $scope.selectMobile = function(mobile){
+            $scope.OTPMobile = mobile;
+        };
+        
+        
+        $scope.sendOTP = function(mobile){
+            //ABC
+            $scope.verificationMobile = mobile;
+            mobile ='9829685919';
+            //alert(mobile);
+            var thisOTP = {
+                mobile:mobile,
+                otp: generateOtp(),
+                reason : 'Claiming ' + $scope.provider._id
+            };
+            //console.info(JSON.stringify(thisOTP));
+            OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
+                $scope.serverOTP = data.otp;
+                
+            })
+            .error(function (data, status, header, config) {
+                console.info();
+            });
+            $scope.verifyStep = 2;
+        };
+        $scope.verifyOTP = function(){
+            if($scope.serverOTP == $scope.userOTP){
+                alert('Success');
+            }else{
+                alert('You have entered an incorrect OTP.');
             }
-        }
+        };
+        
         $scope.overviewIcons = [
             {
                 icon:'images/icons/centre.png',
@@ -774,6 +814,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.provider = thisProvider.data;
         
+        $scope.showClaimDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#claimDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: false
+            });
+        };
+        
+        $scope.editable = false;
+        $scope.verifiedUser = false;
+        if($cookies.getObject('sessionuser')){
+            $scope.user = $cookies.getObject('sessionuser');
+            if($scope.user.userType=='Master'){
+                $scope.editable = true;
+                $scope.verifiedUser = true;
+            }
+            if($scope.user.userType=='Intern - Business Development'){
+                $scope.editable = true;
+                $scope.verifiedUser = true;
+                //$scope.showClaimDialog();
+            }
+            if($scope.user.userType=='Provider'){
+                
+            }
+        }else{
+            //user is not allowed to access this page
+            $scope.showClaimDialog();
+        }
         
         var city =  $scope.provider.city;
         LocationService.getCityLocations(city).success(function (data, status, headers) {
@@ -994,7 +1063,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.saveProvider = function(){
             console.info($scope.provider);
             var saveProvider = {
-                targetStudyProvider:$scope.provider
+                targetStudyProvider:$scope.provider,
+                user: $scope.user.userId
             };
             targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.showSavedDialog();
@@ -1274,6 +1344,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
               clickOutsideToClose: true
             });
         };
+        
+        
         
         $scope.showMarkLocationDialog = function(ev) {
             $mdDialog.show({
@@ -1611,7 +1683,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         $scope.provider = thisProvider.data;
         
-        $scope.showClaimDialog = function(ev) {
+        /*$scope.showClaimDialog = function(ev) {
             $scope.currProvider = $scope.provider;
             $mdDialog.show({
               contentElement: '#claimDialog',
@@ -1619,7 +1691,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
               targetEvent: ev,
               clickOutsideToClose: true
             });
-        };
+        };*/
         $scope.cancel = function() {
             $mdDialog.cancel();
             $scope.started = false;
@@ -1740,6 +1812,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             //alert('Here');
             $scope.showLogin = !$scope.showLogin;
         };
+            
+        $rootScope.$on("CallShowLogin", function(){
+           $scope.showLoginForm();
+        });
+
         /*if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position){
                 alert(JSON.stringify(position));
@@ -1836,7 +1913,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         //alert($state.current.name);
                         
                         if($state.current.name == 'main'){
-                            $state.go('master-dashboard', {masterId: sessionuser.masterId});
+                            if(sessionuser.userType =='Master'){
+                                $state.go('master-dashboard', {masterId: sessionuser.masterId});
+                            }
+                            if(sessionuser.userType =='Intern - Business Development'){
+                                 $state.go('targetStudyProviders', {city: 'Jaipur'});
+                            }
+                            
                         }else{
                             $state.reload();
                         }
@@ -1849,12 +1932,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     
                 })
                 .error(function (data, status, header, config) {
-                $scope.ServerResponse =  htmlDecode("Data: " + data +
-                    "\n\n\n\nstatus: " + status +
-                    "\n\n\n\nheaders: " + header +
-                    "\n\n\n\nconfig: " + config);
-                });
-            
+                console.info('Error');
+                })
             
             })
             .error(function(){
@@ -2193,12 +2272,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
     exambazaar.controller("getTargetStudyCoachingController", 
     [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities','$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog,locationsList,$window){
+        $scope.providersList = targetStudyProvidersList.data;
+        //alert($scope.providersList);
+        $scope.cities = targetStudyCities.data;
+        $scope.city = $stateParams.city;
+        
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location');
-            //alert($scope.location);
-            /*var latlon = $scope.location.lat + "," + $scope.location.long;
-            $scope.img_url = "https://maps.googleapis.com/maps/api/staticmap?center="+latlon+"&zoom=14&size=400x300&sensor=false";*/
         }
+        
+        $scope.showLevel = 0;
+        
+        if($cookies.getObject('sessionuser')){
+            
+            $scope.user = $cookies.getObject('sessionuser');
+            if($scope.user.userType=='Master'){
+                $scope.showLevel = 10;
+            }
+            if($scope.user.userType=='Intern - Business Development'){
+                
+                if($scope.city != 'Jaipur'){
+                    $scope.showLevel = 0;
+                }else{
+                    $scope.showLevel = 1; 
+                }
+                
+            }
+            
+        }
+        
         
         $scope.addEmail = function(provider){
             $window.open(provider.targetStudyWebsite, '_newhtml');
@@ -2237,10 +2339,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
          
         
-        $scope.providersList = targetStudyProvidersList.data;
-        //alert($scope.providersList);
-        $scope.cities = targetStudyCities.data;
-        $scope.city = $stateParams.city;
+        
         
         $scope.uprank = function(provider){
             targetStudyProviderService.uprank(provider._id).success(function (data, status, headers) {
@@ -2937,6 +3036,44 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.stream = stream;
         };
     }]);
+            
+    exambazaar.controller("addInternController", 
+        [ '$scope', 'UserService','$http','$state', function($scope, UserService,$http,$state){
+        $scope.genders = ["Female", "Male"];
+        $scope.intern = {
+            userType: 'Intern',
+            password: '',
+            basic: {
+                name: 'Gaurav Parashar',
+                gender: 'Male',
+                //dob: new Date("April 29, 1989")
+            },
+            contact: {
+                mobile: '9829685919',
+                email: 'gauravparashar294@gmail.com'
+            }
+        };
+            
+        $scope.internTypes =[
+            'Intern - Business Development',
+            'Intern - Content'
+        ];    
+        
+        $scope.addIntern = function () {
+            var saveIntern = UserService.saveUser($scope.intern).success(function (data, status, headers) {
+                var internId = data;
+            //$scope.formmessage = "Intern " + $scope.intern.basic.firstName + " " + $scope.intern.basic.lastName + " saved!";
+            
+            alert('Done');    
+                //$state.go('intern-dashboard', {internId: internId});
+                
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+            };
+    }]);          
+            
     exambazaar.controller("addMasterController", 
         [ '$scope', 'UserService','$http','$state', function($scope, UserService,$http,$state){
         $scope.genders = ["Female", "Male"];
@@ -3116,6 +3253,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     $urlRouterProvider.otherwise('/getStarted');
     $stateProvider
         //landing page
+    
         .state('landing', {
             url: '/getStarted',
             views: {
@@ -4440,7 +4578,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         .state('addMaster', {
-            url: '/addMaster',
+            url: '/master/:masterId/addMaster',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -4449,6 +4587,24 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 'body':{
                     templateUrl: 'addMaster.html',
                     controller: 'addMasterController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+            }
+        })
+        .state('addIntern', {
+            url: '/master/:masterId/addIntern',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'addIntern.html',
+                    controller: 'addInternController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'

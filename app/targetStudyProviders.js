@@ -53,7 +53,7 @@ router.get('/city/:city', function(req, res) {
         .exec(function (err, cityProviders) {
         if (!err){
             
-            console.log(cityProviders);
+            //console.log(cityProviders);
             res.json(cityProviders);
             
         } else {throw err;}
@@ -492,7 +492,8 @@ router.post('/cityCourse', function(req, res) {
 });
 router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;
-    console.log(thisProvider);
+    var userId = req.body.user;
+    console.log(userId);
     var coachingId = thisProvider._id;
     
     var oldProvider = targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, oldProvider) {
@@ -500,19 +501,26 @@ router.post('/savecoaching', function(req, res) {
         
         //oldProvider = thisProvider;
         if(oldProvider){
-            console.log("New Coaching is: " + JSON.stringify(thisProvider));
+            //console.log("New Coaching is: " + JSON.stringify(thisProvider));
             for (var property in thisProvider) {
                 oldProvider[property] = thisProvider[property];
                 if(property=='location'){
-                    console.log('Yes location is there: ' + thisProvider[property]);
+                    //console.log('Yes location is there: ' + thisProvider[property]);
                 }
             }
-            console.log("Coaching is: " + JSON.stringify(oldProvider));
+            if(userId){
+                var newSave = {
+                    user: userId
+                }
+                oldProvider._saved.push(newSave);
+                console.log('--------- '+ userId);
+            }
+            //console.log("Coaching is: " + JSON.stringify(oldProvider));
 
             //save the changes
             oldProvider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
-                console.log(thisprovider._id + " saved!");
+                //console.log(thisprovider._id + " saved!");
                 res.json('Done');
             });
             
@@ -523,12 +531,18 @@ router.post('/savecoaching', function(req, res) {
             for (var property in thisProvider) {
                 oldProvider[property] = thisProvider[property];
             }
-            console.log("Coaching is: " + JSON.stringify(oldProvider));
-
+            //console.log("Coaching is: " + JSON.stringify(oldProvider));
+            if(userId){
+                var newSave = {
+                    user: userId
+                }
+                oldProvider._saved.push(newSave);
+                console.log('--------- '+ userId);
+            }
             //save the changes
             oldProvider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
-                console.log(thisprovider._id + " saved!");
+                //console.log(thisprovider._id + " saved!");
                 res.json('Done');
             });
             

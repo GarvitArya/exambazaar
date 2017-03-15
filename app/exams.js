@@ -19,7 +19,7 @@ router.post('/save', function(req, res) {
     var thisExam = req.body;
     var examId = req.body._id;
     var examName = thisExam.name;
-    console.log("Exam is: " + JSON.stringify(examName));
+    //console.log("Exam is: " + JSON.stringify(examName));
     var existingExam = exam.findOne({ '_id': examId },function (err, existingExam) {
         if(existingExam){
             for (var property in thisExam) {
@@ -70,7 +70,7 @@ router.get('/', function(req, res) {
         .deepPopulate('stream')
         .exec(function (err, docs) {
         if (!err){
-            console.log(docs);
+            //console.log(docs);
             res.json(docs);
         } else {throw err;}
     });
@@ -92,7 +92,7 @@ router.get('/stream/:streamName', function(req, res) {
                     streamExams.push(thisExam);
                 }
             });
-            console.log(streamExams);
+            //console.log(streamExams);
             res.json(streamExams);
         } else {throw err;}
     });
@@ -106,7 +106,7 @@ router.get('/exam/:examName', function(req, res) {
         .deepPopulate('stream')
         .exec(function (err, thisExam) {
         if (!err){
-            console.log(thisExam);
+            //console.log(thisExam);
             res.json(thisExam);
         } else {throw err;}
     });
@@ -126,13 +126,13 @@ router.get('/count', function(req, res) {
 //to get a particular user with _id userId
 router.get('/edit/:examId', function(req, res) {
     var examId = req.params.examId;
-    console.log("Exam is " + examId);
+    //console.log("Exam is " + examId);
     exam
         .findOne({ '_id': examId },{})
         //.deepPopulate('_master.contact')
         .exec(function (err, docs) {
         if (!err){ 
-            console.log(docs);
+            //console.log(docs);
             res.json(docs);
             //process.exit();
         } else {throw err;}
