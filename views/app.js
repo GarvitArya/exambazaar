@@ -896,6 +896,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             '1 Year',
             '2 Year',
             '3 Months',
+            '4 Months',
+            '5 Months',
             '6 Months',
             '9 Months'
         ];
@@ -1024,6 +1026,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.editCourses= function(){
             $scope.editCourse = true;
         };
+        
+        
+        
         $scope.addCourse = function(exam){
             $scope.preAddCourseLength = $scope.provider.course.length;
             var newCourse = {
@@ -1245,6 +1250,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.editLocation = false;
         };
         
+        $scope.addebNote = function(){
+            $scope.preAddNotesLength = $scope.provider.ebNote.length;
+            var newebNote = {
+                note: '',
+                user: $scope.user.userId
+            };
+            $scope.provider.ebNote.push(newebNote);
+            console.info(JSON.stringify($scope.provider.ebNote));
+            
+        };
+        
+        $scope.saveEBNotes = function(){
+            $scope.saveProvider();
+            $scope.editLocation = false;
+        };
         $scope.addPhotoTag = function(tag){
             //alert(JSON.stringify(tag));
             if($scope.tagThisPhoto.tags.indexOf(tag._id) == -1){

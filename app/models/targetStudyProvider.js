@@ -81,6 +81,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     rank: {type: Number,default: 0},
     ebNote: [{
         note: String,
+        user: { type: Schema.ObjectId, ref: 'User' },
         _added: { type: Date, default: Date.now }
     }],
     _saved:[{

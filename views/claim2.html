@@ -1555,6 +1555,54 @@
         <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement" id="paneRight">
         </div>
     </div>
+    
+    
+    <div layout="row" layout-xs="column" class="componentRow " id="EBNotes">
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 bottomBorder" id="paneLeft">
+            <div class="componentRowElement"layout="column" layout-align="center center">
+                
+                <span>
+                    EB Notes
+                    <span class="badge" id="leftBadge">
+                        {{provider.ebNote.length}}
+                        <md-tooltip>EB team has added a total of {{provider.ebNote.length}} notes</md-tooltip>
+                    </span>
+                </span>
+                <div layout="row">
+                    <md-button class="md-raised md-primary md-small font9" ng-click="saveEBNotes()"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;Save</md-button>
+                    <md-button class="md-raised md-default md-small font9" ng-click="cancelChanges()"><i class="fa fa-ban" aria-hidden="true"></i>&nbsp;Cancel</md-button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
+            <div layout="row" layout-margin layout-align="center center" ng-repeat="ebNote in provider.ebNote">
+                <div flex="80">
+                    <textarea class="font11 width100" ng-model="provider.ebNote[$index].note" placeholder="Add internal notes for EB team" rows="2"></textarea>
+                </div>
+                <div flex="20">
+                    <div class="font9">
+                        Added by:
+                    </div>
+                    <div class="font9">
+                        {{ebNote._added | date}}
+                    </div>
+                    <div class="font9">
+                        {{ebNote.user.basic.name}}
+                    </div>
+                </div>
+                
+            </div>
+            <div layout="row" layout-align="center center" layout-margin id="upload" ng-click="addebNote()">
+                <span>
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Notes
+                </span>
+            </div>
+        </div>
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement" id="paneRight">
+        </div>
+        
+        
+    </div>
  </div>
 
 <!-- Page on unathorized access-->

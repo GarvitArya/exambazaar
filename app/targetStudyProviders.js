@@ -560,7 +560,7 @@ router.get('/coaching/:coachingId', function(req, res) {
     
     var thisProvider = targetStudyProvider
         .findOne({'_id': coachingId})
-        .deepPopulate('exams exams.stream location faculty.exams')
+        .deepPopulate('exams exams.stream location faculty.exams ebNote.user')
         .exec(function (err, thisProvider) {
         if (!err){
             res.json(thisProvider);
