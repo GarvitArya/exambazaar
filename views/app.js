@@ -895,6 +895,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.durations=[
             '1 Year',
             '2 Year',
+            '1 Month',
             '3 Months',
             '4 Months',
             '5 Months',
