@@ -890,7 +890,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             'Online Classes',
             'Test Series',
             'Distance Education',
-            'Satellite Classes'
+            'Satellite Classes',
+            'Weekend Classroom'
         ];
         $scope.durations=[
             '1 Year',
@@ -1036,6 +1037,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 exam: exam._id,
                 name:'',
                 fees: '10000',
+                idealFor:'',
                 mode: ''
             };
             $scope.provider.course.push(newCourse);

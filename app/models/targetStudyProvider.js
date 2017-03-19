@@ -40,6 +40,7 @@ var targetStudyProviderSchema = mongoose.Schema({
         entranceCriteria: {type: String},
         fees: {type: String, required: true},
         mode: {type: String,required: true},
+        idealFor: {type: String, default:''},
         eligibility: {type: String, default:''},
         _added: { type: Date, default: Date.now }
     }],
