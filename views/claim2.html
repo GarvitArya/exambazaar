@@ -32,7 +32,7 @@
     .component{
         font-weight: bold;
         font-family: "Avenir";
-        color: rgba(0,0,0,0.4);
+        color: rgba(0,0,0,0.8);
         /*letter-spacing: 2px;*/
     }
     .mainContent{
@@ -42,7 +42,7 @@
     #heroHeader{
         margin-top: 10px;
         background-color: rgba(0,0,0,0.6);
-        color: whitesmoke;
+        color: white;
     }
     #heroHeaderContent{
         min-height: 25vh;
@@ -334,6 +334,22 @@
     
     #courseLeftContainer{
         min-height: 100px;
+        background: #20C39A;
+        
+        position: relative;
+        display: inline-block;
+    }
+    
+    .inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+    }
+
+    .rotate {
+        -moz-transform: translateX(-50%) translateY(-50%) rotate(270deg);
+        -webkit-transform: translateX(-50%) translateY(-50%) rotate(270deg);
+        transform:  translateX(-50%) translateY(-50%) rotate(270deg);
     }
     #courseRightContainer{
         min-height: 100px;
@@ -459,18 +475,27 @@
         
     </div>
     
-    <div bs-affix data-offset-top="200" hide-xs layout="row" class="topBorder bottomBorder coachingNavBar" layout-align="start center">
-        <div class="container">
-        <div class="row  hidden-xs hidden-sm col-md-12 col-lg-12">
-            <a href="#{{component}}" du-smooth-scroll du-scrollspy offset="200" class="col-xs-2 col-sm-1 col-md-1 col-lg-1 component" ng-repeat="component in components">
+    <div bs-affix data-offset-top="200" hide-xs layout="row" class="coachingNavBar" layout-align="start center">
+        
+        <div layout="row" layout-align="center center" class="width100 whiteBackground">
+            <div flex ng-repeat="component in components">
+            
+            
+            <a href="#{{component}}" du-smooth-scroll du-scrollspy offset="160" class="component padding5" >
                 <span>
                     <span id="">
                     {{component}}
                     </span>
                 </span>        
             </a>
+            </div>
         </div>
+        
+        <!--<div class="container">
+        <div class="row  hidden-xs hidden-sm col-md-12 col-lg-12">
+            
         </div>
+        </div>-->
     </div>
     <!--start of Overview 
     <div layout="row " class="componentRow" id="Overview">
@@ -991,80 +1016,78 @@
             </span>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement" id="paneMiddle" >
-            <div layout="row" class="bottom-buffer10" ng-repeat="exam in provider.exams" id="greyBorder" ng-show="!editCourse" layout-align="start center">
-                <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
-                    <div layout="row" layout-align="center center" id="courseLeftContainer">
-                        <span class="text md-title">
-                            {{exam.displayname}}
-                        </span>
+            <div flex layout="row" class="bottom-buffer10" ng-repeat="exam in provider.exams" id="greyBorder" ng-show="!editCourse" layout-align="start center" >
+                <div layout="column" layout-align="center center" flex="10" id="courseLeftContainer">
+                    <div class="font12 inner rotate">
+                        {{exam.displayname}}
                     </div>
                 </div>
-                <div class="col-xs-4 col-sm-10 col-md-10 col-lg-10" id="courseRightContainer">
-                    <div layout="row" layout-align="center center" layout-margin id="dialogHeader">
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <md-content flex="90" id="courseRightContainer">
+                    <div layout="row" layout-align="start center" id="dialogHeader">
+                        <div flex class="paddingLeft10">
                             Course Name
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             Duration
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             Fees
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             Mode
                         </div>
                     </div>
-                    <div layout="row" layout-align="center center" ng-repeat="course in provider.course" ng-if="course.exam == exam._id" layout-margin>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                            <div class="row">
+                    <div layout="row" layout-align="center center" ng-repeat="course in provider.course" ng-if="course.exam == exam._id">
+                        <div flex class="paddingLeft10">
+                            <div layout="row">
                             {{course.name}}
                             </div>
-                            <div class="row font9 textLightGrey">
+                            <div layout="row" class="font9 textLightGrey">
                                 {{course.idealFor}}
                             </div>
                             
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             {{course.duration}}
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             {{course.fees | currency:"₹":0}}
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             {{course.mode}}
                         </div>
                     </div>
                     
-                </div>
+                </md-content>
             </div>
             
             <div layout="row" class="bottom-buffer10" ng-repeat="exam in provider.exams" id="greyBorder" ng-show="editCourse" layout-align="start center">
-                <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+                <div flex="10">
                     <div layout="row" layout-align="center center" id="courseLeftContainer">
-                        <span class="text-primary md-title">
+                        <span class="font12 inner rotate">
                             {{exam.displayname}}
                         </span>
                         
                     </div>
                     
                 </div>
-                <div class="col-xs-4 col-sm-10 col-md-10 col-lg-10" id="courseRightContainer">
-                    <div layout="row" layout-align="center center" layout-margin id="dialogHeader">
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <div flex="90" id="courseRightContainer">
+                    <div layout="row" layout-align="center center" id="dialogHeader">
+                        <div flex>
                             Course Name
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             Duration
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             Fees
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             Mode
                         </div>
                     </div>
-                    <div layout="row" layout-align="center center" ng-repeat="course in provider.course" ng-if="course.exam == exam._id" layout-margin>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div layout="row" layout-align="center center" ng-repeat="course in provider.course" ng-if="course.exam == exam._id">
+                        <div flex>
                             <div class="row">
                                 <input type="text" class="font9 width100"  id="course.name" ng-model="course.name"  placeholder="New Course" focus-me="$index == preAddCourseLength">
                             </div>
@@ -1077,7 +1100,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             <span ng-repeat="duration in durations">
                                 <span class="badge font9" id="tagHolder" ng-click="setCourseDuration(course, duration)" ng-if="course.duration != duration">
                                 {{duration}}
@@ -1088,10 +1111,10 @@
                             </span>
                             
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             <input type="text" class="font9 width100"  id="course.fees" ng-model="course.fees"  placeholder="Course Fees">
                         </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div flex>
                             <span ng-repeat="mode in modes">
                                 <span class="badge font9" id="tagHolder" ng-click="setCourseStudyMode(course, mode)" ng-if="course.mode != mode">
                                 {{mode}}

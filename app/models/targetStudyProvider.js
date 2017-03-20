@@ -38,8 +38,8 @@ var targetStudyProviderSchema = mongoose.Schema({
         name: {type: String,required: true},
         nSeats: {type: String},
         entranceCriteria: {type: String},
-        fees: {type: String, required: true},
-        mode: {type: String,required: true},
+        fees: {type: String},
+        mode: {type: String},
         idealFor: {type: String, default:''},
         eligibility: {type: String, default:''},
         _added: { type: Date, default: Date.now }
