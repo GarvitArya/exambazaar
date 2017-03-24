@@ -1110,6 +1110,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.deleteFaculty = function(faculty){
             faculty.active = false;
+            $scope.provider.faculty.forEach( function(thisFaculty, index){
+                if(thisFaculty._id == faculty._id){
+                    $scope.provider.faculty.splice(index, 1);
+                }
+            });
             $scope.saveProvider();
         };
         
