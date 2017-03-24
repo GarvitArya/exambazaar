@@ -1315,7 +1315,6 @@
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder" id="paneLeft" ng-class="{ editing: editVideo }">
             <div class="componentRowElement"layout="column" layout-align="start center">
-                
                 <span>
                     Videos
                     <span class="badge" id="leftBadge">
@@ -1323,14 +1322,6 @@
                         <md-tooltip>Provider had added a total of {{provider.video.length}} videos</md-tooltip>
                     </span>
                 </span>
-                <!--<div layout="row" ng-show="!editVideo">
-                <md-button class="md-raised md-warning md-small font9" ng-click="editVideos()" ><i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;Edit Videos</md-button>
-                </div>
-                <div layout="row">
-                    <md-button class="md-raised md-primary md-small font9" ng-click="saveVideos()" ng-show="editVideo"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;Save</md-button>
-                    <md-button class="md-raised md-default md-small font9" ng-click="dontsaveChanges()" ng-show="editVideo"><i class="fa fa-ban" aria-hidden="true"></i>&nbsp;Cancel</md-button>
-                </div>-->
-                
             </div>
         </div>
         <div class="col-xs-12 hidden-sm hidden-md hidden-lg bottomBorder " id="paneLeft">
@@ -2261,7 +2252,7 @@
 </div>
 
 <div class="saveCancel">
-    <div layout="row" ng-show="editContact || editCourse || editPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
+    <div layout="row" ng-show="editContact || editCourse || editResult2 ||  editPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
         <div flex ="80">
             Do you want to save your changes to {{provider.name}}? 
         </div>

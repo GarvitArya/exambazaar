@@ -1726,7 +1726,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }else{
                 result.exam = exam;
             }
-            $scope.editResult = true;
+            
+            $scope.editResult2 = true;
         };
         $scope.setResultExam = function(exam){
             if(exam._id){
