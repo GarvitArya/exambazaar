@@ -49,7 +49,7 @@ router.post('/save', function(req, res) {
 
 router.post('/bulksave', function(req, res) {
     var locations = req.body;
-    console.log(JSON.stringify(locations));
+    //console.log(JSON.stringify(locations));
      locations.forEach(function(thisLocation, index){
         console.log(" Current Location is "+ index + JSON.stringify(thisLocation));
         var area = thisLocation.area;
@@ -123,7 +123,7 @@ router.get('/city/:cityName', function(req, res) {
         .find({ 'city': cityName })
         .exec(function (err, allLocations) {
         if (!err){
-            console.log(allLocations);
+            //console.log(allLocations);
             res.json(allLocations);
         } else {throw err;}
     });

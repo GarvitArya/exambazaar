@@ -95,6 +95,121 @@ router.get('/cityCount', function(req, res) {
 });
 
 
+router.post('/bulkAddResult', function(req, res) {
+    var examResult = req.body;
+    var exam = examResult.exam;
+    var providerId = examResult.providerId;
+    var result = examResult.result;
+    var nResult = examResult.result.length;
+    var counter = 0;
+    console.log('Starting Bulk Add of ' + nResult + ' Results');
+    
+    //console.log('Express received: ' + JSON.stringify(examResult));
+    
+    var thisProvider = targetStudyProvider
+        .findOne({ _id: providerId }, {results:1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            
+        if(thisProvider){
+            var newResults = result.map(function(a) {return a._id;});
+            var ExistingResults = thisProvider.results.map(function(a) {return a._id;});
+
+            //console.log('New Result are: ' +JSON.stringify(newResults));
+            //console.log('Existing Result are: ' + JSON.stringify(ExistingResults));
+            var deleteResults = [];
+            ExistingResults.forEach(function(thisResult, index){
+                if(thisResult){
+                    if(newResults.indexOf(thisResult.toString()) == -1){
+                        deleteResults.push(thisResult);
+                    }
+                }
+
+
+            });
+            //console.log('About to delete the following: ' + JSON.stringify(deleteResults));
+
+
+            result.forEach(function(thisResult, index){
+            counter = counter + 1;
+            if(thisResult._id && thisResult._id != ''){
+                thisProvider.results.forEach(function(existingResult, existingIndex){
+                    if(existingResult._id == thisResult._id){
+                        //console.log(thisResult.name);
+                        if(thisResult.name =='' || thisResult.name == null){
+                           //thisResult.active = false; 
+                           console.log('Splicing the result' + thisResult._id);
+                            deleteResults.push(thisResult._id);
+                            //thisProvider.results.splice(existingIndex, 1);
+                            //console.log(JSON.stringify(thisProvider.results));
+                        }else{
+                            if(thisResult.name !='' && thisResult.name !=null){
+                                for (var property in thisResult) {
+                                existingResult[property] = thisResult[property];
+                                }
+                                existingResult.name = titleCase(thisResult.name);
+
+                            }
+
+
+                        }
+                    }
+                });
+
+            }else{
+                if(thisResult.name != ''){
+                    console.log('I am here second loop ' + thisResult.name);
+
+                    thisResult.name = titleCase(thisResult.name);
+                    var newResult = {
+                        year: thisResult.year,
+                        name: thisResult.name,
+                        rank: thisResult.rank,
+                        category: thisResult.category,
+                        exam: exam
+                    };
+
+                    thisProvider.results.push(newResult);
+
+                }
+
+
+            }
+            if(counter == nResult){
+                console.log(JSON.stringify(deleteResults));
+                var subSetResults = []; thisProvider.results.forEach(function(thisResult, index){
+                    var delIndex = deleteResults.indexOf(thisResult._id.toString());
+                    if(delIndex == -1){
+                        subSetResults.push(thisResult);
+                    }
+                });
+                //console.log('New Results are: ' + JSON.stringify(subSetResults));
+                thisProvider.results = subSetResults;
+
+
+
+
+                thisProvider.save(function(err, thisProvider) {
+                    if (err) return console.error(err);
+                    console.log("Results edited for provider id: "+ thisProvider._id);
+                    console.log('Total results are: '+ thisProvider.results.length);
+                    res.json('Done');
+
+                });
+
+            }
+
+            });
+
+        }else{
+            console.log('No such provider');
+            res.json('Error');
+        }
+        } else {throw err;}
+    });
+    
+});
+
 
 
 router.post('/addResult', function(req, res) {
@@ -110,6 +225,7 @@ router.post('/addResult', function(req, res) {
             
             if(thisProvider){
                 var nResult = thisProvider.results.length;
+                console.log('There are ' + nResults +' results');
                 var resultExists = false;
                 var counter = 0;
                 thisProvider.results.forEach(function(thisResult, index){
@@ -361,6 +477,101 @@ router.post('/addVideo', function(req, res) {
     
 });
 
+/*
+router.post('/setResultExam', function(req, res) {
+    var resultExamForm = req.body;
+    var providerId = resultExamForm.providerId;
+    var examId = resultExamForm.examId;
+    var resultId = resultExamForm.resultId;
+    console.log('Set Result Exam: Express received: ' + JSON.stringify(resultExamForm));
+    
+    var thisProvider = targetStudyProvider
+        .findOne({ _id: providerId }, {results:1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            if(thisProvider){ 
+                thisProvider.results.forEach(function(thisResult, index){
+                    if(thisResult._id == resultId){
+                        thisResult.exam = examId;
+                        thisProvider.save(function(err, thisProvider) {
+                            if (err) return console.error(err);
+                            console.log("Result Exam saved for " + thisResult._id);
+                            res.json('Done');
+                        });
+                    }
+                });
+                
+            }else{
+                console.log('No such provider');
+                res.json('Error');
+            }
+        } else {throw err;}
+    });
+});
+*/
+
+router.post('/addResultPic', function(req, res) {
+    var newResultPicForm = req.body;
+    var image = newResultPicForm.image;
+    var providerId = newResultPicForm.providerId;
+    var resultId = newResultPicForm.resultId;
+    
+    console.log('Add Result Pic: Express received: ' + JSON.stringify(newResultPicForm));
+    
+    var thisProvider = targetStudyProvider
+        .findOne({ _id: providerId }, {results:1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            
+            if(thisProvider){   
+                thisProvider.results.forEach(function(thisResult, index){
+                    if(thisResult._id == resultId){
+                        thisResult.image = image;
+                        thisProvider.save(function(err, thisProvider) {
+                            if (err) return console.error(err);
+                            console.log("Result pic saved for " + thisResult._id);
+                            res.json('Done');
+                        });
+                    }
+                    
+                });
+                
+            }else{
+                console.log('No such provider');
+                res.json('Error');
+            }
+        } else {throw err;}
+    });
+    
+});
+
+router.post('/addLogo', function(req, res) {
+    var newLogoForm = req.body;
+    var logo = newLogoForm.logo;
+    var providerId = newLogoForm.providerId;
+    console.log('Express received: ' + JSON.stringify(newLogoForm));
+    
+    var thisProvider = targetStudyProvider
+        .findOne({ _id: providerId }, {logo:1, oldlogo:1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            
+            if(thisProvider){
+                thisProvider.logo = logo;
+                thisProvider.save(function(err, thisProvider) {
+                    if (err) return console.error(err);
+                    console.log("Logo data saved for " + thisProvider._id);
+                    res.json('Done');
+                });
+            }else{
+                console.log('No such provider');
+                res.json('Error');
+            }
+        } else {throw err;}
+    });
+    
+});
+
 
 
 router.post('/addPhoto', function(req, res) {
@@ -596,22 +807,27 @@ router.get('/setRank0', function(req, res) {
 
 router.get('/logoService', function(req, res) {
     console.log("Logo Service Starting now");
-    var allproviders =  targetStudyProvider.find({}, {logo:1, oldlogo:1},function(err, allproviders) {
+    var allproviders =  targetStudyProvider.find({city:'Jaipur'}, {logo:1, oldlogo:1},function(err, allproviders) {
     if (!err){
          allproviders.forEach(function(thisprovider, index){
             //console.log(index);
             //console.log(thisprovider);
             if(thisprovider.logo){
-                if(thisprovider.logo.indexOf('http') != -1){
+                /*if(thisprovider.logo.indexOf('http') != -1){
                     if(thisprovider.logo != 'https://targetstudy.com/tools/ge.php')
                     thisprovider.oldlogo = thisprovider.logo;
+                }*/
+                if(thisprovider.logo == 'https://targetstudy.com/tools/ge.php'){
+                    console.log("Yes logo needs to changed for: " + thisprovider._id);
+                    thisprovider.logo = '';
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        console.log(thisprovider._id + " saved!");
+                    });
                 }
             }
                 
-            thisprovider.save(function(err, thisprovider) {
-                if (err) return console.error(err);
-                console.log(thisprovider._id + " saved!");
-            });
+            
          });
     }
     });
@@ -922,4 +1138,14 @@ router.get('/edit/removeDuplicates/:city', function(req, res) {
     } else {throw err;}
     });
 });
+
+function titleCase(str) {
+  if(str){
+      str = str.toLowerCase().split(' ');
+      for (var i = 0; i < str.length; i++) {
+        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+      }
+      return str.join(' ');
+  }
+}
 module.exports = router;

@@ -554,20 +554,20 @@ Comment For Cell
 }
 
 .ht_clone_top {
-  z-index: 101;
+  z-index: -1;
 }
 
 .ht_clone_left {
-  z-index: 102;
+  z-index: -1;
 }
 
 .ht_clone_top_left_corner,
 .ht_clone_bottom_left_corner {
-  z-index: 103;
+  z-index: -1;
 }
 
 .ht_clone_debug {
-  z-index: 103;
+  z-index: -1;
 }
 
 .handsontable td.htSearchResult {
