@@ -871,7 +871,7 @@
                     
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-if="!editResult">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 top-buffer" ng-repeat="examResult in resultWithImages" ng-if="examResult.exam==exam._id">
-                    <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="result in examResult.result | orderBy:['-year']" ng-if="$index<12 && result.image && result.image!=''" id="imageContainer" ng-click="showResultDialog($event, $index)">
+                    <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="result in examResult.result" ng-if="$index<12 && result.image && result.image!=''" id="imageContainer" ng-click="showResultDialog($event, $index, examResult)">
                         <div ng-if="$index != 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
                         </div>
                         <div ng-if="$index == 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
@@ -1055,7 +1055,7 @@
                 
                 
                 <div flex="90" id="courseRightContainer">
-                    <div layout="row" layout-align="start center" id="dialogHeader" class="font11">
+                    <div layout="row" layout-align="start center" id="dialogHeader" class="font11 greyDashedBottomBorder">
                         <div flex class="paddingLeft10">
                             Course Name
                         </div>
@@ -1069,7 +1069,7 @@
                             Mode
                         </div>
                     </div>
-                    <div layout="row" layout-align="start center" ng-repeat="course in provider.course" ng-if="course.exam == exam._id">
+                    <div layout="row" layout-align="start center" ng-repeat="course in provider.course" ng-if="course.exam == exam._id" class="font11">
                         <div flex class="paddingLeft10">
                             <div layout="row">
                             {{course.name}}
@@ -1101,7 +1101,7 @@
                     </div>
                 </div>
                 <div flex="90" id="courseRightContainer">
-                    <div layout="row" layout-align="center center" id="dialogHeader" class="font11">
+                    <div layout="row" layout-align="center center" class="font11">
                         <div flex class="paddingLeft10">
                             Course Name
                         </div>
@@ -1115,8 +1115,8 @@
                             Mode
                         </div>
                     </div>
-                    <div layout="row" layout-align="center center" ng-repeat="course in provider.course" ng-if="course.exam == exam._id">
-                        <div flex layout="column" class="paddingLeft10 paddingRight10">
+                    <div layout="row" layout-align="center center" ng-repeat="course in provider.course" ng-if="course.exam == exam._id" class="font11">
+                        <div flex layout="column" class="paddingLeft10 paddingRight10 ">
                             
                             <input type="text" class="font9 width100"  id="course.name" ng-model="course.name"  placeholder="New Course" focus-me="$index == preAddCourseLength">
                             
@@ -1790,10 +1790,9 @@
                     <div class="md-subhead">{{activeResult.name | uppercase}}
                     </div>
                     <div class="textCCC">
-                        {{activeResult.subject}}
-                        <span ng-if="activeResult.yearsExperience">
-                        &nbsp;|&nbsp;{{activeResult.yearsExperience}} years of Experience
-                        </span>
+                        {{activeResult.year}}<br/>
+                        All India Rank: {{activeResult.rank}}<br/>
+                        Category: {{activeResult.category}}
                         
                     </div>
                     <div class="textCCC">

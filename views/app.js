@@ -1223,7 +1223,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     pivotResult.forEach(function(thisPivotResult, pivotIndex){
                         thisPivotResult.initialLength = thisPivotResult.result.length;
                     });
-                    console.log(pivotResult);
+                    //console.log(pivotResult);
                     $scope.pivotResult = pivotResult;
                 }
             });
@@ -1276,7 +1276,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if(counter == nResults){
                     
                     $scope.resultWithImages = resultWithImages;
-                    console.info(resultWithImages);
+                    //console.info(resultWithImages);
                 }
             });  
         };
@@ -1819,13 +1819,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
         };
         
-        $scope.showResultDialog = function(ev,index) {
+        $scope.showResultDialog = function(ev, index, examResult) {
             $scope.activeResultIndex = index;
-            $scope.activeResult = $scope.provider.results[index];
-            var indexPair = startEndIndex(index, $scope.provider.results.length);
+            $scope.activeResult = examResult.result[index];
+            var indexPair = startEndIndex(index, examResult.result.length);
+            console.info(index + ' ' + examResult.result.length); 
+            console.info(JSON.stringify(indexPair));
             $scope.startResultIndex = indexPair.start;
             $scope.endResultIndex = indexPair.end;
-            
+            $scope.dialogExamResult = examResult;
             
             $mdDialog.show({
               contentElement: '#resultsDialog',
@@ -3448,6 +3450,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
     }]);
     
+    exambazaar.controller("profileController", 
+        [ '$scope', 'thisuser' , '$http','$state', function($scope, thisuser,$http,$state){
+        $scope.user = thisuser.data;
+        
+        
+    }]);    
+        
     exambazaar.controller("addAwsCredentialController", 
         [ '$scope',  'awsCredentialList','AwsCredentialService','$http','$state', function($scope, awsCredentialList, AwsCredentialService,$http,$state){
         $scope.awsCredentials = awsCredentialList.data;
@@ -4886,25 +4895,25 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         
-        .state('student-profile', {
-            url: '/student/:studentId/profile',
+        .state('profile', {
+            url: '/user/:userId/profile',
             views: {
                 'header':{
                     templateUrl: 'header.html',
                     controller: 'headerController'
                 },
                 'body':{
-                    templateUrl: 'student-profile.html',
-                    controller: 'studentProfileController',
+                    templateUrl: 'profile.html',
+                    controller: 'profileController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
                 }
             },
             resolve: {
-                thisstudent: ['StudentService', '$stateParams',
-                    function(StudentService,$stateParams){
-                    return StudentService.getStudent($stateParams.studentId);
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
                 }],
                 student: function() { return {}; }
             }

@@ -24,6 +24,7 @@ var userSchema = mongoose.Schema({
        exam: [{type: String}],
     },
     mobile : { type: String,required: true,unique:true },
+    image : { type: String},
     email : { type: String},
     verified : { type: Boolean, default: false},
     _created: { type: Date, default: Date.now },

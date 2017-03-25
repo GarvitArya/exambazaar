@@ -1,0 +1,17 @@
+<div class="container">
+    <div id="spacer">
+    </div>
+    <div flex layout="row" >
+        <div flex layout="column">
+            <span>Welcome, {{user.basic.name}}</span>
+            <span>User Type: {{user.userType}}</span>
+            <span>Last Login: {{user.logins[user.logins.length-1] | date: 'dd-MMM-yyyy HH:mm'}}</span>
+        </div>
+        <div flex layout="column" id="picHolder">
+            <div ng-if="user.image">
+                {{user.image}}
+            </div>
+        </div>
+        
+    </div>
+</div>

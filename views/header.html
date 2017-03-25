@@ -136,13 +136,17 @@
         <ul class="nav navbar-nav navbar-right" ng-if="sessionuser.basic">
             
         <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{sessionuser.basic.name}}
-              <span class="badge">
-                {{notification.unread.length}}
-              </span>
-              <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li ng-repeat="unread in notification.unread">
+        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{sessionuser.basic.name}}
+            <span class="badge">
+            {{notification.unread.length}}
+            </span>
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+            <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })">Profile</a>
+            </li>
+            <!--<li ng-repeat="unread in notification.unread">
                 <a ng-click="markRead(unread)">
                 <strong>
                     {{unread.forDate | date}} {{unread.text}}
@@ -155,7 +159,7 @@
                 
                     {{read.forDate | date}} {{read.text}}
                 </a>
-            </li>
+            </li>-->
           </ul>
         </li>    
         

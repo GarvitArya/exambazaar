@@ -166,6 +166,7 @@ router.post('/bulkAddResult', function(req, res) {
                         name: thisResult.name,
                         rank: thisResult.rank,
                         category: thisResult.category,
+                        image: thisResult.image,
                         exam: exam
                     };
 
