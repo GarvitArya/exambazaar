@@ -76,10 +76,10 @@
                     Find options tailored just for you
                 </h6>
                 <div layout="row" layout-align="center center" ng-show ="step1">
-                    <form name="signUpForm">
+                    <form name="signUpForm" ng-submit="verifyPhone()">
                     <div class="input-group input-group-lg hidden-sm hidden-xs" id= "top-buffer1">
                     <span class="input-group-addon whiteFont" id="sizing-addon1">+91</span>
-                    <input ng-model="newUser.contact.mobile" type="text" class="form-control whiteFont" size="10" placeholder="Mobile" aria-describedby="sizing-addon1" autofocus required>
+                    <input ng-model="newUser.contact.mobile" type="text" class="form-control whiteFont" size="10" placeholder="Mobile" aria-describedby="sizing-addon1" autofocus required only-digits ng-minlength="10" ng-maxlength="10" limit-to="10">
                     <span class="input-group-btn">
                         <button class="btn btn-warning" type="submit" ng-click="verifyPhone()" ng-disabled="signUpForm.$invalid">{{button1}}</button>
                     </span>
@@ -97,6 +97,9 @@
                     </form>   
                     
                 </div>
+                <div layout="row" layout-align="center center" ng-if="userExistMessage" class="top-buffer danger">
+                    {{userExistMessage}}
+                </div>
                 <div layout="row" layout-align="center center" ng-show="step2">
                     <form name="OTPVerifyForm">
                     <h6 class="text-center whiteFont">
@@ -104,7 +107,7 @@
                     </h6>
                     <div class="input-group input-group-lg" id= "top-buffer1">
                     <span class="input-group-addon whiteFont" id="sizing-addon1"><strong>OTP</strong></span>
-                    <input ng-model="newUser.OTP" type="text" class="form-control whiteFont" size="4" placeholder="4 digit OTP" aria-describedby="sizing-addon1" autofocus required>
+                    <input ng-model="newUser.OTP" type="text" class="form-control whiteFont" placeholder="4 digit OTP" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits aria-describedby="sizing-addon1" autofocus required>
                     <span class="input-group-btn">
                         <button class="btn btn-warning" type="submit" ng-click="verifyOTP()" ng-disabled="OTPVerifyForm.$invalid" autofocus>{{button2}}</button>
                     </span>

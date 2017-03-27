@@ -132,25 +132,26 @@
             <a ui-sref="targetStudyProviders({ city:{{'city'}} })">{{city}} | </a>
         </span>
     </div>
-    <div class="row top-buffer" ng-if="showLevel>5">
+    <div class="row top-buffer font10" ng-if="showLevel>5">
         <!---->
-        <md-button class="md-raised md-primary" ng-click="removeDuplicates()">Remove Duplicates</md-button>
-        <md-button class="md-raised md-primary" ng-click="cleanTargetstudyurls()">Clean Websites</md-button>
-        <md-button class="md-raised md-primary" ng-click="logoService()">Logo Service</md-button>
-        <md-button class="md-raised md-primary" ng-click="UniqueLogoService()">Unique Logo</md-button>
-        <!--<md-button class="md-raised md-primary" ng-click="getCityCount()">City Count</md-button>
-        <md-button class="md-raised md-primary" ng-click="rank0()">Set Rank 0</md-button>-->
-        <md-button class="md-raised md-primary" ng-click="getAllCourses()">All Courses</md-button>
-        <md-button class="md-raised md-primary" ng-click="getWebsites()">Coaching Websites</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="removeDuplicates()">Remove Duplicates</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="cleanTargetstudyurls()">Clean Websites</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="logoService()">Logo Service</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="UniqueLogoService()">Unique Logo</md-button>
+        <md-button class="md-small md-cancel md-small font10" ng-click="allDistinct()">Distinct Providers</md-button>
+        <!--<md-button class="md-cancel md-small font10" ng-click="getCityCount()">City Count</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="rank0()">Set Rank 0</md-button>-->
+        <md-button class="md-cancel md-small font10" ng-click="getAllCourses()">All Courses</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="getWebsites()">Coaching Websites</md-button>
     </div>
     
     <!--<div class="row top-buffer">
-        <md-button class="md-raised md-primary" ng-click="geturl()">Coaching Adda URLs</md-button>
-        <md-button class="md-raised md-primary" ng-click="geturl2()">Target Study URLs</md-button>
-        <md-button class="md-raised md-primary" ng-click="getclusterUrls()">Target Study Cluster URLs</md-button>
-        <md-button class="md-raised md-primary" ng-click="getTargetStudyUrlsList()">Get Target Study List</md-button>
-        <md-button class="md-raised md-primary" ng-click="getTargetStudyurl()">Fill Target Study</md-button>
-        <md-button class="md-raised md-primary" ng-click="removeDuplicates()">Remove Duplicates</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="geturl()">Coaching Adda URLs</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="geturl2()">Target Study URLs</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="getclusterUrls()">Target Study Cluster URLs</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="getTargetStudyUrlsList()">Get Target Study List</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="getTargetStudyurl()">Fill Target Study</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="removeDuplicates()">Remove Duplicates</md-button>
         {{count}} {{currUrl}}
     </div>
     <div class="row top-buffer">
@@ -177,8 +178,8 @@
     
     </div>
     <!-- orderBy:'-coursesOffered.length'-->
-    <div class="row top-buffer" ng-show="!showlogos">
-        <div ng-repeat="provider in providersList | orderBy:['-email','-rank','name'] | filter:filterText as filtered" class="col-md-12 col-sm-12 col-xs-12">
+    <div class="row top-buffer" ng-show="!showlogos && !allDistinctBool">
+        <div ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered" class="col-md-12 col-sm-12 col-xs-12">
         <div class="row">
             <small>
             
@@ -256,6 +257,20 @@
             {{course}}
         </div>
     </div>
+    
+    
+    <div class = "row top-buffer" ng-show="allDistinctBool">
+        <div ng-repeat="name in allProviderNames | orderBy:'count'">
+            <div class=" col-lg-9 col-md-9 col-sm-9 col-xs-9">  
+                {{name}}
+            </div>
+            <div class=" col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                {{name.count}}
+            </div>
+            
+        </div>
+    </div>
+    
     
     <div style="visibility: hidden">    
         <div class="md-dialog-container" id="myDialog">

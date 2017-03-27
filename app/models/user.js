@@ -23,8 +23,13 @@ var userSchema = mongoose.Schema({
        category: [{type: String}],
        exam: [{type: String}],
     },
-    mobile : { type: String,required: true,unique:true },
+    mobile : { type: String, required: true, unique:true },
     image : { type: String},
+    partner: [{ type: Schema.ObjectId, ref: 'targetStudyProvider' }],
+    shortlisted: [{
+        institute: { type: Schema.ObjectId, ref: 'targetStudyProvider' },
+        _date: { type: Date, default: Date.now }
+    }],
     email : { type: String},
     verified : { type: Boolean, default: false},
     _created: { type: Date, default: Date.now },

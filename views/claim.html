@@ -3,21 +3,6 @@
     .whiteBackground{
         background: white;
     }
-    .md-button.md-green{
-        background: #20C39A;
-        color: white;
-    }
-    .md-button.md-green:hover{
-        background: #FF5A5F;
-        color: white;
-    }
-    .md-button.md-cancel{
-        border: 1px solid black;
-    }
-    .md-button.md-cancel:hover{
-        background: black;
-        color: white;
-    }
     .bottomBorder{
         border-bottom: solid;
         border-width: 1px;
@@ -103,7 +88,7 @@
         background-color: rgba(0,0,0,0.8);
         color: white;
         min-height: 25vh;
-        padding-top: 20px;
+        padding-top: 10px;
     }
     #heroHeaderContent{
         
@@ -232,6 +217,7 @@
     #firstContainerImage{
         max-height: 100%;
         object-fit: contain;
+        z-index: 99;
     }
     
     #imageContainer{
@@ -243,6 +229,7 @@
     #prevButton{
         color: #ccc;
         margin-right: 10px;
+        padding:10px;
     }
     #prevButton:hover{
         color: #20C39A;
@@ -250,6 +237,7 @@
     #nextButton{
         color: #ccc;
         margin-left: 10px;
+        padding:10px;
     }
     #nextButton:hover{
         color: #20C39A;
@@ -527,10 +515,10 @@
 
             </div>
         </div>
-        <div layout="column" flex id="heroHeaderContent">
+        <div layout="column" flex id="heroHeaderContent" >
             <div layout="row" layout-align="end start" class="">
                 <span hide-gt-xs>
-                    <button class="btn actionButton  tolowercase"><i class="fa fa-heart-o" aria-hidden="true"></i>
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-heart-o" aria-hidden="true" ng-if="!shortlisted"></i><i class="fa fa-heart" aria-hidden="true" ng-if="shortlisted"></i>
                     </button>
                     <button class="btn actionButton  tolowercase"><i class="fa fa-inr" aria-hidden="true"></i>
                     </button>
@@ -538,7 +526,14 @@
                     </button>
                 </span>
                 <span hide-xs>
-                    <button class="btn actionButton heroButton tolowercase"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;Shortlist
+                    <button class="btn actionButton heroButton tolowercase" ng-if="user.userId" ng-click="shortlistInstitute()">
+                        <span ng-if="!shortlisted">
+                            <i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;Shortlist
+                        </span>
+                        <span ng-if="shortlisted">
+                            <i class="fa fa-heart" aria-hidden="true"></i>&nbsp;&nbsp;Shortlisted
+                        </span>
+                        
                     </button>
                     <button class="btn actionButton heroButton tolowercase"><i class="fa fa-inr" aria-hidden="true"></i>&nbsp;&nbsp;Avail Discount
                     </button>
@@ -1101,7 +1096,7 @@
                     </div>
                 </div>
                 <div flex="90" id="courseRightContainer">
-                    <div layout="row" layout-align="center center" class="font11">
+                    <div layout="row" layout-align="center center" class="font11 greyDashedBottomBorder">
                         <div flex class="paddingLeft10">
                             Course Name
                         </div>
@@ -1115,7 +1110,7 @@
                             Mode
                         </div>
                     </div>
-                    <div layout="row" layout-align="center center" ng-repeat="course in provider.course" ng-if="course.exam == exam._id" class="font11">
+                    <div layout="row" layout-align="center center" ng-repeat="course in provider.course" ng-if="course.exam == exam._id" class="font11 paddingTB10 greyDashedBottomBorder">
                         <div flex layout="column" class="paddingLeft10 paddingRight10 ">
                             
                             <input type="text" class="font9 width100"  id="course.name" ng-model="course.name"  placeholder="New Course" focus-me="$index == preAddCourseLength">
@@ -2084,6 +2079,7 @@
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="claimDialog">
       <md-dialog class="fullscreen-dialog whiteBackground">
+          
           <div layout="column" layout-align="start center" layout-fill>
               <div flex="15" class="width100 bottomBorder" id="dialogHeader">
                   <div layout="row" layout-padding layout-align="center center">
@@ -2107,7 +2103,7 @@
                 
                   <div layout="column" layout-align="center center" layout-padding flex="40" class="height80 rightBorder">
                     
-                      <div layout="column" layout-align="center center">
+                      <div layout="column" layout-align="center center" class="">
                           <span ng-if="provider.logo">
                           <img ng-src="{{provider.logo}}" id="claimLogo"/>
                           </span>
@@ -2124,7 +2120,7 @@
                            - {{provider.pincode}}
                           </span>
                           </span>
-                          <span ng-if="provider.phone.length > 0" class="text-center">
+                          <span ng-if="provider.phone.length > 0" class="text-center font10 marginT10">
                               Phone:&nbsp;
                               <span ng-repeat="phone in provider.phone">
                                 {{phone}}
@@ -2133,7 +2129,7 @@
                                 </span>
                               </span>
                           </span>
-                          <span ng-if="provider.mobile.length > 0" class="text-center">
+                          <span ng-if="provider.mobile.length > 0" class="text-center font10">
                               Mobile:&nbsp;
                               <span ng-repeat="mobile in provider.mobile">
                                 {{mobile}}
@@ -2194,10 +2190,10 @@
                         </div>
                         <div layout="row" layout-align="center center" class="top-buffer10 text-center">
                             <span ng-repeat="mobile in provider.mobile" ng-show="!newMobileMode">
-                                <span class="badge font16" id="claimMobile" ng-if="OTPMobile != mobile" ng-click="selectMobile(mobile)">
+                                <span class="badge font12" id="claimMobile" ng-if="OTPMobile != mobile" ng-click="selectMobile(mobile)">
                                     {{mobile}}
                                 </span>
-                                <span class="badge font16" id="claimExistingMobile" ng-if="OTPMobile == mobile" ng-click="selectMobile(mobile)">
+                                <span class="badge font12" id="claimExistingMobile" ng-if="OTPMobile == mobile" ng-click="selectMobile(mobile)">
                                     {{mobile}}
                                 </span>&nbsp;
                             </span>

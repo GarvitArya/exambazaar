@@ -1,0 +1,40 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    #logo{
+        max-height: 40px;
+        max-width: 100px;
+    }
+</style>
+
+<div class="whiteBackground mainContent" >
+    <div id="spacer">
+    </div>
+    <div layout="row" layout-align="start center">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" ng-repeat="institute in shortlisted | orderBy:'-_date'" id="instituteHolder">
+                <div layout="column" layout-align="center center">
+                    <div id="logoHolder" class="">
+                        <div layout="column" layout-align="center center" class="height100">
+                        <img ng-src="{{institute.logo}}" id="logo"/>
+                        </div>
+                    </div>
+                    
+                    <div class="font14">
+                        {{institute.name}}
+                    </div>
+                    <div class="font9">
+                        on {{institute._date | date}}
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,15 +1,35 @@
-<div class="container">
+<style>
+    #picHolder{
+        border: 1px solid rgba(0,0,0,0.8);
+        height: 120px;
+        width: 120px;
+        border-radius: 4px;
+    }
+    #pic{
+        max-height: 120px;
+        max-width: 120px;
+        border-radius: 4px;
+    }
+</style>
+<div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
-    <div flex layout="row" >
-        <div flex layout="column">
+    <div flex layout="row" layout-align="start center">
+        <div flex layout="column" layout-align="center center" layout-margin>
             <span>Welcome, {{user.basic.name}}</span>
-            <span>User Type: {{user.userType}}</span>
+            <!--<span>User Type: {{user.userType}}</span>-->
             <span>Last Login: {{user.logins[user.logins.length-1] | date: 'dd-MMM-yyyy HH:mm'}}</span>
         </div>
-        <div flex layout="column" id="picHolder">
-            <div ng-if="user.image">
-                {{user.image}}
+        <div flex layout="column" layout-align="start start">
+            <div layout="column" layout-align="center center" ng-if="user.image">
+                <img id="pic" ng-src="{{user.image}}" />
+                <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">Edit</span>
+            </div>
+            <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">
+                <div layout="row" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Image
+                </div>
+                
             </div>
         </div>
         

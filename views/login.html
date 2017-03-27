@@ -1,44 +1,36 @@
-<!doctype html>
-<html>
-<head>
-    <title>Node Authentication</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <style>
-        body         { padding-top:80px; }
-    </style>
-</head>
-<body>
-<div class="container">
-<div class="col-sm-6 col-sm-offset-3">
 
-    <h1><span class="fa fa-sign-in"></span> Login</h1>
-
-    <% if (message.length > 0) { %>
-        <div class="alert alert-danger"><%= message %></div>
-    <% } %>
-
-    <!-- LOGIN FORM -->
-    <form action="/login" method="post">
+<style>
+    
+</style>
+<div id="spacer" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div layout="column" layout-align="center center" class="whiteBackground mainContent2" layout-padding>
+    <span class="font14 top-buffer">
+    Login using your registered mobile number and password below
+    </span>
+    <form ng-submit="login()" ng-show="!sessionuser" class="minwidth25" name="loginForm">
         <div class="form-group">
-            <label>Mobile</label>
-            <input type="text" class="form-control" name="mobile">
+        <input type="text" placeholder="10 Digit Mobile" class="form-control text-center" ng-model="login.mobile" size="15" ng-minlength="10" ng-maxlength="10" id="headerInput" focus-me="showLogin" only-digits limit-to="10">
         </div>
         <div class="form-group">
-            <label>Password</label>
-            <input type="password" class="form-control" name="password">
+        <input type="password" placeholder="Password" class="form-control text-center" ng-model="login.password" size="15" id="headerInput">
         </div>
-
-        <button type="submit" class="btn btn-warning btn-lg">Login</button>
+        <div layout="row" layout-align="center center" layout-margin layout-padding>
+            <button type="submit" class="btn" ng-disabled="loginForm.$invalid">Log in</button>
+            <button type="submit" class="btn btn-primary" ui-sref="signup">Sign up</button>
+            <!--<span class="font9">
+                Forgot Password
+            </span>-->
+        </div>
+        <div layout="row" layout-align="center center" layout-margin layout-padding >
+            &nbsp;
+            <span ng-if="message" class="danger">
+            {{message}}
+            </span>
+        </div>
+        
     </form>
-
-    <hr>
-
-    <p>Need an account? <a href="/signup">Signup</a></p>
-    <p>Or go <a href="/">home</a>.</p>
-
-
 </div>
-</div>
-</body>
-</html>
+

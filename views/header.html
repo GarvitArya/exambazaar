@@ -39,10 +39,10 @@
     
 </style>
 
-<div class="alert alert-danger alert-dismissible" role="alert" ng-if="message !=''">
+<!--<div class="alert alert-danger alert-dismissible" role="alert" ng-if="message !=''">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>{{message}}</strong>
-</div>
+</div>-->
 <!--transparent-->
 <nav class="navbar navbar-default navbar-fixed-top nav-justified" role="navigation" id="mainNav">
     
@@ -63,14 +63,14 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
         <div class="navbar-right">
-        <form class="navbar-form animated fadeIn" ng-submit="login()" ng-show="!sessionuser && showLogin">
+        <form class="navbar-form animated fadeIn" ng-submit="login()" ng-show="!sessionuser && showLogin" name="loginForm">
         <div class="form-group">
-        <input type="text" placeholder="Mobile" class="form-control text-center" ng-model="login.mobile" size="15" id="headerInput" focus-me="showLogin">
+        <input type="text" placeholder="Mobile" class="form-control text-center" ng-model="login.mobile" size="15" id="headerInput" focus-me="showLogin" only-digits limit-to="10" ng-minlength="10" ng-maxlength="10">
         </div>
         <div class="form-group">
         <input type="password" placeholder="Password" class="form-control text-center" ng-model="login.password" size="15" id="headerInput">
         </div>
-        <button type="submit" class="btn">Log in</button>
+        <button type="submit" class="btn" ng-disabled="loginForm.$invalid">Log in</button>
         <button type="submit" class="btn btn-primary" ui-sref="signup">Sign up</button>
         </form>
         <form class="navbar-form" ng-show="!showLogin">
@@ -111,6 +111,8 @@
         
         </ul>
         
+        
+        
         <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Intern - Business Development'">
         <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Home</a></li>
         <li class="dropdown">
@@ -133,10 +135,19 @@
         </ul>
         
         
+        
         <ul class="nav navbar-nav navbar-right" ng-if="sessionuser.basic">
+        <li>
+            <span ng-if="sessionuser.image">
+                <img ng-src="{{sessionuser.image}}" id="userPic"/>
+            </span>
+        </li>   
             
         <li class="dropdown">
-        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{sessionuser.basic.name}}
+        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            
+            
+            {{sessionuser.basic.name}}
             <span class="badge">
             {{notification.unread.length}}
             </span>
@@ -145,6 +156,9 @@
         <ul class="dropdown-menu">
             <li>
             <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })">Profile</a>
+            </li>
+            <li>
+            <a ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
             </li>
             <!--<li ng-repeat="unread in notification.unread">
                 <a ng-click="markRead(unread)">

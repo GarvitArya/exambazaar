@@ -85,6 +85,11 @@ var targetStudyProviderSchema = mongoose.Schema({
         user: { type: Schema.ObjectId, ref: 'User' },
         _added: { type: Date, default: Date.now }
     }],
+    interested: [{
+        user: { type: Schema.ObjectId, ref: 'User' },
+        active: {type: Boolean,default: true},
+        _date: { type: Date, default: Date.now }
+    }],
     _saved:[{
         user: { type: Schema.ObjectId, ref: 'user' },
         _time: { type: Date, default: Date.now }

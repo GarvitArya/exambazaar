@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
-
+//basiccoaching
 var config = require('../config/mydatabase.js');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
+var cisaved = require('../app/models/cisaved');
 var oldtargetStudyProvider = require('../app/models/oldtargetStudyProvider');
 var exam = require('../app/models/exam');
 var mongoose = require('mongoose');
@@ -732,6 +733,19 @@ router.post('/savecoaching', function(req, res) {
             //save the changes
             oldProvider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
+                /*var cisavedForm = req.body;
+                var institute = cisavedForm.institute;
+                var user = cisavedForm.user;
+
+                var newcisaved = new cisaved({
+                    institute: institute,
+                    user: user
+                });
+                newcisaved.save(function(err, newcisaved) {
+                    if (err) return console.error(err);
+                    //console.log("MediaTag saved with id: " + this_mediaTag._id);
+                    res.json(newcisaved._id);
+                });*/
                 //console.log(thisprovider._id + " saved!");
                 res.json('Done');
             });
@@ -778,14 +792,19 @@ router.get('/coaching/:coachingId', function(req, res) {
             res.json(thisProvider);
         } else {throw err;}
     });
-    
-    /*targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, docs) {
-    if (!err){
-        res.json(docs);
-    } else {throw err;}
-    }); //.limit(500)*/
 });
 
+router.get('/basiccoaching/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': coachingId},{name:1, website: 1, address:1, city:1, state:1, logo:1})
+        /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
+        .exec(function (err, thisProvider) {
+        if (!err){
+            res.json(thisProvider);
+        } else {throw err;}
+    });
+});
 
 
 
@@ -842,6 +861,53 @@ router.get('/UniqueLogoService', function(req, res) {
         res.json(docs);
     } else {throw err;}
     });
+});
+
+router.get('/allDistinct', function(req, res) {
+    console.log("Getting all distinct institutes with count");
+    
+    var uniqueName = [];
+    var nameCount = [];
+    var allproviders =  targetStudyProvider.find({}, {name:1},function(err, allproviders) {
+        var counter = 0;
+        var nProviders = allproviders.length;
+        res.json('Done');
+        /*res.json(allproviders);*/
+        allproviders.forEach(function(thisprovider, index){
+            
+            var nameIndex = uniqueName.indexOf(thisprovider.name);
+            
+            if(nameIndex == -1){
+                uniqueName.push(thisprovider.name);
+                var newPair = {
+                    name: thisprovider.name,
+                    count: 1
+                };
+                nameCount.push(newPair);
+            }else{
+                nameCount[nameIndex].count += 1;
+            }
+            counter = counter + 1;
+            //console.log('Running on provider no: ' + counter);
+            if(counter == nProviders){
+                /*nameCount.forEach(function(thisprovider, index){
+                    console.log(thisprovider.name + "&^" + thisprovider.count );
+                });*/
+                
+                console.info(JSON.stringify(nameCount));
+                //res.json(nameCount);
+            }
+        });
+        //ABC
+    });
+    
+    /*
+    targetStudyProvider.distinct("name",function(err, docs) {
+    if (!err){ 
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    });*/
 });
 
 
