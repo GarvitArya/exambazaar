@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var user = require('../app/models/user');
+var cisaved = require('../app/models/cisaved');
 var mongoose = require('mongoose');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
 var moment = require('moment');
@@ -225,6 +226,87 @@ router.get('/editBasic/:userId', function(req, res) {
             //process.exit();
         } else {throw err;}
     });
+});
+router.get('/editFilled/:userId', function(req, res) {
+    var userId = req.params.userId;
+    console.log('Finding Filled Institutes for: ' + userId);
+    if(userId == 'all'){
+        var usersavedCIs = cisaved
+            .find({},{institute:1,user:1, _date: 1})
+            .deepPopulate('institute user')
+            .exec(function (err, usersavedCIs) {
+            if (!err){
+                console.log(usersavedCIs);
+                var usersavedCIsBasic = [];
+                var counter = 0;
+                var nLength = usersavedCIs.length;
+                usersavedCIs.forEach(function(thissave, saveindex){
+                    var newusersavedCI = {
+                        user: userId,
+                        userName: thissave.user.basic.name,
+                        institute: thissave.institute._id,
+                        name: thissave.institute.name,
+                        address: thissave.institute.address,
+                        city: thissave.institute.city,
+                        pincode: thissave.institute.pincode,
+                        _date: thissave._date
+                    }
+                    //console.log(newcisavedUser);
+                    counter = counter + 1;
+                    usersavedCIsBasic.push(newusersavedCI);
+                    if(counter == nLength){
+                        res.json(usersavedCIsBasic);
+                    }
+
+                });
+                if(nLength==0){
+                    res.json([]);
+                }
+
+
+            } else {throw err;}
+        });
+    }else{
+        var usersavedCIs = cisaved
+            .find({'user': userId},{institute:1,user:1, _date: 1})
+            .deepPopulate('institute user')
+            .exec(function (err, usersavedCIs) {
+            if (!err){
+                console.log(usersavedCIs);
+                var usersavedCIsBasic = [];
+                var counter = 0;
+                var nLength = usersavedCIs.length;
+                usersavedCIs.forEach(function(thissave, saveindex){
+                    var newusersavedCI = {
+                        user: userId,
+                        userName: thissave.user.basic.name,
+                        institute: thissave.institute._id,
+                        name: thissave.institute.name,
+                        address: thissave.institute.address,
+                        city: thissave.institute.city,
+                        pincode: thissave.institute.pincode,
+                        _date: thissave._date
+                    }
+                    //console.log(newcisavedUser);
+                    counter = counter + 1;
+                    usersavedCIsBasic.push(newusersavedCI);
+                    if(counter == nLength){
+                        res.json(usersavedCIsBasic);
+                    }
+
+                });
+                if(nLength==0){
+                    res.json([]);
+                }
+
+
+            } else {throw err;}
+        });
+        
+    }
+    
+    
+    
 });
 
 router.get('/editShortlist/:userId', function(req, res) {

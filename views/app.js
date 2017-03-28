@@ -192,6 +192,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getUserShortlisted = function(userId) {
             return $http.get('/api/users/editShortlist/'+userId, {userId: userId});
         };
+        this.getUserFilled = function(userId) {
+            
+            return $http.get('/api/users/editFilled/'+userId, {userId: userId});
+        };
         this.userexists = function(mobile) {
             return $http.get('/api/users/userexists/'+mobile, {mobile: mobile});
         };
@@ -3606,6 +3610,36 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
     }]);
     
+    exambazaar.controller("filledCIController", 
+        [ '$scope', 'thisuser' , 'thisuserFilled',  '$http','$state','$rootScope', function($scope, thisuser, thisuserFilled, $http, $state, $rootScope){
+        $scope.user = thisuser.data;
+        $scope.authorized = true;
+        if($state.current.name == 'filledAll' ){
+            if($scope.user.userType !='Master'){
+                $scope.authorized = false;
+                if($scope.user._id){
+                    $state.go('filled', {userId: $scope.user._id});
+                }
+            }
+        }
+            
+        //ABC
+        $scope.filterText = '';
+        $scope.setUser = function(name){
+            $scope.filterText = name;
+        };
+        $scope.clear = function(){
+            $scope.filterText = '';
+        };
+        $scope.filled = thisuserFilled.data;
+        $scope.uniqueUsers = [];
+        $scope.filled.forEach(function(thisFill, index){
+            if($scope.uniqueUsers.indexOf(thisFill.userName) == -1){
+                $scope.uniqueUsers.push(thisFill.userName);
+            }
+        });
+        $rootScope.title =$scope.user.basic.name;
+    }]);    
     exambazaar.controller("shortlistedController", 
         [ '$scope', 'thisuser' , 'thisuserShortlisted',  '$http','$state','$rootScope', function($scope, thisuser, thisuserShortlisted, $http, $state, $rootScope){
         $scope.user = thisuser.data;
@@ -5174,6 +5208,62 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 thisuserShortlisted: ['UserService', '$stateParams',
                     function(UserService,$stateParams){
                     return UserService.getUserShortlisted($stateParams.userId);
+                }],
+                
+                user: function() { return {}; }
+            }
+        })
+        .state('filled', {
+            url: '/user/:userId/filled',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'filled.html',
+                    controller: 'filledCIController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                thisuserFilled: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUserFilled($stateParams.userId);
+                }],
+                
+                user: function() { return {}; }
+            }
+        })
+        .state('filledAll', {
+            url: '/user/:userId/filledAll',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'filled.html',
+                    controller: 'filledCIController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                thisuserFilled: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUserFilled('all');
                 }],
                 
                 user: function() { return {}; }
