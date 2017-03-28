@@ -49,6 +49,11 @@
         padding-bottom: 20px;
         min-height: 20vh;
     }
+    .componentRowElement2{
+        padding-top: 20px;
+        padding-bottom: 20px;
+        min-height: 10vh;
+    }
     #showYearResult{
         overflow-y: scroll;
         text-align: left;
@@ -1620,7 +1625,7 @@
     </div>
     
     
-    <div layout="row" layout-xs="column" class="componentRow  lastRow" id="EBNotes">
+    <div layout="row" layout-xs="column" class="componentRow  " id="EBNotes">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder" id="paneLeft" ng-class="{ editing: editEBnote }">
@@ -1665,6 +1670,50 @@
             
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
+            
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        
+    </div>
+    
+    
+    
+    <div layout="row" layout-xs="column" class="componentRow  lastRow2 lastRow" id="SavedHistory">
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder" id="paneLeft" ng-class="{ editing: editEBnote }">
+            <div class="componentRowElement2"layout="column" layout-align="center center">
+                <span>
+                    Saved History
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement2 text-center" id="paneMiddle">
+            <div layout="row" layout-align="start start" class="font10 thirdFont">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div layout="column" layout-align="center center">
+                    <span ng-if="cisavedUsersList.length > 0">
+                    Last 3 saves
+                    </span>
+                    <span layout="column" layout-align="start start" ng-repeat="cisavedUser in cisavedUsersList" ng-if="$index<3">
+                        <span>
+                        {{cisavedUser.name}} on {{cisavedUser._date | date}}
+                        </span>
+                    </span>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <md-button class="md-green md-small font10 width25" ng-click="markasdone()">
+                    Mark Done
+                    </md-button>
+                </div>
+                
+                
+            </div>
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement2" id="paneRight">
+            
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
@@ -2075,6 +2124,23 @@
     </div>    
 </div>
 
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="markedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    CI {{provider.name}} marked as Done!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="claimDialog">

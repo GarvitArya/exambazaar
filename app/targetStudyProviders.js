@@ -794,6 +794,7 @@ router.get('/coaching/:coachingId', function(req, res) {
     });
 });
 
+
 router.get('/basiccoaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     var thisProvider = targetStudyProvider
@@ -806,6 +807,39 @@ router.get('/basiccoaching/:coachingId', function(req, res) {
     });
 });
 
+router.get('/cisavedUsers/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    
+    
+    var cisavedUsers = cisaved
+        .find({'institute': coachingId},{user:1, _date: 1})
+        .deepPopulate('user')
+        .exec(function (err, cisavedUsers) {
+        if (!err){
+            var cisavedUsersBasic = [];
+            var counter = 0;
+            var nLength = cisavedUsers.length;
+            cisavedUsers.forEach(function(thissave, saveindex){
+                var newcisavedUser = {
+                    user: thissave.user._id,
+                    name: thissave.user.basic.name,
+                    _date: thissave._date
+                }
+                console.log(newcisavedUser);
+                counter = counter + 1;
+                cisavedUsersBasic.push(newcisavedUser);
+                if(counter == nLength){
+                    console.log(JSON.stringify(cisavedUsersBasic));
+                    res.json(cisavedUsersBasic);
+                }
+                
+            });
+            //ABC
+            
+            
+        } else {throw err;}
+    });
+});
 
 
 router.get('/setRank0', function(req, res) {
@@ -898,7 +932,6 @@ router.get('/allDistinct', function(req, res) {
                 //res.json(nameCount);
             }
         });
-        //ABC
     });
     
     /*

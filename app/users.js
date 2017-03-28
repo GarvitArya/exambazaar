@@ -210,6 +210,22 @@ router.get('/edit/:userId', function(req, res) {
         } else {throw err;}
     });
 });
+//to get a particular user with _id userId
+router.get('/editBasic/:userId', function(req, res) {
+    var userId = req.params.userId;
+    //var mobile = req.params.mobile;
+    console.log("User is " + userId);
+    user
+        .findOne({ '_id': userId },{basic:1})
+        //.deepPopulate('_master.contact')
+        .exec(function (err, docs) {
+        if (!err){ 
+            console.log(docs);
+            res.json(docs);
+            //process.exit();
+        } else {throw err;}
+    });
+});
 
 router.get('/editShortlist/:userId', function(req, res) {
     var userId = req.params.userId;

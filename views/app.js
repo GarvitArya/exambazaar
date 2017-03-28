@@ -186,6 +186,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getUser = function(userId) {
             return $http.get('/api/users/edit/'+userId, {userId: userId});
         };
+        this.getUserBasic = function(userId) {
+            return $http.get('/api/users/editBasic/'+userId, {userId: userId});
+        };
         this.getUserShortlisted = function(userId) {
             return $http.get('/api/users/editShortlist/'+userId, {userId: userId});
         };
@@ -435,6 +438,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.getProviderBasic = function(coachingId) {
             return $http.get('/api/targetStudyProviders/basiccoaching/'+coachingId, {coachingId: coachingId});
+        };
+        this.cisavedUsers = function(coachingId) {
+            return $http.get('/api/targetStudyProviders/cisavedUsers/'+coachingId, {coachingId: coachingId});
         };
         this.saveProvider = function(provider) {
             return $http.post('/api/targetStudyProviders/savecoaching',provider);
@@ -774,7 +780,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
     
     
-    exambazaar.controller("oldclaimController", 
+    exambazaar.controller("oldClaimController", 
     [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies','$mdDialog', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies,$mdDialog){
         
         $scope.editable = false;
@@ -830,7 +836,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'Upload', 'thisProvider', 'imageMediaTagList', 'examList', 'streamList', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, Upload, thisProvider, imageMediaTagList, examList,streamList,  $state,$stateParams, $cookies,$mdDialog, $timeout){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'Upload', 'thisProvider', 'imageMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, Upload, thisProvider, imageMediaTagList, examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.resultSet = [
@@ -940,7 +946,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         ];
         
         $scope.provider = thisProvider.data;
-        
+        //ABC
+        $scope.cisavedUsersList = cisavedUsersList.data;
+        console.log($scope.cisavedUsersList);
         $scope.showClaimDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#claimDialog',
@@ -960,7 +968,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if(shortlistedIds.indexOf($scope.provider._id) != -1){
                     $scope.shortlisted = true;
                 }
-                console.info(data);
+                //console.info(data);
             })
             .error(function (data, status, header, config) {
                 alert(status + " " + data);    
@@ -1488,6 +1496,23 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }
             });
         };
+       
+        $scope.markasdone = function(){
+            var cisavedForm = {
+                institute: $scope.provider._id,
+                user: $scope.user.userId
+            };
+            //console.info(cisavedForm);
+            cisavedService.savecisaved(cisavedForm).success(function (data, status, headers) {
+                //console.info('Done');
+                $scope.showMarkedDialog();
+                $state.reload();
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
+        
         
         $scope.addExamResult = function(examResult, multimode){
             //alert('Here');
@@ -1828,6 +1853,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.showSavedDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#savedDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
+        $scope.showMarkedDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#markedDialog',
               parent: angular.element(document.body),
               targetEvent: ev,
               clickOutsideToClose: true
@@ -4229,7 +4265,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 },
                 'body':{
                     templateUrl: 'oldclaim.html',
-                    controller: 'oldclaimController',
+                    controller: 'oldClaimController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -4279,6 +4315,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 streamList: ['StreamService',
                     function(StreamService){
                     return StreamService.getStreams();
+                }],
+                cisavedUsersList: ['targetStudyProviderService', '$stateParams',
+                    function(targetStudyProviderService,$stateParams) {  
+                    return targetStudyProviderService.cisavedUsers($stateParams.coachingId);
                 }],
                 
                 provider: function() { return {}; }
