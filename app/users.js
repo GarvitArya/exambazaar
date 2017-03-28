@@ -36,7 +36,7 @@ router.post('/save', function(req, res) {
         });
         this_user.save(function(err, this_user) {
             if (err) return console.error(err);
-            res.json(this_user._id);
+            res.json(this_user);
         });
     });
 });

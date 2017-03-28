@@ -563,7 +563,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.newUser.userType = 'Student';
             $scope.newUser.verified = true;
             var saveUser = UserService.saveUser($scope.newUser).success(function (data, status, headers) {
-                var userId = data;
+                var fulluser = data;
+                
+                var sessionuser = {
+                    userId: fulluser._id,
+                    masterId: fulluser._id,
+                    userType: fulluser.userType,
+                    basic: fulluser.basic,
+                    image: fulluser.image,
+                    mobile: fulluser.mobile,
+                    email: fulluser.email,
+                    nLogins: fulluser.logins.length
+                };
+                $cookies.putObject('sessionuser', sessionuser);
+                
+                //DEF
                 $state.go('main');
                 
             })
