@@ -782,7 +782,7 @@ router.post('/savecoaching', function(req, res) {
 });
 router.get('/coaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
-    //console.log(coachingId);
+    console.log('Fetching coaching ' + coachingId);
     
     var thisProvider = targetStudyProvider
         .findOne({'_id': coachingId})
@@ -809,8 +809,7 @@ router.get('/basiccoaching/:coachingId', function(req, res) {
 
 router.get('/cisavedUsers/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
-    
-    
+    console.log('Fetching saved users for ' + coachingId);
     var cisavedUsers = cisaved
         .find({'institute': coachingId},{user:1, _date: 1})
         .deepPopulate('user')
@@ -825,15 +824,18 @@ router.get('/cisavedUsers/:coachingId', function(req, res) {
                     name: thissave.user.basic.name,
                     _date: thissave._date
                 }
-                console.log(newcisavedUser);
+                //console.log(newcisavedUser);
                 counter = counter + 1;
                 cisavedUsersBasic.push(newcisavedUser);
                 if(counter == nLength){
-                    console.log(JSON.stringify(cisavedUsersBasic));
+                    //console.log(JSON.stringify(cisavedUsersBasic));
                     res.json(cisavedUsersBasic);
                 }
                 
             });
+            if(nLength==0){
+                res.json([]);
+            }
             //ABC
             
             
