@@ -195,6 +195,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getUserShortlisted = function(userId) {
             return $http.get('/api/users/editShortlist/'+userId, {userId: userId});
         };
+        this.getUsers = function() {
+            return $http.get('/api/users');
+        };
+        this.getInterns = function() {
+            return $http.get('/api/users/interns');
+        };
         this.getUserFilled = function(userId) {
             
             return $http.get('/api/users/editFilled/'+userId, {userId: userId});
@@ -211,14 +217,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.addPic = function(newPicForm) {
             return $http.post('/api/users/addPic', newPicForm);
         };
-        this.getUsers = function() {
-            return $http.get('/api/users');
-        };
+        
         this.getUsersCount = function() {
             return $http.get('/api/users/count');
         };
         this.getVerfiedUsersCount = function() {
             return $http.get('/api/users/verfiedCount');
+        };
+        this.getStudentCount = function() {
+            return $http.get('/api/users/studentcount');
         };
         this.updatePassword = function(userPassword) {
             return $http.post('/api/users/updatePassword',userPassword);
@@ -325,7 +332,26 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
     }]);
+    exambazaar.service('tofillciService', ['$http', function($http) {
+       
+        this.savetofillci = function(tofillciForm) {
+            return $http.post('/api/tofillcis/save', tofillciForm);
+        };
+        this.markDone = function(tofillciForm) {
+            return $http.post('/api/tofillcis/markDone', tofillciForm);
+        };
         
+        
+        this.gettofillci = function(tofillciId) {
+            return $http.get('/api/tofillcis/edit/'+tofillciId, {tofillciId: tofillciId});
+        };
+        this.gettofillcis = function() {
+            return $http.get('/api/tofillcis');
+        };
+        this.getusertofillcis = function(userId) {
+            return $http.get('/api/tofillcis/user/'+userId, {userId: userId});
+        };
+    }]);
     exambazaar.service('LocationService', ['$http', function($http) {
         this.saveLocation = function(location) {
             return $http.post('/api/locations/save', location);
@@ -957,7 +983,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);  
     
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'Upload', 'thisProvider', 'imageMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, Upload, thisProvider, imageMediaTagList, examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService','Upload', 'thisProvider', 'imageMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService ,Upload, thisProvider, imageMediaTagList, examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.resultSet = [
@@ -1676,9 +1702,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
             //console.info(cisavedForm);
             cisavedService.savecisaved(cisavedForm).success(function (data, status, headers) {
-                //console.info('Done');
-                $scope.showMarkedDialog();
-                $state.reload();
+                tofillciService.markDone(cisavedForm)
+                .success( function (data, status, headers) {
+                    $scope.showMarkedDialog();
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+                
             })
             .error(function (data, status, header, config) {
                 console.info("Error ");
@@ -2556,11 +2588,42 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
         
     exambazaar.controller("masterDashboardController", 
-        [ '$scope','usersCount','verifiedUsersCount','coachingCount', function($scope, usersCount,verifiedUsersCount,coachingCount){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', '$state', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,$state){
             
             $scope.usersCount = usersCount.data;
+            $scope.studentCount = studentCount.data;
             $scope.coachingCount = coachingCount.data;
+            $scope.internList = internList.data;
+            $scope.tofillciList = tofillciList.data;
+            //console.info($scope.tofillciList);
             $scope.verifiedUsersCount = verifiedUsersCount.data;
+            $scope.ciDeadline = new Date();
+            $scope.ciDeadline.setDate( $scope.ciDeadline.getDate() + 1);
+            $scope.assignCIFill = function(){
+                var intern = $scope.ciIntern;
+                var coaching = $scope.instituteInput;
+                var ciDeadline = $scope.ciDeadline;
+                
+                var res = coaching.split("/");
+                var coaching = res[res.length-1];
+                if(coaching.length < 15 || !ciDeadline){
+                    alert('Check Coaching Id or URL and deadline date');
+                }else{
+                    //ABC
+                    var tofillciForm = {
+                        institute: coaching,
+                        user: intern,
+                        _deadline: ciDeadline,
+                    };
+                    tofillciService.savetofillci(tofillciForm).success(function (data, status, headers) {
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info(status + " " + data);
+                    });
+                }
+            };
+            
     }]);
     
     exambazaar.controller("seocontroller", ['$rootScope', function($rootScope){
@@ -2585,13 +2648,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                $scope.$evalAsync(
                     function( $scope ) {
                         $scope.notification = data;
-                        //alert(JSON.stringify(data));
                     }
                 ); 
                    
                 })
                 .error(function (data, status, header, config) {
-                    alert(status + " " + data);
+                    console.info(status + " " + data);
                 });
             }    
         } 
@@ -2606,7 +2668,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     console.info('Login marked');
                 })
                 .error(function (data, status, header, config) {
-                    alert(status + " " + data);    
+                    console.info(status + " " + data);    
                 });
                 UserService.getUser(user._id).success(function (data, status, headers) {
                     var fulluser = data;
@@ -2625,17 +2687,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                             nLogins: fulluser.logins.length
                         };
                         $cookies.putObject('sessionuser', sessionuser);
-                        //alert($state.current.name);
-                        //alert($state.current.name);
                         if($state.current.name == 'main' || $state.current.name == 'landing' || $state.current.name == 'login'){
                             if(sessionuser.userType =='Master'){
                                 $state.go('master-dashboard', {masterId: sessionuser.masterId});
                                 
                                 
                             }
-                            if(sessionuser.userType =='Intern - Business Development'){
-                                //alert('Here');
-                                 $state.go('targetStudyProviders', {city: 'Jaipur'});
+                            if(sessionuser.userType =='Intern - Business Development'){ $state.go('targetStudyProviders', {city: 'Jaipur'});
                             }
                             if(sessionuser.userType =='Student'){
                                 $state.reload();
@@ -2647,7 +2705,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         
                         
                     }else{
-                        //alert("User id is: " + user._id);
+                        
                         $state.go('verify', {userId: user._id});
                     }
                     
@@ -2661,8 +2719,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
               
               $scope.login.password="";
               $scope.message = 'Incorrect Mobile or Password';
-                //alert(JSON.stringify(data));
-              //$state.go('main');
+                
             });
         };//login ends
         $scope.logout = function(){
@@ -2687,7 +2744,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
 
         /*if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position){
-                alert(JSON.stringify(position));
+                
                 $scope.position = position;
               
             });
@@ -2695,7 +2752,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         //geolocation.getLocation().then(function(data){
         /*geolocation.getLocation().then(function(data){
             $scope.coords = {lat:data.coords.latitude, long:data.coords.longitude, accuracy:data.coords.accuracy};
-            //alert(data.coords.accuracy);
+            
             $cookies.putObject('location', $scope.coords);
         });*/
             
@@ -2717,13 +2774,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                $scope.$evalAsync(
                     function( $scope ) {
                         $scope.notification = data;
-                        //alert(JSON.stringify(data));
                     }
                 ); 
                    
                 })
                 .error(function (data, status, header, config) {
-                    alert(status + " " + data);
+                    console.info(status + " " + data);
                 });
             }    
         }
@@ -2757,7 +2813,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     console.info('Login marked');
                 })
                 .error(function (data, status, header, config) {
-                    alert(status + " " + data);    
+                    console.info(status + " " + data);    
                 });
                 
                
@@ -2795,10 +2851,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         });*/
                             console.info(JSON.stringify(sessionuser));
                         }
-                        //alert($state.current.name);
-                        //alert($state.current.name);
                         if($state.current.name == 'main' || $state.current.name == 'landing'){
                             if(sessionuser.userType =='Master'){
+                                
                                 $state.go('master-dashboard', {masterId: sessionuser.masterId});
                                 
                                 
@@ -2818,7 +2873,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         
                         
                     }else{
-                        //alert("User id is: " + user._id);
+                        
                         $state.go('verify', {userId: user._id});
                     }
                     
@@ -2844,26 +2899,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]); 
     
-    exambazaar.controller("UserController", 
-        [ '$scope','$state', 'thisuser','UserService','StudentService','TeacherService','$http', function($scope,$state, thisuser,UserService,StudentService,TeacherService,$http){
-            $scope.thisuser = thisuser.data;
-            if($scope.thisuser.userType=='Student'){
-                alert($scope.thisuser._student._id);
-                //$state.go('institute', {instituteId: $scope.thisuser._institute._id});
-                $state.go('student', {studentId: $scope.thisuser._student[0]._id});
-            }
-            if($scope.thisuser.userType=='Teacher'){
-                //alert($scope.thisuser._teacher._id);
-                //$state.go('institute', {instituteId: $scope.thisuser._institute._id});
-                $state.go('teacher', {teacherId: $scope.thisuser._teacher[0]._id});
-            }
-    }]);
       
     
     exambazaar.controller("verifyController", 
     [ '$scope','thisuser','OTPService','UserService','$rootScope','$state','$cookies', function($scope,thisuser,OTPService,UserService,$rootScope,$state,$cookies){
         $scope.user = thisuser.data;
-        //alert(JSON.stringify($scope.user));
         $scope.sessionuser = $cookies.getObject('sessionuser');
         
         $scope.enterOTP=false;
@@ -2883,7 +2923,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
         $scope.generateUserOTP = function(){
-            //alert(JSON.stringify(thisOTP));
             OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
             $scope.acknowledgement = data;
             $scope.enterOTP = true;
@@ -2909,13 +2948,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         };
         $scope.setNewPassword = function(){
-            //alert($scope.password);
            var userPassword = {
                userId: $scope.user._id,
                newPassword: $scope.password
            };
             UserService.updatePassword(userPassword).success(function (data, status, headers) {
-                //alert("all done");
                 $rootScope.message = 'User verified & password updated! Please login again.';
                 $scope.logout();
                 //$state.go('main');
@@ -2931,8 +2968,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.logout = function(){
             
                 $cookies.remove('sessionuser');
-                //$http.post('/logout');
-            //alert("Logging out now");
+              
                 $state.reload();
                 //$state.go("main", {}, {reload: true});
             };
@@ -2954,7 +2990,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             uploader.onSuccessItem = function(fileItem, response, status, headers) {
                 //console.info('onSuccessItem', fileItem, response, status, headers);
                 var link = response.link;
-                //alert(JSON.stringify(response.link));
                 console.info('Resume added');
                 if(link){
                     $scope.applicant.resume = link;
@@ -2966,7 +3001,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     console.info("Ready to add to database");
                     MasterService.addIntern($scope.applicant).success(function (data, status, headers) {
                         console.info("Done");
-                        //alert("Thank you, your application has been submitted");
                         $scope.submitted = 1;
                     })
                     .error(function (data, status, header, config) {
@@ -3020,7 +3054,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }).then(function (resp) {
                     console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                     thisFile.link = $(resp.data).find('Location').text();
-                    //alert(thisFile.link);
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
                 }, function (evt) {
@@ -3040,7 +3073,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
         $scope.submit = function() {
           if ($scope.form.file.$valid && $scope.file) {
-            //alert($scope.file.name);
             var fileInfo = {
                 filename: $scope.file.name,
                 contentType: $scope.file.type
@@ -3078,7 +3110,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
             
           }else{
-              alert('Error');
+              console.info('Error');
           }
         };
 
@@ -3165,7 +3197,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     exambazaar.controller("getTargetStudyCoachingController", 
     [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities','$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog,locationsList,$window){
         $scope.providersList = targetStudyProvidersList.data;
-        //alert($scope.providersList);
         $scope.cities = targetStudyCities.data;
         $scope.city = $stateParams.city;
         
@@ -3235,7 +3266,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.uprank = function(provider){
             targetStudyProviderService.uprank(provider._id).success(function (data, status, headers) {
-                //alert("Done");
                 console.info("Done");
             })
             .error(function (data, status, header, config) {
@@ -3244,7 +3274,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         $scope.downrank = function(provider){
             targetStudyProviderService.downrank(provider._id).success(function (data, status, headers) {
-                //alert("Done");
                 console.info("Done");
             })
             .error(function (data, status, header, config) {
@@ -3262,7 +3291,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var tempFilterText = '',
             filterTextTimeout;
         $scope.$watch('searchText', function (val) {
-            //alert('Here');
             if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
 
             tempFilterText = val;
@@ -3409,7 +3437,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             var pivot1 = url.indexOf('/');
             if(pivot1 != -1)
                 url = url.substring(0, pivot1);
-            //alert(url);
             $scope.suggestedLeft.forEach(function(thisLeft, index){
                 var newEmail = thisLeft + '@' + url;
                 $scope.suggestedEmails.push(newEmail);
@@ -3484,7 +3511,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
         $scope.uploadFaculties = function () {
-            alert('Here');
             var faculties = $scope.faculties;
             var nFiles = faculties.length;
             $scope.showAddFacultiesForm = false;
@@ -3572,7 +3598,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         $scope.uprank = function(provider){
             targetStudyProviderService.uprank(provider._id).success(function (data, status, headers) {
-                //alert("Done");
                 console.info("Done");
             })
             .error(function (data, status, header, config) {
@@ -3606,7 +3631,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.downrank = function(provider){
             targetStudyProviderService.downrank(provider._id).success(function (data, status, headers) {
-                //alert("Done");
                 console.info("Done");
             })
             .error(function (data, status, header, config) {
@@ -3618,7 +3642,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
            var provider = {
                targetStudyProvider: $scope.provider
            }; targetStudyProviderService.saveProvider(provider).success(function (data, status, headers) {
-                alert("Provider Saved");
                 console.info("Done");
             })
             .error(function (data, status, header, config) {
@@ -3631,7 +3654,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     exambazaar.controller("mastergetCoachingController", 
     [ '$scope', 'ProviderService','providersList','$timeout','$state','$stateParams', function($scope, ProviderService,providersList,$timeout,$state,$stateParams){
-        //alert("Here");
         //$scope.master = thismaster.data;
         $scope.cities = ['Agra','Ahmedabad','Akola','Aligarh','Allahabad','Amravati','Amritsar','Aurangabad','Bareilly','Belgaum','Bengaluru','Bhavnagar','Bhilai','Bhopal','Bhubaneswar','Bikaner','Bokaro','Chandigarh','Chennai','Cochin','Coimbatore','Cuttack','Dehradun','Delhi','Dhanbad','Durgapur','Gorakhpur','Guwahati','Gwalior','Hyderabad','Indore','Jaipur','Jalandhar','Jalgaon','Jammu','Jamnagar','Jamshedpur','Jhansi','Kanpur','Kolhapur','Kolkata','Kota','Kozhikode','Lucknow','Ludhiana','Madurai','Meerut','Moradabad','Mumbai','Mysore','Nagpur','Nanded','Nashik','Nellore','Patiala','Patna','Pune','Raipur','Rajkot','Ranchi','Salem','Solapur','Surat','Tirupur','Trichy','Trivandrum','Udaipur','Ujjain','Vadodara','Varanasi','Vijayawada','Visakhapatnam'];
         $scope.city = $stateParams.city;
@@ -3710,14 +3732,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.student = student;
         };
         $scope.updateProfilePic = function(imageUrl){
-            alert(imageUrl);
             $scope.profilePic = imageUrl;
         };
         $scope.addStudent = function () {
             alert($scope.profilePic);
             $scope.student.parent.mobile = $scope.student.contact.mobile;
             $scope.student.parent.email = $scope.student.contact.email;
-            //alert("here");
             if($scope.profilePic != ""){
                 $scope.student.account = {
                     imageUrl: $scope.profilePic
@@ -3726,17 +3746,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             var saveStudent = StudentService.saveStudent($scope.student).success(function (data, status, headers) {
             var studentId = data;
             $scope.formmessage = "Student " + $scope.student.basic.firstName + " " + $scope.student.basic.lastName + " saved!";
-            
-            //alert("Student saved with id:" + studentId);
             var newparent = $scope.student.parent;
             newparent.studentId = studentId;
             var saveParent = ParentService.saveParent(newparent).success(function (data, status, headers) {
                 var parentId = data;
                 $state.go('institute', {instituteId: $scope.institute._id});
-                //alert("Parent saved with id:" +parentId);
             })
             .error(function (data, status, header, config) {
-                $scope.ServerResponse =  alert("Data: " + data +
+                console.info("Data: " + data +
                     "\n\n\n\nstatus: " + status +
                     "\n\n\n\nheaders: " + header +
                     "\n\n\n\nconfig: " + config);
@@ -3793,6 +3810,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.sendGridCredential = sendGridCredential;
         };
     }]);
+    
+    exambazaar.controller("assignedController", 
+        [ '$scope', 'thisuser' , 'thisuserAssigned',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssigned, $http, $state, $rootScope){
+        $scope.user = thisuser.data;
+        $scope.assigned = thisuserAssigned.data;
+        if($scope.user.userType =='Master' || $scope.user.userType =='Intern - Business Development'){
+            $scope.authorized = true;
+        } 
+        
+        $rootScope.title =$scope.user.basic.name;
+    }]);  
     
     exambazaar.controller("filledCIController", 
         [ '$scope', 'thisuser' , 'thisuserFilled',  '$http','$state','$rootScope', function($scope, thisuser, thisuserFilled, $http, $state, $rootScope){
@@ -3948,7 +3976,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
          
         $scope.addMediaTag = function () {
-            //alert('Here');
             var saveMediaTag = MediaTagService.saveMediaTags([$scope.mediaTag]).success(function (data, status, headers) {
                
                 alert("Media Tag saved: " + $scope.mediaTag.media + ' > ' + $scope.mediaTag.type + ' > ' + $scope.mediaTag.subType);
@@ -5020,10 +5047,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     function(UserService) {
                     return UserService.getVerfiedUsersCount();
                 }],
+                studentCount: ['UserService',
+                    function(UserService) {
+                    return UserService.getStudentCount();
+                }],
+                internList: ['UserService',
+                    function(UserService) {
+                    return UserService.getInterns();
+                }],
                 coachingCount: ['targetStudyProviderService',
                     function(targetStudyProviderService) {
                     return targetStudyProviderService.getCount();
-                }]
+                }],
+                tofillciList: ['tofillciService',
+                    function(tofillciService) {
+                    return tofillciService.gettofillcis();
+                }],
             }
         })
         .state('master-manageBatchStudents', {
@@ -5441,6 +5480,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 thisuserFilled: ['UserService', '$stateParams',
                     function(UserService,$stateParams){
                     return UserService.getUserFilled($stateParams.userId);
+                }],
+                
+                user: function() { return {}; }
+            }
+        })
+        .state('assigned', {
+            url: '/user/:userId/assigned',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'assigned.html',
+                    controller: 'assignedController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                thisuserAssigned: ['tofillciService', '$stateParams',
+                    function(tofillciService,$stateParams){
+                    return tofillciService.getusertofillcis($stateParams.userId);
+                        //ABC
                 }],
                 
                 user: function() { return {}; }

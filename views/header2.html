@@ -162,20 +162,15 @@
             <li>
             <a ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
             </li>
-            <!--<li ng-repeat="unread in notification.unread">
-                <a ng-click="markRead(unread)">
-                <strong>
-                    {{unread.forDate | date}} {{unread.text}}
-                    </strong>
-                </a>
+            <li ng-if="sessionuser.userType=='Intern - Business Development'">
+                <a ui-sref="filled({ userId:{{'sessionuser.userId'}} })">Your Filled Institutes</a>
             </li>
-            <li role="separator" class="divider"></li>
-            <li ng-repeat="read in notification.read">
-                <a ng-click="#">
-                
-                    {{read.forDate | date}} {{read.text}}
-                </a>
-            </li>-->
+            <li ng-if="sessionuser.userType=='Intern - Business Development'">
+                <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>
+            </li>
+            <li ng-if="sessionuser.userType=='Master'">
+                <a ui-sref="filledAll({ userId:{{'sessionuser.userId'}} })">Filled Institutes</a>
+            </li>
           </ul>
         </li>    
         

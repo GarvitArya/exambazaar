@@ -66,7 +66,14 @@ router.get('/count', function(req, res) {
     } else {throw err;}
     });
 });
-
+router.get('/studentcount', function(req, res) {
+    user.count({userType:'Student'}, function(err, docs) {
+    if (!err){ 
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    });
+});
 
 router.get('/verfiedCount', function(req, res) {
     user.count({verified: true}, function(err, docs) {
@@ -219,6 +226,20 @@ router.get('/edit/:userId', function(req, res) {
     });
 });
 
+//to get a particular user with _id userId
+router.get('/interns', function(req, res) {
+    console.log('Getting all interns');
+    user
+        .find({ 'userType': 'Intern - Business Development' },{basic:1})
+        //.deepPopulate('_master.contact')
+        .exec(function (err, docs) {
+        if (!err){ 
+            console.log(docs);
+            res.json(docs);
+            //process.exit();
+        } else {throw err;}
+    });
+});
 router.get('/editPartner/:userId', function(req, res) {
     var userId = req.params.userId;
     console.log("User is " + userId);
@@ -349,6 +370,7 @@ router.get('/editFilled/:userId', function(req, res) {
 
             } else {throw err;}
         });
+        
         
     }
     

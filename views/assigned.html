@@ -29,53 +29,48 @@
     </div>
     <div layout="column" layout-align="start start" ng-if="authorized">
         <div layout="row" layout-align="center center" class="font20 text-primary bold width100">
-            Institutes filled&nbsp;<span class="badge" id="badge">{{filtered.length}}</span>
+            Institutes Assigned&nbsp;<span class="badge" id="badge">{{filtered.length}}</span>
         </div>
-        <div layout="row" layout-align="center center" layout-padding class="width100">
-            <span ng-repeat="uniqueUser in uniqueUsers">
-                <span class="badge unselectedName" ng-class="{ selectedName: filterText==uniqueUser }" ng-click="setUser(uniqueUser)">
-                    {{uniqueUser}}
-                </span>&nbsp;
-            </span>
-            <span class="font10" ng-click="clear()" ng-if="filterText!=''">
-            Clear</span>
-        </div>
-        
         <div flex layout="row" layout-align="start center" class="width100 greyBottomBorder marginT20 bold">
             <div flex="5">
                 S. No.
             </div>
-            <div flex="10">
-                Date Time
-            </div>
             <div flex="20">
                 Institute
             </div>
-            <div flex="25">
-                Address
+            <div flex="10">
+                Created
             </div>
             <div flex="10">
-                User
+                Deadline
+            </div>
+            <div flex="10">
+                Finished?
+            </div>
+            <div flex="10">
+                Finished on
             </div>
         </div>
-        <div flex layout="row" layout-align="start center" ng-repeat="institute in filled | orderBy:'-_date' | filter:filterText as filtered" class="width100 greyDashedBottomBorder">
+        <div flex layout="row" layout-align="start center" ng-repeat="task in assigned | orderBy:['-active','_deadline','_created'] | filter:filterText as filtered" class="width100 greyDashedBottomBorder">
             <div flex="5">
                 {{$index+1}}
             </div>
-            <div flex="10" class="font10">
-                {{institute._date | date: "dd-MMM-yy HH:mm"}}
-            </div>
             <div flex="20" class="font12">
-                <a ui-sref="claim({ coachingId:{{'institute.institute'}} })" target="_blank" id="link">
-                <strong>{{institute.name}}</strong>
+                <a ui-sref="claim({ coachingId:{{'task.institute._id'}} })" target="_blank" id="link">
+                <strong>{{task.institute.name}}</strong>
                 </a>
-                
-            </div>
-            <div flex="25" class="font10">
-                {{institute.address}}, {{institute.city}} - {{institute.pincode}}
             </div>
             <div flex="10" class="font10">
-                {{institute.userName}}
+                {{task._created | date: "dd-MMM-yy HH:mm"}}
+            </div>
+            <div flex="10" class="font10">
+                {{task._deadline | date: "dd-MMM-yy HH:mm"}}
+            </div>
+            <div flex="10">
+                {{!task.active}}
+            </div>
+            <div flex="10" class="font10">
+                {{task._finished | date: "dd-MMM-yy HH:mm"}}
             </div>
         </div>
         
