@@ -91,7 +91,7 @@
         </div>
     </div>
     <div class="row whiteBackground greyBorder" id="assignTask">
-        <div layout="column" layout-margin  layout-align="center center" class="font10">
+        <div layout="column"   layout-align="center center" class="font10">
             <span class="top-buffer font20">Assigned Tasks</span>
             <div flex layout="row" class="width100 greyDashedBottomBorder">
                 <div layout="column" layout="center center" flex="5">S. No.</div>
@@ -103,11 +103,11 @@
                 <div layout="column" layout="center center" flex="20">Institute</div>
                 <div layout="column" layout="center center" flex="5">City</div>
             </div>
-            <div flex layout="row" ng-repeat="tofillci in tofillciList | orderBy:['-active','_deadline','_created']" class="width100 greyDashedBottomBorder">
+            <div layout="row" ng-repeat="tofillci in tofillciList | orderBy:['-active','_deadline','_created']" class="width100 greyDashedBottomBorder" ng-class="{ pending: tofillci.active }">
                 <div layout="column" layout="center center" flex="5">{{$index + 1}}</div>
                 <div layout="column" layout="center center" flex="10">{{tofillci._created | date: "dd-MMM-yy HH:mm"}}</div>
                 <div layout="column" layout="center center" flex="10">{{tofillci._deadline | date: "dd-MMM-yy HH:mm"}}</div>
-                <div layout="column" layout="center center" flex="10">{{!tofillci.active}}</div>
+                <div layout="column" layout="center center" flex="10" ng-class="{ pending2: tofillci.active }">{{!tofillci.active}}</div>
                 <div layout="column" layout="center center" flex="15">{{tofillci._finished | date: "dd-MMM-yy HH:mm"}}</div>
                 <div layout="column" layout="center center" flex="15">{{tofillci.user.name}}</div>
                 <div layout="column" layout="center center" flex="20">
