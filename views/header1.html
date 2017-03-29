@@ -84,7 +84,10 @@
             
         <li><a href="#/" ng-click="logout()">Logout</a></li>
         </ul>
-        
+        <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Partner'">
+            <li><a ui-sref="partner-dashboard({ partnerId:{{'sessionuser.userId'}} })">Home</a></li>
+            <li><a ui-sref="claim({ coachingId:{{'sessionuser.partner[0]'}} })">Claim</a></li>
+        </ul>
         <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
         <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
         <li class="dropdown">
@@ -135,14 +138,16 @@
         </ul>
         
         
-        <ul class="nav navbar-nav navbar-right" ng-if="sessionuser.basic">
+        <ul class="nav navbar-nav navbar-right">
         <li>
             <span ng-if="sessionuser.image">
                 <img ng-src="{{sessionuser.image}}" id="userPic"/>
             </span>
         </li>       
-        <li class="dropdown">
-        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{sessionuser.basic.name}}
+        <li class="dropdown" ng-if="sessionuser">
+        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span ng-if="sessionuser.basic.name">{{sessionuser.basic.name}}</span>
+            <span ng-if="!sessionuser.basic.name">Get Started</span>
             <span class="badge">
             {{notification.unread.length}}
             </span>
@@ -153,7 +158,7 @@
             <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })">Profile</a>
             </li>
             <li>
-            <a ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
+            <a ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
             </li>
             <!--<li ng-repeat="unread in notification.unread">
                 <a ng-click="markRead(unread)">

@@ -22,23 +22,30 @@ router.post('/save', function(req, res) {
     var mobileNumber = thisUser.contact.mobile;
     console.log("User is: " + JSON.stringify(thisUser));
     var existingUser = user.findOne({ 'mobile': mobileNumber },function (err, existingUser) {
-        var hash = bcrypt.hashSync(thisUser.password, bcrypt.genSaltSync(10));
-        var this_user = new user({
-            userType : thisUser.userType,
-            password : hash,
-            basic: {
-                name: thisUser.basic.name,
-                gender: thisUser.basic.gender,
-                dob: thisUser.basic.dob,
-            },
-            mobile: thisUser.contact.mobile,
-            email: thisUser.contact.email,
-            verified: thisUser.verified
-        });
-        this_user.save(function(err, this_user) {
-            if (err) return console.error(err);
-            res.json(this_user);
-        });
+        if(existingUser){
+            
+        }else{
+            var hash = bcrypt.hashSync(thisUser.password, bcrypt.genSaltSync(10));
+            var this_user = new user({
+                userType : thisUser.userType,
+                password : hash,
+                
+                mobile: thisUser.contact.mobile,
+                email: thisUser.contact.email,
+                verified: thisUser.verified
+            });
+            if(thisUser.partner){
+                this_user.partner = [thisUser.partner];
+            }
+            if(thisUser.basic){
+                this_user.basic = thisUser.basic;
+            }
+            this_user.save(function(err, this_user) {
+                if (err) return console.error(err);
+                res.json(this_user);
+            });
+        }
+        
     });
 });
 
@@ -211,6 +218,45 @@ router.get('/edit/:userId', function(req, res) {
         } else {throw err;}
     });
 });
+
+router.get('/editPartner/:userId', function(req, res) {
+    var userId = req.params.userId;
+    console.log("User is " + userId);
+    user
+        .findOne({ '_id': userId },{userType: 1, partner: 1})
+        .deepPopulate('partner')
+        .exec(function (err, thisUser) {
+        if (!err){ 
+            if(thisUser.userType == 'Partner'){
+                var partnersFull = thisUser.partner;
+                var counter = 0;
+                var nLength = partnersFull.length;
+                var partnersBasic = [];
+                partnersFull.forEach(function(thisPartner, partnerIndex){
+                    var newPartnerBasic = {
+                        _id: thisPartner._id,
+                        name: thisPartner.name,
+                        city: thisPartner.city,
+                    };
+                    counter = counter + 1;
+                    partnersBasic.push(newPartnerBasic);
+                    if(counter == nLength){
+                        console.log(JSON.stringify(partnersBasic));
+                        res.json(partnersBasic);
+                    }
+                });
+                //console.log(thisUser);
+                
+            }else{
+                res.json([]);
+            }
+            
+            
+            //process.exit();
+        } else {throw err;}
+    });
+});
+
 //to get a particular user with _id userId
 router.get('/editBasic/:userId', function(req, res) {
     var userId = req.params.userId;
@@ -267,6 +313,7 @@ router.get('/editFilled/:userId', function(req, res) {
             } else {throw err;}
         });
     }else{
+        
         var usersavedCIs = cisaved
             .find({'user': userId},{institute:1,user:1, _date: 1})
             .deepPopulate('institute user')

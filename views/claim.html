@@ -1625,7 +1625,7 @@
     </div>
     
     
-    <div layout="row" layout-xs="column" class="componentRow  " id="EBNotes">
+    <div layout="row" layout-xs="column" class="componentRow  " id="EBNotes" ng-if="ebuser">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder" id="paneLeft" ng-class="{ editing: editEBnote }">
@@ -1679,7 +1679,7 @@
     
     
     
-    <div layout="row" layout-xs="column" class="componentRow  lastRow2 lastRow" id="SavedHistory">
+    <div layout="row" layout-xs="column" class="componentRow  lastRow2 lastRow" id="SavedHistory" ng-if="ebuser">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder" id="paneLeft" ng-class="{ editing: editEBnote }">
@@ -2220,9 +2220,10 @@
                     </div>
                 <div layout="row" layout-align="center center" layout-padding class="top-buffer" ng-show="!verifyingOTP">
                     <div layout="column" layout-align="center center" flex="50">
-                        <div layout="column" layout-align="center center" id="claimButton" ng-click="verifyByOTP()">
+                        <div layout="column" layout-align="center center" id="claimButton" ng-click="verifyClaim()">
+                            <!-- ng-click="verifyByOTP()" -->
                             <span class="">
-                                Verify Mobile
+                                Claim Institute
                             </span>
                         </div>
                         
@@ -2302,7 +2303,21 @@
                         </span>
                     </div>
                 </div>
-                      
+                
+                <div layout="row" layout-align="center start" layout-padding class="width100" ng-show="createUserBool && verifyStep == 3">
+                    
+                    <div layout="column" layout-align="center center" class="top-buffer10 text-center md-title">
+                        <span>
+                        Choose a password and tell us about yourself
+                        </span>
+                        <span>
+                        <input type="text" class="font12 width100" ng-model="claimName"  placeholder="Tell us your name" focus-me="true" id="newMobile">
+                        </span>
+                        <span class="top-buffer10">
+                        
+                        </span>
+                    </div>
+                </div>
                       
                 </div>
               </div>
