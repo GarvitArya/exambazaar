@@ -103,7 +103,7 @@
                 <div layout="column" layout="center center" flex="20">Institute</div>
                 <div layout="column" layout="center center" flex="5">City</div>
             </div>
-            <div flex layout="row" ng-repeat="tofillci in tofillciList" class="width100 greyDashedBottomBorder">
+            <div flex layout="row" ng-repeat="tofillci in tofillciList | orderBy:['-active','_deadline','_created']" class="width100 greyDashedBottomBorder">
                 <div layout="column" layout="center center" flex="5">{{$index + 1}}</div>
                 <div layout="column" layout="center center" flex="10">{{tofillci._created | date: "dd-MMM-yy HH:mm"}}</div>
                 <div layout="column" layout="center center" flex="10">{{tofillci._deadline | date: "dd-MMM-yy HH:mm"}}</div>
