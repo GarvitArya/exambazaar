@@ -878,8 +878,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.verifyOTP = function(){
             
             
+            
             if($scope.enterOTP[0] && $scope.enterOTP[1] && $scope.enterOTP[2] && $scope.enterOTP[3]){
-                //alert('Here');
                 var enterOTP = $scope.enterOTP[0].toString() + $scope.enterOTP[1].toString() + $scope.enterOTP[2].toString() + $scope.enterOTP[3].toString();
                 //alert(enterOTP);
                 if(enterOTP == $scope.serverOTP){
@@ -890,6 +890,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }else{
                     $scope.incorrectOTP = true;
                     console.info('OTP incorrect');
+                    $scope.currStep = 2;
                     //alert('Not Matched');
                 }
             }
