@@ -90,10 +90,13 @@ router.post('/sendGrid', function(req, res) {
             var subject = subject;
             var content = new helper.Content('text/html', html);
             var mail = new helper.Mail(from_email, subject, to_email, content);
-            mail.personalizations[0].addSubstitution(
-              new helper.Substitution('-name-', name));
-
             mail.setTemplateId('f2c433ee-29cb-4429-8b28-774582fba276');
+            //mail.Substitution('-name-', name);
+            //mail.personalizations = [];
+            //mail.personalizations[0].addSubstitution(
+            //  new helper.Substitution('-name-', name));
+
+            
             var request = sg.emptyRequest({
               method: 'POST',
               path: '/v3/mail/send',

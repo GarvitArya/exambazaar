@@ -621,7 +621,7 @@
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement secondFont textLightGrey" id="paneMiddle">
             <div layout="column">
-                <div layout="row" layout-align="center center" id="upload2" ng-click="editContacts()" class="marginB10" ng-show="!editContact">
+                <div layout="row" layout-align="center center" id="upload2" ng-click="editContacts()" class="marginB10" ng-show="!editContact && editable">
                     <span class="font12">
                         <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Edit Contact
                     </span>
@@ -884,7 +884,7 @@
                 </div>
                  
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font10" ng-repeat = "examResult in examWiseResult" ng-if="examResult.exam == exam._id && !editResult" >
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bottom-buffer10" id="upload2" ng-click="editResults()">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bottom-buffer10" id="upload2" ng-click="editResults()" ng-show="editable">
                         Spreadsheet Mode
                     </div>
                     
@@ -1041,7 +1041,7 @@
             </span>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement" id="paneMiddle" >
-            <div layout="row" layout-align="center center" id="upload2" ng-click="editCourses()" class="marginB10" ng-show="!editCourse">
+            <div layout="row" layout-align="center center" id="upload2" ng-click="editCourses()" class="marginB10" ng-show="!editCourse && editable">
                 <span class="font12">
                     <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Edit Courses
                 </span>
@@ -1200,12 +1200,12 @@
             </span>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
-            <div layout="row" layout-align="center center" id="upload2" ng-click="editPhotos()" class="marginB10" ng-if="!editPhoto && provider.photo.length > 0">
+            <div layout="row" layout-align="center center" id="upload2" ng-click="editPhotos()" class="marginB10" ng-if="!editPhoto && provider.photo.length > 0" ng-show="editable">
                 <span class="font12">
                     <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Edit Photos
                 </span>
             </div>
-            <div layout="column" layout-align="center center" id="upload2" class="marginB10 font12" ng-if="editPhoto || provider.photo.length == 0" ngf-select="uploadPhotos(photos)" multiple="multiple" ng-model="photos" ngf-accept="'image/*'">
+            <div layout="column" layout-align="center center" id="upload2" class="marginB10 font12" ng-if="editPhoto || provider.photo.length == 0" ngf-select="uploadPhotos(photos)" multiple="multiple" ng-model="photos" ngf-accept="'image/*'" ng-show="editable">
                 <div layout="row" layout-align="center center">
                     <i class="fa fa-camera" aria-hidden="true"></i>&nbsp;
                     <span>
@@ -1334,7 +1334,7 @@
             </span>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
-            <div layout="row" layout-align="center center" id="upload2" ng-click="editVideos()" class="marginB10" ng-show="!editVideo">
+            <div layout="row" layout-align="center center" id="upload2" ng-click="editVideos()" class="marginB10" ng-show="!editVideo && editable">
                 <span class="font12">
                     <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Edit Videos
                 </span>
@@ -1436,13 +1436,13 @@
             </span>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
-            <div layout="row" layout-align="center center" id="upload2" ng-click="editFaculties()" class="marginB10" ng-show="!editFaculty && provider.faculty.length !=0">
+            <div layout="row" layout-align="center center" id="upload2" ng-click="editFaculties()" class="marginB10" ng-show="!editFaculty && provider.faculty.length !=0 && editable">
                 <span class="font12">
                     <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Edit Faculties
                 </span>
             </div>
             
-            <div layout="row" layout-align="center center" id="upload2" ng-model="faculties" ngf-select="uploadFaculties(faculties)" multiple="multiple" ngf-accept="'image/*'"  class="marginB10" ng-if="editFaculty || provider.faculty.length ==0">
+            <div layout="row" layout-align="center center" id="upload2" ng-model="faculties" ngf-select="uploadFaculties(faculties)" multiple="multiple" ngf-accept="'image/*'"  class="marginB10" ng-if="editFaculty || provider.faculty.length ==0" ng-show="editable">
                 <span class="font12">
                     <i class="fa fa-camera" aria-hidden="true"></i>&nbsp;Add Faculties
                 </span>
@@ -1562,7 +1562,7 @@
             Location
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
-            <div layout="row" layout-align="center center" id="upload2" ng-click="editLocations()" class="marginB10" ng-show="!editLocation">
+            <div layout="row" layout-align="center center" id="upload2" ng-click="editLocations()" class="marginB10" ng-show="!editLocation && editable">
                 <span class="font12">
                     <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Edit Location
                 </span>

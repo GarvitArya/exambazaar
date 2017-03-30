@@ -380,6 +380,7 @@ router.get('/editFilled/:userId', function(req, res) {
 
 router.get('/editShortlist/:userId', function(req, res) {
     var userId = req.params.userId;
+    console.log(userId);
     user
         .findOne({ '_id': userId },{shortlisted:1})
         .deepPopulate('shortlisted._id')
@@ -422,7 +423,9 @@ router.get('/editShortlist/:userId', function(req, res) {
                     } else {throw err;}
                 });
             });
-            
+            if(nShortlisted==0){
+                res.json([]);
+            }
             //res.json(basicShortlisted);
             //process.exit();
         } else {throw err;}

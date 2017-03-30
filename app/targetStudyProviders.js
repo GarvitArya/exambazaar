@@ -47,9 +47,9 @@ router.get('/count', function(req, res) {
 router.get('/city/:city', function(req, res) {
     var city = req.params.city;
     console.log("City is: "+city);
-    
+    //, 'exams.0': { $exists: true }, "logo": { $ne: "/img/bullets/box-orange-arrow.gif" }
     var cityProviders = targetStudyProvider
-        .find({'city': city, 'exams.0': { $exists: true }, "logo": { $ne: "/img/bullets/box-orange-arrow.gif" } },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1})
+        .find({'city': city },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1})
         .deepPopulate('exams location')
         .exec(function (err, cityProviders) {
         if (!err){
@@ -891,9 +891,9 @@ router.get('/logoService', function(req, res) {
 
 router.get('/UniqueLogoService', function(req, res) {
     console.log("Getting all logos");
-    targetStudyProvider.distinct( "oldlogo",function(err, docs) {
+    targetStudyProvider.distinct( "logo",function(err, docs) {
     if (!err){ 
-        //console.log(docs);
+        console.log('There are: ' + docs.length + ' unique logos!');
         res.json(docs);
     } else {throw err;}
     });
