@@ -3156,13 +3156,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var tempFilterText = '',
             filterTextTimeout;
         $scope.$watch('searchText', function (val) {
+            
             if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
-
+            console.info(val);
             tempFilterText = val;
             filterTextTimeout = $timeout(function() {
                 $scope.filterText = tempFilterText;
             }, 250); // delay 250 ms
         });
+        
+        
     }]);
     
      
@@ -3281,23 +3284,38 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
         };
         
+        $scope.searchText = '';
         $scope.filterText = '';
         $scope.setFilter = function(text){
-            $scope.searchText = text;
+            if(text && text !=''){
+                $scope.searchText = text;
+                $scope.filterText = text;
+            }else{
+                $scope.filterText = $scope.searchText;
+            }
+            
+            
         };
-        $scope.clearFilter = function(text){
+        $scope.clearFilter = function(){
             $scope.searchText = '';
+            $scope.filterText = '';
         };
-        var tempFilterText = '',
-            filterTextTimeout;
-        $scope.$watch('searchText', function (val) {
+        //var tempFilterText = '',
+        //    filterTextTimeout;
+        //ABC
+        /*$scope.$watch('searchText', function (newValue, oldValue, scope) {
+            //alert(newValue);
             if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
-
-            tempFilterText = val;
+            
+            tempFilterText = newValue;
             filterTextTimeout = $timeout(function() {
                 $scope.filterText = tempFilterText;
             }, 250); // delay 250 ms
-        });
+        });*/
+        
+        
+        
+        
         
         $scope.removeDuplicates = function(){
             targetStudyProviderService.removeDuplicates($scope.city).success(function (data, status, headers) {
