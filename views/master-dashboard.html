@@ -15,6 +15,9 @@
     #link:hover{
         color: #20C39A;
     }
+    #badge{
+        background: #20C39A;
+    }
 </style>
 <div class="container">
     <div id="spacer1">
@@ -48,6 +51,10 @@
                         <font size="10" class="text-primary" >{{coachingCount}}</font>
                     </div>
                     
+                    <div layout="column" layout-align="center">
+                        <span>Saved: {{coachingSavedCount}}</span>
+                        <span>Filled by Interns: {{filledCount}}</span>
+                    </div>
                 </div>
             </div>
             <div  class="panel panel-default">
@@ -60,7 +67,43 @@
                     </div>
                 </div>
             </div>
-            
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Interns</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{internList.length}}</font>
+                    </div>
+                    <div layout-align="center">
+                        <strong>Due Tasks:</strong><br/>
+                        <font size="10" class="text-primary" >{{fillsDue}}</font>
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Views</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout="column" layout-align="start start" class="font12">
+                        <span>
+                            Today:  {{masterViewSummary.today}}
+                        </span>
+                        <span>
+                            Yesterday:  {{masterViewSummary.yesterday}}
+                        </span>
+                        <span>
+                            Last 7 days:  {{masterViewSummary.week}}
+                        </span>
+                        <span>
+                            Total:  {{masterViewSummary.total}}
+                        </span>
+                        
+                    </div>
+                    
+                </div>
+            </div>
         </div>
         <md-divider></md-divider>
         
@@ -92,15 +135,22 @@
     </div>
     <div class="row whiteBackground greyBorder" id="assignTask">
         <div layout="column"   layout-align="center center" class="font10">
-            <span class="top-buffer font20">Assigned Tasks</span>
-            <div flex layout="row" class="width100 greyDashedBottomBorder">
+            <span class="top-buffer">
+                <span class="font20">Assigned Tasks</span>&nbsp;<span class="badge" id="badge">{{fillsDue}}</span>
+            </span>
+            <span class="font12">
+                <span ng-repeat="due in internDueList">
+                    [{{due.intern.basic.name}}: {{due.due}}]&nbsp;
+                </span>
+            </span>
+            <div flex layout="row" class="width100 greyDashedBottomBorder bold">
                 <div layout="column" layout="center center" flex="5">S. No.</div>
                 <div layout="column" layout="center center" flex="10">Created on</div>
                 <div layout="column" layout="center center" flex="10">Deadline</div>
                 <div layout="column" layout="center center" flex="10">Finished?</div>
-                <div layout="column" layout="center center" flex="15">Finished on</div>
+                <div layout="column" layout="center center" flex="10">Finished on</div>
                 <div layout="column" layout="center center" flex="15">Name</div>
-                <div layout="column" layout="center center" flex="20">Institute</div>
+                <div layout="column" layout="center center" flex="25">Institute</div>
                 <div layout="column" layout="center center" flex="5">City</div>
             </div>
             <div layout="row" ng-repeat="tofillci in tofillciList | orderBy:['-active','_deadline','_created']" class="width100 greyDashedBottomBorder" ng-class="{ pending: tofillci.active }">
@@ -108,9 +158,9 @@
                 <div layout="column" layout="center center" flex="10">{{tofillci._created | date: "dd-MMM-yy HH:mm"}}</div>
                 <div layout="column" layout="center center" flex="10">{{tofillci._deadline | date: "dd-MMM-yy HH:mm"}}</div>
                 <div layout="column" layout="center center" flex="10" ng-class="{ pending2: tofillci.active }">{{!tofillci.active}}</div>
-                <div layout="column" layout="center center" flex="15">{{tofillci._finished | date: "dd-MMM-yy HH:mm"}}</div>
+                <div layout="column" layout="center center" flex="10">{{tofillci._finished | date: "dd-MMM-yy HH:mm"}}</div>
                 <div layout="column" layout="center center" flex="15">{{tofillci.user.name}}</div>
-                <div layout="column" layout="center center" flex="20">
+                <div layout="column" layout="center center" flex="25">
                     <a ui-sref="claim({ coachingId:{{'tofillci.institute._id'}} })" target="_blank" id="link">
                     <strong>{{tofillci.institute.name}}</strong>
                     </a>

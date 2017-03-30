@@ -34,6 +34,16 @@ router.get('/', function(req, res) {
     } else {throw err;}
     });
 });
+
+router.get('/savedCount', function(req, res) {
+    cisaved.distinct( "institute",function(err, docs) {
+    if (!err){
+        res.json(docs.length);
+    } else {throw err;}
+    });
+});
+
+
 //to get all cisaveds from a user
 router.get('/user/:userId', function(req, res) {
     var userId = req.params.userId;

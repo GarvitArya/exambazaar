@@ -203,7 +203,7 @@
             <div id="cell" flex="10">EB Rank</div>
         </div>
         
-        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-rank','name'] | filter:filterText as filtered" class="greyDashedBottomBorder font10">
+        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-rank','-exams.length'] | filter:filterText as filtered" class="greyDashedBottomBorder font10">
             <div id="cell" flex="5">
                 {{$index+1}}
             </div>
@@ -266,7 +266,7 @@
         
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div ng-repeat="logo in uniquelogos" ng-if="$index>=5500 && $index<6500">
+        <div ng-repeat="logo in uniquelogos" ng-if="$index>=6500 && $index<7500">
             <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
                 <img ng-src="{{logo}}" />
             </div>

@@ -26,6 +26,56 @@ router.get('/edit/:viewId', function(req, res) {
     });
 });
 
+router.get('/masterViewSummary', function(req, res) {
+    
+    view.count({}, function(err, totalViews) {
+    if (!err){
+        var start = new Date();
+        start.setHours(0,0,0,0);
+        var end = new Date();
+        end.setHours(23,59,59,999);
+        
+        view.count({_date: {$gte: start, $lt: end}}, function(err, todayViews) {
+            if (!err){
+                var start = new Date();
+                start.setDate(start.getDate()-7);
+                start.setHours(0,0,0,0);
+                var end = new Date();
+                end.setHours(23,59,59,999);
+                
+                view.count({_date: {$gte: start, $lt: end}}, function(err, weekViews) {
+                if (!err){
+                    var start = new Date();
+                    start.setDate(start.getDate()-1);
+                    start.setHours(0,0,0,0);
+                    var end = new Date();
+                    end.setDate(end.getDate()-1);
+                    end.setHours(23,59,59,999);
+                    
+                    view.count({_date: {$gte: start, $lt: end}}, function(err, yesterdayViews) {
+                    if (!err){
+                        var viewSummary ={
+                            total: totalViews,
+                            week: weekViews,
+                            yesterday: yesterdayViews,
+                            today: todayViews
+                        };
+                        res.json(viewSummary);
+                    } else {throw err;}
+                    });
+                    
+                } else {throw err;}
+                });
+                
+            } else {throw err;}
+        });
+        
+        
+    } else {throw err;}
+    });
+    
+});
+
 router.post('/markDone', function(req, res) {
     var viewForm = req.body;
     var institute = viewForm.institute;
@@ -110,6 +160,40 @@ router.get('/user/:userId', function(req, res) {
                         address: thisView.institute.address,
                         city: thisView.institute.city,
                         pincode: thisView.institute.pincode
+                    },
+                    _date: thisView._date
+                };
+                counter = counter + 1;
+                basicViews.push(newView);
+                if(counter == nLength){
+                    res.json(basicViews);
+                }
+            });
+            
+            if(nLength == 0){
+                res.json([]);
+            }
+        } else {throw err;}
+    });
+    
+});
+router.get('/institute/:instituteId', function(req, res) {
+    var instituteId = req.params.instituteId;
+    var views = view
+        .find({institute: instituteId})
+        .deepPopulate('user')
+        .exec(function (err, views) {
+        if (!err){
+            var basicViews = [];
+            var counter = 0;
+            var nLength = views.length;
+            views.forEach(function(thisView, index){
+                var newView = {
+                    institute: institute,
+                    user: {
+                        _id: thisView.user._id,
+                        name: thisView.user.basic.name,
+                        mobile: thisView.user.contact.mobile
                     },
                     _date: thisView._date
                 };

@@ -26,6 +26,14 @@ router.get('/edit/:tofillciId', function(req, res) {
     });
 });
 
+router.get('/filledCount', function(req, res) {
+    tofillci.distinct( "institute",{active: false},function(err, docs) {
+    if (!err){
+        res.json(docs.length);
+    } else {throw err;}
+    });
+});
+
 router.post('/markDone', function(req, res) {
     var tofillciForm = req.body;
     var institute = tofillciForm.institute;

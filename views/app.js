@@ -322,6 +322,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.savecisaved = function(cisavedForm) {
             return $http.post('/api/cisaveds/save', cisavedForm);
         };
+        this.savedCount = function() {
+            return $http.get('/api/cisaveds/savedCount');
+        };
+        
         this.getcisaved = function(cisavedId) {
             return $http.get('/api/cisaveds/edit/'+cisavedId, {cisavedId: cisavedId});
         };
@@ -343,7 +347,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.saveview = function(viewForm) {
             return $http.post('/api/views/save', viewForm);
         };
-        
+        this.masterViewSummary = function() {
+            return $http.get('/api/views/masterViewSummary');
+        };
         this.getview = function(viewId) {
             return $http.get('/api/views/edit/'+viewId, {viewId: viewId});
         };
@@ -352,6 +358,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.getuserviews = function(userId) {
             return $http.get('/api/views/user/'+userId, {userId: userId});
+        };
+        this.getinstituteviews = function(instituteId) {
+            return $http.get('/api/views/institute/'+instituteId, {instituteId: instituteId});
         };
     }]);
     exambazaar.service('tofillciService', ['$http', function($http) {
@@ -362,7 +371,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.markDone = function(tofillciForm) {
             return $http.post('/api/tofillcis/markDone', tofillciForm);
         };
-        
+        this.filledCount = function(tofillciForm) {
+            return $http.get('/api/tofillcis/filledCount');
+        };
         
         this.gettofillci = function(tofillciId) {
             return $http.get('/api/tofillcis/edit/'+tofillciId, {tofillciId: tofillciId});
@@ -2643,14 +2654,41 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
         
     exambazaar.controller("masterDashboardController", 
-        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', '$state', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,$state){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount){
             
             $scope.usersCount = usersCount.data;
             $scope.studentCount = studentCount.data;
             $scope.coachingCount = coachingCount.data;
+            $scope.coachingSavedCount = coachingSavedCount.data;
             $scope.internList = internList.data;
+            $scope.filledCount = filledCount.data;
             $scope.tofillciList = tofillciList.data;
-            //console.info($scope.tofillciList);
+            $scope.masterViewSummary = masterViewSummary.data;
+            //alert($scope.masterViewSummary);
+            //DEF
+            $scope.internDueList = [];
+            $scope.fillsDue = 0;
+            var internIds = $scope.internList.map(function(a) {return a._id;});
+            //console.info(internIds);
+            $scope.internList.forEach( function(thisIntern, index){
+                var internDue = {
+                    intern: thisIntern,
+                    due: 0
+                };
+                $scope.internDueList.push(internDue);
+            });
+            
+            $scope.tofillciList.forEach( function(thisTask, index){
+                
+                if(thisTask.active){
+                    //console.info(thisTask.user);
+                    $scope.fillsDue += 1;
+                    var internIndex = internIds.indexOf(thisTask.user._id);
+                    //console.info(internIndex);
+                    $scope.internDueList[internIndex].due += 1;
+                }
+            });
+            //console.info($scope.internDueList);
             $scope.verifiedUsersCount = verifiedUsersCount.data;
             $scope.ciDeadline = new Date();
             $scope.ciDeadline.setDate( $scope.ciDeadline.getDate() + 1);
@@ -5126,6 +5164,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     function(UserService) {
                     return UserService.getStudentCount();
                 }],
+                masterViewSummary: ['viewService',
+                    function(viewService) {
+                    return viewService.masterViewSummary();
+                }],
                 internList: ['UserService',
                     function(UserService) {
                     return UserService.getInterns();
@@ -5134,10 +5176,42 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     function(targetStudyProviderService) {
                     return targetStudyProviderService.getCount();
                 }],
+                coachingSavedCount: ['cisavedService',
+                    function(cisavedService) {
+                    return cisavedService.savedCount();
+                }],
+                filledCount: ['tofillciService',
+                    function(tofillciService) {
+                    return tofillciService.filledCount();
+                }],
                 tofillciList: ['tofillciService',
                     function(tofillciService) {
                     return tofillciService.gettofillcis();
                 }],
+            }
+        })
+        .state('partner-dashboard', {
+            url: '/partner/:userId/dashboard',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'partner-dashboard.html',
+                    controller: 'partnerDashboardController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                //DEF
+                thisPartner: ['userService','$stateParams',
+                    function(userService,$stateParams) {  
+                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                }],
+                provider: function() { return {}; }
             }
         })
         .state('master-manageBatchStudents', {
