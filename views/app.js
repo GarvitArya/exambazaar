@@ -332,6 +332,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
     }]);
+        
+        
+    exambazaar.service('ipService', ['$http', function($http) {
+        this.getip = function() {
+            return $http.get('http://ip-api.com/json');
+        };
+        
+    }]);
+    exambazaar.service('viewService', ['$http', function($http) {
+       
+        this.saveview = function(viewForm) {
+            return $http.post('/api/views/save', viewForm);
+        };
+        
+        this.getview = function(viewId) {
+            return $http.get('/api/views/edit/'+viewId, {viewId: viewId});
+        };
+        this.getviews = function() {
+            return $http.get('/api/views');
+        };
+        this.getuserviews = function(userId) {
+            return $http.get('/api/views/user/'+userId, {userId: userId});
+        };
+    }]);
     exambazaar.service('tofillciService', ['$http', function($http) {
        
         this.savetofillci = function(tofillciForm) {
@@ -616,7 +640,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 };
                 $cookies.putObject('sessionuser', sessionuser);
                 
-                //DEF
                 $state.go('main');
                 
             })
@@ -983,7 +1006,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);  
     
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService','Upload', 'thisProvider', 'imageMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService ,Upload, thisProvider, imageMediaTagList, examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.resultSet = [
@@ -992,6 +1015,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $rootScope.$emit("CallShowLogin", {});
         };
         //OTP Related Functions
+        
+        
         
         $scope.verifyingOTP = false;
         $scope.verifyByOTP = function(){
@@ -1141,7 +1166,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $state.go('verifyClaim', {coachingId: $scope.provider._id});
         };
         $scope.cisavedUsersList = cisavedUsersList.data;
-        console.log($scope.cisavedUsersList);
+        //console.log($scope.cisavedUsersList);
         $scope.showClaimDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#claimDialog',
@@ -1155,8 +1180,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.editable = false;
         $scope.verifiedUser = false;
         $scope.ebuser = false;
+        
+        
+        
         if($cookies.getObject('sessionuser')){
             $scope.user = $cookies.getObject('sessionuser');
+            //Mark the view
+            var viewForm = {
+                institute: $scope.provider._id,
+                user: $scope.user.userId,
+                claim: true
+            };
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                console.info('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.info();
+            });
+
+            
             UserService.getUserShortlisted($scope.user.userId).success(function (data, status, headers) {
                 var shortlistedIds = data.map(function(a) {return a._id;});
                 if(shortlistedIds.indexOf($scope.provider._id) != -1){
@@ -1186,6 +1232,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         }else{
             //user is not allowed to access this page
+            var viewForm = {
+                institute: $scope.provider._id,
+                claim: true
+            };
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                console.info('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.info();
+            });
             $scope.showClaimDialog();
         }
         
@@ -2732,7 +2792,28 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);
     
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state','$cookies','$http','UserService','NotificationService','StudentService','geolocation','$geolocation', function($scope,$rootScope,$state,$cookies,$http,UserService,NotificationService,StudentService,geolocation,$geolocation){
+        [ '$scope','$rootScope','$state','$cookies','$http','UserService','NotificationService','ipService','geolocation','$geolocation', function($scope,$rootScope,$state,$cookies,$http,UserService,NotificationService,ipService,geolocation,$geolocation){
+        
+        ipService.getip()
+        .success(function (data, status, headers) {
+            //console.info(data);
+            var ip = {
+                city: data.city,
+                country: data.country,
+                lat: data.lat,
+                long: data.long,
+                zip: data.zip,
+                org: data.org,
+                as: data.as,
+                isp: data.isp,
+                query: data.query,
+            };
+            $cookies.putObject('ip', ip);
+        })
+        .error(function (data, status, header, config) {
+            console.info();
+        });    
+            
         $scope.showLogin = false;
         $scope.showLoginForm = function(){
             $scope.showLogin = !$scope.showLogin;
@@ -2769,18 +2850,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         if($scope.sessionuser != null){
             
            if($scope.sessionuser.studentId != null){
-               StudentService.getStudentNotification($scope.sessionuser.studentId).success(function (data, status, headers) {
-                    
-               $scope.$evalAsync(
-                    function( $scope ) {
-                        $scope.notification = data;
-                    }
-                ); 
-                   
-                })
-                .error(function (data, status, header, config) {
-                    console.info(status + " " + data);
-                });
+               
             }    
         }
         $scope.markRead = function(thisnotification){
