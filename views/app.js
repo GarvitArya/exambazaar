@@ -3976,6 +3976,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $rootScope.title =$scope.user.basic.name;
     }]);    
+    exambazaar.controller("viewedController", 
+        [ '$scope', 'thisuser' , 'thisuserViewed',  '$http','$state','$rootScope', function($scope, thisuser, thisuserViewed, $http, $state, $rootScope){
+        $scope.user = thisuser.data;
+        $scope.viewed = thisuserViewed.data;
+        
+        $rootScope.title =$scope.user.basic.name;
+    }]);     
         
     exambazaar.controller("profileController", 
         [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'Upload', 'ImageService', 'UserService', function($scope, thisuser,$http,$state,$rootScope, $cookies, Upload, ImageService, UserService){
@@ -5601,6 +5608,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 thisuserShortlisted: ['UserService', '$stateParams',
                     function(UserService,$stateParams){
                     return UserService.getUserShortlisted($stateParams.userId);
+                }],
+                
+                user: function() { return {}; }
+            }
+        })
+        .state('viewed', {
+            url: '/user/:userId/viewed',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'viewed.html',
+                    controller: 'viewedController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                //DEF
+                thisuserViewed: ['viewService', '$stateParams',
+                    function(viewService,$stateParams){
+                    return viewService.getuserviews($stateParams.userId);
                 }],
                 
                 user: function() { return {}; }

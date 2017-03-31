@@ -153,10 +153,11 @@ router.get('/user/:userId', function(req, res) {
             var nLength = views.length;
             views.forEach(function(thisView, index){
                 var newView = {
-                    user: user,
+                    user: userId,
                     institute: {
                         _id: thisView.institute._id,
                         name: thisView.institute.name,
+                        logo: thisView.institute.logo,
                         address: thisView.institute.address,
                         city: thisView.institute.city,
                         pincode: thisView.institute.pincode

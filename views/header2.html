@@ -155,18 +155,21 @@
             </span>
             <span class="caret"></span>
         </a>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" >
             <li>
             <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })">Profile</a>
             </li>
             <li>
             <a ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
             </li>
-            <li ng-if="sessionuser.userType=='Intern - Business Development'">
-                <a ui-sref="filled({ userId:{{'sessionuser.userId'}} })">Your Filled Institutes</a>
+            <li>
+            <a ng-if="sessionuser.userType != 'Partner'" ui-sref="viewed({ userId:{{'sessionuser.userId'}} })">Your Viewed Institutes</a>
+            </li>
+            <li ng-if="sessionuser.userType=='Intern - Business Development' || sessionuser.userType=='Master'">
+                <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>
             </li>
             <li ng-if="sessionuser.userType=='Intern - Business Development'">
-                <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>
+                <a ui-sref="filled({ userId:{{'sessionuser.userId'}} })">Your Filled Institutes</a>
             </li>
             <li ng-if="sessionuser.userType=='Master'">
                 <a ui-sref="filledAll({ userId:{{'sessionuser.userId'}} })">Filled Institutes</a>
