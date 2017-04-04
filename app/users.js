@@ -189,7 +189,7 @@ router.get('/markLogin/:userId', function(req, res) {
             if(!thisUser.logins){
                 thisUser.logins =[loginTime];
             }else{
-                console.log(thisUser.logins);
+                //console.log(thisUser.logins);
                 if(thisUser.logins.length == 0){
                     thisUser.logins =[loginTime];
                     //thisUser.logins.push(loginTime);
@@ -213,14 +213,14 @@ router.get('/markLogin/:userId', function(req, res) {
 router.get('/edit/:userId', function(req, res) {
     var userId = req.params.userId;
     //var mobile = req.params.mobile;
-    console.log("User is " + userId);
+    console.log("User fetched is " + userId);
     user
         .findOne({ '_id': userId },{logins:0})
         //.deepPopulate('_master.contact')
         .exec(function (err, thisuser) {
         if (!err){
             
-            //console.log(thisuser);
+            console.log(thisuser);
             res.json(thisuser);
             //process.exit();
         } else {throw err;}

@@ -90,6 +90,7 @@
     paddedLR{
         padding-left: 20px;
         padding-right: 20px;
+        
     }
     #upload2{
         background: white;
@@ -152,7 +153,7 @@
                     <div flex layout="row" layout-align="start center" class="width100">
                         <div flex="30">Name:</div>
                         <div flex="70" ng-if="addPrimaryManagement">
-                        <input type="text" ng-model="primaryManagement.name"  placeholder="Name" class="width100">
+                        <input type="text" ng-model="primaryManagement.name"  placeholder="Name" class="width75">
                         </div>
                         <div flex="70" ng-if="!addPrimaryManagement">
                         {{primaryManagement.name}}
@@ -161,7 +162,7 @@
                     <div flex layout="row" layout-align="start center" class="width100">
                         <div flex="30">Mobile:</div>
                         <div flex="70" ng-if="addPrimaryManagement">
-                        <input type="text" placeholder="10 Digit Mobile" class="width100" ng-model="primaryManagement.mobile" size="15" ng-minlength="10" ng-maxlength="10" only-digits limit-to="10" class="">
+                        <input type="text" placeholder="10 Digit Mobile" class="width75" ng-model="primaryManagement.mobile" size="15" ng-minlength="10" ng-maxlength="10" only-digits limit-to="10" class="">
                         </div>
                         <div flex="70" ng-if="!addPrimaryManagement">
                         {{primaryManagement.mobile}}
@@ -170,7 +171,7 @@
                     <div flex layout="row" layout-align="start center" class="width100">
                         <div flex="30">Email:</div>
                         <div flex="70" ng-if="addPrimaryManagement">
-                        <input type="email" ng-model="primaryManagement.email"  placeholder="Email" class="width100">
+                        <input type="email" ng-model="primaryManagement.email"  placeholder="Email" class="width75">
                         </div>
                         <div flex="70" ng-if="!addPrimaryManagement">
                         {{primaryManagement.email}}
@@ -179,7 +180,7 @@
                     <div flex layout="row" layout-align="start center" class="width100">
                         <div flex="30">Designation:</div>
                         <div flex="70" ng-if="addPrimaryManagement">
-                        <input type="text" ng-model="primaryManagement.role"  placeholder="Designation" class="width100">
+                        <input type="text" ng-model="primaryManagement.role"  placeholder="Designation" class="width75">
                         </div>
                         <div flex="70" ng-if="!addPrimaryManagement">
                         {{primaryManagement.role}}
@@ -187,9 +188,11 @@
                     </div>
                     </div>
                     <div flex="40" layout="column" layout-align="end center">
+                        <div class="width100 fourthFont" layout="row">
+                            Primary Contact is contacted for everything related to the listing and is mandatory to Edit the listing. Add more Contacts to delegate responsibilities.
+                        </div>
                         <div class="width100" ng-if="addPrimaryManagement" layout="row">
-                        <md-button class="md-cancel md-small width50" ng-click="savePrimaryManagement()">Save</md-button>
-                        <!--<md-button class="md-cancel md-small width50" ng-click="" disabled>Remove</md-button>-->
+                            <md-button class="md-green md-small width50" ng-click="savePrimaryManagement()">Save</md-button>
                         </div>
                         
                         
@@ -209,7 +212,7 @@
                     <div flex layout="row" layout-align="start center" class="width100 ">
                         <div flex="30">Name:</div>
                         <div flex="70" ng-if="thisManagement.editable">
-                        <input type="text" ng-model="thisManagement.name"  placeholder="Name"  class="width100">
+                        <input type="text" ng-model="thisManagement.name"  placeholder="Name"  class="width75">
                         </div>
                         <div flex="70" ng-if="!thisManagement.editable">
                         {{thisManagement.name}}
@@ -218,7 +221,7 @@
                     <div flex layout="row" layout-align="start center" class="width100 ">
                         <div flex="30">Mobile:</div>
                         <div flex="70" ng-if="thisManagement.editable">
-                        <input type="text" placeholder="10 Digit Mobile" class="width100" ng-model="thisManagement.mobile" size="15" ng-minlength="10" ng-maxlength="10" only-digits limit-to="10" >
+                        <input type="text" placeholder="10 Digit Mobile" class="width75" ng-model="thisManagement.mobile" size="15" ng-minlength="10" ng-maxlength="10" only-digits limit-to="10" >
                         
                         </div>
                         <div flex="70" ng-if="!thisManagement.editable">
@@ -228,7 +231,7 @@
                     <div flex layout="row" layout-align="start center" class="width100 ">
                         <div flex="30">Email:</div>
                         <div flex="70" ng-if="thisManagement.editable">
-                        <input type="email" ng-model="thisManagement.email"  placeholder="Email" class="width100">
+                        <input type="email" ng-model="thisManagement.email"  placeholder="Email" class="width75">
                         </div>
                         <div flex="70" ng-if="!thisManagement.editable">
                         {{thisManagement.email}}
@@ -237,7 +240,7 @@
                     <div flex layout="row" layout-align="start center" class="width100 ">
                         <div flex="30">Designation:</div>
                         <div flex="70" ng-if="thisManagement.editable">
-                        <input type="text" ng-model="thisManagement.role"  placeholder="Designation" class="width100">
+                        <input type="text" ng-model="thisManagement.role"  placeholder="Designation" class="width75">
                         </div>
                         <div flex="70" ng-if="!thisManagement.editable">
                         {{thisManagement.role}}
@@ -257,7 +260,7 @@
                 </div>  
                 
                 <div flex layout="row" class="width100 marginT10"  >
-                    <div flex="20" layout="row" layout-align="center center" id="upload2" ng-click="editPrimaryManagement()" class="secondFont textLightGrey width100" ng-if="!editManagement">
+                    <div flex="20" layout="row" layout-align="center center" id="upload2" ng-click="editPrimaryManagement()" class="secondFont textLightGrey width100 marginT20" ng-if="!editManagement">
                     <span>
                         <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
                     </span>

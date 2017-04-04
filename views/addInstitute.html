@@ -1,13 +1,97 @@
 <style>
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        padding: 10px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
     
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    .listingHeader{
+        background-color: #f7f7f7;
+        color: black;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+    .listingContent{
+        padding-left: 10px;
+        width: 100%;
+    }
 </style>
-<div class="whiteBackground mainContent" >
+<div class="whiteBackground mainContent padded" >
     <div id="spacer">
     </div>
-    <div flex layout="row" layout-align="start center">
-        <div flex layout="column" layout-align="center center">
-            {{user}}
+    <div flex layout="column" layout-align="start center" ng-if="showLevel>5">
+        <form class="width100" name="addInstituteForm">
+        <div class="secondFont listingHeader bold">
+            Add New Institute
         </div>
-        
+        <div flex layout="row" layout-align="start center" class="width100">
+            <div flex="25">
+                Institute Name
+            </div>
+            <div flex="75">
+                <input required type="text" ng-model="newInstitute.name"  placeholder="Institute Name" class="width75">
+            </div>    
+        </div>
+        <div flex layout="row" layout-align="start center" class="width100">
+            <div flex="25">
+                Group Name
+            </div>
+            <div flex="75">
+                <input required type="text" ng-model="newInstitute.group"  placeholder="Group Name" class="width75">
+            </div>    
+        </div>
+        <div flex layout="row" layout-align="start center" class="width100">
+            <div flex="25">
+                Address
+            </div>
+            <div flex="75">
+                <input required type="text" ng-model="newInstitute.address"  placeholder="Address" class="width75">
+            </div>    
+        </div>
+        <div flex layout="row" layout-align="start center" class="width100">
+            <div flex="25">
+                City
+            </div>
+            <div flex="75">
+                <input required type="text" ng-model="newInstitute.city"  placeholder="City" class="width75">
+            </div>    
+        </div>
+        <div flex layout="row" layout-align="start center" class="width100">
+            <div flex="25">
+                State
+            </div>
+            <div flex="75">
+                <input required type="text" ng-model="newInstitute.state"  placeholder="State" class="width75">
+            </div>    
+        </div>
+        <div flex layout="row" layout-align="start center" class="width100">
+            <div flex="25">
+                Pincode
+            </div>
+            <div flex="75">
+                <input required type="text" ng-model="newInstitute.pincode"  placeholder="Pincode" class="width75">
+            </div>    
+        </div>
+        <div flex layout="row" layout-align="start center" class="width100 marginT20">
+            <md-button class="md-green md-small width25" ng-click="addInstitute()" ng-disabled="addInstituteForm.$invalid">Add</md-button>
+        </div>
+        <div flex layout="row" layout-align="start center" class="width100 marginT10 fourthFont" ng-if="addedInstituteId">
+            Institute added sucessfully with id {{addedInstituteId}}. <span ng-click="claimInstitute()">Edit Institute</span>
+        </div>
+        </form>
     </div>
 </div>

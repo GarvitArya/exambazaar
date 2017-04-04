@@ -86,7 +86,7 @@
         </ul>
         <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Partner'">
             <li><a ui-sref="partner-dashboard({ userId:{{'sessionuser.userId'}} })">Home</a></li>
-            <li><a ui-sref="claim({ coachingId:{{'sessionuser.partner[0]'}} })">Claim</a></li>
+            <li><a ui-sref="claim({ coachingId:{{'sessionuser.partner[0]'}} })">Edit Listing</a></li>
         </ul>
         <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
         <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>

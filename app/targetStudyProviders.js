@@ -923,7 +923,7 @@ router.post('/savecoaching', function(req, res) {
                     res.json(newcisaved._id);
                 });*/
                 //console.log(thisprovider._id + " saved!");
-                res.json('Done');
+                res.json(thisprovider._id);
             });
             
         }else{
@@ -944,8 +944,8 @@ router.post('/savecoaching', function(req, res) {
             //save the changes
             oldProvider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
-                //console.log(thisprovider._id + " saved!");
-                res.json('Done');
+                console.log(thisprovider._id + " saved!");
+                res.json(thisprovider._id);
             });
             
         }

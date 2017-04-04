@@ -521,7 +521,7 @@
         <div hide-xs flex="15" layout="column" layout-align="end end" class="paddingB10">
             <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
                 <img  ng-src="{{provider.logo}}" class="pageLogo"/>
-                <span ng-show="provider.logo !=''" class="font9 textDarkGrey" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
+                <span ng-show="provider.logo && provider.logo !=''" class="font9 textDarkGrey" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
                     Change Logo
                 </span>
                 <span class="textDarkGrey" ng-show="provider.logo == '' || !provider.logo" ng-click="">
@@ -2198,6 +2198,52 @@
                     CI {{provider.name}} marked as Done!
                 </span>
                 
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="addPrimaryManagementDialog">
+      <md-dialog>
+          <div layout="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20">
+                <span class="danger md-headline">
+                  <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    You need to add Primary Contact before you can edit your listing.
+                </span>
+              </div>
+              <div class="padding10">
+                  
+                  <md-button class="md-green md-small" ng-click="markPrimaryManagement()">
+                    Update Now
+                  </md-button>
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="unauthorizedAccessDialog">
+      <md-dialog>
+          <div layout="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20">
+                <span class="danger md-headline">
+                  <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    You are not authorised to edit {{provider.name}}.<br/>Contact ExamBazaar team at always@exambazaar.com for more information.
+                </span>
+              </div>
+              <div class="padding10">
+                  
+                  <md-button class="md-green md-small" ng-click="cancel()">
+                    I am just browsing!
+                  </md-button>
               </div>
           </div>
       </md-dialog>

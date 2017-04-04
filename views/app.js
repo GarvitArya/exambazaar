@@ -1192,7 +1192,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.verifiedUser = false;
         $scope.ebuser = false;
         
-        
+        $scope.showAddPrimaryManagement = function(ev) {
+            $mdDialog.show({
+              contentElement: '#addPrimaryManagementDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: false
+            });
+        };
+        $scope.showUnauthorizedAccess = function(ev) {
+            $mdDialog.show({
+              contentElement: '#unauthorizedAccessDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: false
+            });
+        };
         
         if($cookies.getObject('sessionuser')){
             $scope.user = $cookies.getObject('sessionuser');
@@ -1240,9 +1255,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.verifiedUser = true;
                 $scope.ebuser = false;
                 if($scope.user.partner.indexOf($scope.provider._id) != -1){
-                    $scope.editable = true;
+                    if(!$scope.provider.primaryManagement || $scope.provider.primaryManagement.name =='' || $scope.provider.primaryManagement.mobile ==''){
+                        //alert('Here');
+                        $scope.editable = false;
+                        $scope.showAddPrimaryManagement();
+                    }else{
+                        $scope.editable = true;
+                    }
+                    
+                    
+                    
                 }else{
-                    alert('You are not authorised to edit this institute. Contact EB team for more.');
+                    $scope.editable = false;
+                    $scope.showUnauthorizedAccess();
+                    //alert('You are not authorised to edit this institute. Contact EB team for more.');
                 }
                 
             }
@@ -1266,7 +1292,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }
         
         
-        
+        $scope.markPrimaryManagement = function(){
+            $state.go('partner-dashboard', {userId: $scope.user.userId});
+        };
         
         var city =  $scope.provider.city;
         LocationService.getCityLocations(city).success(function (data, status, headers) {
@@ -2168,6 +2196,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
               clickOutsideToClose: true
             });
         };
+        
         $scope.showRemoveLastPhoneDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#removeLastPhoneDialog',
@@ -2691,7 +2720,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             $scope.addPrimaryManagement = false;
             $scope.showOtherManagement = false;
-            if(!$scope.primaryManagement){
+            if(!$scope.primaryManagement || $scope.primaryManagement.mobile =='' || $scope.primaryManagement.name ==''){
                 $scope.addPrimaryManagement = true;
                 $scope.primaryManagement ={
                     name: '',
@@ -2720,7 +2749,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             if(!$scope.management){
                 $scope.management = [];
             }
-            //DEF
             var newManagement = {
                 name: '',
                 mobile: '',
@@ -2739,7 +2767,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     var managementIds = $scope.management.map(function(a) {return a._id;});
                     var mIndex = managementIds.indexOf(thisManagement._id);
                     if(mIndex != -1){
-                        //DEF
                         var newManagementForm ={
                             management: thisManagement,
                             providerId: $scope.listing._id
@@ -2794,50 +2821,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             $scope.editManagementFunc = function(thisManagement){
                 thisManagement.editable = true;
-            };
-            
-            $scope.saveAllManagement = function(){
-                var good = true;
-                //check if all good
-                var thisManagement = $scope.primaryManagement;
-                if(thisManagement.name)
-                
-                
-                var newMobile = thisManagement.mobile;
-                var newName = thisManagement.name;
-                var managementMobiles = $scope.management.map(function(a) {
-                    if(a.editable){
-                        return null;
-                    }else{
-                        return a.mobile;
-                    }
-                    
-                });
-                if(newMobile !='' && newName != ''){
-                    var mIndex = managementMobiles.indexOf(newMobile);
-                    
-                    if(mIndex == -1){
-                        var newManagementForm ={
-                            management: thisManagement,
-                            providerId: $scope.listing._id
-                        };
-                         targetStudyProviderService.addManagement(newManagementForm).success(function (data, status, headers) {
-                            $scope.showSavedDialog();
-                            $state.reload();
-                            console.info("Done");
-                        })
-                        .error(function (data, status, header, config) {
-                            console.info("Error ");
-                        });
-                    }else{
-                        $scope.existingManagement = $scope.management[mIndex];
-                        $scope.showMobileExistDialog();
-                        //alert('Cant add two management people with same mobile');
-                    }
-                }else{
-                    $scope.showErrorDialog();
-                }
-                
             };
             
             
@@ -2908,6 +2891,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     $mdDialog.cancel();
                 },1000)
             };
+            
+            
+            
+            
+            
             $scope.showMobileExistDialog = function(ev) {
                 $mdDialog.show({
                   contentElement: '#mobileExistDialog',
@@ -4654,11 +4642,38 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
     }]);
     exambazaar.controller("addInstituteController", 
-        [ '$scope', 'UserService', '$http', '$state', 'thisuser', function($scope, UserService,$http,$state, thisuser){
+        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService){
         $scope.user = thisuser.data;
-        
-        
-        
+        if($scope.user.userType =='Master'){
+            $scope.showLevel = 10;
+        }
+        $scope.newInstitute = {
+            name:'',
+            group:'',
+            address:'',
+            city:'',
+            state:'',
+            pincode:'',
+        };
+        $scope.addInstitute = function(){
+            //DEF
+             var saveProvider = {
+                targetStudyProvider:$scope.newInstitute,
+                user: $scope.user.userId
+            };
+            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+                $scope.addedInstituteId = data;
+                console.info("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
+        $scope.claimInstitute = function(){
+            if($scope.addedInstituteId){
+                $state.go('claim', {coachingId: $scope.addedInstituteId});
+            }
+        };
     }]);    
         
         
