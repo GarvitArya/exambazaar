@@ -62,6 +62,43 @@
         </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
+        
+        <!--<div class="navbar-left">
+            <form class="navbar-form ">
+            <div class="form-group" ng-controller="autocompleteController as ctrl">
+                <md-autocomplete flex 
+                md-selected-item="ctrl.selectedItem"
+                md-selected-item-change= "ctrl.selectedItemChange(item)"
+                md-search-text="ctrl.searchText"
+                md-items="item in ctrl.querySearch(ctrl.searchText)"
+                md-item-text="item.name"
+                md-delay="300"
+                md-min-length="1"
+                md-menu-class="autocomplete"
+                md-clear-button="true"
+                placeholder="Search"
+                class="width100">
+                    <md-item-template >
+                        <span class="item-title font12">
+                        <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                        <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
+                        </span>
+                        <span class="item-metadata">
+                        <span class="item-metastat font10">
+                        {{item.city}}:
+                        </span>&nbsp;
+                        <span class="item-metastat font10">
+                        {{item.address}}
+                        </span>
+                        </span>
+                    </md-item-template>
+                </md-autocomplete>
+            </div>
+            </form>
+        </div>-->
+        
+        
+        
         <div class="navbar-right">
         <form class="navbar-form animated fadeIn" ng-submit="login()" ng-show="!sessionuser && showLogin" name="loginForm">
         <div class="form-group">
@@ -84,17 +121,19 @@
         </ul>
         
         <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Partner'">
-            <li><a ui-sref="partner-dashboard({ partnerId:{{'sessionuser.userId'}} })">Home</a></li>
+            <li><a ui-sref="partner-dashboard({ userId:{{'sessionuser.userId'}} })">Home</a></li>
             <li><a ui-sref="claim({ coachingId:{{'sessionuser.partner[0]'}} })">Claim</a></li>
         </ul>
         <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
         <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
+        <li><a ui-sref="sandbox({ masterId:{{'sessionuser.userId'}} })">Sandbox</a></li>
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a ui-sref="sendEmail({ masterId:{{'sessionuser.userId'}} })">Send Email</a></li>
             <li><a ui-sref="addMaster({ masterId:{{'sessionuser.userId'}} })">Add Master User</a></li>
             <li><a ui-sref="addIntern({ masterId:{{'sessionuser.userId'}} })">Add Intern User</a></li>
+            <li><a ui-sref="group({ userId:{{'sessionuser.userId'}} })">Group</a></li>
             <li><a ui-sref="addExam">Add Exam</a></li>
             <li><a ui-sref="addStream">Add Stream</a></li>
             <li><a ui-sref="addLocation">Add Location</a></li>
@@ -110,6 +149,7 @@
           <ul class="dropdown-menu">
             <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Default Dataset</a></li>
             <li><a ui-sref="providers({ city:'Jaipur' })">Second Dataset</a></li>
+            <li><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>  
           </ul>
         </li>
         
@@ -122,6 +162,7 @@
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<span class="caret"></span></a>
           <ul class="dropdown-menu">
+            <li><a ui-sref="group({ userId:{{'sessionuser.userId'}} })">Group</a></li>
             <li><a ui-sref="addExam">Add Exam</a></li>
             <li><a ui-sref="addStream">Add Stream</a></li>
             <li><a ui-sref="addLocation">Add Location</a></li>
@@ -137,6 +178,8 @@
         </li>
         
         </ul>
+        
+        
         
         
         

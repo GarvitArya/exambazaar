@@ -6,6 +6,8 @@ var Schema = mongoose.Schema;
 var targetStudyProviderSchema = mongoose.Schema({
     type: {type: String, default:'Coaching'},
     name: {type: String,required: true},
+    group: {type: String},
+    groupChecked: {type: Boolean,default: false},
     targetStudyWebsite: String,
     website: String,
     email: [String],
@@ -76,6 +78,18 @@ var targetStudyProviderSchema = mongoose.Schema({
           class
           cleared exam
         */
+    }],
+    primaryManagement:{
+        name: {type: String,required: true},
+        role: {type: String},
+        mobile: {type: String,required: true,unique: true},
+        email: {type: String},
+    },
+    management:[{
+        name: {type: String,required: true},
+        role: {type: String},
+        mobile: {type: String,required: true,unique: true},
+        email: {type: String},
     }],
     coursesOffered: [String],
     exams: [{ type: Schema.ObjectId, ref: 'exam' }],

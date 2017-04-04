@@ -24,6 +24,17 @@
     <link rel="stylesheet" href="dropzone.css">
     
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Gudea|Quattrocento+Sans|Rambla|Roboto|Roboto+Condensed|Scada|Lato" rel="stylesheet">
+    
+    <!--
+    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Quattrocento Sans', sans-serif;
+    font-family: 'Gudea', sans-serif;
+    font-family: 'Scada', sans-serif;
+    font-family: 'Rambla', sans-serif;
+    -->
     <style>
         @font-face{
             font-family: "Cabin-Regular";
@@ -60,13 +71,44 @@
             font-family: "Avenir";
         }
         .secondFont{
-            font-family: "Avenir";
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
         }
         .thirdFont{
-            font-family: "Open Sans";
+            font-family: 'Fira Sans', sans-serif;
+            font-size: 16px;
         }
+        .fourthFont{
+            font-family: 'Fira Sans', sans-serif;
+            font-weight: 300;
+            font-size: 13px;
+        }
+        .editFont{
+            font-family: 'Fira Sans', sans-serif;
+            color: #999999;
+            font-size: 13px;
+        }
+        .textLightGrey{
+            color: #909090;
+        }
+        .textDarkGrey{
+            /*color: rgba(0,0,0,0.6);*/
+            color: #333333;
+        }
+        .textBlack{
+            color: black;
+        }
+        .text-white{
+            color: white;
+        }
+        .text-salmon{
+            color: #FF5A5F;
+        }
+        .transaprentBackground{
+            background-color: rgba(0,0,0,0.5);
+        };
         .lightGreyBackground{
-            background: #f7f7f7;
+            background: #F5F5F5;
         }
         .font6{
             font-size:6px;
@@ -98,6 +140,16 @@
         .font20{
             font-size:20px;
         }
+        .font40{
+            font-size:40px;
+        }
+        .font60{
+            font-size:60px;
+        }
+        .font80{
+            font-size:100px;
+            font-weight: 100;
+        }
         .text-primary{
             color: #20C39A;
         }
@@ -123,6 +175,9 @@
         }
         .greyBottomBorder{
             border-bottom: 1px solid #ccc;
+        }
+        .greyTopBorder{
+            border-top: 1px solid #ccc;
         }
         .greyDashedBottomBorder{
             border-bottom: 1px dashed #0074D9;
@@ -189,19 +244,7 @@
         #badgeLink{
             color: black;
         }
-        .textDarkGrey{
-            color: rgba(0,0,0,0.6);
-        }
-        .textBlack{
-            color: black;
-        }
-        .text-white{
-            color: white;
-        }
-        .textLightGrey{
-            color: rgba(0,0,0,0.4);
-            font-family: "Avenir";
-        }
+        
         .textCCC{
             color: #ccc;
         }
@@ -210,7 +253,6 @@
         }
         .textWhite{
             color: white;
-            font-family: "Avenir";
         }
         .whiteBackground{
             background-color: white;
@@ -252,6 +294,36 @@
            left: 0; 
             width: 100%;
             height:100%;
+            background: rgba(0,0,0,0.5);
+        }
+        
+        #AddButton{ 
+           position: absolute; 
+           top: 0%; 
+           left: 6%; 
+            width: 92%;
+            height:100%;
+            
+            /*
+            border: 1px solid #000;
+            border-radius: 0px
+            rgba(32, 195, 154,0.1);
+            */
+            
+            background-color: #F5F5F5;
+            color: #333333;
+        }
+        #AddButton:hover{ 
+            background-color: #FF5A5F;
+            color: white;
+        }
+        #thumbnailResultText{ 
+           position: absolute; 
+           top: 80%; 
+           left: 0; 
+            width: 100%;
+            height:20%;
+            text-shadow: 0 0 5px black;
             background: rgba(0,0,0,0.5);
         }
         #dialogHeader{
@@ -302,17 +374,27 @@
         .marginR10{
             margin-right: 10px;
         }
+        .marginLR10{
+            margin-left: 10px;
+            margin-right: 10px;
+        }
         .marginL20{
             margin-left: 20px;
         }
         .marginB20{
             margin-bottom: 20px;
         }
+        .marginB30{
+            margin-bottom: 30px;
+        }
         .marginT10{
             margin-top: 10px;
         }
         .marginT20{
             margin-top: 20px;
+        }
+        .marginT30{
+            margin-top: 30px;
         }
         .tolowercase {
             text-transform: none;
@@ -347,6 +429,9 @@
         .paddingB10{
             padding-bottom: 10px;
         }
+        .paddingB20{
+            padding-bottom: 20px;
+        }
         .paddingL20{
             padding-left: 20px;
         }
@@ -380,6 +465,9 @@
         .height100{
             height: 100%;
         }
+        .height100px{
+            height: 100px;
+        }
         .bold{
             font-weight: bold;
         }
@@ -409,7 +497,10 @@
         .mainContent2{
             height: 55vh;
         }
-        
+        .padded{
+            padding-left: 60px;
+            padding-right: 60px;
+        }
         #step{
             width: 50px;
             height: 6px;
@@ -450,19 +541,15 @@
             text-decoration: none;
         }
         a:hover{
-            color: white;
             text-decoration: none;
         }
         a:link:hover{
-            color: white;
             text-decoration: none;
         }
         a:visited{
-            color: white;
             text-decoration: none;
         }
         a:visited:hover{
-            color: white;
             text-decoration: none;
         }
         #fullPageContent{

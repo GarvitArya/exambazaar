@@ -15,7 +15,7 @@ mongoose.Promise = require('bluebird');
 
 //to get all providers
 router.get('/cities', function(req, res) {
-    console.log("Getting cities");
+    //console.log("Getting cities");
     targetStudyProvider.distinct( "city",function(err, docs) {
     if (!err){
         res.json(docs);
@@ -46,7 +46,7 @@ router.get('/count', function(req, res) {
 });
 router.get('/city/:city', function(req, res) {
     var city = req.params.city;
-    console.log("City is: "+city);
+    //console.log("City is: "+city);
     //, 'exams.0': { $exists: true }, "logo": { $ne: "/img/bullets/box-orange-arrow.gif" }
     var cityProviders = targetStudyProvider
         .find({'city': city },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1})
@@ -281,8 +281,162 @@ router.post('/addResult', function(req, res) {
     
 });
 
+router.post('/addPrimaryManagement', function(req, res) {
+    var newManagementForm = req.body;
+    var newManagement = newManagementForm.management;
+    var mobile = newManagement.mobile;
+    var providerId = newManagementForm.providerId;
+    console.log('Express received: ' + JSON.stringify(newManagementForm));
+    var thisProvider = targetStudyProvider
+        .findOne({ _id: providerId }, {management:1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            if(thisProvider){
+                thisProvider.primaryManagement = newManagement;
+                thisProvider.save(function(err, thisProvider) {
+                    if (err) return console.error(err);
+                    console.log("Management data saved for " + thisProvider._id);
+                    res.json('Done');
+                });
+            }else{
+                console.log('No such provider');
+                res.json('Error');
+            }
+        } else {throw err;}
+    });
+    
+});
+
+router.post('/removeManagement', function(req, res) {
+    var newManagementForm = req.body;
+    var newManagement = newManagementForm.management;
+    var mobile = newManagement.mobile;
+    var providerId = newManagementForm.providerId;
+    console.log('Express received to remove: ' + JSON.stringify(newManagementForm));
+    var thisProvider = targetStudyProvider
+        .findOne({ _id: providerId }, {management:1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            if(thisProvider){
+                console.log(thisProvider._id);
+                var existingId = newManagement._id;
+                if(existingId){
+                    console.log(existingId);
+                    var providerManagement = thisProvider.management;
+                    var providerManagementIds = providerManagement.map(function(a) {return a._id.toString();});
+                    var mIndex = providerManagementIds.indexOf(existingId.toString());
+                    
+                    console.log(providerManagementIds);
+                    console.log(mIndex);
+                    if(mIndex != -1){
+                        console.log(mIndex);
+                        thisProvider.management.splice(mIndex, 1);
+                        thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("Management data saved for " + thisProvider._id);
+                        res.json('Done');
+                    });
+                        
+                    }else{
+                        
+                    }
+                    
+                }else{
+                    console.log('No such management');
+                    res.json('Error');
+                }
+                
+            }else{
+                console.log('No such provider');
+                res.json('Error');
+            }
+        } else {throw err;}
+    });
+    
+});
 
 
+router.post('/addManagement', function(req, res) {
+    var newManagementForm = req.body;
+    var newManagement = newManagementForm.management;
+    var mobile = newManagement.mobile;
+    var providerId = newManagementForm.providerId;
+    console.log('Express received: ' + JSON.stringify(newManagementForm));
+    var thisProvider = targetStudyProvider
+        .findOne({ _id: providerId }, {management:1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            if(thisProvider){
+                //DEF
+                var existingId = newManagement._id;
+                if(existingId){
+                    var providerManagement = thisProvider.management;
+                    var providerManagementIds = providerManagement.map(function(a) {return a._id;});
+                    var mIndex = providerManagementIds.indexOf(existingId);
+                    if(mIndex != -1){
+                        thisProvider.management[mIndex] = newManagement;
+                        thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("Management data saved for " + thisProvider._id);
+                        res.json('Done');
+                    });
+                        
+                    }else{
+                        
+                    }
+                    
+                }
+                
+                
+                var nManagement = thisProvider.management.length;
+                var managementExists = false;
+                var counter = 0;
+                 thisProvider.management.forEach(function(thisManagement, index){
+                counter = counter + 1;
+                if(!managementExists){
+                
+                if(mobile == thisManagement.mobile){
+                    managementExists = true; console.log(JSON.stringify(newManagement));     
+                    for (var property in newManagement) {
+                        thisManagement[property] = newManagement[property];
+                    }
+                    thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("Management data saved for " + thisProvider._id);
+                        res.json('Done');
+                    });
+                    
+                }   
+                        
+                }
+                if(!managementExists && counter == nManagement){ thisProvider.management.push(newManagement);
+                    thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("Management data saved for " + thisProvider._id);
+                        res.json('Done');
+                    });
+                }
+                });
+                
+                if(nManagement == 0){
+                    //console.log('----------Here---------');
+                    //create new management
+                    thisProvider.management.push(newManagement);
+                    thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("Management data saved for " + thisProvider._id);
+                        res.json('Done');
+                    });
+                }
+                
+            }else{
+                console.log('No such provider');
+                res.json('Error');
+            }
+        } else {throw err;}
+    });
+    
+});
 
 
 
@@ -639,6 +793,28 @@ router.post('/addPhoto', function(req, res) {
     
 });
 
+router.get('/query/:query', function(req, res) {
+    var query = req.params.query;
+    
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}}, {name:1 , address:1, city:1, state:1, logo:1},function(err, docs) {
+    if (!err){
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
+
+router.get('/group/:query', function(req, res) {
+    var query = req.params.query;
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}}, {name:1 ,group:1, address:1, city:1, state:1, logo:1, website:1},function(err, docs) {
+    if (!err){
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
+
+
 router.get('/providersWithAreas', function(req, res) {
     targetStudyProvider.find({"name" : {$regex : ".*-.*"}}, {name:1 , address:1},function(err, docs) {
     if (!err){ 
@@ -863,27 +1039,34 @@ router.get('/setRank0', function(req, res) {
 
 router.get('/logoService', function(req, res) {
     console.log("Logo Service Starting now");
-    var allproviders =  targetStudyProvider.find({city:'Jaipur'}, {logo:1, oldlogo:1},function(err, allproviders) {
+    var allproviders =  targetStudyProvider.find({"logo": { $exists: true, $ne: null } }, {logo:1},function(err, allproviders) {
     if (!err){
+         res.json('Done');
+         var counter = 0;
+         var changes = 0;
+         var nLength = allproviders.length;
          allproviders.forEach(function(thisprovider, index){
-            //console.log(index);
-            //console.log(thisprovider);
+             counter = counter + 1;
             if(thisprovider.logo){
-                /*if(thisprovider.logo.indexOf('http') != -1){
-                    if(thisprovider.logo != 'https://targetstudy.com/tools/ge.php')
-                    thisprovider.oldlogo = thisprovider.logo;
-                }*/
-                if(thisprovider.logo == 'https://targetstudy.com/tools/ge.php'){
-                    console.log("Yes logo needs to changed for: " + thisprovider._id);
+                
+                var logo = thisprovider.logo;
+                //console.log(counter + ". " + logo);
+                if(logo.indexOf('ge.php') != -1 || logo.indexOf('box-orange-arrow.gif') != -1){
+                    changes = changes + 1;
+                    //console.log(logo);
+                    console.log("Yes logo needs to changed: " + logo + ' for: ' + thisprovider._id);
                     thisprovider.logo = '';
-                    thisprovider.save(function(err, thisprovider) {
+                    /*thisprovider.save(function(err, thisprovider) {
                         if (err) return console.error(err);
                         console.log(thisprovider._id + " saved!");
-                    });
+                    });*/
                 }
             }
                 
-            
+            if(counter == nLength){
+                console.log(changes + " logo changes needed out of " + nLength + " providers!");
+                //res.json('Done');
+            }
          });
     }
     });
@@ -902,13 +1085,34 @@ router.get('/UniqueLogoService', function(req, res) {
 router.get('/allDistinct', function(req, res) {
     console.log("Getting all distinct institutes with count");
     
-    var uniqueName = [];
+    targetStudyProvider.find({},{name:1, group:1},function(err, allProviders) {
+    if (!err){
+        res.json('Done');
+        allProviders.forEach(function(thisprovider, index){
+            thisprovider.group = thisprovider.name;
+            thisprovider.save(function(err, thisprovider) {
+                if (err) return console.error(err);
+                console.log(thisprovider._id + " saved!");
+            });
+        });
+        
+        
+    } else {throw err;}
+    });
+    
+    /*targetStudyProvider.distinct("name",function(err, docs) {
+    if (!err){ 
+        console.log(docs.length);
+        console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    }).limit(5000);*/
+    /*var uniqueName = [];
     var nameCount = [];
     var allproviders =  targetStudyProvider.find({}, {name:1},function(err, allproviders) {
         var counter = 0;
         var nProviders = allproviders.length;
         res.json('Done');
-        /*res.json(allproviders);*/
         allproviders.forEach(function(thisprovider, index){
             
             var nameIndex = uniqueName.indexOf(thisprovider.name);
@@ -924,25 +1128,15 @@ router.get('/allDistinct', function(req, res) {
                 nameCount[nameIndex].count += 1;
             }
             counter = counter + 1;
-            //console.log('Running on provider no: ' + counter);
+            
             if(counter == nProviders){
-                /*nameCount.forEach(function(thisprovider, index){
-                    console.log(thisprovider.name + "&^" + thisprovider.count );
-                });*/
-                
                 console.info(JSON.stringify(nameCount));
-                //res.json(nameCount);
             }
         });
-    });
-    
-    /*
-    targetStudyProvider.distinct("name",function(err, docs) {
-    if (!err){ 
-        //console.log(docs);
-        res.json(docs);
-    } else {throw err;}
     });*/
+    
+    
+    
 });
 
 

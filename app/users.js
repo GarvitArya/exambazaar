@@ -215,12 +215,13 @@ router.get('/edit/:userId', function(req, res) {
     //var mobile = req.params.mobile;
     console.log("User is " + userId);
     user
-        .findOne({ '_id': userId },{})
+        .findOne({ '_id': userId },{logins:0})
         //.deepPopulate('_master.contact')
-        .exec(function (err, docs) {
-        if (!err){ 
-            console.log(docs);
-            res.json(docs);
+        .exec(function (err, thisuser) {
+        if (!err){
+            
+            //console.log(thisuser);
+            res.json(thisuser);
             //process.exit();
         } else {throw err;}
     });
@@ -228,19 +229,33 @@ router.get('/edit/:userId', function(req, res) {
 
 //to get a particular user with _id userId
 router.get('/interns', function(req, res) {
-    console.log('Getting all interns');
+    //console.log('Getting all interns');
     user
         .find({ 'userType': 'Intern - Business Development' },{basic:1})
         //.deepPopulate('_master.contact')
         .exec(function (err, docs) {
         if (!err){ 
-            console.log(docs);
+            //console.log(docs);
             res.json(docs);
             //process.exit();
         } else {throw err;}
     });
 });
+
 router.get('/editPartner/:userId', function(req, res) {
+    var userId = req.params.userId;
+    //console.log("User is " + userId);
+    user
+        .findOne({ '_id': userId },{})
+        .deepPopulate('partner partner.location')
+        .exec(function (err, thisUser) {
+        if (!err){
+            //console.log(thisUser);
+            res.json(thisUser);
+        } else {throw err;}
+    });
+});
+router.get('/editPartnerBasic/:userId', function(req, res) {
     var userId = req.params.userId;
     console.log("User is " + userId);
     user

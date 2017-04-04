@@ -142,7 +142,7 @@
         <!---->
         <md-button class="md-cancel md-small font10" ng-click="removeDuplicates()">Remove Duplicates</md-button>
         <md-button class="md-cancel md-small font10" ng-click="cleanTargetstudyurls()">Clean Websites</md-button>
-        <md-button class="md-cancel md-small font10" ng-click="logoService()">Logo Service</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="logoService()">Clean Logos</md-button>
         <md-button class="md-cancel md-small font10" ng-click="UniqueLogoService()">Unique Logo</md-button>
         <md-button class="md-small md-cancel md-small font10" ng-click="allDistinct()">Distinct Providers</md-button>
         <!--<md-button class="md-cancel md-small font10" ng-click="getCityCount()">City Count</md-button>
@@ -283,12 +283,13 @@
     
     <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12 top-buffer" ng-show="allDistinctBool">
         <div ng-repeat="name in allProviderNames | orderBy:'count'">
-            <div class=" col-lg-9 col-md-9 col-sm-9 col-xs-9">  
-                {{name}}
-            </div>
             <div class=" col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                {{name.count}}
+                {{$index+1}}
             </div>
+            <div class=" col-lg-9 col-md-9 col-sm-9 col-xs-9">  
+                {{name.name}}
+            </div>
+            <!---->
             
         </div>
     </div>
