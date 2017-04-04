@@ -80,9 +80,9 @@ var targetStudyProviderSchema = mongoose.Schema({
         */
     }],
     primaryManagement:{
-        name: {type: String,required: true},
+        name: {type: String},
         role: {type: String},
-        mobile: {type: String,required: true,unique: true},
+        mobile: {type: String},
         email: {type: String},
     },
     management:[{

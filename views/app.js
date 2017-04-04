@@ -2722,8 +2722,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
             //DEF
             var newManagement = {
-                name: 'Gaurav',
-                mobile: '9829685919',
+                name: '',
+                mobile: '',
                 role: '',
                 email: '',
                 editable: true
@@ -2795,6 +2795,52 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.editManagementFunc = function(thisManagement){
                 thisManagement.editable = true;
             };
+            
+            $scope.saveAllManagement = function(){
+                var good = true;
+                //check if all good
+                var thisManagement = $scope.primaryManagement;
+                if(thisManagement.name)
+                
+                
+                var newMobile = thisManagement.mobile;
+                var newName = thisManagement.name;
+                var managementMobiles = $scope.management.map(function(a) {
+                    if(a.editable){
+                        return null;
+                    }else{
+                        return a.mobile;
+                    }
+                    
+                });
+                if(newMobile !='' && newName != ''){
+                    var mIndex = managementMobiles.indexOf(newMobile);
+                    
+                    if(mIndex == -1){
+                        var newManagementForm ={
+                            management: thisManagement,
+                            providerId: $scope.listing._id
+                        };
+                         targetStudyProviderService.addManagement(newManagementForm).success(function (data, status, headers) {
+                            $scope.showSavedDialog();
+                            $state.reload();
+                            console.info("Done");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                    }else{
+                        $scope.existingManagement = $scope.management[mIndex];
+                        $scope.showMobileExistDialog();
+                        //alert('Cant add two management people with same mobile');
+                    }
+                }else{
+                    $scope.showErrorDialog();
+                }
+                
+            };
+            
+            
             $scope.saveManagement = function(thisManagement){
                 var newMobile = thisManagement.mobile;
                 var newName = thisManagement.name;
