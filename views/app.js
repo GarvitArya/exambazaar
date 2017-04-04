@@ -2936,12 +2936,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.filledCount = filledCount.data;
             $scope.tofillciList = tofillciList.data;
             $scope.masterViewSummary = masterViewSummary.data;
-            //alert($scope.masterViewSummary);
             
             $scope.internDueList = [];
             $scope.fillsDue = 0;
             var internIds = $scope.internList.map(function(a) {return a._id;});
-            //console.info(internIds);
             $scope.internList.forEach( function(thisIntern, index){
                 var internDue = {
                     intern: thisIntern,
@@ -2953,14 +2951,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.tofillciList.forEach( function(thisTask, index){
                 
                 if(thisTask.active){
-                    //console.info(thisTask.user);
                     $scope.fillsDue += 1;
                     var internIndex = internIds.indexOf(thisTask.user._id);
                     //console.info(internIndex);
                     $scope.internDueList[internIndex].due += 1;
                 }
             });
-            //console.info($scope.internDueList);
             $scope.verifiedUsersCount = verifiedUsersCount.data;
             $scope.ciDeadline = new Date();
             $scope.ciDeadline.setDate( $scope.ciDeadline.getDate() + 1);
@@ -4745,18 +4741,65 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
     exambazaar.controller("sendEmailController", 
-        [ '$scope','$http','$state','EmailService', function($scope,$http,$state,EmailService){
+        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser',  function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser){
             $scope.email = {
                 to: 'gauravparashar294@gmail.com',
-                name: 'Gaurav Parashar',
-                from: 'gaurav@exambazaar.com',
-                subject: 'Give 2 minutes to REVOLUTIONIZE Test Preparation in India',
-                html: "Winning this Amazon Gift Card is a lot easier than any exam you have ever written! Fill this 2 minute survey about your test preparation experience to participate in the contest.<br/><br/>"
+                sender: '',
+                senderId: '',
+                from: '',
+                subject: '',
+                html: "",
+                instituteName:'',
+                instituteId:'',
+                
             };
+            $scope.showLevel = 0;
+            $scope.user = thisuser.data;
+            if($scope.user.userType=='Master'){
+                $scope.showLevel = 10;
+                $scope.email.from = $scope.user.email;
+                $scope.email.sender = $scope.user.basic.name;
+                $scope.email.senderId = $scope.user._id;
+            }else{
+                
+            }
+            $scope.$watch('email.instituteId', function (newValue, oldValue, scope) {
+            if(newValue != null && newValue != ''){
+                console.info(newValue);
+                //DEF
+                var newValueArr = newValue.split("/");
+                newValue = newValueArr[newValueArr.length-1];
+                console.info(newValue);
+                if(newValue.length > 5){
+                    //alert($scope.email.instituteId);
+                    targetStudyProviderService.getProviderBasic(newValue).success(function (refreshedProvider, status, headers) {
+                    if(refreshedProvider){
+                        
+                        $scope.provider = refreshedProvider;
+                        $scope.email.instituteName = $scope.provider.name;
+                        $scope.email.instituteId = $scope.provider._id;
+                        $scope.email.subject = $scope.provider.name + ' - Claim your free Exambazaar Listing today';
+                    }
+                    
+                    
+
+                    }).error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                }
+
+
+
+
+            }
+
+            }, true);
             
             $scope.sendEmail = function() {
+                //
                 EmailService.sendGrid($scope.email).success(function (data, status, headers) {
-                    alert('Done');
+                    
+                    alert(JSON.stringify(data));
                 })
                 .error(function (data, status, header, config) {
                     console.info('Error ' + data + ' ' + status);
@@ -5329,7 +5372,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         })
     
         .state('sendEmail', {
-            url: '/master/:masterId/sendEmail',
+            url: '/master/:userId/sendEmail',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -5342,6 +5385,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 'footer': {
                     templateUrl: 'footer.html'
                 }
+            },
+            resolve: {
+                
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                user: function() { return {}; }
             }
         })
     

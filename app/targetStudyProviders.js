@@ -974,7 +974,7 @@ router.get('/coaching/:coachingId', function(req, res) {
 router.get('/basiccoaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     var thisProvider = targetStudyProvider
-        .findOne({'_id': coachingId},{name:1, website: 1, address:1, city:1, state:1, logo:1})
+        .findOne({'_id': coachingId},{name:1, website: 1, address:1, city:1, state:1, logo:1,email:1, mobile:1, phone:1})
         /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
         .exec(function (err, thisProvider) {
         if (!err){

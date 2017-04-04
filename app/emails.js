@@ -14,6 +14,8 @@ router.post('/send', function(req, res) {
     var html = thisEmail.html;
     // setup e-mail data with unicode symbols
     /*"<b>Hello world, whats up?</b><br/><img src='https://s-media-cache-ak0.pinimg.com/736x/63/9a/5d/639a5d6ff67552c63e690431218b83b8.jpg'>'"*/
+    
+    
     console.log("To: " + to + " Subject: " + subject);
     var mailOptions = {
         from: '"Edu Chronicle" <hi@educhronicle.com>', // sender address
@@ -69,14 +71,25 @@ router.post('/sendGrid', function(req, res) {
     var thisEmail = req.body;
     var templateId = thisEmail.templateId;
     var from = thisEmail.from;
+    var sender = thisEmail.sender;
+    sender = 'Always Exambazaar';
+    var fromEmail = {
+        email: from,
+        name: sender
+    };
     var to = thisEmail.to;
     var subject = thisEmail.subject;
     var name = thisEmail.name;
+    var instituteName = thisEmail.instituteName;
+    var instituteId = thisEmail.instituteId;
     var html = thisEmail.html;
-    console.log("To: " + to + " Subject: " + subject);
+    if(!html){
+        html = ' ';
+    }
+    console.log("To: " + to + " Subject: " + subject + " from: " + from);
     
     
-    var apiKey = sendGridCredential.getOneSendGridCredential
+    //var apiKey = sendGridCredential.getOneSendGridCredential
     
     var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
         if (err) return handleError(err);
@@ -84,18 +97,24 @@ router.post('/sendGrid', function(req, res) {
         if(existingSendGridCredential){
             var apiKey = existingSendGridCredential.apiKey;
             var sg = require("sendgrid")(apiKey);
-            //console.log(apiKey);
-            var from_email = new helper.Email(from);
+            
+            var from_email = new helper.Email(fromEmail);
             var to_email = new helper.Email(to);
-            var subject = subject;
+            //var subject = subject;
             var content = new helper.Content('text/html', html);
-            var mail = new helper.Mail(from_email, subject, to_email, content);
-            mail.setTemplateId('f2c433ee-29cb-4429-8b28-774582fba276');
+            var mail = new helper.Mail(fromEmail, subject, to_email, content);
+            mail.setTemplateId('4600a054-1d6c-4c2b-9cf4-5e45f91b5f11');
+            //mail.setTemplateId('f2c433ee-29cb-4429-8b28-774582fba276');
+            console.log('API Key: ' + apiKey);
+            console.log('From Email: ' + JSON.stringify(from_email));
+            console.log('To Email: ' + JSON.stringify(to_email));
+            console.log('Subject: ' + JSON.stringify(subject));
+            console.log('Content: ' + JSON.stringify(content));
+            
             //mail.Substitution('-name-', name);
             //mail.personalizations = [];
-            //mail.personalizations[0].addSubstitution(
-            //  new helper.Substitution('-name-', name));
-
+            mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteName-', instituteName));
+            mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteId-', instituteId));
             
             var request = sg.emptyRequest({
               method: 'POST',
@@ -104,10 +123,15 @@ router.post('/sendGrid', function(req, res) {
             });
 
             sg.API(request, function(error, response) {
-              console.log(response.statusCode);
-              console.log(response.body);
-              console.log(response.headers);
-              res.json(response);
+                if(error){
+                    res.json('Could not send email! ' + error);
+                }else{
+                    console.log(response.statusCode);
+                    console.log(response.body);
+                    console.log(response.headers);
+                    res.json(response);
+                }
+                
             });
             
         }else{

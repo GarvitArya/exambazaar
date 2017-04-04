@@ -26,43 +26,48 @@
 <div class="container">
     <div id="spacer1">
     </div>
-    <div layout="row" layout-margin layout-padding>
-        <span class="md-subhead">
-            Send Emails
-        </span>
-    </div>
-    
-    <md-divider></md-divider>
-    
     <div layout="column" layout-margin layout-padding>
-    <h4 class="text-primary md-title">Email Params</h4>
+    <h4 class="text-primary md-title">Send Claim Email to Institutes</h4>
     <div class="col-md-12" id="addMasterForm">
         <md-content flex layout-padding>
             <form name="emailForm" >
             <div layout="column" >
-                <div layout="column">
-
-                    <md-input-container class="md-block" flex-gt-sm>
-                        <label>To</label>
-                        <input required ng-model="email.to">
-                    </md-input-container>
-                    <md-input-container class="md-block" flex-gt-sm>
-                        <label>Name</label>
-                        <input required ng-model="email.name">
-                    </md-input-container>
+                <div layout="row">
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>From</label>
                         <input required ng-model="email.from">
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
+                        <label>Sender</label>
+                        <input ng-model="email.sender" disabled>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Institute Id</label>
+                        <input required ng-model="email.instituteId" focus-me="true">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Institute Name</label>
+                        <input required ng-model="email.instituteName" disabled>
+                    </md-input-container>
+                </div>
+                {{provider.email}}
+                <div layout="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>To</label>
+                        <input required ng-model="email.to">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
                         <label>Subject</label>
                         <input required ng-model="email.subject">
                     </md-input-container>
-                    <md-input-container class="md-block" flex-gt-sm>
-                        <label>Content</label>
-                        <input required ng-model="email.html">
-                    </md-input-container>
-                </div>   
+                </div>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Content</label>
+                    <input ng-model="email.html">
+                </md-input-container>
+                 
 
                 <md-button class="md-raised md-primary" ng-click="sendEmail()" ng-disabled="emailForm.$invalid">Send Email</md-button>
 
