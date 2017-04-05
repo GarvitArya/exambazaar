@@ -208,8 +208,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.userexists = function(mobile) {
             return $http.get('/api/users/userexists/'+mobile, {mobile: mobile});
         };
-        this.markLogin = function(userId) {
-            return $http.get('/api/users/markLogin/'+userId, {userId: userId});
+        this.markLogin = function(loginForm) {
+            //alert('Here');
+            return $http.post('/api/users/markLogin',loginForm);
         };
         this.shortlistInstitute = function(shortListForm) {
             return $http.post('/api/users/shortlistInstitute', shortListForm);
@@ -2958,6 +2959,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.internList.forEach( function(thisIntern, index){
                 var internDue = {
                     intern: thisIntern,
+                    done: 0,
                     due: 0
                 };
                 $scope.internDueList.push(internDue);
@@ -2970,6 +2972,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     var internIndex = internIds.indexOf(thisTask.user._id);
                     //console.info(internIndex);
                     $scope.internDueList[internIndex].due += 1;
+                }else{
+                    var internIndex = internIds.indexOf(thisTask.user._id);
+                    $scope.internDueList[internIndex].done += 1;
                 }
             });
             $scope.verifiedUsersCount = verifiedUsersCount.data;
@@ -3040,7 +3045,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
               password: $scope.login.password,
             })
             .success(function(user){
-                UserService.markLogin(user._id).success(function (data, status, headers) {
+                
+                
+                var loginForm = {
+                    userId: user._id
+                };
+                if($cookies.getObject('ip')){
+                    var ip = $cookies.getObject('ip');
+                    loginForm.ip = ip;
+                }
+                console.info(JSON.stringify(loginForm));
+                UserService.markLogin(loginForm).success(function (data, status, headers) {
                     console.info('Login marked');
                 })
                 .error(function (data, status, header, config) {
@@ -3194,7 +3209,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
               password: $scope.login.password,
             })
             .success(function(user){
-                UserService.markLogin(user._id).success(function (data, status, headers) {
+                var loginForm = {
+                    userId: user._id
+                };
+                if($cookies.getObject('ip')){
+                    var ip = $cookies.getObject('ip');
+                    loginForm.ip = ip;
+                }
+                console.info(JSON.stringify(loginForm));
+                UserService.markLogin(loginForm).success(function (data, status, headers) {
                     console.info('Login marked');
                 })
                 .error(function (data, status, header, config) {
@@ -4321,7 +4344,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 return http.status != 404;
 
             };
-            alert(imageExists('https://s3.ap-south-1.amazonaws.com/exambazaar/L_60725.gif'));
+            //alert(imageExists('https://s3.ap-south-1.amazonaws.com/exambazaar/L_60725.gif'));
             
             $rootScope.title ='Sandbox';
     }]); 

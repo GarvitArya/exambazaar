@@ -33,7 +33,21 @@ var userSchema = mongoose.Schema({
     email : { type: String},
     verified : { type: Boolean, default: false},
     _created: { type: Date, default: Date.now },
-    logins:[{type: Date}] //,required: true
+    logins:[{
+        loginTime: Date,
+        ip: {
+            city: {type: String},
+            country: {type: String},
+            lat: {type: String},
+            long: {type: String},
+            zip: {type: String},
+            org: {type: String},
+            as: {type: String},
+            isp: {type: String},
+            query: {type: String},
+        },
+            
+    }] //,required: true
 });
 userSchema.plugin(passportLocalMongoose);
 

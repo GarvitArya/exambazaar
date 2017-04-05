@@ -179,28 +179,40 @@ router.get('/userexists/:mobile', function(req, res) {
     
 });
 
-router.get('/markLogin/:userId', function(req, res) {
-    var userId = req.params.userId;
+router.post('/markLogin', function(req, res) {
+    //console.log('Here');
+    var loginForm = req.body;
+    var userId = loginForm.userId;
+    var ip = loginForm.ip;
+    
+    console.log('Login form is: ' + loginForm);
     var thisUser = user
         .findOne({ '_id': userId },{logins:1})
         .exec(function (err, thisUser) {
         if (!err){
-            var loginTime = moment().toDate();
+            
+            var loginDateTime = moment().toDate();
+            var newLogin = {
+                loginTime: loginDateTime
+            };
+            if(ip){
+                newLogin.ip = ip;
+            }
             if(!thisUser.logins){
-                thisUser.logins =[loginTime];
+                thisUser.logins =[newLogin];
             }else{
                 //console.log(thisUser.logins);
                 if(thisUser.logins.length == 0){
-                    thisUser.logins =[loginTime];
+                    thisUser.logins =[newLogin];
                     //thisUser.logins.push(loginTime);
                 }else{
-                    thisUser.logins.push(loginTime);
+                    thisUser.logins.push(newLogin);
                 }
             }
             
             thisUser.save(function(err, thisUser) {
                 if (err) return console.error(err);
-                console.log('User login at: ' + loginTime);
+                console.log('User login at: ' + newLogin.loginTime);
             });
             res.json("User login added");
             

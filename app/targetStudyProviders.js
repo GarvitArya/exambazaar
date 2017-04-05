@@ -1066,7 +1066,40 @@ router.get('/databaseService', function(req, res) {
     console.log("Database Service Starting now");
     //"email": { $exists: true, $ne: null } 
     
-    group.find({}, function(err, allGroups) {
+    res.json('Done');
+        var allproviders =  targetStudyProvider.find({ website: { $exists: true } }, {website:1},function(err, allproviders) {
+        if (!err){
+             var counter = 0;
+             var changes = 0;
+             var nLength = allproviders.length;
+             allproviders.forEach(function(thisprovider, index){
+                 counter = counter + 1;
+                 var website = thisprovider.website;
+                 
+                 if(website != ''){
+                  
+                 var httpIndex = website.indexOf('http');
+                 if(httpIndex == -1){
+                     changes = changes + 1;
+                     console.log(counter + ' ' + JSON.stringify(thisprovider));
+                     thisprovider.website = 'http://' + thisprovider.website;
+                     thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        console.log(thisprovider._id + " saved!");
+                    });
+                 }
+                    
+                 }
+                if(counter == nLength){
+                    console.log(changes + " websites to be changed in " + nLength + " providers!");
+                    //res.json('Done');
+                }
+             });
+        }else {throw err;}
+        });
+    
+    
+    /*group.find({}, function(err, allGroups) {
     if (!err){
         allGroups = allGroups.map(function(a) {return a.group;});
         res.json('Done');
@@ -1105,7 +1138,7 @@ router.get('/databaseService', function(req, res) {
         
         
     } else {throw err;}
-    });
+    });*/
     
     
 });
