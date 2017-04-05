@@ -69,10 +69,10 @@ router.post('/send', function(req, res) {
 
 router.post('/sendGrid', function(req, res) {
     var thisEmail = req.body;
-    var templateId = thisEmail.templateId;
+    var templateName = thisEmail.templateName;
     var from = thisEmail.from;
     var sender = thisEmail.sender;
-    sender = 'Always Exambazaar';
+    //sender = 'Always Exambazaar';
     var fromEmail = {
         email: from,
         name: sender
@@ -98,41 +98,69 @@ router.post('/sendGrid', function(req, res) {
             var apiKey = existingSendGridCredential.apiKey;
             var sg = require("sendgrid")(apiKey);
             
-            var from_email = new helper.Email(fromEmail);
-            var to_email = new helper.Email(to);
-            //var subject = subject;
-            var content = new helper.Content('text/html', html);
-            var mail = new helper.Mail(fromEmail, subject, to_email, content);
-            mail.setTemplateId('4600a054-1d6c-4c2b-9cf4-5e45f91b5f11');
-            //mail.setTemplateId('f2c433ee-29cb-4429-8b28-774582fba276');
-            console.log('API Key: ' + apiKey);
-            console.log('From Email: ' + JSON.stringify(from_email));
-            console.log('To Email: ' + JSON.stringify(to_email));
-            console.log('Subject: ' + JSON.stringify(subject));
-            console.log('Content: ' + JSON.stringify(content));
             
-            //mail.Substitution('-name-', name);
-            //mail.personalizations = [];
-            mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteName-', instituteName));
-            mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteId-', instituteId));
-            
-            var request = sg.emptyRequest({
-              method: 'POST',
-              path: '/v3/mail/send',
-              body: mail.toJSON(),
-            });
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            console.log(emailTemplate);
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+                if(thisEmailTemplate.name == templateName){
+                    templateFound = true;
+                    templateId = thisEmailTemplate.templateKey;
+                    console.log(templateId);
+                    var from_email = new helper.Email(fromEmail);
+                    var to_email = new helper.Email(to);
+                    //var subject = subject;
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    //mail.setTemplateId('4600a054-1d6c-4c2b-9cf4-5e45f91b5f11');
+                    mail.setTemplateId(templateId);
+                    //mail.setTemplateId('f2c433ee-29cb-4429-8b28-774582fba276');
+                    console.log('API Key: ' + apiKey);
+                    console.log('From Email: ' + JSON.stringify(from_email));
+                    console.log('To Email: ' + JSON.stringify(to_email));
+                    console.log('Subject: ' + JSON.stringify(subject));
+                    console.log('Content: ' + JSON.stringify(content));
 
-            sg.API(request, function(error, response) {
-                if(error){
-                    res.json('Could not send email! ' + error);
-                }else{
-                    console.log(response.statusCode);
-                    console.log(response.body);
-                    console.log(response.headers);
-                    res.json(response);
+                    //mail.Substitution('-name-', name);
+                    //mail.personalizations = [];
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteName-', instituteName));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteId-', instituteId));
+
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+
+                    sg.API(request, function(error, response) {
+                        if(error){
+                            res.json('Could not send email! ' + error);
+                        }else{
+                            console.log(response.statusCode);
+                            console.log(response.body);
+                            console.log(response.headers);
+                            res.json(response);
+                        }
+
+                    });
+                    
                 }
-                
+                if(counter == nLength){
+                    if(!templateFound){
+                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    }
+                }
             });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+            
+            
             
         }else{
             res.json('No Active SendGrid API Key');

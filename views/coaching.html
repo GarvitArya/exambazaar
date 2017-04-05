@@ -255,12 +255,18 @@
                 <div class="bs-callout bs-callout-success col-xs-12 col-sm-8 col-md-8 col-lg-8 " ng-show="provider.showDetails" id="rightTabs">
                     <div layout="column" layout-align="center left">
 
-                    <div layout="row">
+                    <div layout="row" layout-align="start center">
                         <h6 class="md-subhead text" id="coachingHeader">
-                            <strong>
+                            <strong><span>
                                 {{provider.name | uppercase}}
-                            </strong>
-                         </h6>
+                            </span></strong>
+                            &nbsp;
+                        </h6>
+                            <!--<a ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'provider.group'}} })">
+                            <span class="secondFont"><strong>GROUP</strong>
+                            </span>
+                            </a>-->
+                         
                     </div>
                     <md-divider></md-divider>
                     <div layout="row" ng-if="provider.address">
@@ -298,6 +304,8 @@
                         <span class="md-subhead text"><strong>KNOW MORE</strong>
                         </span>
                         </button>
+                        
+                        
                     </div>
                     <div>
 

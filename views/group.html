@@ -115,9 +115,9 @@
         border: 1px solid #ccc;
     }
     #cell{
-        padding: 5px;
-        
-        
+        padding: 0px;
+        padding-left: 5px;
+        padding-right: 5px;
     }
     
     
@@ -153,60 +153,73 @@
 <div class="whiteBackground mainContent" ng-if="showLevel>0">
     <div id="spacer" class="whiteBackground">
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font10 whiteBackground paddingTB10" ng-if="showLevel>1">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font10 whiteBackground" ng-if="showLevel>1">
         <!---->
-        <md-button class="md-cancel md-small font10" ng-click="removeDuplicates()">Group Checked</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="">Group Checked</md-button>
     </div>
-    <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12 whiteBackground paddingTB10"  >
+    <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12 whiteBackground"  >
+        <form name="searchForm">
         <div layout="row" layout-align="start center">
+            
             <div flex="50" layout="row" layout-align="start center" class="icon-addon addon-md">
-                <input type="search" placeholder="Search for coaching centre" class="form-control font12" id="Input" ng-model="searchText">
+                <input type="search" placeholder="Search for coaching centre" class="form-control font12" id="Input" ng-model="searchText" required>
                 <label for="searchText" class="glyphicon glyphicon-search" rel="tooltip" title="searchText"></label>
             </div>
             <div layout="row" layout-align="start center" flex="50" class="" >
                 <div layout="row" layout-align="start center" flex="50">
-                    <md-button class="md-cancel md-small" ng-click="findPartners(searchText)" class="height100 width100">Search</md-button>
+                    <md-button type="submit" class="md-cancel md-small" ng-click="findPartners(searchText)" class="height100 width100" ng-disabled="searchForm.$invalid">Search</md-button>
                     <div class="text-primary" ng-if="searchText"><a ng-click="clearFilter()">Clear</a></div>
                 </div>
                 <div flex="50" layout="row" layout-align="start center">
-                    <small class="text-muted">  displaying {{providersList.length}} providers in <span class="text-primary">{{city}}</span></small>
+                    <small class="text-muted">  displaying {{providersList.length}} providers</small>
                 </div>
 
             </div>
+           
         </div>
+        </form>
     </div>
     
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 whiteBackground paddingTB10">
-        <div layout="row" layout-align="start center" class="greyDashedBottomBorder greyDashedTopBorder font10 bold">
+        <div layout="row" layout-align="start center" class="greyDashedBottomBorder greyDashedTopBorder font12 bold">
             <div id="cell" flex="5">S. No.</div>
-            <div id="cell" flex="15" class="font12">Institute</div>
-            <div id="cell" flex="15">Address</div>
-            <div id="cell" flex="30">Group</div>
+            <div id="cell" flex="20">Institute</div><!--
+            <div id="cell" flex="15">Address</div>-->
+            <div id="cell" flex="20">Group</div>
+            <div id="cell" flex="5">EB Link</div>
             <div id="cell" flex="5">Url</div>
+            <div id="cell" flex="5">TS Url</div>
         </div>
         
         <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['group']" class="greyDashedBottomBorder font10">
             <div id="cell" flex="5">
                 {{$index+1}}
             </div>
-            <div id="cell" flex="15" class="font12">
-                <a ui-sref="claim({ coachingId:{{'provider._id'}} })" target="_blank">
-                <strong>{{provider.name}}</strong>
-                </a>
-            </div>
+            <div id="cell" flex="20" class="font12">
+                
+                <input type="text" placeholder="Institute Name" class="form-control" ng-model="provider.name">
+            </div><!--
             <div id="cell" flex="15">
                 {{provider.address}}, <strong>{{provider.city}}</strong>
-            </div>
-            <div id="cell" flex="30">
-                <input type="text" placeholder="Group Name" class="form-control text-center" ng-model="provider.group">
+            </div>-->
+            <div id="cell" flex="20">
+                <input type="text" placeholder="Group Name" class="form-control" ng-model="provider.group">
             </div> 
-            
+            <div id="cell" flex="5">
+            <a ui-sref="claim({ coachingId:{{'provider._id'}} })" target="_blank">
+                <strong>EB Link</strong>
+            </a>
+            </div>
             <div id="cell" flex="5">
                 <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
                     Url
                 </a>
             </div>
-            
+            <div id="cell" flex="5">
+                <a ng-href="{{provider.targetStudyWebsite}}" target="_blank" ng-if="provider.targetStudyWebsite">
+                    TS Url
+                </a>
+            </div>
             
         
         </div>

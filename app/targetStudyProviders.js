@@ -6,6 +6,7 @@ var targetStudyProvider = require('../app/models/targetStudyProvider');
 var cisaved = require('../app/models/cisaved');
 var oldtargetStudyProvider = require('../app/models/oldtargetStudyProvider');
 var exam = require('../app/models/exam');
+var group = require('../app/models/group');
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 db.on('error', console.error);
@@ -806,7 +807,7 @@ router.get('/query/:query', function(req, res) {
 
 router.get('/group/:query', function(req, res) {
     var query = req.params.query;
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}}, {name:1 ,group:1, address:1, city:1, state:1, logo:1, website:1},function(err, docs) {
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}}, {name:1 ,group:1, address:1, city:1, state:1, logo:1, website:1, targetStudyWebsite:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -863,9 +864,9 @@ router.post('/cityCourse', function(req, res) {
         .deepPopulate('stream')
         .exec(function (err, thisExam) {
         if (!err){
-            targetStudyProvider.find({"city" : city,"exams" : thisExam._id}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1},{sort: '-rank'},function(err, providerList) {
+            targetStudyProvider.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1, group:1},{sort: '-rank'},function(err, providerList) {
             if (!err){
-                console.log(providerList);
+                //console.log(providerList);
                 res.json(providerList);
             } else {throw err;}
             });
@@ -970,17 +971,41 @@ router.get('/coaching/:coachingId', function(req, res) {
     });
 });
 
+router.get('/coachingGroup/:groupName', function(req, res) {
+    var groupName = req.params.groupName;
+    console.log('Fetching coaching group: ' + groupName);
+    
+    var thisGroup = targetStudyProvider
+        .find({'group': groupName})
+        /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
+        .exec(function (err, thisGroup) {
+        if (!err){
+            console.log(thisGroup);
+            res.json(thisGroup);
+        } else {throw err;}
+    });
+});
 
 router.get('/basiccoaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
-    var thisProvider = targetStudyProvider
+    if(mongoose.Types.ObjectId.isValid(coachingId)){
+        var thisProvider = targetStudyProvider
         .findOne({'_id': coachingId},{name:1, website: 1, address:1, city:1, state:1, logo:1,email:1, mobile:1, phone:1})
-        /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
-        .exec(function (err, thisProvider) {
-        if (!err){
-            res.json(thisProvider);
-        } else {throw err;}
-    });
+            /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
+            .exec(function (err, thisProvider) {
+            if (!err){
+                if(thisProvider){
+                    res.json(thisProvider);
+                }else{
+                    res.json(null);
+                }
+
+            } else {throw err;}
+        });
+    }else{
+        res.json(null);
+    }
+    
 });
 
 router.get('/cisavedUsers/:coachingId', function(req, res) {
@@ -1035,6 +1060,54 @@ router.get('/setRank0', function(req, res) {
          });
     }
     });
+});
+
+router.get('/databaseService', function(req, res) {
+    console.log("Database Service Starting now");
+    //"email": { $exists: true, $ne: null } 
+    
+    group.find({}, function(err, allGroups) {
+    if (!err){
+        allGroups = allGroups.map(function(a) {return a.group;});
+        res.json('Done');
+        var allproviders =  targetStudyProvider.find({groupChecked: {$ne: true}}, {group:1, groupChecked:1},function(err, allproviders) {
+        if (!err){
+             
+             var counter = 0;
+             var changes = 0;
+             var nLength = allproviders.length;
+             allproviders.forEach(function(thisprovider, index){
+                 counter = counter + 1;
+                 var gIndex = allGroups.indexOf(thisprovider.group);
+                 if(gIndex != -1){
+                     changes = changes + 1;
+                     console.log(counter + ' ' + JSON.stringify(thisprovider));
+                     if(!thisprovider.groupChecked){
+                         thisprovider.groupChecked = true;
+                         thisprovider.save(function(err, thisprovider) {
+                            if (err) return console.error(err);
+                            console.log(thisprovider._id + " saved!");
+                        });
+                     }
+                 }
+
+                if(counter == nLength){
+                    console.log(changes + " group checked marked in " + nLength + " providers!");
+                    //res.json('Done');
+                }
+             });
+        }
+        });
+        
+        
+        
+        
+        
+        
+    } else {throw err;}
+    });
+    
+    
 });
 
 router.get('/logoService', function(req, res) {

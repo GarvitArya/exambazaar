@@ -143,6 +143,7 @@
         <md-button class="md-cancel md-small font10" ng-click="removeDuplicates()">Remove Duplicates</md-button>
         <md-button class="md-cancel md-small font10" ng-click="cleanTargetstudyurls()">Clean Websites</md-button>
         <md-button class="md-cancel md-small font10" ng-click="logoService()">Clean Logos</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="databaseService()">Database Service</md-button>
         <md-button class="md-cancel md-small font10" ng-click="UniqueLogoService()">Unique Logo</md-button>
         <md-button class="md-small md-cancel md-small font10" ng-click="allDistinct()">Distinct Providers</md-button>
         <!--<md-button class="md-cancel md-small font10" ng-click="getCityCount()">City Count</md-button>
@@ -170,15 +171,16 @@
         </hot-table>
     </div>-->
     
-    <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12 whiteBackground paddingTB10"  >
+    <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12 whiteBackground paddingTB10">
+        <form name="searchForm">
         <div layout="row" layout-align="start center">
             <div flex="50" layout="row" layout-align="start center" class="icon-addon addon-md">
-                <input type="search" placeholder="Search by name, courses" class="form-control font12" id="Input" ng-model="searchText">
+                <input type="search" placeholder="Search by name, courses" class="form-control font12" id="Input" ng-model="searchText" required>
                 <label for="searchText" class="glyphicon glyphicon-search" rel="tooltip" title="searchText"></label>
             </div>
             <div layout="row" layout-align="start center" flex="50" class="" >
                 <div layout="row" layout-align="start center" flex="50">
-                    <md-button class="md-cancel md-small" ng-click="setFilter(searchText)" class="height100 width100">Search</md-button>
+                    <md-button class="md-cancel md-small" ng-click="setFilter(searchText)" class="height100 width100" type="submit" ng-disabled="searchForm.$invalid">Search</md-button>
                     <div class="text-primary" ng-if="searchText"><a ng-click="clearFilter()">Clear</a></div>
                 </div>
                 <div flex="50" layout="row" layout-align="start center">
@@ -187,7 +189,7 @@
 
             </div>
         </div>
-    
+        </form>
     </div>
     
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 whiteBackground paddingTB10" ng-show="!showlogos && !allDistinctBool">

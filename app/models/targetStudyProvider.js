@@ -93,6 +93,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     }],
     coursesOffered: [String],
     exams: [{ type: Schema.ObjectId, ref: 'exam' }],
+    disabled: {type: Boolean,default: false},
     rank: {type: Number,default: 0},
     ebNote: [{
         note: String,

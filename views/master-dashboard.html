@@ -151,7 +151,7 @@
                 <div layout="column" layout="center center" flex="10">Finished on</div>
                 <div layout="column" layout="center center" flex="15">Name</div>
                 <div layout="column" layout="center center" flex="25">Institute</div>
-                <div layout="column" layout="center center" flex="5">City</div>
+                <div layout="column" layout="center center" flex="5">Id</div>
             </div>
             <div layout="row" ng-repeat="tofillci in tofillciList | orderBy:['-active','-_finished','_deadline','_created']" class="width100 greyDashedBottomBorder" ng-class="{ pending: tofillci.active }">
                 <div layout="column" layout="center center" flex="5">{{$index + 1}}</div>
@@ -165,7 +165,7 @@
                     <strong>{{tofillci.institute.name}}</strong>
                     </a>
                 </div>
-                <div layout="column" layout="center center" flex="5">{{tofillci.institute.city}}</div>
+                <div layout="column" layout="center center" flex="5">{{tofillci.institute._id}}</div>
                 
             </div>
         </div>

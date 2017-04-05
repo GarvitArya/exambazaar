@@ -1,0 +1,244 @@
+<style>
+    .whiteBackground{
+        background: white;
+    }
+    .greenBackground{
+        background-color: lightgreen;
+    }
+    .pinkBackground{
+        background-color: lightpink;
+    }
+    .bottomBorder{
+        border-bottom: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    .topBorder{
+        border-top: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    .rightBorder{
+        border-right: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    .leftBorder{
+        border-left: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    
+    .component{
+        font-weight: bold;
+        font-family: "Avenir";
+        color: rgba(0,0,0,0.4);
+        /*letter-spacing: 2px;*/
+    }
+    .mainContent{
+        min-height: 200vh;
+        
+    }
+    #heroHeader{
+        margin-top: 10px;
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+    }
+    #heroHeaderContent{
+        min-height: 25vh;
+        padding-top: 20px;
+    }
+    #coachingHeader{
+        font-family: "Avenir";
+        letter-spacing: 2px;
+    }
+    #coachingHeader a{
+        color: #20C39A;
+    }
+    
+    .actionButton{
+        background-color: #FF5A5F;
+        font-family: "Open Sans";
+        color:white;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+    .actionButton:hover{
+        background-color: white;
+        color: #FF5A5F;
+        font-weight: bold;
+    }
+    .tolowercase {
+        text-transform: none;
+    }
+    #locationHolder{
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    .coachingNavBar{
+        min-height: 7vh;
+        background: rgba(255, 255, 255, 1);
+        z-index: 100;
+    }
+    a{
+        color: rgba(0,0,0,0.6);
+    }
+    a.link{
+        color: rgba(0,0,0,0.6);
+    }
+    a.visted{
+        color: rgba(0,0,0,0.6);
+    }
+    a:hover{
+        text-decoration: none;
+        color: #20C39A;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a.active {
+      background: #FF5A5F;
+      color: #fff;
+    }
+    .affix-top {
+        top: 100px;
+    }
+
+    .affix-bottom {
+        bottom: 0px;
+    }
+    .component{
+        margin-right: 20px;
+        font-weight: bold;
+    }
+    .componentRow{
+        min-height: 25vh;
+        font-family: "Avenir";
+    }
+    .componentRowElement{
+        padding-top: 20px;
+        padding-bottom: 20px;
+        min-height: 25vh;
+    }
+    #overviewIcon{
+        max-height: 40px;
+        padding-bottom: 7px;
+     }
+    #iconText{
+        color:rgba(0,0,0,0.4);
+        padding-top: 2px;
+        border-top: solid;
+        border-width: 1px;
+        border-color: lightgray;
+        border-spacing: 10px;
+    }
+    #iconTextContainer{
+        margin-top:1px;
+        
+    }
+    #iconData{
+        color:rgba(0,0,0,0.6);
+        font-weight: bold;
+        padding-top: 10px;
+    }
+    #linkFont{
+        color:rgba(0,0,0,0.6);
+    }
+    #breadcrumb{
+        margin-top: 5vh;
+    }
+    #paneLeft{
+        
+    }
+    #paneMiddle{
+    }
+    #spacerXS{
+        min-height: 13vh;
+    }
+</style>
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div layout="column" layout-xs="column" class="whiteBackground mainContent">
+    <div layout="row">
+        <div class="container">
+            <div class="row">
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
+            <small>
+            <span><a ui-sref="main">EXAMBAZAAR</a></span>
+            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
+            <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
+            <span> > <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{city | uppercase}}</a></span>
+            <span> > {{provider.name | uppercase}}</span>
+            </small>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div layout="row" id="heroHeader">
+
+        <div class="container">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <div layout="column" layout-align="end start" id="heroHeaderContent">
+            <div class="row">
+                <span class="hidden-xs text md-headline" id="coachingHeader">
+                    {{provider.name | uppercase}}
+                    <span class="badge" ng-if="editable" ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })"><small>
+                            Edit
+                    </small>
+                    </span>
+                </span>
+                <span class="hidden-sm hidden-md hidden-lg text md-subhead" id="coachingHeader">
+                    {{provider.name | uppercase}}
+                </span>
+            </div>
+            <div class="row">
+               <span>
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span ng-if="provider.location">
+                {{provider.location.area}},
+                </span>
+                {{provider.city}}
+                </span>
+            </div>
+            <div class="row" id="locationHolder">
+                <span class="hidden-sm hidden-md hidden-lg">
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-heart-o" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-inr" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                    </button>
+                </span>
+            </div>    
+            </div>
+            </div>
+            <div class="hidden-xs col-sm-6 col-md-6 col-lg-6">
+            <div layout="row" layout-align="end start">
+                <button class="btn actionButton heroButton tolowercase"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;Shortlist
+                </button>
+                <button class="btn actionButton heroButton tolowercase"><i class="fa fa-inr" aria-hidden="true"></i>&nbsp;&nbsp;Avail Discount
+                </button>
+                <button class="btn actionButton heroButton tolowercase"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i>&nbsp;&nbsp;Schedule Demo
+                </button>
+            </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div layout="column " class="componentRow">
+        <div layout="row" layout-align="start center" ng-repeat="thisGroup in group">
+            <div flex>
+            {{thisGroup._id}}
+            </div>
+            <div flex>
+            {{thisGroup.address}}  
+            </div>
+        </div>
+        
+    </div>
+    
+ </div>

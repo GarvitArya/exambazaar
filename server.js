@@ -62,6 +62,7 @@ var routes = require('./app/routes.js')(app, passport);
 //var institutes = require('./app/institutes.js',institutes); 
 var providers = require('./app/providers.js',providers); 
 var targetStudyProviders = require('./app/targetStudyProviders.js',targetStudyProviders); 
+var groups = require('./app/groups.js',groups); 
 var masters = require('./app/masters.js',masters); 
 //var admins = require('./app/admins.js',admins); 
 //var students = require('./app/students.js',students); 
@@ -86,6 +87,7 @@ var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredent
 
 app.use('/api/providers', providers);
 app.use('/api/targetStudyProviders', targetStudyProviders);
+app.use('/api/groups', groups);
 //app.use('/api/admins', admins);
 app.use('/api/masters', masters);
 //app.use('/api/students', students);
@@ -114,7 +116,20 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, Accept, Origin, Referer, User-Agent, Content-Type, Authorization');
+ 
+  // intercept OPTIONS method
+  if (req.method === 'OPTIONS') {
+    res.send(200);
+  }
+  else {
+    next();
+  }
+};
+app.use(allowCrossDomain);
 
 var server = app.listen(port);
 
@@ -124,7 +139,7 @@ console.log('The magic happens on port ' + port);
 
 var SitemapGenerator = require('sitemap-generator');
 
-var generator = new SitemapGenerator('http://www.exambazaar.com/#!/getStarted', {
+/*var generator = new SitemapGenerator('http://www.exambazaar.com/#!/getStarted', {
   restrictToBasepath: false,
   stripQuerystring: true,
 });
@@ -132,4 +147,4 @@ var generator = new SitemapGenerator('http://www.exambazaar.com/#!/getStarted', 
 generator.on('done', function (sitemap) {
   console.log(sitemap); // => prints xml sitemap
 });
-generator.start();
+generator.start();*/

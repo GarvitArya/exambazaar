@@ -513,6 +513,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getProvider = function(coachingId) {
             return $http.get('/api/targetStudyProviders/coaching/'+coachingId, {coachingId: coachingId});
         };
+        
+        this.getGroup = function(groupName) {
+            return $http.get('/api/targetStudyProviders/coachingGroup/'+groupName, {groupName: groupName});
+        };
         this.getProviderBasic = function(coachingId) {
             return $http.get('/api/targetStudyProviders/basiccoaching/'+coachingId, {coachingId: coachingId});
         };
@@ -548,6 +552,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.logoService = function() {
             return $http.get('/api/targetStudyProviders/logoService');
+        };
+        this.databaseService = function() {
+            return $http.get('/api/targetStudyProviders/databaseService');
         };
         this.UniqueLogoService = function() {
             return $http.get('/api/targetStudyProviders/UniqueLogoService');
@@ -997,7 +1004,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         sessionuser.partner = fulluser.partner;
                     }
                     $cookies.putObject('sessionuser', sessionuser);
-                    //DEF
+                    
                     $state.go('partner-dashboard', {userId: sessionuser.userId});
 
                 })
@@ -2626,7 +2633,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
     }]);     
+   
+    exambazaar.controller("showGroupController", 
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup','$state','$stateParams', '$cookies', function($scope,$rootScope, targetStudyProviderService,thisGroup,$state,$stateParams, $cookies){
+        $scope.group = thisGroup.data;
         
+    }]);    
+           
+   
+   
     exambazaar.controller("showCoachingController", 
     [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies','thisStream','thisExam', '$document', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies,thisStream,thisExam,$document){
         $scope.category = thisStream.data;
@@ -3792,6 +3807,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 console.info("Error ");
             });
         };
+        $scope.databaseService = function(){
+            targetStudyProviderService.databaseService().success(function (data, status, headers) {
+                console.info("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
         $scope.UniqueLogoService = function(){
             
             $scope.showlogos = true;
@@ -4286,7 +4309,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     exambazaar.controller("sandboxController", 
         [ '$scope', '$http','$state','$rootScope', function($scope, $http, $state, $rootScope){
-        
+            
+            
+            function imageExists(image_url){
+
+                var http = new XMLHttpRequest();
+
+                http.open('HEAD', image_url, false);
+                http.send();
+
+                return http.status != 404;
+
+            };
+            alert(imageExists('https://s3.ap-south-1.amazonaws.com/exambazaar/L_60725.gif'));
             
             $rootScope.title ='Sandbox';
     }]); 
@@ -4744,6 +4779,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser',  function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser){
             $scope.email = {
                 to: 'gauravparashar294@gmail.com',
+                templateName: '',
                 sender: '',
                 senderId: '',
                 from: '',
@@ -4753,6 +4789,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 instituteId:'',
                 
             };
+            $scope.templateNames = [
+                'Survey Email - 11March2017',
+                'Claim CI Email - 5thApril2017'
+            ];
             $scope.showLevel = 0;
             $scope.user = thisuser.data;
             if($scope.user.userType=='Master'){
@@ -5063,6 +5103,38 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 thisProvider: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getProvider($stateParams.coachingId);
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('showGroup', {
+            url: '/group/:categoryName/:subCategoryName/:cityName/:groupName', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header1.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'showGroup.html',
+                    controller: 'showGroupController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisStream: ['StreamService','$stateParams',
+                    function(StreamService,$stateParams){
+                    return StreamService.getStreamByName($stateParams.categoryName);
+                }],
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamByName($stateParams.subCategoryName);
+                }],
+                thisGroup: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {  
+                    return targetStudyProviderService.getGroup($stateParams.groupName);
                 }],
                 provider: function() { return {}; }
                 
