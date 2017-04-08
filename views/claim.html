@@ -286,8 +286,8 @@
         border: 1px solid #FF5A5F;
     }
     #upload3{
-        background-color: #20C39A;
-        color: white;
+        background-color: #F5F5F5;
+        color: #333333;
         border: 7px solid #fff;
         padding: 5px;
         margin: 10px;
@@ -354,6 +354,7 @@
     }
     #deleteButton{
         background: #FF5A5F;
+        color:white;
     }
     #restoreButton{
         background: #20C39A;
@@ -898,8 +899,11 @@
             <div flex layout="row" class="bottom-buffer10" ng-repeat="exam in provider.exams" id="greyBorder"  layout-align="start center">
                 <div layout="column" layout-align="center center" flex="5" id="courseLeftContainer">
                     
-                    <div class="secondFont inner rotate">
+                    <div layout="row" >
+                        <div class="secondFont inner rotate">
                         {{exam.displayname}}
+                        </div>
+                        
                     </div>
                 </div>
                 <div layout="column" flex="95" id="courseRightContainer">
@@ -939,8 +943,14 @@
                 </div>
                  
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-repeat = "examResult in examWiseResult" ng-if="examResult.exam == exam._id && !editResult" >
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bottom-buffer10 secondFont" id="upload2" ng-click="editResults()" ng-show="editable">
+                    <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bottom-buffer10 secondFont" id="upload2" ng-click="editResults()" ng-show="editable">
                         Spreadsheet Mode
+                    </div>-->
+                    
+                    <div layout="row" layout-align="center center" id="upload2" ng-click="editResults()" class="marginB10 secondFont textLightGrey" ng-show="editable">
+                        <span class="">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
+                        </span>
                     </div>
                     
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 greyBorder" ng-repeat = "yearResult in examResult.yearResult" ng-if="yearResult.result.length > 0" id="showYearResult">
@@ -1021,10 +1031,10 @@
                         <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Back
                         </span>
                         
-                        You can bulk edit Results for {{exam.displayname}} by pasting in the Spreadsheet Below
-                        <span class="badge">
+                        You can bulk edit Results for {{exam.displayname}} by pasting in the Spreadsheet below
+                        <!--<span class="badge">
                             {{examResult.initialLength}}
-                        </span>
+                        </span>-->
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font9">
                         
@@ -1094,10 +1104,11 @@
             </div>
             <div flex layout="row" class="bottom-buffer10" ng-repeat="exam in provider.exams" id="greyBorder" ng-show="!editCourse" layout-align="start center" >
                 <div layout="column" layout-align="center center" flex="5" id="courseLeftContainer">
+                    <div layout="row" >
                     <div class=" secondFont inner rotate">
-                        <md-truncate flex>
+                        
                         {{exam.displayname}}
-                        </md-truncate>
+                    </div>
                     </div>
                 </div>
                 
@@ -1138,6 +1149,9 @@
                             <span ng-if="course.fees > 0">
                                 {{course.fees | currency:"₹":0}}
                             </span>
+                            <div layout="row" class="textLightGrey fourthFont">
+                                {{course.feeType}}
+                            </div>
                             <span ng-if="course.fees == 0 || !course.fees">
                             </span>
                         </div>
@@ -1150,8 +1164,10 @@
             <div flex layout="row" class="bottom-buffer10" ng-repeat="exam in provider.exams" id="greyBorder" ng-show="editCourse" layout-align="start center">
                 
                 <div layout="column" layout-align="center center" flex="5" id="courseLeftContainer" class="">
+                    <div layout="row" >
                     <div class="secondFont inner rotate">
                         {{exam.displayname}}
+                    </div>
                     </div>
                 </div>
                 <div flex="95" id="courseRightContainer">
@@ -1172,15 +1188,18 @@
                         </div>
                         
                     </div>
-                    <div ng-repeat="course in provider.course" ng-if="course.exam == exam._id" class="editFont marginTB10 paddingB10">
+                    <div ng-repeat="course in provider.course" ng-if="course.exam == exam._id" class="editFont marginTB10 paddingB20">
                         <div layout="row" layout-align="center start">
                         <div flex="35" layout="column" class="paddingLeft10 paddingRight10 ">
                             <input type="text" class="editFont width100"  id="course.name" ng-model="course.name"  placeholder="New Course" focus-me="$index == preAddCourseLength">
                             <input type="text" class="editFont width100"  id="course.idealFor" ng-model="course.idealFor"  placeholder="Ideal for..">
                             
                         </div>
-                        <div flex class="paddingLeft10 paddingRight10">
-                            <span ng-repeat="duration in durations">
+                        <div flex="25" class="paddingLeft10 paddingRight10">
+                            <div layout="row">
+                                <input type="text" class="editFont width100"  id="course.hoursPerWeek" ng-model="course.hoursPerWeek"  placeholder="Hours per week">
+                            </div>
+                            <span ng-repeat="duration in durations" >
                                 <span class="badge editFont" id="tagHolder" ng-click="setCourseDuration(course, duration)" ng-if="course.duration != duration">
                                 {{duration}}
                                 </span>
@@ -1203,6 +1222,14 @@
                         </div>
                         <div flex class="paddingLeft10 paddingRight10">
                             <input type="text" class="editFont width100"  id="course.fees" ng-model="course.fees"  placeholder="Course Fees">
+                            <span ng-repeat="feeType in feeTypes" >
+                                <span class="badge editFont" id="tagHolder" ng-click="setFeeType(course, feeType)" ng-if="course.feeType != feeType">
+                                {{feeType}}
+                                </span>
+                                <span class="badge editFont" id="existingTagHolder" ng-click="setFeeType(course, feeType)" ng-if="course.feeType == feeType">
+                                {{feeType}}
+                                </span>&nbsp;
+                            </span>
                         </div>
                         <div flex="5" layout="row" layout-align="center start" class="">
                             <span class="badge text-black font20" ng-click="deleteCourse(course)" id="deleteBadge">
@@ -1356,8 +1383,8 @@
                 <div class="hidden-xs col-sm-4 col-md-4 col-lg-4" id="elementBox">
                     <div id="thumbnailImage"  ng-click="showPhotoDialog($event, $index)" ></div>
                 </div>
-                <div layout="row" layout-align="center center" class="text-black" id="AddButton" ngf-select="uploadPhotos(photos)" multiple="multiple" ng-model="photos" ngf-accept="'image/*'">
-                    <span class="font80">
+                <div layout="row" layout-align="center center" class="text-black editFont" id="AddButton" ngf-select="uploadPhotos(photos)" multiple="multiple" ng-model="photos" ngf-accept="'image/*'">
+                    <span class="font100">
                         +
                     </span>
                 </div>
@@ -1424,19 +1451,30 @@
             <div class="hidden-xs col-sm-6 col-md-6 col-lg-6" ng-repeat="video in provider.video" id="displayBox" >
                 <div class="hidden-xs col-sm-12 col-md-12 col-lg-12 text-left" id="elementBox" >
                     <div layout="column" class="greyBorder" layout-align="start center">
-                        <div class="col-sm-12 col-md-12 col-lg-12 font9 marginT10">
-                            <span>
+                        <div class="col-sm-12 col-md-12 col-lg-12 fourthFont marginT10">
+                            <div class="marginB5">
+                                <span>
                                 Video# {{$index + 1}} of {{provider.video.length}}
-                            </span>&nbsp;
-                            <span clas="font9" ng-if="$index >= preUploadVideoLength" class="badge font9" id="addedButton">
-                                Just Added
-                            </span>&nbsp;
-                            <span class="badge font9" id="deleteButton" ng-click="deleteVideo(video)">
-                            Delete
-                            </span>&nbsp;
-                            <span class="badge font9" id="tagHolder" ng-click="showVideoTagDialog($event, video)">
-                            Add Video Tag
-                            </span>
+                                </span>&nbsp;
+                                <span clas="font9" ng-if="$index >= preUploadVideoLength" class="badge font9" id="addedButton">
+                                    Just Added
+                                </span>&nbsp;
+                                <span class="badge font9" id="deleteButton" ng-click="deleteVideo(video)">
+                                Delete
+                                </span>&nbsp;
+                            </div>
+                            <div class="marginB5">
+                                <span>
+                                Video Tags:
+                                </span>&nbsp;
+                                <span class="badge font9" id="tagHolder" ng-click="showVideoTagDialog($event, video)" ng-if="!video.tags || video.tags.length ==0">
+                                Add Video Tag
+                                </span>
+                                <span class="badge font9" id="existingTagHolder" ng-click="showVideoTagDialog($event, video)" ng-if="video.tags.length >0">
+                                Add Video Tag
+                                </span>
+                            </div>
+                            
                         </div>
                         <div class="col-sm-12 col-md-12 col-lg-12 marginTB5">
                             <input type="text" class="font9 width100"  id="video.link" ng-model="video.link"  placeholder="Add Youtube Link" focus-me="$index == preUploadVideoLength">
@@ -1452,12 +1490,12 @@
                 </div>
             </div>
             <!-- Add New Video -->
-            <div class="hidden-xs col-sm-6 col-md-6 col-lg-6" id="addBox" ng-click="addVideos()">
+            <div class="hidden-xs col-sm-6 col-md-6 col-lg-6 " id="addBox" ng-click="addVideos()">
                 <div class="hidden-xs col-sm-4 col-md-4 col-lg-4" id="elementBox">
                     <div id="thumbnailImage"  ng-click="showPhotoDialog($event, $index)" ></div>
                 </div>
-                <div layout="row" layout-align="center center" class="text-black" id="AddButton" >
-                    <span class="font80">
+                <div layout="row" layout-align="center center" class="text-black editFont " id="AddButton" >
+                    <span class="font100">
                         +
                     </span>
                 </div>
@@ -1524,7 +1562,7 @@
                 </div>
             </div>
             
-            <div class="row" ng-show="editFaculty" id="editSection">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="editFaculty" id="editSection">
             <form name="editFacultyForm">
             <div class="hidden-xs col-sm-6 col-md-6 col-lg-6" ng-repeat="faculty in provider.faculty" id="displayBox" >
                 <div class="hidden-xs col-sm-4 col-md-4 col-lg-4 " id="elementBox">
@@ -1593,12 +1631,17 @@
                 </div>
             </div>
                 <!-- Add New Faculty -->
-            <div class="hidden-xs col-sm-6 col-md-6 col-lg-6" id="addBox" ng-model="faculties" ngf-select="uploadFaculties(faculties)" multiple="multiple" ngf-accept="'image/*'" >
+                
+                
+                
+                
+                
+            <div class="hidden-xs col-sm-6 col-md-6 col-lg-6 " id="addBox" ng-model="faculties" ngf-select="uploadFaculties(faculties)" multiple="multiple" ngf-accept="'image/*'" >
                 <div class="hidden-xs col-sm-4 col-md-4 col-lg-4" id="elementBox">
                     <div id="thumbnailImage"  ng-click="showPhotoDialog($event, $index)" ></div>
                 </div>
-                <div layout="row" layout-align="center center" class="text-black" id="AddButton" >
-                    <span class="font80">
+                <div layout="row" layout-align="center center" class="text-black editFont " id="AddButton" >
+                    <span class="font100">
                         +
                     </span>
                 </div>
@@ -1640,10 +1683,10 @@
                 </div>
                 <div layout="row" layout-align="start center" class="marginB10">
                     
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                         <input type="text" class="font9 width100" ng-model="provider.pincode"  placeholder="Pincode">
                     </div>
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 ">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 ">
                         <div layout="row" layout-align="center center">
                             <span>
                             {{provider.location.area}}
@@ -2029,26 +2072,26 @@
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="tagVideoDialog">
-      <md-dialog>
+        <!--class="fullscreen-dialog"-->
+      <md-dialog class="halfscreen-dialog">
           <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeader">
               <h6 class="">
                 WHAT IS THIS VIDEO ABOUT?
               </h6>
           </div>
-          <div layout="row" layout-xs="column" layout-fill layout-padding>
+          <div layout="column" layout-padding>
               
-            <div flex="100" layout="column" >
-                
+            
                 <div flex layout="row" ng-repeat="videoType in videoTypes" class="top-buffer10">
                     <div flex="15">
                         {{videoType | uppercase}}
                     </div>
                     <div flex="85">
                         <span ng-repeat="videoTag in videoTags" ng-if="videoTag.type == videoType">
-                            <span class="badge font9" id="tagHolder" ng-click="addPhotoTag(videoTag)" ng-if="tagThisPhoto.tags.indexOf(videoTag._id) == -1">
+                            <span class="badge font9" id="tagHolder" ng-click="addVideoTag(videoTag)" ng-if="tagThisVideo.tags.indexOf(videoTag._id) == -1">
                             {{videoTag.subType}}
                             </span>
-                            <span class="badge font9" id="existingTagHolder" ng-click="addPhotoTag(videoTag)" ng-if="tagThisPhoto.tags.indexOf(videoTag._id) != -1">
+                            <span class="badge font9" id="existingTagHolder" ng-click="removeVideoTag(videoTag)" ng-if="tagThisVideo.tags.indexOf(videoTag._id) != -1">
                             {{videoTag.subType}}
                             </span>&nbsp;
                         </span>
@@ -2057,7 +2100,7 @@
                     
                     
                 </div>
-            </div>
+            
             
             
          </div>
@@ -2478,7 +2521,7 @@
 
 
 <div class="saveCancel">
-    <div layout="row" ng-show="editContact || editCourse || editResult2 ||  editPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
+    <div layout="row" ng-show="editContact || editExam || editCourse || editResult2 ||  editPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
         <div flex ="80">
             <span>
             Do you want to save your changes to {{provider.name}}? 

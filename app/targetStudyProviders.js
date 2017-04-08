@@ -118,8 +118,8 @@ router.post('/bulkAddResult', function(req, res) {
             var newResults = result.map(function(a) {return a._id;});
             var ExistingResults = thisProvider.results.map(function(a) {return a._id;});
 
-            console.log('New Result are: ' +JSON.stringify(newResults));
-            console.log('Existing Result are: ' + JSON.stringify(ExistingResults));
+            //console.log('New Result are: ' +JSON.stringify(newResults));
+            //console.log('Existing Result are: ' + JSON.stringify(ExistingResults));
             var deleteResults = [];
             ExistingResults.forEach(function(thisResult, index){
                 if(thisResult){
@@ -130,7 +130,7 @@ router.post('/bulkAddResult', function(req, res) {
 
 
             });
-            console.log('About to delete the following: ' + JSON.stringify(deleteResults));
+            //console.log('About to delete the following: ' + JSON.stringify(deleteResults));
 
 
             result.forEach(function(thisResult, index){
@@ -921,7 +921,7 @@ router.post('/savecoaching', function(req, res) {
         
         //oldProvider = thisProvider;
         if(oldProvider){
-            //console.log("New Coaching is: " + JSON.stringify(thisProvider));
+            console.log("New Coaching is: " + JSON.stringify(thisProvider));
             for (var property in thisProvider) {
                 oldProvider[property] = thisProvider[property];
                 if(property=='location'){

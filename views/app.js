@@ -1207,6 +1207,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             '2003'    
         ];
         
+        
         $scope.provider = thisProvider.data;
        
         
@@ -1354,7 +1355,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         });
         $scope.providerExamIds = $scope.provider.exams.map(function(a) {return a._id;});
+        $scope.editExam = false;
         $scope.addExam = function(exam){
+            //$scope.editExam = true;
             if($scope.editable){
             if($scope.provider.exams.indexOf(exam) == -1){
                 $scope.provider.exams.push(exam);
@@ -1370,9 +1373,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             'Class Room', 'Online Classes', 'Test Series', 'Distance Education', 'Satellite Classes', 'Weekend Classroom'
         ];
         $scope.durations=[
-            '3 Months', '6 Months', '9 Months', '1 Year', '2 Year', '1 Month', '4 Months', '5 Months',
+            '1 Month','2 Months','3 Months', '4 Months', '5 Months', '6 Months', '9 Months', '1 Year', '2 Year',  
         ];
-        
+        $scope.feeTypes = [
+            'In Lumpsum',    
+            'In Installments',        
+        ];
         $scope.editContact = false;
         $scope.editContacts= function(){
             $scope.editContact = true;
@@ -1522,6 +1528,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.setCourseDuration = function(course, duration){
             course.duration = duration;    
         };
+        $scope.setFeeType = function(course, feeType){
+            course.feeType = feeType;    
+        };
         $scope.setCourseStudyMode = function(course, mode){
             course.mode = mode; 
         };
@@ -1532,13 +1541,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if(course._id == thisCourse._id){
                     spliceIndex = index;
                 }
-                if(course.name == thisCourse.name){
+                if(!course._id && course.name == thisCourse.name){
                     spliceIndex = index;
                 }
             });
             if(spliceIndex != -1){
                 $scope.provider.course.splice(spliceIndex, 1);
-                $scope.saveProvider();  
+                //$scope.saveProvider();  
             }
         };
         
@@ -1561,6 +1570,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
         };
         $scope.removeExam = function(exam){
+            //$scope.editExam = true;
             if($scope.editable){
                 var examIndex = -1;
                 $scope.provider.exams.forEach(function(thisExam, index){
@@ -1587,7 +1597,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     $scope.provider.faculty.splice(index, 1);
                 }
             });
-            $scope.saveProvider();
+            //$scope.saveProvider();
         };
         $scope.playerVars = {
             controls: 1,
@@ -1600,7 +1610,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     $scope.provider.video.splice(index, 1);
                 }
             });
-            $scope.saveProvider();
+            //$scope.saveProvider();
         };
         
         $scope.deletePhoto = function(photo){
@@ -1611,7 +1621,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     $scope.provider.photo.splice(index, 1);
                 }
             });
-            $scope.saveProvider();
+            //$scope.saveProvider();
         };
         $scope.saveProvider = function(){
             //console.info($scope.provider);
@@ -2105,6 +2115,24 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
             
         };
+        $scope.addVideoTag = function(tag){
+            //console.info(JSON.stringify($scope.tagThisVideo));
+            if($scope.tagThisVideo.tags.indexOf(tag._id) == -1){
+                $scope.tagThisVideo.tags.push(tag._id);
+            }
+            
+        };
+        
+        $scope.removeVideoTag = function(tag){
+            //console.info(JSON.stringify($scope.tagThisVideo));
+            var vIndex = $scope.tagThisVideo.tags.indexOf(tag._id);
+            if(vIndex != -1){
+                
+                $scope.tagThisVideo.tags.splice(vIndex, 1);
+            }
+            
+        };
+        
         $scope.addFacultyTag = function(tag){
             if($scope.tagThisFaculty.tags.indexOf(tag._id) == -1){
                 $scope.tagThisFaculty.tags.push(tag._id);
