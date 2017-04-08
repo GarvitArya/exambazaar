@@ -1,0 +1,191 @@
+<style>
+    .top-buffer { margin-top:20px; }
+    
+    .input-group .icon-addon .form-control {
+    border-radius: 0;
+    }
+
+    .icon-addon {
+        position: relative;
+        color: #555;
+        display: block;
+    }
+
+    .icon-addon:after,
+    .icon-addon:before {
+        display: table;
+        content: " ";
+    }
+
+    .icon-addon:after {
+        clear: both;
+    }
+
+    .icon-addon.addon-md .glyphicon,
+    .icon-addon .glyphicon, 
+    .icon-addon.addon-md .fa,
+    .icon-addon .fa {
+        position: absolute;
+        z-index: 2;
+        left: 10px;
+        font-size: 14px;
+        width: 20px;
+        margin-left: -2.5px;
+        text-align: center;
+        padding: 10px 0;
+        top: 1px
+    }
+
+    .icon-addon.addon-lg .form-control {
+        line-height: 1.33;
+        height: 46px;
+        font-size: 18px;
+        padding: 10px 16px 10px 40px;
+    }
+
+    .icon-addon.addon-sm .form-control {
+        height: 30px;
+        padding: 5px 10px 5px 28px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .icon-addon.addon-lg .fa,
+    .icon-addon.addon-lg .glyphicon {
+        font-size: 18px;
+        margin-left: 0;
+        left: 11px;
+        top: 4px;
+    }
+
+    .icon-addon.addon-md .form-control,
+    .icon-addon .form-control {
+        padding-left: 30px;
+        float: left;
+        font-weight: normal;
+    }
+
+    .icon-addon.addon-sm .fa,
+    .icon-addon.addon-sm .glyphicon {
+        margin-left: 0;
+        font-size: 12px;
+        left: 5px;
+        top: -1px
+    }
+
+    .icon-addon .form-control:focus + .glyphicon,
+    .icon-addon:hover .glyphicon,
+    .icon-addon .form-control:focus + .fa,
+    .icon-addon:hover .fa {
+        color: #2580db;
+    }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    #logoContainer{
+        min-height: 40px;
+    }
+    #logo{
+        max-height: 30px;
+    }
+    #pageHeaderFont{
+        border-bottom: solid 3px;
+        border-color: #20C39A;
+        letter-spacing: 4px;
+    }
+    #otherCategoryLink{
+        color: #20C39A;
+        
+    }
+    #Input{
+        background-color : #f7f7f7;
+        border: 1px solid #ccc;
+    }
+    #cell{
+        padding: 0px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    
+    
+    input[type="text"]
+    {
+        font-size: 10px;
+        color: #333333;
+        padding: 5px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+</style>
+<div class="container" ng-if="showLevel==0">
+    <div id="spacer">
+    </div>
+    <div class="row top-buffer">
+        <h1>
+        You do not have access to view this information. Login above to try again.
+        </h1>
+    </div>
+
+</div>
+<div class="whiteBackground mainContent padded" ng-if="showLevel>0">
+    <div id="spacer" class="whiteBackground">
+    </div>
+    
+    <div layout="column">
+        <div layout="row" layout-align="start center" ng-repeat="logo in logoList" class="padding10 greyDashedBottomBorder" id="logoContainer">
+            <div flex="5">
+             {{$index + 1}}
+            </div>
+            <div flex="15" class="font10">
+             {{logo._id}}
+            </div>
+            <div flex="15" class="font10">
+                <a ui-sref="claim({ coachingId:{{'logo._id'}} })" target="_blank">
+                    {{logo.name}}
+                </a>
+             
+            </div>
+            <div flex="25">
+                <img ng-src="{{logo.logoBackup}}" id="logo" />
+            </div>
+            <div flex="25">
+                <img ng-src="{{logo.newlogo}}" id="logo" />
+            </div>
+            <div flex="15" class="font10">
+                <md-switch ng-model="logo.mark" aria-label="Switch 1">
+                    Mark as Checked?
+                  </md-switch>
+            </div>
+
+        </div>
+    </div>
+    <div flex layout="row" layout-align="start center" class="width100 marginT10 fourthFont">
+        <md-button class="md-green md-small width25" ng-click="markChecked()">Mark</md-button>
+    </div>
+</div>

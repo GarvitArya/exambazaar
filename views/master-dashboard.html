@@ -138,11 +138,11 @@
             <span class="top-buffer">
                 <span class="font20">Assigned Tasks</span>&nbsp;<span class="badge" id="badge">{{fillsDue}}</span>
             </span>
-            <span class="font12">
-                <span ng-repeat="due in internDueList">
+            <div class="font12">
+                <div ng-repeat="due in internDueList">
                     [{{due.intern.basic.name}}: Due: {{due.due}}, Done: {{due.done}}]&nbsp;
-                </span>
-            </span>
+                </div>
+            </div>
             <div flex layout="row" class="width100 greyDashedBottomBorder bold">
                 <div layout="column" layout="center center" flex="5">S. No.</div>
                 <div layout="column" layout="center center" flex="10">Created on</div>

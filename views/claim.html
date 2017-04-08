@@ -1433,10 +1433,10 @@
                             </span>&nbsp;
                             <span class="badge font9" id="deleteButton" ng-click="deleteVideo(video)">
                             Delete
-                            </span>
-                            <!--<span class="badge font9" id="tagHolder" ng-click="showVideoTagDialog($event, video)">
+                            </span>&nbsp;
+                            <span class="badge font9" id="tagHolder" ng-click="showVideoTagDialog($event, video)">
                             Add Video Tag
-                            </span>&nbsp;-->
+                            </span>
                         </div>
                         <div class="col-sm-12 col-md-12 col-lg-12 marginTB5">
                             <input type="text" class="font9 width100"  id="video.link" ng-model="video.link"  placeholder="Add Youtube Link" focus-me="$index == preUploadVideoLength">
@@ -2011,6 +2011,45 @@
                             </span>
                             <span class="badge font9" id="existingTagHolder" ng-click="addPhotoTag(imageTag)" ng-if="tagThisPhoto.tags.indexOf(imageTag._id) != -1">
                             {{imageTag.subType}}
+                            </span>&nbsp;
+                        </span>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            
+         </div>
+      </md-dialog>
+</div>    
+</div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="tagVideoDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeader">
+              <h6 class="">
+                WHAT IS THIS VIDEO ABOUT?
+              </h6>
+          </div>
+          <div layout="row" layout-xs="column" layout-fill layout-padding>
+              
+            <div flex="100" layout="column" >
+                
+                <div flex layout="row" ng-repeat="videoType in videoTypes" class="top-buffer10">
+                    <div flex="15">
+                        {{videoType | uppercase}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="videoTag in videoTags" ng-if="videoTag.type == videoType">
+                            <span class="badge font9" id="tagHolder" ng-click="addPhotoTag(videoTag)" ng-if="tagThisPhoto.tags.indexOf(videoTag._id) == -1">
+                            {{videoTag.subType}}
+                            </span>
+                            <span class="badge font9" id="existingTagHolder" ng-click="addPhotoTag(videoTag)" ng-if="tagThisPhoto.tags.indexOf(videoTag._id) != -1">
+                            {{videoTag.subType}}
                             </span>&nbsp;
                         </span>
                     </div>

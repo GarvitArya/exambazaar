@@ -7,6 +7,7 @@ var cisaved = require('../app/models/cisaved');
 var oldtargetStudyProvider = require('../app/models/oldtargetStudyProvider');
 var exam = require('../app/models/exam');
 var group = require('../app/models/group');
+var logourl = require('../app/models/logourl');
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 db.on('error', console.error);
@@ -117,8 +118,8 @@ router.post('/bulkAddResult', function(req, res) {
             var newResults = result.map(function(a) {return a._id;});
             var ExistingResults = thisProvider.results.map(function(a) {return a._id;});
 
-            //console.log('New Result are: ' +JSON.stringify(newResults));
-            //console.log('Existing Result are: ' + JSON.stringify(ExistingResults));
+            console.log('New Result are: ' +JSON.stringify(newResults));
+            console.log('Existing Result are: ' + JSON.stringify(ExistingResults));
             var deleteResults = [];
             ExistingResults.forEach(function(thisResult, index){
                 if(thisResult){
@@ -129,7 +130,7 @@ router.post('/bulkAddResult', function(req, res) {
 
 
             });
-            //console.log('About to delete the following: ' + JSON.stringify(deleteResults));
+            console.log('About to delete the following: ' + JSON.stringify(deleteResults));
 
 
             result.forEach(function(thisResult, index){
@@ -729,7 +730,36 @@ router.post('/addLogo', function(req, res) {
     
 });
 
-
+router.post('/bulkCheckLogos', function(req, res) {
+    var checkLogoForm = req.body;
+    console.log(checkLogoForm);
+    var instituteIds = checkLogoForm.ids;
+    var nLength = instituteIds.length;
+    var counter = 0;
+    
+    instituteIds.forEach(function(thisInstituteId, index){
+        //JHI
+        
+        var thisProvider = targetStudyProvider.findOne( {"_id" : thisInstituteId}, {logoChecked:1},function(err, thisProvider) {
+        if (!err){
+            counter = counter +1;
+            thisProvider.logoChecked = true;
+            thisProvider.save(function(err, thisProvider) {
+                if (err) return console.error(err);
+                console.log("Logo Checked for " + thisProvider._id);
+                
+                //res.json('Done');
+            });
+            if(counter == nLength){
+                res.json('Done');
+            }
+        } else {throw err;}
+        });
+        
+        
+    });
+    
+});
 
 router.post('/addPhoto', function(req, res) {
     var newPhotoForm = req.body;
@@ -807,7 +837,7 @@ router.get('/query/:query', function(req, res) {
 
 router.get('/group/:query', function(req, res) {
     var query = req.params.query;
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}}, {name:1 ,group:1, address:1, city:1, state:1, logo:1, website:1, targetStudyWebsite:1},function(err, docs) {
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}}, {name:1 ,group:1, groupName:1, address:1, city:1, state:1, logo:1, website:1, targetStudyWebsite:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -864,7 +894,7 @@ router.post('/cityCourse', function(req, res) {
         .deepPopulate('stream')
         .exec(function (err, thisExam) {
         if (!err){
-            targetStudyProvider.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1, group:1},{sort: '-rank'},function(err, providerList) {
+            targetStudyProvider.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1, group:1, groupName:1},{sort: '-rank'},function(err, providerList) {
             if (!err){
                 //console.log(providerList);
                 res.json(providerList);
@@ -976,7 +1006,7 @@ router.get('/coachingGroup/:groupName', function(req, res) {
     console.log('Fetching coaching group: ' + groupName);
     
     var thisGroup = targetStudyProvider
-        .find({'group': groupName})
+        .find({'groupName': groupName})
         /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
         .exec(function (err, thisGroup) {
         if (!err){
@@ -1062,83 +1092,94 @@ router.get('/setRank0', function(req, res) {
     });
 });
 
+router.get('/checkLogo/:pageNumber', function(req, res) {
+    var pageNumber = req.params.pageNumber;
+    if(!pageNumber){
+        pageNumber=1;
+    }
+    var allproviders =  targetStudyProvider.find({ logo: { $exists: true, $ne: ''}, logoChecked: {$ne: true}}, {logo:1, newlogo:1, logoBackup:1, name:1},function(err, allproviders) {
+        if (!err){
+            res.json(allproviders);
+            /*var counter = 0;
+            var changes = 0;
+            var nLength = allproviders.length;
+            allproviders.forEach(function(thisprovider, index){
+                counter = counter + 1;
+                var logo = thisprovider.logo;
+                var newlogo = thisprovider.logo;
+                var res = logo.split("/");
+                var filename = res[res.length-1].toLowerCase();
+
+                res = newlogo.split("/");
+                var newfilename = res[res.length-1].toLowerCase();
+
+                console.log(counter + ' ' + filename + newfilename);
+                if(filename != newfilename){
+                    changes = changes + 1;
+                    console.log(counter + ' ' + filename + newfilename);
+                }
+
+                if(counter == nLength){
+                    console.log(changes + " logos to be changed in " + nLength + " providers!");
+                    //res.json('Done');
+                }
+                });*/
+             
+        }else {throw err;}
+        }).skip(pageNumber > 0 ? ((pageNumber-1)*500) : 0).limit(500);
+    
+    
+    
+});
+
+
+
 router.get('/databaseService', function(req, res) {
     console.log("Database Service Starting now");
     //"email": { $exists: true, $ne: null } 
     
     res.json('Done');
-        var allproviders =  targetStudyProvider.find({ website: { $exists: true } }, {website:1},function(err, allproviders) {
+    //, newlogo: { $exists: false}
+    //, newlogo: {$exists:false}
+    //logo: { $exists: true, $ne: ''}
+    var groups = group.find({}, function(err, groups) {
         if (!err){
-             var counter = 0;
-             var changes = 0;
-             var nLength = allproviders.length;
-             allproviders.forEach(function(thisprovider, index){
-                 counter = counter + 1;
-                 var website = thisprovider.website;
-                 
-                 if(website != ''){
-                  
-                 var httpIndex = website.indexOf('http');
-                 if(httpIndex == -1){
-                     changes = changes + 1;
-                     console.log(counter + ' ' + JSON.stringify(thisprovider));
-                     thisprovider.website = 'http://' + thisprovider.website;
-                     thisprovider.save(function(err, thisprovider) {
-                        if (err) return console.error(err);
-                        console.log(thisprovider._id + " saved!");
-                    });
-                 }
-                    
-                 }
-                if(counter == nLength){
-                    console.log(changes + " websites to be changed in " + nLength + " providers!");
-                    //res.json('Done');
-                }
-             });
+        var groupNames = groups.map(function(a) {return a.group;});
+        var allproviders =  targetStudyProvider.find({ }, {group:1, groupName:1},function(err, allproviders) {
+                if (!err){
+                    var counter = 0;
+                    var changes = 0;
+                    var nLength = allproviders.length;
+
+                    allproviders.forEach(function(thisprovider, index){
+                    counter = counter + 1;
+                    var gIndex = groupNames.indexOf(thisprovider.groupName);
+                    if(gIndex!=-1){
+                        console.log(counter + thisprovider._id);
+                        thisprovider.group = groups[gIndex]._id;
+                        changes = changes + 1;
+                        thisprovider.save(function(err, thisprovider) {
+                            if (err) return console.error(err);
+                            console.log(thisprovider._id + " saved!");
+                        });
+                    }
+
+
+                    if(counter == nLength){
+                        console.log(changes + " logos to be changed in " + nLength + " providers!");
+                        //res.json('Done');
+                    }
+                    }); 
+
+               } else {throw err;}
+            });
+            
+             
         }else {throw err;}
         });
     
     
-    /*group.find({}, function(err, allGroups) {
-    if (!err){
-        allGroups = allGroups.map(function(a) {return a.group;});
-        res.json('Done');
-        var allproviders =  targetStudyProvider.find({groupChecked: {$ne: true}}, {group:1, groupChecked:1},function(err, allproviders) {
-        if (!err){
-             
-             var counter = 0;
-             var changes = 0;
-             var nLength = allproviders.length;
-             allproviders.forEach(function(thisprovider, index){
-                 counter = counter + 1;
-                 var gIndex = allGroups.indexOf(thisprovider.group);
-                 if(gIndex != -1){
-                     changes = changes + 1;
-                     console.log(counter + ' ' + JSON.stringify(thisprovider));
-                     if(!thisprovider.groupChecked){
-                         thisprovider.groupChecked = true;
-                         thisprovider.save(function(err, thisprovider) {
-                            if (err) return console.error(err);
-                            console.log(thisprovider._id + " saved!");
-                        });
-                     }
-                 }
-
-                if(counter == nLength){
-                    console.log(changes + " group checked marked in " + nLength + " providers!");
-                    //res.json('Done');
-                }
-             });
-        }
-        });
-        
-        
-        
-        
-        
-        
-    } else {throw err;}
-    });*/
+    
     
     
 });
@@ -1191,11 +1232,11 @@ router.get('/UniqueLogoService', function(req, res) {
 router.get('/allDistinct', function(req, res) {
     console.log("Getting all distinct institutes with count");
     
-    targetStudyProvider.find({},{name:1, group:1},function(err, allProviders) {
+    targetStudyProvider.find({},{name:1, groupName:1},function(err, allProviders) {
     if (!err){
         res.json('Done');
         allProviders.forEach(function(thisprovider, index){
-            thisprovider.group = thisprovider.name;
+            thisprovider.groupName = thisprovider.name;
             thisprovider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
                 console.log(thisprovider._id + " saved!");

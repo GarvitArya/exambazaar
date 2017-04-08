@@ -317,16 +317,32 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
     }]);
+    
+    exambazaar.service('GroupService', ['$http', function($http) {
+       
+        this.saveGroups = function(groups) {
+            return $http.post('/api/groups/bulksave', groups);
+        };
+        this.getGroup = function(groupId) {
+            return $http.get('/api/groups/edit/'+groupId, {groupId: groupId});
+        };
+        this.getGroups = function() {
+            return $http.get('/api/groups');
+        };
+        
+    }]);    
         
     exambazaar.service('cisavedService', ['$http', function($http) {
        
         this.savecisaved = function(cisavedForm) {
             return $http.post('/api/cisaveds/save', cisavedForm);
         };
+        this.institutesSaved = function() {
+            return $http.get('/api/cisaveds/institutesSaved');
+        };
         this.savedCount = function() {
             return $http.get('/api/cisaveds/savedCount');
         };
-        
         this.getcisaved = function(cisavedId) {
             return $http.get('/api/cisaveds/edit/'+cisavedId, {cisavedId: cisavedId});
         };
@@ -372,10 +388,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.markDone = function(tofillciForm) {
             return $http.post('/api/tofillcis/markDone', tofillciForm);
         };
-        this.filledCount = function(tofillciForm) {
+        this.filledCount = function() {
             return $http.get('/api/tofillcis/filledCount');
         };
-        
+        this.institutesFilled = function() {
+            return $http.get('/api/tofillcis/institutesFilled');
+        };
         this.gettofillci = function(tofillciId) {
             return $http.get('/api/tofillcis/edit/'+tofillciId, {tofillciId: tofillciId});
         };
@@ -466,6 +484,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.searchProviders = function(query) {
             return $http.get('/api/targetStudyProviders/query/'+query, {query: query});
+        };
+        this.checkLogo = function(pageNumber) {
+            return $http.get('/api/targetStudyProviders/checkLogo/'+pageNumber, {pageNumber: pageNumber});
+        };
+        this.bulkCheckLogos = function(checkLogoForm) {
+            return $http.post('/api/targetStudyProviders/bulkCheckLogos',checkLogoForm);
         };
         this.groupProviders = function(query) {
             return $http.get('/api/targetStudyProviders/group/'+query, {query: query});
@@ -1026,9 +1050,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);  
     
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
+        $scope.videoTags = videoMediaTagList.data.mediaTypeTags;
+        $scope.videoTypes = videoMediaTagList.data.distinctTypes;
+        
+        /*console.info($scope.videoTags);
+        console.info($scope.videoTypes);*/
+        
         $scope.resultSet = [
         ];
         $scope.showHeaderLogin = function() {
@@ -1854,9 +1884,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             var properties = [
                 'year',
                 'name',
-                'rank',
-                'category'
+                
             ];
+            /*'rank',
+                'category'*/
             examResult.result.forEach(function(thisExamResult, examResultIndex){
                 var valid = true;
                 properties.forEach(function(thisProperty, propertyIndex){
@@ -2168,6 +2199,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.tagThisPhoto = photo;
             $mdDialog.show({
               contentElement: '#tagPhotoDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        //JHI
+        $scope.showVideoTagDialog = function(ev, video) {
+            $scope.tagThisVideo = video;
+            $mdDialog.show({
+              contentElement: '#tagVideoDialog',
               parent: angular.element(document.body),
               targetEvent: ev,
               clickOutsideToClose: true
@@ -3668,10 +3709,32 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
     
     exambazaar.controller("getTargetStudyCoachingController", 
-    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities','$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog,locationsList,$window){
+    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList){
         $scope.providersList = targetStudyProvidersList.data;
+        //JHI
+        var providersListIds = $scope.providersList.map(function(a) {return a._id;});
+        var institutesSaved = institutesSavedList.data;
+        var institutesFilled = institutesFilledList.data;
+        //console.log(JSON.stringify(institutesSaved));
+        $scope.providersList.forEach(function(thisProvider, index){
+            if(institutesSaved.indexOf(thisProvider._id) != -1){
+                thisProvider.cisaved = true;
+            }else{
+                thisProvider.cisaved = false;
+            }
+            
+            if(institutesFilled.indexOf(thisProvider._id) != -1){
+                thisProvider.cifilled = true;
+            }else{
+                thisProvider.cifilled = false;
+            }
+        });
+        
+        
         $scope.cities = targetStudyCities.data;
         $scope.city = $stateParams.city;
+        
+        
         
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location');
@@ -4404,6 +4467,40 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $rootScope.title =$scope.user.basic.name;
     }]);     
         
+    exambazaar.controller("checkLogoController", 
+        [ '$scope', 'thisuser','logoList' , '$http','$state', '$rootScope', '$cookies', 'UserService', 'targetStudyProviderService', function($scope, thisuser, logoList, $http,$state,$rootScope, $cookies, UserService, targetStudyProviderService){
+        $scope.user = thisuser.data;
+        $scope.logoList = logoList.data;
+        if($scope.user.userType =='Master'){
+            $scope.showLevel = 10;
+        }
+        $scope.logoList.forEach(function(thisLogo, index){
+            //if(index >= 24)
+            thisLogo.mark = true;
+        });
+        $scope.markChecked = function(){
+            var ids = [];
+            $scope.logoList.forEach(function(thisLogo, index){
+                if(thisLogo.mark){
+                    ids.push(thisLogo._id);
+                }
+            });
+            var checkLogoForm = {
+                ids: ids    
+            };
+            targetStudyProviderService.bulkCheckLogos(checkLogoForm).success(function (data, status, headers) {
+               
+                alert('Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+        };
+            
+        if($scope.user.basic)
+            $rootScope.title =$scope.user.basic.name;
+    }]);       
+        
     exambazaar.controller("profileController", 
         [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'Upload', 'ImageService', 'UserService', function($scope, thisuser,$http,$state,$rootScope, $cookies, Upload, ImageService, UserService){
         $scope.user = thisuser.data;
@@ -4548,7 +4645,48 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.mediaTag = mediaTag;
         };
     }]); 
-     
+    exambazaar.controller("addGroupController", 
+        [ '$scope',  'groupList','GroupService','$http','$state', function($scope, groupList, GroupService,$http,$state){
+            
+        $scope.groups = groupList.data;
+        $scope.newgroups = [
+            {
+                group: 'Jamboree'
+            }
+        ];
+        $scope.bulkAddMode = true;
+        $scope.setBulkAddMode = function(){
+            $scope.bulkAddMode = !$scope.bulkAddMode;
+        };
+         
+        $scope.addGroup = function () {
+            var saveGroup = GroupService.saveGroups([$scope.group]).success(function (data, status, headers) {
+               
+                alert("Group saved: " + $scope.group.media + ' > ' + $scope.group.type + ' > ' + $scope.group.subType);
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+        };
+            
+        $scope.addGroups = function(){
+            $scope.newgroups.pop();
+            $scope.newgroups.pop();
+            $scope.newgroups.pop();
+            $scope.newgroups.pop();
+            $scope.newgroups.pop();
+            
+            GroupService.saveGroups($scope.newgroups).success(function (data, status, headers) {
+                alert('Groups Saved!');
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error: ' + data);
+                });      
+        };
+        $scope.setGroup = function(group){
+            $scope.group = group;
+        };
+    }]);  
     exambazaar.controller("addLocationController", 
         [ '$scope',  'locationList','cityList','LocationService','$http','$state', function($scope, locationList,cityList, LocationService,$http,$state){
         $scope.locations = locationList.data;
@@ -5653,6 +5791,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     function(targetStudyProviderService,$stateParams) {   
                     return targetStudyProviderService.getProviders($stateParams.city);
                 }],
+                institutesSavedList: ['cisavedService',
+                    function(cisavedService) {   
+                    return cisavedService.institutesSaved();
+                }],
+                //JHI
+                institutesFilledList: ['tofillciService',
+                    function(tofillciService) {   
+                    return tofillciService.institutesFilled();
+                }],
+                
                 provider: function() { return {}; },
                 targetStudyCities: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService) {
@@ -6324,6 +6472,34 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 user: function() { return {}; }
             }
         })
+        .state('checkLogo', {
+            url: '/user/:userId/checkLogo/:pageNumber/',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'checkLogo.html',
+                    controller: 'checkLogoController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                logoList: ['targetStudyProviderService', '$stateParams',
+                    function(targetStudyProviderService, $stateParams) {
+                    return targetStudyProviderService.checkLogo($stateParams.pageNumber);
+                }],
+                
+                user: function() { return {}; }
+            }
+        })
         .state('student-subjects', {
             url: '/student/:studentId/subjects',
             views: {
@@ -6476,6 +6652,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     return MediaTagService.getMediaTypes();
                 }],
                 mediaTag: function() { return {}; }
+            }
+        })
+        .state('addGroup', {
+            url: '/addGroup',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'addGroup.html',
+                    controller: 'addGroupController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                groupList: ['GroupService',
+                    function(GroupService){
+                    return GroupService.getGroups();
+                }],
+                group: function() { return {}; }
             }
         })
         .state('addSendGridCredential', {

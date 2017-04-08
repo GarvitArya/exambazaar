@@ -1,0 +1,90 @@
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
+<style>
+    .md-block{
+        padding: 10px;
+        border: 1px solid #ccc; 
+    }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    
+    #mediaTypeContainer{
+        background: white;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+    #distinctTypeContainer{
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+<div class="container">
+    <div id="spacer1">
+    </div>
+    
+    
+    <div ng-if="!bulkAddMode" layout="column" layout-margin layout-padding>
+    <h6 class="text-primary md-title">Add Location
+    <md-button class="md-raised md-primary" ng-click="setBulkAddMode()">Bulk Add Mode</md-button>
+    </h6>
+    <div class="col-md-12" id="addMasterForm">
+        <md-content flex layout-padding>
+            <form name="groupForm" >
+            <div layout="column" >
+                <div layout="column">
+
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Media</label>
+                        <input required ng-model="group.media">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Type</label>
+                        <input required ng-model="group.type">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Sub Type</label>
+                        <input required ng-model="group.subType">
+                    </md-input-container>
+                    
+                </div>   
+
+                <md-button class="md-raised md-primary" ng-click="addGroup()" ng-disabled="groupForm.$invalid">Add/Save Media Tag</md-button>
+
+            </div>
+        </form>
+        </md-content>
+        </div>
+    </div>
+
+    <div ng-if="bulkAddMode" layout="column" layout-margin layout-padding>
+    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange}"
+           row-headers="false"
+           min-spare-rows="5"
+           datarows="newgroups"
+           >
+        <hot-column data="group" title="'Group <br/>(eg. Jamboree)'"></hot-column>
+    </hot-table>
+        <md-button class="md-raised md-primary" ng-click="addGroups()">Add Groups</md-button>
+    </div>
+    
+</div>
+<div>
+</div>

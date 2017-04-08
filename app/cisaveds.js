@@ -35,6 +35,15 @@ router.get('/', function(req, res) {
     });
 });
 
+//to get all cisaveds
+router.get('/institutesSaved', function(req, res) {
+    cisaved.distinct( "institute",function(err, docs) {
+    if (!err){
+        res.json(docs);
+    } else {throw err;}
+    });
+});
+
 router.get('/savedCount', function(req, res) {
     cisaved.distinct( "institute",function(err, docs) {
     if (!err){
