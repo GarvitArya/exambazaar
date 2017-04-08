@@ -4968,7 +4968,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser',  function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser){
             $scope.email = {
                 to: 'gauravparashar294@gmail.com',
-                templateName: '',
+                templateName: 'Claim CI Email - 5thApril2017',
                 sender: '',
                 senderId: '',
                 from: '',

@@ -26,6 +26,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     oldlogo: String,
     mobile: [String],
     phone: [String],
+    listingSnapshot: String,
     results:[{
         exam: {type: Schema.ObjectId, ref: 'exam'},
         year: {type: String},

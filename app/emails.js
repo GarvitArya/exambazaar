@@ -82,6 +82,11 @@ router.post('/sendGrid', function(req, res) {
     var name = thisEmail.name;
     var instituteName = thisEmail.instituteName;
     var instituteId = thisEmail.instituteId;
+    var prefix = "https://s3.ap-south-1.amazonaws.com/exambazaar/listingSnapshot/";
+    var fileName = thisEmail.instituteId+'.png';
+    var listingSnapshot = prefix + fileName;
+    console.log(listingSnapshot);
+    
     var html = thisEmail.html;
     if(!html){
         html = ' ';
@@ -118,16 +123,17 @@ router.post('/sendGrid', function(req, res) {
                     //mail.setTemplateId('4600a054-1d6c-4c2b-9cf4-5e45f91b5f11');
                     mail.setTemplateId(templateId);
                     //mail.setTemplateId('f2c433ee-29cb-4429-8b28-774582fba276');
-                    console.log('API Key: ' + apiKey);
+                    /*console.log('API Key: ' + apiKey);
                     console.log('From Email: ' + JSON.stringify(from_email));
                     console.log('To Email: ' + JSON.stringify(to_email));
                     console.log('Subject: ' + JSON.stringify(subject));
-                    console.log('Content: ' + JSON.stringify(content));
+                    console.log('Content: ' + JSON.stringify(content));*/
 
                     //mail.Substitution('-name-', name);
                     //mail.personalizations = [];
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteName-', instituteName));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteId-', instituteId));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-listingSnapshot-', listingSnapshot));
 
                     var request = sg.emptyRequest({
                       method: 'POST',
