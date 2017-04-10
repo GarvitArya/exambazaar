@@ -24,7 +24,7 @@ router.post('/save', function(req, res) {
     console.log("User is: " + JSON.stringify(thisUser));
     var existingUser = user.findOne({ 'mobile': mobileNumber },function (err, existingUser) {
         if(existingUser){
-            
+            res.json(existingUser);
         }else{
             var hash = bcrypt.hashSync(thisUser.password, bcrypt.genSaltSync(10));
             var this_user = new user({

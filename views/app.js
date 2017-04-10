@@ -181,6 +181,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     exambazaar.service('UserService', ['$http', function($http) {
         this.saveUser = function(user) {
+            alert('Here');
             return $http.post('/api/users/save', user);
         };
         this.getUser = function(userId) {
@@ -4805,13 +4806,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             userType: 'Intern',
             password: '',
             basic: {
-                name: 'Gaurav Parashar',
-                gender: 'Male',
+                name: 'Lakshana Gopi',
+                gender: 'Female',
                 //dob: new Date("April 29, 1989")
             },
             contact: {
-                mobile: '9829685919',
-                email: 'gauravparashar294@gmail.com'
+                mobile: '9940179709',
+                email: 'lakiilaksh28@gmail.com'
             }
         };
             
@@ -4821,6 +4822,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         ];    
         
         $scope.addIntern = function () {
+            console.info(JSON.stringify($scope.intern));
             var saveIntern = UserService.saveUser($scope.intern).success(function (data, status, headers) {
                 var internId = data;
             //$scope.formmessage = "Intern " + $scope.intern.basic.firstName + " " + $scope.intern.basic.lastName + " saved!";
@@ -5059,7 +5061,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if($scope.user.userType=='Intern - Business Development' && $scope.user._id == '58c8e895bbaebf3560545f19'){
                     $scope.showLevel = 10;
                     $scope.email.from = 'always@exambazaar.com';
-                    $scope.email.sender = 'Always Exambazaar';
+                    $scope.email.sender = 'Exambazaar';
                     $scope.email.senderId = $scope.user._id;
                 }
             }
@@ -6903,7 +6905,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         })
         .state('addIntern', {
-            url: '/master/:masterId/addIntern',
+            url: '/user/:userId/addIntern',
             views: {
                 'header':{
                     templateUrl: 'header.html',
