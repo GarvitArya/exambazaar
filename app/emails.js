@@ -2,6 +2,7 @@ var nodemailer = require('nodemailer');
 var express = require('express');
 var router = express.Router();
 var helper = require('sendgrid').mail;
+var email = require('../app/models/email');
 var sendGridCredential = require('../app/models/sendGridCredential');
 
 
@@ -72,6 +73,7 @@ router.post('/sendGrid', function(req, res) {
     var templateName = thisEmail.templateName;
     var from = thisEmail.from;
     var sender = thisEmail.sender;
+    var senderId = thisEmail.senderId;
     //sender = 'Always Exambazaar';
     var fromEmail = {
         email: from,
@@ -82,6 +84,7 @@ router.post('/sendGrid', function(req, res) {
     var name = thisEmail.name;
     var instituteName = thisEmail.instituteName;
     var instituteId = thisEmail.instituteId;
+    var logo = thisEmail.logo;
     var prefix = "https://s3.ap-south-1.amazonaws.com/exambazaar/listingSnapshot/";
     var fileName = thisEmail.instituteId+'.png';
     var listingSnapshot = prefix + fileName;
@@ -133,8 +136,10 @@ router.post('/sendGrid', function(req, res) {
                     //mail.personalizations = [];
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteName-', instituteName));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteId-', instituteId));
+                    console.log('Setting image as: ' + listingSnapshot);
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-listingSnapshot-', listingSnapshot));
-
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-logo-', logo));
+                    //console.log('Logo is: ' + logo);
                     var request = sg.emptyRequest({
                       method: 'POST',
                       path: '/v3/mail/send',
@@ -145,9 +150,33 @@ router.post('/sendGrid', function(req, res) {
                         if(error){
                             res.json('Could not send email! ' + error);
                         }else{
-                            console.log(response.statusCode);
-                            console.log(response.body);
-                            console.log(response.headers);
+                            console.log("Code is: " + response.statusCode);
+                            console.log("Body is: " + response.body);
+                            console.log("Headers are: " + JSON.stringify(response.headers));
+                            console.log(JSON.stringify(response));
+                            
+                            var this_email = new email({
+                                institute: instituteId,
+                                user: senderId,
+                                templateId: templateId,
+                                fromEmail: {
+                                    email: from,
+                                    name: sender
+                                },
+                                to: to,
+                                response: {
+                                    status: response.statusCode,
+                                    _date: response.headers.date,
+                                    xMessageId: response.headers["x-message-id"]
+                                }
+                                
+                            });
+                            console.log('This email is: ' + JSON.stringify(this_email));
+                            
+                            this_email.save(function(err, this_email) {
+                                if (err) return console.error(err);
+                                console.log('Email sent with id: ' + this_email._id);
+                            });
                             res.json(response);
                         }
 

@@ -186,6 +186,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getUser = function(userId) {
             return $http.get('/api/users/edit/'+userId, {userId: userId});
         };
+        this.getEmails = function(userId) {
+            return $http.get('/api/users/emails/'+userId, {userId: userId});
+        };
         this.getPartner = function(userId) {
             return $http.get('/api/users/editPartner/'+userId, {userId: userId});
         };
@@ -4869,7 +4872,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }
         $scope.newInstitute = {
             name:'',
-            group:'',
+            groupName:'',
             address:'',
             city:'',
             state:'',
@@ -4965,9 +4968,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
     exambazaar.controller("sendEmailController", 
-        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser',  function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser){
+        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser,$mdDialog, $timeout, thisuserEmails){
+            $scope.user = thisuser.data;
+            $scope.userEmails = thisuserEmails.data;
+            $scope.sendingMode = true;
+            $scope.flipSendingMode = function(){
+                $scope.sendingMode = !$scope.sendingMode;
+            }
             $scope.email = {
-                to: 'gauravparashar294@gmail.com',
+                to: 'vikrantrmlnlu@gmail.com',
                 templateName: 'Claim CI Email - 5thApril2017',
                 sender: '',
                 senderId: '',
@@ -4976,21 +4985,83 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 html: "",
                 instituteName:'',
                 instituteId:'',
-                
+                logo:''
+            };
+            $scope.instituteIds =[
+                "5870d1271a807f0011545809",
+                "587139ba5f53bc1f94b0210a",
+                "5870f6dab2a1c11da8740271",
+                "5870f236b2a1c11da8740236",
+                "5870ff60b2a1c11da87402df",
+                "5870f7cdb2a1c11da874027d",
+                "5870f7d5b2a1c11da874027e",
+                "5870fcadb2a1c11da87402be",
+                "58e3707a76035205d401c22f",
+                "587138cf5f53bc1f94b020ff",
+                "5870d1271a807f001154580b",
+                "58713a045f53bc1f94b0210c",
+                "5870ce8d1131e4320865fc81",
+                "5870ef6280ea0e069889091c",
+                "5870f328b2a1c11da8740242",
+                "5870f6efb2a1c11da8740273",
+                "5870f787b2a1c11da874027c",
+                "587138b25f53bc1f94b020fc",
+                "587139275f53bc1f94b02101",
+                "587139495f53bc1f94b02103",
+                "5870d1271a807f0011545806",
+                "5870f86bb2a1c11da8740287",
+                "587126eb72dbba182cb4a644",
+                "587137ad5f53bc1f94b020ee",
+                "5870d1271a807f0011545807",
+            ];
+            $scope.update = function(instituteId){
+                $scope.email.instituteId = instituteId;
+            };
+            $scope.setEmail = function(email){
+                $scope.email.to = email;
+            };
+            
+            $scope.showSentDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#sentDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },8000)
+            };
+            
+            $scope.showErrorDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#errorDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },9000)
             };
             $scope.templateNames = [
-                'Survey Email - 11March2017',
+                /*'Survey Email - 11March2017',*/
                 'Claim CI Email - 5thApril2017'
             ];
             $scope.showLevel = 0;
-            $scope.user = thisuser.data;
+            
             if($scope.user.userType=='Master'){
                 $scope.showLevel = 10;
                 $scope.email.from = $scope.user.email;
                 $scope.email.sender = $scope.user.basic.name;
                 $scope.email.senderId = $scope.user._id;
             }else{
-                
+                if($scope.user.userType=='Intern - Business Development' && $scope.user._id == '58c8e895bbaebf3560545f19'){
+                    $scope.showLevel = 10;
+                    $scope.email.from = 'always@exambazaar.com';
+                    $scope.email.sender = 'Always Exambazaar';
+                    $scope.email.senderId = $scope.user._id;
+                }
             }
             $scope.$watch('email.instituteId', function (newValue, oldValue, scope) {
             if(newValue != null && newValue != ''){
@@ -5007,6 +5078,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         $scope.provider = refreshedProvider;
                         $scope.email.instituteName = $scope.provider.name;
                         $scope.email.instituteId = $scope.provider._id;
+                        $scope.email.logo = $scope.provider.logo;
                         $scope.email.subject = $scope.provider.name + ' - Claim your free Exambazaar Listing today';
                     }
                     
@@ -5027,8 +5099,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.sendEmail = function() {
                 //
                 EmailService.sendGrid($scope.email).success(function (data, status, headers) {
-                    
-                    alert(JSON.stringify(data));
+                    var response = data;
+                    console.info(JSON.stringify(response));
+                    if(response.statusCode == '202'){
+                        $scope.showSentDialog();
+                    }else{
+                        $scope.showErrorDialog();
+                    }
+                    //alert(JSON.stringify(data));
                 })
                 .error(function (data, status, header, config) {
                     console.info('Error ' + data + ' ' + status);
@@ -5633,7 +5711,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         })
     
         .state('sendEmail', {
-            url: '/master/:userId/sendEmail',
+            url: '/user/:userId/sendEmail',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -5652,6 +5730,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 thisuser: ['UserService', '$stateParams',
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
+                }],
+                thisuserEmails: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getEmails($stateParams.userId);
                 }],
                 user: function() { return {}; }
             }

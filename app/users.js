@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var user = require('../app/models/user');
+var email = require('../app/models/email');
 var cisaved = require('../app/models/cisaved');
 var mongoose = require('mongoose');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
@@ -239,6 +240,46 @@ router.get('/edit/:userId', function(req, res) {
     });
 });
 
+//to get a particular user with _id userId
+router.get('/emails/:userId', function(req, res) {
+    var userId = req.params.userId;
+    //var mobile = req.params.mobile;
+    console.log("User fetched is " + userId);
+    email
+        .find({ 'user': userId },{logins:0})
+        .deepPopulate('institute')
+        .exec(function (err, allFullEmails) {
+        if (!err){
+            var nLength = allFullEmails.length;
+            var counter = 0;
+            var allEmails = [];
+            allFullEmails.forEach(function(thisEmail, index){
+                counter = counter + 1;
+                var instituteBasic = {
+                    _id:  thisEmail.institute._id,
+                    name:  thisEmail.institute.name,
+                    address:  thisEmail.institute.address,
+                    city:  thisEmail.institute.city,
+                    state:  thisEmail.institute.state,
+                    logo:  thisEmail.institute.logo
+                    
+                };
+                thisEmail.institute = instituteBasic;
+                allEmails.push(thisEmail);
+                if(counter == nLength){
+                    console.log(JSON.stringify(allEmails));
+                    
+                    res.json(allEmails);
+                }
+                if(nLength == 0){
+                    res.json([]);
+                }
+            });
+            
+            //process.exit();
+        } else {throw err;}
+    });
+});
 //to get a particular user with _id userId
 router.get('/interns', function(req, res) {
     //console.log('Getting all interns');
