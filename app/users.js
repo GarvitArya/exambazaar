@@ -271,11 +271,11 @@ router.get('/emails/:userId', function(req, res) {
                     
                     res.json(allEmails);
                 }
-                if(nLength == 0){
-                    res.json([]);
-                }
+                
             });
-            
+            if(nLength == 0){
+                    res.json([]);
+            }
             //process.exit();
         } else {throw err;}
     });
