@@ -118,30 +118,17 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With, Accept, Origin, Referer, User-Agent, Content-Type, Authorization');
- 
-  // intercept OPTIONS method
-  if (req.method === 'OPTIONS') {
-    res.send(200);
-  }
-  else {
-    next();
-  }
-};
-app.use(allowCrossDomain);
 
 var server = app.listen(port);
 
-server.timeout = 30000000;
 console.log('The magic happens on port ' + port);
 
 
-var SitemapGenerator = require('sitemap-generator');
 
-/*var generator = new SitemapGenerator('http://www.exambazaar.com/#!/getStarted', {
+
+/*
+var SitemapGenerator = require('sitemap-generator');
+var generator = new SitemapGenerator('http://www.exambazaar.com/#!/getStarted', {
   restrictToBasepath: false,
   stripQuerystring: true,
 });
