@@ -35,7 +35,7 @@ router.get('/filledCount', function(req, res) {
 });
 
 router.get('/institutesFilled', function(req, res) {
-    tofillci.distinct( "institute",{active: false},function(err, docs) {
+    tofillci.distinct( "institute",{},function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}

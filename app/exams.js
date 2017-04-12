@@ -49,6 +49,7 @@ router.post('/save', function(req, res) {
                 preparation : thisExam.preparation,
                 studysource : thisExam.studysource,
                 previouspapers : thisExam.previouspapers,
+                resultFormat : thisExam.resultFormat,
                 qualify : thisExam.qualify,
                 colleges : thisExam.qualify,
                 doubts : thisExam.qualify

@@ -100,14 +100,20 @@ router.get('/cityCount', function(req, res) {
 
 router.post('/bulkAddResult', function(req, res) {
     var examResult = req.body;
-    var exam = examResult.exam;
     var providerId = examResult.providerId;
-    var result = examResult.result;
-    var nResult = examResult.result.length;
-    var counter = 0;
-    console.log('Starting Bulk Add of ' + nResult + ' Results');
+    var examResults = examResult.examResults;
+    var nExams = examResults.length;
+    var bigCounter = 0;
+    var bigCounter2 = 0;
+    var tResults = 0;
+    var resSent = false;
+    examResults.forEach(function(examResult, index){
+        tResults = tResults + examResult.result.length;
+    });
     
-    //console.log('Express received: ' + JSON.stringify(examResult));
+    
+    
+    console.log('Express received: ' + tResults + " results");
     
     var thisProvider = targetStudyProvider
         .findOne({ _id: providerId }, {results:1})
@@ -115,6 +121,16 @@ router.post('/bulkAddResult', function(req, res) {
         if (!err){
             
         if(thisProvider){
+            
+            examResults.forEach(function(examResult, index){
+            bigCounter = bigCounter + 1;
+    
+            var exam = examResult.exam;
+            var result = examResult.result;
+            var nResult = examResult.result.length;
+            var counter = 0;
+            console.log('Starting Bulk Add of ' + nResult + ' Results for: ' + exam);
+            
             var newResults = result.map(function(a) {return a._id;});
             var ExistingResults = thisProvider.results.map(function(a) {return a._id;});
 
@@ -135,6 +151,7 @@ router.post('/bulkAddResult', function(req, res) {
 
             result.forEach(function(thisResult, index){
             counter = counter + 1;
+            bigCounter2 = bigCounter2 + 1;
             if(thisResult._id && thisResult._id != ''){
                 thisProvider.results.forEach(function(existingResult, existingIndex){
                     if(existingResult._id == thisResult._id){
@@ -168,6 +185,10 @@ router.post('/bulkAddResult', function(req, res) {
                         year: thisResult.year,
                         name: thisResult.name,
                         rank: thisResult.rank,
+                        marks: thisResult.marks,
+                        percentile: thisResult.percentile,
+                        percentage: thisResult.percentage,
+                        passFail: thisResult.passFail,
                         category: thisResult.category,
                         image: thisResult.image,
                         exam: exam
@@ -197,7 +218,11 @@ router.post('/bulkAddResult', function(req, res) {
                     if (err) return console.error(err);
                     console.log("Results edited for provider id: "+ thisProvider._id);
                     console.log('Total results are: '+ thisProvider.results.length);
-                    res.json('Done');
+                    //res.json('Done');
+                    if(bigCounter == nExams && bigCounter2 == tResults && !resSent){
+                        resSent = true;
+                        res.json('Done');
+                    }
 
                 });
 
@@ -205,6 +230,10 @@ router.post('/bulkAddResult', function(req, res) {
 
             });
 
+            
+            });
+            
+            
         }else{
             console.log('No such provider');
             res.json('Error');
@@ -993,7 +1022,7 @@ router.get('/coaching/:coachingId', function(req, res) {
     
     var thisProvider = targetStudyProvider
         .findOne({'_id': coachingId})
-        .deepPopulate('exams exams.stream location faculty.exams ebNote.user')
+        .deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam')
         .exec(function (err, thisProvider) {
         if (!err){
             res.json(thisProvider);

@@ -70,6 +70,13 @@
                     </md-select>
                     </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
+                    <md-select ng-model="exam.resultFormat" placeholder="Select the format of Exam Result?">
+                    <md-option ng-repeat="resultFormat in resultFormats" ng-value="resultFormat">
+                    {{resultFormat}}
+                    </md-option>
+                    </md-select>
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
                         <label>Exam Display Rank</label>
                         <input ng-model="exam.rank">
                     </md-input-container>

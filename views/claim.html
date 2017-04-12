@@ -895,6 +895,11 @@
                 
             </div>
             
+            <div layout="row" layout-align="center center" id="upload2" ng-click="editResults()" class="marginB10 secondFont textLightGrey" ng-show="editable">
+                <span class="">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
+                </span>
+            </div>
             
             <div flex layout="row" class="bottom-buffer10" ng-repeat="exam in provider.exams" id="greyBorder"  layout-align="start center">
                 <div layout="column" layout-align="center center" flex="5" id="courseLeftContainer">
@@ -913,8 +918,15 @@
                     <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="result in examResult.result" ng-if="$index<12 && result.image && result.image!=''" id="imageContainer" ng-click="showResultDialog($event, $index, examResult)">
                         <div ng-if="$index != 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
                             <div layout="row" layout-align="end center" class="text-white" id="thumbnailResultText">
-                                <div flex="60" layout="row" layout-padding layout-align="start center" class="font10 bold">
-                                    AIR {{result.rank}}
+                                <div flex="60" layout="row" layout-padding layout-align="start center" class="font10">
+                                    <span ng-if="result.exam.resultFormat == 'Rank'">
+                                        AIR {{result.rank}}
+                                    </span>
+                                    <span ng-if="result.exam.resultFormat == 'Marks'">
+                                        {{result.marks}}
+                                    </span>
+                                    
+                                    
                                 </div>
                                 <div flex="40" layout="row" layout-padding layout-align="end center" class="font8">
                                     {{result.year}}
@@ -947,16 +959,11 @@
                         Spreadsheet Mode
                     </div>-->
                     
-                    <div layout="row" layout-align="center center" id="upload2" ng-click="editResults()" class="marginB10 secondFont textLightGrey" ng-show="editable">
-                        <span class="">
-                            <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
-                        </span>
-                    </div>
                     
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 greyBorder" ng-repeat = "yearResult in examResult.yearResult" ng-if="yearResult.result.length > 0" id="showYearResult">
+                    
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 greyBorder" ng-repeat = "yearResult in examResult.yearResult" ng-if="yearResult.result.length > 0" id="showYearResult" class="">
                         
-                        
-                        <div layout="row" layout-align="center center" class="width100 greyBorder lightGreyBackground  marginB10">
+                        <div layout="row" layout-align="center center" class="width100 lightGreyBackground  marginB10">
                         {{yearResult.year}}
                         </div>
                         <div layout="row" layout-align="start center" class="greyDashedBottomBorder">
@@ -966,9 +973,16 @@
                             <div flex>
                                 Student Name
                             </div>
-                            <div flex>
+                            <div flex ng-if="exam.resultFormat == 'Rank'">
                                 All India Rank
                             </div>
+                            <div flex ng-if="exam.resultFormat == 'Percentile'">
+                                Percentile
+                            </div>
+                            <div flex ng-if="exam.resultFormat == 'Marks'">
+                                Score
+                            </div>
+                            
                             <div flex>
                                 Category
                             </div>
@@ -987,9 +1001,16 @@
                             <div flex>
                                 {{result.name}}
                             </div>
-                            <div flex>
+                            <div flex ng-if="exam.resultFormat == 'Rank'">
                                 {{result.rank}}
                             </div>
+                            <div flex ng-if="exam.resultFormat == 'Percentile'">
+                                {{result.percentile}}
+                            </div>
+                            <div flex ng-if="exam.resultFormat == 'Marks'">
+                                {{result.marks}}
+                            </div>
+                            
                             <div flex>
                                 {{result.category}}
                             </div>
@@ -1002,22 +1023,11 @@
                                     </span>
                                 </div>
                                 <div layout="column" layout-align="center center" ng-if="!result.image" class="lightGreyBackground" ngf-select="uploadResultPic(newResultPic, result)" ng-model="newResultPic" ngf-accept="'image/*'">
-                                    <span >
+                                    <span class="editFont">
                                     Add Pic
                                     </span>
                                 </div>
-                                <!--<div layout="column" layout-align="center center" ng-if="!result.image" class="greyBorder lightGreyBackground" id="editPicHolder" ngf-select="uploadResultPic(newResultPic, result)" ng-model="newResultPic" ngf-accept="'image/*'">
-                                    <span >
-                                    <i class="fa fa-camera" aria-hidden="true"></i>
-                                    </span>
-                                </div>-->
                             </div>
-                            <!--<div flex>
-                                <span class="danger">
-                                    <i class="fa fa-times" aria-hidden="true"></i>
-                                </span>
-                                
-                            </div>-->
                         </div>
                         
                         
@@ -1026,6 +1036,7 @@
                     
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-repeat="examResult in examPivotResults" ng-if="examResult.pivot == exam._id && editResult" id="tableHolder">
+                    
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center top-buffer">
                         <span class="pull-left" ng-click="showSpreadsheetConfirm($event)">
                         <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Back
@@ -1037,11 +1048,41 @@
                         </span>-->
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font9">
-                        
-                    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable">
+                    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Rank'">
                         <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
                         <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
-                        <hot-column data="rank" title="'AIR <br/>(eg. 32)'" type="'numeric'" width="80"></hot-column>
+                        <hot-column data="rank" title="'AIR <br/>(eg. 32)'" type="'numeric'" width="80" ></hot-column>
+                        
+                        <hot-column data="category" title="'Category <br/>(e.g. General)'" width="100" type="'autocomplete'">
+                        <hot-autocomplete datarows="GENERAL, OBC-NCL, SC/ST, PwD">
+                        </hot-autocomplete>
+                        </hot-column>
+                        <hot-column width="100" data="image" title="'Image URL'">
+                        
+                        
+                       <!-- <div layout="column" layout-align="center center" flex >
+                                
+                            <div ng-if="result.image">
+                                <img  ng-src="{{result.image}}" id="editPic"/>
+                                <span class="font8 text-center" ngf-select="uploadResultPic(newResultPic, result)" ng-model="newResultPic" ngf-accept="'image/*'"><br/>
+                                Edit
+                                </span>
+                            </div>
+                            <div layout="column" layout-align="center center" ng-if="!result.image" class="lightGreyBackground" ngf-select="uploadResultPic(newResultPic, result)" ng-model="newResultPic" ngf-accept="'image/*'">
+                                <span class="editFont">
+                                Add Pic
+                                </span>
+                            </div>
+                        </div>-->
+                        
+                        
+                        </hot-column>
+                    </hot-table>
+                    
+                    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Marks'">
+                        <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
+                        <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
+                        <hot-column data="marks" title="'Score <br/>(eg. 800)'" type="'numeric'" width="80" ></hot-column>
                         <hot-column data="category" title="'Category <br/>(e.g. General)'" width="100" type="'autocomplete'">
                         <hot-autocomplete datarows="GENERAL, OBC-NCL, SC/ST, PwD">
                         </hot-autocomplete>
@@ -1049,13 +1090,34 @@
                         <hot-column width="100" data="image" title="'Image URL'"></hot-column>
                     </hot-table>
                         
+                    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Percentile'">
+                        <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
+                        <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
+                        <hot-column data="percentile" title="'Percentile <br/>(eg. 99.85)'" type="'numeric'" width="80"  format="'0.00'"></hot-column>
+                        <hot-column data="category" title="'Category <br/>(e.g. General)'" width="100" type="'autocomplete'">
+                        <hot-autocomplete datarows="GENERAL, OBC-NCL, SC/ST, PwD">
+                        </hot-autocomplete>
+                        </hot-column>
+                        <hot-column width="100" data="image" title="'Image URL'"></hot-column>
+                    </hot-table>
+                        
+                    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Pass/Fail'">
+                        <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
+                        <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
+                        <!--<hot-column data="percentile" title="'Percentile <br/>(eg. 99.85)'" type="'numeric'" width="80" ></hot-column>-->
+                        <hot-column data="category" title="'Category <br/>(e.g. General)'" width="100" type="'autocomplete'">
+                        <hot-autocomplete datarows="GENERAL, OBC-NCL, SC/ST, PwD">
+                        </hot-autocomplete>
+                        </hot-column>
+                        <hot-column width="100" data="image" title="'Image URL'"></hot-column>
+                    </hot-table>    
                     </div>
                     
-                    <div layout="row" layout-align="center center" class="top-buffer" id="upload2" ng-click="addExamResult(examResult, false)" >
+                    <!--<div layout="row" layout-align="center center" class="top-buffer" id="upload2" ng-click="addExamResult()" >
                         <span class="">
                             <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Save Changes for {{exam.displayname}}
                         </span>
-                    </div> 
+                    </div> -->
                     
                 </div>  
                 </div>
@@ -1140,7 +1202,12 @@
                             
                         </div>
                         <div flex layout="column" layout-align="start center" class="height100">
+                            <div layout="row">
                             {{course.duration}}
+                            </div>
+                            <div layout="row" class="textLightGrey fourthFont">
+                                {{course.hoursPerWeek}}
+                            </div>
                         </div>
                         <div flex layout="column" layout-align="start center" class="height100">
                             {{course.mode}}
@@ -2337,34 +2404,23 @@
       <md-dialog class="fullscreen-dialog whiteBackground">
           
           <div layout="column" layout-align="start center" layout-fill>
-              <div flex="15" class="width100 bottomBorder" id="dialogHeader">
+              <div class="width100 bottomBorder" id="dialogHeader">
                   <div layout="row" layout-padding layout-align="center center">
-                      <div class="md-title">
-                        <span class="text-white">
-                          <i class="fa fa-database" aria-hidden="true"></i>
-                        </span>&nbsp;
+                      <div class="secondFont">
                         Claim {{provider.name}}
                       </div>
                   </div>
               </div>
-              <div layout="column" layout-align="center center" flex="15" class="width100">
-                <span class="md-subhead">
-                    <span>
-                    In order to claim and edit this institute, you need to verify your identity.
-                    </span>
-                    
-                </span>
-              </div>
-              <div layout="row" layout-align="start start" class="width100 top-buffer" flex="65">
+              <div flex="85" layout="row" layout-xs="column" layout-align="start center" class="width100  height100 editFont text-white" >
                 
-                  <div layout="column" layout-align="center center" layout-padding flex="40" class="height80 rightBorder">
+                  <div layout="column" layout-align="center center" layout-padding flex="40" flex-xs="100" class="">
                     
                       <div layout="column" layout-align="center center" class="">
                           <span ng-if="provider.logo">
                           <img ng-src="{{provider.logo}}" id="claimLogo"/>
                           </span>
 
-                          <span class="md-title text-center bold">
+                          <span class="md-title text-center bold" hide-xs>
                             {{provider.name}}
                           </span>
                           <span class="text-center">
@@ -2376,7 +2432,7 @@
                            - {{provider.pincode}}
                           </span>
                           </span>
-                          <span ng-if="provider.phone.length > 0" class="text-center font10 marginT10">
+                          <span ng-if="provider.phone.length > 0" class="text-center font10 marginT10" hide-xs>
                               Phone:&nbsp;
                               <span ng-repeat="phone in provider.phone">
                                 {{phone}}
@@ -2396,118 +2452,35 @@
                           </span>
                       </div>
                       
-                      
-                      
                   </div>
-                  <div layout="column" layout-align="center center" flex="60">
-                    <div layout="row" layout-align="center center" ng-if="!verifyingOTP">
-                    <span class="">
-                        <span>
-                        You can choose to either verify your identity by OTP or Log in, if you already have an account
+                  
+                  <div layout="column" layout-align="center center" flex="60" flex-xs="100" class="">
+                    <div layout="row" layout-align="center center" layout-padding hide-xs>
+                        <span class="text-center">
+                            You can choose to either verify your identity by OTP or Log in, if you already have an account
                         </span>
-
-                    </span>
-                    </div>
-                <div layout="row" layout-align="center center" layout-padding class="top-buffer" ng-show="!verifyingOTP">
-                    <div layout="column" layout-align="center center" flex="50">
-                        <div layout="column" layout-align="center center" id="claimButton" ng-click="verifyClaim()">
-                            <!-- ng-click="verifyByOTP()" -->
-                            <span class="">
-                                Claim Institute
-                            </span>
-                        </div>
                         
                     </div>
-                    <div layout="column" layout-align="center center" flex="50">
-                        <div layout="column" layout-align="center center" id="claimButton" ng-click="showHeaderLogin()">
-                            <span class="">
-                                Login
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div layout="row" layout-align="center start" layout-padding class="width100" ng-show="verifyingOTP && verifyStep == 1">
-                    <div layout="column" layout-align="start start" layout-padding>
-                        <div layout="column" layout-align="start center" ng-show="nMobiles > 1">
-                            <span>
-                            We have {{nMobiles}} mobiles listed for your institute. Select the mobile you would like to verify or you can <a ng-click="addClaimMobile()" id="claimMobileLink">add a new mobile</a>.
-                            </span>
-                            
-                        </div>
-                        <div layout="column" layout-align="center center" ng-show="nMobiles == 1">
-                            <span>
-                            We have only one mobile listed for your institute. Verify it or you can <a ng-click="addClaimMobile()" id="claimMobileLink">add a new mobile</a>.
-                            </span>
-                        </div>
-                        <div layout="column" layout-align="center center" ng-show="nMobiles == 0">
-                            <span>
-                            We have NO mobile listed for your institute. You can <a ng-click="addClaimMobile()" id="claimMobileLink">add a new mobile</a> to verify your identity.
-                            </span>
-                            
-                        </div>
-                        <div layout="row" layout-align="center center" class="top-buffer10 text-center">
-                            <span ng-repeat="mobile in provider.mobile" ng-show="!newMobileMode">
-                                <span class="badge " id="claimMobile" ng-if="OTPMobile != mobile" ng-click="selectMobile(mobile)">
-                                    {{mobile}}
+                    <div layout="row" layout-align="center center" layout-padding class="">
+                        <button type="submit" class="btn btn-primary" ui-sref="verifyClaim({ coachingId:{{'provider._id'}} })">Claim Institute</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="submit" class="btn" ng-click="showHeaderLogin()" hide-xs>Login</button>
+                        <!--<div layout="column" layout-align="center center" flex="50">
+                            <div layout="column" layout-align="center center" id="claimButton" ng-click="verifyClaim()">
+                                <span class="">
+                                    Claim Institute
                                 </span>
-                                <span class="badge " id="claimExistingMobile" ng-if="OTPMobile == mobile" ng-click="selectMobile(mobile)">
-                                    {{mobile}}
-                                </span>&nbsp;
-                            </span>
-                            <span ng-show="newMobileMode">
-                                <input type="text" class=" width100" ng-model="newMobilePhone"  placeholder="Add New Mobile" focus-me="true" id="newMobile">
-                            </span>
+                            </div>
+
                         </div>
-                        <div layout="row" layout-align="center center" class="top-buffer10 text-center md-title">
-                            <span ng-if="newMobileMode || OTPMobile">
-                                Send verification OTP to <span ng-if="!newMobileMode">{{OTPMobile}}</span><span ng-if="newMobileMode">{{newMobilePhone}}</span>
-                            </span>
-                        </div>
-                        <div layout="row" layout-align="center center" class="text-center md-title" >
-                            <md-button class="md-raised md-primary font9" ng-click="sendOTP(OTPMobile)" ng-if="!newMobileMode" ng-disabled="OTPMobile.length != 10"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;Send OTP</md-button>
-                            <md-button class="md-raised md-primary font9" ng-click="sendOTP(newMobilePhone)" ng-if="newMobileMode" ng-disabled="newMobilePhone.length != 10"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;Send OTP</md-button>
-                        </div>
+                        <div layout="column" layout-align="center center" flex="50">
+                            <div layout="column" layout-align="center center" id="claimButton" ng-click="showHeaderLogin()">
+                                <span class="">
+                                    Login
+                                </span>
+                            </div>
+                        </div>-->
                     </div>
-                    
-                </div>
                 
-                <div layout="row" layout-align="center start" layout-padding class="width100" ng-show="verifyingOTP && verifyStep == 2">
-                    
-                    <div layout="column" layout-align="center center" class="top-buffer10 text-center md-title">
-                        <span>
-                        Enter the OTP sent to {{verificationMobile}}
-                        </span>
-                        <span>
-                        
-                        </span>
-                        <span>
-                        <input type="text" class=" width100" ng-model="userOTP"  placeholder="Enter 4 digit OTP" focus-me="true" id="newMobile">
-                        </span>
-                        <span class="top-buffer10">
-                        <md-button class="md-raised md-primary font9" ng-click="verifyOTP()" ng-if="!newMobileMode" ng-disabled="userOTP.length != 4">Verify Code</md-button>
-                            
-                        <br/>
-                        <span class="md-display-2 text-primary" ng-show="userOTP == serverOTP">
-                            <i class="fa fa-check-circle" aria-hidden="true"></i>
-                        </span>
-                        </span>
-                    </div>
-                </div>
-                
-                <div layout="row" layout-align="center start" layout-padding class="width100" ng-show="createUserBool && verifyStep == 3">
-                    
-                    <div layout="column" layout-align="center center" class="top-buffer10 text-center md-title">
-                        <span>
-                        Choose a password and tell us about yourself
-                        </span>
-                        <span>
-                        <input type="text" class=" width100" ng-model="claimName"  placeholder="Tell us your name" focus-me="true" id="newMobile">
-                        </span>
-                        <span class="top-buffer10">
-                        
-                        </span>
-                    </div>
-                </div>
                       
                 </div>
               </div>
@@ -2521,7 +2494,7 @@
 
 
 <div class="saveCancel">
-    <div layout="row" ng-show="editContact || editExam || editCourse || editResult2 ||  editPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
+    <div layout="row" ng-show="editContact || editExam || editCourse || editResult || editResult2 ||  editPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
         <div flex ="80">
             <span>
             Do you want to save your changes to {{provider.name}}? 

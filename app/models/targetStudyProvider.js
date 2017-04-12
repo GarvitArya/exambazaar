@@ -35,6 +35,8 @@ var targetStudyProviderSchema = mongoose.Schema({
         rank: {type: String},
         percentile: {type: String},
         percentage: {type: String},
+        marks: {type: String},
+        passFail: {type: String},
         active: {type: Boolean,default: true},
         course: {type: Schema.ObjectId, ref: 'course'},
         image: {type: String},

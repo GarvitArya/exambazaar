@@ -181,7 +181,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     exambazaar.service('UserService', ['$http', function($http) {
         this.saveUser = function(user) {
-            alert('Here');
+            //alert('Here');
             return $http.post('/api/users/save', user);
         };
         this.getUser = function(userId) {
@@ -1265,7 +1265,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                console.info('View Marked');
+                //console.info('View Marked');
             })
             .error(function (data, status, header, config) {
                 console.info();
@@ -1439,8 +1439,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.examPivotResults.forEach(function(thisExamResult, index){
                 
                 if(thisExamResult.pivot !='null'){
-                    console.info(JSON.stringify(thisExamResult));
-                    console.info('--' + thisExamResult.result.length + ' ' + thisExamResult.initialLength);
+                    //console.info(JSON.stringify(thisExamResult));
+                    //console.info('--' + thisExamResult.result.length + ' ' + thisExamResult.initialLength);
                     if(thisExamResult.result.length != thisExamResult.initialLength + 1){
                         spreadSheetEdited = true;
                     }
@@ -1678,11 +1678,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     pivot: thisPivotVal,
                     result: []
                 };
+                
+                if(pivot =='exam'){
+                    var eIndex = $scope.providerExamIds.indexOf(thisPivotVal);
+                    //console.log(eIndex);
+                    if(eIndex !=-1){
+                        newpivotResult.exam = $scope.provider.exams[eIndex];
+                    }
+                    
+                }
                 pivotResult.push(newpivotResult);
             });
             
             $scope.provider.results.forEach(function(thisResult, resultIndex){
-                var pivotIndex = pivotVals.indexOf(thisResult[pivot]);
+                var pivotIndex = pivotVals.indexOf(thisResult[pivot]._id);
                 if(thisResult[pivot] && pivotIndex == -1){
                     pivotVals.push(thisResult[pivot]);
                     var newpivotResult = {
@@ -1800,7 +1809,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 });
                 if(counter == nLength){
                     $scope.examWiseResult = examWiseResult;
-                    
+                    console.info($scope.examWiseResult);
                 }
             });
             if(nLength ==0){
@@ -1887,38 +1896,76 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
         };
         
+        $scope.saveProvider = function(){
+                //console.info($scope.provider);
+                var saveProvider = {
+                    targetStudyProvider:$scope.provider,
+                    user: $scope.user.userId
+                };
+                targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+                    console.log($scope.editResult + ' ' + $scope.editResult);
+                    if($scope.editResult || $scope.editResult){
+                        $scope.addExamResult();
+                    }else{
+                        $scope.showSavedDialog();
+                        $state.reload();
+                        console.info("Done");
+                    }
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
         
-        $scope.addExamResult = function(examResult, multimode){
+        
+        $scope.addExamResult = function(){
             var providerId = $scope.provider._id;
             var finalExamResult = {
                 providerId: providerId,
-                exam: examResult.pivot,
-                result: []
+                examResults: [],
+                
             };
             var properties = [
-                'year',
+                /*'year',*/
                 'name',
                 
             ];
             /*'rank',
                 'category'*/
-            examResult.result.forEach(function(thisExamResult, examResultIndex){
-                var valid = true;
-                properties.forEach(function(thisProperty, propertyIndex){
-                    if(thisExamResult[thisProperty] == null){
-                        if(!thisExamResult._id){
-                            valid = false;
-                        }
-                        
-                    }
-                });   
-                if(valid){ finalExamResult.result.push(thisExamResult);
+            $scope.examPivotResults.forEach(function(examResult, index){
+                var newExamResult = {
+                    exam: examResult.pivot,
+                    result: []
+                };
+                if(examResult.pivot != "null"){
+                    finalExamResult.examResults.push(newExamResult);
                 }
+                  
             });
-            
-            targetStudyProviderService.bulkAddResult(finalExamResult).success(function (data, status, headers) {
+            var examResultIds =  finalExamResult.examResults.map(function(a) {return a.exam;});
+            $scope.examPivotResults.forEach(function(examResult, index){
+                var eIndex = examResultIds.indexOf(examResult.pivot);
+                examResult.result.forEach(function(thisExamResult, examResultIndex){
+                    var valid = true;
+                    properties.forEach(function(thisProperty, propertyIndex){
+                        if(thisExamResult[thisProperty] == null){
+                            if(!thisExamResult._id){
+                                valid = false;
+                            }
+
+                        }
+                    });   
+                    if(valid && eIndex != -1){
+                        finalExamResult.examResults[eIndex].result.push(thisExamResult);
+                        
+                        //finalExamResult.result.push(thisExamResult);
+                    }
+                });
+                
+            }); targetStudyProviderService.bulkAddResult(finalExamResult).success(function (data, status, headers) {
                 console.info("Done");
-                if(data == 'Done' && !multimode){
+                if(data == 'Done'){
                     var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                     $scope.provider = refreshedProvider;
                      $scope.resultHelper('exam',$scope.providerExamIds);
@@ -2462,8 +2509,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     if(counter == nFiles){
                         
                         var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                            $scope.provider = refreshedProvider;
+                            $scope.provider = refreshedProvider;
+                            $scope.resultHelper('exam',$scope.providerExamIds);
+                            $scope.examPivotResults =$scope.pivotResult;
+                            //console.info(JSON.stringify($scope.examPivotResults));
+                            $scope.resultSortExamYear();
+                            $scope.editResult = false;
+                            
+                            
                             $scope.showSavedDialog();
-                            $state.reload();
+                            //$state.reload();
                         }).error(function (data, status, header, config) {
                             console.info("Error ");
                         });
@@ -2951,21 +3007,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
             };
             
-            $scope.saveProvider = function(){
-                //console.info($scope.provider);
-                var saveProvider = {
-                    targetStudyProvider:$scope.partner,
-                    user: $scope.partner.userId
-                };
-                targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
-                    $scope.showSavedDialog();
-                    $state.reload();
-                    console.info("Done");
-                })
-                .error(function (data, status, header, config) {
-                    console.info("Error ");
-                });
-            };
+            
             $scope.dontsaveChanges= function(){
                 $state.reload();
             };
@@ -4477,6 +4519,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         $scope.filled = thisuserFilled.data;
         $scope.uniqueUsers = [];
+        $scope.uniqueInstitutes = [];
         $scope.filled.forEach(function(thisFill, index){
             if($scope.uniqueUsers.indexOf(thisFill.userName) == -1){
                 $scope.uniqueUsers.push(thisFill.userName);
@@ -4767,6 +4810,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
         
         $scope.streams = streamList.data;
+        $scope.resultFormats = [
+            "Rank",
+            "Percentile",
+            "Percentage",
+            "Marks",
+            "Pass/Fail",
+
+        ];
         //console.info(examList.data);
         $scope.addExam = function () {
             var saveExam = ExamService.saveExam($scope.exam).success(function (data, status, headers) {
@@ -4976,7 +5027,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.sendingMode = true;
             $scope.flipSendingMode = function(){
                 $scope.sendingMode = !$scope.sendingMode;
-            }
+            };
             $scope.email = {
                 to: 'vikrantrmlnlu@gmail.com',
                 templateName: 'Claim CI Email - 5thApril2017',
@@ -5048,7 +5099,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
             $scope.templateNames = [
                 /*'Survey Email - 11March2017',*/
-                'Claim CI Email - 5thApril2017'
+                'Claim CI Email - 5thApril2017',
+                'Follow Up 1 to CIs',
             ];
             $scope.showLevel = 0;
             

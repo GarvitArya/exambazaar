@@ -20,6 +20,7 @@ var examSchema = mongoose.Schema({
     preparation: {type: String},
     studysource: {type: String},
     previouspapers: {type: String},
+    resultFormat: {type: String},
     qualify: {type: String},
     colleges: {type: String},
     doubts: {type: String}
