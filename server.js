@@ -19,6 +19,9 @@ var flash        = require('req-flash');
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+
 var session      = require('express-session');
 var cors = require('cors');
 var unirest = require('unirest');
