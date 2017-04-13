@@ -284,7 +284,7 @@ router.get('/emails/:userId', function(req, res) {
 router.get('/interns', function(req, res) {
     //console.log('Getting all interns');
     user
-        .find({ 'userType': 'Intern - Business Development' },{basic:1})
+        .find({ 'userType': 'Intern - Business Development' },{basic:1, active:1})
         //.deepPopulate('_master.contact')
         .exec(function (err, docs) {
         if (!err){ 

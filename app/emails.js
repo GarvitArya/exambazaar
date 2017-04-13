@@ -123,9 +123,9 @@ router.post('/sendGrid', function(req, res) {
                     //var subject = subject;
                     var content = new helper.Content('text/html', html);
                     var mail = new helper.Mail(fromEmail, subject, to_email, content);
-                    //mail.setTemplateId('4600a054-1d6c-4c2b-9cf4-5e45f91b5f11');
                     mail.setTemplateId(templateId);
-                    //mail.setTemplateId('f2c433ee-29cb-4429-8b28-774582fba276');
+                    console.log('Template id is: ' + JSON.stringify(templateId));
+                    
                     /*console.log('API Key: ' + apiKey);
                     console.log('From Email: ' + JSON.stringify(from_email));
                     console.log('To Email: ' + JSON.stringify(to_email));

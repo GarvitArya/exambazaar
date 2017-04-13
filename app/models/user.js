@@ -32,6 +32,7 @@ var userSchema = mongoose.Schema({
     }],
     email : { type: String},
     verified : { type: Boolean, default: false},
+    active : { type: Boolean, default: true},
     _created: { type: Date, default: Date.now },
     logins:[{
         loginTime: Date,

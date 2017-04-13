@@ -108,6 +108,7 @@
         <md-divider></md-divider>
         
     </div>
+    
     <div class="row whiteBackground greyBorder" id="assignTask">
         <div layout="row" layout-xs="column" layout-margin  layout-align="center" class="font20">
             Assign CI Claim Task
@@ -131,6 +132,8 @@
                 <md-button  class="md-green md-small font10" ng-click="assignCIFill()" class="width25">Assign</md-button>
             </div>
             
+            
+            
         </div>
     </div>
     <div class="row whiteBackground greyBorder" id="assignTask">
@@ -138,11 +141,53 @@
             <span class="top-buffer">
                 <span class="font20">Assigned Tasks</span>&nbsp;<span class="badge" id="badge">{{fillsDue}}</span>
             </span>
-            <div class="font12">
-                <div ng-repeat="due in internDueList">
-                    [{{due.intern.basic.name}}: Due: {{due.due}}, Done: {{due.done}}]&nbsp;
+            <div flex layout="row" class="width100">
+                <div flex="50" layout="column" class="font12 padded2">
+                    <span class="secondFont bold">
+                    Intern Roaster
+                    </span>
+                <div layout="column">
+                    <div flex layout="row" class="width100">
+                        <div flex="50">
+                            Name
+                        </div>
+                        <div flex="25">
+                            Due Tasks
+                        </div>
+                        <div flex="25">
+                            Done Tasks
+                        </div>
+                    </div>
+                    
+                    <div ng-repeat="due in internDueList | orderBy: '-due'" ng-if="due.intern.active" flex layout="row" class="width100">
+                        <div flex="50">
+                            {{due.intern.basic.name}}
+                        </div>
+                        <div flex="25">
+                            {{due.due}}
+                        </div>
+                        <div flex="25">
+                            {{due.done}}
+                        </div>
+                    </div>
+                    
+                    </div>
+                </div>
+                <div flex="50" layout="column"  class="font12 padded2">
+                    <span class="secondFont bold">
+                    Marked as Done Yesterday (after {{yesterday | date: "dd-MMM-yy HH:mm"}})<span class="badge" id="badge">{{yesterdayTasks.length}}</span>
+                    </span>
+                    <div ng-repeat="yesterdayTask in yesterdayTasks">
+                        <a ui-sref="claim({ coachingId:{{'yesterdayTask.institute._id'}} })" target="_blank" id="link">
+                        <strong>{{yesterdayTask.institute.name}}</strong>
+                        </a>
+                         by 
+                        {{yesterdayTask.user.name}}
+                    </div>
                 </div>
             </div>
+            
+            
             <div flex layout="row" class="width100 greyDashedBottomBorder bold">
                 <div layout="column" layout="center center" flex="5">S. No.</div>
                 <div layout="column" layout="center center" flex="10">Created on</div>

@@ -1650,7 +1650,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         });
         
+        $scope.provider.results.forEach(function(thisResult, resultIndex){
+            
+            var addPic = "<button class='btn-primary editFont' ng-controller='claimController' ng-click='popHi()' >Add Pic</button>";
+            //thisResult.imageShow = "<img src='" + thisResult.image + "' width='100'>" + addPic;
+            thisResult.imageShow = addPic;
+            
+            //ngf-select='uploadResultPic(newResultPic, examResult.result)' ng-model='newResultPic' ngf-accept=''image/*''
+            
+            
+                                
+            
+        });
         
+        $scope.popHi = function(){
+            alert('Hi');
+        };
         $scope.editResult = false;
         $scope.editResults= function(){
             $scope.editResult = true;
@@ -1691,6 +1706,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
             
             $scope.provider.results.forEach(function(thisResult, resultIndex){
+                
                 var pivotIndex = pivotVals.indexOf(thisResult[pivot]._id);
                 if(thisResult[pivot] && pivotIndex == -1){
                     pivotVals.push(thisResult[pivot]);
@@ -1809,7 +1825,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 });
                 if(counter == nLength){
                     $scope.examWiseResult = examWiseResult;
-                    console.info($scope.examWiseResult);
+                    //console.info($scope.examWiseResult);
                 }
             });
             if(nLength ==0){
@@ -2471,6 +2487,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.uploadResultPic = function (newresultpic,result) {
             //var logo = $scope.newlogo;
+            alert('Hi');
             var logo = [newresultpic];
             var nFiles = logo.length;
             
@@ -3064,11 +3081,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.coachingCount = coachingCount.data;
             $scope.coachingSavedCount = coachingSavedCount.data;
             $scope.internList = internList.data;
+           
             $scope.filledCount = filledCount.data;
             $scope.tofillciList = tofillciList.data;
             $scope.masterViewSummary = masterViewSummary.data;
             
             $scope.internDueList = [];
+            $scope.yesterdayTasks = [];
             $scope.fillsDue = 0;
             var internIds = $scope.internList.map(function(a) {return a._id;});
             $scope.internList.forEach( function(thisIntern, index){
@@ -3080,6 +3099,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.internDueList.push(internDue);
             });
             
+            var yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            yesterday.setHours(0,0,0,0);
+            $scope.yesterday = yesterday;
+            
             $scope.tofillciList.forEach( function(thisTask, index){
                 
                 if(thisTask.active){
@@ -3090,6 +3114,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }else{
                     var internIndex = internIds.indexOf(thisTask.user._id);
                     $scope.internDueList[internIndex].done += 1;
+                    if(compare(new Date(thisTask._finished), yesterday) == 1){
+                        $scope.yesterdayTasks.push(thisTask);
+                    }
+                    
                 }
             });
             $scope.verifiedUsersCount = verifiedUsersCount.data;
@@ -3199,7 +3227,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                                 
                                 
                             }
-                            if(sessionuser.userType =='Intern - Business Development'){ $state.go('targetStudyProviders', {city: 'Jaipur'});
+                            if(sessionuser.userType =='Intern - Business Development'){ $state.go('assigned', {userId: sessionuser.userId});
                             }
                             if(sessionuser.userType =='Student'){
                                 $state.reload();
@@ -3383,7 +3411,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                                 
                             }
                             if(sessionuser.userType =='Intern - Business Development'){
-                                 $state.go('targetStudyProviders', {city: 'Jaipur'});
+                                 $state.go('assigned', {userId: sessionuser.userId});
                             }
                             if(sessionuser.userType =='Student'){
                                 $state.reload();
@@ -7314,9 +7342,15 @@ function generateOtp(min, max) {
     min = 1000;
     max = 9999;
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 
-
+function compare(dateTimeA, dateTimeB) {
+    var momentA = moment(dateTimeA,"DD/MM/YYYY");
+    var momentB = moment(dateTimeB,"DD/MM/YYYY");
+    if (momentA > momentB) return 1;
+    else if (momentA < momentB) return -1;
+    else return 0;
+};
 
 
 

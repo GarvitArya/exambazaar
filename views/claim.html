@@ -1038,7 +1038,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-repeat="examResult in examPivotResults" ng-if="examResult.pivot == exam._id && editResult" id="tableHolder">
                     
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center top-buffer">
-                        <span class="pull-left" ng-click="showSpreadsheetConfirm($event)">
+                        <span class="pull-left" ng-click='showSpreadsheetConfirm($event)'>
                         <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Back
                         </span>
                         
@@ -1057,25 +1057,9 @@
                         <hot-autocomplete datarows="GENERAL, OBC-NCL, SC/ST, PwD">
                         </hot-autocomplete>
                         </hot-column>
-                        <hot-column width="100" data="image" title="'Image URL'">
-                        
-                        
-                       <!-- <div layout="column" layout-align="center center" flex >
-                                
-                            <div ng-if="result.image">
-                                <img  ng-src="{{result.image}}" id="editPic"/>
-                                <span class="font8 text-center" ngf-select="uploadResultPic(newResultPic, result)" ng-model="newResultPic" ngf-accept="'image/*'"><br/>
-                                Edit
-                                </span>
-                            </div>
-                            <div layout="column" layout-align="center center" ng-if="!result.image" class="lightGreyBackground" ngf-select="uploadResultPic(newResultPic, result)" ng-model="newResultPic" ngf-accept="'image/*'">
-                                <span class="editFont">
-                                Add Pic
-                                </span>
-                            </div>
-                        </div>-->
-                        
-                        
+                        <!--<hot-column width="100" data="imageShow" title="'Image URL'"  renderer= "'html'">
+                        </hot-column>-->
+                        <hot-column width="100" data="image" title="'Image URL (read only)'">
                         </hot-column>
                     </hot-table>
                     
