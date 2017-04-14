@@ -219,7 +219,7 @@
             <div id="cell" flex="10">EB Rank</div>
         </div>
         
-        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-noEmail','-rank','-exams.length'] | filter:filterText as filtered" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
+        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-noEmail','-rank','-exams.length'] | filter:filterText as filtered track by $index" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
             <div id="cell" flex="5">
                 {{$index+1}}
             </div>
@@ -270,7 +270,7 @@
                 <!--<a ng-href="{{provider.targetStudyWebsite}}" target="_blank">
                     TS Url
                 </a>-->
-                {{provider.rank}}
+                {{provider.active}}
             </div>
             <div id="cell" flex="10">
                 <div class="btn-group" role="group" aria-label="...">

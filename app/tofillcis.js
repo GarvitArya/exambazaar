@@ -86,7 +86,8 @@ router.get('/', function(req, res) {
                         name: thisFillTask.institute.name,
                         address: thisFillTask.institute.address,
                         city: thisFillTask.institute.city,
-                        pincode: thisFillTask.institute.pincode
+                        pincode: thisFillTask.institute.pincode,
+                        email: thisFillTask.institute.email
                     },
                     _created: thisFillTask._created,
                     _deadline: thisFillTask._deadline,

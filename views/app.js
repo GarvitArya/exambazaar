@@ -3116,7 +3116,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             var rightNow = new Date();
             
             $scope.tofillciList.forEach( function(thisTask, index){
+               
                 
+                //console.log(JSON.stringify(thisTask.institute));
                 if(thisTask.active){
                     $scope.fillsAssigned += 1;
                     var internIndex = internIds.indexOf(thisTask.user._id);
@@ -3129,6 +3131,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         $scope.fillsDue += 1;
                     }
                 }else{
+                    var thisEmail = thisTask.institute.email;
+                    if(!thisEmail || thisEmail.length == 0){
+                        thisTask.noEmail = true;
+                    }else{
+                        thisTask.noEmail = false;
+                    }
                     var internIndex = internIds.indexOf(thisTask.user._id);
                     $scope.internDueList[internIndex].done += 1;
                     if(compare(new Date(thisTask._finished), yesterday) == 1){
@@ -3834,7 +3842,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
         var institutesSaved = institutesSavedList.data;
         var institutesFilled = institutesFilledList.data;
-        //console.log(JSON.stringify(institutesSaved));
+        console.log(JSON.stringify(institutesFilled.length));
+        console.log(JSON.stringify(institutesFilled));
         $scope.filledCounter = 0;
         $scope.noEmailCounter = 0;
         $scope.providersList.forEach(function(thisProvider, index){
@@ -4554,10 +4563,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         [ '$scope', 'thisuser' , 'thisuserAssigned',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssigned, $http, $state, $rootScope){
         $scope.user = thisuser.data;
         $scope.assigned = thisuserAssigned.data;
+        $scope.assignedCount = 0;
         if($scope.user.userType =='Master' || $scope.user.userType =='Intern - Business Development'){
             $scope.authorized = true;
-        } 
-        
+        }
+        $scope.assigned.forEach(function(thisAssigned, index){
+            
+            if(thisAssigned.active){
+                $scope.assignedCount += 1;
+            }
+        });
+        //console.log($scope.assignedCount);
         $rootScope.title =$scope.user.basic.name;
     }]);  
     
