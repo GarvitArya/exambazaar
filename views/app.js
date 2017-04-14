@@ -3081,7 +3081,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.coachingCount = coachingCount.data;
             $scope.coachingSavedCount = coachingSavedCount.data;
             $scope.internList = internList.data;
-           
+            $scope.activeInternList = [];
+            //console.info($scope.internList);
+            $scope.internList.forEach( function(thisIntern, index){
+                if(thisIntern.active){
+                    $scope.activeInternList.push(thisIntern);    
+                }
+            });
+            
             $scope.filledCount = filledCount.data;
             $scope.tofillciList = tofillciList.data;
             $scope.masterViewSummary = masterViewSummary.data;
@@ -3089,12 +3096,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.internDueList = [];
             $scope.yesterdayTasks = [];
             $scope.fillsDue = 0;
+            $scope.fillsAssigned = 0;
             var internIds = $scope.internList.map(function(a) {return a._id;});
             $scope.internList.forEach( function(thisIntern, index){
                 var internDue = {
                     intern: thisIntern,
                     done: 0,
-                    due: 0
+                    due: 0,
+                    assigned: 0
                 };
                 $scope.internDueList.push(internDue);
             });
@@ -3104,13 +3113,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             yesterday.setHours(0,0,0,0);
             $scope.yesterday = yesterday;
             
+            var rightNow = new Date();
+            
             $scope.tofillciList.forEach( function(thisTask, index){
                 
                 if(thisTask.active){
-                    $scope.fillsDue += 1;
+                    $scope.fillsAssigned += 1;
                     var internIndex = internIds.indexOf(thisTask.user._id);
                     //console.info(internIndex);
-                    $scope.internDueList[internIndex].due += 1;
+                    $scope.internDueList[internIndex].assigned += 1;
+                    
+                    //console.info(thisTask._deadline + ' ' + rightNow + ' ' + compare(rightNow, new Date(thisTask._deadline)));
+                    if(compare(rightNow, new Date(thisTask._deadline)) == 1){
+                        $scope.internDueList[internIndex].due += 1;
+                        $scope.fillsDue += 1;
+                    }
                 }else{
                     var internIndex = internIds.indexOf(thisTask.user._id);
                     $scope.internDueList[internIndex].done += 1;
@@ -3127,7 +3144,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 var intern = $scope.ciIntern;
                 var coaching = $scope.instituteInput;
                 var ciDeadline = $scope.ciDeadline;
-                
+                ciDeadline.setHours(23,59,59);
                 var res = coaching.split("/");
                 var coaching = res[res.length-1];
                 if(coaching.length < 15 || !ciDeadline){
@@ -3818,7 +3835,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var institutesSaved = institutesSavedList.data;
         var institutesFilled = institutesFilledList.data;
         //console.log(JSON.stringify(institutesSaved));
+        $scope.filledCounter = 0;
+        $scope.noEmailCounter = 0;
         $scope.providersList.forEach(function(thisProvider, index){
+            if(!thisProvider.email || thisProvider.email.length ==0){
+                thisProvider.noEmail = true;
+                $scope.noEmailCounter += 1;
+            }else{
+                thisProvider.noEmail = false;
+            }
             if(institutesSaved.indexOf(thisProvider._id) != -1){
                 thisProvider.cisaved = true;
             }else{
@@ -3827,11 +3852,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             if(institutesFilled.indexOf(thisProvider._id) != -1){
                 thisProvider.cifilled = true;
+                //$scope.filledCounter += 1;
             }else{
                 thisProvider.cifilled = false;
             }
         });
         
+        $scope.providersList.forEach(function(thisProvider, index){
+            if(thisProvider.cifilled){
+                $scope.providersList.forEach(function(otherProvider, otherIndex){
+                    if(otherProvider.name == thisProvider.name){
+                        otherProvider.cifilled = true;
+                        $scope.filledCounter += 1;
+                    }
+                });
+            }
+        });
         
         $scope.cities = targetStudyCities.data;
         $scope.city = $stateParams.city;

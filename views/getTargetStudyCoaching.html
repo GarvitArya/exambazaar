@@ -154,6 +154,13 @@
         <md-button class="md-cancel md-small font10" ng-click="rank0()">Set Rank 0</md-button>-->
         <md-button class="md-cancel md-small font10" ng-click="getAllCourses()">All Courses</md-button>
         <md-button class="md-cancel md-small font10" ng-click="getWebsites()">Coaching Websites</md-button>
+        <span class="editFont">
+            Filled: {{filledCounter}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            No Emails: {{noEmailCounter}}
+        </span>
+        
     </div>
     <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font10 whiteBackground paddingTB10" ng-if="showLevel>5">
     {{institutesFilled}}
@@ -205,13 +212,14 @@
             <div id="cell" flex="15">Address</div>
             <div id="cell" flex="5">Location</div>
             <div id="cell" flex="15">Exams</div>
-            <div id="cell" flex="15">Phone</div>    
+            <!--<div id="cell" flex="15">Phone</div> -->   
+            <div id="cell" flex="15">Email(s)</div>    
             <div id="cell" flex="15">Mobile</div>
             <div id="cell" flex="5">Url</div>
             <div id="cell" flex="10">EB Rank</div>
         </div>
         
-        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-rank','-exams.length'] | filter:filterText as filtered" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
+        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-noEmail','-rank','-exams.length'] | filter:filterText as filtered" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
             <div id="cell" flex="5">
                 {{$index+1}}
             </div>
@@ -236,13 +244,18 @@
                      | 
                 </span>
             </div>
-            <div id="cell" flex="15">
+            <!--<div id="cell" flex="15">
                 <span ng-repeat="phone in provider.phone track by $index">
                     {{phone}}
                     <span ng-if="!$last">, </span>
                 </span>
-            </div>    
-            
+            </div> -->   
+            <div id="cell" flex="15">
+                <span ng-repeat="thisemail in provider.email track by $index">
+                    {{thisemail}}
+                    <span ng-if="!$last">, </span>
+                </span>
+            </div> 
             <div id="cell" flex="15">
                 <span ng-repeat="mobile in provider.mobile track by $index">
                     {{mobile}}

@@ -76,7 +76,7 @@
                         <font size="10" class="text-primary" >{{internList.length}}</font>
                     </div>
                     <div layout-align="center">
-                        <strong>Due Tasks:</strong><br/>
+                        <strong>Due Deadline:</strong><br/>
                         <font size="10" class="text-primary" >{{fillsDue}}</font>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                 <md-input-container class="width75 text-primary">
                   <md-select ng-model="ciIntern"  placeholder="Select Intern">
 
-                    <md-option ng-value="intern._id" ng-repeat="intern in internList" class="text-primary" ng-click="update(intern)">
+                    <md-option ng-value="intern._id" ng-repeat="intern in activeInternList | orderBy: 'basic.name'" class="text-primary" ng-click="update(intern)">
                       {{intern.basic.name}}
                     </md-option>
                   </md-select>
@@ -139,7 +139,9 @@
     <div class="row whiteBackground greyBorder" id="assignTask">
         <div layout="column"   layout-align="center center" class="font10">
             <span class="top-buffer">
-                <span class="font20">Assigned Tasks</span>&nbsp;<span class="badge" id="badge">{{fillsDue}}</span>
+                <span class="font20">Assigned Tasks</span>&nbsp;<span class="badge" id="badge">{{fillsAssigned}}</span>
+                &nbsp;
+                <span class="font20">Due Deadline</span>&nbsp;<span class="badge" id="badge">{{fillsDue}}</span>
             </span>
             <div flex layout="row" class="width100">
                 <div flex="50" layout="column" class="font12 padded2">
@@ -148,25 +150,31 @@
                     </span>
                 <div layout="column">
                     <div flex layout="row" class="width100">
-                        <div flex="50">
+                        <div flex="40">
                             Name
                         </div>
-                        <div flex="25">
-                            Due Tasks
+                        <div flex="20">
+                            Assigned Tasks
                         </div>
-                        <div flex="25">
+                        <div flex="20">
+                            Due Deadline
+                        </div>
+                        <div flex="20">
                             Done Tasks
                         </div>
                     </div>
                     
                     <div ng-repeat="due in internDueList | orderBy: '-due'" ng-if="due.intern.active" flex layout="row" class="width100">
-                        <div flex="50">
+                        <div flex="40">
                             {{due.intern.basic.name}}
                         </div>
-                        <div flex="25">
+                        <div flex="20">
+                            {{due.assigned}}
+                        </div>
+                        <div flex="20">
                             {{due.due}}
                         </div>
-                        <div flex="25">
+                        <div flex="20">
                             {{due.done}}
                         </div>
                     </div>
