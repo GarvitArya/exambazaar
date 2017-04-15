@@ -1166,11 +1166,60 @@ router.get('/checkLogo/:pageNumber', function(req, res) {
 router.get('/databaseService', function(req, res) {
     console.log("Database Service Starting now");
     //"email": { $exists: true, $ne: null } 
-    
+    var states = [
+        "Andhra Pradesh",
+        "Assam",
+        "Bihar",
+        "Chandigarh",
+        "Delhi",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Karnataka",
+        "Kerala",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Punjab",
+        "Rajasthan",
+        "Tamil Nadu",
+        "Uttar Pradesh",
+        "Uttarakhand",
+        "West Bengal",
+    ];
     res.json('Done');
+    targetStudyProvider.find({}, {email:1, state:1},function(err, allproviders) {
+        var counter = 0;
+        var changes = 0;
+        var nLength = allproviders.length;
+        allproviders.forEach(function(thisprovider, index){
+            var thisState = thisprovider.state;
+            var sIndex = states.indexOf(thisState);
+            
+            if(sIndex == -1){
+                //console.log(thisprovider);
+                states.forEach(function(this_state, stateIndex){
+                    if(thisState.indexOf(this_state) != -1){
+                        //console.log(thisState + ' ' + this_state);
+                        thisprovider.state = this_state;
+                        thisprovider.save(function(err, thisprovider) {
+                            if (err) return console.error(err);
+                            console.log(thisprovider._id + " saved!");
+                        });
+                        changes = changes + 1;
+                        
+                    }
+                });
+                
+                
+            }
+        });
+        console.log("To change: " + changes + " providers!");
+        
+    });
     
+   
     
-    var allproviders =  targetStudyProvider.find({city:'Jaipur'}, {email:1, state:1},function(err, allproviders) {
+    /*var allproviders =  targetStudyProvider.find({city:'Jaipur'}, {email:1, state:1},function(err, allproviders) {
         if (!err){
             var counter = 0;
             var changes = 0;
@@ -1193,7 +1242,7 @@ router.get('/databaseService', function(req, res) {
             }); 
 
            } else {throw err;}
-        });
+        });*/
     
     
     

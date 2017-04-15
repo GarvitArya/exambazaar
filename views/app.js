@@ -4055,6 +4055,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         $scope.databaseService = function(){
             targetStudyProviderService.databaseService().success(function (data, status, headers) {
+                $scope.distinctStates = data;
                 console.info("Done");
             })
             .error(function (data, status, header, config) {
