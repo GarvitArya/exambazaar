@@ -2139,10 +2139,10 @@
                     </div>
                     <div flex="85">
                         <span ng-repeat="videoTag in videoTags" ng-if="videoTag.type == videoType">
-                            <span class="badge font9" id="tagHolder" ng-click="addVideoTag(videoTag)" ng-if="tagThisVideo.tags.indexOf(videoTag._id) == -1">
+                            <span class="badge font9" id="tagHolder" ng-click="addVideoTag(videoTag)" ng-if="!tagThisVideo.tags || tagThisVideo.tags.indexOf(videoTag._id) == -1">
                             {{videoTag.subType}}
                             </span>
-                            <span class="badge font9" id="existingTagHolder" ng-click="removeVideoTag(videoTag)" ng-if="tagThisVideo.tags.indexOf(videoTag._id) != -1">
+                            <span class="badge font9" id="existingTagHolder" ng-click="removeVideoTag(videoTag)" ng-if="tagThisVideo.tags && tagThisVideo.tags.indexOf(videoTag._id) != -1">
                             {{videoTag.subType}}
                             </span>&nbsp;
                         </span>

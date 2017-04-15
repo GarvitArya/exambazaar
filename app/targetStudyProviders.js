@@ -1170,7 +1170,7 @@ router.get('/databaseService', function(req, res) {
     res.json('Done');
     
     
-    var allproviders =  targetStudyProvider.find({city:'Jaipur'}, {email:1},function(err, allproviders) {
+    var allproviders =  targetStudyProvider.find({city:'Jaipur'}, {email:1, state:1},function(err, allproviders) {
         if (!err){
             var counter = 0;
             var changes = 0;

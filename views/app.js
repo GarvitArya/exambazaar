@@ -3842,14 +3842,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
         var institutesSaved = institutesSavedList.data;
         var institutesFilled = institutesFilledList.data;
-        console.log(JSON.stringify(institutesFilled.length));
-        console.log(JSON.stringify(institutesFilled));
+       
         $scope.filledCounter = 0;
         $scope.noEmailCounter = 0;
         $scope.providersList.forEach(function(thisProvider, index){
             if(!thisProvider.email || thisProvider.email.length ==0){
                 thisProvider.noEmail = true;
-                $scope.noEmailCounter += 1;
+                //$scope.noEmailCounter += 1;
             }else{
                 thisProvider.noEmail = false;
             }
@@ -3875,6 +3874,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         $scope.filledCounter += 1;
                     }
                 });
+            }
+            if(!thisProvider.noEmail){
+                $scope.providersList.forEach(function(otherProvider, otherIndex){
+                    if(otherProvider.name == thisProvider.name){
+                        otherProvider.noEmail = false;
+                        //$scope.noEmailCounter -= 1;
+                    }
+                });
+            }
+        });
+        
+        $scope.providersList.forEach(function(thisProvider, index){
+            if(thisProvider.noEmail){
+                $scope.noEmailCounter += 1;
             }
         });
         
@@ -7503,4 +7516,15 @@ exambazaar.directive("moveNextOnMaxlength", function() {
             });
         }
     }
+});
+
+exambazaar.directive('www.exambazaar.com', function(){
+    return {
+        scope: {},
+        link:function(scope,element){
+            element.on('copy', function (event) {
+              event.preventDefault();
+            });
+        }
+    };
 });
