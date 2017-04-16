@@ -30,6 +30,7 @@
     
 </style>
 
+
 <div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
@@ -59,5 +60,42 @@
             </md-item-template>
           
         </md-autocomplete>
+    </div>
+    
+    <!--<div layout="column" layout-padding class="width100">
+        <input type="text" class="form-control text-center" ng-model="mapAddress" >
+        
+        <ng-map center="{{mapAddress}}" zoom="14" scrollwheel="true">
+        <marker position="{{mapAddress}}"
+              title="{{mapAddress}}"
+              animation="Animation.BOUNCE"
+              centered="true"></marker>
+        </ng-map>
+    </div>-->
+    <div id="map"></div>
+    
+    <md-button class="md-raised md-primary md-small font12" ng-click="setData()" id="">Show</md-button>
+    <md-button class="md-raised md-primary md-small font12" ng-click="saveData()" id="">Save</md-button>
+    <div layout="column" class="padded">
+    <div layout="row" ng-if="dataShow">
+        {{unavailableLatLng}} unavailable latlng out of 20!
+    </div>
+    <div layout="row" ng-repeat ="thisProvider in providers" ng-if="dataShow">
+        <div flex>
+            {{$index}}
+        </div>
+        <div flex="50">
+            {{thisProvider.address}}, {{thisProvider.city}}
+        </div>
+        <div flex>
+            {{thisProvider.latlng.lat | number:2}}
+        </div>
+        <div flex>
+            {{thisProvider.latlng.lng | number:2}}
+        </div>
+        <div flex>
+            {{thisProvider.latlngna}}
+        </div>
+    </div>
     </div>
 </div>

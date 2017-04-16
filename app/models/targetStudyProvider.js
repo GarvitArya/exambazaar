@@ -14,6 +14,12 @@ var targetStudyProviderSchema = mongoose.Schema({
     fbpage: String,
     email: [String],
     address: String,
+    mapAddress: String,
+    latlng: {
+        lat: String,
+        lng: String
+    },
+    latlngna: Boolean,
     area: String,
     location: { type: Schema.ObjectId, ref: 'location' },
     city: String,

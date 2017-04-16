@@ -758,6 +758,71 @@ router.post('/addLogo', function(req, res) {
     });
     
 });
+router.get('/coachingAddressService/', function(req, res) {
+    
+    var allproviders =  targetStudyProvider.find({
+            /*'city':'Noida',*/
+            $or: [{'latlngna': {$exists: false}}, {'latlngna': false}],
+            latlng: {$exists: false},
+        }, {address:1, city:1},function(err, allproviders) {
+        if (!err){
+            //console.log(allproviders);
+            res.json(allproviders);
+        }else {throw err;}
+        }).limit(20);
+    
+    
+    
+});
+
+router.post('/bulkSaveLatLng', function(req, res) {
+    var LatLngForm = req.body;
+    var nLength = LatLngForm.length;
+    var counter = 0;
+    //console.log(LatLngForm);
+    LatLngForm.forEach(function(thisLatLng, index){
+        //JHI
+        
+        var thisProvider = targetStudyProvider.findOne( {"_id" : thisLatLng._id}, {latlng:1, latlngna:1},function(err, thisProvider) {
+        if (!err){
+            counter = counter +1;
+            var latlng = thisLatLng.latlng;
+            if(latlng && latlng.lat !='' && latlng.lng !=''){
+                console.log('Setting latlng for: ' + thisLatLng._id + ' ' + JSON.stringify(latlng));
+                thisProvider.latlngna = false;
+                thisProvider.latlng = latlng;
+                thisProvider.save(function(err, thisProvider) {
+                    if (err) return console.error(err);
+                    console.log("Lat long saved for " + thisProvider._id);
+
+                    //res.json('Done');
+                });
+            }else{
+                console.log('---- ' + JSON.stringify(thisLatLng));
+                if(thisLatLng && thisLatLng.latlngna){
+                    thisProvider.latlngna = true;
+                    console.log('Setting latlngna for: ' + thisLatLng._id);
+                    thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("Lat long not available for " + thisProvider._id);
+
+                        //res.json('Done');
+                    });
+                }
+                
+            }
+            
+            
+            if(counter == nLength){
+                res.json('Done');
+            }
+        } else {throw err;}
+        });
+        
+        
+    });
+    
+});
 
 router.post('/bulkCheckLogos', function(req, res) {
     var checkLogoForm = req.body;
@@ -1029,6 +1094,9 @@ router.get('/coaching/:coachingId', function(req, res) {
         } else {throw err;}
     });
 });
+
+
+
 
 router.get('/coachingGroup/:groupName', function(req, res) {
     var groupName = req.params.groupName;

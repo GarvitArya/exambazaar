@@ -486,8 +486,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getProvidersWithAreas = function() {
             return $http.get('/api/targetStudyProviders/providersWithAreas');
         };
+        this.coachingAddressService = function() {
+            return $http.get('/api/targetStudyProviders/coachingAddressService');
+        };
         this.searchProviders = function(query) {
             return $http.get('/api/targetStudyProviders/query/'+query, {query: query});
+        };
+        this.bulkSaveLatLng = function(LatLngForm) {
+            return $http.post('/api/targetStudyProviders/bulkSaveLatLng',LatLngForm);
         };
         this.checkLogo = function(pageNumber) {
             return $http.get('/api/targetStudyProviders/checkLogo/'+pageNumber, {pageNumber: pageNumber});
@@ -4555,24 +4561,107 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);
         
     exambazaar.controller("sandboxController", 
-        [ '$scope', '$http','$state','$rootScope', function($scope, $http, $state, $rootScope){
+        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList){
+            $scope.providers = targetStudyProvidersList.data;
+            console.log($scope.providers.length);
             
-            
-            function imageExists(image_url){
-
-                var http = new XMLHttpRequest();
-
-                http.open('HEAD', image_url, false);
-                http.send();
-
-                return http.status != 404;
-
+            $scope.setData = function(){
+               $scope.dataShow = true; 
             };
+            
+            $scope.saveData = function(){
+                targetStudyProviderService.bulkSaveLatLng($scope.providers).success(function (data, status, headers) {
+
+                    //alert('All Marked');
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });
+                
+            };
+            $scope.dataShow = false;
+            
+            /*$scope.providers.forEach(function(thisProvider, index){
+                var thisAddress = thisProvider.address;
+                if(thisAddress){
+                    
+                }
+            });*/
+            
+            $scope.unavailableLatLng = 0;
+            var counter = 0;
+            for (var i=0;i<=$scope.providers.length-1;i++) {
+            (function(ind) {
+               setTimeout(function(){
+               GMaps.geocode({
+                address: $scope.providers[ind].address + ", " + $scope.providers[ind].city,
+                callback: function(results, status) {
+                    if(ind == $scope.providers.length-1){
+                        //console.info($scope.providers);
+                        $scope.saveData();
+                    }
+                    if (status == 'OK') {
+                        console.log(ind + ' ' + results[0].geometry.location.lat());
+                        $scope.providers[ind].latlng = {
+                            lat: results[0].geometry.location.lat(),
+                            lng: results[0].geometry.location.lng()
+                        };
+                        
+                        //console.log($scope.providers);
+                    }else{
+                        console.log(ind + ' '+ status + ' ' + $scope.providers[ind]._id);
+                        
+                        if(status == 'ZERO_RESULTS'){
+                        console.info($scope.providers[ind]._id);    
+                        $scope.providers[ind].latlngna = true;
+                        $scope.unavailableLatLng += 1;   
+                        }
+                    }
+
+                }
+            });
+
+
+           }, 1000 + (1000 * ind));
+
+            })(i);
+            };
+            
+           
+            
+            
+            var map = new GMaps({
+              el: '#map',
+              lat: -12.043333,
+              lng: -77.028333
+            });
+            
+            
+            
+            
             //alert(imageExists('https://s3.ap-south-1.amazonaws.com/exambazaar/L_60725.gif'));
             
             $rootScope.title ='Sandbox';
     }]); 
     
+function getLatLng(thisData) {
+    //console.log(thisData);
+    GMaps.geocode({
+        address: thisData.address,
+        callback: function(results, status) {
+            if (status == 'OK') {
+                console.log(results[0].geometry.location.lat());
+                thisData.lat = results[0].geometry.location.lat();
+                thisData.lng = results[0].geometry.location.lng();
+            }else{
+                console.log(thisData + ' ' + status);
+                thisData.na = true;
+            }
+        }
+    });
+};    
+        
     exambazaar.controller("assignedController", 
         [ '$scope', 'thisuser' , 'thisuserAssigned',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssigned, $http, $state, $rootScope){
         $scope.user = thisuser.data;
@@ -5662,6 +5751,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 'footer': {
                     templateUrl: 'footer.html'
                 }
+            },
+            resolve: {
+                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService) {   
+                    return targetStudyProviderService.coachingAddressService();
+                }],
+                provider: function() { return {}; }
+                
             }
         })
         .state('privacy', {
