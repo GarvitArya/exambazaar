@@ -214,7 +214,7 @@
             <div id="cell" flex="15">Exams</div>
             <!--<div id="cell" flex="15">Phone</div> -->   
             <div id="cell" flex="15">Email(s)</div>    
-            <div id="cell" flex="15">Mobile</div>
+            <div id="cell" flex="15">EB Note</div>
             <div id="cell" flex="5">Url</div>
             <div id="cell" flex="10">EB Rank</div>
         </div>
@@ -256,13 +256,18 @@
                     <span ng-if="!$last">, </span>
                 </span>
             </div> 
-            <div id="cell" flex="15">
+            <!--<div id="cell" flex="15">
                 <span ng-repeat="mobile in provider.mobile track by $index">
                     {{mobile}}
                     <span ng-if="!$last">, </span>
                 </span>
+            </div>-->
+            <div id="cell" flex="15">
+                <span ng-repeat="note in provider.ebNote track by $index">
+                    {{note.note}} by {{note.user.basic.name}}
+                    <span ng-if="!$last">, </span>
+                </span>
             </div>
-            
             <div id="cell" flex="5">
                 <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
                     Url

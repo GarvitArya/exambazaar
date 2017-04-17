@@ -4613,7 +4613,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         console.log(ind + ' '+ status + ' ' + $scope.providers[ind]._id);
                         
                         if(status == 'ZERO_RESULTS'){
-                        console.info($scope.providers[ind]._id);    
+                        //console.info($scope.providers[ind]._id);    
                         $scope.providers[ind].latlngna = true;
                         $scope.unavailableLatLng += 1;   
                         }

@@ -51,8 +51,8 @@ router.get('/city/:city', function(req, res) {
     //console.log("City is: "+city);
     //, 'exams.0': { $exists: true }, "logo": { $ne: "/img/bullets/box-orange-arrow.gif" }
     var cityProviders = targetStudyProvider
-        .find({'city': city },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1})
-        .deepPopulate('exams location')
+        .find({'city': city },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1})
+        .deepPopulate('exams location ebNote.user')
         .exec(function (err, cityProviders) {
         if (!err){
             
@@ -769,7 +769,7 @@ router.get('/coachingAddressService/', function(req, res) {
             //console.log(allproviders);
             res.json(allproviders);
         }else {throw err;}
-        }).limit(20);
+        }).limit(20).skip( Math.floor(Math.random() * (400 - 20 + 1)) + 20 );
     
     
     
