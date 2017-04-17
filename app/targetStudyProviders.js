@@ -4,6 +4,7 @@ var router = express.Router();
 var config = require('../config/mydatabase.js');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
 var cisaved = require('../app/models/cisaved');
+var disableProvider = require('../app/models/disableProvider');
 var oldtargetStudyProvider = require('../app/models/oldtargetStudyProvider');
 var exam = require('../app/models/exam');
 var group = require('../app/models/group');
@@ -25,6 +26,47 @@ router.get('/cities', function(req, res) {
     });
 });
 
+router.post('/bulkDisableProviders', function(req, res) {
+    var disableForm = req.body;
+    var instituteIds = disableForm.instituteIds;
+    var user = disableForm.user;
+    console.log('You are about to disable: ' + JSON.stringify(instituteIds) + ' and user is ' + user);
+    var nLength = instituteIds.length;
+    var counter = 0;
+    
+    instituteIds.forEach(function(thisInstituteId, index){
+        //JHI
+        
+        var thisProvider = targetStudyProvider.findOne( {"_id" : thisInstituteId}, {disabled:1},function(err, thisProvider) {
+        if (!err){
+            counter = counter +1;
+            thisProvider.disabled = true;
+            thisProvider.save(function(err, thisProvider) {
+                if (err) return console.error(err);
+                
+                var newDisabled = new disableProvider({
+                    institute: thisProvider._id,
+                    user: user
+                });
+                newDisabled.save(function(err, newDisabled) {
+                    if (err) return console.error(err);
+                    //res.json(newDisabled._id);
+                    console.log("The following provider is disabled: " + thisProvider._id + ' ' + thisProvider.address + ', ' + thisProvider.city);
+                });
+                
+                
+                //res.json('Done');
+            });
+            if(counter == nLength){
+                res.json('Done');
+            }
+        } else {throw err;}
+        });
+        
+        
+    });
+    
+});
 
 //to get all providers
 router.get('/websites', function(req, res) {
@@ -51,7 +93,7 @@ router.get('/city/:city', function(req, res) {
     //console.log("City is: "+city);
     //, 'exams.0': { $exists: true }, "logo": { $ne: "/img/bullets/box-orange-arrow.gif" }
     var cityProviders = targetStudyProvider
-        .find({'city': city },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1})
+        .find({'city': city, disabled: {$ne: true} },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1})
         .deepPopulate('exams location ebNote.user')
         .exec(function (err, cityProviders) {
         if (!err){
@@ -1098,12 +1140,15 @@ router.get('/coaching/:coachingId', function(req, res) {
 
 
 
-router.get('/coachingGroup/:groupName', function(req, res) {
-    var groupName = req.params.groupName;
+router.post('/coachingGroup', function(req, res) {
+    var groupCity = req.body;
+    var groupName = groupCity.groupName;
+    var cityName = groupCity.cityName;
+    console.log('Group city is: ' + groupCity);
     console.log('Fetching coaching group: ' + groupName);
     
     var thisGroup = targetStudyProvider
-        .find({'groupName': groupName})
+        .find({'groupName': groupName, city: cityName, disabled:false})
         /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
         .exec(function (err, thisGroup) {
         if (!err){

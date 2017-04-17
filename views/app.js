@@ -501,6 +501,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.bulkCheckLogos = function(checkLogoForm) {
             return $http.post('/api/targetStudyProviders/bulkCheckLogos',checkLogoForm);
         };
+        this.bulkDisableProviders = function(disableForm) {
+            return $http.post('/api/targetStudyProviders/bulkDisableProviders',disableForm);
+        };
+        
         this.groupProviders = function(query) {
             return $http.get('/api/targetStudyProviders/group/'+query, {query: query});
         };
@@ -549,8 +553,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.get('/api/targetStudyProviders/coaching/'+coachingId, {coachingId: coachingId});
         };
         
-        this.getGroup = function(groupName) {
-            return $http.get('/api/targetStudyProviders/coachingGroup/'+groupName, {groupName: groupName});
+        this.getGroupCity = function(groupCity) {
+            return $http.post('/api/targetStudyProviders/coachingGroup/',groupCity);
         };
         this.getProviderBasic = function(coachingId) {
             return $http.get('/api/targetStudyProviders/basiccoaching/'+coachingId, {coachingId: coachingId});
@@ -1219,7 +1223,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
         $scope.provider = thisProvider.data;
-       
         
         $scope.verifyClaim = function(){
             
@@ -1237,6 +1240,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
         $scope.shortlisted = false;
+        
+        $scope.showDisabled = function(ev) {
+            $mdDialog.show({
+              contentElement: '#disabledDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: false
+            });
+        };
+        
+        
+        $scope.disabled = $scope.provider.disabled;
+        if($scope.disabled){
+            $scope.showDisabled();
+        }
+        
         $scope.editable = false;
         $scope.verifiedUser = false;
         $scope.ebuser = false;
@@ -2790,6 +2809,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     exambazaar.controller("showGroupController", 
     [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup','$state','$stateParams', '$cookies', function($scope,$rootScope, targetStudyProviderService,thisGroup,$state,$stateParams, $cookies){
         $scope.group = thisGroup.data;
+        $scope.group.forEach(function(thisGroup, index){
+            thisGroup.mapAddress = thisGroup.address + ', ' + thisGroup.city;
+            console.log(thisGroup.mapAddress);
+        });
+        $scope.city = $stateParams.city; 
         
     }]);    
            
@@ -3851,6 +3875,36 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
        
         $scope.filledCounter = 0;
         $scope.noEmailCounter = 0;
+        
+        $scope.showDisableConfirm = function(provider, ev) {
+        
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to diable ' + provider.name + '?')
+                .textContent('Address: ' + provider.address + ', ' + provider.city + '!')
+                .ariaLabel('Lucky day')
+                .targetEvent(ev)
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                  $scope.disableProvider(provider);
+                }, function() {
+                  //nothing
+                });
+            
+        };
+        
+        $scope.showSavedDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#savedDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
         $scope.providersList.forEach(function(thisProvider, index){
             if(!thisProvider.email || thisProvider.email.length ==0){
                 thisProvider.noEmail = true;
@@ -3926,7 +3980,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
         }
         
-        
+        $scope.disableProvider = function(provider){
+            if(provider._id){
+                var instituteIds = [provider._id];
+                var disableForm = {
+                    instituteIds: instituteIds,
+                    user: $scope.user.userId
+                };
+                targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+                    //alert('Done');
+                    $scope.showSavedDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            }
+        };
         $scope.addEmail = function(provider){
             $window.open(provider.targetStudyWebsite, '_newhtml');
             //$window.open('https://targetstudy.com/tools/ge.php', '_newhtml2');
@@ -5637,8 +5706,13 @@ function getLatLng(thisData) {
                     return ExamService.getExamByName($stateParams.subCategoryName);
                 }],
                 thisGroup: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getGroup($stateParams.groupName);
+                    function(targetStudyProviderService,$stateParams) {
+                    var groupCity = {
+                        groupName: $stateParams.groupName,
+                        cityName: $stateParams.cityName
+                        
+                    };
+                    return targetStudyProviderService.getGroupCity(groupCity);
                 }],
                 provider: function() { return {}; }
                 

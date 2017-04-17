@@ -229,16 +229,43 @@
         
     </div>
     
-    <div layout="column " class="componentRow">
+    <div layout="column " class="componentRow padded editFont width100">
         <div layout="row" layout-align="start center" ng-repeat="thisGroup in group">
-            <div flex>
-            {{thisGroup._id}}
+            <div flex="20">
+                <a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank">
+                <strong>{{thisGroup._id}}</strong>
+                </a>
+            
             </div>
-            <div flex>
+            <div flex="25">
             {{thisGroup.address}}  
+            </div>
+            <div flex="5">
+            {{thisGroup.photo.length}}  
+            </div>
+            <div flex="5">
+            {{thisGroup.video.length}}  
+            </div>
+            <div flex="5">
+            {{thisGroup.exams.length}}  
+            </div>
+            <div flex="5">
+            {{thisGroup.results.length}}  
+            </div>
+            <div flex="5">
+            {{thisGroup.course.length}}  
             </div>
         </div>
         
+    </div>
+    
+    <div layout="column " class="componentRow padded editFont width100" id="map">
+        <ng-map center="{{city}}" zoom="14" scrollwheel="false" >
+        <marker position="{{thisGroup.address}}, {{thisGroup.city}}"
+              title="{{thisGroup.address}}"
+              animation="Animation.BOUNCE"
+              centered="true" ng-repeat="thisGroup in group"></marker>
+        </ng-map>
     </div>
     
  </div>
