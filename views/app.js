@@ -1252,6 +1252,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
         $scope.disabled = $scope.provider.disabled;
+        
         if($scope.disabled){
             $scope.showDisabled();
         }
@@ -2425,13 +2426,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
           $mdDialog.cancel();
         };    
         
-        if($scope.provider.pincode){
+        
+        if($scope.provider.latlng){
+            $scope.provider.mapAddress = [$scope.provider.latlng.lat, $scope.provider.latlng.lng];
+        }
+        
+        /*if($scope.provider.pincode){
             $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' +
             $scope.provider.city + ' ' +
             $scope.provider.pincode;
         }else{
             $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' + $scope.provider.city;   
-        }
+        }*/
         
         $scope.uploadPhotos = function (photos) {
             //var photos = $scope.photos;
@@ -3874,6 +3880,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var institutesFilled = institutesFilledList.data;
        
         $scope.filledCounter = 0;
+        $scope.noMapCounter = 0;
         $scope.noEmailCounter = 0;
         
         $scope.showDisableConfirm = function(provider, ev) {
@@ -3911,6 +3918,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 //$scope.noEmailCounter += 1;
             }else{
                 thisProvider.noEmail = false;
+            }
+            
+            
+            if(!thisProvider.latlng){
+                $scope.noMapCounter += 1;
             }
             if(institutesSaved.indexOf(thisProvider._id) != -1){
                 thisProvider.cisaved = true;

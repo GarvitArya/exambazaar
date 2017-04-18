@@ -158,7 +158,10 @@
             Filled: {{filledCounter}}
         </span>&nbsp;&nbsp;
         <span class="editFont">
-            No Emails: {{noEmailCounter}}
+            No Email: {{noEmailCounter}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            No Map: {{noMapCounter}}
         </span>
         
     </div>
@@ -235,7 +238,8 @@
                 {{provider.address}}
             </div>
             <div id="cell" flex="5">
-            <span ng-if="!provider.location" ng-click="showLocationDialog($event,provider)" id="otherCategoryLink"><small>Set</small></span>
+                <!--<span ng-if="!provider.location" ng-click="showLocationDialog($event,provider)" id="otherCategoryLink"><small>Set</small></span>-->
+                <span ng-if="!provider.latlng" ng-click="" id="otherCategoryLink"><small>Fix</small></span>
             <br/>
             <span ng-show="!provider.email" ng-click="addEmail(provider)" id="otherCategoryLink"><small>Add Email</small></span>    
             </div>

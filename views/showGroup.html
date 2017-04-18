@@ -177,14 +177,14 @@
             </div>
         </div>
     </div>
-    <div layout="row" id="heroHeader">
+    <div layout="row" id="heroHeader" ng-class="{ dangerBG: disabled }">
 
         <div class="container">
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <div layout="column" layout-align="end start" id="heroHeaderContent">
             <div class="row">
                 <span class="hidden-xs text md-headline" id="coachingHeader">
-                    {{provider.name | uppercase}}
+                    {{provider.name | uppercase}} 
                     <span class="badge" ng-if="editable" ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })"><small>
                             Edit
                     </small>
@@ -260,7 +260,7 @@
     </div>
     
     <div layout="column " class="componentRow padded editFont width100" id="map">
-        <ng-map center="{{city}}" zoom="14" scrollwheel="false" >
+        <ng-map center="{{city}}" scrollwheel="false" >
         <marker position="{{thisGroup.address}}, {{thisGroup.city}}"
               title="{{thisGroup.address}}"
               animation="Animation.BOUNCE"
