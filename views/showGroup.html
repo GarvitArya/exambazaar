@@ -255,15 +255,18 @@
             <div flex="5">
             {{thisGroup.course.length}}  
             </div>
+            <div flex="5">
+            {{thisGroup.latlng}}  
+            </div>
         </div>
         
     </div>
     
-    <div layout="column " class="componentRow padded editFont width100" id="map">
-        <ng-map center="{{city}}" scrollwheel="false" >
-        <marker position="{{thisGroup.address}}, {{thisGroup.city}}"
-              title="{{thisGroup.address}}"
-              animation="Animation.BOUNCE"
+    <div layout="column"  class="componentRow padded editFont width100" id="map">
+        <ng-map zoom-to-include-markers=true  scrollwheel="false" >
+        <marker position="{{thisGroup.mapAddress}}"
+              title="{{thisGroup.name}}"
+              animation="Animation.DROP"
               centered="true" ng-repeat="thisGroup in group"></marker>
         </ng-map>
     </div>

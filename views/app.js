@@ -389,6 +389,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.savetofillci = function(tofillciForm) {
             return $http.post('/api/tofillcis/save', tofillciForm);
         };
+        
         this.markDone = function(tofillciForm) {
             return $http.post('/api/tofillcis/markDone', tofillciForm);
         };
@@ -400,6 +401,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.gettofillci = function(tofillciId) {
             return $http.get('/api/tofillcis/edit/'+tofillciId, {tofillciId: tofillciId});
+        };
+        this.removeAssigned = function(tofillciId){
+            $http.get('/api/tofillcis/remove/'+tofillciId, {tofillciId: tofillciId});
         };
         this.gettofillcis = function() {
             return $http.get('/api/tofillcis');
@@ -1125,6 +1129,78 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 alert('You have entered an incorrect OTP.');
             }
         };
+        
+        
+        $scope.$watch('[provider.address, provider.city]', function (newValue, oldValue, scope) {
+            if(newValue != null && newValue[0] != '' && newValue[1] != ''){
+                //console.info(newValue);
+                var address = newValue[0];
+                var city = newValue[0];
+                
+                $timeout(function() {
+                    
+                    GMaps.geocode({
+                    address: address + ", " + city,
+                    callback: function(results, status) {
+
+                        if (status == 'OK') {
+                           
+                            var latlng = {
+                                lat: results[0].geometry.location.lat(),
+                                lng: results[0].geometry.location.lng()
+                            };
+                            
+                            if(!$scope.provider.latlng || $scope.provider.latlng.lat != latlng.lat || $scope.provider.latlng.lng != latlng.lng){
+                                $scope.editLocation = true; 
+                                $scope.provider.latlng = latlng;
+                                console.log($scope.provider.latlng);
+                            }
+                            
+                            
+                        }else{
+                            console.log(status + ' ' + $scope.provider._id);
+
+                            if(status == 'ZERO_RESULTS'){
+                            $scope.provider.latlngna = true; 
+                            }
+                        }
+
+                    }
+                });  
+                    
+                    
+                    
+                }, 250);
+            }
+
+            }, true);
+        
+        $scope.markLatlng = function(){
+            GMaps.geocode({
+                address: $scope.provider.address + ", " + $scope.provider.city,
+                callback: function(results, status) {
+                    
+                    if (status == 'OK') {
+                        console.log(results[0].geometry.location.lat());
+                        $scope.provider.latlng = {
+                            lat: results[0].geometry.location.lat(),
+                            lng: results[0].geometry.location.lng()
+                        };
+                        $scope.showLatLngDialog();
+                        //console.log($scope.provider.latlng);
+                    }else{
+                        console.log(status + ' ' + $scope.provider._id);
+                        
+                        if(status == 'ZERO_RESULTS'){
+                        $scope.provider.latlngna = true; 
+                        }
+                    }
+
+                }
+            });  
+            
+        };
+        
         /*$scope.createUser = function(){
             $scope.newUser = {
                 userType: 'Partner',
@@ -2347,6 +2423,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $mdDialog.cancel();
             },1000)
         };
+        $scope.showLatLngDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#latlngDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
+        
         $scope.showMarkedDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#markedDialog',
@@ -2429,8 +2517,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         if($scope.provider.latlng){
             $scope.provider.mapAddress = [$scope.provider.latlng.lat, $scope.provider.latlng.lng];
+        }else{
+            if($scope.provider.pincode){
+                $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' +
+                $scope.provider.city + ' ' +
+                $scope.provider.pincode;
+            }else{
+                $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' + $scope.provider.city;   
+            }
         }
-        
+        console.log($scope.provider.mapAddress);
         /*if($scope.provider.pincode){
             $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' +
             $scope.provider.city + ' ' +
@@ -2816,8 +2912,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup','$state','$stateParams', '$cookies', function($scope,$rootScope, targetStudyProviderService,thisGroup,$state,$stateParams, $cookies){
         $scope.group = thisGroup.data;
         $scope.group.forEach(function(thisGroup, index){
-            thisGroup.mapAddress = thisGroup.address + ', ' + thisGroup.city;
-            console.log(thisGroup.mapAddress);
+            if(thisGroup.latlng){
+                thisGroup.mapAddress = [thisGroup.latlng.lat, thisGroup.latlng.lng];
+                //console.log(thisGroup.mapAddress);
+            }
+            
         });
         $scope.city = $stateParams.city; 
         
@@ -3110,7 +3209,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
         
     exambazaar.controller("masterDashboardController", 
-        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog){
             
             $scope.usersCount = usersCount.data;
             $scope.studentCount = studentCount.data;
@@ -3207,6 +3306,33 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         console.info(status + " " + data);
                     });
                 }
+            };
+            
+            
+            $scope.showRemoveConfirm = function(tofillci, ev) {
+                console.info(JSON.stringify(tofillci.institute));
+                console.info(JSON.stringify(tofillci.user));
+                
+                var confirm = $mdDialog.confirm()
+                    .title('Would you like to remove ' + tofillci.institute.name + ' for ' +  tofillci.user.name + '?')
+                    .textContent('Assigned on: ' + moment(tofillci._created).format('DD-MMM HH:mm') + ', Deadline: ' + moment(tofillci._deadline).format('DD-MMM HH:mm') + '!')
+                    .ariaLabel('Lucky day')
+                    .targetEvent(ev)
+                    .clickOutsideToClose(true)
+                    .ok('Confirm')
+                    .cancel('Cancel');
+                    $mdDialog.show(confirm).then(function() {
+                      $scope.removeAssigned(tofillci);
+                    }, function() {
+                      //nothing
+                    });
+
+            };
+            
+            $scope.removeAssigned = function(tofillci){
+                console.log(tofillci);
+                tofillciService.removeAssigned(tofillci._id);
+                $state.reload();
             };
             
     }]);
@@ -5330,6 +5456,7 @@ function getLatLng(thisData) {
                 "587126eb72dbba182cb4a644",
                 "587137ad5f53bc1f94b020ee",
                 "5870d1271a807f0011545807",
+                "58f5ed043d592300f42b5c72"
             ];
             $scope.update = function(instituteId){
                 $scope.email.instituteId = instituteId;

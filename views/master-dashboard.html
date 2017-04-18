@@ -206,9 +206,10 @@
                 <div layout="column" layout="center center" flex="10">Deadline</div>
                 <div layout="column" layout="center center" flex="10">Finished?</div>
                 <div layout="column" layout="center center" flex="10">Finished on</div>
-                <div layout="column" layout="center center" flex="15">Name</div>
-                <div layout="column" layout="center center" flex="25">Institute</div>
-                <div layout="column" layout="center center" flex="5">Id</div>
+                <div layout="column" layout="center center" flex="10">Name</div>
+                <div layout="column" layout="center center" flex="20">Institute</div>
+                <div layout="column" layout="center center" flex="15">Id</div>
+                <div layout="column" layout="center center" flex="5">Remove</div>
             </div>
             <div layout="row" ng-repeat="tofillci in tofillciList | orderBy:['-active','-_finished','_deadline','_created']" class="width100 greyDashedBottomBorder" ng-class="{ pending: tofillci.active, noEmail: tofillci.noEmail }">
                 <div layout="column" layout="center center" flex="5">{{$index + 1}}</div>
@@ -216,14 +217,14 @@
                 <div layout="column" layout="center center" flex="10">{{tofillci._deadline | date: "dd-MMM-yy HH:mm"}}</div>
                 <div layout="column" layout="center center" flex="10" ng-class="{ pending2: tofillci.active }">{{!tofillci.active}}</div>
                 <div layout="column" layout="center center" flex="10">{{tofillci._finished | date: "dd-MMM-yy HH:mm"}}</div>
-                <div layout="column" layout="center center" flex="15">{{tofillci.user.name}}</div>
-                <div layout="column" layout="center center" flex="25">
+                <div layout="column" layout="center center" flex="10">{{tofillci.user.name}}</div>
+                <div layout="column" layout="center center" flex="20">
                     <a ui-sref="claim({ coachingId:{{'tofillci.institute._id'}} })" target="_blank" id="link">
                     <strong>{{tofillci.institute.name}}</strong>
                     </a>
                 </div>
-                <div layout="column" layout="center center" flex="5">{{tofillci.institute._id}}</div>
-                
+                <div layout="column" layout="center center" flex="15">{{tofillci.institute._id}}</div>
+                <div layout="column" layout="center center" flex="5"><span ng-if="tofillci.active" ng-click="showRemoveConfirm(tofillci)"><i class="fa fa-times-circle" aria-hidden="true"></i></span></div>
             </div>
         </div>
     </div>

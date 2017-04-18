@@ -1060,8 +1060,9 @@ router.post('/savecoaching', function(req, res) {
             console.log("New Coaching is: " + JSON.stringify(thisProvider));
             for (var property in thisProvider) {
                 oldProvider[property] = thisProvider[property];
-                if(property=='location'){
+                if(property=='latlng'){
                     //console.log('Yes location is there: ' + thisProvider[property]);
+                    oldProvider['latlngna'] = false;
                 }
             }
             if(userId){

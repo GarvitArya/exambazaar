@@ -6,6 +6,7 @@ var tofillci = require('../app/models/tofillci');
 
 
 var mongoose = require('mongoose');
+var mongodb = require('mongodb');
 var db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', function() {});
@@ -26,6 +27,20 @@ router.get('/edit/:tofillciId', function(req, res) {
     });
 });
 
+router.get('/remove/:tofillciId', function(req, res) {
+    var tofillciId = req.params.tofillciId;
+    console.log(tofillciId);
+    
+    
+    tofillci.remove({_id: new mongodb.ObjectID(tofillciId)}, function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(tofillciId + ' removed!');
+            res.json("Done");
+        }                              
+    });
+});
 router.get('/filledCount', function(req, res) {
     tofillci.distinct( "institute",{active: false},function(err, docs) {
     if (!err){
@@ -77,6 +92,7 @@ router.get('/', function(req, res) {
             var nLength = tofillcis.length;
             tofillcis.forEach(function(thisFillTask, index){
                 var newTask = {
+                    _id: thisFillTask._id,
                     user: {
                         _id: thisFillTask.user._id,
                         name: thisFillTask.user.basic.name,
