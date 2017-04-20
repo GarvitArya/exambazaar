@@ -99,7 +99,7 @@
         min-height: 200vh;
     }
     #heroHeader{
-        margin-top: 10px;
+        margin-top: 0px;
         background-color: rgba(0,0,0,0.8);
         color: white;
         min-height: 25vh;
@@ -240,6 +240,8 @@
         color: #ccc;
         margin-right: 10px;
         padding:10px;
+        font-size: 40px;
+        outline-style: none;
     }
     #prevButton:hover{
         color: #20C39A;
@@ -248,8 +250,18 @@
         color: #ccc;
         margin-left: 10px;
         padding:10px;
+        font-size: 40px;
+        outline-style: none;
     }
     #nextButton:hover{
+        color: #20C39A;
+    }
+    #closeButton{
+        color: #ccc;
+        font-size: 15px;
+        outline-style: none;
+    }
+    #closeButton:hover{
         color: #20C39A;
     }
     .thumb{
@@ -1893,7 +1905,7 @@
       <md-dialog class="fullscreen-dialog dialogText">
         <div layout="row" layout-xs="column" layout-fill layout-margin>
             <div hide-gt-xs flex-xs="5">
-            <span class="pull-right md-subhead" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
             </div>
             <div flex-gt-xs="65" flex-xs="65" layout = "row" layout-xs="column">
                 <div flex="100" layout = "column">
@@ -1901,7 +1913,7 @@
                         <div layout="row" layout-align="center center" class="fillParent">
                             <div flex="10" class="fillParent" layout="row" layout-align="center center">
                              <span id = "prevButton" class="md-subhead" ng-click="prevFaculty()">
-                              <i class="fa fa-chevron-left" aria-hidden="true" ></i>
+                              <i class="fa fa-chevron-circle-left" aria-hidden="true" ></i>
                              </span>
                             </div>
                             <div flex="80" class="fillParent" layout="row" layout-align="center center">
@@ -1909,7 +1921,7 @@
                             </div>
                             <div flex="10" class="fillParent" layout="row" layout-align="center center">
                              <span id = "nextButton"  class="md-subhead" ng-click="nextFaculty()">
-                              <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                              <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
                              </span>
                             </div>
                         </div>
@@ -1948,7 +1960,7 @@
                 </div>
             </div>
             <div hide-xs flex-gt-xs="5">
-            <span class="pull-right text-white md-subhead" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
             </div>
         </div>
       </md-dialog>
@@ -1960,7 +1972,7 @@
       <md-dialog class="fullscreen-dialog dialogText">
         <div layout="row" layout-xs="column" layout-fill layout-margin>
             <div hide-gt-xs flex-xs="5">
-            <span class="pull-right md-subhead" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
             </div>
             <div flex-gt-xs="65" flex-xs="65" layout = "row" layout-xs="column">
                 <div flex="100" layout = "column">
@@ -1968,7 +1980,7 @@
                         <div layout="row" layout-align="center center" class="fillParent">
                             <div flex="10" class="fillParent" layout="row" layout-align="center center">
                              <span id = "prevButton" class="md-subhead" ng-click="prevResult()">
-                              <i class="fa fa-chevron-left" aria-hidden="true" ></i>
+                              <i class="fa fa-chevron-circle-left" aria-hidden="true" ></i>
                              </span>
                             </div>
                             <div flex="80" class="fillParent" layout="row" layout-align="center center">
@@ -1976,7 +1988,7 @@
                             </div>
                             <div flex="10" class="fillParent" layout="row" layout-align="center center">
                              <span id = "nextButton"  class="md-subhead" ng-click="nextResult()">
-                              <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                              <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
                              </span>
                             </div>
                         </div>
@@ -2014,7 +2026,7 @@
                 </div>
             </div>
             <div hide-xs flex-gt-xs="5">
-            <span class="pull-right text-white md-subhead" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
             </div>
         </div>
       </md-dialog>
@@ -2026,15 +2038,15 @@
       <md-dialog class="fullscreen-dialog dialogText">
         <div layout="row" layout-xs="column" layout-fill layout-margin>
             <div hide-gt-xs flex-xs="5">
-            <span class="pull-right md-subhead" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
             </div>
             <div flex-gt-xs="95" flex-xs="95" layout = "row" layout-xs="column">
-                <div flex="100" layout = "column">
+                <div flex="100" layout ="column">
                     <div flex="80" >
                         <div layout="row" layout-align="center center" class="fillParent">
                             <div flex="10" class="fillParent" layout="row" layout-align="center center">
                              <span id = "prevButton" class="md-subhead" ng-click="prevPhoto()">
-                              <i class="fa fa-chevron-left" aria-hidden="true" ></i>
+                              <i class="fa fa-chevron-circle-left" aria-hidden="true" ></i>
                              </span>
                             </div>
                             <div flex="80" class="fillParent" layout="row" layout-align="center center">
@@ -2042,7 +2054,7 @@
                             </div>
                             <div flex="10" class="fillParent" layout="row" layout-align="center center">
                              <span id = "nextButton"  class="md-subhead" ng-click="nextPhoto()">
-                              <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                              <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
                              </span>
                             </div>
                         </div>
@@ -2080,8 +2092,8 @@
                     </small>
                 </div>
             </div>
-            <div hide-xs flex-gt-xs="5">
-            <span class="pull-right text-white md-subhead" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            <div hide-xs flex-gt-xs="5" class="" layout="row" layout-align="end start">
+            <span class="pull-right" ng-click="cancel()" id="closeButton"><i class="fa fa-times" aria-hidden="true"></i></span>
             </div>
         </div>
       </md-dialog>

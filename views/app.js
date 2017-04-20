@@ -1067,6 +1067,217 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }, true);
     }]);  
     
+   
+    exambazaar.controller("showGroupController", 
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService){
+        $scope.exam = thisExam.data;
+        $scope.category = thisStream.data;
+        $scope.categoryName = $stateParams.categoryName;
+        $scope.subCategoryName = $stateParams.subCategoryName;
+        $scope.subcategory = $scope.exam;
+        $scope.city = $stateParams.cityName; 
+        $scope.allExams = examList.data;
+        $scope.allStreams = streamList.data;
+        $scope.playerVars = {
+            controls: 1,
+            showinfo: 0
+        };
+        //console.log($scope.allExams);
+        if($cookies.getObject('sessionuser')){
+            $scope.user = $cookies.getObject('sessionuser');
+            /*var viewForm = {
+                institute: $scope.provider._id,
+                user: $scope.user.userId,
+                claim: true
+            };
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                //console.info('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.info();
+            });*/
+            UserService.getUserShortlisted($scope.user.userId).success(function (data, status, headers) {
+                var shortlistedIds = data.map(function(a) {return a._id;});
+                if(shortlistedIds.indexOf($scope.provider._id) != -1){
+                    $scope.shortlisted = true;
+                }
+                //console.info(data);
+            })
+            .error(function (data, status, header, config) {
+                console.info('Shortlist Error' + status + " " + data);    
+            }); 
+            
+            /*if($scope.user.userType=='Master'){
+                $scope.editable = true;
+                $scope.verifiedUser = true;
+                $scope.ebuser = true;
+            }
+            if($scope.user.userType=='Intern - Business Development'){
+                $scope.editable = true;
+                $scope.verifiedUser = true;
+                $scope.ebuser = true;
+                //$scope.showClaimDialog();
+            }
+            if($scope.user.userType=='Partner'){
+                $scope.verifiedUser = true;
+                $scope.ebuser = false;
+                if($scope.user.partner.indexOf($scope.provider._id) != -1){
+                    if(!$scope.provider.primaryManagement || $scope.provider.primaryManagement.name =='' || $scope.provider.primaryManagement.mobile ==''){
+                        //alert('Here');
+                        $scope.editable = false;
+                        $scope.showAddPrimaryManagement();
+                    }else{
+                        $scope.editable = true;
+                    }
+                    
+                    
+                    
+                }else{
+                    $scope.editable = false;
+                    $scope.showUnauthorizedAccess();
+                    //alert('You are not authorised to edit this institute. Contact EB team for more.');
+                }
+                
+            }*/
+        }else{
+            //user is not allowed to access this page
+            /*var viewForm = {
+                institute: $scope.provider._id,
+                claim: true
+            };
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                console.info('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.info();
+            });*/
+        }
+        
+        $scope.overviewIcons = [
+            {
+                icon:'images/icons/centre.png',
+                text:'Centres',
+                data: '1'
+            },
+            {
+                icon:'images/icons/city.png',
+                text:'Cities',
+                data: '1'
+            },
+            {
+                icon:'images/icons/students.png',
+                text:'Students',
+                data: '100'
+            },
+            {
+                icon:'images/icons/faculty.png',
+                text:'Faculty',
+                data: '10'
+            }
+        ];
+        $scope.components = [
+            /*'Overview',*/
+            'Contact',
+            'Exams',
+            'Results',
+            'Courses',
+            'Photos',
+            'Videos',
+            'Faculty',
+            'Location'
+        ];
+        
+        $scope.rankCategories = [
+            'GENERAL',    
+            'OBC-NCL',    
+            'SC/ST',    
+            'PwD'   
+        ];
+        $scope.resultYears = [
+            '2017',    
+            '2016',    
+            '2015',    
+            '2014',    
+            '2013',    
+            '2012',    
+            '2011',    
+            '2010',    
+            '2009',    
+            '2008',    
+            '2007',    
+            '2006',    
+            '2005',    
+            '2004',    
+            '2003'    
+        ];
+        
+        
+        $scope.group = thisGroup.data;
+        $scope.provider = {
+            name: $stateParams.groupName,
+            city: $stateParams.cityName
+        };
+        $scope.groupExams = [];
+        $scope.groupStreams = [];
+        $scope.groupPhotos = [];
+        $scope.groupVideos = [];
+        $scope.groupCourses = [];
+        $scope.groupFaculties = [];
+        var groupExamIds = [];
+        var groupStreamIds = [];
+               
+        $scope.group.forEach(function(thisGroup, index){
+            if(thisGroup.latlng){
+                thisGroup.mapAddress = [thisGroup.latlng.lat, thisGroup.latlng.lng];
+                //console.log(thisGroup.mapAddress);
+            }
+            if(thisGroup.logo){
+                $scope.provider.logo = thisGroup.logo;
+            }
+            var thisGroupExams = thisGroup.exams;
+            thisGroupExams.forEach(function(thisExam, index){
+                groupExamIds = $scope.groupExams.map(function(a) {return a.exam._id;});
+                var eIndex = groupExamIds.indexOf(thisExam._id);
+                
+                if(eIndex == -1){
+                    var newGroupExam = {
+                        exam: thisExam,
+                        centre: [thisGroup]
+                    };
+                    var thisStream = thisExam.stream;
+                    groupStreamIds = $scope.groupStreams.map(function(a) {return a._id;});
+                    if(groupStreamIds.indexOf(thisStream._id) == -1){ $scope.groupStreams.push(thisStream);
+                    }
+                    $scope.groupExams.push(newGroupExam);
+                }else{
+                    var groupExam = $scope.groupExams[eIndex];
+                    groupExam.centre.push(thisGroup);
+                }
+            });
+            var thisGroupPhoto = thisGroup.photo;
+            var thisGroupVideo = thisGroup.video;
+            var thisGroupFaculty = thisGroup.faculty;
+            var thisGroupCourse = thisGroup.course;
+            $scope.groupPhotos = $scope.groupPhotos.concat(thisGroupPhoto);
+            $scope.groupVideos = $scope.groupVideos.concat(thisGroupVideo);
+            $scope.groupFaculties = $scope.groupFaculties.concat(thisGroupFaculty);
+            $scope.groupCourses = $scope.groupCourses.concat(thisGroupCourse);
+        });
+        $scope.groupExamsOnly = $scope.groupExams.map(function(a) {return a.exam;});
+        
+        
+        
+    }]);    
+           
+   
     exambazaar.controller("claimController", 
     [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
@@ -1356,7 +1567,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         if($cookies.getObject('sessionuser')){
             $scope.user = $cookies.getObject('sessionuser');
-            //Mark the view
             var viewForm = {
                 institute: $scope.provider._id,
                 user: $scope.user.userId,
@@ -1372,8 +1582,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .error(function (data, status, header, config) {
                 console.info();
             });
-
-            
             UserService.getUserShortlisted($scope.user.userId).success(function (data, status, headers) {
                 var shortlistedIds = data.map(function(a) {return a._id;});
                 if(shortlistedIds.indexOf($scope.provider._id) != -1){
@@ -2209,7 +2417,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         function startEndIndex (index, arrayLength){
             
-            var showLength = 6;
+            var showLength = 10;
             var indexPair = {
                 start: 0,
                 end: arrayLength
@@ -2907,22 +3115,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
     }]);     
-   
-    exambazaar.controller("showGroupController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup','$state','$stateParams', '$cookies', function($scope,$rootScope, targetStudyProviderService,thisGroup,$state,$stateParams, $cookies){
-        $scope.group = thisGroup.data;
-        $scope.group.forEach(function(thisGroup, index){
-            if(thisGroup.latlng){
-                thisGroup.mapAddress = [thisGroup.latlng.lat, thisGroup.latlng.lng];
-                //console.log(thisGroup.mapAddress);
-            }
-            
-        });
-        $scope.city = $stateParams.city; 
-        
-    }]);    
-           
-   
    
     exambazaar.controller("showCoachingController", 
     [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies','thisStream','thisExam', '$document', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies,thisStream,thisExam,$document){
@@ -5419,7 +5611,7 @@ function getLatLng(thisData) {
                 $scope.sendingMode = !$scope.sendingMode;
             };
             $scope.email = {
-                to: 'vikrantrmlnlu@gmail.com',
+                to: 'gauravparashar294@gmail.com',
                 templateName: 'Claim CI Email - 5thApril2017',
                 sender: '',
                 senderId: '',
@@ -5427,6 +5619,8 @@ function getLatLng(thisData) {
                 subject: '',
                 html: "",
                 instituteName:'',
+                instituteAddress:'',
+                institutePhoneMobile:'',
                 instituteId:'',
                 logo:''
             };
@@ -5510,28 +5704,55 @@ function getLatLng(thisData) {
             }
             $scope.$watch('email.instituteId', function (newValue, oldValue, scope) {
             if(newValue != null && newValue != ''){
-                console.info(newValue);
+                //console.info(newValue);
                 //DEF
                 var newValueArr = newValue.split("/");
                 newValue = newValueArr[newValueArr.length-1];
-                console.info(newValue);
+                //console.info(newValue);
                 if(newValue.length > 5){
-                    //alert($scope.email.instituteId);
-                    targetStudyProviderService.getProviderBasic(newValue).success(function (refreshedProvider, status, headers) {
-                    if(refreshedProvider){
-                        
-                        $scope.provider = refreshedProvider;
-                        $scope.email.instituteName = $scope.provider.name;
-                        $scope.email.instituteId = $scope.provider._id;
-                        $scope.email.logo = $scope.provider.logo;
-                        $scope.email.subject = $scope.provider.name + ' - Claim your free Exambazaar Listing today';
+                //alert($scope.email.instituteId);
+                targetStudyProviderService.getProviderBasic(newValue).success(function (refreshedProvider, status, headers) {
+                if(refreshedProvider){
+                    $scope.provider = refreshedProvider;
+                    //console.log($scope.provider);
+                    $scope.email.instituteName = $scope.provider.name;
+                    $scope.email.instituteAddress = $scope.provider.address + ', ' + $scope.provider.city;
+                    if($scope.provider.pincode){
+                        $scope.email.instituteAddress += $scope.provider.pincode;
                     }
                     
+                    $scope.email.institutePhoneMobile = '';
                     
-
-                    }).error(function (data, status, header, config) {
-                        console.info("Error ");
+                    $scope.provider.mobile.forEach(function(thisMobile, mIndex){
+                        if(mIndex == 0){
+                           $scope.email.institutePhoneMobile += 'Mobile: ';
+                        }
+                        
+                        $scope.email.institutePhoneMobile += thisMobile;
+                        if(mIndex != $scope.provider.mobile.length - 1){
+                            $scope.email.institutePhoneMobile += ', ';
+                        }
                     });
+
+                    $scope.provider.phone.forEach(function(thisPhone, pIndex){
+                        if(pIndex == 0){
+                           $scope.email.institutePhoneMobile += ' Phone: ';
+                        }
+                        
+                        $scope.email.institutePhoneMobile += thisPhone;
+                        if(pIndex != $scope.provider.phone.length - 1){
+                        $scope.email.institutePhoneMobile += ', ';
+                        }
+                    });
+                    //console.log($scope.email.institutePhoneMobile);
+                    
+                    $scope.email.instituteId = $scope.provider._id;
+                    $scope.email.logo = $scope.provider.logo;
+                    $scope.email.subject = $scope.provider.name + ' - Control your free Exambazaar Listing today';
+                }
+                }).error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
                 }
 
 
@@ -5843,6 +6064,14 @@ function getLatLng(thisData) {
                 thisExam: ['ExamService','$stateParams',
                     function(ExamService,$stateParams){
                     return ExamService.getExamByName($stateParams.subCategoryName);
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
                 }],
                 thisGroup: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService,$stateParams) {

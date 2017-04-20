@@ -968,7 +968,7 @@ router.get('/query/:query', function(req, res) {
         //console.log(docs);
         res.json(docs);
     } else {throw err;}
-    }); //.limit(500) .sort( { rank: -1 } )
+    }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
 });
 
 router.get('/group/:query', function(req, res) {
@@ -1150,7 +1150,7 @@ router.post('/coachingGroup', function(req, res) {
     
     var thisGroup = targetStudyProvider
         .find({'groupName': groupName, city: cityName, disabled:false})
-        /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
+        .deepPopulate('exams exams.stream location')
         .exec(function (err, thisGroup) {
         if (!err){
             console.log(thisGroup);
@@ -1442,12 +1442,39 @@ router.get('/logoService', function(req, res) {
 
 router.get('/UniqueLogoService', function(req, res) {
     console.log("Getting all logos");
-    targetStudyProvider.distinct( "logo",function(err, docs) {
+    
+    
+    targetStudyProvider.find({logo: {$exists: true, $ne: ''}},{groupName:1, logo:1},function(err, allProviders) {
+    if (!err){
+        var uniqueGroups = [];
+        var uniqueLogos = [];
+        var counter = 0; 
+        var nLength = allProviders.length;
+        //res.json('Done');
+        allProviders.forEach(function(thisprovider, index){
+            var groupName = thisprovider.groupName;
+            var logo = thisprovider.logo;
+            counter = counter + 1;
+            if(uniqueGroups.indexOf(groupName) == -1){
+                uniqueGroups.push(groupName);
+                uniqueLogos.push(logo);
+            }
+            if(counter == nLength){
+                //console.log(uniqueLogos);
+                res.json(uniqueLogos);
+            }
+        });
+        
+        
+    } else {throw err;}
+    }).limit(1000);
+    
+    /*targetStudyProvider.distinct( "logo",function(err, docs) {
     if (!err){ 
         console.log('There are: ' + docs.length + ' unique logos!');
         res.json(docs);
     } else {throw err;}
-    });
+    });*/
 });
 
 router.get('/allDistinct', function(req, res) {

@@ -83,8 +83,13 @@ router.post('/sendGrid', function(req, res) {
     var subject = thisEmail.subject;
     var name = thisEmail.name;
     var instituteName = thisEmail.instituteName;
+    var instituteAddress = thisEmail.instituteAddress;
+    var institutePhoneMobile = thisEmail.institutePhoneMobile;
     var instituteId = thisEmail.instituteId;
     var logo = thisEmail.logo;
+    if(!logo){
+        logo='https://s3.ap-south-1.amazonaws.com/exambazaar/logo/white.png';
+    }
     var prefix = "https://s3.ap-south-1.amazonaws.com/exambazaar/listingSnapshot/";
     var fileName = thisEmail.instituteId+'.png';
     var listingSnapshot = prefix + fileName;
@@ -135,6 +140,10 @@ router.post('/sendGrid', function(req, res) {
                     //mail.Substitution('-name-', name);
                     //mail.personalizations = [];
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteName-', instituteName));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteAddress-', instituteAddress));
+                    
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-institutePhoneMobile-', institutePhoneMobile));
+                    
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteId-', instituteId));
                     console.log('Setting image as: ' + listingSnapshot);
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-listingSnapshot-', listingSnapshot));
