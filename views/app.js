@@ -5663,7 +5663,7 @@ function getLatLng(thisData) {
                 $scope.sendingMode = !$scope.sendingMode;
             };
             $scope.email = {
-                to: 'gauravparashar294@gmail.com',
+                to: '',
                 templateName: 'Claim CI Email - 5thApril2017',
                 sender: '',
                 senderId: '',
@@ -5764,10 +5764,16 @@ function getLatLng(thisData) {
                 //console.info(newValue);
                 if(newValue.length > 5){
                 //alert($scope.email.instituteId);
-                targetStudyProviderService.getProviderBasic(newValue).success(function (refreshedProvider, status, headers) {
-                if(refreshedProvider){
+                targetStudyProviderService.getProviderBasic(newValue).success(function (data, status, headers) {
+                if(data){
+                    console.info(data);
+                    var refreshedProvider = data.provider;
+                    $scope.emailSent = data.emailSent;
+                    $scope.emailSent.forEach(function(thisEmail, eIndex){
+                        thisEmail.fromNow = moment(thisEmail._date).fromNow();;
+                    });
                     $scope.provider = refreshedProvider;
-                    //console.log($scope.provider);
+                    //console.log(emailSent);
                     $scope.email.instituteName = $scope.provider.name;
                     $scope.email.instituteAddress = $scope.provider.address + ', ' + $scope.provider.city;
                     if($scope.provider.pincode){

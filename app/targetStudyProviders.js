@@ -4,6 +4,7 @@ var router = express.Router();
 var config = require('../config/mydatabase.js');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
 var cisaved = require('../app/models/cisaved');
+var email = require('../app/models/email');
 var disableProvider = require('../app/models/disableProvider');
 var oldtargetStudyProvider = require('../app/models/oldtargetStudyProvider');
 var exam = require('../app/models/exam');
@@ -1168,7 +1169,45 @@ router.get('/basiccoaching/:coachingId', function(req, res) {
             .exec(function (err, thisProvider) {
             if (!err){
                 if(thisProvider){
-                    res.json(thisProvider);
+                    var coachingId = thisProvider._id;
+                    
+                    var emails = email
+                    .find({'institute': coachingId},{})
+                    .deepPopulate('user')
+                    .exec(function (err, emails) {
+                    if (!err){
+                        var emailsBasic = [];
+                        var counter = 0;
+                        var nLength = emails.length;
+                        emails.forEach(function(thisEmail, emailIndex){
+                            var newemailUser = {
+                                user: thisEmail.user._id,
+                                name: thisEmail.user.basic.name,
+                                _date: thisEmail._date
+                            }
+                            console.log(newemailUser);
+                            counter = counter + 1;
+                            emailsBasic.push(newemailUser);
+                            if(counter == nLength){
+                                var providerBasic = {
+                                    provider: thisProvider,
+                                    emailSent: emailsBasic
+                                };
+                                
+                                
+                                res.json(providerBasic);
+                            }
+
+                        });
+                        if(nLength==0){
+                            res.json(thisProvider);
+                        }
+                        //ABC
+
+
+                    } else {throw err;}
+                });
+                    
                 }else{
                     res.json(null);
                 }

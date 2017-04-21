@@ -27,6 +27,7 @@
     }
     #logo{
         max-height: 30px;
+        max-width: 60px;
     }
 </style>
 <div class="container">
@@ -45,7 +46,7 @@
             <div layout="column" >
                 <div layout="row">
                     <md-input-container class="width50 text-primary">
-                      <md-select ng-model="email.templateName"  placeholder="Select Templated" required>
+                      <md-select ng-model="email.templateName"  placeholder="Select Template" required>
 
                         <md-option ng-value="templateName" ng-repeat="templateName in templateNames" class="text-primary" >
                             <!--ng-click="update(mobile)"-->
@@ -105,6 +106,12 @@
                         <input required ng-model="email.subject">
                     </md-input-container>
                 </div>
+                <div layout="column" layout-align="center center">
+                    <span class="secondFont bold">Earlier Emails Sent</span>
+                    <div class="editFont" ng-repeat="email in emailSent">
+                        {{email.name}} on {{email._date | date: "dd-MMM-yy HH:mm"}} ({{email.fromNow}})
+                    </div>
+                </div>
                 <!--<md-input-container class="md-block" flex-gt-sm>
                     <label>Content</label>
                     <input ng-model="email.html">
@@ -118,8 +125,34 @@
         </md-content>
         
         <md-content flex layout-padding ng-show="!sendingMode">
+            <div flex layout="row" layout-align="start center" class="font8 width100 bold">
+                <div flex="5">
+                    No.
+                </div>
+                <div flex="10">
+                    Date
+                </div>
+                <div flex="10">
+                    Logo
+                </div>
+                <div flex="15">
+                    Institute Name
+                </div>
+                <div flex="15">
+                    Sent To
+                </div>
+                <div flex="15">
+                    Sent From
+                </div>
+                <div flex="10">
+                    Status
+                </div>
+                <div flex="10">
+                    Institute Id
+                </div>
             
-            <div flex layout="row" layout-align="start center" ng-repeat="email in userEmails" class="fourthFont width100">
+            </div>
+            <div flex layout="row" layout-align="start center" ng-repeat="email in userEmails | orderBy:'-_date'" class="font8 width100">
                 <div flex="5">
                     {{$index + 1}}
                 </div>
@@ -132,19 +165,22 @@
                 <div flex="15">
                     {{email.institute.name}}
                 </div>
-                <div flex="25">
+                <div flex="15">
                     {{email.to}}
                 </div>
-                <div flex="25">
+                <div flex="15">
                     {{email.fromEmail.email}}
                 </div>
-                <div flex="15">
+                <div flex="10">
                     <span ng-if="email.response.status =='202'" class="text-primary">
                         Success
                     </span>
                     <span ng-if="!email.response.status =='202'" class="danger">
                         Failed
                     </span>
+                </div>
+                <div flex="10">
+                    {{email.institute._id}}
                 </div>
             </div>
         </md-content>
