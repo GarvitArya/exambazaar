@@ -1183,6 +1183,8 @@ router.get('/basiccoaching/:coachingId', function(req, res) {
                             var newemailUser = {
                                 user: thisEmail.user._id,
                                 name: thisEmail.user.basic.name,
+                                to: thisEmail.to,
+                                fromEmail: thisEmail.fromEmail,
                                 _date: thisEmail._date
                             }
                             console.log(newemailUser);
