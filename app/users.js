@@ -180,6 +180,32 @@ router.get('/userexists/:mobile', function(req, res) {
     
 });
 
+router.post('/markLatLng', function(req, res) {
+    //console.log('Here');
+    var positionForm = req.body;
+    var userId = positionForm.userId;
+    var latlng = positionForm.latlng;
+    console.log('Here');
+    //console.log('Position form is: ' + positionForm);
+    var thisUser = user
+        .findOne({ '_id': userId },{latlng:1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            
+            if(latlng){
+                thisUser.latlng = latlng;
+                thisUser.save(function(err, thisUser) {
+                if (err) return console.error(err);
+                    //console.log('User login at: ' + newLogin.loginTime);
+                });
+                
+            }
+            res.json("Done");
+        } else {throw err;}
+    });
+    
+});
+
 router.post('/markLogin', function(req, res) {
     //console.log('Here');
     var loginForm = req.body;

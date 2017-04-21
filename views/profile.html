@@ -14,8 +14,8 @@
 <div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
-    <div flex layout="row" layout-align="start center">
-        <div flex layout="column" layout-align="center center" layout-margin>
+    <div flex layout="row" layout-align="start center" class="padded">
+        <div flex layout="column" layout-align="center center">
             <span ng-if="user.basic">Welcome, {{user.basic.name}}</span>
             <!--<span>User Type: {{user.userType}}</span>-->
             <span ng-if="user.basic">Last Login: {{user.logins[user.logins.length-1] | date: 'dd-MMM-yyyy HH:mm'}}</span>
@@ -34,6 +34,19 @@
                 </div>
                 
             </div>
+        </div>
+        
+    </div>
+    <div flex layout="column" layout-align="start start" class="padded">
+        <span>Tell us where you live</span>
+        <div ng-if="user.latlng" class="width50">
+            <ng-map center="current-location"  zoom="14">
+                
+                <marker position="current-location"
+                      title="ABC"
+                      animation="Animation.DROP"
+                      centered="true"></marker>
+              </ng-map>
         </div>
         
     </div>

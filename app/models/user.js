@@ -48,7 +48,11 @@ var userSchema = mongoose.Schema({
             query: {type: String},
         },
             
-    }] //,required: true
+    }],
+    latlng: {
+        lat: {type: String},
+        lng: {type: String}
+    }
 });
 userSchema.plugin(passportLocalMongoose);
 

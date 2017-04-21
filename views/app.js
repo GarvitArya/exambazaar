@@ -216,6 +216,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             //alert('Here');
             return $http.post('/api/users/markLogin',loginForm);
         };
+        this.markLatLng = function(positionForm) {
+            //alert('Here');
+            return $http.post('/api/users/markLatLng',positionForm);
+        };
         this.shortlistInstitute = function(shortListForm) {
             return $http.post('/api/users/shortlistInstitute', shortListForm);
         };
@@ -3599,6 +3603,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                             email: fulluser.email,
                             
                         };
+                        
+                            
+                        
                         $cookies.putObject('sessionuser', sessionuser);
                         if($state.current.name == 'main' || $state.current.name == 'landing' || $state.current.name == 'login'){
                             if(sessionuser.userType =='Master'){
@@ -3654,7 +3661,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 city: data.city,
                 country: data.country,
                 lat: data.lat,
-                long: data.long,
+                lng: data.lon,
                 zip: data.zip,
                 org: data.org,
                 as: data.as,
@@ -5159,10 +5166,15 @@ function getLatLng(thisData) {
     }]);       
         
     exambazaar.controller("profileController", 
-        [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'Upload', 'ImageService', 'UserService', function($scope, thisuser,$http,$state,$rootScope, $cookies, Upload, ImageService, UserService){
+        [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'Upload', 'ImageService', 'UserService', 'ipService', function($scope, thisuser,$http,$state,$rootScope, $cookies, Upload, ImageService, UserService, ipService){
         $scope.user = thisuser.data;
+        if($cookies.getObject('sessionuser')){
+            var sessionuser = $cookies.getObject( 'sessionuser');
+        }
         
-        
+        //console.log($scope.user);    
+           
+            
         $scope.uploadPic = function (newPic) {
             //var pic = $scope.newPic;
             var pic = [newPic];
@@ -5230,8 +5242,48 @@ function getLatLng(thisData) {
             });
             }
          };
+        
+        GMaps.geolocate({
+          success: function(position) {
+            map.setCenter(position.coords.latitude, position.coords.longitude);
+          },
+          error: function(error) {
+            alert('Geolocation failed: '+error.message);
+          },
+          not_supported: function() {
+            alert("Your browser does not support geolocation");
+          },
+          always: function() {
+            alert("Done!");
+          }
+        });    
             
+        $scope.$on('mapInitialized', function(evt, evtMap) {
+            $scope.map = evtMap;
             
+            var latlng = {
+                lat: $scope.map.markers[0].getPosition().lat(),
+                lng: $scope.map.markers[0].getPosition().lng()
+            };
+            console.info(latlng);
+            if(latlng.lat && latlng.lng && latlng.lat !='' && latlng.lng !=''){
+                
+                //console.info('Hi');
+                //console.info($scope.user);
+                var positionForm = {
+                    userId: $scope.user._id,
+                    latlng: latlng
+                };
+                
+                UserService.markLatLng(positionForm).success(function (data, status, headers) {
+                    console.info('Position marked: ' + JSON.stringify(latlng));
+                })
+                .error(function (data, status, header, config) {
+                    console.info(status + " " + data);    
+                });
+            }
+        });
+
             
         if($scope.user.basic)
             $rootScope.title =$scope.user.basic.name;
@@ -5708,6 +5760,7 @@ function getLatLng(thisData) {
                 //DEF
                 var newValueArr = newValue.split("/");
                 newValue = newValueArr[newValueArr.length-1];
+                $scope.email.instituteId = newValue;
                 //console.info(newValue);
                 if(newValue.length > 5){
                 //alert($scope.email.instituteId);
@@ -5748,7 +5801,7 @@ function getLatLng(thisData) {
                     
                     $scope.email.instituteId = $scope.provider._id;
                     $scope.email.logo = $scope.provider.logo;
-                    $scope.email.subject = $scope.provider.name + ' - Control your free Exambazaar Listing today';
+                    $scope.email.subject = $scope.provider.name + ' - Claim Your Free Exambazaar Listing Now';
                 }
                 }).error(function (data, status, header, config) {
                     console.info("Error ");
