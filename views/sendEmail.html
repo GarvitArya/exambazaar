@@ -100,7 +100,7 @@
                 </div>
                 <div layout="column" layout-align="center center">
                     <span class="secondFont bold">Earlier Emails Sent</span>
-                    <div class="editFont" ng-repeat="email in emailSent">
+                    <div class="font8" ng-repeat="email in emailSent">
                         {{email.name}} on {{email._date | date: "dd-MMM-yy HH:mm"}} ({{email.fromNow}}). From Email: {{email.fromEmail.email}}, To Email: {{email.to}}
                     </div>
                 </div>
