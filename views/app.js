@@ -5760,18 +5760,22 @@ function getLatLng(thisData) {
                 //DEF
                 var newValueArr = newValue.split("/");
                 newValue = newValueArr[newValueArr.length-1];
-                $scope.email.instituteId = newValue;
+                //$scope.email.instituteId = newValue;
                 //console.info(newValue);
                 if(newValue.length > 5){
                 //alert($scope.email.instituteId);
                 targetStudyProviderService.getProviderBasic(newValue).success(function (data, status, headers) {
                 if(data){
-                    console.info(data);
+                    //console.info(data);
                     var refreshedProvider = data.provider;
-                    $scope.emailSent = data.emailSent;
-                    $scope.emailSent.forEach(function(thisEmail, eIndex){
-                        thisEmail.fromNow = moment(thisEmail._date).fromNow();;
-                    });
+                    
+                    if(data.emailSent){
+                        $scope.emailSent = data.emailSent;
+                        $scope.emailSent.forEach(function(thisEmail, eIndex){
+                            thisEmail.fromNow = moment(thisEmail._date).fromNow();;
+                        });
+                    }
+                    
                     $scope.provider = refreshedProvider;
                     //console.log(emailSent);
                     $scope.email.instituteName = $scope.provider.name;

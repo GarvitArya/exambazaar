@@ -72,19 +72,11 @@
                         <label>Institute Id</label>
                         <input required ng-model="email.instituteId" focus-me="true">
                     </md-input-container>-->
-                    <md-input-container class="width50 ">
-                        <md-input-container class="md-block" flex-gt-sm>
-                            <label>Institute Id</label>
-                            <input ng-model="email.instituteId">
-                        </md-input-container>  
+                    <md-input-container class="width50 md-block" flex-gt-sm>
+                        <label>Institute Id</label>
+                        <input required ng-model="email.instituteId" focus-me="true">
+                    </md-input-container>  
                         
-                        <!--<md-select ng-model="email.instituteId"  placeholder="Select Institute" required>
-                              
-                            <md-option ng-value="instituteId" ng-repeat="instituteId in instituteIds" class="text-primary" ng-click="update(instituteId)">
-                              {{instituteId}}
-                            </md-option>
-                          </md-select>-->
-                        </md-input-container>
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>Institute Name</label>
                         <input required ng-model="email.instituteName" disabled>

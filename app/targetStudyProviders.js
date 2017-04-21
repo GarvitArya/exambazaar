@@ -1200,7 +1200,11 @@ router.get('/basiccoaching/:coachingId', function(req, res) {
 
                         });
                         if(nLength==0){
-                            res.json(thisProvider);
+                            var providerBasic = {
+                                provider: thisProvider,
+                                emailSent: []
+                            };
+                            res.json(providerBasic);
                         }
                         //ABC
 
