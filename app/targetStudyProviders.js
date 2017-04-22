@@ -19,12 +19,25 @@ mongoose.Promise = require('bluebird');
 
 //to get all providers
 router.get('/cities', function(req, res) {
-    //console.log("Getting cities");
-    targetStudyProvider.distinct( "city",function(err, docs) {
+    
+    targetStudyProvider.aggregate(
+            [
+                {"$group": { "_id": { city: "$city", state: "$state" } } }
+            ],function(err, docs) {
+            if (!err){
+                console.log(docs);
+                res.json(docs);
+            } else {throw err;}
+            });
+    
+    
+    /*
+    targetStudyProvider.distinct( ("city","state"),function(err, docs) {
     if (!err){
+        console.log(docs);
         res.json(docs);
     } else {throw err;}
-    });
+    });*/
 });
 
 router.post('/bulkDisableProviders', function(req, res) {
@@ -80,6 +93,15 @@ router.get('/websites', function(req, res) {
     });
 });
 
+router.get('/cityProviderCount/:city', function(req, res) {
+    var city = req.params.city;
+    console.log('City is ' + city);
+    targetStudyProvider.count({city: city}, function(err, docs) {
+    if (!err){
+        res.json(docs);
+    } else {throw err;}
+    });
+});
 
 router.get('/count', function(req, res) {
     targetStudyProvider.count({}, function(err, docs) {
@@ -1320,7 +1342,24 @@ router.get('/checkLogo/:pageNumber', function(req, res) {
     
 });
 
-
+router.get('/sandbox2Service/:cityName', function(req, res) {
+    var city = req.params.cityName;
+    if(!city || city==''){
+        city = 'Jaipur';
+    }
+    console.log("Sandbox2 Service Starting now for " + city);
+    
+    targetStudyProvider.find({city: city, latlng: {$exists: true}}, {latlng:1, name:1, address:1, mobile:1, phone:1, website:1, email:1, logo:1},function(err, allproviders) {
+        var counter = 0;
+        var changes = 0;
+        var nLength = allproviders.length;
+        
+        res.json(allproviders);
+        
+        
+    });
+    
+});
 
 router.get('/databaseService', function(req, res) {
     console.log("Database Service Starting now");

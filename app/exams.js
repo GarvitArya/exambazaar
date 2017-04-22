@@ -71,7 +71,8 @@ router.get('/', function(req, res) {
         .deepPopulate('stream')
         .exec(function (err, docs) {
         if (!err){
-            //console.log(docs);
+            //var examNames = docs.map(function(a) {return a.name;});
+            //console.log(examNames);
             res.json(docs);
         } else {throw err;}
     });

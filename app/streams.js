@@ -47,7 +47,7 @@ router.get('/', function(req, res) {
     console.log('Here');
     stream.find({}, function(err, docs) {
     if (!err){ 
-        //console.log(docs);
+        console.log(docs);
         res.json(docs);
     } else {throw err;}
     });

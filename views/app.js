@@ -579,6 +579,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getCityCount = function() {
             return $http.get('/api/targetStudyProviders/cityCount');
         };
+        this.getCityProviderCount = function(city) {
+            return $http.get('/api/targetStudyProviders/cityProviderCount/'+city, {city: city});
+        };
         this.getCities = function() {
             return $http.get('/api/targetStudyProviders/cities');
         };
@@ -602,6 +605,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.databaseService = function() {
             return $http.get('/api/targetStudyProviders/databaseService');
+        };
+        this.sandbox2Service = function(city) {
+            return $http.get('/api/targetStudyProviders/sandbox2Service/'+city, {city: city});
         };
         this.UniqueLogoService = function() {
             return $http.get('/api/targetStudyProviders/UniqueLogoService');
@@ -4288,7 +4294,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         });
         
-        $scope.cities = targetStudyCities.data;
+        $scope.cityStates = targetStudyCities.data.map(function(a) {return a._id;});;
+        
+        var repStates = $scope.cityStates.map(function(a) {return a.state;});
+        $scope.states = [];
+        repStates.forEach(function(thisState, index){
+            if($scope.states.indexOf(thisState) == -1){
+                $scope.states.push(thisState);
+            }
+        });
+        
         $scope.city = $stateParams.city;
         
         
@@ -4965,7 +4980,34 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
             $rootScope.title ='Sandbox';
     }]);
-        
+    
+    exambazaar.controller("sandbox2Controller", 
+        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$stateParams', 'targetStudyCities', 'cityProviderCount', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $stateParams, targetStudyCities, cityProviderCount){
+            $scope.providers = targetStudyProvidersList.data;
+            $scope.city = $stateParams.cityName;
+            $scope.cityProviderCount = cityProviderCount.data;
+            $scope.masterId = $stateParams.masterId;
+            $scope.cityStates = targetStudyCities.data.map(function(a) {return a._id;});
+            var repStates = $scope.cityStates.map(function(a) {return a.state;});
+            $scope.states = [];
+            repStates.forEach(function(thisState, index){
+                if($scope.states.indexOf(thisState) == -1){
+                    $scope.states.push(thisState);
+                }
+            });
+            $scope.providers.forEach(function(thisProvider, index){
+                thisProvider.mapLatLng = [thisProvider.latlng.lat, thisProvider.latlng.lng]
+            });
+            $scope.showProvider = function(event, provider){
+                $scope.activeProvider = provider;
+                if(!provider.logo || provider.logo == ''){
+                    $scope.activeProvider.logo = '';
+                }
+                
+            };
+            $rootScope.title ='Sandbox 2';
+    }]); 
+    
     exambazaar.controller("sandboxController", 
         [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList){
             $scope.providers = targetStudyProvidersList.data;
@@ -6261,6 +6303,38 @@ function getLatLng(thisData) {
                 targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService) {   
                     return targetStudyProviderService.coachingAddressService();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('sandbox2', {
+            url: '/master/:masterId/sandbox2/:cityName', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'sandbox2.html',
+                    controller: 'sandbox2Controller',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {
+                    return targetStudyProviderService.sandbox2Service($stateParams.cityName);
+                }],
+                cityProviderCount: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {
+                    return targetStudyProviderService.getCityProviderCount($stateParams.cityName);
+                }],
+                targetStudyCities: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService) {
+                    return targetStudyProviderService.getCities();
                 }],
                 provider: function() { return {}; }
                 

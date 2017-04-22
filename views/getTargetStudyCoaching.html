@@ -138,9 +138,13 @@
     <div id="spacer" class="whiteBackground">
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font11 whiteBackground" ng-if="showLevel>5">
-        <span ng-repeat="city in cities">
-            <a ui-sref="targetStudyProviders({ city:{{'city'}} })">{{city}} | </a>
-        </span>
+        <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2" ng-repeat="state in states">
+            <div>{{state}}</div>
+            <span ng-repeat="cityState in cityStates | orderBy: 'city'" ng-if="cityState.state == state">
+                <a ui-sref="targetStudyProviders({ city:{{'cityState.city'}} })">{{cityState.city}} | </a>
+            </span>
+            
+        </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font10 whiteBackground paddingTB10" ng-if="showLevel>5">
         <!---->
@@ -222,7 +226,7 @@
             <div id="cell" flex="10">EB Rank</div>
         </div>
         
-        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-noEmail','-rank','-exams.length'] | filter:filterText as filtered track by $index" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
+        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-website','-noEmail','-rank','-exams.length'] | filter:filterText as filtered track by $index" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
             <div id="cell" flex="5">
                 {{$index+1}}
             </div>
