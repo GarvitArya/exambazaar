@@ -87,7 +87,7 @@
             
         </div>
         <div flex="30" layout="column" class="font10 padding10">
-            <div ng-repeat="state in states">
+            <div ng-repeat="state in states | orderBy:'toString()'">
                 <span class="bold">{{state}}:</span>
                 <span ng-repeat="cityState in cityStates | orderBy: 'city'" ng-if="cityState.state == state">
                     &nbsp;<a ui-sref="sandbox2({ masterId:{{'masterId'}}, cityName:'{{cityState.city}}' } )" id="link" ng-class="{ secondFont: cityState.city == city }">{{cityState.city}}</a>
