@@ -760,6 +760,36 @@
                         </span>
                     </div>
                 </div>
+                <div layout="row" ng-show="provider.facebookPage || editContact" class="marginB5">
+                    <div flex="5">
+                        <i class="fa fa-facebook-official" aria-hidden="true"></i>
+                    </div>
+                    <div flex="95">
+                        <span ng-if="!editContact">
+                        <a ng-href="{{provider.facebookPage}}" target="_blank" ng-if="provider.facebookPage">
+                        Facebook Page
+                        </a>&nbsp;
+                        </span>
+                        <span ng-if="editContact">
+                            <input type="text" class=" width50" ng-model="provider.facebookPage"  placeholder="Link Facebook Page">&nbsp;
+                        </span>
+                    </div>
+                </div>
+                <div layout="row" ng-show="provider.youtubeChannel || editContact" class="marginB5">
+                    <div flex="5">
+                        <i class="fa fa-youtube" aria-hidden="true"></i>
+                    </div>
+                    <div flex="95">
+                        <span ng-if="!editContact">
+                        <a ng-href="{{provider.youtubeChannel}}" target="_blank" ng-if="provider.youtubeChannel">
+                        Youtube Channel
+                        </a>&nbsp;
+                        </span>
+                        <span ng-if="editContact">
+                            <input type="text" class=" width50" ng-model="provider.youtubeChannel"  placeholder="Link Youtube Channel">&nbsp;
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement height100" id="paneRight">
@@ -2357,7 +2387,23 @@
       </md-dialog>
     </div>    
 </div>
-
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="nolatlngDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="danger md-headline">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    No Google map Lat Lng found! Please check the address again.
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="markedDialog">
       <md-dialog>

@@ -11,6 +11,8 @@ var targetStudyProviderSchema = mongoose.Schema({
     groupChecked: {type: Boolean,default: false},
     targetStudyWebsite: String,
     website: String,
+    facebookPage: String,
+    youtubeChannel: String,
     fbpage: String,
     email: [String],
     address: String,

@@ -808,7 +808,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.subcategory = [];
             
         
-        $rootScope.pageTitle = 'Exam Bazaar';    
+        $rootScope.pageTitle = 'Exambazaar: Find best coaching institutes in your city to prepare for over 50 exams';
+        $rootScope.pageDescription = "Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching institutes in your city. Our easy-to-use website shows you all the coaching institutes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching institutes to prepare for them";
+            
         $scope.goToCity = function(subcategory){ 
             $cookies.putObject('subcategory', subcategory);
             $state.go('city');
@@ -1411,9 +1413,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         //console.log($scope.provider.latlng);
                     }else{
                         console.log(status + ' ' + $scope.provider._id);
-                        
+                        $scope.showNoLatLngDialog();
                         if(status == 'ZERO_RESULTS'){
                         $scope.provider.latlngna = true; 
+                        
                         }
                     }
 
@@ -2652,7 +2655,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $mdDialog.cancel();
             },1000)
         };
-        
+        $scope.showNoLatLngDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#nolatlngDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },3000)
+        };
         $scope.showMarkedDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#markedDialog',

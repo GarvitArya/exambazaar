@@ -50,7 +50,7 @@
                 <!--<marker position="current-location"
                       title="current-location" class="map-icon map-icon-point-of-interest"icon="{path:'CIRCLE', scale: 10}" draggable="false"></marker>-->
                 <marker position="{{city}}"
-                      title="City" class="map-icon map-icon-point-of-interest"icon="{path:'CIRCLE', scale: 10}" draggable="false"></marker>
+                      title="City" icon="{path:'CIRCLE', scale: 10}" draggable="false"></marker>
                 <marker position="{{provider.mapLatLng}}"
                       title="{{provider.name}}"
                    ng-repeat="provider in providers" on-click="showProvider(event, provider)"></marker>
