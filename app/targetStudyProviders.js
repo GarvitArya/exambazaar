@@ -96,7 +96,7 @@ router.get('/websites', function(req, res) {
 router.get('/cityProviderCount/:city', function(req, res) {
     var city = req.params.city;
     console.log('City is ' + city);
-    targetStudyProvider.count({city: city}, function(err, docs) {
+    targetStudyProvider.count({city: city, $where: "this.exams && this.exams.length > 0"}, function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}
@@ -116,7 +116,7 @@ router.get('/city/:city', function(req, res) {
     //console.log("City is: "+city);
     //, 'exams.0': { $exists: true }, "logo": { $ne: "/img/bullets/box-orange-arrow.gif" }
     var cityProviders = targetStudyProvider
-        .find({'city': city, disabled: {$ne: true} },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1, latlng:1, latlngna:1})
+        .find({'city': city, disabled: {$ne: true}, $where: "this.exams && this.exams.length > 0" },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1, latlng:1, latlngna:1})
         .deepPopulate('exams location ebNote.user')
         .exec(function (err, cityProviders) {
         if (!err){
@@ -1349,7 +1349,7 @@ router.get('/sandbox2Service/:cityName', function(req, res) {
     }
     console.log("Sandbox2 Service Starting now for " + city);
     
-    targetStudyProvider.find({city: city, latlng: {$exists: true}}, {latlng:1, name:1, address:1, mobile:1, phone:1, website:1, email:1, logo:1},function(err, allproviders) {
+    targetStudyProvider.find({city: city, latlng: {$exists: true}, $where: "this.exams && this.exams.length > 0"}, {latlng:1, name:1, address:1, mobile:1, phone:1, website:1, email:1, logo:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;
         var nLength = allproviders.length;
