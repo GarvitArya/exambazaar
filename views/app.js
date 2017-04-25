@@ -242,6 +242,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);
         
     exambazaar.service('EmailService', ['$http', function($http) {
+        this.getEmails = function() {
+            return $http.get('/api/emails');
+        };
         this.send = function(email) {
             return $http.post('/api/emails/send', email);
         };
@@ -4216,9 +4219,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
     
     exambazaar.controller("getTargetStudyCoachingController", 
-    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList){
+    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', 'emailList', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList, emailList){
         $scope.providersList = targetStudyProvidersList.data;
-        //JHI
+        $scope.emailsList = emailList.data;
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
         var institutesSaved = institutesSavedList.data;
         var institutesFilled = institutesFilledList.data;
@@ -4226,6 +4229,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.filledCounter = 0;
         $scope.noMapCounter = 0;
         $scope.noEmailCounter = 0;
+        
+        $scope.emailSentCount = 0;
+        $scope.emailsList.forEach(function(thisEmail, index){
+            var pIndex = providersListIds.indexOf(thisEmail.institute);
+            if(pIndex != -1){
+                $scope.providersList[pIndex].emailSent = true;
+                $scope.emailSentCount += 1;
+            }
+        });
         
         $scope.showDisableConfirm = function(provider, ev) {
         
@@ -6742,12 +6754,14 @@ function getLatLng(thisData) {
                     function(cisavedService) {   
                     return cisavedService.institutesSaved();
                 }],
-                //JHI
                 institutesFilledList: ['tofillciService',
                     function(tofillciService) {   
                     return tofillciService.institutesFilled();
                 }],
-                
+                emailList: ['EmailService',
+                    function(EmailService) {   
+                    return EmailService.getEmails();
+                }],
                 provider: function() { return {}; },
                 targetStudyCities: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService) {

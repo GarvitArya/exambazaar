@@ -123,6 +123,9 @@
         background-color: #001f3f;
         color: white;
     }
+    .emailSent{
+        
+    }
 </style>
 <div class="container" ng-if="showLevel==0">
     <div id="spacer">
@@ -158,6 +161,7 @@
         <md-button class="md-cancel md-small font10" ng-click="rank0()">Set Rank 0</md-button>-->
         <md-button class="md-cancel md-small font10" ng-click="getAllCourses()">All Courses</md-button>
         <md-button class="md-cancel md-small font10" ng-click="getWebsites()">Coaching Websites</md-button>
+        <br/>
         <span class="editFont">
             Filled: {{filledCounter}}
         </span>&nbsp;&nbsp;
@@ -166,6 +170,9 @@
         </span>&nbsp;&nbsp;
         <span class="editFont">
             No Map: {{noMapCounter}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            Emails Sent: {{emailSentCount}}
         </span>
         
     </div>
@@ -226,7 +233,7 @@
             <div id="cell" flex="10">EB Rank</div>
         </div>
         
-        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-website','-noEmail','-rank','-exams.length'] | filter:filterText as filtered track by $index" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
+        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-emailSent','-website','-noEmail','-rank','-exams.length'] | filter:filterText as filtered track by $index" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
             <div id="cell" flex="5">
                 {{$index+1}}
             </div>
@@ -265,6 +272,9 @@
                 <span ng-repeat="thisemail in provider.email track by $index">
                     {{thisemail}}
                     <span ng-if="!$last">, </span>
+                </span>
+                <span class="text-primary" ng-if="provider.emailSent">
+                    <i class="fa fa-check-circle-o" aria-hidden="true"></i>
                 </span>
             </div> 
             <!--<div id="cell" flex="15">

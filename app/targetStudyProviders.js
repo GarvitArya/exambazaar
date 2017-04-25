@@ -25,7 +25,7 @@ router.get('/cities', function(req, res) {
                 {"$group": { "_id": { city: "$city", state: "$state" } } }
             ],function(err, docs) {
             if (!err){
-                console.log(docs);
+                //console.log(docs);
                 res.json(docs);
             } else {throw err;}
             });

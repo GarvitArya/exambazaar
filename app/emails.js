@@ -215,4 +215,20 @@ router.post('/sendGrid', function(req, res) {
     
     
 });
+
+router.get('/', function(req, res) {
+    email
+        .find({ })
+        //.deepPopulate('stream')
+        .exec(function (err, docs) {
+        if (!err){
+            //var examNames = docs.map(function(a) {return a.name;});
+            //console.log(examNames);
+            res.json(docs);
+        } else {throw err;}
+    });
+    
+});
+
+
 module.exports = router;
