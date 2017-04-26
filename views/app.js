@@ -573,6 +573,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.cisavedUsers = function(coachingId) {
             return $http.get('/api/targetStudyProviders/cisavedUsers/'+coachingId, {coachingId: coachingId});
         };
+        this.setEBVerifyState = function(verifyForm) {
+            return $http.post('/api/targetStudyProviders/setEBVerifyState',verifyForm);
+        };
         this.saveProvider = function(provider) {
             return $http.post('/api/targetStudyProviders/savecoaching',provider);
         };
@@ -1523,7 +1526,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             '2004',    
             '2003'    
         ];
-        
+        $scope.ebVerifyStates = ["Verified", "No Response", "Does not Exist", "Not Verified"];
         
         $scope.provider = thisProvider.data;
         
@@ -1686,6 +1689,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });
         $scope.providerExamIds = $scope.provider.exams.map(function(a) {return a._id;});
         $scope.editExam = false;
+        
+        $scope.setEBVerifyState = function(verifyState){
+            //$scope.editExam = true;
+            if($scope.editable){
+                $scope.provider.ebVerifyState = verifyState;
+                var ebVerfiyForm = {
+                    provider: $scope.provider._id,
+                    state: verifyState,
+                    user: $scope.user.userId
+                };
+                console.info(ebVerfiyForm);
+                targetStudyProviderService.setEBVerifyState(ebVerfiyForm).success(function (data, status, headers) {
+                    $scope.showSavedDialog();
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error");
+                });
+            }else{
+                alert('Cannot Edit without logging in or verifying identity');
+                $scope.showClaimDialog();
+            }
+        };
+        
         $scope.addExam = function(exam){
             //$scope.editExam = true;
             if($scope.editable){
@@ -2433,7 +2460,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         function startEndIndex (index, arrayLength){
             
-            var showLength = 10;
+            var showLength = 6;
             var indexPair = {
                 start: 0,
                 end: arrayLength
@@ -5878,7 +5905,7 @@ function getLatLng(thisData) {
                     
                     $scope.email.instituteId = $scope.provider._id;
                     $scope.email.logo = $scope.provider.logo;
-                    $scope.email.subject = $scope.provider.name + ' - Claim Your Free Exambazaar Listing Now';
+                    $scope.email.subject = $scope.provider.name + " - Don't Wait! Claim Your Free Exambazaar Listing Now";
                 }
                 }).error(function (data, status, header, config) {
                     console.info("Error ");

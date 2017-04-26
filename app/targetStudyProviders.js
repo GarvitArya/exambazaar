@@ -1069,6 +1069,45 @@ router.post('/cityCourse', function(req, res) {
     } else {throw err;}
     });*/
 });
+
+router.post('/setEBVerifyState', function(req, res) {
+    var verifyForm = req.body;
+    var provider = verifyForm.provider;
+    var state = verifyForm.state;
+    var user = verifyForm.user;
+    
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': provider}, {ebVerifyState:1, ebVerify: 1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            var newVerify = {
+                state: state,
+                user: user
+            };
+            if(!thisProvider.ebVerify || thisProvider.ebVerify.length == 0){
+                thisProvider.ebVerify = [];
+            }
+            thisProvider.ebVerifyState = state;
+            thisProvider.ebVerify.push(newVerify);
+            thisProvider.save(function(err, thisProvider) {
+                if (err) return console.error(err);
+                res.json('Done');
+                console.log(thisProvider._id + " saved!");
+            });
+            
+            /*if(thisProvider.ebVerify && thisProvider.ebVerify.length > 0){
+                thisProvider.ebVerifyState = state;
+                thisProvider.ebVerify.push(newVerify);
+            }else{
+                thisProvider.ebVerify = [];
+                thisProvider.ebVerifyState = state;
+                thisProvider.ebVerify.push(newVerify);
+            }*/
+        } else {throw err;}
+    });
+});
+
+
 router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;
     var userId = req.body.user;

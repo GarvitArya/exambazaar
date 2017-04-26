@@ -577,6 +577,7 @@
                     </button>
                 </span>
             </div>
+            
             <div flex layout="column" layout-align="end start" class="paddingL20 paddingB10">
                 <span class="hidden-xs text md-headline mainFont" id="coachingHeader">
                     {{provider.name | uppercase}}
@@ -657,6 +658,45 @@
         
     </div>
      -->
+    
+    <div layout="row" layout-xs="column" class="" id="EBVerify" ng-if="ebuser">
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey paddingTB20" id="paneLeft" ng-class="{ editing: editEBVerify }">
+            <div class=""layout="row" layout-align="start start">
+                <span>
+                    EB Verify
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder text-center secondFont textLightGrey paddingTB20" id="paneMiddle">
+            <div layout="column">
+            <div layout="row" layout-align="center center" class="marginB10">
+                Only for EB Employees, update the verification tag after phone verification of {{provider.name}}
+            </div>
+            
+            <div layout="row" layout-align="center center">
+                <span ng-repeat="verifyState in ebVerifyStates">
+                    <span class="badge" id="examTagHolder" ng-if="provider.ebVerifyState != verifyState" ng-click="setEBVerifyState(verifyState)">
+                        {{verifyState}}
+                    </span>
+                    <span class="badge" id="existingExamTagHolder" ng-if="provider.ebVerifyState == verifyState" ng-click="">
+                        {{verifyState}}
+                    </span>&nbsp;&nbsp;
+                </span>
+            </div>
+            </div>
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1" id="paneRight">
+            
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        
+    </div>
+    
+    
+    
     <div layout="row" layout-xs="column" class="componentRow secondFont" id="Contact">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
