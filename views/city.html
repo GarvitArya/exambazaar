@@ -62,9 +62,17 @@
         color: #20C39A;
         
     }
+    #cityContainer{
+        background: rgba(255, 255, 255, 0.5);
+        min-height: 40vh;
+        margin-left: 80px;
+        margin-right: 80px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
 </style>
 
-<div id="fullPageContent">
+<div id="fullPage">
 <div class="container">
     <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div id="spacer">
@@ -76,6 +84,7 @@
             <span> > {{subcategory.displayname | uppercase}}</span>
             </div>
         </div>
+        <div id="cityContainer" layout="column">
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center" id="pageHeader">
             <span class="text md-title" id="pageHeaderFont"><strong>SELECT YOUR CITY</strong></span>
         </div>
@@ -126,7 +135,7 @@
                 </md-button>
             </div>-->
         </div>
-        
+        </div>
         <div layout="row" layout-align="center end" id="steps">
             <div id="stepActive">
             </div>

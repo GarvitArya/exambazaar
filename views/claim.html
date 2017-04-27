@@ -1357,7 +1357,7 @@
                             
                         </div>
                         <div flex class="paddingLeft10 paddingRight10">
-                            <input type="text" class="editFont width100"  id="course.fees" ng-model="course.fees"  placeholder="Course Fees">
+                            <input type="text" class="editFont width100"  id="course.fees" ng-model="course.fees"  placeholder="Course Fees" only-digits>
                             <span ng-repeat="feeType in feeTypes" >
                                 <span class="badge editFont" id="tagHolder" ng-click="setFeeType(course, feeType)" ng-if="course.feeType != feeType">
                                 {{feeType}}

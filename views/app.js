@@ -874,33 +874,65 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.category = thisStream.data;
         $scope.subcategory = thisExam.data;
+        //console.log($scope.subcategory);
         $scope.streamExams = streamExams.data.map(function(a) {return a.name;});
         
         $scope.providersList = targetStudyProvidersList.data;
         $scope.uniqueProviders = [];
-        $scope.uniqueProviderInstitutes = [];
+        $scope.uniqueInstitutes = [];
         $scope.providersList.forEach(function(thisProvider, providerIndex){
             var position = $scope.uniqueProviders.indexOf(thisProvider.name);
             if(position==-1){
                 $scope.uniqueProviders.push(thisProvider.name);
-                $scope.uniqueProviderInstitutes.push([thisProvider]);
+                var newUniqueInstitute = {
+                    institutes: [thisProvider],
+                    logo: thisProvider.logo,
+                    groupName: thisProvider.groupName
+                };
+                $scope.uniqueInstitutes.push(newUniqueInstitute);
             }else{
-                $scope.uniqueProviderInstitutes[position].push(thisProvider);
+                $scope.uniqueInstitutes[position].institutes.push(thisProvider);
             }
         });
-        
-        
-        
-        $scope.providersList.forEach(function(thisProvider, providerIndex){
+        var coursesOffered;
+        var groupResults;
+        var thisProviderCourses;
+        var thisProviderResults;
+        $scope.uniqueInstitutes.forEach(function(thisGroup, index){
+            coursesOffered = [];
+            groupResults = [];
+            thisGroup.institutes.forEach(function(thisProvider, pIndex){
+                thisProviderCourses = thisProvider.coursesOffered;
+                thisProviderResults = thisProvider.results;
+                thisProviderCourses.forEach(function(thisCourse, cIndex){
+                    if(coursesOffered.indexOf(thisCourse) == -1){
+                        coursesOffered.push(thisCourse);
+                    }
+                });
+                /*if(thisProviderResults){
+                    groupResults = groupResults.concat(thisProviderResults);
+                }*/
+                thisProviderResults.forEach(function(thisResult, rIndex){
+                    if(thisResult.exam == $scope.subcategory._id){
+                        groupResults.push(thisResult);
+                    }
+                });
+               
+                //console.info(coursesOffered);
+            });
+            thisGroup.coursesOffered = coursesOffered;
+            thisGroup.groupResults = groupResults;
+        });
+        /*$scope.providersList.forEach(function(thisProvider, providerIndex){
             var positionIndex = $scope.uniqueProviders.indexOf(thisProvider.name);
-            thisProvider.nCenters = $scope.uniqueProviderInstitutes[positionIndex].length;
+            thisProvider.nCenters = $scope.uniqueInstitutes[positionIndex].length;
             thisProvider.mapAddress = thisProvider.name + ', ' + thisProvider.address + ', ' + thisProvider.city + ' ' + thisProvider.pincode;
             thisProvider.showDetails = false;
             if(providerIndex==0){
                 thisProvider.showDetails = true;
             }
-        });
-        
+        });*/
+        //console.log($scope.subcategory);
         $scope.showCoaching = function(provider){
             $scope.providersList.forEach(function(thisProvider, providerIndex){
                 thisProvider.showDetails = false;
@@ -1247,11 +1279,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.groupStreams = [];
         $scope.groupPhotos = [];
         $scope.groupVideos = [];
+        $scope.groupResults = [];
         $scope.groupCourses = [];
         $scope.groupFaculties = [];
         var groupExamIds = [];
         var groupStreamIds = [];
-               
+        var examTitle = ' for ';       
         $scope.group.forEach(function(thisGroup, index){
             if(thisGroup.latlng){
                 thisGroup.mapAddress = [thisGroup.latlng.lat, thisGroup.latlng.lng];
@@ -1281,14 +1314,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }
             });
             var thisGroupPhoto = thisGroup.photo;
+            var thisGroupResults = thisGroup.results;
             var thisGroupVideo = thisGroup.video;
             var thisGroupFaculty = thisGroup.faculty;
             var thisGroupCourse = thisGroup.course;
             $scope.groupPhotos = $scope.groupPhotos.concat(thisGroupPhoto);
             $scope.groupVideos = $scope.groupVideos.concat(thisGroupVideo);
             $scope.groupFaculties = $scope.groupFaculties.concat(thisGroupFaculty);
+            $scope.groupResults = $scope.groupResults.concat(thisGroupResults);
             $scope.groupCourses = $scope.groupCourses.concat(thisGroupCourse);
         });
+        
         $scope.groupExamsOnly = $scope.groupExams.map(function(a) {return a.exam;});
         
         
@@ -1351,7 +1387,78 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
             
         };
+        $scope.showFacultyDialog = function(ev,index) {
+            $scope.activeFacultyIndex = index;
+            $scope.activeFaculty = $scope.groupFaculties[index];
+            var indexPair = startEndIndex(index, $scope.groupFaculties.length);
+            $scope.startFacultyIndex = indexPair.start;
+            $scope.endFacultyIndex = indexPair.end;
+            
+            $mdDialog.show({
+              contentElement: '#facultyDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.prevFaculty = function(){
+            var index = $scope.activeFacultyIndex - 1;
+            $scope.changeFacultyImage(index);
+        };
+         $scope.nextFaculty = function(){
+            var index = $scope.activeFacultyIndex + 1;
+            $scope.changeFacultyImage(index);
+        };
+        $scope.changeFacultyImage = function(index){
+            var arrayLength = $scope.groupFaculties.length;
+            if(index >=0 && index < arrayLength){
+                $scope.activeFacultyIndex = index;
+                $scope.activeFaculty = $scope.groupFaculties[index];
+                var indexPair = startEndIndex(index,$scope.groupFaculties.length);
+                $scope.startFacultyIndex = indexPair.start;
+                $scope.endFacultyIndex = indexPair.end;
+            }
+            
+        };
         
+        $scope.showResultDialog = function(ev, index, examResult) {
+            $scope.activeResultIndex = index;
+            $scope.activeResult = $scope.groupResults[index];
+            var indexPair = startEndIndex(index, $scope.groupResults.length);
+            
+            $scope.startResultIndex = indexPair.start;
+            $scope.endResultIndex = indexPair.end;
+            $scope.dialogExamResult = examResult;
+            
+            $mdDialog.show({
+              contentElement: '#resultsDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        
+        $scope.prevResult = function(){
+            var index = $scope.activeResultIndex - 1;
+            $scope.changeResultImage(index);
+        };
+         $scope.nextResult = function(){
+            var index = $scope.activeResultIndex + 1;
+            $scope.changeResultImage(index);
+        };
+        $scope.changeResultImage = function(index){
+            var arrayLength = $scope.groupResults.length
+            if(index >=0 && index < arrayLength){
+                $scope.activeResultIndex = index;
+                $scope.activeResult = $scope.groupResults[index];
+                var indexPair = startEndIndex(index,$scope.groupResults.length);
+                $scope.startResultIndex = indexPair.start;
+                $scope.endResultIndex = indexPair.end;
+            }
+        };
+        var title = $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ' Exam';
+        console.log(title);
+        $rootScope.pageTitle = title;
     }]);    
            
    
@@ -1790,7 +1897,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             'Class Room', 'Online Classes', 'Test Series', 'Distance Education', 'Satellite Classes', 'Weekend Classroom'
         ];
         $scope.durations=[
-            '1 Month','2 Months','3 Months', '4 Months', '5 Months', '6 Months', '9 Months', '1 Year', '2 Year',  
+            '1 Month','2 Months','3 Months', '4 Months', '5 Months', '6 Months', '9 Months', '1 Year', '2 Year','3 Year', '4 Year'  
         ];
         $scope.feeTypes = [
             'In Lumpsum',    
@@ -2508,7 +2615,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.changeFacultyImage(index);
         };
         $scope.changeFacultyImage = function(index){
-            var arrayLength = $scope.provider.faculty.length
+            var arrayLength = $scope.provider.faculty.length;
             if(index >=0 && index < arrayLength){
                 $scope.activeFacultyIndex = index;
                 $scope.activeFaculty = $scope.provider.faculty[index];

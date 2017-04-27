@@ -195,8 +195,8 @@
         color:#333333;
     }
     #breadcrumb{
-        padding-top: 5px;
-        padding-bottom: 5px;
+        padding-top: 10px;
+        padding-bottom: 0px;
     }
     #paneLeft{
         
@@ -231,9 +231,7 @@
         z-index: 99;
     }
     
-    #imageContainer{
-        padding: 5px;
-    }
+    
     #suggestedPics{
         background: rgba(0,0,0,0.8);
     }
@@ -849,66 +847,6 @@
             </span>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center thirdFont textDarkGrey" id="paneMiddle">
-            <div layout="column" class="bottom-buffer10 font10"  layout-align="start center" ng-repeat="examResult in examPivotResults" ng-if="examResult.pivot == 'null' && examResult.result.length > 0">
-                <div layout="row" layout-align="center center" class="width100 greyBottomBorder font14" ng-if="examResult.result.length > 0">
-                Assign Exams to the below Results first!
-                </div>
-                <div layout="row" layout-align="start center" class="width100 greyBottomBorder" ng-if="examResult.result.length > 0">
-                    <div flex>
-                        S. No.
-                    </div>
-                    <div flex>
-                        Year
-                    </div>
-                    <div flex>
-                        Student Name
-                    </div>
-                    <div flex>
-                        All India Rank
-                    </div>
-                    <div flex>
-                        Category
-                    </div>
-                    <div flex>
-                        Select Exam
-                    </div>
-                </div>
-                <div layout="row" layout-align="start center" class="width100 greyBottomBorder" ng-repeat="result in examResult.result">
-                    <div flex>
-                    {{$index + 1}}
-                    </div>
-                    <div flex>
-                        {{result.year}}
-                    </div>
-                    <div flex>
-                        {{result.name}}
-                    </div>
-                    <div flex>
-                        {{result.rank}}
-                    </div>
-                    <div flex>
-                        {{result.category}}
-                    </div>
-                    <div flex>
-                        <span  ng-repeat="pExam in groupExamsOnly" ng-click="setExamForResult(pExam, result)">
-                            <span class="badge font9" id="tagHolder" ng-if="result.exam != pExam._id">
-                                {{pExam.displayname}}
-                            </span>
-                            <span class="badge font9" id="existingTagHolder" ng-if="result.exam == pExam._id">
-                                {{pExam.displayname}}
-                            </span>&nbsp;
-                            
-                        </span>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div layout="row" layout-align="center center" id="upload2" ng-click="editResults()" class="marginB10 secondFont textLightGrey" ng-show="editable && !disabled">
-                <span class="">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
-                </span>
-            </div>
             
             <div flex layout="row" class="bottom-buffer10" ng-repeat="exam in groupExamsOnly" id="greyBorder"  layout-align="start center">
                 <div layout="column" layout-align="center center" flex="5" id="courseLeftContainer">
@@ -922,9 +860,10 @@
                 </div>
                 <div layout="column" flex="95" id="courseRightContainer">
                   
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-if="!editResult">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 top-buffer" ng-repeat="examResult in resultWithImages" ng-if="examResult.exam==exam._id">
-                    <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="result in examResult.result" ng-if="$index<12 && result.image && result.image!=''" id="imageContainer" ng-click="showResultDialog($event, $index, examResult)">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    
+                    <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="result in groupResults" ng-if="$index<12 && result.exam._id==exam._id" id="imageContainer" ng-click="showResultDialog($event, $index, result)">
+                         <!--&& result.image && result.image!=''-->
                         <div ng-if="$index != 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
                             <div layout="row" layout-align="end center" class="text-white" id="thumbnailResultText">
                                 <div flex="60" layout="row" layout-padding layout-align="start center" class="font10">
@@ -956,163 +895,13 @@
                         </div>
                         <div ng-if="$index == 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
                             <div layout="row" layout-align="center center" class="md-headline text-white" id="thumbnailText">
-                                +{{provider.results.length - 12}}
+                                +{{groupResults.length - 12}}
                             </div>
                         </div>
                     </div>
-                    </div>
+                      
                 </div>
-                 
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-repeat = "examResult in examWiseResult" ng-if="examResult.exam == exam._id && !editResult" >
-                    <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bottom-buffer10 secondFont" id="upload2" ng-click="editResults()" ng-show="editable && !disabled">
-                        Spreadsheet Mode
-                    </div>-->
-                    
-                    
-                    
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 greyBorder" ng-repeat = "yearResult in examResult.yearResult" ng-if="yearResult.result.length > 0" id="showYearResult" class="">
-                        
-                        <div layout="row" layout-align="center center" class="width100 lightGreyBackground  marginB10">
-                        {{yearResult.year}}
-                        </div>
-                        <div layout="row" layout-align="start center" class="greyDashedBottomBorder">
-                            <div flex>
-                                S. No.
-                            </div>
-                            <div flex>
-                                Student Name
-                            </div>
-                            <div flex ng-if="exam.resultFormat == 'Rank'">
-                                All India Rank
-                            </div>
-                            <div flex ng-if="exam.resultFormat == 'Percentile'">
-                                Percentile
-                            </div>
-                            <div flex ng-if="exam.resultFormat == 'Marks'">
-                                Score
-                            </div>
-                            
-                            <div flex>
-                                Category
-                            </div>
-                            <div flex>
-                                Photo
-                            </div>
-                            <!--<div flex>
-                                Delete
-                            </div>-->
-                        </div>
-                        
-                        <div layout="row" layout-align="start center" class="greyDashedBottomBorder" ng-repeat="result in yearResult.result" id="showResultRow"  >
-                            <div flex>
-                                {{$index + 1}}
-                            </div>
-                            <div flex>
-                                {{result.name}}
-                            </div>
-                            <div flex ng-if="exam.resultFormat == 'Rank'">
-                                {{result.rank}}
-                            </div>
-                            <div flex ng-if="exam.resultFormat == 'Percentile'">
-                                {{result.percentile}}
-                            </div>
-                            <div flex ng-if="exam.resultFormat == 'Marks'">
-                                {{result.marks}}
-                            </div>
-                            
-                            <div flex>
-                                {{result.category}}
-                            </div>
-                            <div layout="column" layout-align="center center" flex >
-                                
-                                <div ng-if="result.image">
-                                    <img  ng-src="{{result.image}}" id="editPic"/>
-                                    <span class="font8 text-center" ngf-select="uploadResultPic(newResultPic, result)" ng-model="newResultPic" ngf-accept="'image/*'"><br/>
-                                    Edit
-                                    </span>
-                                </div>
-                                <div layout="column" layout-align="center center" ng-if="!result.image" class="lightGreyBackground" ngf-select="uploadResultPic(newResultPic, result)" ng-model="newResultPic" ngf-accept="'image/*'">
-                                    <span class="editFont">
-                                    Add Pic
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
-                        
-                    </div>
-                    
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-repeat="examResult in examPivotResults" ng-if="examResult.pivot == exam._id && editResult" id="tableHolder">
-                    
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center top-buffer">
-                        <span class="pull-left" ng-click='showSpreadsheetConfirm($event)'>
-                        <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Back
-                        </span>
-                        
-                        You can bulk edit Results for {{exam.displayname}} by pasting in the Spreadsheet below
-                        <!--<span class="badge">
-                            {{examResult.initialLength}}
-                        </span>-->
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font9">
-                    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Rank'">
-                        <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
-                        <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
-                        <hot-column data="rank" title="'AIR <br/>(eg. 32)'" type="'numeric'" width="80" ></hot-column>
-                        
-                        <hot-column data="category" title="'Category <br/>(e.g. General)'" width="100" type="'autocomplete'">
-                        <hot-autocomplete datarows="GENERAL, OBC-NCL, SC/ST, PwD">
-                        </hot-autocomplete>
-                        </hot-column>
-                        <!--<hot-column width="100" data="imageShow" title="'Image URL'"  renderer= "'html'">
-                        </hot-column>-->
-                        <hot-column width="100" data="image" title="'Image URL (read only)'">
-                        </hot-column>
-                    </hot-table>
-                    
-                    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Marks'">
-                        <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
-                        <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
-                        <hot-column data="marks" title="'Score <br/>(eg. 800)'" type="'numeric'" width="80" ></hot-column>
-                        <hot-column data="category" title="'Category <br/>(e.g. General)'" width="100" type="'autocomplete'">
-                        <hot-autocomplete datarows="GENERAL, OBC-NCL, SC/ST, PwD">
-                        </hot-autocomplete>
-                        </hot-column>
-                        <hot-column width="100" data="image" title="'Image URL'"></hot-column>
-                    </hot-table>
-                        
-                    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Percentile'">
-                        <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
-                        <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
-                        <hot-column data="percentile" title="'Percentile <br/>(eg. 99.85)'" type="'numeric'" width="80"  format="'0.00'"></hot-column>
-                        <hot-column data="category" title="'Category <br/>(e.g. General)'" width="100" type="'autocomplete'">
-                        <hot-autocomplete datarows="GENERAL, OBC-NCL, SC/ST, PwD">
-                        </hot-autocomplete>
-                        </hot-column>
-                        <hot-column width="100" data="image" title="'Image URL'"></hot-column>
-                    </hot-table>
-                        
-                    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Pass/Fail'">
-                        <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
-                        <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
-                        <!--<hot-column data="percentile" title="'Percentile <br/>(eg. 99.85)'" type="'numeric'" width="80" ></hot-column>-->
-                        <hot-column data="category" title="'Category <br/>(e.g. General)'" width="100" type="'autocomplete'">
-                        <hot-autocomplete datarows="GENERAL, OBC-NCL, SC/ST, PwD">
-                        </hot-autocomplete>
-                        </hot-column>
-                        <hot-column width="100" data="image" title="'Image URL'"></hot-column>
-                    </hot-table>    
-                    </div>
-                    
-                    <!--<div layout="row" layout-align="center center" class="top-buffer" id="upload2" ng-click="addExamResult()" >
-                        <span class="">
-                            <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Save Changes for {{exam.displayname}}
-                        </span>
-                    </div> -->
-                    
-                </div>  
+                
                 </div>
             </div>
             
@@ -1611,6 +1400,140 @@
             </div>
             <div hide-xs flex-gt-xs="5" class="" layout="row" layout-align="end start">
             <span class="pull-right" ng-click="cancel()" id="closeButton"><i class="fa fa-times" aria-hidden="true"></i></span>
+            </div>
+        </div>
+      </md-dialog>
+</div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="facultyDialog">
+      <md-dialog class="fullscreen-dialog dialogText">
+        <div layout="row" layout-xs="column" layout-fill layout-margin>
+            <div hide-gt-xs flex-xs="5">
+            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            </div>
+            <div flex-gt-xs="65" flex-xs="65" layout = "row" layout-xs="column">
+                <div flex="100" layout = "column">
+                    <div flex="80" >
+                        <div layout="row" layout-align="center center" class="fillParent">
+                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
+                             <span id = "prevButton" class="md-subhead" ng-click="prevFaculty()">
+                              <i class="fa fa-chevron-circle-left" aria-hidden="true" ></i>
+                             </span>
+                            </div>
+                            <div flex="80" class="fillParent" layout="row" layout-align="center center">
+                             <img ng-src="{{activeFaculty.image}}" id="firstContainerImage" />
+                            </div>
+                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
+                             <span id = "nextButton"  class="md-subhead" ng-click="nextFaculty()">
+                              <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+                             </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div flex="20">
+                        <div layout="row" layout-align="center center">
+                          <div flex = "10" class="opaqueImage" ng-repeat="faculty in groupFaculties" ng-if="$index >= startFacultyIndex &&  $index < endFacultyIndex" layout-padding>
+                            <div id="thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}" ng-click="changeFacultyImage($index)">
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div flex-gt-xs="30" flex-xs="30" layout = "column">
+                <div layout="column" layout-margin>
+                    <small>
+                    
+                    <div class="md-subhead">{{activeFaculty.name | uppercase}}
+                    </div>
+                    <div class="textCCC">
+                        {{activeFaculty.subject}}
+                        <span ng-if="activeFaculty.yearsExperience">
+                        &nbsp;|&nbsp;{{activeFaculty.yearsExperience}} years of Experience
+                        </span>
+                        
+                    </div>
+                    <div class="textCCC">
+                            {{activeFaculty.qualification}}
+                    </div>
+                    <div class="top-buffer10 text-justify textCCC">
+                        {{activeFaculty.description}}
+                    </div>
+                    </small>
+                </div>
+            </div>
+            <div hide-xs flex-gt-xs="5">
+            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            </div>
+        </div>
+      </md-dialog>
+</div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="resultsDialog">
+      <md-dialog class="fullscreen-dialog dialogText">
+        <div layout="row" layout-xs="column" layout-fill layout-margin>
+            <div hide-gt-xs flex-xs="5">
+            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            </div>
+            <div flex-gt-xs="65" flex-xs="65" layout = "row" layout-xs="column">
+                <div flex="100" layout = "column">
+                    <div flex="80" >
+                        <div layout="row" layout-align="center center" class="fillParent">
+                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
+                             <span id = "prevButton" class="md-subhead" ng-click="prevResult()">
+                              <i class="fa fa-chevron-circle-left" aria-hidden="true" ></i>
+                             </span>
+                            </div>
+                            <div flex="80" class="fillParent" layout="row" layout-align="center center">
+                             <img ng-src="{{activeResult.image}}" id="firstContainerImage" />
+                            </div>
+                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
+                             <span id = "nextButton"  class="md-subhead" ng-click="nextResult()">
+                              <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+                             </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div flex="20">
+                        <div layout="row" layout-align="center center">
+                          <div flex = "10" class="opaqueImage" ng-repeat="result in groupResults" ng-if="$index >= startResultIndex &&  $index < endResultIndex" layout-padding>
+                            <div id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}" ng-click="changeResultImage($index)">
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div flex-gt-xs="30" flex-xs="30" layout = "column">
+                <div layout="column" layout-margin>
+                    <small>
+                    
+                    <div class="md-subhead">{{activeResult.name | uppercase}}
+                    </div>
+                    <div class="textCCC">
+                        {{activeResult.exam.displayname}}&nbsp;
+                        {{activeResult.year}}<br/>
+                        All India Rank: {{activeResult.rank}}<br/>
+                        Category: {{activeResult.category}}
+                        
+                    </div>
+                    <div class="textCCC">
+                            {{activeResult.qualification}}
+                    </div>
+                    <div class="top-buffer10 text-justify textCCC">
+                        {{activeResult.description}}
+                    </div>
+                    </small>
+                </div>
+            </div>
+            <div hide-xs flex-gt-xs="5">
+            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
             </div>
         </div>
       </md-dialog>
