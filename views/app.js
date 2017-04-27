@@ -1087,7 +1087,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
    
     exambazaar.controller("showGroupController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService){
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog){
         $scope.exam = thisExam.data;
         $scope.category = thisStream.data;
         $scope.categoryName = $stateParams.categoryName;
@@ -1292,6 +1292,65 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.groupExamsOnly = $scope.groupExams.map(function(a) {return a.exam;});
         
         
+        $scope.showPhotoDialog = function(ev,index) {
+            $scope.activePhotoIndex = index;
+            $scope.activePhoto = $scope.groupPhotos[index];
+            var indexPair = startEndIndex(index, $scope.groupPhotos.length);
+            $scope.startPhotoIndex = indexPair.start;
+            $scope.endPhotoIndex = indexPair.end;
+            
+            $mdDialog.show({
+              contentElement: '#photoDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        function startEndIndex (index, arrayLength){
+            
+            var showLength = 6;
+            var indexPair = {
+                start: 0,
+                end: arrayLength
+            };
+            
+            if(index - showLength/2 <=0){
+                indexPair.start = 0;
+                indexPair.end = Math.min(indexPair.start + showLength, arrayLength);
+            }else{
+                if(index + showLength/2 >= arrayLength){
+                    indexPair.end = arrayLength;
+                    indexPair.start = Math.max(0, indexPair.end - showLength);
+                    
+                }else{
+                    indexPair.start = index -showLength/2;
+                    indexPair.end = Math.min(indexPair.start + showLength, arrayLength);
+                }
+                
+            }
+            return (indexPair);
+        };
+        
+        $scope.prevPhoto = function(){
+            var index = $scope.activePhotoIndex - 1;
+            $scope.changePhotoImage(index);
+        };
+         $scope.nextPhoto = function(){
+            var index = $scope.activePhotoIndex + 1;
+            $scope.changePhotoImage(index);
+        };
+        $scope.changePhotoImage = function(index){
+            var arrayLength = $scope.groupPhotos.length;
+            if(index >=0 && index < arrayLength){
+                $scope.activePhotoIndex = index;
+                $scope.activePhoto = $scope.groupPhotos[index];
+                var indexPair = startEndIndex(index, $scope.groupPhotos.length);
+                //console.info(JSON.stringify(indexPair));
+                $scope.startPhotoIndex = indexPair.start;
+                $scope.endPhotoIndex = indexPair.end;
+            }
+            
+        };
         
     }]);    
            

@@ -1548,3 +1548,71 @@
     
     
  </div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="photoDialog">
+      <md-dialog class="fullscreen-dialog dialogText">
+        <div layout="row" layout-xs="column" layout-fill layout-margin>
+            <div hide-gt-xs flex-xs="5">
+            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            </div>
+            <div flex-gt-xs="95" flex-xs="95" layout = "row" layout-xs="column">
+                <div flex="100" layout ="column">
+                    <div flex="80" >
+                        <div layout="row" layout-align="center center" class="fillParent">
+                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
+                             <span id = "prevButton" class="md-subhead" ng-click="prevPhoto()">
+                              <i class="fa fa-chevron-circle-left" aria-hidden="true" ></i>
+                             </span>
+                            </div>
+                            <div flex="80" class="fillParent" layout="row" layout-align="center center">
+                             <img ng-src="{{activePhoto.image}}" id="firstContainerImage" />
+                            </div>
+                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
+                             <span id = "nextButton"  class="md-subhead" ng-click="nextPhoto()">
+                              <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+                             </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div flex="20">
+                        <div layout="row" layout-align="center center">
+                          <div flex = "10" class="opaqueImage" ng-repeat="photo in groupPhotos" ng-if="$index >= startPhotoIndex &&  $index < endPhotoIndex" layout-padding>
+                            <div id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}" ng-click="changePhotoImage($index)">
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div flex-gt-xs="0" flex-xs="0" layout = "column">
+                <div layout="column" layout-margin>
+                    <small>
+                    
+                    <div class="md-subhead">{{activeFaculty.name | uppercase}}
+                    </div>
+                    <div class="textCCC">
+                        {{activeFaculty.subject}}
+                        <span ng-if="activeFaculty.yearsExperience">
+                        &nbsp;|&nbsp;{{activeFaculty.yearsExperience}} years of Experience
+                        </span>
+                        
+                    </div>
+                    <div class="textCCC">
+                            {{activeFaculty.qualification}}
+                    </div>
+                    <div class="top-buffer10 text-justify textCCC">
+                        {{activeFaculty.description}}
+                    </div>
+                    </small>
+                </div>
+            </div>
+            <div hide-xs flex-gt-xs="5" class="" layout="row" layout-align="end start">
+            <span class="pull-right" ng-click="cancel()" id="closeButton"><i class="fa fa-times" aria-hidden="true"></i></span>
+            </div>
+        </div>
+      </md-dialog>
+</div>    
+</div>
