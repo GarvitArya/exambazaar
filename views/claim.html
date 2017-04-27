@@ -667,6 +667,9 @@
                 <span>
                     EB Verify
                 </span>
+                <span ng-if="provider.ebVerifyState && ebVerifyState!=''">
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                </span>
             </div>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder text-center secondFont textLightGrey paddingTB20" id="paneMiddle">
@@ -1937,6 +1940,12 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement2 text-center thirdFont textDarkGrey" id="paneMiddle">
+            
+            <div layout="row" layout-align="start start" class="thirdFont" ng-if="masteruser">
+                <a ng-href="{{provider.targetStudyWebsite}}" target="_blank" ng-if="provider.targetStudyWebsite">
+                TS Url
+                </a>
+            </div>
             <div layout="row" layout-align="start start" class="thirdFont">
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                     <div layout="column" layout-align="center center">

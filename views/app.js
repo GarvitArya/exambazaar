@@ -1566,7 +1566,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.editable = false;
         $scope.verifiedUser = false;
         $scope.ebuser = false;
-        
+        $scope.masteruser = false;
         $scope.showAddPrimaryManagement = function(ev) {
             $mdDialog.show({
               contentElement: '#addPrimaryManagementDialog',
@@ -1616,6 +1616,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.editable = true;
                 $scope.verifiedUser = true;
                 $scope.ebuser = true;
+                $scope.masteruser = true;
             }
             if($scope.user.userType=='Intern - Business Development'){
                 $scope.editable = true;
