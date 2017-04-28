@@ -3,7 +3,7 @@
         margin-top: 40px;
     }
     #categoryFont{
-        min-height: 5vh;
+        min-height: 7vh;
         color: white;
         min-width: 175px;
         border-style: solid;
@@ -64,27 +64,28 @@
     }
     #cityContainer{
         background: rgba(255, 255, 255, 0.5);
-        min-height: 40vh;
-        margin-left: 80px;
-        margin-right: 80px;
+        min-height: 60vh;
         padding-top: 20px;
-        padding-bottom: 20px;
+    }
+    #cityPageContent{
+        min-height: 75vh;
     }
 </style>
 
 <div id="fullPage">
-<div class="container">
+<div class="container-fluid">
     <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div id="spacer">
         </div>
-        <div id="breadcrumbContainer">
-            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 text-center md-subhead" id="breadcrumb">
+        <div id="breadcrumbContainer" hide-xs>
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 text-center editFont" id="breadcrumb">
             <span><a ui-sref="main">EXAMBAZAAR</a></span>
             <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
             <span> > {{subcategory.displayname | uppercase}}</span>
             </div>
         </div>
-        <div id="cityContainer" layout="column">
+        <div id="cityPageContent" layout="column" layout-align="center center">
+        <div id="cityContainer" layout="column" class="width100">
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center" id="pageHeader">
             <span class="text md-title" id="pageHeaderFont"><strong>SELECT YOUR CITY</strong></span>
         </div>
@@ -136,13 +137,14 @@
             </div>-->
         </div>
         </div>
-        <div layout="row" layout-align="center end" id="steps">
+        <div layout="row" layout-align="center end" id="steps" class="width100">
             <div id="stepActive">
             </div>
             <div id="stepActive">
             </div>
             <div id="stepActive">
             </div>
+        </div>
         </div>
         
     </div>

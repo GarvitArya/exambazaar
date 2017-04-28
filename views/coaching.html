@@ -45,6 +45,7 @@
     }
     #breadcrumb{
         letter-spacing: 0px;
+        color: #20C39A;
     }
     
     .bs-callout {
@@ -197,6 +198,9 @@
     #coachingList{
         /*min-height: 40vh;*/
     }
+    a{
+        color: #20C39A;
+    }
 </style>
 
 <div id="fullPageContent">
@@ -204,8 +208,8 @@
     <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div id="spacer">
         </div>
-        <div class="row">
-            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
+        <div class="row" hide-xs>
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 editFont text-primary" id="breadcrumb">
             <small>
             <span><a ui-sref="main">EXAMBAZAAR</a></span>
             <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
@@ -214,7 +218,7 @@
             </small>
             </div>
         </div>
-        <div class="row">
+        <div class="row ">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated fadeIn" id="pageHeader">
             <span class="text md-title" id="pageHeaderFont"><strong>{{uniqueInstitutes.length}} {{subcategory.displayname | uppercase}} INSTITUTES IN {{city | uppercase}}</strong></span>
             <!--<span id="normal" ng-if="editable"><small>
@@ -224,10 +228,10 @@
             </small></span>-->
         </div>
         </div>
-        <div class="row" id="mainContent">
+        <div class="row " id="mainContent">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
 
-            <div class="row">
+            <div layout="column">
             <div ng-repeat="coachingGroup in uniqueInstitutes | orderBy:['-institutes.length'] " class="fourthFont" id="coachingList">
                 <div class="row" >
                 <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9" id="leftTabs">
@@ -235,7 +239,7 @@
                     <div layout="row">
                         <div flex="85" layout="column" layout-align="center start">
                             <strong><span class=" text-primary secondFont">
-                            <a id="coachingHeader">
+                            <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                                 {{$index + 1}}. {{coachingGroup.groupName | uppercase}}
                             </a>
                             </span></strong>

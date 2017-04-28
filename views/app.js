@@ -11,12 +11,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .primaryPalette("teal");
     })
     .controller('streamController', streamController);
-    function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories) {
+    function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope) {
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location'); 
         }
         $scope.streams = streamList.data;
-        
+        $rootScope.pageTitle = "Exambazaar: Select the stream you want to study";
         /*
         $scope.showSubCategories = 0;
         $scope.category = '';
@@ -776,7 +776,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         if($scope.exams[0].stream){
             $scope.category = $scope.exams[0].stream;
         }
-        
+        $rootScope.pageTitle = $scope.category.displayname + ' Coaching Institutes in India | Exambazaar';
         
         /*//console.info(JSON.stringify(categories));
         $scope.categoryName = $stateParams.categoryName;
@@ -794,7 +794,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
             });
         }*/
-        $rootScope.pageTitle = $scope.category.displayname + ' deals at Exam Bazaar';    
+          
         /*$scope.goToCity = function(subcategory){ 
             $cookies.putObject('subcategory', subcategory);
             $state.go('city');
@@ -836,7 +836,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.subcategory = $scope.exam;
         
-        $rootScope.pageTitle = $scope.subcategory.displayname + ' deals at Exam Bazaar'; 
+        $rootScope.pageTitle = $scope.subcategory.displayname + ' Coaching Institutes in India | Exambazaar'; 
             
         $scope.showCoaching = function(city){ 
             $cookies.putObject('city', city);

@@ -502,7 +502,7 @@
 </div>
 <!-- Claim the page section -->
 <div layout="column" layout-xs="column" class="whiteBackground mainContent" ng-cloak>
-    <div layout="row" layout-align="start center" id="breadcrumb" class="">
+    <div layout="row" layout-align="start center" id="breadcrumb" hide-xs>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8  editFont textDarkGrey" id="paneMiddle">
@@ -647,7 +647,7 @@
         
     </div>
      -->
-    <div layout="row" layout-xs="column" class="componentRow secondFont" id="Contact">
+    <!--<div layout="row" layout-xs="column" class="componentRow secondFont" id="Contact">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1  bottomBorder textLightGrey" id="paneLeft"  ng-class="{ editing: editContact }">
@@ -664,10 +664,13 @@
                 <div layout="row" class="">
                     <span class="text-primary">
                         <a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank">
-                        Centre #{{$index+1}} of {{group.length}}
+                        Centre {{$index+1}}
                         </a>
                     </span>:&nbsp;
-                    {{thisGroup.address}}, {{thisGroup.city}} - {{thisGroup.pincode}}
+                    <span>
+                        {{thisGroup.address}}, {{thisGroup.city}} - {{thisGroup.pincode}}
+                    </span>
+                    
                 </div>
                 <div layout="row" ng-show="thisGroup.phone.length > 0" class="marginB5">
                     <div flex="5">
@@ -762,7 +765,9 @@
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
-    </div>
+    </div>-->
+    
+    
     <div layout="row" layout-xs="column" class="componentRow" id="Exams">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
@@ -899,7 +904,6 @@
                             </div>
                         </div>
                     </div>
-                      
                 </div>
                 
                 </div>
@@ -1259,7 +1263,7 @@
     
     
     
-    <div layout="row" layout-xs="column" class="componentRow " id="Faculty">
+    <div layout="row" layout-xs="column" class="componentRow " id="Faculty" ng-if="groupFaculties.length > 0">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft" ng-class="{ editing: editFaculty }">
