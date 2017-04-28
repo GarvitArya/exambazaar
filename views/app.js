@@ -17,6 +17,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }
         $scope.streams = streamList.data;
         $rootScope.pageTitle = "Exambazaar: Select the stream you want to study";
+        var streamNames = '';
+        $scope.streams.forEach(function(thisStream, sIndex){
+            if(true){
+                streamNames += thisStream.displayname 
+                if(sIndex != $scope.streams.length - 1){
+                    streamNames += ', ';
+                }    
+                    
+            }
+            
+        });
+        $rootScope.pageDescription = "Search over 20,000 coaching institutes in India to study across " + streamNames + ' at Exambazaar';
+        console.info($rootScope.pageDescription);
+        
         /*
         $scope.showSubCategories = 0;
         $scope.category = '';
