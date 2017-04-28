@@ -2472,6 +2472,24 @@
 </div>
 
 <div style="visibility: hidden">    
+    <div class="md-dialog-container" id="verifiedDoneDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    CI {{provider.name}} verification marked to {{verifiedStateMarked}}!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
     <div class="md-dialog-container" id="addPrimaryManagementDialog">
       <md-dialog>
           <div layout="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >

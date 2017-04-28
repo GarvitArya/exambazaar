@@ -118,6 +118,7 @@ var targetStudyProviderSchema = mongoose.Schema({
         user: { type: Schema.ObjectId, ref: 'User' },
         _added: { type: Date, default: Date.now }
     }],
+    verfiyAssigned: {type: Boolean,default: false},
     rank: {type: Number,default: 0},
     ebNote: [{
         note: String,

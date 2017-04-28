@@ -436,6 +436,34 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.get('/api/tofillcis/user/'+userId, {userId: userId});
         };
     }]);
+    exambazaar.service('toverifyciService', ['$http', function($http) {
+       
+        this.savetoverifyci = function(toverifyciForm) {
+            return $http.post('/api/toverifycis/save', toverifyciForm);
+        };
+        
+        this.markDone = function(toverifyciForm) {
+            return $http.post('/api/toverifycis/markDone', toverifyciForm);
+        };
+        this.verifiedCount = function() {
+            return $http.get('/api/toverifycis/verifiedCount');
+        };
+        this.institutesFilled = function() {
+            return $http.get('/api/toverifycis/institutesFilled');
+        };
+        this.gettoverifyci = function(toverifyciId) {
+            return $http.get('/api/toverifycis/edit/'+toverifyciId, {toverifyciId: toverifyciId});
+        };
+        this.removeAssigned = function(toverifyciId){
+            $http.get('/api/toverifycis/remove/'+toverifyciId, {toverifyciId: toverifyciId});
+        };
+        this.gettoverifycis = function() {
+            return $http.get('/api/toverifycis');
+        };
+        this.getusertoverifycis = function(userId) {
+            return $http.get('/api/toverifycis/user/'+userId, {userId: userId});
+        };
+    }]);    
     exambazaar.service('LocationService', ['$http', function($http) {
         this.saveLocation = function(location) {
             return $http.post('/api/locations/save', location);
@@ -1544,7 +1572,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
            
    
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.videoTags = videoMediaTagList.data.mediaTypeTags;
@@ -1949,8 +1977,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 };
                 console.info(ebVerfiyForm);
                 targetStudyProviderService.setEBVerifyState(ebVerfiyForm).success(function (data, status, headers) {
-                    $scope.showSavedDialog();
-                    $state.reload();
+                    
+                    var toverifyciForm = {
+                        institute: $scope.provider._id
+                    };
+                    //GHI
+                    $scope.verifiedStateMarked = verifyState;
+                    toverifyciService.markDone(toverifyciForm)
+                    .success( function (data, status, headers) {
+                        $scope.showVerifiedDoneDialog();
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                    
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error");
@@ -2955,6 +2996,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $mdDialog.cancel();
             },1000)
         };
+        $scope.showVerifiedDoneDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#verifiedDoneDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
         $scope.showMarkLocationDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#markLocationDialog',
@@ -3702,7 +3754,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
         
     exambazaar.controller("masterDashboardController", 
-        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount){
             
             $scope.usersCount = usersCount.data;
             $scope.studentCount = studentCount.data;
@@ -3719,6 +3771,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             $scope.filledCount = filledCount.data;
             $scope.tofillciList = tofillciList.data;
+            $scope.toverifyciList = toverifyciList.data;
+            $scope.verifiedCount = verifiedCount.data;
             $scope.masterViewSummary = masterViewSummary.data;
             
             $scope.internDueList = [];
@@ -3800,7 +3854,43 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     });
                 }
             };
+            $scope.rankedCities = ["Jaipur", "Delhi", "Mumbai", "New Delhi", "Gurgaon"];
+            /*"Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"*/
             
+            $scope.ciVerifyDeadline = new Date();
+            $scope.ciVerifyDeadline.setDate( $scope.ciVerifyDeadline.getDate() + 1);
+            
+            
+            $scope.instituteVerifyCount = 1;
+            $scope.ciVerifyIntern = $scope.internList[$scope.internList.length-1];
+            $scope.verifyCity = 'Jaipur';
+            $scope.assignCIVerify = function(){
+                var intern = $scope.ciVerifyIntern;
+                var instituteVerifyCount = $scope.instituteVerifyCount;
+                var ciVerifyDeadline = $scope.ciVerifyDeadline;
+                var verifyCity = $scope.verifyCity;
+                ciVerifyDeadline.setHours(23,59,59);
+                //var res = coaching.split("/");
+                //var coaching = res[res.length-1];
+                if(instituteVerifyCount == '' || !ciVerifyDeadline){
+                    alert('Check Count or URL and deadline date');
+                }else{
+                    //ABC
+                    var toverifyciForm = {
+                        verifyCity: verifyCity,
+                        instituteVerifyCount: instituteVerifyCount,
+                        user: intern,
+                        _deadline: ciVerifyDeadline,
+                    };
+                   console.info(toverifyciForm); toverifyciService.savetoverifyci(toverifyciForm).success(function (data, status, headers) {
+                        console.info('Done');
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info(status + " " + data);
+                    });
+                }
+            };
             
             $scope.showRemoveConfirm = function(tofillci, ev) {
                 console.info(JSON.stringify(tofillci.institute));
@@ -3821,6 +3911,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     });
 
             };
+            
             
             $scope.removeAssigned = function(tofillci){
                 console.log(tofillci);
@@ -5409,7 +5500,25 @@ function getLatLng(thisData) {
         }
     });
 };    
-        
+      
+    exambazaar.controller("assignedToVerifyController", 
+        [ '$scope', 'thisuser' , 'thisuserAssignedToVerify',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssignedToVerify, $http, $state, $rootScope){
+        $scope.user = thisuser.data;
+        $scope.assigned = thisuserAssignedToVerify.data;
+        $scope.assignedCount = 0;
+        if($scope.user.userType =='Master' || $scope.user.userType =='Intern - Business Development'){
+            $scope.authorized = true;
+        }
+        $scope.assigned.forEach(function(thisAssigned, index){
+            
+            if(thisAssigned.active){
+                $scope.assignedCount += 1;
+            }
+        });
+        //console.log($scope.assignedCount);
+        $rootScope.title =$scope.user.basic.name;
+    }]);  
+      
     exambazaar.controller("assignedController", 
         [ '$scope', 'thisuser' , 'thisuserAssigned',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssigned, $http, $state, $rootScope){
         $scope.user = thisuser.data;
@@ -7152,6 +7261,14 @@ function getLatLng(thisData) {
                     function(tofillciService) {
                     return tofillciService.gettofillcis();
                 }],
+                toverifyciList: ['toverifyciService',
+                    function(toverifyciService) {
+                    return toverifyciService.gettoverifycis();
+                }],
+                verifiedCount: ['toverifyciService',
+                    function(toverifyciService) {
+                    return toverifyciService.verifiedCount();
+                }],
             }
         })
         .state('partner-dashboard', {
@@ -7634,6 +7751,35 @@ function getLatLng(thisData) {
                 thisuserAssigned: ['tofillciService', '$stateParams',
                     function(tofillciService,$stateParams){
                     return tofillciService.getusertofillcis($stateParams.userId);
+                        //ABC
+                }],
+                
+                user: function() { return {}; }
+            }
+        })
+        .state('assignedToVerify', {
+            url: '/user/:userId/assignedToVerify',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'assignedToVerify.html',
+                    controller: 'assignedToVerifyController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                thisuserAssignedToVerify: ['toverifyciService', '$stateParams',
+                    function(toverifyciService,$stateParams){
+                    return toverifyciService.getusertoverifycis($stateParams.userId);
                         //ABC
                 }],
                 
