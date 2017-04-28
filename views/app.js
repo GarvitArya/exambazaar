@@ -198,7 +198,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     exambazaar.service('UserService', ['$http', function($http) {
         this.saveUser = function(user) {
-            //alert('Here');
+            
             return $http.post('/api/users/save', user);
         };
         this.getUser = function(userId) {
@@ -230,11 +230,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.get('/api/users/userexists/'+mobile, {mobile: mobile});
         };
         this.markLogin = function(loginForm) {
-            //alert('Here');
+            
             return $http.post('/api/users/markLogin',loginForm);
         };
         this.markLatLng = function(positionForm) {
-            //alert('Here');
+            
             return $http.post('/api/users/markLatLng',positionForm);
         };
         this.shortlistInstitute = function(shortListForm) {
@@ -1272,7 +1272,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.ebuser = false;
                 if($scope.user.partner.indexOf($scope.provider._id) != -1){
                     if(!$scope.provider.primaryManagement || $scope.provider.primaryManagement.name =='' || $scope.provider.primaryManagement.mobile ==''){
-                        //alert('Here');
+                        
                         $scope.editable = false;
                         $scope.showAddPrimaryManagement();
                     }else{
@@ -1284,7 +1284,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }else{
                     $scope.editable = false;
                     $scope.showUnauthorizedAccess();
-                    //alert('You are not authorised to edit this institute. Contact EB team for more.');
+                    
                 }
                 
             }*/
@@ -1904,7 +1904,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.ebuser = false;
                 if($scope.user.partner.indexOf($scope.provider._id) != -1){
                     if(!$scope.provider.primaryManagement || $scope.provider.primaryManagement.name =='' || $scope.provider.primaryManagement.mobile ==''){
-                        //alert('Here');
+                        
                         $scope.editable = false;
                         $scope.showAddPrimaryManagement();
                     }else{
@@ -1916,7 +1916,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }else{
                     $scope.editable = false;
                     $scope.showUnauthorizedAccess();
-                    //alert('You are not authorised to edit this institute. Contact EB team for more.');
+                    
                 }
                 
             }
@@ -2305,9 +2305,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
         });
         
-        $scope.popHi = function(){
-            alert('Hi');
-        };
         $scope.editResult = false;
         $scope.editResults= function(){
             $scope.editResult = true;
@@ -3175,7 +3172,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.uploadResultPic = function (newresultpic,result) {
             //var logo = $scope.newlogo;
-            alert('Hi');
+            //alert('Hi');
             var logo = [newresultpic];
             var nFiles = logo.length;
             
@@ -4731,7 +4728,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     user: $scope.user.userId
                 };
                 targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
-                    //alert('Done');
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
