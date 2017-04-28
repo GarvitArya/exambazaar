@@ -1457,7 +1457,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         };
         var title = $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ' Exam';
-        console.log(title);
+        //console.log(title);
+        
         $rootScope.pageTitle = title;
     }]);    
            
