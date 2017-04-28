@@ -30,9 +30,9 @@
     </div>
     <div layout="column" layout-align="start start" ng-if="authorized">
         <div layout="row" layout-align="center center" class="font20 text-primary bold width100">
-            Institutes Assigned to {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{assignedCount}}</span>
+            Institutes Assigned to Verify -  {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{assignedCount}}</span>
         </div>
-        <div flex layout="row" layout-align="start center" class="width100 greyBottomBorder marginT20 bold">
+        <div flex layout="row" layout-align="start center" class="width100 greyBottomBorder marginT20 font10 bold">
             <div flex="5">
                 S. No.
             </div>
@@ -52,7 +52,7 @@
                 Finished on
             </div>
         </div>
-        <div flex layout="row" layout-align="start center" ng-repeat="task in assigned | orderBy:['-active','_deadline','_created'] | filter:filterText as filtered" class="width100 greyDashedBottomBorder" ng-class="{ pending: task.active }">
+        <div flex layout="row" layout-align="start center" ng-repeat="task in assigned | orderBy:['-active','_deadline','_created'] | filter:filterText as filtered" class="width100 greyDashedBottomBorder font10" ng-class="{ pending: task.active }">
             <div flex="5">
                 {{$index+1}}
             </div>
