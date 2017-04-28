@@ -1393,7 +1393,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });
         
         $scope.groupExamsOnly = $scope.groupExams.map(function(a) {return a.exam;});
-        
+        console.info($scope.groupResults);
         
         $scope.showPhotoDialog = function(ev,index) {
             $scope.activePhotoIndex = index;
