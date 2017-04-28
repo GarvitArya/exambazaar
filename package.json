@@ -67,6 +67,7 @@
     "ng-file-upload": "^12.2.13",
     "ng-handsontable": "^0.13.0",
     "ng-imgur": "^0.2.1",
+    "ng-meta": "^1.0.0",
     "ngGeolocation": "0.0.7",
     "ngmap": "^1.18.0",
     "nodemailer": "^3.0.2",

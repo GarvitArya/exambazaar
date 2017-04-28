@@ -1,5 +1,5 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload','youtube-embed']);
+var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload','youtube-embed', 'ngMeta']);
 //,'ngHandsontable''ngHandsontable',
     (function() {
     'use strict';
@@ -11,7 +11,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .primaryPalette("teal");
     })
     .controller('streamController', streamController);
-    function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope) {
+    function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope, ngMeta) {
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location'); 
         }
@@ -28,8 +28,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
             
         });
-        $rootScope.pageDescription = "Search over 20,000 coaching institutes in India to study across " + streamNames + ' at Exambazaar';
-        console.info($rootScope.pageDescription);
+        var pageTitle = "Choose your Study Stream for over 50 Exams in India"
+        var pageDescription = "Search over 20,000 coaching institutes in India to study across " + streamNames + ' at Exambazaar | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India';
+        $rootScope.pageDescription = pageDescription;
+        ngMeta.setTitle(pageTitle);
+        ngMeta.setTag('description', pageDescription);
         
         /*
         $scope.showSubCategories = 0;
@@ -783,15 +786,26 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]); 
     exambazaar.controller("categoryController", 
-        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','examList', function($scope,$stateParams,$cookies,$state,categories,$rootScope,examList){
+        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','examList', 'ngMeta', function($scope,$stateParams,$cookies,$state,categories,$rootScope,examList, ngMeta){
         
         $scope.exams = examList.data;
             $scope.categoryName = $stateParams.categoryName;
         if($scope.exams[0].stream){
             $scope.category = $scope.exams[0].stream;
         }
-        $rootScope.pageTitle = $scope.category.displayname + ' Coaching Institutes in India | Exambazaar';
-        
+        var examNames = '';
+        $scope.exams.forEach(function(thisExam, examIndex){
+            examNames += thisExam.displayname;
+            if(examIndex < $scope.exams.length - 1){
+                examNames += ', ';
+            }
+        });
+        //console.info(examNames);
+        var pageTitle = "Choose the exam you are preparing for within " + $scope.category.displayname;
+        var pageDescription = "Study for " + examNames + " at the best coaching institutes across 90 cities of India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
+        $rootScope.pageDescription = pageDescription;
+        ngMeta.setTitle(pageTitle);
+        ngMeta.setTag('description', pageDescription);
         /*//console.info(JSON.stringify(categories));
         $scope.categoryName = $stateParams.categoryName;
         $scope.category = {};
@@ -829,7 +843,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
         
         $rootScope.pageTitle = 'Exambazaar: Find best coaching institutes in your city to prepare for over 50 exams';
-        $rootScope.pageDescription = "Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching institutes in your city. Our easy-to-use website shows you all the coaching institutes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching institutes to prepare for them";
+        $rootScope.pageDescription = "Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching institutes in your city. Our easy-to-use website shows you all the coaching institutes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching institutes to succeed";
             
         $scope.goToCity = function(subcategory){ 
             $cookies.putObject('subcategory', subcategory);
@@ -838,7 +852,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]); 
     exambazaar.controller("cityController", 
-        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog','thisStream','thisExam', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog,thisStream,thisExam){
+        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog','thisStream','thisExam', 'ngMeta', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog,thisStream,thisExam, ngMeta){
         
         $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
         
@@ -850,7 +864,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.subcategory = $scope.exam;
         
-        $rootScope.pageTitle = $scope.subcategory.displayname + ' Coaching Institutes in India | Exambazaar'; 
+        
             
         $scope.showCoaching = function(city){ 
             $cookies.putObject('city', city);
@@ -867,12 +881,31 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         $scope.cancel = function() {
           $mdDialog.cancel();
-        };    
+        }; 
+            
+        var cityNames = '';
+        $scope.rankedCities.forEach(function(thisCity, cityIndex){
+            
+            if(cityIndex < 11){
+                cityNames += thisCity;
+                if(cityIndex < 10){
+                cityNames += ', ';
+                }
+            }
+        });
+        
+            
+        var pageTitle = "Select the city to study " + $scope.category.displayname;
+        var pageDescription = "Search for " + $scope.subcategory.displayname + " coaching institutes in " + cityNames + " and 90 other cities in India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
+        $rootScope.pageDescription = pageDescription;
+        ngMeta.setTitle(pageTitle);
+        //console.info(pageDescription);
+        ngMeta.setTag('description', pageDescription);
             
     }]);    
     
     exambazaar.controller("coachingController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam','streamExams', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams){
+    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam','streamExams', 'ngMeta', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams, ngMeta){
        
         $scope.editable = false;
         if($cookies.getObject('sessionuser')){
@@ -912,6 +945,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var groupResults;
         var thisProviderCourses;
         var thisProviderResults;
+        
+        
         $scope.uniqueInstitutes.forEach(function(thisGroup, index){
             coursesOffered = [];
             groupResults = [];
@@ -954,7 +989,25 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             provider.showDetails = true;
         };
         $scope.cities = cities;
-        $rootScope.pageTitle = $scope.city + ": " + $scope.subcategory.displayname + " institutes around you";
+        
+        var coachingGroupNames = '';
+        var howmany = 25;
+        $scope.uniqueProviders.forEach(function(thisProvider, pIndex){
+            if(pIndex < howmany){
+                coachingGroupNames += thisProvider;
+                if(pIndex < howmany - 1){
+                    coachingGroupNames += ", ";
+                }
+            }
+        });
+        
+        var pageTitle = $scope.subcategory.displayname + " Coaching Institutes in " + $scope.city;
+        var pageDescription = "Search from " + $scope.uniqueInstitutes.length + " " +   $scope.subcategory.displayname + " Coaching Institutes in " + $scope.city + ". Browse through "+ coachingGroupNames + " and " + " many more!" + " | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
+        $rootScope.pageDescription = pageDescription;
+        ngMeta.setTitle(pageTitle);
+        //console.info(pageDescription);
+        
+        ngMeta.setTag('description', pageDescription);
         
         $scope.setFilter = function(text){
             $scope.searchText = text;
@@ -1133,7 +1186,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
    
     exambazaar.controller("showGroupController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog){
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', 'ngMeta', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, ngMeta){
         $scope.exam = thisExam.data;
         $scope.category = thisStream.data;
         $scope.categoryName = $stateParams.categoryName;
@@ -1470,10 +1523,23 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.endResultIndex = indexPair.end;
             }
         };
-        var title = $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ' Exam';
+        
+        
+        
+        
+        var pageTitle = $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ' Exam';
+        ///Change this
+        
+        var pageDescription = $stateParams.groupName + ", " +$scope.city +  " has " + $scope.group.length + " " +   $scope.subcategory.displayname + " Coaching Centers in " + $scope.city + ". | Exambazaar - results, fees, faculty, photos, vidoes, reviews of " + $stateParams.groupName;
+        $rootScope.pageDescription = pageDescription;
+        ngMeta.setTitle(pageTitle);
+        console.info(pageDescription);
+        
+        ngMeta.setTag('description', pageDescription);
+        
         //console.log(title);
         
-        $rootScope.pageTitle = title;
+        $rootScope.pageTitle = pageTitle;
     }]);    
            
    
@@ -6135,8 +6201,15 @@ function getLatLng(thisData) {
         'tooltipTemplateUrlCache': true
         //etc...
       });
-    }])
+    }]);
         
+    exambazaar.config(['ngMetaProvider', function configConf(ngMetaProvider) {
+        ngMetaProvider.useTitleSuffix(true);
+        ngMetaProvider.setDefaultTitle('Search, Compare and Apply for Exam Preparation');
+        ngMetaProvider.setDefaultTitleSuffix(' | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India');
+        ngMetaProvider.setDefaultTag('description', 'Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching institutes in your city. Our easy-to-use website shows you all the coaching institutes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching institutes to succeed | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India');
+        ngMetaProvider.setDefaultTag('author', 'Gaurav Parashar');
+    }]);    
     //exambazaar.constant('moment', require('moment-timezone'));
     /*exambazaar.value('angularMomentConfig', {
         timezone: 'Asia/Calcutta|Asia/Kolkata' // e.g. 'Europe/London'
@@ -8297,7 +8370,7 @@ function getLatLng(thisData) {
         
     })();
 
-exambazaar.run(function($rootScope,$mdDialog) {
+exambazaar.run(function($rootScope,$mdDialog, ngMeta) {
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
     $rootScope.imageUrl = '';
@@ -8314,6 +8387,7 @@ exambazaar.run(function($rootScope,$mdDialog) {
        document.body.scrollTop = document.documentElement.scrollTop = 0;
         $mdDialog.hide();
     });
+    ngMeta.init();
 });
 
 function generateOtp(min, max) {
