@@ -1572,7 +1572,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
            
    
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService', 'ngMeta', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService, ngMeta){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.videoTags = videoMediaTagList.data.mediaTypeTags;
@@ -3462,7 +3462,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
          };
         
         $rootScope.pageTitle = $scope.provider.name;
+        var pageTitle = $scope.provider.name + ' listing in ' + $scope.provider.city + ' - Claim Now';
         
+        var examNames = '';
+        $scope.provider.exams.forEach(function(thisExam, examIndex){
+            examNames += thisExam.displayname;
+            if(examIndex < $scope.provider.exams.length - 1){
+                examNames += ', ';
+            }
+        });
+        
+        var pageDescription = "Study at " + $scope.provider.name + ", " +$scope.city +  " for " + examNames+ ". | Exambazaar - results, fees, faculty, photos, vidoes, reviews of " + $stateParams.groupName;
+        $rootScope.pageDescription = pageDescription;
+        ngMeta.setTitle(pageTitle);
+        console.info(pageDescription);
+        
+        ngMeta.setTag('description', pageDescription);
         
     }]);     
    
@@ -4590,6 +4605,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var institutesFilled = institutesFilledList.data;
        
         $scope.filledCounter = 0;
+        $scope.verifiedCounter = 0;
+        $scope.doesnotexistCounter = 0;
         $scope.noMapCounter = 0;
         $scope.noEmailCounter = 0;
         
@@ -4673,6 +4690,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         //$scope.noEmailCounter -= 1;
                     }
                 });
+            }
+            if(thisProvider.ebVerifyState && thisProvider.ebVerifyState !='' ){
+                $scope.verifiedCounter += 1;
+                if(thisProvider.ebVerifyState == 'Does not Exist'){
+                    $scope.doesnotexistCounter += 1;
+                }
             }
         });
         

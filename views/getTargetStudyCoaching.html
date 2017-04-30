@@ -173,8 +173,13 @@
         </span>&nbsp;&nbsp;
         <span class="editFont">
             Emails Sent: {{emailSentCount}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            Verification Done: {{verifiedCounter}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            Does not Exist: {{doesnotexistCounter}}
         </span>
-        
     </div>
     <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font10 whiteBackground paddingTB10" ng-if="showLevel>5">
     {{institutesFilled}}
@@ -236,6 +241,8 @@
         <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-emailSent','-website','-noEmail','-rank','-exams.length'] | filter:filterText as filtered track by $index" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
             <div id="cell" flex="5">
                 {{$index+1}}
+                <span>{{provider.ebVerifyState}}</span>
+                
             </div>
             <div layout="column" id="cell" flex="15" class="font12">
                 <a ui-sref="claim({ coachingId:{{'provider._id'}} })" target="_blank">
