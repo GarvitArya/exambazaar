@@ -5958,7 +5958,7 @@ function getLatLng(thisData) {
             },
             {
                 level: 2,
-                name: "XII or After XII"
+                name: "After XII (Drop Year)"
             },
             {
                 level: 3,
@@ -6005,6 +6005,14 @@ function getLatLng(thisData) {
         ];
         $scope.undergradMajors = [
             {
+                name: "btech",
+                displayname: "B.Tech."
+            },
+            {
+                name: "be",
+                displayname: "B.E."
+            },
+            {
                 name: "mbbs",
                 displayname: "M.B.B.S."
             },
@@ -6012,31 +6020,22 @@ function getLatLng(thisData) {
                 name: "bds",
                 displayname: "B.D.S."
             },
-            
             {
                 name: "bsc",
                 displayname: "B.Sc."
+            },
+            {
+                name: "ba",
+                displayname: "B.A."
             },
             {
                 name: "bftech",
                 displayname: "NIFT B.F.Tech."
             },
             {
-                name: "be",
-                displayname: "B.E."
-            },
-            {
-                name: "btech",
-                displayname: "B.Tech."
-            },
-            {
                 name: "bcom",
                 displayname: "B.Com."
-            },
-            {
-                name: "ba",
-                displayname: "B.A."
-            },		
+            },	
             {
                 name: "barch",
                 displayname: "B. Arch."
@@ -6046,24 +6045,38 @@ function getLatLng(thisData) {
                 displayname: "LL.B."
             },
             {
-                name: "fiveyearintegratedllb",
-                displayname: "Five Year Integrated LL.B. (Hons.)"
+                name: "others",
+                displayname: "Others"
             },
             {
                 name: "fiveyearballb",
                 displayname: "Five Year B.A. LL.B."
             },
             {
+                name: "fiveyearintegratedllb",
+                displayname: "Five Year Integrated LL.B. (Hons.)"
+            },
+            
+            {
                 name: "lawdegreeequivalenttollb",
                 displayname: "Law Degree equivalent to LL.B."
             },
-            {
-                name: "others",
-                displayname: "Others"
-            },
+            
 
         ];
         $scope.postgradMajors = [
+            {
+                name: "mba",
+                displayname: "M.B.A."
+            },
+            {
+                name: "ms",
+                displayname: "M.S."
+            },
+            {
+                name: "mtech",
+                displayname: "M.Tech."
+            },
             {
                 name: "mcom",
                 displayname: "M.Com."
@@ -6081,23 +6094,16 @@ function getLatLng(thisData) {
                 displayname: "M.C.A."
             },
             {
-                name: "mtech",
-                displayname: "M.Tech."
-            },
-            {
-                name: "mba",
-                displayname: "M.B.A."
-            },
-            {
-                name: "ms",
-                displayname: "M.S."
-            },
-            {
                 name: "llm",
                 displayname: "LL.M."
             },
+            {
+                name: "others",
+                displayname: "Others"
+            },
 
         ];
+            
         $scope.setCategory = function(categoryName){
             $scope.categoryOptions.forEach(function(thisCategory, index){
                 $scope.elgInput.category[thisCategory] = false;
@@ -6131,7 +6137,7 @@ function getLatLng(thisData) {
         };
         $scope.elgInput = {
             category: {
-                general: false,
+                general: true,
                 sc: false,
                 st: false,
                 obc: false,
@@ -6169,26 +6175,202 @@ function getLatLng(thisData) {
                 others: false,
             },
             undergradPercentage: null,
+            postgradMajor:{
+                mcom: false,
+                msc: false,
+                ma: false,
+                mca: false,
+                mtech: false,
+                mba: false,
+                ms: false,
+                llm: false,
+                others: false,
+            },
             postgradPercentage: null,
             
         };
             
         $scope.checkEligibility = function(){
-            console.info($scope.elgInput);
+            //console.info($scope.elgInput);
+            $scope.error = false;
             var error = false;
-            var errrorMessage = '';
+            var errorClass12Subjects = true;
+            var errorUnderGradMajor = true;
+            var errorPostGradMajor = true;
+            var errorMessages = [];
             
+            if(!$scope.elgInput.age){
+                error = true;
+                errorMessages.push("Please select your age");
+            }
+            
+            if($scope.elgInput.educationLevel.level == null){
+                error = true;
+                errorMessages.push("Please select your current education level");
+            }
+           
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=1){
+                
+                $scope.class12Subjects.forEach(function(thisSubject, index){
+                    if($scope.elgInput.class12Subjects[thisSubject.name]){
+                        errorClass12Subjects = false;
+                    }
+                    
+                });
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=1 && errorClass12Subjects){
+                error = true;
+                errorMessages.push("Please select your Class XII Subjects");
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=3){
+                if(!$scope.elgInput.class12Percentage){
+                    error = true;
+                    errorMessages.push("Please select your Class XII Percentage");
+                }
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=3){
+                $scope.undergradMajors.forEach(function(thisMajor, index){
+                    if($scope.elgInput.undergradMajor[thisMajor.name]){
+                        errorUnderGradMajor = false;
+                    }
+                    if(index == $scope.undergradMajors.length - 1 && errorUnderGradMajor){
+                        error = errorUnderGradMajor;
+                        errorMessages.push("Please select your Undergraduate Major");
+                    }
+                });
+            }
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=4){
+                if(!$scope.elgInput.undergradPercentage){
+                    error = true;
+                    errorMessages.push("Please select your Undergraduate Percentage (or equivalent CGPA)");
+                }
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=5){
+                $scope.postgradMajors.forEach(function(thisMajor, index){
+                    if($scope.elgInput.postgradMajor[thisMajor.name]){
+                        errorPostGradMajor = false;
+                    }
+                    if(index == $scope.postgradMajors.length - 1 && errorPostGradMajor){
+                        error = errorPostGradMajor;
+                        errorMessages.push("Please select your Postgraduate Major");
+                    }
+                });
+            }
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=5){
+                if(!$scope.elgInput.postgradPercentage){
+                    error = true;
+                    errorMessages.push("Please select your achieved or expected Postgraduate Percentage (or equivalent CGPA)");
+                }
+            }
+            
+            
+            if(error){
+                $scope.error = true;
+                $scope.errorMessages = errorMessages;
+            }else{
+            $scope.validExams = [];    
+            $scope.uniqueValidExams = [];    
             $scope.eligibilityList.forEach(function(thisEligibility, index){
-                var checkCategory = thisEligibility.category.applicable;
-                var checkAge = thisEligibility.age.applicable;
-                var checkClass12Subjects = thisEligibility.class12Subjects.applicable;
-                var checkClass12Percentage = thisEligibility.class12Percentage.applicable;
-                var checkUndergradMajor = thisEligibility.undergradMajor.applicable;
-                var checkUndergradPercentage = thisEligibility.undergradPercentage.applicable;
-                var checkPostgradMajor = thisEligibility.postgradMajor.applicable;
-                var checkPostgradPercentage = thisEligibility.postgradPercentage.applicable;
+                
+            var checkCategory = thisEligibility.category.applicable;
+            var checkAge = thisEligibility.age.applicable;
+            var checkClass12Subjects = thisEligibility.class12Subjects.applicable;
+            var checkClass12Percentage = thisEligibility.class12Percentage.applicable;
+            var checkUndergradMajor = thisEligibility.undergradMajor.applicable;
+            var checkUndergradPercentage = thisEligibility.undergradPercentage.applicable;
+            var checkPostgradMajor = thisEligibility.postgradMajor.applicable;
+            var checkPostgradPercentage = thisEligibility.postgradPercentage.applicable;
+            var valid = true;
+            if(checkCategory){
+                $scope.categoryOptions.forEach(function(thisItem, itemIndex){
+                    if(thisEligibility.category[thisItem] && !$scope.elgInput.category[thisItem]){
+                        valid = false;
+                        //console.info(index + " " + valid + " " + thisItem + " " + thisEligibility._id);
+                    }
+                });
+            }
+            if(checkAge){
+                if($scope.elgInput.age < thisEligibility.age.minage || $scope.elgInput.age > thisEligibility.age.maxage){
+                    valid = false;
+                    //console.info(index + " " + valid + " " + thisEligibility._id);
+                }
+            }
+            if(checkClass12Subjects){
+                $scope.class12Subjects.forEach(function(thisItem, itemIndex){
+                    if(thisEligibility.class12Subjects[thisItem.name] && !$scope.elgInput.class12Subjects[thisItem.name]){
+                        valid = false;
+                        //console.info(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
+                    }
+                });
+            }    
+            if(checkClass12Percentage){
+                if(thisEligibility.class12Percentage.minPercentage && $scope.elgInput.class12Percentage < thisEligibility.class12Percentage.minPercentage){
+                    valid = false;
+                    //console.info(index + " " + valid + " " + thisEligibility._id);
+                }
+            }    
+            if(checkUndergradMajor){
+                var undergradBool = false;
+                $scope.undergradMajors.forEach(function(thisItem, itemIndex){
+                    if(thisEligibility.undergradMajor[thisItem.name] && $scope.elgInput.undergradMajor[thisItem.name]){
+                        undergradBool = true;
+                    }
+                });
+                if(!undergradBool){
+                    valid = false;
+                    //console.info(index + " " + valid + " " + thisEligibility._id);
+               }
+            }
+            if(checkUndergradPercentage){
+                if(thisEligibility.undergradPercentage.minPercentage && $scope.elgInput.undergradPercentage < thisEligibility.undergradPercentage.minPercentage){
+                    valid = false;
+                    //console.info(index + " " + valid + " " + thisEligibility._id);
+                }
+            }    
+            if(checkPostgradMajor){
+                var postgradBool = false;
+                $scope.postgradMajors.forEach(function(thisItem, itemIndex){
+                    if(thisEligibility.postgradMajor[thisItem.name] && $scope.elgInput.postgradMajor[thisItem.name]){
+                        postgradBool = true;
+                    }
+                });
+                if(!postgradBool){
+                    valid = false;
+                    //console.info(index + " " + valid + " " + thisEligibility._id);
+               }
+            }    
+            if(checkPostgradPercentage){
+                if(thisEligibility.postgradPercentage.minPercentage && $scope.elgInput.postgradPercentage < thisEligibility.postgradPercentage.minPercentage){
+                    valid = false;
+                    //console.info(index + " " + valid + " " + thisEligibility._id);
+                }
+            } 
+                
+            if(valid){
+                $scope.validExams.push(thisEligibility.exam);
+            }
                 
             });
+                
+            var uniqueValidExamIds = [];
+            $scope.validExams.forEach(function(thisExam, examIndex){
+                var eIndex = uniqueValidExamIds.indexOf(thisExam._id);
+                if(eIndex == -1){
+                    $scope.uniqueValidExams.push(thisExam);
+                    uniqueValidExamIds.push(thisExam._id);
+                }
+            });
+                
+                
+            
+            
+            }
+            
         };
             
     }]); 
