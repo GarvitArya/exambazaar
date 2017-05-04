@@ -271,6 +271,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     }]);    
     
+    exambazaar.service('EligibilityService', ['$http', function($http) {
+        this.bulksaveEligibility = function(eligibility) {
+            return $http.post('/api/eligibilitys/bulksave', eligibility);
+        };
+        this.getEligibility = function(eligibilityId) {
+            return $http.get('/api/eligibilitys/edit/'+eligibilityId, {eligibilityId: eligibilityId});
+        };
+        this.getEligibilities = function() {
+            return $http.get('/api/eligibilitys');
+        };
+        
+    }]);
     exambazaar.service('ExamService', ['$http', function($http) {
         this.saveExam = function(exam) {
             return $http.post('/api/exams/save', exam);
@@ -4607,6 +4619,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.filledCounter = 0;
         $scope.verifiedCounter = 0;
         $scope.doesnotexistCounter = 0;
+        $scope.noresponseCounter = 0;
         $scope.noMapCounter = 0;
         $scope.noEmailCounter = 0;
         
@@ -4695,6 +4708,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.verifiedCounter += 1;
                 if(thisProvider.ebVerifyState == 'Does not Exist'){
                     $scope.doesnotexistCounter += 1;
+                }
+                if(thisProvider.ebVerifyState == 'No Response'){
+                    $scope.noresponseCounter += 1;
                 }
             }
         });
@@ -5908,6 +5924,330 @@ function getLatLng(thisData) {
             $scope.location = location;
         };
     }]);
+    
+    exambazaar.controller("eligibilityController", 
+        [ '$scope',  'examList','streamList','EligibilityService','$http','$state', 'eligibilityList', function($scope, examList,streamList, EligibilityService,$http,$state, eligibilityList){
+        $scope.examNames = '';    
+        $scope.exams = examList.data;
+        
+        $scope.eligibilityList = eligibilityList.data;
+        
+        
+        var examNameHelper = $scope.exams.map(function(a) {return a.displayname;});
+        var examIdHelper = $scope.exams.map(function(a) {return a._id;});
+        $scope.eligibilityList.forEach(function(thisEligibility, index){
+            
+            var examName = thisEligibility.exam.displayname;
+            thisEligibility.examName = examName;
+        });
+            
+        $scope.exams.forEach(function(thisExam, eIndex){
+            $scope.examNames += thisExam.displayname+',';
+        });
+        //console.info($scope.examNames);    
+        $scope.streams = streamList.data;
+        $scope.categoryOptions = ["general","sc","st","obc"];
+        $scope.educationLevels = [
+            {
+                level: 0,
+                name: "I-X"
+            },
+            {
+                level: 1,
+                name: "XI-XII"
+            },
+            {
+                level: 2,
+                name: "XII or After XII"
+            },
+            {
+                level: 3,
+                name: "In UG or equivalent"
+            },
+            {
+                level: 4,
+                name: "During or After Final Year of UG"
+            },
+            {
+                level: 5,
+                name: "During or After Final Year of PG"
+            },
+        ];
+        $scope.class12Subjects = [
+            {
+                name: "english",
+                displayname: "English"
+            },
+            {
+                name: "physics",
+                displayname: "Physics"
+            },
+            {
+                name: "chemistry",
+                displayname: "Chemistry"
+            },
+            {
+                name: "mathematics",
+                displayname: "Mathematics"
+            },
+            {
+                name: "biology",
+                displayname: "Biology"
+            },
+            {
+                name: "biotechnology",
+                displayname: "Biotechnology"
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+        ];
+        $scope.undergradMajors = [
+            {
+                name: "mbbs",
+                displayname: "M.B.B.S."
+            },
+            {
+                name: "bds",
+                displayname: "B.D.S."
+            },
+            
+            {
+                name: "bsc",
+                displayname: "B.Sc."
+            },
+            {
+                name: "bftech",
+                displayname: "NIFT B.F.Tech."
+            },
+            {
+                name: "be",
+                displayname: "B.E."
+            },
+            {
+                name: "btech",
+                displayname: "B.Tech."
+            },
+            {
+                name: "bcom",
+                displayname: "B.Com."
+            },
+            {
+                name: "ba",
+                displayname: "B.A."
+            },		
+            {
+                name: "barch",
+                displayname: "B. Arch."
+            },
+            {
+                name: "llb",
+                displayname: "LL.B."
+            },
+            {
+                name: "fiveyearintegratedllb",
+                displayname: "Five Year Integrated LL.B. (Hons.)"
+            },
+            {
+                name: "fiveyearballb",
+                displayname: "Five Year B.A. LL.B."
+            },
+            {
+                name: "lawdegreeequivalenttollb",
+                displayname: "Law Degree equivalent to LL.B."
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+
+        ];
+        $scope.postgradMajors = [
+            {
+                name: "mcom",
+                displayname: "M.Com."
+            },
+            {
+                name: "msc",
+                displayname: "M.Sc."
+            },
+            {
+                name: "ma",
+                displayname: "M.A."
+            },
+            {
+                name: "mca",
+                displayname: "M.C.A."
+            },
+            {
+                name: "mtech",
+                displayname: "M.Tech."
+            },
+            {
+                name: "mba",
+                displayname: "M.B.A."
+            },
+            {
+                name: "ms",
+                displayname: "M.S."
+            },
+            {
+                name: "llm",
+                displayname: "LL.M."
+            },
+
+        ];
+        $scope.setCategory = function(categoryName){
+            $scope.categoryOptions.forEach(function(thisCategory, index){
+                $scope.elgInput.category[thisCategory] = false;
+            });
+            $scope.elgInput.category[categoryName] = true;
+            
+        };
+        $scope.setEducationLevel = function(educationLevel){
+            $scope.elgInput.educationLevel = educationLevel;
+        };
+        $scope.setPWD = function(truefalse){
+            $scope.elgInput.category.pwd = truefalse;
+        };
+        $scope.setClass12Subjects = function(class12Subject){
+            $scope.elgInput.class12Subjects[class12Subject] = true;
+        };
+        $scope.unsetClass12Subjects = function(class12Subject){
+            $scope.elgInput.class12Subjects[class12Subject] = false;
+        };
+        $scope.setUndergradMajor = function(undergradMajor){
+            $scope.undergradMajors.forEach(function(thisUndergrad, index){
+                $scope.elgInput.undergradMajor[thisUndergrad.name] = false;
+            });
+            $scope.elgInput.undergradMajor[undergradMajor] = true;
+        };
+        $scope.setPostgradMajor = function(postgradMajor){
+            $scope.postgradMajors.forEach(function(thisPostgrad, index){
+                $scope.elgInput.postgradMajor[thisPostgrad.name] = false;
+            });
+            $scope.elgInput.postgradMajor[postgradMajor] = true;
+        };
+        $scope.elgInput = {
+            category: {
+                general: false,
+                sc: false,
+                st: false,
+                obc: false,
+                pwd: false,
+            },
+            age: 18,
+            educationLevel:{
+                level: null,
+                name: null
+            },
+            class12Subjects:{
+                biology: false,
+                chemistry: false,
+                biotechnology: false,
+                physics: false,
+                mathematics: false,
+                english: false,
+                others: false
+            },
+            class12Percentage: null,
+            undergradMajor:{
+                mbbs: false,
+                bds: false,
+                bsc: false,
+                bftech: false,
+                be: false,
+                btech: false,
+                bcom: false,
+                ba: false,
+                barch: false,
+                llb: false,
+                fiveyearintegratedllb: false,
+                fiveyearballb: false,
+                lawdegreeequivalenttollb: false,
+                others: false,
+            },
+            undergradPercentage: null,
+            postgradPercentage: null,
+            
+        };
+            
+        $scope.checkEligibility = function(){
+            console.info($scope.elgInput);
+            var error = false;
+            var errrorMessage = '';
+            
+            $scope.eligibilityList.forEach(function(thisEligibility, index){
+                var checkCategory = thisEligibility.category.applicable;
+                var checkAge = thisEligibility.age.applicable;
+                var checkClass12Subjects = thisEligibility.class12Subjects.applicable;
+                var checkClass12Percentage = thisEligibility.class12Percentage.applicable;
+                var checkUndergradMajor = thisEligibility.undergradMajor.applicable;
+                var checkUndergradPercentage = thisEligibility.undergradPercentage.applicable;
+                var checkPostgradMajor = thisEligibility.postgradMajor.applicable;
+                var checkPostgradPercentage = thisEligibility.postgradPercentage.applicable;
+                
+            });
+        };
+            
+    }]); 
+    exambazaar.controller("addEligibilityController", 
+        [ '$scope',  'examList','streamList','EligibilityService','$http','$state', 'eligibilityList', function($scope, examList,streamList, EligibilityService,$http,$state, eligibilityList){
+        $scope.examNames = '';    
+        $scope.exams = examList.data;
+        
+        $scope.newEligibility = eligibilityList.data;
+        if(!$scope.newEligibility){
+            $scope.newEligibility = [];
+        }
+        
+        var examNameHelper = $scope.exams.map(function(a) {return a.displayname;});
+        var examIdHelper = $scope.exams.map(function(a) {return a._id;});
+        $scope.newEligibility.forEach(function(thisEligibility, index){
+            
+            var examName = thisEligibility.exam.displayname;
+            thisEligibility.examName = examName;
+        });
+            
+        $scope.exams.forEach(function(thisExam, eIndex){
+            $scope.examNames += thisExam.displayname+',';
+        });
+        //console.info($scope.examNames);    
+        $scope.streams = streamList.data;
+        
+        $scope.addEligibility = function () {
+            var eligibilitys = [];
+            $scope.newEligibility.forEach(function(thisEligibility, index){
+                var eIndex = examNameHelper.indexOf(thisEligibility.examName);
+               
+                var exam = null;
+                if(eIndex != -1){
+                    exam = $scope.exams[eIndex]._id;
+                    thisEligibility.exam = exam;
+                }
+                if(exam){
+                    eligibilitys.push(thisEligibility);
+                }else{
+                    if(thisEligibility.examName){
+                        console.info("Please check exam name: " + thisEligibility.examName +". You need to match it exactly.");
+                    }
+                    
+                }
+                
+            });
+            
+            var saveEligibility = EligibilityService.bulksaveEligibility(eligibilitys).success(function (data, status, headers) {
+                alert("Eligibilities saved!");
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+        };
+        $scope.setExam = function(exam){
+            $scope.exam = exam;
+        };
+    }]);    
     exambazaar.controller("addExamController", 
         [ '$scope',  'examList','streamList','ExamService','$http','$state', function($scope, examList,streamList, ExamService,$http,$state){
         $scope.exams = examList.data;
@@ -6772,6 +7112,38 @@ function getLatLng(thisData) {
                     return targetStudyProviderService.getCities();
                 }],
                 provider: function() { return {}; }
+                
+            }
+        })
+        .state('eligibility', {
+            url: '/user/:userId/eligibility', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'eligibility.html',
+                    controller: 'eligibilityController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                eligibilityList: ['EligibilityService',
+                    function(EligibilityService){
+                    return EligibilityService.getEligibilities();
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
+                exam: function() { return {}; }
                 
             }
         })
@@ -8147,6 +8519,37 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
+                exam: function() { return {}; }
+            }
+        })
+        .state('addEligibility', {
+            url: '/addEligibility',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'addEligibility.html',
+                    controller: 'addEligibilityController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                eligibilityList: ['EligibilityService',
+                    function(EligibilityService){
+                    return EligibilityService.getEligibilities();
+                }],
                 examList: ['ExamService',
                     function(ExamService){
                     return ExamService.getExams();

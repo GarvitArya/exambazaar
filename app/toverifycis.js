@@ -132,7 +132,7 @@ router.get('/user/:userId', function(req, res) {
     var userId = req.params.userId;
     var toverifycis = toverifyci
         .find({user: userId})
-        .deepPopulate('institute user')
+        .deepPopulate('institute user institute.ebNote.user')
         .exec(function (err, toverifycis) {
         if (!err){
             var basicFillTasks = [];
@@ -149,7 +149,8 @@ router.get('/user/:userId', function(req, res) {
                         name: thisFillTask.institute.name,
                         address: thisFillTask.institute.address,
                         city: thisFillTask.institute.city,
-                        pincode: thisFillTask.institute.pincode
+                        pincode: thisFillTask.institute.pincode,
+                        ebNote: thisFillTask.institute.ebNote,
                     },
                     _created: thisFillTask._created,
                     _deadline: thisFillTask._deadline,

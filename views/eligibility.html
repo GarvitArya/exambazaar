@@ -1,0 +1,184 @@
+
+<style>
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    #tagHolder{
+        padding: 10px;
+        background: white;
+        border: 1px solid #000;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    #existingTagHolder{
+        color: white;
+        padding: 10px;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    #tagHolder:hover{
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    md-slider .md-track-ticks canvas {
+      height: 10px;
+    }
+    md-slider .md-track canvas {
+      height: 5px;
+    }
+    md-slider[md-discrete] .md-sign,
+    md-slider[md-discrete] .md-sign:after {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 0, 0) scale(1);
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+</style>
+<div class="container">
+    <div id="spacer">
+    </div>
+    
+    
+    <div layout="column" layout-padding>
+        <form name="eligibilityForm" >
+            <div layout="column" layout-align="start center">
+                <div layout="row">1. Please select your category</div>
+                <div layout="row" layout-padding>
+                    <span ng-repeat="cateogryOption in categoryOptions">
+                    <span class="badge editFont" id="tagHolder" ng-click="setCategory(cateogryOption)" ng-if="elgInput.category[cateogryOption] != true">{{cateogryOption | uppercase}}
+                    </span>
+                    <span class="badge editFont" id="existingTagHolder" ng-click="setCategory(cateogryOption)" ng-if="elgInput.category[cateogryOption] == true">{{cateogryOption | uppercase}}
+                    </span>
+                    </span>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center">
+                <div layout="row">2. Are you a person with disability?</div>
+                <div layout="row" layout-padding>
+                    <span class="badge editFont" id="tagHolder" ng-click="setPWD(false)" ng-if="elgInput.category.pwd">No
+                    </span>
+                    <span class="badge editFont" id="existingTagHolder" ng-click="setPWD(false)" ng-if="!elgInput.category.pwd">No
+                    </span>
+                    <span class="badge editFont" id="tagHolder" ng-click="setPWD(true)" ng-if="!elgInput.category.pwd">Yes
+                    </span>
+                    <span class="badge editFont" id="existingTagHolder" ng-click="setPWD(true)" ng-if="elgInput.category.pwd">Yes
+                    </span>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center">
+                <div layout="row" >3. What is your current age?</div>
+                <div layout="row" layout-align="start center" layout-padding class="width50">
+                    
+                  <!--<div flex="10" layout layout-align="center center">
+                    <span class="md-body-1">Age</span>
+                  </div>-->
+                  <md-slider flex md-discrete ng-model="elgInput.age" step="1" min="14" max="35" aria-label="Age">
+                  </md-slider>
+                    
+                </div>
+            </div>
+            <div layout="column" layout-align="start center">
+                <div layout="row">4. Please select your current education level</div>
+                <div layout="row" layout-padding>
+                    <span ng-repeat="educationLevel in educationLevels">
+                    <span class="badge editFont" id="tagHolder" ng-click="setEducationLevel(educationLevel)" ng-if="elgInput.educationLevel.name != educationLevel.name">{{educationLevel.name | uppercase}}
+                    </span>
+                    <span class="badge editFont" id="existingTagHolder" ng-click="setEducationLevel(educationLevel)" ng-if="elgInput.educationLevel.name == educationLevel.name">{{educationLevel.name | uppercase}}
+                    </span>
+                    </span>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" ng-if="elgInput.educationLevel.level >=1 ">
+                <div layout="row">5. Please tell us the subjects you studied in Class XII</div>
+                <div layout="row" layout-padding>
+                    <span ng-repeat="class12Subject in class12Subjects">
+                    <span class="badge editFont" id="tagHolder" ng-click="setClass12Subjects(class12Subject.name)" ng-if="!elgInput.class12Subjects[class12Subject.name]">{{class12Subject.displayname | uppercase}}
+                    </span>
+                    <span class="badge editFont" id="existingTagHolder" ng-click="unsetClass12Subjects(class12Subject.name)" ng-if="elgInput.class12Subjects[class12Subject.name]">{{class12Subject.displayname | uppercase}}
+                    </span>
+                    </span>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" ng-if="elgInput.educationLevel.level >=1 ">
+                <div layout="row">6. Please tell us your percentage score in Class XII</div>
+                
+                <div layout="row" layout-align="start center" layout-padding class="width50">
+                  <md-slider flex md-discrete ng-model="elgInput.class12Percentage" step="1" min="40" max="100" aria-label="Class 12th Percentage">
+                  </md-slider>
+
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="start center" ng-if="elgInput.educationLevel.level >=3 ">
+                <div layout="row">7. Please tell us your major in Undergraduate</div>
+                <div layout="row" layout-padding>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2" ng-repeat="undergradMajor in undergradMajors">
+                    <div class="badge editFont" id="tagHolder" ng-click="setUndergradMajor(undergradMajor.name)" ng-if="!elgInput.undergradMajor[undergradMajor.name]">{{undergradMajor.displayname | uppercase}}
+                    </div>
+                    <div class="badge editFont" id="existingTagHolder" ng-click="setUndergradMajor(undergradMajor.name)" ng-if="elgInput.undergradMajor[undergradMajor.name]">{{undergradMajor.displayname | uppercase}}
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" ng-if="elgInput.educationLevel.level >=3 ">
+                <div layout="row">8. Please tell us your percentage score (or equivalent) in Undergraduate</div>
+                
+                <div layout="row" layout-align="start center" layout-padding class="width50">
+                  <md-slider flex md-discrete ng-model="elgInput.undergradPercentage" step="1" min="40" max="100" aria-label="Undergraduate Percentage">
+                  </md-slider>
+
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="start center" ng-if="elgInput.educationLevel.level >=5 ">
+                <div layout="row">9. Please tell us your major in Postgraduate</div>
+                <div layout="row" layout-padding>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2" ng-repeat="postgradMajor in postgradMajors">
+                    <div class="badge editFont" id="tagHolder" ng-click="setPostgradMajor(postgradMajor.name)" ng-if="!elgInput.postgradMajor[postgradMajor.name]">{{postgradMajor.displayname | uppercase}}
+                    </div>
+                    <div class="badge editFont" id="existingTagHolder" ng-click="setPostgradMajor(postgradMajor.name)" ng-if="elgInput.postgradMajor[postgradMajor.name]">{{postgradMajor.displayname | uppercase}}
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" ng-if="elgInput.educationLevel.level >=5 ">
+                <div layout="row">10. Please tell us your percentage score (or equivalent) in Postgraduate</div>
+                
+                <div layout="row" layout-align="start center" layout-padding class="width50">
+                  <md-slider flex md-discrete ng-model="elgInput.postgradPercentage" step="1" min="40" max="100" aria-label="Postgraduate Percentage">
+                  </md-slider>
+
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="start center">
+                <md-button class="md-raised md-primary" ng-click="checkEligibility()">Check Eligibility</md-button>
+            </div>
+            
+        </form>
+    </div>
+</div>
+<div>
+</div>

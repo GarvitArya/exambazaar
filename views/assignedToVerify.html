@@ -51,6 +51,9 @@
             <div flex="10">
                 Finished on
             </div>
+            <div flex="35">
+                EB Notes
+            </div>
         </div>
         <div flex layout="row" layout-align="start center" ng-repeat="task in assigned | orderBy:['-active','_deadline','_created'] | filter:filterText as filtered" class="width100 greyDashedBottomBorder font10" ng-class="{ pending: task.active }">
             <div flex="5">
@@ -73,6 +76,13 @@
             <div flex="10" class="font10">
                 {{task._finished | date: "dd-MMM-yy HH:mm"}}
             </div>
+            <div flex="35">
+                <span ng-repeat="note in task.institute.ebNote track by $index">
+                    {{$index + 1}}. {{note.note}} by {{note.user.basic.name}}
+                    <br/>
+                </span>
+            </div>
+            
         </div>
         
         
