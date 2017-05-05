@@ -141,4 +141,31 @@ router.get('/edit/:examId', function(req, res) {
     });
 });
 
+router.post('/addLogo', function(req, res) {
+    var newLogoForm = req.body;
+    var logo = newLogoForm.logo;
+    var examId = newLogoForm.examId;
+    console.log('Express received: ' + JSON.stringify(newLogoForm));
+    
+    var thisExam = exam
+        .findOne({ _id: examId }, {logo:1})
+        .exec(function (err, thisExam) {
+        if (!err){
+            
+            if(thisExam){
+                thisExam.logo = logo;
+                thisExam.save(function(err, thisExam) {
+                    if (err) return console.error(err);
+                    console.log("Logo data saved for " + thisExam._id);
+                    res.json('Done');
+                });
+            }else{
+                console.log('No such exam');
+                res.json('Error');
+            }
+        } else {throw err;}
+    });
+    
+});
+
 module.exports = router;

@@ -22,6 +22,15 @@
         color: #20C39A;
         text-decoration: none;
     }
+    #pageLogoHolder{
+        border: 1px solid rgba(0,0,0,0.8);
+        height: 90px;
+        width: 90px;
+        border-radius: 4px;
+    }
+    .pageLogo{
+        max-height: 50px;
+    }
 </style>
 <div class="container">
     <div id="spacer1">
@@ -58,6 +67,27 @@
                         <label>Exam Display Name</label>
                         <input required ng-model="exam.displayname">
                     </md-input-container>
+                    
+                    
+                    <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
+                    <img  ng-src="{{exam.logo}}" class="pageLogo"/>
+                    <span ng-show="exam.logo && exam.logo !=''" class="font9 textDarkGrey" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
+                        Change Logo
+                    </span>
+                    <span class="textDarkGrey" ng-show="exam.logo == '' || !exam.logo" ng-click="">
+
+                        <div layout="column" layout-align="center center" class="width100 height100" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
+                            <span class="md-display-1">
+                                <i class="fa fa-camera" aria-hidden="true"></i>
+                            </span>
+                            <span>
+                                Add Logo
+                            </span>
+                        </div>
+                    </span>
+
+                </div>
+                    
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>Brief Description</label>
                         <input ng-model="exam.briefDescription">
@@ -164,4 +194,40 @@
     </div>
 </div>
 <div>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="saveExamFirstDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Save exam first before uploading logo!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
 </div>

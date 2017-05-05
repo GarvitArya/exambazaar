@@ -299,7 +299,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getExamByName = function(examName) {
             return $http.get('/api/exams/exam/'+examName, {examName: examName});
         };
-        
+        this.addLogo = function(newLogoForm) {
+            return $http.post('/api/exams/addLogo',newLogoForm);
+        };
     }]);
         
     exambazaar.service('SendGridService', ['$http', function($http) {
@@ -6191,7 +6193,7 @@ function getLatLng(thisData) {
         };
             
         $scope.checkEligibility = function(){
-            //console.info($scope.elgInput);
+            console.info($scope.elgInput);
             $scope.error = false;
             var error = false;
             var errorClass12Subjects = true;
@@ -6273,8 +6275,9 @@ function getLatLng(thisData) {
                 $scope.error = true;
                 $scope.errorMessages = errorMessages;
             }else{
-            $scope.validExams = [];    
-            $scope.uniqueValidExams = [];    
+            $scope.validEligibilities = [];    
+            $scope.uniqueValidEligibilities = [];
+            var checkExamIds = ['58cedb079eef5e0011c17e91'];
             $scope.eligibilityList.forEach(function(thisEligibility, index){
                 
             var checkCategory = thisEligibility.category.applicable;
@@ -6287,23 +6290,41 @@ function getLatLng(thisData) {
             var checkPostgradPercentage = thisEligibility.postgradPercentage.applicable;
             var valid = true;
             if(checkCategory){
+                var categoryBool = false;
                 $scope.categoryOptions.forEach(function(thisItem, itemIndex){
-                    if(thisEligibility.category[thisItem] && !$scope.elgInput.category[thisItem]){
-                        valid = false;
+                    if(thisEligibility.category[thisItem] && $scope.elgInput.category[thisItem]){
+                        categoryBool = true;
                         //console.info(index + " " + valid + " " + thisItem + " " + thisEligibility._id);
                     }
                 });
+                if(!categoryBool){
+                    valid = false;
+                        /*if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
+                            console.info(index + " " + valid + " " + thisItem + " " + thisEligibility._id);
+                        }*/
+                }
+                
             }
             if(checkAge){
                 if($scope.elgInput.age < thisEligibility.age.minage || $scope.elgInput.age > thisEligibility.age.maxage){
                     valid = false;
+                    if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
+                        console.info(index + " " + valid + " " + thisEligibility._id);
+                    }
                     //console.info(index + " " + valid + " " + thisEligibility._id);
                 }
             }
             if(checkClass12Subjects){
+                
+                if($scope.elgInput.educationLevel.level < 1){
+                    valid = false;
+                }
                 $scope.class12Subjects.forEach(function(thisItem, itemIndex){
                     if(thisEligibility.class12Subjects[thisItem.name] && !$scope.elgInput.class12Subjects[thisItem.name]){
                         valid = false;
+                        if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
+                            console.info(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
+                        }
                         //console.info(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
                     }
                 });
@@ -6316,9 +6337,13 @@ function getLatLng(thisData) {
             }    
             if(checkUndergradMajor){
                 var undergradBool = false;
+                if($scope.elgInput.educationLevel.level < 3){
+                    valid = false;
+                }
                 $scope.undergradMajors.forEach(function(thisItem, itemIndex){
                     if(thisEligibility.undergradMajor[thisItem.name] && $scope.elgInput.undergradMajor[thisItem.name]){
                         undergradBool = true;
+                        //console.info(index + " " + valid + " " + thisItem.name + " "+ thisEligibility._id);
                     }
                 });
                 if(!undergradBool){
@@ -6334,6 +6359,9 @@ function getLatLng(thisData) {
             }    
             if(checkPostgradMajor){
                 var postgradBool = false;
+                if($scope.elgInput.educationLevel.level < 5){
+                    valid = false;
+                }
                 $scope.postgradMajors.forEach(function(thisItem, itemIndex){
                     if(thisEligibility.postgradMajor[thisItem.name] && $scope.elgInput.postgradMajor[thisItem.name]){
                         postgradBool = true;
@@ -6352,17 +6380,24 @@ function getLatLng(thisData) {
             } 
                 
             if(valid){
-                $scope.validExams.push(thisEligibility.exam);
+                //console.info(thisEligibility.level + " " + $scope.elgInput.educationLevel.level);
+                if(thisEligibility.level >= $scope.elgInput.educationLevel.level){
+                    $scope.validEligibilities.push(thisEligibility);
+                }
+                
             }
                 
             });
                 
             var uniqueValidExamIds = [];
-            $scope.validExams.forEach(function(thisExam, examIndex){
-                var eIndex = uniqueValidExamIds.indexOf(thisExam._id);
+            $scope.validEligibilities.forEach(function(thisEligibility, examIndex){
+                //console.log(thisEligibility);
+                var eIndex = uniqueValidExamIds.indexOf(thisEligibility.exam._id);
                 if(eIndex == -1){
-                    $scope.uniqueValidExams.push(thisExam);
-                    uniqueValidExamIds.push(thisExam._id);
+                    $scope.uniqueValidEligibilities.push(thisEligibility);
+                    uniqueValidExamIds.push(thisEligibility.exam._id);
+                }else{
+                    
                 }
             });
                 
@@ -6431,7 +6466,7 @@ function getLatLng(thisData) {
         };
     }]);    
     exambazaar.controller("addExamController", 
-        [ '$scope',  'examList','streamList','ExamService','$http','$state', function($scope, examList,streamList, ExamService,$http,$state){
+        [ '$scope',  'examList','streamList','ExamService','$http','$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', function($scope, examList,streamList, ExamService,$http,$state, $mdDialog, ImageService, Upload, $timeout){
         $scope.exams = examList.data;
             
         
@@ -6457,6 +6492,95 @@ function getLatLng(thisData) {
         $scope.setExam = function(exam){
             $scope.exam = exam;
         };
+        $scope.showSavedDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#savedDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
+        $scope.saveExamFirstDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#saveExamFirstDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        }; 
+            
+        $scope.uploadLogo = function (newlogo) {
+            var logo = [newlogo];
+            var nFiles = logo.length;
+            
+            var counter = 0;
+            if (logo && logo.length) {
+            
+            logo.forEach(function(thisFile, index){
+            var fileInfo = {
+                filename: thisFile.name,
+                contentType: thisFile.type
+            }; ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+            var s3Request = {};
+            var allParams = data.params;
+            for (var key in allParams) {
+              if (allParams.hasOwnProperty(key)) {
+                s3Request[key] = allParams[key];
+              }
+            }
+                 
+            s3Request.file = thisFile;
+            Upload.upload({
+                url: data.endpoint_url,
+                data: s3Request
+            }).then(function (resp) {
+                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                var logoLink = $(resp.data).find('Location').text();
+                
+                var newLogoForm ={
+                    logo: logoLink,
+                    examId: $scope.exam._id
+                };
+                console.info(newLogoForm);
+                
+                if(newLogoForm.examId){
+                    ExamService.addLogo(newLogoForm).success(function (data, status, headers) {
+                        counter = counter + 1;
+                        $scope.showSavedDialog();
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                }else{
+                    $scope.saveExamFirstDialog();
+                }
+                
+                
+                
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    
+                });
+
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error");
+            });   
+                 
+            });
+            }
+     };    
+            
+            
+            
     }]);
     exambazaar.controller("addStreamController", 
         [ '$scope',  'streamList','StreamService','$http','$state', function($scope, streamList, StreamService,$http,$state){

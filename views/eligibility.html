@@ -208,9 +208,46 @@
                 </div>
                 
             </div>
-            <div layout="column" id="questionDiv" layout-align="start start">
-                <div ng-repeat="validExam in uniqueValidExams | orderBy:'-rank'">
-                    {{$index+1}}.&nbsp;{{validExam.displayname}}
+            <div layout="column" id="questionDiv" layout-align="start start" >
+                <div flex layout="row" class="width100">
+                    <div flex = "5">
+                        No.
+                    </div>
+                    <div flex = "25">
+                        Exam   
+                    </div>
+                    <div flex = "25">
+                        Course Level
+                    </div>
+                    <div flex = "25">
+                        Recommended For
+                    </div>
+                    <div flex = "25">
+                        Qualifications
+                    </div>
+                    <div flex = "25">
+                        Notes
+                    </div>
+                </div>
+                <div flex layout="row" ng-repeat="validEligibility in validEligibilities | orderBy:'exam.displayname'" class="width100 font10">
+                    <div flex = "5">
+                        {{$index+1}}.
+                    </div>
+                    <div flex = "25">
+                        {{validEligibility.exam.displayname}}
+                    </div>
+                    <div flex = "25">
+                        {{validEligibility.courseLevel}}
+                    </div>
+                    <div flex = "25">
+                        {{validEligibility.recommendedFor}}
+                    </div>
+                    <div flex = "25">
+                        {{validEligibility.qualifications}}
+                    </div>
+                    <div flex = "25">
+                        {{validEligibility.notes}}
+                    </div>
                 </div>
             </div>
         </form>
