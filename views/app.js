@@ -6490,7 +6490,13 @@ function getLatLng(thisData) {
             });
         };
         $scope.setExam = function(exam){
+            
+            
             $scope.exam = exam;
+            if(!$scope.exam.logo){
+                $scope.exam.logo = '';
+            }
+            
         };
         $scope.showSavedDialog = function(ev) {
             $mdDialog.show({

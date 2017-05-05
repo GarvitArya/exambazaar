@@ -70,7 +70,7 @@
                     
                     
                     <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
-                    <img  ng-src="{{exam.logo}}" class="pageLogo"/>
+                    <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
                     <span ng-show="exam.logo && exam.logo !=''" class="font9 textDarkGrey" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
                         Change Logo
                     </span>
