@@ -6250,9 +6250,15 @@ function getLatLng(thisData) {
             postgradPercentage: null,
             
         };
-            
+        $scope.editQualifications = function(){
+            $scope.elgVerified = false;
+        };
+        $scope.scrollTop = function(){
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+        };
         $scope.checkEligibility = function(){
             console.info($scope.elgInput);
+            
             $scope.error = false;
             var error = false;
             var errorClass12Subjects = true;
@@ -6334,7 +6340,7 @@ function getLatLng(thisData) {
                 $scope.error = true;
                 $scope.errorMessages = errorMessages;
             }else{
-                
+            
             $scope.elgVerified = true;    
             $scope.validEligibilities = [];    
             $scope.uniqueValidEligibilities = [];
@@ -6504,7 +6510,7 @@ function getLatLng(thisData) {
             });
                 
             console.log($scope.validStreamExams);
-                
+            $scope.scrollTop();    
             /*var uniqueValidExamIds = [];
             $scope.validEligibilities.forEach(function(thisEligibility, examIndex){
                 //console.log(thisEligibility);
@@ -9388,6 +9394,7 @@ exambazaar.run(function($rootScope,$mdDialog, ngMeta) {
     });
     ngMeta.init();
 });
+
 
 function generateOtp(min, max) {
     min = 1000;
