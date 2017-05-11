@@ -72,7 +72,7 @@ router.get('/', function(req, res) {
         .exec(function (err, docs) {
         if (!err){
             //var examNames = docs.map(function(a) {return a.name;});
-            //console.log(examNames);
+            //console.log(docs);
             res.json(docs);
         } else {throw err;}
     });

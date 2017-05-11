@@ -50,6 +50,7 @@ var eligibilitySchema = mongoose.Schema({
         fiveyearintegratedllb: { type: Boolean, default: false},
         fiveyearballb: { type: Boolean, default: false},
         lawdegreeequivalenttollb: { type: Boolean, default: false},
+        professionalcourseequivalenttobtech: { type: Boolean, default: false},
     },
     undergradQualifications:{
         cacpt: {type: Boolean, default: false},

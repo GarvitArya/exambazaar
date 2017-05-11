@@ -5933,6 +5933,7 @@ function getLatLng(thisData) {
         $scope.exams = examList.data;
         
         $scope.eligibilityList = eligibilityList.data;
+        $scope.elgVerified = false;
         
         
         var examNameHelper = $scope.exams.map(function(a) {return a.displayname;});
@@ -5955,13 +5956,13 @@ function getLatLng(thisData) {
                 name: "I-X"
             },
             {
-                level: 1,
-                name: "XI-XII"
+                level: 2,
+                name: "XI / XII / After XII"
             },
-            {
+            /*{
                 level: 2,
                 name: "After XII (Drop Year)"
-            },
+            },*/
             {
                 level: 3,
                 name: "In UG or equivalent"
@@ -6063,7 +6064,10 @@ function getLatLng(thisData) {
                 name: "lawdegreeequivalenttollb",
                 displayname: "Law Degree equivalent to LL.B."
             },
-            
+            {
+                name: "professionalcourseequivalenttobtech",
+                displayname: "Professional Courses equivalent to B.E. / B.Tech."
+            },
 
         ];
         $scope.postgradMajors = [
@@ -6145,7 +6149,7 @@ function getLatLng(thisData) {
                 obc: false,
                 pwd: false,
             },
-            age: 18,
+            age: null,
             educationLevel:{
                 level: null,
                 name: null
@@ -6160,6 +6164,61 @@ function getLatLng(thisData) {
                 others: false
             },
             class12Percentage: null,
+            undergradMajor:{
+                mbbs: false,
+                bds: false,
+                bsc: false,
+                bftech: false,
+                be: false,
+                btech: false,
+                bcom: false,
+                ba: false,
+                barch: false,
+                llb: false,
+                fiveyearintegratedllb: false,
+                fiveyearballb: false,
+                lawdegreeequivalenttollb: false,
+                others: false,
+            },
+            undergradPercentage: null,
+            postgradMajor:{
+                mcom: false,
+                msc: false,
+                ma: false,
+                mca: false,
+                mtech: false,
+                mba: false,
+                ms: false,
+                llm: false,
+                others: false,
+            },
+            postgradPercentage: null,
+            
+        };
+            
+        $scope.elgInput = {
+            category: {
+                general: true,
+                sc: false,
+                st: false,
+                obc: false,
+                pwd: false,
+            },
+            age: 18,
+            educationLevel:{
+                level: null,
+                name: null
+            },
+            class12Subjects:{
+                biology: false,
+                chemistry: true,
+                biotechnology: false,
+                physics: true,
+                mathematics: true,
+                english: true,
+                others: false
+            },
+            class12Percentage: 90,
             undergradMajor:{
                 mbbs: false,
                 bds: false,
@@ -6275,6 +6334,8 @@ function getLatLng(thisData) {
                 $scope.error = true;
                 $scope.errorMessages = errorMessages;
             }else{
+                
+            $scope.elgVerified = true;    
             $scope.validEligibilities = [];    
             $scope.uniqueValidEligibilities = [];
             var checkExamIds = ['58cedb079eef5e0011c17e91'];
@@ -6334,6 +6395,9 @@ function getLatLng(thisData) {
                     valid = false;
                     //console.info(index + " " + valid + " " + thisEligibility._id);
                 }
+                if($scope.elgInput.class12Percentage == null || $scope.elgInput.class12Percentage == 0){
+                    valid = false;
+                }
             }    
             if(checkUndergradMajor){
                 var undergradBool = false;
@@ -6356,6 +6420,9 @@ function getLatLng(thisData) {
                     valid = false;
                     //console.info(index + " " + valid + " " + thisEligibility._id);
                 }
+                if($scope.elgInput.undergradPercentage == null || $scope.elgInput.undergradPercentage == 0){
+                    valid = false;
+                }
             }    
             if(checkPostgradMajor){
                 var postgradBool = false;
@@ -6377,6 +6444,9 @@ function getLatLng(thisData) {
                     valid = false;
                     //console.info(index + " " + valid + " " + thisEligibility._id);
                 }
+                if($scope.elgInput.postgradPercentage == null || $scope.elgInput.postgradPercentage == 0){
+                    valid = false;
+                }
             } 
                 
             if(valid){
@@ -6388,8 +6458,54 @@ function getLatLng(thisData) {
             }
                 
             });
+            
+            $scope.validStreamExams = [];
+            var uniqueStreamIds = [];
+            var uniqueExamIds = [];
+            
+            $scope.validEligibilities.forEach(function(thisEligibility, eligIndex){
+                var streamId = thisEligibility.exam.stream._id;
+                var examId = thisEligibility.exam._id;
                 
-            var uniqueValidExamIds = [];
+                var sIndex = uniqueStreamIds.indexOf(streamId);
+                if(sIndex == -1){
+                    uniqueStreamIds.push(streamId);
+                    var streamexam = {
+                        stream: thisEligibility.exam.stream,
+                        examEligs: []
+                    };
+                    var newExamElig = {
+                        exam: thisEligibility.exam,
+                        eligibilitys: [thisEligibility]
+                    };
+                    streamexam.examEligs.push(newExamElig);
+                    $scope.validStreamExams.push(streamexam);
+                }else{
+                    
+                    var thisStreamExam = $scope.validStreamExams[sIndex];
+                    var eIndex = -1;
+                    thisStreamExam.examEligs.forEach(function(thisExamElig, examEligIndex){
+                        if(thisExamElig.exam._id == examId){
+                            eIndex = examEligIndex;
+                        }
+                    });
+                    
+                    if(eIndex != -1){
+                        thisStreamExam.examEligs[eIndex].eligibilitys.push(thisEligibility);
+                    }else{
+                        var newExamElig = {
+                            exam: thisEligibility.exam,
+                            eligibilitys: [thisEligibility]
+                        };
+                        thisStreamExam.examEligs.push(newExamElig);
+                    }
+                    
+                }
+            });
+                
+            console.log($scope.validStreamExams);
+                
+            /*var uniqueValidExamIds = [];
             $scope.validEligibilities.forEach(function(thisEligibility, examIndex){
                 //console.log(thisEligibility);
                 var eIndex = uniqueValidExamIds.indexOf(thisEligibility.exam._id);
@@ -6399,7 +6515,7 @@ function getLatLng(thisData) {
                 }else{
                     
                 }
-            });
+            });*/
                 
                 
             

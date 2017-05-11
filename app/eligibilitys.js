@@ -72,7 +72,7 @@ router.get('/', function(req, res) {
     //console.log('Here');
     eligibility
         .find({ })
-        .deepPopulate('exam')
+        .deepPopulate('exam exam.stream')
         .exec(function (err, docs) {
         if (!err){
             res.json(docs);
