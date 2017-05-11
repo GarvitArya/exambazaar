@@ -233,7 +233,7 @@
                         </div>
                         
                     </div>
-                    <div flex="30" layout="column" layout-align="start start" ng-if="elgInput.educationLevel.level >=2" class="width100">
+                    <div flex="30" layout="column" layout-align="start start" ng-if="elgInput.educationLevel.level >=3" class="width100">
                         <div layout="column">
                         Undergraduate
                         </div>
@@ -308,27 +308,30 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding10" ng-repeat="streamExam in validStreamExams | orderBy:'-stream.rank'">
                 
-                    <div  class="panel panel-default">
-                    <div class="panel-heading secondFont">
-                        <strong>{{streamExam.stream.displayname}}</strong>
-                    </div>
-                    <div class="panel-body">
-                        <div ng-repeat="examElig in streamExam.examEligs">
-                        <div flex layout="row" id="examElig" class="">
-                            <div flex ="20" layout="column" layout-align="center start">
-                                <img ng-src="{{examElig.exam.logo}}" id="logo"/>
-                            </div>
-                            <div flex ="80" layout="column">
-                                <div>
-                                {{examElig.exam.displayname}}
-                                </div>   
-                                
-                            </div>
+                <div  class="panel panel-default">
+                <div class="panel-heading secondFont">
+                    <strong>{{streamExam.stream.displayname}}</strong>
+                </div>
+                <div class="panel-body">
+                    <div ng-repeat="examElig in streamExam.examEligs">
+                    <div flex layout="row" id="examElig" class="marginTB10 greyBorder">
+                        <div flex ="20" layout="column" layout-align="center start">
+                            <img ng-src="{{examElig.exam.logo}}" id="logo"/>
                         </div>
-                            
-                        
+                        <div flex ="80" layout="column">
+                            <div class="secondFont">
+                            {{examElig.exam.displayname}}
+                            </div>
+                            <div class="editFont" ng-repeat="eligibility in examElig.eligibilitys">
+                            {{eligibility}}
+                            </div>
+
                         </div>
                     </div>
+
+
+                    </div>
+                </div>
                 </div>
                     
                 </div>

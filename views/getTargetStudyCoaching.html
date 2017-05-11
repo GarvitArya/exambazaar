@@ -241,7 +241,7 @@
             <div id="cell" flex="10">EB Rank</div>
         </div>
         
-        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-emailSent','-website','-noEmail','-rank','-exams.length'] | filter:filterText as filtered track by $index" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
+        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-website','name'] | filter:filterText as filtered track by $index" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
             <div id="cell" flex="5">
                 {{$index+1}}
                 <span>{{provider.ebVerifyState}}</span>

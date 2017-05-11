@@ -7018,6 +7018,7 @@ function getLatLng(thisData) {
                     
                     $scope.provider = refreshedProvider;
                     //console.log(emailSent);
+                    $scope.email.to ='';
                     $scope.email.instituteName = $scope.provider.name;
                     $scope.email.instituteAddress = $scope.provider.address + ', ' + $scope.provider.city;
                     if($scope.provider.pincode){
