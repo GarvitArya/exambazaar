@@ -174,12 +174,13 @@ router.post('/save', function(req, res) {
     var institute = tofillciForm.institute;
     var user = tofillciForm.user;
     var _deadline = tofillciForm._deadline;
-    
+    console.log("To fill CI form is: " + JSON.stringify(tofillciForm));
     var newtofillci = new tofillci({
         institute: institute,
         user: user,
         _deadline: _deadline
     });
+    console.log("New to fill CI form is: " + JSON.stringify(tofillciForm));
     newtofillci.save(function(err, newtofillci) {
         if (err) return console.error(err);
         //console.log("MediaTag saved with id: " + this_mediaTag._id);

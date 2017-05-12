@@ -3872,7 +3872,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         user: intern,
                         _deadline: ciDeadline,
                     };
+                    console.log(JSON.stringify(tofillciForm));
                     tofillciService.savetofillci(tofillciForm).success(function (data, status, headers) {
+                        alert('Done');
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
