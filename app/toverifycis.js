@@ -107,7 +107,8 @@ router.get('/', function(req, res) {
                         address: thisFillTask.institute.address,
                         city: thisFillTask.institute.city,
                         pincode: thisFillTask.institute.pincode,
-                        email: thisFillTask.institute.email
+                        email: thisFillTask.institute.email,
+                        ebVerifyState: thisFillTask.institute.ebVerifyState
                     },
                     _created: thisFillTask._created,
                     _deadline: thisFillTask._deadline,

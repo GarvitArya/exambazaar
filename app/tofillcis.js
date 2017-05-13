@@ -100,9 +100,9 @@ router.get('/', function(req, res) {
                     institute: {
                         _id: thisFillTask.institute._id,
                         name: thisFillTask.institute.name,
-                        address: thisFillTask.institute.address,
+                        //address: thisFillTask.institute.address,
                         city: thisFillTask.institute.city,
-                        pincode: thisFillTask.institute.pincode,
+                        //pincode: thisFillTask.institute.pincode,
                         email: thisFillTask.institute.email
                     },
                     _created: thisFillTask._created,

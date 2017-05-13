@@ -283,7 +283,12 @@
             <div layout="column" layout="center center" flex="5">Remove</div>
         </div>
         <div layout="row" ng-repeat="toverifyci in toverifyciList | orderBy:['-active','-_finished','_deadline','_created']" class="width100 greyDashedBottomBorder font10" ng-class="{ pending: toverifyci.active, noEmail: toverifyci.noEmail }">
-            <div layout="column" layout="center center" flex="5">{{$index + 1}}</div>
+            <div layout="row" layout="center center" flex="5">
+                {{$index + 1}}
+                <span ng-if="toverifyci.institute.email && toverifyci.institute.email.length > 0">
+                &nbsp;<i class="fa fa-envelope" aria-hidden="true"></i>    
+                </span>
+            </div>
             <div layout="column" layout="center center" flex="10">{{toverifyci._created | date: "dd-MMM-yy HH:mm"}}</div>
             <div layout="column" layout="center center" flex="10">{{toverifyci._deadline | date: "dd-MMM-yy HH:mm"}}</div>
             <div layout="column" layout="center center" flex="10" ng-class="{ pending2: toverifyci.active }">{{!toverifyci.active}}</div>
@@ -293,10 +298,15 @@
                 <a ui-sref="claim({ coachingId:{{'toverifyci.institute._id'}} })" target="_blank" id="link">
                 <strong>{{toverifyci.institute.name}}</strong>
                 </a>
+                
             </div>
             <div layout="column" layout="center center" flex="15">{{toverifyci.institute._id}}</div>
             <!--ng-click="showRemoveConfirm(toverifyci)"-->
-            <div layout="column" layout="center center" flex="5"><span ng-if="toverifyci.active" ><i class="fa fa-times-circle" aria-hidden="true"></i></span></div>
+            <div layout="column" layout="center center" flex="5"><span ng-if="toverifyci.active" ><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+            <span ng-if="toverifyci.institute.ebVerifyState">
+                {{toverifyci.institute.ebVerifyState}}
+            </span>
+            </div>
         </div>
     
     </div>
@@ -306,7 +316,7 @@
     <div class="md-dialog-container" id="savedDialog">
       <md-dialog>
           <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
-              <div class="margin20 padding10">
+              <div class="margin20 paddingTB10 paddingLR20">
                 <span class="text-primary md-headline">
                   <i class="fa fa-check-square" aria-hidden="true"></i>
                 </span>

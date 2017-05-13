@@ -331,7 +331,7 @@
 
 
                 <div class="editFont danger marginT10">
-                    <span>
+                    <span ng-click="showExamEligibility(examElig)">
                     Read More
                     </span>
 
@@ -346,5 +346,82 @@
     </div>
     </div>
 </div>
-<div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="examEligDialog">
+    <md-dialog class="halfscreen-dialog">
+
+    <div layout="column" layout-align="start center" layout-fill>
+        <div flex layout="row" id="examBox" class="width100 paddingTB10">
+            <div flex ="30" layout="column" layout-align="start center" class="paddingT5">
+                <img ng-src="{{activeExamEligibility.exam.logo}}" id="logo"/>
+            </div>
+            <div flex ="70" layout="column" class="">
+                <div layout="column" layout-align="start start" class="editFont">
+                    <div class="fifthFont textBlack marginB5" id="lineHeight2">
+                    {{activeExamEligibility.exam.displayname}}
+                    </div>
+
+                    <div id="lineHeight" class="">
+                    <span ng-repeat="eligibility in activeExamEligibility.eligibilitys">
+
+                    <span ng-if="eligibility.courseLevel">
+                        {{eligibility.courseLevel}}
+                        <span ng-if="!$last">
+                            &nbsp;|&nbsp;
+                        </span>
+                    </span> 
+                    </span>
+                    </div>
+                    <div id="lineHeight">
+                    <span class="editFont ">
+                    <span class="">
+                        Recommended for:</span>&nbsp;{{activeExamEligibility.eligibilitys[0].recommendedFor}}
+
+                    </span> 
+                    </div>
+                    <div id="lineHeight">
+                        <span class="font12">
+                            {{activeExamEligibility.exam.briefDescription}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="column" layout-align="start center" class="width100 height100 paddingTB20 editFont" >
+            <div ng-repeat="eligibility in  activeExamEligibility.eligibilitys" class="width100">
+                <div flex layout="row" class="padding10 greyBottomBorder width100">
+                    <div flex="40" layout="column" class="textDarkGrey">
+                        <span>
+                            {{eligibility.courseLevel}}
+                        </span>
+                        <span>
+                            Recommended for: {{eligibility.recommendedFor}}
+                        </span>
+                        
+                    </div>
+                    <div flex="60" layout="column">
+                        <span>
+                            <div ng-if="eligibility.qualifications && eligibility.qualifications !=''" class="textDarkGrey">
+                                Other qualifications required
+                            </div>
+                            {{eligibility.qualifications}}
+                        </span>
+                        <span>
+                            <div ng-if="eligibility.notes && eligibility.notes !=''" class="textDarkGrey">
+                                Please Note
+                            </div>
+                            {{eligibility.notes}}
+                        </span>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </md-dialog>
+    </div>    
 </div>
+

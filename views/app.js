@@ -5930,14 +5930,27 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("eligibilityController", 
-        [ '$scope',  'examList','streamList','EligibilityService','$http','$state', 'eligibilityList', function($scope, examList,streamList, EligibilityService,$http,$state, eligibilityList){
+        [ '$scope',  'examList','streamList','EligibilityService','$http','$state', 'eligibilityList', '$mdDialog', function($scope, examList,streamList, EligibilityService,$http,$state, eligibilityList, $mdDialog){
         $scope.examNames = '';    
         $scope.exams = examList.data;
         
         $scope.eligibilityList = eligibilityList.data;
         $scope.elgVerified = false;
+        $scope.activeExamEligibility = null;
         
-        
+        $scope.showExamEligibility = function(examElig){
+            $scope.activeExamEligibility = examElig;
+            $scope.showExamEligDialog();
+        };
+        $scope.showExamEligDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#examEligDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+            
         var examNameHelper = $scope.exams.map(function(a) {return a.displayname;});
         var examIdHelper = $scope.exams.map(function(a) {return a._id;});
         $scope.eligibilityList.forEach(function(thisEligibility, index){
