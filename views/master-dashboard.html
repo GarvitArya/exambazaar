@@ -193,7 +193,7 @@
                         <strong>{{yesterdayTask.institute.name}}</strong>
                         </a>
                          by 
-                        {{yesterdayTask.user.name}} on {{yesterdayTask._finished | date: "dd-MMM-yy HH:mm"}}
+                        {{yesterdayTask.user.basic.name}} on {{yesterdayTask._finished | date: "dd-MMM-yy HH:mm"}}
                     </div>
                 </div>
             </div>
@@ -217,7 +217,7 @@
                 <div layout="column" layout="center center" flex="10">{{tofillci._deadline | date: "dd-MMM-yy HH:mm"}}</div>
                 <div layout="column" layout="center center" flex="10" ng-class="{ pending2: tofillci.active }">{{!tofillci.active}}</div>
                 <div layout="column" layout="center center" flex="10">{{tofillci._finished | date: "dd-MMM-yy HH:mm"}}</div>
-                <div layout="column" layout="center center" flex="10">{{tofillci.user.name}}</div>
+                <div layout="column" layout="center center" flex="10">{{tofillci.user.basic.name}}</div>
                 <div layout="column" layout="center center" flex="20">
                     <a ui-sref="claim({ coachingId:{{'tofillci.institute._id'}} })" target="_blank" id="link">
                     <strong>{{tofillci.institute.name}}</strong>
@@ -293,7 +293,7 @@
             <div layout="column" layout="center center" flex="10">{{toverifyci._deadline | date: "dd-MMM-yy HH:mm"}}</div>
             <div layout="column" layout="center center" flex="10" ng-class="{ pending2: toverifyci.active }">{{!toverifyci.active}}</div>
             <div layout="column" layout="center center" flex="10">{{toverifyci._finished | date: "dd-MMM-yy HH:mm"}}</div>
-            <div layout="column" layout="center center" flex="10">{{toverifyci.user.name}}</div>
+            <div layout="column" layout="center center" flex="10">{{toverifyci.user.basic.name}}</div>
             <div layout="column" layout="center center" flex="20">
                 <a ui-sref="claim({ coachingId:{{'toverifyci.institute._id'}} })" target="_blank" id="link">
                 <strong>{{toverifyci.institute.name}}</strong>

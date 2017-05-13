@@ -3,6 +3,8 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var tofillci = require('../app/models/tofillci');
+var targetStudyProvider = require('../app/models/targetStudyProvider');
+var user = require('../app/models/user');
 
 
 var mongoose = require('mongoose');
@@ -84,38 +86,47 @@ router.post('/markDone', function(req, res) {
 router.get('/', function(req, res) {
     var tofillcis = tofillci
         .find({})
-        .deepPopulate('institute user')
         .exec(function (err, tofillcis) {
         if (!err){
             var basicFillTasks = [];
             var counter = 0;
             var nLength = tofillcis.length;
+            
             tofillcis.forEach(function(thisFillTask, index){
-                var newTask = {
-                    _id: thisFillTask._id,
-                    user: {
-                        _id: thisFillTask.user._id,
-                        name: thisFillTask.user.basic.name,
-                    },
-                    institute: {
-                        _id: thisFillTask.institute._id,
-                        name: thisFillTask.institute.name,
-                        //address: thisFillTask.institute.address,
-                        city: thisFillTask.institute.city,
-                        //pincode: thisFillTask.institute.pincode,
-                        email: thisFillTask.institute.email
-                    },
-                    _created: thisFillTask._created,
-                    _deadline: thisFillTask._deadline,
-                    _finished: thisFillTask._finished,
-                    active: thisFillTask.active,
+                var instituteId = thisFillTask.institute;
+                var userId = thisFillTask.user;
+                var thisProvider = targetStudyProvider
+                    .findOne({'_id': instituteId}, {name:1, city:1, email:1})
+                    .exec(function (err, thisProvider) {
+                    if (!err){
+                        
+                    var thisUser = user
+                        .findOne({ '_id': userId },{basic:1})
+                        .deepPopulate('partner partner.location')
+                        .exec(function (err, thisUser) {
+                        if (!err){
+                            var newTask = {
+                            _id: thisFillTask._id,
+                            user: thisUser,
+                            institute: thisProvider,
+                            _created: thisFillTask._created,
+                            _deadline: thisFillTask._deadline,
+                            _finished: thisFillTask._finished,
+                            active: thisFillTask.active,
 
-                };
-                counter = counter + 1;
-                basicFillTasks.push(newTask);
-                if(counter == nLength){
-                    res.json(basicFillTasks);
-                }
+                        };
+                        counter = counter + 1;
+                        basicFillTasks.push(newTask);
+                        if(counter == nLength){
+                            res.json(basicFillTasks);
+                        }    
+                            
+                        } else {throw err;}
+                    });
+                        
+                    } else {throw err;}
+                });
+ 
             });
             if(nLength == 0){
                 res.json([]);

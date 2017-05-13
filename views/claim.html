@@ -1812,7 +1812,12 @@
                     <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
                 </span>
             </div>
-            
+            <div layout="row" layout-align="start start">
+                <span class="text-left">
+                Address:&nbsp;{{provider.address}},&nbsp;{{provider.city}},&nbsp;{{provider.state}} 
+                <span ng-if="provider.pincode && provider.pincode!=''">&nbsp;-&nbsp; {{provider.pincode}}</span>
+                </span>
+            </div>
             <div layout="column" ng-show="editLocation"> 
                 <div layout="row" layout-align="start center" class="marginB10 marginLR10">
                     <div flex="80">

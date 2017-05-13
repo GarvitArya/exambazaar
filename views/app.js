@@ -3780,7 +3780,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
         
     exambazaar.controller("masterDashboardController", 
-        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope){
             
             $scope.usersCount = usersCount.data;
             $scope.studentCount = studentCount.data;
@@ -3947,8 +3947,135 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $state.reload();
             };
             
+            $rootScope.pageTitle = 'Master Dashboard';
+            
     }]);
     
+    /*    
+    exambazaar.controller("masterToFillController", 
+        [ '$scope', 'internList', 'tofillciList', 'tofillciService', '$state', 'filledCount', '$mdDialog', function($scope, internList, tofillciList, tofillciService, $state , filledCount, $mdDialog){
+            
+            $scope.internList = internList.data;
+            $scope.activeInternList = [];
+            //console.info($scope.internList);
+            $scope.internList.forEach( function(thisIntern, index){
+                if(thisIntern.active){
+                    $scope.activeInternList.push(thisIntern);    
+                }
+            });
+            
+            $scope.filledCount = filledCount.data;
+            $scope.tofillciList = tofillciList.data;
+            
+            $scope.internDueList = [];
+            $scope.yesterdayTasks = [];
+            $scope.fillsDue = 0;
+            $scope.fillsAssigned = 0;
+            var internIds = $scope.internList.map(function(a) {return a._id;});
+            $scope.internList.forEach( function(thisIntern, index){
+                var internDue = {
+                    intern: thisIntern,
+                    done: 0,
+                    due: 0,
+                    assigned: 0
+                };
+                $scope.internDueList.push(internDue);
+            });
+            
+            var yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            yesterday.setHours(0,0,0,0);
+            $scope.yesterday = yesterday;
+            
+            var rightNow = new Date();
+            
+            $scope.tofillciList.forEach( function(thisTask, index){
+               
+                
+                //console.log(JSON.stringify(thisTask.institute));
+                if(thisTask.active){
+                    $scope.fillsAssigned += 1;
+                    var internIndex = internIds.indexOf(thisTask.user._id);
+                    //console.info(internIndex);
+                    $scope.internDueList[internIndex].assigned += 1;
+                    
+                    //console.info(thisTask._deadline + ' ' + rightNow + ' ' + compare(rightNow, new Date(thisTask._deadline)));
+                    if(compare(rightNow, new Date(thisTask._deadline)) == 1){
+                        $scope.internDueList[internIndex].due += 1;
+                        $scope.fillsDue += 1;
+                    }
+                }else{
+                    var thisEmail = thisTask.institute.email;
+                    if(!thisEmail || thisEmail.length == 0){
+                        thisTask.noEmail = true;
+                    }else{
+                        thisTask.noEmail = false;
+                    }
+                    var internIndex = internIds.indexOf(thisTask.user._id);
+                    $scope.internDueList[internIndex].done += 1;
+                    if(compare(new Date(thisTask._finished), yesterday) == 1){
+                        $scope.yesterdayTasks.push(thisTask);
+                    }
+                    
+                }
+            });
+            $scope.ciDeadline = new Date();
+            $scope.ciDeadline.setDate( $scope.ciDeadline.getDate() + 1);
+            $scope.assignCIFill = function(){
+                var intern = $scope.ciIntern;
+                var coaching = $scope.instituteInput;
+                var ciDeadline = $scope.ciDeadline;
+                ciDeadline.setHours(23,59,59);
+                var res = coaching.split("/");
+                var coaching = res[res.length-1];
+                if(coaching.length < 15 || !ciDeadline){
+                    alert('Check Coaching Id or URL and deadline date');
+                }else{
+                    //ABC
+                    var tofillciForm = {
+                        institute: coaching,
+                        user: intern,
+                        _deadline: ciDeadline,
+                    };
+                    console.log(JSON.stringify(tofillciForm));
+                    tofillciService.savetofillci(tofillciForm).success(function (data, status, headers) {
+                        alert('Done');
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info(status + " " + data);
+                    });
+                }
+            };
+            
+            $scope.showRemoveConfirm = function(tofillci, ev) {
+                console.info(JSON.stringify(tofillci.institute));
+                console.info(JSON.stringify(tofillci.user));
+                
+                var confirm = $mdDialog.confirm()
+                    .title('Would you like to remove ' + tofillci.institute.name + ' for ' +  tofillci.user.name + '?')
+                    .textContent('Assigned on: ' + moment(tofillci._created).format('DD-MMM HH:mm') + ', Deadline: ' + moment(tofillci._deadline).format('DD-MMM HH:mm') + '!')
+                    .ariaLabel('Lucky day')
+                    .targetEvent(ev)
+                    .clickOutsideToClose(true)
+                    .ok('Confirm')
+                    .cancel('Cancel');
+                    $mdDialog.show(confirm).then(function() {
+                      $scope.removeAssigned(tofillci);
+                    }, function() {
+                      //nothing
+                    });
+            };
+            
+            
+            $scope.removeAssigned = function(tofillci){
+                console.log(tofillci);
+                tofillciService.removeAssigned(tofillci._id);
+                $state.reload();
+            };
+            
+    }]);    */
+        
     exambazaar.controller("seocontroller", ['$rootScope', function($rootScope){
         $rootScope.pageTitle = "Exambazaar: Exclusive Deals and Videos for test preparation";
     }]);
@@ -8114,6 +8241,36 @@ function getLatLng(thisData) {
                 }],
             }
         })
+        /*.state('master-tofill', {
+            url: '/master/:masterId/tofill',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'master-tofill.html',
+                    controller: 'masterToFillController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                internList: ['UserService',
+                    function(UserService) {
+                    return UserService.getInterns();
+                }],
+                filledCount: ['tofillciService',
+                    function(tofillciService) {
+                    return tofillciService.filledCount();
+                }],
+                tofillciList: ['tofillciService',
+                    function(tofillciService) {
+                    return tofillciService.gettofillcis();
+                }],
+            }
+        })*/
         .state('partner-dashboard', {
             url: '/partner/:userId/dashboard',
             views: {

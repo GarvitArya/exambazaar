@@ -4,7 +4,7 @@ var router = express.Router();
 var config = require('../config/mydatabase.js');
 var toverifyci = require('../app/models/toverifyci');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
-
+var user = require('../app/models/user');
 
 var mongoose = require('mongoose');
 var mongodb = require('mongodb');
@@ -83,8 +83,60 @@ router.post('/markDone', function(req, res) {
     
 });
 
-//to get all toverifycis
 router.get('/', function(req, res) {
+    var toverifycis = toverifyci
+        .find({})
+        .exec(function (err, toverifycis) {
+        if (!err){
+            var basicFillTasks = [];
+            var counter = 0;
+            var nLength = toverifycis.length;
+            
+            toverifycis.forEach(function(thisFillTask, index){
+                var instituteId = thisFillTask.institute;
+                var userId = thisFillTask.user;
+                var thisProvider = targetStudyProvider
+                    .findOne({'_id': instituteId}, {name:1, city:1, email:1})
+                    .exec(function (err, thisProvider) {
+                    if (!err){
+                        
+                    var thisUser = user
+                        .findOne({ '_id': userId },{basic:1})
+                        .deepPopulate('partner partner.location')
+                        .exec(function (err, thisUser) {
+                        if (!err){
+                            var newTask = {
+                            _id: thisFillTask._id,
+                            user: thisUser,
+                            institute: thisProvider,
+                            _created: thisFillTask._created,
+                            _deadline: thisFillTask._deadline,
+                            _finished: thisFillTask._finished,
+                            active: thisFillTask.active,
+
+                        };
+                        counter = counter + 1;
+                        basicFillTasks.push(newTask);
+                        if(counter == nLength){
+                            res.json(basicFillTasks);
+                        }    
+                            
+                        } else {throw err;}
+                    });
+                        
+                    } else {throw err;}
+                });
+ 
+            });
+            if(nLength == 0){
+                res.json([]);
+            }
+        } else {throw err;}
+    });
+});
+
+//to get all toverifycis
+/*router.get('/', function(req, res) {
     var toverifycis = toverifyci
         .find({})
         .deepPopulate('institute user')
@@ -127,7 +179,7 @@ router.get('/', function(req, res) {
             }
         } else {throw err;}
     });
-});
+});*/
 //to get all toverifycis for a user
 router.get('/user/:userId', function(req, res) {
     var userId = req.params.userId;
