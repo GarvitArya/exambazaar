@@ -71,9 +71,12 @@
         width: 80px;
     }
     #examBox{
-        min-height: 20vh;
+        
         background-color: white;
         box-shadow: 0 0 10px lightgray;
+    }
+    #examEligBox{
+        min-height: 20vh;
     }
     #lineHeight2{
         line-height: 100%;
@@ -349,14 +352,17 @@
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="examEligDialog">
-    <md-dialog class="halfscreen-dialog">
-
-    <div layout="column" layout-align="start center" layout-fill>
-        <div flex layout="row" id="examBox" class="width100 paddingTB10">
-            <div flex ="30" layout="column" layout-align="start center" class="paddingT5">
+    <md-dialog class="halfscreen-dialog2">
+    <div class="width100" id="examinfo">
+        
+    </div>
+    <div class="paddingTB20 paddingLR40" layout="column" layout-align="start center" layout-fill>
+        
+        <div flex layout="row" id="examEligBox" class="width100 greyBottomBorder paddingTB10">
+            <div flex ="25" layout="column" layout-align="start start" class="paddingT5">
                 <img ng-src="{{activeExamEligibility.exam.logo}}" id="logo"/>
             </div>
-            <div flex ="70" layout="column" class="">
+            <div flex ="75" layout="column" class="">
                 <div layout="column" layout-align="start start" class="editFont">
                     <div class="fifthFont textBlack marginB5" id="lineHeight2">
                     {{activeExamEligibility.exam.displayname}}
@@ -373,34 +379,38 @@
                     </span> 
                     </span>
                     </div>
-                    <div id="lineHeight">
+                    <!--<div id="lineHeight">
                     <span class="editFont ">
                     <span class="">
                         Recommended for:</span>&nbsp;{{activeExamEligibility.eligibilitys[0].recommendedFor}}
 
                     </span> 
-                    </div>
-                    <div id="lineHeight">
-                        <span class="font12">
+                    </div>-->
+                    <div id="lineHeight" class="marginT10">
+                        <span class="font12 textDarkGrey">
                             {{activeExamEligibility.exam.briefDescription}}
                         </span>
                     </div>
                 </div>
             </div>
         </div>
-        <div layout="column" layout-align="start center" class="width100 height100 paddingTB20 editFont" >
-            <div ng-repeat="eligibility in  activeExamEligibility.eligibilitys" class="width100">
-                <div flex layout="row" class="padding10 greyBottomBorder width100">
-                    <div flex="40" layout="column" class="textDarkGrey">
+        <div layout="column" layout-align="start center" class="width100 editFont" >
+            <div ng-repeat="eligibility in  activeExamEligibility.eligibilitys" class="width100 paddingT10 marginB10">
+                <div flex layout="row" class="padding10  width100" ng-class="{ greyBottomBorder: !$last }">
+                    <div flex="25" layout="column" class="textDarkGrey paddingR10">
                         <span>
                             {{eligibility.courseLevel}}
                         </span>
-                        <span>
-                            Recommended for: {{eligibility.recommendedFor}}
-                        </span>
                         
                     </div>
-                    <div flex="60" layout="column">
+                    <div flex="75" layout="column">
+                        <span>
+                            <div ng-if="eligibility.recommendedFor && eligibility.recommendedFor !=''" class="textDarkGrey">
+                                Recommended for
+                            </div>
+                             {{eligibility.recommendedFor}}
+                        </span>
+                        
                         <span>
                             <div ng-if="eligibility.qualifications && eligibility.qualifications !=''" class="textDarkGrey">
                                 Other qualifications required

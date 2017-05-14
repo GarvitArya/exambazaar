@@ -629,6 +629,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getProviderBasic = function(coachingId) {
             return $http.get('/api/targetStudyProviders/basiccoaching/'+coachingId, {coachingId: coachingId});
         };
+        this.getProviderFillSummary = function(coachingId) {
+            return $http.get('/api/targetStudyProviders/fillSummary/'+coachingId, {coachingId: coachingId});
+        };
         this.cisavedUsers = function(coachingId) {
             return $http.get('/api/targetStudyProviders/cisavedUsers/'+coachingId, {coachingId: coachingId});
         };
@@ -3780,7 +3783,37 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
         
     exambazaar.controller("masterDashboardController", 
-        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'targetStudyProviderService', '$timeout', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, targetStudyProviderService, $timeout){
+            
+            $scope.today = moment();
+            var startOfWeek = moment().startOf('week').subtract(3, "days");
+            var endOfWeek = moment().endOf('week').add(1, 'w');
+
+            $scope.days = [];
+            var day = startOfWeek;
+
+            while (day <= endOfWeek) {
+                $scope.days.push(day.toDate());
+                day = day.clone().add(1, 'd');
+            }
+            
+            $scope.daysTask = function(task, day){
+                var comp = $scope.compareDates(task._deadline, day);
+                console.info(task._deadline + ' ' + day + ' ' + comp);
+                if(comp == 0){
+                    return true;
+                }else{
+                    return false;
+                }
+            };
+            $scope.compareDates = function(dateTimeA, dateTimeB) {
+                dateTimeA = new Date(dateTimeA);
+                var momentA = moment(dateTimeA,"DD/MM/YYYY");
+                var momentB = moment(dateTimeB,"DD/MM/YYYY");
+                if (momentA > momentB) return 1;
+                else if (momentA < momentB) return -1;
+                else return 0;
+            };
             
             $scope.usersCount = usersCount.data;
             $scope.studentCount = studentCount.data;
@@ -3795,6 +3828,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }
             });
             
+            $scope.showSavedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#savedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
+            $scope.showFillDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#fillDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                
+            };
+            $scope.showInternAssignedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#internAssignedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                
+            };
             $scope.filledCount = filledCount.data;
             $scope.tofillciList = tofillciList.data;
             $scope.toverifyciList = toverifyciList.data;
@@ -3811,7 +3873,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     intern: thisIntern,
                     done: 0,
                     due: 0,
-                    assigned: 0
+                    assigned: 0,
+                    taskList: [],
                 };
                 $scope.internDueList.push(internDue);
             });
@@ -3825,8 +3888,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             $scope.tofillciList.forEach( function(thisTask, index){
                
-                
                 //console.log(JSON.stringify(thisTask.institute));
+                var iIndex = internIds.indexOf(thisTask.user._id);
+                
+                if($scope.compareDates(thisTask._deadline, $scope.days[0]) == 1){
+                    $scope.internDueList[iIndex].taskList.push(thisTask);
+                }
+                
+                
                 if(thisTask.active){
                     $scope.fillsAssigned += 1;
                     var internIndex = internIds.indexOf(thisTask.user._id);
@@ -3836,6 +3905,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     //console.info(thisTask._deadline + ' ' + rightNow + ' ' + compare(rightNow, new Date(thisTask._deadline)));
                     if(compare(rightNow, new Date(thisTask._deadline)) == 1){
                         $scope.internDueList[internIndex].due += 1;
+                        
+                        
                         $scope.fillsDue += 1;
                     }
                 }else{
@@ -3852,7 +3923,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     }
                     
                 }
+                
             });
+            //console.log($scope.internDueList);
             $scope.verifiedUsersCount = verifiedUsersCount.data;
             $scope.ciDeadline = new Date();
             $scope.ciDeadline.setDate( $scope.ciDeadline.getDate() + 1);
@@ -3874,7 +3947,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     };
                     console.log(JSON.stringify(tofillciForm));
                     tofillciService.savetofillci(tofillciForm).success(function (data, status, headers) {
-                        alert('Done');
+                        $scope.showSavedDialog();
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
@@ -3882,6 +3955,36 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     });
                 }
             };
+            
+            
+            $scope.getInternAssigned = function(due){
+                var internId = due.intern._id;
+                var internIndex = internIds.indexOf(internId);
+                
+                $scope.activeIntern = $scope.internDueList[internIndex];
+                
+                
+
+                
+                $scope.showInternAssignedDialog();
+                
+            };
+            
+            $scope.getSummary = function(tofillci){
+                var instituteId = tofillci.institute._id;
+                
+                targetStudyProviderService.getProviderFillSummary(instituteId).success(function (data, status, headers) {
+                    $scope.fillProvider = data;
+                    $scope.fillUser = tofillci.user;
+                    $scope.showFillDialog();
+                    console.info(JSON.stringify(data));
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            
+            
             $scope.rankedCities = ["Jaipur", "Delhi", "Mumbai", "New Delhi", "Gurgaon"];
             /*"Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"*/
             
@@ -3921,8 +4024,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
             
             $scope.showRemoveConfirm = function(tofillci, ev) {
-                console.info(JSON.stringify(tofillci.institute));
-                console.info(JSON.stringify(tofillci.user));
                 
                 var confirm = $mdDialog.confirm()
                     .title('Would you like to remove ' + tofillci.institute.name + ' for ' +  tofillci.user.name + '?')
@@ -4659,12 +4760,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
            
            if($scope.startsWith != ''){
                targetStudyProviderService.changeProvidersStartingWith($scope.startsWith).success(function (data, status, headers) {
-                console.info("Done");
-               $scope.clear();
-            })
-            .error(function (data, status, header, config) {
-                console.info("Error ");
-            });
+                    console.info("Done");
+                   $scope.clear();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
            }
             
         };

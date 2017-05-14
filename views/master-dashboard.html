@@ -21,6 +21,17 @@
     .noEmail{
         border: 1px solid red;
     }
+    #providerBox{
+        min-height: 5vh;
+        background-color: white;
+        box-shadow: 0 0 10px lightgray;
+    }
+    #logo{
+        width: 80px;
+    }
+    .todayDiv{
+        background-color: #D7EBBA;
+    }
 </style>
 <div class="container">
     <div id="spacer1">
@@ -156,14 +167,17 @@
                         <div flex="40">
                             Name
                         </div>
-                        <div flex="20">
-                            Assigned Tasks
+                        <div flex="15">
+                            Assigned
                         </div>
-                        <div flex="20">
-                            Due Deadline
+                        <div flex="15">
+                            Due
                         </div>
-                        <div flex="20">
-                            Done Tasks
+                        <div flex="15">
+                            Completed
+                        </div>
+                        <div flex="15">
+                            Timeline
                         </div>
                     </div>
                     
@@ -171,14 +185,20 @@
                         <div flex="40">
                             {{due.intern.basic.name}}
                         </div>
-                        <div flex="20">
+                        <div flex="15">
                             {{due.assigned}}
                         </div>
-                        <div flex="20">
+                        <div flex="15">
                             {{due.due}}
                         </div>
-                        <div flex="20">
+                        <div flex="15">
                             {{due.done}}
+                        </div>
+                        <div flex="15">
+                        <span ng-click="getInternAssigned(due)">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        </span>
+                        
                         </div>
                     </div>
                     
@@ -209,7 +229,7 @@
                 <div layout="column" layout="center center" flex="10">Name</div>
                 <div layout="column" layout="center center" flex="20">Institute</div>
                 <div layout="column" layout="center center" flex="15">Id</div>
-                <div layout="column" layout="center center" flex="5">Remove</div>
+                <div layout="column" layout="center center" flex="5">Summary</div>
             </div>
             <div layout="row" ng-repeat="tofillci in tofillciList | orderBy:['-active','-_finished','_deadline','_created']" class="width100 greyDashedBottomBorder" ng-class="{ pending: tofillci.active, noEmail: tofillci.noEmail }">
                 <div layout="column" layout="center center" flex="5">{{$index + 1}}</div>
@@ -223,8 +243,13 @@
                     <strong>{{tofillci.institute.name}}</strong>
                     </a>
                 </div>
-                <div layout="column" layout="center center" flex="15">{{tofillci.institute._id}}</div>
-                <div layout="column" layout="center center" flex="5"><span ng-if="tofillci.active" ng-click="showRemoveConfirm(tofillci)"><i class="fa fa-times-circle" aria-hidden="true"></i></span></div>
+                <div layout="row" layout="center center" flex="15">{{tofillci.institute._id}}</div>
+                <div layout="row" layout="center center" flex="5">
+                    <span ng-click="getSummary(tofillci)">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                    </span>&nbsp;
+                    <span ng-if="tofillci.active" ng-click="showRemoveConfirm(tofillci)"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                </div>
             </div>
             
         </div>
@@ -286,7 +311,13 @@
             <div layout="row" layout="center center" flex="5">
                 {{$index + 1}}
                 <span ng-if="toverifyci.institute.email && toverifyci.institute.email.length > 0">
-                &nbsp;<i class="fa fa-envelope" aria-hidden="true"></i>    
+                    
+                &nbsp;<i class="fa fa-envelope" aria-hidden="true"></i>
+                <md-tooltip>
+                    <span ng-repeat="email in toverifyci.institute.email">
+                        {{email}}&nbsp;
+                    </span>
+                </md-tooltip>
                 </span>
             </div>
             <div layout="column" layout="center center" flex="10">{{toverifyci._created | date: "dd-MMM-yy HH:mm"}}</div>
@@ -330,4 +361,161 @@
     </div>    
 </div>
 
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="fillDialog">
+    <md-dialog class="fullscreen-dialog2">
+
+    <div layout="column" layout-align="start start" layout-fill>
+        
+        <div flex layout="row" id="providerBox" class="width100 paddingT10 ">
+            <div flex ="15" layout="column" layout-align="start start" class="padding10 ">
+                <img ng-src="{{fillProvider.logo}}" id="logo"/>
+            </div>
+            <div flex ="85" layout="column" class="editFont ">
+                <div class="fifthFont textBlack">
+                {{fillProvider.name}}
+                </div>
+                <div class="text-left font10 textBlack">
+
+                Address:&nbsp;{{fillProvider.address}},&nbsp;{{fillProvider.city}},&nbsp;{{fillProvider.state}} 
+                <span ng-if="fillProvider.pincode && fillProvider.pincode!=''">&nbsp;-&nbsp; {{fillProvider.pincode}}</span>
+
+                </div>
+                <div class="thirdFont">
+                Filled by: {{fillUser.basic.name}}
+                </div>
+                  
+            </div>
+        </div>
+        <div layout="column" layout-align="start start" class="width100  editFont textBlack paddingLR40" >
+            <div flex layout="column" class="width100">
+                <div class="lightGreyBackground thirdFont">Contact Information Added</div>
+                <div layout="row" class="width100" layout-padding>
+                <span>
+                    Phones: {{fillProvider.contact.phone}}
+                </span>
+                <span>
+                    Mobiles: {{fillProvider.contact.mobile}}
+                </span>
+                <span>
+                    Emails: {{fillProvider.contact.email}}
+                </span>
+                <span ng-if="fillProvider.contact.website && fillProvider.contact.website !=''">
+                    <a ng-href="{{fillProvider.contact.website}}" target="_blank" class="textBlack">
+                    Website
+                    </a>
+                </span>
+                <span ng-if="fillProvider.contact.facebookPage && fillProvider.contact.facebookPage !=''">
+                    <a ng-href="{{fillProvider.contact.facebookPage}}" target="_blank" class="textBlack">
+                    <i class="fa fa-facebook-official" aria-hidden="true"></i>
+                    </a>
+                </span>
+                <span ng-if="fillProvider.contact.youtubeChannel && fillProvider.contact.youtubeChannel !=''">
+                    <a ng-href="{{fillProvider.contact.youtubeChannel}}" target="_blank" class="textBlack">
+                    <i class="fa fa-youtube" aria-hidden="true"></i>
+                    </a>
+                </span>
+                </div>    
+            </div>
+            <div flex layout="column" class="width100">
+                <div class="lightGreyBackground thirdFont">CI Information Added</div>
+                <div layout="row" class="width100" layout-padding>
+                <span>
+                    #Results: {{fillProvider.info.results}}
+                </span>
+                <span>
+                    #Photo: {{fillProvider.info.photo}}
+                </span>
+                <span>
+                    #Video: {{fillProvider.info.video}}
+                </span>
+                <span>
+                    #Faculty: {{fillProvider.info.faculty}}
+                </span>
+                    
+                </div>
+            </div>
+            <div flex layout="column" class="width100">
+                <div class="lightGreyBackground thirdFont">Additional Information</div>
+                <div layout="row" class="width100" layout-padding>
+                    <span>
+                    LatLng Marked: 
+                    <span ng-if="fillProvider.latlng">
+                    Yes
+                    </span>
+                    <span ng-if="!fillProvider.latlng">
+                        No
+                        </span>
+                    </span>
+                    <span>
+                        EB Verify State: {{fillProvider.ebVerifyState}}
+                    </span>
+                    <span>
+                        #times saved: {{fillProvider._savedLength}}
+                    </span>
+                </div>
+                
+            </div>
+            <div flex layout="row" class="width100" layout-padding>
+                <div layout="column" class="width100" >
+                    <span>EB Notes</span>
+                    <div flex layout="row" ng-repeat="note in fillProvider.ebNote" ng-if="note.note !=''">
+                        <div flex="5">
+                            {{$index+1}}
+                        </div>
+                        <div flex="95">
+                            {{note.note}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </md-dialog>
+    </div>    
+</div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="internAssignedDialog">
+    <md-dialog class="fullscreen-dialog2">
+
+    <div layout="column" layout-align="start start" layout-fill >
+        
+        <div layout="row" id="providerBox" class="width100 thirdFont padding20">
+            {{activeIntern.intern.basic.name}}
+        </div>
+        <div layout="column" class="width100 paddingLR40 " layout-wrap>
+            
+            <div layout="row" ng-repeat="day in days" class="greyDashedBottomBorder padding5" ng-class="{ todayDiv: {{(today | date:'dd/MM/yyyy') == (day | date:'dd/MM/yyyy')}}}" layout-wrap>
+                <div flex="25">
+                    {{day | date : 'dd-MMM'}}
+                </div>
+                <div flex="75" class="width100">
+                    
+                    <div layout="row" ng-repeat="task in activeIntern.taskList" ng-if="(task._deadline | date:'dd/MM/yyyy') == (day | date:'dd/MM/yyyy')">
+                        <div>
+                            <a ui-sref="claim({ coachingId:{{'task.institute._id'}} })" target="_blank" id="link">
+                            <strong>{{task.institute.name}}</strong>
+                            </a>
+                        </div>
+                        <div ng-if="!task.active" class="text-primary">
+                        &nbsp;<i class="fa fa-check-circle" aria-hidden="true"></i>
+                        </div>
+                        <div ng-if="task.active" class="text-primary">
+                        &nbsp;<span class="badge font10">
+                            Pending
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+    </md-dialog>
+    </div>    
+</div>
 

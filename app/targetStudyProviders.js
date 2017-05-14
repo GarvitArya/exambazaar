@@ -1202,7 +1202,48 @@ router.get('/coaching/:coachingId', function(req, res) {
     });
 });
 
-
+router.get('/fillSummary/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    //console.log('Fetching coaching ' + coachingId);
+    
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': coachingId})
+        //.deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam')
+        .exec(function (err, thisProvider) {
+        if (!err){
+            var fillSummary = {
+                contact:{
+                    phone: thisProvider.phone.length,
+                    mobile: thisProvider.mobile.length,
+                    email: thisProvider.email.length,
+                    website: thisProvider.website,
+                    facebookPage: thisProvider.facebookPage,
+                    youtubeChannel: thisProvider.youtubeChannel,
+                },
+                info:{
+                    results: thisProvider.results.length,
+                    photo: thisProvider.photo.length,
+                    video: thisProvider.video.length,
+                    faculty: thisProvider.faculty.length,
+                    
+                },
+                name: thisProvider.name,
+                logo: thisProvider.logo,
+                address: thisProvider.address,
+                city: thisProvider.city,
+                state: thisProvider.state,
+                pincode: thisProvider.pincode,
+                latlng: thisProvider.latlng,
+                ebVerifyState: thisProvider.ebVerifyState,
+                ebNote: thisProvider.ebNote,
+                _savedLength: thisProvider._saved.length,
+            };
+            //console.log(fillSummary);
+            
+            res.json(fillSummary);
+        } else {throw err;}
+    });
+});
 
 
 router.post('/coachingGroup', function(req, res) {

@@ -96,7 +96,7 @@ router.get('/', function(req, res) {
                 var instituteId = thisFillTask.institute;
                 var userId = thisFillTask.user;
                 var thisProvider = targetStudyProvider
-                    .findOne({'_id': instituteId}, {name:1, city:1, email:1})
+                    .findOne({'_id': instituteId}, {name:1, city:1, email:1, ebVerifyState:1})
                     .exec(function (err, thisProvider) {
                     if (!err){
                         
