@@ -440,6 +440,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.gettofillci = function(tofillciId) {
             return $http.get('/api/tofillcis/edit/'+tofillciId, {tofillciId: tofillciId});
         };
+        this.prevFilled = function(groupName) {
+            return $http.get('/api/tofillcis/prevFilled/'+groupName, {groupName: groupName});
+        };
         this.removeAssigned = function(tofillciId){
             $http.get('/api/tofillcis/remove/'+tofillciId, {tofillciId: tofillciId});
         };
@@ -4049,6 +4052,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
             
             $rootScope.pageTitle = 'Master Dashboard';
+            $scope.fetching = false;
+            $scope.$watch('instituteInput', function (newValue, oldValue, scope) {
+            if(newValue != null && newValue != ''){
+                //console.info(newValue);
+                //DEF
+                var newValueArr = newValue.split("/");
+                newValue = newValueArr[newValueArr.length-1];
+                //$scope.email.instituteId = newValue;
+                //console.info(newValue);
+                if(newValue.length > 5){
+                    $scope.fetching = true;
+                    tofillciService.prevFilled(newValue).success(function (prevfilleddata, status, headers) {
+                        $scope.prevFilledLength = prevfilleddata;
+                        $scope.fetching = false;
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info(status + " " + data);
+                    });
+                }
+
+            }
+
+            }, true);
+            
             
     }]);
     

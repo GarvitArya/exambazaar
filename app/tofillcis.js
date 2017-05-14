@@ -59,6 +59,54 @@ router.get('/institutesFilled', function(req, res) {
     });
 });
 
+router.get('/prevFilled/:instituteId', function(req, res) {
+    var instituteId = req.params.instituteId;
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': instituteId},{groupName:1})
+        //.deepPopulate('')
+        .exec(function (err, thisProvider) {
+        if (!err){
+            
+            var groupName = thisProvider.groupName;
+            console.log(groupName);
+            var tofillcis = tofillci
+                .find({},{institute:1})
+                .deepPopulate('institute')
+                .exec(function (err, tofillcis) {
+                if (!err){
+                    var counter = 0;
+                    var nLength = tofillcis.length;
+                    var prevFilledTasks = [];
+                    var groupNameList = tofillcis.map(function(a) {return a.institute.groupName;});
+                    //console.log('Group Names: ' + groupNameList);
+
+                    groupNameList.forEach(function(thisGroup, index){
+
+                        if(thisGroup == groupName){
+                            prevFilledTasks.push(tofillcis[index]);
+                        }
+                        counter = counter + 1;
+                        if(counter == nLength){
+                            console.log(prevFilledTasks.length);
+                            res.json(prevFilledTasks.length);
+                        }
+                    });
+
+                    if(nLength == 0){
+                        res.json(0);
+                    }
+                } else {throw err;}
+            });
+            
+        } else {throw err;}
+    });
+    
+    
+    
+    
+    
+});
+
 router.post('/markDone', function(req, res) {
     var tofillciForm = req.body;
     var institute = tofillciForm.institute;

@@ -145,8 +145,17 @@
                 </md-input-container>
                 <md-button  class="md-green md-small font10" ng-click="assignCIFill()" class="width25">Assign</md-button>
             </div>
-            
-            
+        </div>
+        <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
+            <span ng-if="fetching">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </span>
+            <span ng-if="prevFilledLength > 0" class="danger">
+                Another institute from this group has been filled before! Check before assigning.
+            </span>
+            <span ng-if="prevFilledLength == 0" class="text-primary bold">
+                Go ahead, assign it to an intern!
+            </span>
             
         </div>
     </div>
