@@ -2554,7 +2554,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 institute: $scope.provider._id,
                 user: $scope.user.userId
             };
-            //console.info(cisavedForm);
+            console.info(cisavedForm);
             cisavedService.savecisaved(cisavedForm).success(function (data, status, headers) {
                 tofillciService.markDone(cisavedForm)
                 .success( function (data, status, headers) {
@@ -5008,7 +5008,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
             if($scope.user.userType=='Intern - Business Development'){
                 
-                if($scope.city != 'Jaipur'){
+                if($scope.city != 'Jaipur' && $scope.city != 'New Delhi'){
                     $scope.showLevel = 0;
                 }else{
                     $scope.showLevel = 1; 

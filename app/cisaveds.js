@@ -74,9 +74,11 @@ router.post('/save', function(req, res) {
         institute: institute,
         user: user
     });
+    
+    console.log(JSON.stringify(newcisaved));
     newcisaved.save(function(err, newcisaved) {
         if (err) return console.error(err);
-        //console.log("MediaTag saved with id: " + this_mediaTag._id);
+        console.log(JSON.stringify(newcisaved._id));
         res.json(newcisaved._id);
     });
     
