@@ -899,7 +899,6 @@
         </div>
     </div>
     
-    
     <div layout="row" layout-xs="column" class="componentRow " id="Results">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
@@ -934,6 +933,9 @@
                         S. No.
                     </div>
                     <div flex>
+                        Subgroup
+                    </div>
+                    <div flex>
                         Year
                     </div>
                     <div flex>
@@ -952,6 +954,9 @@
                 <div layout="row" layout-align="start center" class="width100 greyBottomBorder" ng-repeat="result in examResult.result">
                     <div flex>
                     {{$index + 1}}
+                    </div>
+                    <div flex>
+                        {{result.subgroup}}
                     </div>
                     <div flex>
                         {{result.year}}
@@ -1056,6 +1061,9 @@
                                 S. No.
                             </div>
                             <div flex>
+                                Subgroup
+                            </div>
+                            <div flex>
                                 Student Name
                             </div>
                             <div flex ng-if="exam.resultFormat == 'Rank'">
@@ -1082,6 +1090,9 @@
                         <div layout="row" layout-align="start center" class="greyDashedBottomBorder" ng-repeat="result in yearResult.result" id="showResultRow"  >
                             <div flex>
                                 {{$index + 1}}
+                            </div>
+                            <div flex>
+                                {{result.subgroup}}
                             </div>
                             <div flex>
                                 {{result.name}}
@@ -1132,8 +1143,48 @@
                             {{examResult.initialLength}}
                         </span>-->
                     </div>
+                    
+                    <div layout="row" layout-align="center center" id="upload3" ngf-select="uploadResultPhotos(examResult.newresultphotos, examResult)" multiple="multiple" ng-model="examResult.newresultphotos" ngf-accept="'image/*'">
+                        <span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Bulk Add Result Photos
+                        </span>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="hidden-xs col-sm-3 col-md-3 col-lg-3" ng-repeat="photo in examResult.newresultphotos" id="displayBox">
+                        <div layout="column" id="elementBox" class="greyBorder">
+                            <!--<img ng-src="{{photo.link}}"/>-->
+                            <div id="thumbnailImage" ng-style="{'background-image':'url('+ photo.link+')'}" class="showBorder">
+                                <div layout="column" layout-align="center center" class="md-headline text-white md-display-2" id="thumbnailText">
+
+                                    <div class="row font9">
+                                    Photo# {{$index + 1}} of {{examResult.newresultphotos.length}}
+                                    </div>
+                                    <div class="row">
+                                    <i class="fa fa-check-circle text-primary" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="center center" class="marginTB5 width100">
+                                <md-select ng-model="photo.resultName"  placeholder="Assign Result" class="font11 width100">
+
+                                    <md-option ng-value="result.name" ng-repeat="result in examResult.result" ng-if="result.name && result.name !=''" ng-click="updateResultPhoto(result, photo, examResult, $event)" class="text-primary font11">
+                                      {{result.name}}
+                                    </md-option>
+                                </md-select>
+
+                            </div>
+                            <span class="badge font9" id="deleteButton" ng-click="deleteResultPhoto(examResult, photo)">
+                                Delete
+                            </span>
+
+                        </div>
+                    </div>
+                    
+                    
+                    </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font9">
                     <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Rank'">
+                        <hot-column data="subgroup" title="'Subgroup <br/>(eg. Level 1/2/3)<br/>Optional'"></hot-column>
                         <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
                         <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
                         <hot-column data="rank" title="'AIR <br/>(eg. 32)'" type="'numeric'" width="80" ></hot-column>
@@ -1149,6 +1200,7 @@
                     </hot-table>
                     
                     <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Marks'">
+                        <hot-column data="subgroup" title="'Subgroup <br/>(eg. Level 1/2/3)<br/>Optional'"></hot-column>
                         <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
                         <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
                         <hot-column data="marks" title="'Score <br/>(eg. 800)'" type="'numeric'" width="80" ></hot-column>
@@ -1160,6 +1212,7 @@
                     </hot-table>
                         
                     <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Percentile'">
+                        <hot-column data="subgroup" title="'Subgroup <br/>(eg. Level 1/2/3)<br/>Optional'"></hot-column>
                         <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
                         <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
                         <hot-column data="percentile" title="'Percentile <br/>(eg. 99.85)'" type="'numeric'" width="80"  format="'0.00'"></hot-column>
@@ -1171,6 +1224,7 @@
                     </hot-table>
                         
                     <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="examResult.result" min-rows="10" min-spare-rows="1" height="300" id="hotTable" ng-if="examResult.exam.resultFormat == 'Pass/Fail'">
+                        <hot-column data="subgroup" title="'Subgroup <br/>(eg. Level 1/2/3)<br/>Optional'"></hot-column>
                         <hot-column data="year" title="'Year <br/>(eg. 2017)'"></hot-column>
                         <hot-column data="name" title="'Student Name <br/>(eg. Jai Sinha)'"></hot-column>
                         <!--<hot-column data="percentile" title="'Percentile <br/>(eg. 99.85)'" type="'numeric'" width="80" ></hot-column>-->
@@ -1933,7 +1987,6 @@
     </div>
     
     
-    
     <div layout="row" layout-xs="column" class="componentRow  lastRow2 lastRow" id="SavedHistory" ng-if="ebuser">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
@@ -2146,7 +2199,7 @@
                     </div>
                     <div flex="20">
                         <div layout="row" layout-align="center center">
-                          <div flex = "10" class="opaqueImage" ng-repeat="photo in provider.photo" ng-if="$index >= startPhotoIndex &&  $index < endPhotoIndex" layout-padding>
+                          <div flex = "10" class="opaqueImage" ng-repeat="photo in provider.resultphotos" ng-if="$index >= startPhotoIndex &&  $index < endPhotoIndex" layout-padding>
                             <div id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}" ng-click="changePhotoImage($index)">
                             </div>
                           </div>
@@ -2658,7 +2711,7 @@
 
 
 <div class="saveCancel">
-    <div layout="row" ng-show="editContact || editExam || editCourse || editResult || editResult2 ||  editPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
+    <div layout="row" ng-show="editContact || editExam || editCourse || editResult || editResult2 ||  editPhoto || editResultPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
         <div flex ="80">
             <span>
             Do you want to save your changes to {{provider.name}}? 

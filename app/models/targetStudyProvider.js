@@ -41,6 +41,7 @@ var targetStudyProviderSchema = mongoose.Schema({
         name: {type: String},
         category: {type: String},
         rank: {type: String},
+        subgroup: {type: String},
         percentile: {type: String},
         percentage: {type: String},
         marks: {type: String},

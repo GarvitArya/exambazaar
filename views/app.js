@@ -606,6 +606,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.addPhoto = function(newPhotoForm) {
             return $http.post('/api/targetStudyProviders/addPhoto',newPhotoForm);
         };
+        
         this.addLogo = function(newLogoForm) {
             return $http.post('/api/targetStudyProviders/addLogo',newLogoForm);
         };
@@ -1682,7 +1683,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                             
                             
                         }else{
-                            console.log(status + ' ' + $scope.provider._id);
+                            //console.log(status + ' ' + $scope.provider._id);
 
                             if(status == 'ZERO_RESULTS'){
                             $scope.provider.latlngna = true; 
@@ -2289,6 +2290,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
             //$scope.saveProvider();
         };
+        $scope.deleteResultPhoto = function(examResult, photo){
+            
+            examResult.newresultphotos.forEach( function(thisPhoto, index){
+                if(thisPhoto.link == photo.link){
+                    examResult.newresultphotos.splice(index, 1);
+                }
+            });
+            //$scope.saveProvider();
+        };
         $scope.saveProvider = function(){
             //console.info($scope.provider);
             var saveProvider = {
@@ -2310,6 +2320,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }else{
                 thisFaculty.infoAvailable = 0;
             }
+        });
+        
+        $scope.provider.results.forEach(function(thisResult, resultIndex){
+            
         });
         
         $scope.provider.results.forEach(function(thisResult, resultIndex){
@@ -2570,15 +2584,52 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 console.info("Error ");
             });
         };
+        $scope.updateResultPhoto = function(result, photo, examResult, ev){
+            //console.log(examResult.result);
+            
+            
+            if(result.image && result.image != ''){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Do you not want to change image for ' + result.name + '?')
+                .textContent('There is already an image set, you will not be able to recover the old image!')
+                .ariaLabel('Lucky day')
+                .targetEvent(ev)
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    examResult.result.forEach(function(thisResult, index){
+                
+                        if(thisResult.image == photo.link){
+                            thisResult.image = '';
+                        }
+                    });
+                    result.image = photo.link;
+                }, function() {
+                  //nothing
+                }); 
+            }else{
+                examResult.result.forEach(function(thisResult, index){
+                
+                    if(thisResult.image == photo.link){
+                        thisResult.image = '';
+                    }
+                });
+                result.image = photo.link;
+            }
+            
+            
+        };
         
         $scope.saveProvider = function(){
-                //console.info($scope.provider);
+                console.info($scope.provider);
                 var saveProvider = {
                     targetStudyProvider:$scope.provider,
                     user: $scope.user.userId
                 };
                 targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
-                    console.log($scope.editResult + ' ' + $scope.editResult);
+                    //console.log($scope.editResult + ' ' + $scope.editResult);
                     if($scope.editResult || $scope.editResult){
                         $scope.addExamResult();
                     }else{
@@ -2718,6 +2769,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.preUploadPhotoLength = $scope.provider.photo.length;
         $scope.editPhotos= function(){
             $scope.editPhoto = true;
+        };
+        $scope.editResultPhotos= function(){
+            $scope.editResultPhoto = true;
         };
         $scope.savePhotos= function(){
             $scope.saveProvider();
@@ -3104,7 +3158,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' + $scope.provider.city;   
             }
         }
-        console.log($scope.provider.mapAddress);
         /*if($scope.provider.pincode){
             $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' +
             $scope.provider.city + ' ' +
@@ -3189,6 +3242,64 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
             }
          };
+        
+        $scope.uploadResultPhotos = function (newresultphotos, examResult) {
+            console.log(examResult.newresultphotos);
+            //var newresultphotos = $scope.newresultphotos;
+            var nFiles = newresultphotos.length;
+            var providerId = $scope.provider._id;
+            var counter = 0;
+            console.log(nFiles);
+            $scope.ResultPhotoProgess = 0;
+            if (newresultphotos && newresultphotos.length) {
+            newresultphotos.forEach(function(thisFile, index){
+                
+            var fileInfo = {
+                filename: thisFile.name,
+                contentType: thisFile.type
+            };
+             ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+            var s3Request = {};
+            var allParams = data.params;
+            for (var key in allParams) {
+              if (allParams.hasOwnProperty(key)) {
+                s3Request[key] = allParams[key];
+              }
+            }
+            s3Request.file = thisFile;
+            Upload.upload({
+                url: data.endpoint_url,
+                data: s3Request
+            }).then(function (resp) {
+                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                thisFile.link = $(resp.data).find('Location').text();
+                
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    /*$scope.ResultPhotoProgess = 0;
+                    thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                    newresultphotos.forEach(function(thisPhoto, index){
+                        //console.log(index + ' ' + thisPhoto.uploadProgress + ' ' + nFiles);
+                        if(!thisPhoto.uploadProgress){
+                            thisPhoto.uploadProgress = 0;
+                        }
+                        $scope.ResultPhotoProgess += thisPhoto.uploadProgress;
+                        //console.log($scope.photoProgess);
+                    });
+                    $scope.ResultPhotoProgess = $scope.ResultPhotoProgess / nFiles;
+                    //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);*/
+                });
+
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error");
+            });   
+                 
+            });
+            }
+         };
+        
         
         $scope.uploadResultPic = function (newresultpic,result) {
             //var logo = $scope.newlogo;
@@ -5666,6 +5777,25 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $rootScope.title ='Sandbox';
     }]);
     
+    exambazaar.controller("resultAutocompleteController", 
+        [ '$scope', '$http','$state', 'targetStudyProviderService', function($scope, $http, $state, targetStudyProviderService){
+            
+        this.selectedItemChange = selectedItemChange;
+        function selectedItemChange(item) {
+            console.info('Item changed to ' + JSON.stringify(item));
+            $state.go('claim', {coachingId: item._id});
+            
+        };
+        this.querySearch = function(query){
+            if(query.length > 2){
+                return targetStudyProviderService.searchProviders(query).then(function(response){
+                    //console.info(response.data);
+                    return response.data;
+                });
+            }
+        };
+    }]);
+        
     exambazaar.controller("sandbox2Controller", 
         [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$stateParams', 'targetStudyCities', 'cityProviderCount', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $stateParams, targetStudyCities, cityProviderCount){
             $scope.providers = targetStudyProvidersList.data;

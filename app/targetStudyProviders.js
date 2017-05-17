@@ -250,6 +250,7 @@ router.post('/bulkAddResult', function(req, res) {
                     thisResult.name = titleCase(thisResult.name);
                     var newResult = {
                         year: thisResult.year,
+                        subgroup: thisResult.subgroup,
                         name: thisResult.name,
                         rank: thisResult.rank,
                         marks: thisResult.marks,
