@@ -585,6 +585,10 @@
                             Edit
                     </small>
                     </span>
+                    <span class="badge darkGreyBackground text-white" ng-if="masteruser" ng-click="showDisableConfirm(provider)"><small>
+                        Disable
+                    </small>
+                    </span>
                 </span>
                 <span class="hidden-sm hidden-md hidden-lg text md-subhead" id="coachingHeader">
                     {{provider.name | uppercase}}

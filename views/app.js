@@ -1599,6 +1599,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.videoTags = videoMediaTagList.data.mediaTypeTags;
         $scope.videoTypes = videoMediaTagList.data.distinctTypes;
         
+        
+        
         /*console.info($scope.videoTags);
         console.info($scope.videoTypes);*/
         
@@ -2020,6 +2022,41 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }else{
                 alert('Cannot Edit without logging in or verifying identity');
                 $scope.showClaimDialog();
+            }
+        };
+        
+        $scope.showDisableConfirm = function(provider, ev) {
+        
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to diable ' + provider.name + '?')
+                .textContent('Address: ' + provider.address + ', ' + provider.city + '!')
+                .ariaLabel('Lucky day')
+                .targetEvent(ev)
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.disableProvider(provider);
+                    $state.reload();
+                }, function() {
+                  //nothing
+                });
+            
+        };
+        
+        $scope.disableProvider = function(provider){
+            if(provider._id){
+                var instituteIds = [provider._id];
+                var disableForm = {
+                    instituteIds: instituteIds,
+                    user: $scope.user.userId
+                };
+                targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+                    $scope.showSavedDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
             }
         };
         
@@ -7392,7 +7429,7 @@ function getLatLng(thisData) {
                 $scope.email.senderId = $scope.user._id;
             }else{
                 if($scope.user.userType=='Intern - Business Development'){
-                    if($scope.user._id == '58c8e895bbaebf3560545f19' || $scope.user._id == '59085f0fc7289d0011d6ea8c'){
+                    if($scope.user._id == '58c8e895bbaebf3560545f19' || $scope.user._id == '59085f0fc7289d0011d6ea8c' || $scope.user._id == '58e5fdd86c9be422e4820d7e'){
                         $scope.showLevel = 10;
                         $scope.email.from = 'always@exambazaar.com';
                         $scope.email.sender = 'Exambazaar';
