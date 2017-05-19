@@ -238,11 +238,11 @@
                 <div layout="column" id="subcategory">
                     <div layout="row">
                         <div flex="85" layout="column" layout-align="center start">
-                            <strong><span class=" text-primary secondFont">
+                            <h2 class=" text-primary secondFont bold">
                             <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                                 {{$index + 1}}. {{coachingGroup.groupName | uppercase}}
                             </a>
-                            </span></strong>
+                            </h2>
                             <div layout="row" layout-align="start center" class="bold">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;{{coachingGroup.institutes.length}} centre<span ng-if="coachingGroup.institutes.length > 1">s&nbsp;</span> in {{city}}
                             </div>
