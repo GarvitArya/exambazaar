@@ -7618,6 +7618,12 @@ function getLatLng(thisData) {
                 'footer': {
                     templateUrl: 'footer.html'
                 }
+            },
+            resolve: {
+                 data: function($rootScope) {
+                    $rootScope.pageTitle = 'Exambazaar: Find best coaching institutes in your city for 50+ Indian exams';
+                    $rootScope.pageDescription = "Exambazaar:find best coaching institutes in your city. Browse courses, photos, vidoes and results for over 50 entrance exams in India";
+                 }
             }
         })
         .state('login', {
