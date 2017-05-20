@@ -123,6 +123,10 @@ app.use('/api/sendGridCredentials', sendGridCredentials);
 
 var allStates = ['/','/getStarted','/login','/main','/main/:categoryName','/main/:categoryName/:subCategoryName/','/main/:categoryName/:subCategoryName/:cityName','/main/:categoryName/:subCategoryName/:cityName/:coachingId','/group/:categoryName/:subCategoryName/:cityName/:groupName','/oldclaim/:coachingId','/claim/:coachingId','/verifyClaim/:coachingId','/master/:masterId/sandbox','/master/:masterId/sandbox2/:cityName','/user/:userId/eligibility','/privacy','/about','/calendar','/:instituteId/bulkAddStudents','/:instituteId/bulkAddTeachers','/:instituteId/bulkAddBatches','/:instituteId/instituteCalendar','/:batchId/batchCalendar','/admin/:adminId/main','/user/:userId/sendEmail','/master/:masterId/main','/coaching/cAdda/:city','/internship','/account','/edit/tStudy/:coachingId','/coaching/providersWithAreas','/coaching/tStudy/:city','/master/:masterId/analytics','/master/:masterId/institutes','/master/:masterId/dashboard','/master/:masterId/tofill','/partner/:userId/dashboard','/master/:masterId/manageBatchStudents','/master/:masterId/manageInstituteStudents','/master/:masterId/addGlobalSubject','/master/:masterId/invalidusers','/master/:masterId/addGlobalFeeItem','/master/:masterId/mergeUsers','/master/:masterId/invalidParents','/master/:masterId/invalidTeachers','/institute/:instituteId','/institute-batches/:instituteId','/institute-teachers/:instituteId','/institute-students/:instituteId','/student/:studentId/main','/student/:studentId/attendance','/student/:studentId/class','/user/:userId/shortlisted','/user/:userId/viewed','/user/:userId/filled','/user/:userId/assigned','/user/:userId/assignedToVerify','/user/:userId/filledAll','/user/:userId/group','/user/:userId/profile','/user/:userId/checkLogo/:pageNumber/','/student/:studentId/subjects','/:instituteId/addTeacher','/:instituteId/addAdmin','/addStream','/addLocation','/addMediaTag','/addGroup','/addAwsCredential','/addAwsCredential','/addExam','/addEligibility','/master/:masterId/addMaster','/master/:userId/addInstitute','/user/:userId/addIntern','/sitemap','/:instituteId/addStudent','/:instituteId/addTransportVehicle','/:instituteId/addBatch','/:instituteId/feeStructure','/verify/:userId/','/chooselogin/:userId/','/subject/:subjectId','/eval/:evalId','/exam/:examId','/batch/:batchId','/batch/:batchId/attendance'
 ];
+
+app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm'));
+//https://ebprerender.herokuapp.com/
+//https://service.prerender.io/
 allStates.forEach(function(thisState) {
   app.get(thisState, function(req, res){
       res.sendFile(__dirname + '/views/index.html');
@@ -143,6 +147,8 @@ app.use(function(req, res, next) {
     next(err);
 });
 
+//app.use(require('prerender-node').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm'));
+
 
 
 var server = app.listen(port);
@@ -158,7 +164,7 @@ var SitemapGenerator = require('sitemap-generator');
   restrictToBasepath: false,
   stripQuerystring: true,
 });*/
-var generator = new SitemapGenerator('http://www.standyou.com');
+var generator = new SitemapGenerator('http://www.exambazaar.com');
 
 generator.on('done', function (sitemap) {
   console.log(sitemap); // => prints xml sitemap
