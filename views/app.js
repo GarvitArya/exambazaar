@@ -7244,7 +7244,7 @@ function getLatLng(thisData) {
         
     exambazaar.controller("sitemapController", 
         [ '$scope','$http','$state','cities', function($scope,$http,$state,cities){
-        /*$scope.urlpart1 = 'http://www.exambazaar.com/main/';
+        /*$scope.urlpart1 = 'http://www.exambazaar.com/stream/';
         $scope.urlpart2 = [
             'engineering/jee/',
             'engineering/bitsat/',
@@ -7302,7 +7302,7 @@ function getLatLng(thisData) {
         });*/
             
         
-        var part1 = ["http://www.exambazaar.com/main/engineering/JEE%20Advanced/","http://www.exambazaar.com/main/engineering/BITSAT/","http://www.exambazaar.com/main/engineering/GATE/","http://www.exambazaar.com/main/engineering/NATA/","http://www.exambazaar.com/main/medical/AIPMT/","http://www.exambazaar.com/main/medical/AIIMS/","http://www.exambazaar.com/main/medical/AFMC/","http://www.exambazaar.com/main/cacs/CA%20CPT/","http://www.exambazaar.com/main/cacs/CS%20Foundation%20Exam/","http://www.exambazaar.com/main/school/NTSE%20Exam/","http://www.exambazaar.com/main/school/KVPY/","http://www.exambazaar.com/main/mba/CAT/","http://www.exambazaar.com/main/mba/XAT/","http://www.exambazaar.com/main/mba/SNAP/","http://www.exambazaar.com/main/law/CLAT/","http://www.exambazaar.com/main/law/LSAT/","http://www.exambazaar.com/main/law/AILET/","http://www.exambazaar.com/main/foreigneducation/SAT/","http://www.exambazaar.com/main/foreigneducation/GMAT/","http://www.exambazaar.com/main/foreigneducation/GRE/","http://www.exambazaar.com/main/foreigneducation/IELTS/","http://www.exambazaar.com/main/foreigneducation/TOEFL/","http://www.exambazaar.com/main/civilservices/Civil%20Services%20Exam/","http://www.exambazaar.com/main/civilservices/IFS%20Exam/","http://www.exambazaar.com/main/civilservices/IES~2FISS%20Exam/","http://www.exambazaar.com/main/ssc/SSC%20CGLE/","http://www.exambazaar.com/main/ssc/SSC%20CHSL%20Exam/","http://www.exambazaar.com/main/ssc/SSC%20CMLE/","http://www.exambazaar.com/main/ssc/SSC%20CPO%20(S.I)%20Exam/","http://www.exambazaar.com/main/ssc/SSC%20JE/","http://www.exambazaar.com/main/bank/SBI%20PO%20Exam/","http://www.exambazaar.com/main/bank/IBPS%20PO%20CWE/","http://www.exambazaar.com/main/bank/IBPS%20Clerk%20CWE/","http://www.exambazaar.com/main/bank/RBI%20Assistant%20Exam/","http://www.exambazaar.com/main/defence/NDA%20Exam/","http://www.exambazaar.com/main/defence/CDS%20Exam/","http://www.exambazaar.com/main/defence/I.A.F.%20Exam/","http://www.exambazaar.com/main/defence/I.N.A%20Exam/","http://www.exambazaar.com/main/defence/AFCAT/","http://www.exambazaar.com/main/insurance/IRDA%20Exam/","http://www.exambazaar.com/main/insurance/LIC%20AAO%20Exam/","http://www.exambazaar.com/main/insurance/L.I.C%20D.O/","http://www.exambazaar.com/main/insurance/G.I.C%20Exam/"];    
+        var part1 = ["http://www.exambazaar.com/stream/engineering/JEE%20Advanced/","http://www.exambazaar.com/stream/engineering/BITSAT/","http://www.exambazaar.com/stream/engineering/GATE/","http://www.exambazaar.com/stream/engineering/NATA/","http://www.exambazaar.com/stream/medical/AIPMT/","http://www.exambazaar.com/stream/medical/AIIMS/","http://www.exambazaar.com/stream/medical/AFMC/","http://www.exambazaar.com/stream/cacs/CA%20CPT/","http://www.exambazaar.com/stream/cacs/CS%20Foundation%20Exam/","http://www.exambazaar.com/stream/school/NTSE%20Exam/","http://www.exambazaar.com/stream/school/KVPY/","http://www.exambazaar.com/stream/mba/CAT/","http://www.exambazaar.com/stream/mba/XAT/","http://www.exambazaar.com/stream/mba/SNAP/","http://www.exambazaar.com/stream/law/CLAT/","http://www.exambazaar.com/stream/law/LSAT/","http://www.exambazaar.com/stream/law/AILET/","http://www.exambazaar.com/stream/foreigneducation/SAT/","http://www.exambazaar.com/stream/foreigneducation/GMAT/","http://www.exambazaar.com/stream/foreigneducation/GRE/","http://www.exambazaar.com/stream/foreigneducation/IELTS/","http://www.exambazaar.com/stream/foreigneducation/TOEFL/","http://www.exambazaar.com/stream/civilservices/Civil%20Services%20Exam/","http://www.exambazaar.com/stream/civilservices/IFS%20Exam/","http://www.exambazaar.com/stream/civilservices/IES~2FISS%20Exam/","http://www.exambazaar.com/stream/ssc/SSC%20CGLE/","http://www.exambazaar.com/stream/ssc/SSC%20CHSL%20Exam/","http://www.exambazaar.com/stream/ssc/SSC%20CMLE/","http://www.exambazaar.com/stream/ssc/SSC%20CPO%20(S.I)%20Exam/","http://www.exambazaar.com/stream/ssc/SSC%20JE/","http://www.exambazaar.com/stream/bank/SBI%20PO%20Exam/","http://www.exambazaar.com/stream/bank/IBPS%20PO%20CWE/","http://www.exambazaar.com/stream/bank/IBPS%20Clerk%20CWE/","http://www.exambazaar.com/stream/bank/RBI%20Assistant%20Exam/","http://www.exambazaar.com/stream/defence/NDA%20Exam/","http://www.exambazaar.com/stream/defence/CDS%20Exam/","http://www.exambazaar.com/stream/defence/I.A.F.%20Exam/","http://www.exambazaar.com/stream/defence/I.N.A%20Exam/","http://www.exambazaar.com/stream/defence/AFCAT/","http://www.exambazaar.com/stream/insurance/IRDA%20Exam/","http://www.exambazaar.com/stream/insurance/LIC%20AAO%20Exam/","http://www.exambazaar.com/stream/insurance/L.I.C%20D.O/","http://www.exambazaar.com/stream/insurance/G.I.C%20Exam/"];    
         var part2 = ["Delhi","Mumbai","New%20Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
         var urls = [];
         $scope.urls = [];
@@ -7600,12 +7600,12 @@ function getLatLng(thisData) {
       return deferred.promise;
     };
     exambazaar.config(function($stateProvider, $urlRouterProvider,$locationProvider) {
-    $urlRouterProvider.otherwise('/getStarted');
+    $urlRouterProvider.otherwise('/');
     $stateProvider
         //landing page
     
         .state('landing', {
-            url: '/getStarted',
+            url: '/',
             views: {
                 'header':{
                     templateUrl: 'header2.html',
@@ -7643,7 +7643,7 @@ function getLatLng(thisData) {
             }
         })
         .state('main', {
-            url: '/main',
+            url: '/stream',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -7682,7 +7682,7 @@ function getLatLng(thisData) {
                 }
             })
         .state('category', {
-            url: '/main/:categoryName',
+            url: '/stream/:categoryName',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -7705,7 +7705,7 @@ function getLatLng(thisData) {
             }
         })
         .state('city', {
-            url: '/main/:categoryName/:subCategoryName/',
+            url: '/stream/:categoryName/:subCategoryName/',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -7734,7 +7734,7 @@ function getLatLng(thisData) {
         
         })
         .state('findCoaching', {
-            url: '/main/:categoryName/:subCategoryName/:cityName', //masterId?
+            url: '/stream/:categoryName/:subCategoryName/:cityName', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header1.html',
@@ -7777,7 +7777,7 @@ function getLatLng(thisData) {
             }
         })
         .state('showCoaching', {
-            url: '/main/:categoryName/:subCategoryName/:cityName/:coachingId', //masterId?
+            url: '/stream/:categoryName/:subCategoryName/:cityName/:coachingId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header1.html',
