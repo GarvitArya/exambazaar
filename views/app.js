@@ -430,6 +430,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);
     exambazaar.service('tofillciService', ['$http', function($http) {
        
+        this.sendEmails = function() {
+            return $http.get('/api/tofillcis/sendEmails');
+        };
         this.savetofillci = function(tofillciForm) {
             return $http.post('/api/tofillcis/save', tofillciForm);
         };
@@ -7318,7 +7321,18 @@ function getLatLng(thisData) {
         
         
     exambazaar.controller("sendEmailController", 
-        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser,$mdDialog, $timeout, thisuserEmails){
+        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService){
+            $scope.fetchEmails = function(){
+                tofillciService.sendEmails().success(function (data, status, headers) {
+                    var response = data;
+                    console.info(JSON.stringify(response));
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });  
+            };
+            $scope.fetchEmails();
             $scope.user = thisuser.data;
             $scope.userEmails = thisuserEmails.data;
             $scope.sendingMode = true;

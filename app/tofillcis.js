@@ -5,6 +5,7 @@ var config = require('../config/mydatabase.js');
 var tofillci = require('../app/models/tofillci');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
 var user = require('../app/models/user');
+var email = require('../app/models/email');
 
 
 var mongoose = require('mongoose');
@@ -129,6 +130,46 @@ router.post('/markDone', function(req, res) {
     });
     
 });
+
+//to get all tofillcis
+router.get('/sendEmails', function(req, res) {
+    //console.log('I am here!');
+    var allfills = tofillci
+        .find({})
+        .deepPopulate('institute')
+        .exec(function (err, allfills) {
+        if (!err){
+            //console.log('Number of fills ' + allfills.length);
+            var basicFillTasks = [];
+            var counter = 0;
+            var nLength = allfills.length;
+            //console.log(allfills);
+            allfills.forEach(function(thisFillTask, index){
+                var institute = thisFillTask.institute;
+                var instituteId = institute._id;
+                console.log(instituteId);
+                var sentemails = email
+                    .find({institute: instituteId})
+                    .exec(function (err, sentemails) {
+                    if (!err){
+                        if(sentemails){
+                           console.log(institute.name + sentemails[0].to); 
+                        }
+                        
+                    } else {throw err;}
+                });
+                if(nLength == allfills.length){
+                    res.json([]);
+                }
+ 
+            });
+            if(nLength == 0){
+                res.json([]);
+            }
+        } else {throw err;}
+    });
+});
+
 
 //to get all tofillcis
 router.get('/', function(req, res) {

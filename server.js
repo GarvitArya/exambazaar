@@ -167,15 +167,15 @@ console.log('The magic happens on port ' + port);
 
 
 
-
+/*
 var SitemapGenerator = require('sitemap-generator');
-/*var generator = new SitemapGenerator('http://www.exambazaar.com/', {
+var generator = new SitemapGenerator('http://www.exambazaar.com/', {
   restrictToBasepath: false,
   stripQuerystring: true,
-});*/
+});
 var generator = new SitemapGenerator('http://www.exambazaar.com');
 
 generator.on('done', function (sitemap) {
   console.log(sitemap); // => prints xml sitemap
 });
-generator.start();
+generator.start();*/

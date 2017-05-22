@@ -252,14 +252,14 @@ router.post('/markLogin', function(req, res) {
 router.get('/edit/:userId', function(req, res) {
     var userId = req.params.userId;
     //var mobile = req.params.mobile;
-    console.log("User fetched is " + userId);
+    //console.log("User fetched is " + userId);
     user
         .findOne({ '_id': userId },{logins:0})
         //.deepPopulate('_master.contact')
         .exec(function (err, thisuser) {
         if (!err){
             
-            console.log(thisuser);
+            //console.log(thisuser);
             res.json(thisuser);
             //process.exit();
         } else {throw err;}
@@ -270,7 +270,7 @@ router.get('/edit/:userId', function(req, res) {
 router.get('/emails/:userId', function(req, res) {
     var userId = req.params.userId;
     //var mobile = req.params.mobile;
-    console.log("User fetched is " + userId);
+    //console.log("User fetched is " + userId);
     email
         .find({ 'user': userId },{logins:0})
         .deepPopulate('institute')
@@ -293,7 +293,7 @@ router.get('/emails/:userId', function(req, res) {
                 thisEmail.institute = instituteBasic;
                 allEmails.push(thisEmail);
                 if(counter == nLength){
-                    console.log(JSON.stringify(allEmails));
+                    //console.log(JSON.stringify(allEmails));
                     
                     res.json(allEmails);
                 }
