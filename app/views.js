@@ -216,29 +216,39 @@ router.get('/institute/:instituteId', function(req, res) {
 
 router.post('/save', function(req, res) {
     var viewForm = req.body;
-    var institute = viewForm.institute;
+    var institutes = viewForm.institutes;
     var user = viewForm.user;
     var ip = viewForm.ip;
     var claim = viewForm.claim;
     
     console.log(JSON.stringify(ip));
-    var newview = new view({
-        institute: institute
-    });
-    if(user){
-        newview.user = user;
-    }
-    if(ip){
-        newview.ip = ip;
-    }
-    if(claim){
-        newview.claim = claim;
-    }
-    newview.save(function(err, newview) {
-        if (err) return console.error(err);
-        res.json(newview._id);
-    });
+    var nLength = institutes.length;
+    var counter = 0;
     
+    institutes.forEach(function(thisInstitute, index){
+        var newview = new view({
+            institute: thisInstitute
+        });
+        if(user){
+            newview.user = user;
+        }
+        if(ip){
+            newview.ip = ip;
+        }
+        if(claim){
+            newview.claim = claim;
+        }
+        
+        newview.save(function(err, newview) {
+            if (err) return console.error(err);
+            counter = counter + 1;
+            if(counter == nLength){
+                res.json('Done');
+            }
+            
+        });
+        
+    });
     
 });
 

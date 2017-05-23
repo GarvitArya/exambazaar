@@ -1244,7 +1244,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
    
     exambazaar.controller("showGroupController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', 'ngMeta', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, ngMeta){
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', 'ngMeta', 'viewService', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, ngMeta, viewService){
         $scope.exam = thisExam.data;
         $scope.category = thisStream.data;
         $scope.categoryName = $stateParams.categoryName;
@@ -1582,6 +1582,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         };
         
+        
+        var instituteIds = $scope.group.map(function(a) {return a._id;});
+        console.log(instituteIds);
+        $scope.user = $cookies.getObject('sessionuser');
+        var viewForm = {
+            institutes: instituteIds,
+            user: $scope.user.userId,
+            claim: false
+        };
+        console.log(JSON.stringify(viewForm));
+        if($cookies.getObject('ip')){
+            var ip = $cookies.getObject('ip');
+            viewForm.ip = ip;
+        }
+        viewService.saveview(viewForm).success(function (data, status, headers) {
+            //console.info('View Marked');
+        })
+        .error(function (data, status, header, config) {
+            console.info();
+        });
+        
+        
+        
         var examNamesKeywords = "";
         
         $scope.groupExams.forEach(function(thisExam, index){
@@ -1893,7 +1916,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         if($cookies.getObject('sessionuser')){
             $scope.user = $cookies.getObject('sessionuser');
             var viewForm = {
-                institute: $scope.provider._id,
+                institutes: [$scope.provider._id],
                 user: $scope.user.userId,
                 claim: true
             };
@@ -1954,7 +1977,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }else{
             //user is not allowed to access this page
             var viewForm = {
-                institute: $scope.provider._id,
+                institutes: [$scope.provider._id],
                 claim: true
             };
             if($cookies.getObject('ip')){
