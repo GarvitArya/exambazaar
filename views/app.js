@@ -21,7 +21,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $rootScope.pageTitle = 'Exambazaar: Select your Exam Stream';
         $rootScope.pageDescription = "Select your exam stream from Engineering, Medical, CA & CS, School, Mba, Law, Foreign Education, Civil Services, SSC, Bank, Defence, Insurance, Financial Certification";
         
-        
+        $rootScope.pageKeywords = "Exambazaar, Best Coaching India, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
         /*
         var streamNames = '';
         $scope.streams.forEach(function(thisStream, sIndex){
@@ -471,6 +471,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.markDone = function(toverifyciForm) {
             return $http.post('/api/toverifycis/markDone', toverifyciForm);
         };
+        this.changeUser = function() {
+            return $http.get('/api/toverifycis/changeUser');
+        };
         this.verifiedCount = function() {
             return $http.get('/api/toverifycis/verifiedCount');
         };
@@ -852,10 +855,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.category = $scope.exams[0].stream;
         }
         var examNames = '';
+        var examNamesCoaching = '';
         $scope.exams.forEach(function(thisExam, examIndex){
             examNames += thisExam.displayname;
+            examNamesCoaching += thisExam.displayname + ' Coaching';
             if(examIndex < $scope.exams.length - 1){
                 examNames += ', ';
+                examNamesCoaching += ', ';
             }
         });
         
@@ -867,7 +873,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $rootScope.pageTitle = "Choose exam within " + $scope.category.displayname + " Stream";
         $rootScope.pageDescription = "Study for " + examNames + " at the best coaching institutes across 90 cities of India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
-            
+        var streamKeywords = "Exambazaar " + $scope.category.displayname + " Coaching, "+ "Best " + $scope.category.displayname + " Coaching Institutes, " + "Top " + $scope.category.displayname + " Coaching Centre, " + $scope.category.displayname + " Coaching in India, ";
+        $rootScope.pageKeywords = "Exambazaar, " + streamKeywords + examNamesCoaching;
             
     }]); 
     exambazaar.controller("landingController", 
@@ -885,6 +892,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $rootScope.pageTitle = 'Exambazaar: Find best coaching institutes in your city for 50+ Indian exams';
         $rootScope.pageDescription = "Exambazaar:find best coaching institutes in your city. Browse courses, photos, vidoes and results for over 50 entrance exams in India";
+        $rootScope.pageKeywords = "Exambazaar, Best Coaching Institutes, Top Coaching Centre, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
         
         $scope.goToCity = function(subcategory){ 
             $cookies.putObject('subcategory', subcategory);
@@ -925,21 +933,26 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }; 
             
         var cityNames = '';
+        var cityNamesCoaching = '';
         $scope.rankedCities.forEach(function(thisCity, cityIndex){
             
             if(cityIndex < 11){
                 cityNames += thisCity;
+                cityNamesCoaching += "Best " + $scope.subcategory.displayname + " Coaching in " + thisCity;
                 if(cityIndex < 10){
                 cityNames += ', ';
+                cityNamesCoaching += ', ';
                 }
             }
         });
         
           
         
-        $rootScope.pageTitle = "Select your city to study " + $scope.subcategory.displayname;
+        $rootScope.pageTitle = $scope.subcategory.displayname + ": Select city to study";
         $rootScope.pageDescription = "Search for " + $scope.subcategory.displayname + " coaching institutes in " + cityNames + " and 90 other cities in India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
-            
+        
+        var examKeywords = "Exambazaar " + $scope.subcategory.displayname + " Coaching, "+ "Best " + $scope.subcategory.displayname + " Coaching Institutes, " + "Top " + $scope.subcategory.displayname + " Coaching Centre, " + $scope.subcategory.displayname + " Coaching in India, ";
+        $rootScope.pageKeywords = "Exambazaar, " + examKeywords + cityNamesCoaching;
             
     }]);    
     
@@ -1031,12 +1044,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.cities = cities;
         
         var coachingGroupNames = '';
+        var coachingGroupNamesCity = '';
         var howmany = 25;
+        var howmany2 = 10;
         $scope.uniqueProviders.forEach(function(thisProvider, pIndex){
             if(pIndex < howmany){
                 coachingGroupNames += thisProvider;
                 if(pIndex < howmany - 1){
                     coachingGroupNames += ", ";
+                }
+            }
+            if(pIndex < howmany2){
+                coachingGroupNamesCity += thisProvider + " " + $scope.city;
+                if(pIndex < howmany2 - 1){
+                    coachingGroupNamesCity += ", ";
                 }
             }
         });
@@ -1049,9 +1070,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
         
-        $rootScope.pageTitle = $scope.subcategory.displayname + " Coaching Institutes in " + $scope.city;
+        $rootScope.pageTitle = $scope.subcategory.displayname + " Coaching in " + $scope.city;
         $rootScope.pageDescription = "Select from top " + $scope.uniqueInstitutes.length + " " +   $scope.subcategory.displayname + " Coaching Institutes in " + $scope.city + ". Choose from "+ coachingGroupNames + " and " + " many more!" + " | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
         
+        var coachingKeywords = "Best " + $scope.subcategory.displayname + " Coaching Institutes in " + $scope.city + ", " + "Top " + $scope.uniqueInstitutes.length + " " + $scope.subcategory.displayname + " Coaching Centres in " +$scope.city + ", ";
+        $rootScope.pageKeywords = coachingKeywords + coachingGroupNamesCity;
     }]); 
     
     
@@ -1428,7 +1451,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });
         
         $scope.groupExamsOnly = $scope.groupExams.map(function(a) {return a.exam;});
-        console.info($scope.groupResults);
+        //console.info($scope.groupResults);
         
         $scope.showPhotoDialog = function(ev,index) {
             $scope.activePhotoIndex = index;
@@ -1559,13 +1582,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         };
         
+        var examNamesKeywords = "";
         
+        $scope.groupExams.forEach(function(thisExam, index){
+            
+            examNamesKeywords += $stateParams.groupName + " " + $stateParams.cityName + " for " + thisExam.exam.displayname;
+            if(index < $scope.groupExams.length - 1){
+                examNamesKeywords += ", ";
+            }
+        });
         
-        
-        
-        $rootScope.pageTitle = $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ' Exam';
+        $rootScope.pageTitle = $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName;
         $rootScope.pageDescription = $stateParams.groupName + ", " +$scope.city +  " has " + $scope.group.length + " " +   $scope.subcategory.displayname + " Coaching Centers in " + $scope.city + ". | Exambazaar - results, fees, faculty, photos, vidoes, reviews of " + $stateParams.groupName;
         
+        var groupKeywords = "Top " + $stateParams.subCategoryName + " Coaching in " + $stateParams.cityName + ", " + $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ", " + $scope.group.length + " " + $stateParams.groupName + " Centers in " + $scope.city + ", ";
+        $rootScope.pageKeywords = groupKeywords + examNamesKeywords;
     }]);    
            
    
@@ -2578,6 +2609,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
        
         $scope.markasdone = function(){
+            
+            
             var cisavedForm = {
                 institute: $scope.provider._id,
                 user: $scope.user.userId
@@ -3984,6 +4017,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                   clickOutsideToClose: true
                 });
                 
+            };
+            
+            $scope.changeUser = function(){
+                toverifyciService.changeUser().success(function (data, status, headers) {
+                    $scope.showSavedDialog();
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info(status + " " + data);
+                });
             };
             $scope.filledCount = filledCount.data;
             $scope.tofillciList = tofillciList.data;
@@ -7614,12 +7657,12 @@ function getLatLng(thisData) {
       return deferred.promise;
     };
     exambazaar.config(function($stateProvider, $urlRouterProvider,$locationProvider) {
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/start');
     $stateProvider
         //landing page
     
         .state('landing', {
-            url: '/',
+            url: '/start',
             views: {
                 'header':{
                     templateUrl: 'header2.html',

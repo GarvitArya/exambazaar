@@ -50,6 +50,35 @@ router.get('/verifiedCount', function(req, res) {
     });
 });
 
+router.get('/changeUser', function(req, res) {
+    var userId = '58f65c7bb84f2a00119eae7a';
+    
+    var toverifycis = toverifyci
+        .find({user: userId})
+        .exec(function (err, toverifycis) {
+        if (!err){
+            nLength = toverifycis.length;
+            toverifycis.forEach(function(thisFillTask, index){
+                thisFillTask.user = '58900bd8fc519c0a04be52e8';
+                thisFillTask.save(function(err, thisFillTask) {
+                    if (err) return console.error(err);
+                    console.log(thisFillTask._id + ' updated');
+                });
+            });
+            
+            res.json([]);
+            if(nLength == 0){
+                res.json([]);
+            }
+        } else {throw err;}
+    });
+    
+    
+    
+    
+    
+});
+
 router.get('/institutesFilled', function(req, res) {
     toverifyci.distinct( "institute",{},function(err, docs) {
     if (!err){
