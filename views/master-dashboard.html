@@ -190,7 +190,7 @@
                         </div>
                     </div>
                     
-                    <div ng-repeat="due in internDueList | orderBy: '-due'" ng-if="due.intern.active" flex layout="row" class="width100">
+                    <div ng-repeat="due in internDueList | orderBy: '-done'" ng-if="due.intern.active" flex layout="row" class="width100">
                         <div flex="40">
                             {{due.intern.basic.name}}
                         </div>
