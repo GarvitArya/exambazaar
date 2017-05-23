@@ -7368,14 +7368,26 @@ function getLatLng(thisData) {
             $scope.fetchEmails = function(){
                 tofillciService.sendEmails().success(function (data, status, headers) {
                     var response = data;
-                    console.info(JSON.stringify(response));
+                    var uniqueIds = [];
+                    
+                    response.forEach(function(thisId, pIndex){
+                        if(uniqueIds.indexOf(thisId) == -1){
+                            uniqueIds.push(thisId);
+                        }
+                    });
+                    
+                    $scope.bulkEmails = uniqueIds;
+                    console.info(JSON.stringify(uniqueIds.length));
                     
                 })
                 .error(function (data, status, header, config) {
                     console.info('Error ' + data + ' ' + status);
                 });  
             };
-            $scope.fetchEmails();
+            //$scope.fetchEmails();
+            $scope.setBulkProvider = function(bulkEmailProviderId){
+                $scope.email.instituteId = bulkEmailProviderId;
+            };
             $scope.user = thisuser.data;
             $scope.userEmails = thisuserEmails.data;
             $scope.sendingMode = true;

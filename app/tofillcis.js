@@ -135,35 +135,39 @@ router.post('/markDone', function(req, res) {
 router.get('/sendEmails', function(req, res) {
     //console.log('I am here!');
     var allfills = tofillci
-        .find({})
-        .deepPopulate('institute')
+        .find({},{institute:1})
+        //.deepPopulate('institute')
         .exec(function (err, allfills) {
         if (!err){
             //console.log('Number of fills ' + allfills.length);
-            var basicFillTasks = [];
+            var unsentEmails = [];
             var counter = 0;
             var nLength = allfills.length;
             //console.log(allfills);
             allfills.forEach(function(thisFillTask, index){
                 var institute = thisFillTask.institute;
-                var instituteId = institute._id;
+                var instituteId = institute;
                 //console.log(instituteId);
                 var sentemails = email
-                    .find({institute: instituteId})
+                    .findOne({institute: instituteId})
                     .exec(function (err, sentemails) {
                     if (!err){
-                        if(sentemails){
-                           console.log(institute.name + sentemails[0].to); 
+                        console.log(sentemails);
+                        if(!sentemails){
+                            unsentEmails.push(instituteId);
+                           //console.log(institute.name + sentemails[0].to); 
                         }
-                        
+                        counter = counter + 1;
+                        if(counter == nLength){
+                            console.log("Unsent emails are: " + unsentEmails);
+                            res.json(unsentEmails);
+                        } 
                     } else {throw err;}
                 });
                 
  
             });
-            if(nLength == allfills.length){
-                res.json([]);
-            }
+            
             if(nLength == 0){
                 res.json([]);
             }
