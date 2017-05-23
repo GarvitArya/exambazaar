@@ -890,8 +890,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.subcategory = [];
             
         
-        $rootScope.pageTitle = 'Exambazaar: Find best coaching institutes in your city for 50+ Indian exams';
-        $rootScope.pageDescription = "Exambazaar:find best coaching institutes in your city. Browse courses, photos, vidoes and results for over 50 entrance exams in India";
+        $rootScope.pageTitle = 'Exambazaar: Find best coaching institutes in your city for more than 50 exams';
+        $rootScope.pageDescription = "Search and apply to the best coaching institutes and get the education that you deserve. Browse through courses, photos, videos and results for 26000+ institutes in 90+ cities";
         $rootScope.pageKeywords = "Exambazaar, Best Coaching Institutes, Top Coaching Centre, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
         
         $scope.goToCity = function(subcategory){ 
