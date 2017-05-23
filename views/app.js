@@ -1319,6 +1319,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
             }*/
         }else{
+            
+            $scope.signupNeeded = true;
             //user is not allowed to access this page
             /*var viewForm = {
                 institute: $scope.provider._id,
