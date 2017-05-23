@@ -147,7 +147,7 @@ router.get('/sendEmails', function(req, res) {
             allfills.forEach(function(thisFillTask, index){
                 var institute = thisFillTask.institute;
                 var instituteId = institute._id;
-                console.log(instituteId);
+                //console.log(instituteId);
                 var sentemails = email
                     .find({institute: instituteId})
                     .exec(function (err, sentemails) {
@@ -158,11 +158,12 @@ router.get('/sendEmails', function(req, res) {
                         
                     } else {throw err;}
                 });
-                if(nLength == allfills.length){
-                    res.json([]);
-                }
+                
  
             });
+            if(nLength == allfills.length){
+                res.json([]);
+            }
             if(nLength == 0){
                 res.json([]);
             }
