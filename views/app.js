@@ -1588,10 +1588,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.user = $cookies.getObject('sessionuser');
         var viewForm = {
             institutes: instituteIds,
-            user: $scope.user.userId,
+            //user: $scope.user.userId,
             claim: false
         };
-        console.log(JSON.stringify(viewForm));
+        if($scope.user && $scope.user.userId){
+            viewForm.user = $scope.user.userId
+        }
+        //console.log(JSON.stringify(viewForm));
         if($cookies.getObject('ip')){
             var ip = $cookies.getObject('ip');
             viewForm.ip = ip;
