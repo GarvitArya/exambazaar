@@ -8379,7 +8379,7 @@ function getLatLng(thisData) {
             }
         })
         .state('providers', {
-            url: '/coaching/cAdda/:city', //masterId?
+            url: '/coaching/database2/:city', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -8440,7 +8440,7 @@ function getLatLng(thisData) {
             }
         })
         .state('editTargetStudyProvider', {
-            url: '/edit/tStudy/:coachingId', //masterId?
+            url: '/edit/database1/:coachingId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -8493,7 +8493,7 @@ function getLatLng(thisData) {
         
         
         .state('targetStudyProviders', {
-            url: '/coaching/tStudy/:city', //masterId?
+            url: '/coaching/database1/:city', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
