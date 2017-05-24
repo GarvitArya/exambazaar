@@ -126,7 +126,7 @@ var allStates = ['/start','/login','/stream','/stream/:categoryName','/stream/:c
 
 
 
-app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm'));
+app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted('^/claim'));
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
