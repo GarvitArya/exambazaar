@@ -497,7 +497,14 @@
     }
     #addressRow{
         line-height: 100%;
-        min-height: 8vh;
+        padding-top: 10px;
+        min-height: 10vh;
+    }
+    #mobilephoneRow{
+        min-height: 4vh;
+    }
+    #contactbox{
+        min-height: 15vh;
     }
 </style>
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -664,9 +671,11 @@
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement secondFont textDarkGrey" id="paneMiddle">
             
-            <div flex ng-repeat="thisGroup in group" layout="column" class="editFont font10 textDarkGrey col-xs-6 col-sm-3 col-md-3 col-lg-3 paddingLRB10">
-            <div class="lightGreyBorder padding10">
-                <div layout="row" class="secondFont  bold">
+            <div flex ng-repeat="thisGroup in group" layout="column" class="editFont font10 textDarkGrey col-xs-6 col-sm-3 col-md-3 col-lg-3 paddingLRB10" >
+            <div class="lightGreyBorder padding10" >
+                <div id="contactbox">
+                <div layout="row" class="secondFont  bold greyBottomBorder">
+                    <a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank">
                     <span ng-if="!thisGroup.location.area">
                         Centre {{$index+1}}
                         <!--<a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank">
@@ -676,11 +685,12 @@
                     <span ng-if="thisGroup.location.area">
                         {{thisGroup.location.area}}
                     </span>
-                    
+                    </a>
                 </div>
                 <div layout="row" id="addressRow" class="textLightGrey marginB5">
                     {{thisGroup.address}}
                 </div>
+                <div id="mobilephoneRow" class="">
                 <div layout="row" ng-show="thisGroup.phone.length > 0" class="">
                     <div flex="10">
                         <i class="md-title fa fa-phone" aria-hidden="true"></i>
@@ -705,6 +715,7 @@
                         </span>
                     </div>
                 </div>
+            </div>
                 <!--<div layout="row" ng-show="thisGroup.email" class="marginB5">
                     <div flex="5">
                         <i class="md-title fa fa-envelope" aria-hidden="true"></i>
@@ -743,6 +754,7 @@
                         </span>
                     </div>
                 </div>-->
+            </div>
             </div>
             </div>
         </div>
