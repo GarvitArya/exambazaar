@@ -193,7 +193,7 @@
     }
     #pageLogoHolder{
         height: 60px;
-        width: 90px;
+        width: 80px;
     }
     #coachingList{
         /*min-height: 40vh;*/
@@ -234,16 +234,16 @@
             <div layout="column">
             <div ng-repeat="coachingGroup in uniqueInstitutes | orderBy:['-institutes.length'] " class="fourthFont" id="coachingList">
                 <div class="row" >
-                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9" id="leftTabs">
+                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10" id="leftTabs">
                 <div layout="column" id="subcategory">
-                    <div layout="row">
+                    <div layout="row" layout-xs="column">
                         <div flex="85" layout="column" layout-align="center start">
                             <h2 class=" text-primary secondFont bold">
                             <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                                 {{$index + 1}}. {{coachingGroup.groupName | uppercase}}
                             </a>
                             </h2>
-                            <div layout="row" layout-align="start center" class="bold">
+                            <div layout="row" layout-align="start center" class="bold marginT10">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;{{coachingGroup.institutes.length}} centre<span ng-if="coachingGroup.institutes.length > 1">s&nbsp;</span> in {{city}}
                             </div>
                             <div layout="row" id="coachingCourses">
@@ -251,13 +251,13 @@
                             <small>Courses:&nbsp;
                             <span ng-repeat="course in coachingGroup.coursesOffered" ><span>
                                 {{course}}
-                            </span>&nbsp;
-                                <span ng-if="!$last">&#8226;</span>&nbsp;
+                            </span>
+                                <span ng-if="!$last">&#8226;</span>
                             </span>
                             </small>
                             </div>
                         </div>
-                        <div flex="15" layout="column" layout-align="center end" id="pageLogoHolder" class="padding5">
+                        <div flex-gt-xs="15" layout="column" layout-align="center center" id="pageLogoHolder" class="padding5  width100">
                             <img ng-src="{{coachingGroup.logo}}" class="pageLogo"/>
                         </div>
                     </div>

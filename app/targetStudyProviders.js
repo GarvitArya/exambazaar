@@ -1110,6 +1110,72 @@ router.post('/setEBVerifyState', function(req, res) {
     });
 });
 
+router.post('/bulksavecoaching', function(req, res) {
+    var thisProviders = req.body;
+    
+    var nLength = thisProviders.length;
+    var counter = 0;
+    var newProviderIds = [];
+    
+    thisProviders.forEach(function(thisProviderForm, pIndex){
+        var thisProvider = thisProviderForm.targetStudyProvider;
+        var userId = thisProviderForm.user;
+        //console.log(JSON.stringify(thisProvider));
+        //console.log(userId);
+        var arrayProps = ['email','phone','mobile'];
+        oldProvider = new targetStudyProvider({});
+        for (var property in thisProvider) {
+            if(arrayProps.indexOf(property) != -1){
+                console.log(property + " " + thisProvider[property]);
+                
+                var newValueArr = thisProvider[property].split(",");
+                var finalValueArr = [];
+                newValueArr.forEach(function(thisValue, vIndex){
+                    thisValue = thisValue.trim();
+                    if(thisValue && thisValue !=''){
+                        finalValueArr.push(thisValue);
+                    }
+                });
+                oldProvider[property] = finalValueArr;
+                console.log(property + " " + JSON.stringify(finalValueArr));
+            }else{
+                oldProvider[property] = thisProvider[property];    
+            }
+        }
+        
+        if(userId){
+            var newSave = {
+                user: userId
+            }
+            oldProvider._saved.push(newSave);
+            console.log('--------- '+ userId);
+        }
+        //save the changes
+        oldProvider.save(function(err, thisprovider) {
+            if (err) return console.error(err);
+            console.log(thisprovider._id + " saved!");
+            newProviderIds.push(thisprovider._id);
+            counter = counter + 1;
+            if(counter == nLength){
+                console.log(newProviderIds);
+                res.json(newProviderIds);
+            }
+            //res.json(thisprovider._id);
+        });
+        
+        
+        
+        
+        
+        if(nLength == 0){
+            res.json([]);
+        }
+        
+        
+    });
+    
+});
+
 
 router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;

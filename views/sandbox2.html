@@ -25,7 +25,7 @@
     #badge{
         background: #20C39A;
     }
-    #mapHolder1{
+    #mapHolder{
         min-height: 80vh;
     }
     #map{
@@ -34,6 +34,12 @@
     #logo{
         max-width: 100px;
     }
+    .activeCity{
+        font-size: 16px;
+        font-weight: bold;
+        color: #20C39A;
+    }
+    
 </style>
 
 
@@ -41,22 +47,24 @@
     <div id="spacer">
     </div>
     <div flex layout="row" class="padded2">
-        <div flex="70" layout="column">
-            <div layout="row" layout-align="start center" class="editFont">
-            displaying {{providers.length}} coaching institues out of total {{cityProviderCount}} ({{cityProviderCount - providers.length}} are not marked on map)
+        <div flex="80" layout="column">
+            <div layout="row" layout-align="start center" class="fifthFont font10">
+            displaying {{filtered.length}} coaching institues out of total {{cityProviderCount}} <!--({{cityProviderCount - providers.length}} are not marked on map)-->
             </div>
-            <div class="width100" id="mapHolder">
-                <ng-map center="{{city}}" scrollwheel="true" zoom="12" id="map">
+            <div class="width100" id="mapHolder1">
+                <ng-map center="{{city}}" scrollwheel="true" zoom="11" id="map">
                 <!--<marker position="current-location"
                       title="current-location" class="map-icon map-icon-point-of-interest"icon="{path:'CIRCLE', scale: 10}" draggable="false"></marker>-->
                 <marker position="{{city}}"
                       title="City" icon="{path:'CIRCLE', scale: 10}" draggable="false"></marker>
                 <marker position="{{provider.mapLatLng}}"
-                      title="{{provider.name}}"
-                   ng-repeat="provider in providers" on-click="showProvider(event, provider)"></marker>
+                title="{{provider.name}}"
+                ng-repeat="provider in providers | filter:filterText as filtered track by $index" on-click="showProvider(event, provider)">
+                    
+                </marker>
                 </ng-map>
             </div>
-            <div flex layout="row" class="greyBorder marginTB10 padding10" ng-if="activeProvider">
+            <div  layout="row" class="greyBorder marginTB10 padding10" ng-if="activeProvider">
                 <div flex="80" layout="column">
                     <div flex layout="column" layout-align="start start" class="editFont width100 font10" >
                         <span class="editFont">
@@ -87,15 +95,20 @@
             </div>
             
         </div>
-        <div flex="30" layout="column" class="font10 padding10">
+        <div flex="20" layout="column" class="font9 padding10">
             <div ng-repeat="state in states | orderBy:'toString()'">
                 <span class="bold">{{state}}:</span>
                 <span ng-repeat="cityState in cityStates | orderBy: 'city'" ng-if="cityState.state == state">
-                    &nbsp;<a ui-sref="sandbox2({ masterId:{{'masterId'}}, cityName:'{{cityState.city}}' } )" id="link" ng-class="{ secondFont: cityState.city == city }">{{cityState.city}}</a>
+                    &nbsp;<a ui-sref="sandbox2({ masterId:{{'masterId'}}, cityName:'{{cityState.city}}' } )" id="link" ng-class="{ activeCity: cityState.city == city }">{{cityState.city}}</a>
                 </span>
                 
             </div>
-            
+            <div layout="row" class="marginT10">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Search</label>
+                    <input ng-model="filterText">
+                </md-input-container>
+            </div>
         </div>
         
     </div>

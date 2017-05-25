@@ -657,6 +657,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.saveProvider = function(provider) {
             return $http.post('/api/targetStudyProviders/savecoaching',provider);
         };
+        this.bulkSaveProviders = function(providers) {
+            return $http.post('/api/targetStudyProviders/bulksavecoaching',providers);
+        };
         this.getCount = function() {
             return $http.get('/api/targetStudyProviders/count');
         };
@@ -1398,6 +1401,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
         $scope.group = thisGroup.data;
+        var groupDisabled = $scope.group.map(function(a) {return a.disabled;});
+        console.log(groupDisabled);
         $scope.provider = {
             name: $stateParams.groupName,
             city: $stateParams.cityName
@@ -5884,6 +5889,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     exambazaar.controller("sandbox2Controller", 
         [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$stateParams', 'targetStudyCities', 'cityProviderCount', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $stateParams, targetStudyCities, cityProviderCount){
             $scope.providers = targetStudyProvidersList.data;
+            //$scope.filterText = 'Career Launcher';
             $scope.city = $stateParams.cityName;
             $scope.cityProviderCount = cityProviderCount.data;
             $scope.masterId = $stateParams.masterId;
@@ -7286,6 +7292,7 @@ function getLatLng(thisData) {
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
+        $scope.newinstitutes =[];
         $scope.newInstitute = {
             name:'',
             groupName:'',
@@ -7302,6 +7309,28 @@ function getLatLng(thisData) {
             };
             targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.addedInstituteId = data;
+                console.info("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
+        
+        $scope.addInstitutes = function(){
+            var institutes = [];
+            $scope.newinstitutes.forEach(function(thisinstitute, iIndex){
+                if(thisinstitute.name && thisinstitute.name != ''){
+                    var saveProvider = {
+                        targetStudyProvider:thisinstitute,
+                        user: $scope.user._id
+                    };
+                    
+                    institutes.push(saveProvider);
+                }
+            });
+            console.log(institutes);
+            targetStudyProviderService.bulkSaveProviders(institutes).success(function (data, status, headers) {
+                $scope.addedInstituteIds = data;
                 console.info("Done");
             })
             .error(function (data, status, header, config) {
