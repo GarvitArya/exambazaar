@@ -1,4 +1,4 @@
-var url = 'mongodb://exambazaar:ebteam2017@52.66.146.189:27017/exambazaar';
+var url = 'mongodb://exambazaar3:ebteam2017@52.66.146.189:27017/exambazaar';
 
 //var url = 'mongodb://exambazaar:ebteam2017@ec2-35-154-22-107.compute.amazonaws.com:27017/exambazaar'
 
