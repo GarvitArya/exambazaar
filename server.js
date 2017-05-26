@@ -1,7 +1,7 @@
 var express  = require('express');
 //var redirect = require("express-redirect");
 var app      = express();
-var port     = process.env.PORT || 9000;
+var port     = process.env.PORT || 8000;
 var path = require('path');
 //redirect(app); 
 /*
