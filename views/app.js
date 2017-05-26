@@ -5075,7 +5075,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
         var institutesSaved = institutesSavedList.data;
         var institutesFilled = institutesFilledList.data;
-       
+        console.info(institutesFilled);
+        
+        
         $scope.filledCounter = 0;
         $scope.verifiedCounter = 0;
         $scope.doesnotexistCounter = 0;
@@ -5139,7 +5141,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 thisProvider.cisaved = false;
             }
             
-            if(institutesFilled.indexOf(thisProvider._id) != -1){
+            console.log(thisProvider.groupName);
+            console.log(institutesFilled.indexOf(thisProvider.groupName));
+            if(institutesFilled.indexOf(thisProvider.groupName) != -1){
                 thisProvider.cifilled = true;
                 //$scope.filledCounter += 1;
             }else{
@@ -5149,12 +5153,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.providersList.forEach(function(thisProvider, index){
             if(thisProvider.cifilled){
-                $scope.providersList.forEach(function(otherProvider, otherIndex){
+                $scope.filledCounter += 1;
+               /* $scope.providersList.forEach(function(otherProvider, otherIndex){
                     if(otherProvider.name == thisProvider.name){
                         otherProvider.cifilled = true;
                         $scope.filledCounter += 1;
                     }
-                });
+                });*/
             }
             if(!thisProvider.noEmail){
                 $scope.providersList.forEach(function(otherProvider, otherIndex){

@@ -118,7 +118,7 @@ router.get('/city/:city', function(req, res) {
     //, 'exams.0': { $exists: true }, "logo": { $ne: "/img/bullets/box-orange-arrow.gif" }
     //$where: "this.exams && this.exams.length == 0"
     var cityProviders = targetStudyProvider
-        .find({'city': city, disabled: {$ne: true} },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1, latlng:1, latlngna:1, ebVerifyState:1})
+        .find({'city': city, disabled: {$ne: true} },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1, latlng:1, latlngna:1, ebVerifyState:1, groupName:1})
         .deepPopulate('exams location ebNote.user')
         .exec(function (err, cityProviders) {
         if (!err){

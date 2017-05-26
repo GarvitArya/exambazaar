@@ -53,11 +53,69 @@ router.get('/filledCount', function(req, res) {
 });
 
 router.get('/institutesFilled', function(req, res) {
-    tofillci.distinct( "institute",{},function(err, docs) {
+    /*tofillci.distinct( "institute",{},function(err, docs) {
     if (!err){
+        console.log(docs);
         res.json(docs);
     } else {throw err;}
+    });*/
+    
+    
+    var allfills = tofillci
+        .find({},{institute:1})
+        //.deepPopulate('institute')
+        .exec(function (err, allfills) {
+        if (!err){
+            //console.log('Number of fills ' + allfills.length);
+            var filledGroupNames = [];
+            var counter = 0;
+            var nLength = allfills.length;
+            //console.log(allfills);
+            allfills.forEach(function(thisFillTask, index){
+                var institute = thisFillTask.institute;
+                var instituteId = institute;
+                //console.log(instituteId);
+                var thisInstitute = targetStudyProvider
+                    .findOne({_id: instituteId},{groupName:1})
+                    .exec(function (err, thisInstitute) {
+                    if (!err){
+                        //console.log(sentemails);
+                        if(thisInstitute){
+                            filledGroupNames.push(thisInstitute.groupName);
+                            counter = counter + 1;
+                            //console.log(counter + " " + filledGroupNames.length);
+                            if(counter == nLength && filledGroupNames.length == nLength){
+                                
+                                var groupNames = [];
+                                
+                                filledGroupNames.forEach(function(thisGroup, index){
+                                    if(groupNames.indexOf(thisGroup) == -1){
+                                        groupNames.push(thisGroup);
+                                    }
+                                    if(index == nLength - 1){
+                                        //console.log(groupNames);
+                                        res.json(groupNames);
+                                    }
+                                });
+                                
+                                
+                            }
+                            
+                        }
+                        
+                         
+                    } else {throw err;}
+                });
+                
+ 
+            });
+            
+            if(nLength == 0){
+                res.json([]);
+            }
+        } else {throw err;}
     });
+    
 });
 
 router.get('/prevFilled/:instituteId', function(req, res) {
