@@ -1,9 +1,9 @@
 var express  = require('express');
-var redirect = require("express-redirect");
+//var redirect = require("express-redirect");
 var app      = express();
 var port     = process.env.PORT || 8000;
 var path = require('path');
-redirect(app); 
+//redirect(app); 
 /*
 var childProcess = require( "child_process" );
 var phantomjs = require( "phantomjs" );
