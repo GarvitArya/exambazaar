@@ -81,24 +81,13 @@ router.get('/institutesFilled', function(req, res) {
                     if (!err){
                         //console.log(sentemails);
                         if(thisInstitute){
-                            filledGroupNames.push(thisInstitute.groupName);
+                            if(filledGroupNames.indexOf(thisInstitute.groupName) == -1){
+                                filledGroupNames.push(thisInstitute.groupName);
+                            }
+                            
                             counter = counter + 1;
-                            //console.log(counter + " " + filledGroupNames.length);
-                            if(counter == nLength && filledGroupNames.length == nLength){
-                                
-                                var groupNames = [];
-                                
-                                filledGroupNames.forEach(function(thisGroup, index){
-                                    if(groupNames.indexOf(thisGroup) == -1){
-                                        groupNames.push(thisGroup);
-                                    }
-                                    if(index == nLength - 1){
-                                        //console.log(groupNames);
-                                        res.json(groupNames);
-                                    }
-                                });
-                                
-                                
+                            if(counter == nLength){
+                                res.json(filledGroupNames);
                             }
                             
                         }
@@ -106,10 +95,7 @@ router.get('/institutesFilled', function(req, res) {
                          
                     } else {throw err;}
                 });
-                
- 
             });
-            
             if(nLength == 0){
                 res.json([]);
             }
@@ -125,35 +111,52 @@ router.get('/prevFilled/:instituteId', function(req, res) {
         //.deepPopulate('')
         .exec(function (err, thisProvider) {
         if (!err){
-            
             var groupName = thisProvider.groupName;
             console.log(groupName);
-            var tofillcis = tofillci
+            var allfills = tofillci
                 .find({},{institute:1})
-                .deepPopulate('institute')
-                .exec(function (err, tofillcis) {
+                //.deepPopulate('institute')
+                .exec(function (err, allfills) {
                 if (!err){
+                    var filledGroupNames = [];
                     var counter = 0;
-                    var nLength = tofillcis.length;
-                    var prevFilledTasks = [];
-                    var groupNameList = tofillcis.map(function(a) {return a.institute.groupName;});
-                    //console.log('Group Names: ' + groupNameList);
+                    var nLength = allfills.length;
+                    //console.log(allfills);
+                    allfills.forEach(function(thisFillTask, index){
+                        var institute = thisFillTask.institute;
+                        var instituteId = institute;
+                        //console.log(instituteId);
+                        var thisInstitute = targetStudyProvider
+                            .findOne({_id: instituteId},{groupName:1})
+                            .exec(function (err, thisInstitute) {
+                            if (!err){
+                                //console.log(sentemails);
+                                if(thisInstitute){
+                                    if(filledGroupNames.indexOf(thisInstitute.groupName) == -1){
+                                        filledGroupNames.push(thisInstitute.groupName);
+                                    }
 
-                    groupNameList.forEach(function(thisGroup, index){
+                                    counter = counter + 1;
+                                    if(counter == nLength){
+                                       
+                                        if(filledGroupNames.indexOf(groupName) == -1){
+                                            res.json(0);
+                                        }else{
+                                            res.json(1);
+                                        }
+                                        
+                                    }
 
-                        if(thisGroup == groupName){
-                            prevFilledTasks.push(tofillcis[index]);
-                        }
-                        counter = counter + 1;
-                        if(counter == nLength){
-                            console.log(prevFilledTasks.length);
-                            res.json(prevFilledTasks.length);
-                        }
+                                }
+
+
+                            } else {throw err;}
+                        });
                     });
-
                     if(nLength == 0){
                         res.json(0);
                     }
+                    
                 } else {throw err;}
             });
             
@@ -248,7 +251,7 @@ router.get('/', function(req, res) {
                 var instituteId = thisFillTask.institute;
                 var userId = thisFillTask.user;
                 var thisProvider = targetStudyProvider
-                    .findOne({'_id': instituteId}, {name:1, city:1, email:1})
+                    .findOne({'_id': instituteId}, {name:1, city:1, email:1, groupName:1})
                     .exec(function (err, thisProvider) {
                     if (!err){
                         

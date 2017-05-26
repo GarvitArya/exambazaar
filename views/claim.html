@@ -703,6 +703,54 @@
     </div>
     
     
+    <div layout="row" layout-xs="column" class="componentRow  " id="EBNotes" ng-if="ebuser">
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft" ng-class="{ editing: editEBnote }">
+            <div class="componentRowElement"layout="row" layout-align="start start">
+                
+                <span>
+                    EB Notes
+                    <span class="badge" id="leftBadge">
+                        {{provider.ebNote.length}}
+                        <md-tooltip>EB team has added a total of {{provider.ebNote.length}} notes</md-tooltip>
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center secondFont textLightGrey" id="paneMiddle">
+            <div layout="row" layout-align="center center" id="upload2" ng-click="addebNote()">
+                <span>
+                    <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
+                </span>
+            </div>
+            <div layout="row" layout-margin layout-align="center center" ng-repeat="ebNote in provider.ebNote">
+                <div flex="80">
+                    <textarea class="font11 width100" ng-model="provider.ebNote[$index].note" placeholder="Add internal notes for EB team" rows="2"></textarea>
+                </div>
+                <div flex="20">
+                    <div class="font9">
+                        Added by:
+                    </div>
+                    <div class="font9">
+                        {{ebNote._added | date}}
+                    </div>
+                    <div class="font9">
+                        {{ebNote.user.basic.name}}
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
+            
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        
+    </div>
+    
     
     <div layout="row" layout-xs="column" class="componentRow secondFont" id="Contact">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
@@ -1941,54 +1989,6 @@
         </div>
     </div>
     
-    
-    <div layout="row" layout-xs="column" class="componentRow  " id="EBNotes" ng-if="ebuser">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft" ng-class="{ editing: editEBnote }">
-            <div class="componentRowElement"layout="row" layout-align="start start">
-                
-                <span>
-                    EB Notes
-                    <span class="badge" id="leftBadge">
-                        {{provider.ebNote.length}}
-                        <md-tooltip>EB team has added a total of {{provider.ebNote.length}} notes</md-tooltip>
-                    </span>
-                </span>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center secondFont textLightGrey" id="paneMiddle">
-            <div layout="row" layout-align="center center" id="upload2" ng-click="addebNote()">
-                <span>
-                    <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
-                </span>
-            </div>
-            <div layout="row" layout-margin layout-align="center center" ng-repeat="ebNote in provider.ebNote">
-                <div flex="80">
-                    <textarea class="font11 width100" ng-model="provider.ebNote[$index].note" placeholder="Add internal notes for EB team" rows="2"></textarea>
-                </div>
-                <div flex="20">
-                    <div class="font9">
-                        Added by:
-                    </div>
-                    <div class="font9">
-                        {{ebNote._added | date}}
-                    </div>
-                    <div class="font9">
-                        {{ebNote.user.basic.name}}
-                    </div>
-                </div>
-                
-            </div>
-            
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
-            
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        
-    </div>
     
     
     <div layout="row" layout-xs="column" class="componentRow  lastRow2 lastRow" id="SavedHistory" ng-if="ebuser">

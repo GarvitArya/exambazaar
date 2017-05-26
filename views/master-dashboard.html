@@ -151,12 +151,14 @@
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
             </span>
             <span ng-if="prevFilledLength > 0" class="danger">
-                Another institute from this group has been filled before! Check before assigning.
+                {{assignGroup}}: Another institute from this group has been filled before! Check before assigning.
             </span>
             <span ng-if="prevFilledLength == 0" class="text-primary bold">
-                Go ahead, assign it to an intern!
+                {{assignGroup}}: Go ahead, assign it to an intern!
             </span>
-            
+            <span ng-if="assignError" class="danger">
+                Something went wrong!
+            </span>
         </div>
     </div>
     <div class="row whiteBackground greyBorder" id="assignTask">

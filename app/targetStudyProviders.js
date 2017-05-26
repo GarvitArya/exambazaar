@@ -1332,6 +1332,27 @@ router.post('/coachingGroup', function(req, res) {
     });
 });
 
+router.get('/getGroupName/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    if(mongoose.Types.ObjectId.isValid(coachingId)){
+        var thisProvider = targetStudyProvider
+        .findOne({'_id': coachingId},{name:1, groupName:1})
+            .exec(function (err, thisProvider) {
+            if (!err){
+                if(thisProvider){
+                    res.json(thisProvider.groupName);
+                }else{
+                    res.json(null);
+                }
+
+            } else {throw err;}
+        });
+    }else{
+        res.json(null);
+    }
+    
+});
+
 router.get('/basiccoaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     if(mongoose.Types.ObjectId.isValid(coachingId)){

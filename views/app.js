@@ -645,6 +645,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getProviderBasic = function(coachingId) {
             return $http.get('/api/targetStudyProviders/basiccoaching/'+coachingId, {coachingId: coachingId});
         };
+        this.getGroupName = function(coachingId) {
+            return $http.get('/api/targetStudyProviders/getGroupName/'+coachingId, {coachingId: coachingId});
+        };
         this.getProviderFillSummary = function(coachingId) {
             return $http.get('/api/targetStudyProviders/fillSummary/'+coachingId, {coachingId: coachingId});
         };
@@ -4063,6 +4066,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
             $scope.filledCount = filledCount.data;
             $scope.tofillciList = tofillciList.data;
+            
+            var tofillGroupNames = $scope.tofillciList.map(function(a) {return a.institute.groupName;});
             $scope.toverifyciList = toverifyciList.data;
             $scope.verifiedCount = verifiedCount.data;
             $scope.masterViewSummary = masterViewSummary.data;
@@ -4264,13 +4269,40 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 //console.info(newValue);
                 if(newValue.length > 5){
                     $scope.fetching = true;
-                    tofillciService.prevFilled(newValue).success(function (prevfilleddata, status, headers) {
+                    $scope.assignError = false;
+                    console.log(newValue);
+                    targetStudyProviderService.getGroupName(newValue).success(function (data, status, headers) {
+                        console.log(data);
+                        if(data){
+                            $scope.assignGroup = data;
+                            if(tofillGroupNames.indexOf(data) == -1){
+                                $scope.prevFilledLength = 0;
+                            }else{
+                                $scope.prevFilledLength = 1;
+                            }
+                        }else{
+                            $scope.assignError = true;
+                        }
+                        
+                        $scope.fetching = false;
+                    }).error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                    
+                    //tofillGroupNames
+                    //Gaurav 
+                    /*tofillciService.prevFilled(newValue).success(function (prevfilleddata, status, headers) {
                         $scope.prevFilledLength = prevfilleddata;
+                        
                         $scope.fetching = false;
                     })
                     .error(function (data, status, header, config) {
                         console.info(status + " " + data);
-                    });
+                    });*/
+                    
+                    
+                    
+                    
                 }
 
             }
@@ -7560,7 +7592,7 @@ function getLatLng(thisData) {
                 //console.info(newValue);
                 if(newValue.length > 5){
                 //alert($scope.email.instituteId);
-                targetStudyProviderService.getProviderBasic(newValue).success(function (data, status, headers) {
+                 targetStudyProviderService.getProviderBasic(newValue).success(function (data, status, headers) {
                 if(data){
                     //console.info(data);
                     var refreshedProvider = data.provider;
