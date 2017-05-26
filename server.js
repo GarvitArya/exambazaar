@@ -97,7 +97,7 @@ var toverifycis = require('./app/toverifycis.js',toverifycis);
 var images = require('./app/images.js',images); 
 var awsCredentials = require('./app/awsCredentials.js',awsCredentials); 
 var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredentials); 
-
+app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted('^/claim'));
 
 app.use('/api/providers', providers);
 app.use('/api/targetStudyProviders', targetStudyProviders);
@@ -133,7 +133,7 @@ var allStates = ['/','/login','/stream','/stream/:categoryName','/stream/:catego
 //app.redirect("/?_escaped_fragment_=", "/stream", 301);
 //app.redirect("/start", "/stream", 301);
 
-app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted('^/claim'));
+
 
 app.use(function(req, res, next) {
     //console.log("Req is: " + req);

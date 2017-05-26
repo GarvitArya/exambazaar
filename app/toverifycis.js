@@ -264,9 +264,9 @@ router.post('/save', function(req, res) {
     var user = toverifyciForm.user;
     var _deadline = toverifyciForm._deadline;
     console.info(JSON.stringify(toverifyciForm));
-    
+    //, ebVerify: {$exists: false}
     var cityProviders = targetStudyProvider
-        .find({'city': verifyCity, disabled: {$ne: true}, ebVerify: {$exists: false}, verfiyAssigned: {$ne: true} },{name:1, address:1})
+        .find({'city': verifyCity, disabled: {$ne: true}, verfiyAssigned: {$ne: true} },{name:1, address:1})
         .limit(instituteVerifyCount)
         .exec(function (err, cityProviders) {
         if (!err){

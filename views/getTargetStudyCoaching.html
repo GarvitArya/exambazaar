@@ -303,7 +303,7 @@
                 </span>
             </div>
             <div id="cell" flex="5">
-                <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website">
+                <a ng-href="{{provider.website[0]}}" target="_blank" ng-if="provider.website.length > 0">
                     Url
                 </a>&nbsp;
                 <a ng-href="{{provider.targetStudyWebsite}}" target="_blank" ng-if="provider.targetStudyWebsite && showLevel>5">

@@ -1122,7 +1122,7 @@ router.post('/bulksavecoaching', function(req, res) {
         var userId = thisProviderForm.user;
         //console.log(JSON.stringify(thisProvider));
         //console.log(userId);
-        var arrayProps = ['email','phone','mobile'];
+        var arrayProps = ['email','phone','mobile','website'];
         oldProvider = new targetStudyProvider({});
         for (var property in thisProvider) {
             if(arrayProps.indexOf(property) != -1){
@@ -1255,6 +1255,92 @@ router.post('/savecoaching', function(req, res) {
     } else {throw err;}
     }); //.limit(500)
 });
+
+
+router.get('/getGroupInfo/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    console.log('Fetching group info for: ' + coachingId);
+    
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': coachingId},{groupName:1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            var groupName = thisProvider.groupName;
+            var thisGroupProviders = targetStudyProvider
+                .find({'groupName': groupName},{name:1, address:1, email:1, website:1, facebookPage: 1, youtubeChannel:1})
+                .exec(function (err, thisGroupProviders) {
+                if (!err){
+                console.log('There are: ' + thisGroupProviders.length + " centers");
+                var groupInfo = {
+                    email: [],
+                    website: [],
+                    facebookPage: [],
+                    youtubeChannel: [],
+                };
+                var nonArrayProps =['facebookPage', 'youtubeChannel'];
+                thisGroupProviders.forEach(function(thisGroup, gIndex){
+                    console.log(thisGroup.facebookPage);
+                    
+                for (var property in groupInfo) {
+                    //console.log(property);
+                    if(thisGroup[property]){
+                        
+                        if(nonArrayProps.indexOf(property) == -1){
+                            thisGroup[property].forEach(function(thispropertyVal, pIndex){ if(groupInfo[property].indexOf(thispropertyVal) == -1){  
+                                groupInfo[property].push(thispropertyVal);
+                            }
+
+                            });
+                        }else{
+                            console.log(property + " " +thisGroup[property]);
+                            if(groupInfo[property].indexOf(thisGroup[property]) == -1){  
+                                groupInfo[property].push(thisGroup[property]);
+                            }
+                        }
+
+                    }
+
+
+                }
+                    
+                    //console.log(groupInfo);
+                    
+                    /*
+                    var email = thisGroup.email;
+                    if(email){
+                        console.log(email);
+                        email.forEach(function(thisemail, eIndex){
+                        
+                        if(groupInfo.email.indexOf(thisemail) == -1){
+                            
+                            groupInfo.email.push(thisemail);
+                        }
+                        });
+                    }
+
+                    var website = thisGroup.website;
+                    if(website){
+                        website.forEach(function(thiswebsite, eIndex){
+                        if(groupInfo.website.indexOf(thiswebsite) == -1){
+                            console.log(thisGroup._id + " " + thiswebsite);
+                            groupInfo.website.push(thiswebsite);
+                        }
+                        });
+                    }
+                    */
+
+                });
+
+
+
+                res.json(groupInfo);
+                } else {throw err;}
+            });
+            
+        } else {throw err;}
+    });
+});
+
 router.get('/coaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     console.log('Fetching coaching ' + coachingId);
@@ -1534,8 +1620,82 @@ router.get('/sandbox2Service/:cityName', function(req, res) {
 
 router.get('/databaseService', function(req, res) {
     console.log("Database Service Starting now");
+    res.json('Done');
+    
+    /*targetStudyProvider.find({"email": { $exists: true}, _id: '5870ef3280ea0e0698890917'}, {email:1},function(err, allproviders) {
+        var counter = 0;
+        var changes = 0;
+        var nLength = allproviders.length;
+        console.log(nLength);
+        allproviders.forEach(function(thisprovider, index){
+            console.log(thisprovider.email.length);
+            
+            
+            if(thisprovider.email.length > 3){
+                console.log(thisprovider._id + thisprovider.email);
+                changes = changes + 1;
+            }
+            
+            thisprovider.save(function(err, thisprovider) {
+                if (err) return console.error(err);
+                console.log(thisprovider._id + " saved!");
+            });
+            
+        });
+        console.log("To change: " + changes + " providers!");
+        
+    });*/
+    
+    /*targetStudyProvider.find({"city": 'Kota', disabled: false}, {verfiyAssigned: 1, ebVerify:1, disabled:1},function(err, allproviders) {
+        var counter = 0;
+        var changes = 0;
+        var nLength = allproviders.length;
+        allproviders.forEach(function(thisprovider, index){
+            
+            thisprovider.verfiyAssigned = false;
+            thisprovider.ebVerify = [];
+            thisprovider.ebVerifyState = '';
+            changes = changes  +1;
+            thisprovider.save(function(err, thisprovider) {
+                if (err) return console.error(err);
+                console.log(thisprovider._id + " saved!");
+            });
+            
+        });
+        console.log("To change: " + changes + " providers!");
+        
+    });*/
+    
+    targetStudyProvider.find({"website": { $exists: true,$ne:'' }}, {website:1, newwebsite:1},function(err, allproviders) {
+        var counter = 0;
+        var changes = 0;
+        var nLength = allproviders.length;
+        allproviders.forEach(function(thisprovider, index){
+            //var website = thisprovider.website;
+            //thisprovider.newwebsite = [thisprovider.website];
+            
+            var website = thisprovider.website;
+            website.forEach(function(thiswebsite, windex){
+                if(thiswebsite.trim ==''){
+                    console.log(thisprovider._id);
+                    changes = changes + 1;
+                }
+            });
+            
+            /*thisprovider.website = thisprovider.newwebsite;
+            console.log(index +" " + thisprovider.newwebsite);
+            thisprovider.save(function(err, thisprovider) {
+                if (err) return console.error(err);
+                console.log(thisprovider._id + " saved!");
+            });*/
+            
+        });
+        console.log("To change: " + changes + " providers!");
+        
+    });
+    
     //"email": { $exists: true, $ne: null } 
-    var states = [
+    /*var states = [
         "Andhra Pradesh",
         "Assam",
         "Bihar",
@@ -1584,7 +1744,7 @@ router.get('/databaseService', function(req, res) {
         });
         console.log("To change: " + changes + " providers!");
         
-    });
+    });*/
     
    
     

@@ -638,7 +638,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getProvider = function(coachingId) {
             return $http.get('/api/targetStudyProviders/coaching/'+coachingId, {coachingId: coachingId});
         };
-        
+        this.getGroupInfo = function(coachingId) {
+            return $http.get('/api/targetStudyProviders/getGroupInfo/'+coachingId, {coachingId: coachingId});
+        };
         this.getGroupCity = function(groupCity) {
             return $http.post('/api/targetStudyProviders/coachingGroup/',groupCity);
         };
@@ -1637,7 +1639,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
            
    
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService', 'ngMeta', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService, ngMeta){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService', 'ngMeta', 'thisGroupInfo', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService, ngMeta, thisGroupInfo){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.videoTags = videoMediaTagList.data.mediaTypeTags;
@@ -1871,7 +1873,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.ebVerifyStates = ["Verified", "No Response", "Does not Exist", "Not Verified"];
         
         $scope.provider = thisProvider.data;
-        
+        $scope.thisGroupInfo = thisGroupInfo.data;
+        console.log($scope.thisGroupInfo);
         $scope.verifyClaim = function(){
             
             $state.go('verifyClaim', {coachingId: $scope.provider._id});
@@ -2255,6 +2258,33 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         .cancel('Cancel');
                         $mdDialog.show(confirm).then(function() {
                           $scope.provider.email.pop();
+                        }, function() {
+                          //nothing
+                        });
+                    }
+                }
+        };
+        
+        $scope.addWebsite = function(){
+            $scope.provider.website.push('');
+        };
+        $scope.showDeleteWebsiteConfirm = function(ev) {
+        var len = $scope.provider.website.length;
+            if(len > 0){
+                var lastWebsite = $scope.provider.website[len-1];
+                if(lastWebsite == ''){
+                    $scope.provider.website.pop();
+                }else{
+                    var confirm = $mdDialog.confirm()
+                        .title('Would you like to delete ' + lastWebsite + '?')
+                        .textContent('You will not be able to recover it after deleting!')
+                        .ariaLabel('Lucky day')
+                        .targetEvent(ev)
+                        .clickOutsideToClose(true)
+                        .ok('Confirm')
+                        .cancel('Cancel');
+                        $mdDialog.show(confirm).then(function() {
+                          $scope.provider.website.pop();
                         }, function() {
                           //nothing
                         });
@@ -3689,7 +3719,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var pageDescription = "Study at " + $scope.provider.name + ", " +$scope.city +  " for " + examNames+ ". | Exambazaar - results, fees, faculty, photos, vidoes, reviews of " + $stateParams.groupName;
         $rootScope.pageDescription = pageDescription;
         ngMeta.setTitle(pageTitle);
-        console.info(pageDescription);
+        //console.info(pageDescription);
         
         ngMeta.setTag('description', pageDescription);
         
@@ -5107,7 +5137,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
         var institutesSaved = institutesSavedList.data;
         var institutesFilled = institutesFilledList.data;
-        console.info(institutesFilled);
+        //console.info(institutesFilled);
         
         
         $scope.filledCounter = 0;
@@ -5173,8 +5203,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 thisProvider.cisaved = false;
             }
             
-            console.log(thisProvider.groupName);
-            console.log(institutesFilled.indexOf(thisProvider.groupName));
+            //console.log(thisProvider.groupName);
+            //console.log(institutesFilled.indexOf(thisProvider.groupName));
             if(institutesFilled.indexOf(thisProvider.groupName) != -1){
                 thisProvider.cifilled = true;
                 //$scope.filledCounter += 1;
@@ -8059,6 +8089,10 @@ function getLatLng(thisData) {
                 thisProvider: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getProvider($stateParams.coachingId);
+                }],
+                thisGroupInfo: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {  
+                    return targetStudyProviderService.getGroupInfo($stateParams.coachingId);
                 }],
                 imageMediaTagList:['MediaTagService','$stateParams',
                     function(MediaTagService) {  
