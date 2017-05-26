@@ -16,7 +16,7 @@ router.post('/save', function(req, res) {
     var thisStream = req.body;
     var streamName = thisStream.name;
     var streamDisplayName = thisStream.displayname;
-    console.log("Stream is: " + JSON.stringify(streamName));
+    //console.log("Stream is: " + JSON.stringify(streamName));
     var existingStream = stream.findOne({ 'name': streamName },function (err, existingStream) {
         if(existingStream){
             for (var property in thisStream) {
@@ -44,10 +44,10 @@ router.post('/save', function(req, res) {
 });
 
 router.get('/', function(req, res) {
-    console.log('Here');
+    //console.log('Here');
     stream.find({active: {$ne: false}}, function(err, docs) {
     if (!err){ 
-        console.log(docs);
+        //console.log(docs);
         res.json(docs);
     } else {throw err;}
     });
@@ -65,7 +65,7 @@ router.get('/count', function(req, res) {
 
 router.get('/edit/:streamId', function(req, res) {
     var streamId = req.params.streamId;
-    console.log("Stream is " + streamId);
+    //console.log("Stream is " + streamId);
     stream
         .findOne({ '_id': streamId },{})
         //.deepPopulate('_master.contact')
@@ -80,7 +80,7 @@ router.get('/edit/:streamId', function(req, res) {
 
 router.get('/stream/:streamName', function(req, res) {
     var streamName = req.params.streamName;
-    console.log("Stream is " + streamName);
+    //console.log("Stream is " + streamName);
     stream
         .findOne({ 'name': streamName },{})
         //.deepPopulate('_master.contact')

@@ -7726,12 +7726,12 @@ function getLatLng(thisData) {
       return deferred.promise;
     };
     exambazaar.config(function($stateProvider, $urlRouterProvider,$locationProvider) {
-    $urlRouterProvider.otherwise('/start');
+    $urlRouterProvider.otherwise('/');
     $stateProvider
         //landing page
     
         .state('landing', {
-            url: '/start',
+            url: '/',
             views: {
                 'header':{
                     templateUrl: 'header2.html',

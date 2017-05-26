@@ -671,7 +671,7 @@
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement secondFont textDarkGrey" id="paneMiddle">
             
-            <div flex ng-repeat="thisGroup in group" layout="column" class="editFont font10 textDarkGrey col-xs-6 col-sm-3 col-md-3 col-lg-3 paddingLRB10" >
+            <div flex ng-repeat="thisGroup in group" layout="column" class="editFont font10 textDarkGrey col-xs-6 col-sm-3 col-md-3 col-lg-3 paddingLRB10" ng-if="thisGroup.city == city">
             <div class="lightGreyBorder padding10" >
                 <div id="contactbox">
                 <div layout="row" class="secondFont  bold greyBottomBorder">
@@ -1327,7 +1327,7 @@
                 <marker position="{{thisGroup.mapAddress}}"
                       title="{{thisGroup.name}}"
                       animation="Animation.DROP"
-                      centered="true" ng-repeat="thisGroup in group"></marker>
+                      centered="true" ng-repeat="thisGroup in group" ng-if="thisGroup.city == city"></marker>
                 </ng-map>
             </div>
             

@@ -26,10 +26,10 @@ router.post('/save', function(req, res) {
                 existingExam[property] = thisExam[property];
                 //console.log(existingExam[property]);
             }
-            console.log("Exam is: " + JSON.stringify(existingExam));
+            //console.log("Exam is: " + JSON.stringify(existingExam));
             existingExam.save(function(err, existingExam) {
                 if (err) return console.error(err);
-                console.log(existingExam._id + " saved!");
+                //console.log(existingExam._id + " saved!");
                 res.json('Done');
             });
         }else{
@@ -89,7 +89,7 @@ router.get('/stream/:streamName', function(req, res) {
             var streamExams = [];
             //console.log(allExams);
             allExams.forEach(function(thisExam, index){
-                console.log(thisExam);
+                //console.log(thisExam);
                 if(thisExam.stream.name == streamName){
                     streamExams.push(thisExam);
                 }
@@ -145,7 +145,7 @@ router.post('/addLogo', function(req, res) {
     var newLogoForm = req.body;
     var logo = newLogoForm.logo;
     var examId = newLogoForm.examId;
-    console.log('Express received: ' + JSON.stringify(newLogoForm));
+    //console.log('Express received: ' + JSON.stringify(newLogoForm));
     
     var thisExam = exam
         .findOne({ _id: examId }, {logo:1})
@@ -156,7 +156,7 @@ router.post('/addLogo', function(req, res) {
                 thisExam.logo = logo;
                 thisExam.save(function(err, thisExam) {
                     if (err) return console.error(err);
-                    console.log("Logo data saved for " + thisExam._id);
+                    //console.log("Logo data saved for " + thisExam._id);
                     res.json('Done');
                 });
             }else{

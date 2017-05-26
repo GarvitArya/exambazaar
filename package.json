@@ -43,6 +43,7 @@
     "crypto": "0.0.3",
     "ejs": "~2.5.2",
     "express": "~4.15.3",
+    "express-redirect": "^1.2.2",
     "express-session": "^1.14.2",
     "fine-uploader": "^5.14.1",
     "forever": "^0.15.3",

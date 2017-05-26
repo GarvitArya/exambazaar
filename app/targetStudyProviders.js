@@ -1320,8 +1320,9 @@ router.post('/coachingGroup', function(req, res) {
     console.log('Group city is: ' + groupCity);
     console.log('Fetching coaching group: ' + groupName);
     
+    //city: cityName,
     var thisGroup = targetStudyProvider
-        .find({'groupName': groupName, city: cityName, disabled:false})
+        .find({'groupName': groupName, disabled:false})
         .deepPopulate('exams exams.stream location results.exam')
         .exec(function (err, thisGroup) {
         if (!err){

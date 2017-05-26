@@ -1,8 +1,9 @@
 var express  = require('express');
+var redirect = require("express-redirect");
 var app      = express();
 var port     = process.env.PORT || 8000;
 var path = require('path');
-
+redirect(app); 
 /*
 var childProcess = require( "child_process" );
 var phantomjs = require( "phantomjs" );
@@ -121,18 +122,24 @@ app.use('/api/awsCredentials', awsCredentials);
 app.use('/api/sendGridCredentials', sendGridCredentials);
 
 
-var allStates = ['/start','/login','/stream','/stream/:categoryName','/stream/:categoryName/:subCategoryName/','/stream/:categoryName/:subCategoryName/:cityName','/stream/:categoryName/:subCategoryName/:cityName/:coachingId','/group/:categoryName/:subCategoryName/:cityName/:groupName','/oldclaim/:coachingId','/claim/:coachingId','/verifyClaim/:coachingId','/master/:masterId/sandbox','/master/:masterId/sandbox2/:cityName','/user/:userId/eligibility','/privacy','/about','/calendar','/:instituteId/bulkAddStudents','/:instituteId/bulkAddTeachers','/:instituteId/bulkAddBatches','/:instituteId/instituteCalendar','/:batchId/batchCalendar','/admin/:adminId/main','/user/:userId/sendEmail','/master/:masterId/main','/coaching/database2/:city','/internship','/account','/edit/database1/:coachingId','/coaching/providersWithAreas','/coaching/database1/:city','/master/:masterId/analytics','/master/:masterId/institutes','/master/:masterId/dashboard','/master/:masterId/tofill','/partner/:userId/dashboard','/master/:masterId/manageBatchStudents','/master/:masterId/manageInstituteStudents','/master/:masterId/addGlobalSubject','/master/:masterId/invalidusers','/master/:masterId/addGlobalFeeItem','/master/:masterId/mergeUsers','/master/:masterId/invalidParents','/master/:masterId/invalidTeachers','/institute/:instituteId','/institute-batches/:instituteId','/institute-teachers/:instituteId','/institute-students/:instituteId','/student/:studentId/main','/student/:studentId/attendance','/student/:studentId/class','/user/:userId/shortlisted','/user/:userId/viewed','/user/:userId/filled','/user/:userId/assigned','/user/:userId/assignedToVerify','/user/:userId/filledAll','/user/:userId/group','/user/:userId/profile','/user/:userId/checkLogo/:pageNumber/','/student/:studentId/subjects','/:instituteId/addTeacher','/:instituteId/addAdmin','/addStream','/addLocation','/addMediaTag','/addGroup','/addAwsCredential','/addAwsCredential','/addExam','/addEligibility','/master/:masterId/addMaster','/master/:userId/addInstitute','/user/:userId/addIntern','/sitemap','/:instituteId/addStudent','/:instituteId/addTransportVehicle','/:instituteId/addBatch','/:instituteId/feeStructure','/verify/:userId/','/chooselogin/:userId/','/subject/:subjectId','/eval/:evalId','/exam/:examId','/batch/:batchId','/batch/:batchId/attendance'
+var allStates = ['/','/login','/stream','/stream/:categoryName','/stream/:categoryName/:subCategoryName/','/stream/:categoryName/:subCategoryName/:cityName','/stream/:categoryName/:subCategoryName/:cityName/:coachingId','/group/:categoryName/:subCategoryName/:cityName/:groupName','/oldclaim/:coachingId','/claim/:coachingId','/verifyClaim/:coachingId','/master/:masterId/sandbox','/master/:masterId/sandbox2/:cityName','/user/:userId/eligibility','/privacy','/about','/calendar','/:instituteId/bulkAddStudents','/:instituteId/bulkAddTeachers','/:instituteId/bulkAddBatches','/:instituteId/instituteCalendar','/:batchId/batchCalendar','/admin/:adminId/main','/user/:userId/sendEmail','/master/:masterId/main','/coaching/database2/:city','/internship','/account','/edit/database1/:coachingId','/coaching/providersWithAreas','/coaching/database1/:city','/master/:masterId/analytics','/master/:masterId/institutes','/master/:masterId/dashboard','/master/:masterId/tofill','/partner/:userId/dashboard','/master/:masterId/manageBatchStudents','/master/:masterId/manageInstituteStudents','/master/:masterId/addGlobalSubject','/master/:masterId/invalidusers','/master/:masterId/addGlobalFeeItem','/master/:masterId/mergeUsers','/master/:masterId/invalidParents','/master/:masterId/invalidTeachers','/institute/:instituteId','/institute-batches/:instituteId','/institute-teachers/:instituteId','/institute-students/:instituteId','/student/:studentId/main','/student/:studentId/attendance','/student/:studentId/class','/user/:userId/shortlisted','/user/:userId/viewed','/user/:userId/filled','/user/:userId/assigned','/user/:userId/assignedToVerify','/user/:userId/filledAll','/user/:userId/group','/user/:userId/profile','/user/:userId/checkLogo/:pageNumber/','/student/:studentId/subjects','/:instituteId/addTeacher','/:instituteId/addAdmin','/addStream','/addLocation','/addMediaTag','/addGroup','/addAwsCredential','/addAwsCredential','/addExam','/addEligibility','/master/:masterId/addMaster','/master/:userId/addInstitute','/user/:userId/addIntern','/sitemap','/:instituteId/addStudent','/:instituteId/addTransportVehicle','/:instituteId/addBatch','/:instituteId/feeStructure','/verify/:userId/','/chooselogin/:userId/','/subject/:subjectId','/eval/:evalId','/exam/:examId','/batch/:batchId','/batch/:batchId/attendance'
 ];
 
 
+//app.redirect("/?_escaped_fragment_=", "/start?_escaped_fragment_=", 301);
+//app.redirect("/?_escaped_fragment_=", "/stream", 301);
+//app.redirect("/start", "/stream", 301);
 
 app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted('^/claim'));
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+    //console.log("Req is: " + req);
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
 });
+
+
 
 //https://ebprerender.herokuapp.com/
 //https://service.prerender.io/
