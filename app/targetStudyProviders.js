@@ -1298,7 +1298,7 @@ router.get('/getGroupInfo/:coachingId', function(req, res) {
         if (!err){
             var groupName = thisProvider.groupName;
             var thisGroupProviders = targetStudyProvider
-                .find({'groupName': groupName},{name:1, address:1, email:1, website:1, facebookPage: 1, youtubeChannel:1})
+                .find({'groupName': groupName},{name:1, address:1, email:1, website:1, facebookPage: 1, youtubeChannel:1, logo:1,photo:1, video:1})
                 .exec(function (err, thisGroupProviders) {
                 if (!err){
                 console.log('There are: ' + thisGroupProviders.length + " centers");
@@ -1307,15 +1307,18 @@ router.get('/getGroupInfo/:coachingId', function(req, res) {
                     website: [],
                     facebookPage: [],
                     youtubeChannel: [],
+                    logo: [],
+                    photo: [],
+                    video: [],
+                    exams: [],
+                    course: [],
                 };
-                var nonArrayProps =['facebookPage', 'youtubeChannel'];
+                var nonArrayProps =['facebookPage', 'youtubeChannel','logo'];
                 thisGroupProviders.forEach(function(thisGroup, gIndex){
-                    console.log(thisGroup.facebookPage);
                     
                 for (var property in groupInfo) {
-                    //console.log(property);
                     if(thisGroup[property]){
-                        
+                        //console.log(property);
                         if(nonArrayProps.indexOf(property) == -1){
                             thisGroup[property].forEach(function(thispropertyVal, pIndex){ if(groupInfo[property].indexOf(thispropertyVal) == -1){  
                                 groupInfo[property].push(thispropertyVal);
@@ -1323,7 +1326,7 @@ router.get('/getGroupInfo/:coachingId', function(req, res) {
 
                             });
                         }else{
-                            console.log(property + " " +thisGroup[property]);
+                            //console.log("Property is: " + property + " " +thisGroup[property]);
                             if(groupInfo[property].indexOf(thisGroup[property]) == -1){  
                                 groupInfo[property].push(thisGroup[property]);
                             }
@@ -1333,32 +1336,6 @@ router.get('/getGroupInfo/:coachingId', function(req, res) {
 
 
                 }
-                    
-                    //console.log(groupInfo);
-                    
-                    /*
-                    var email = thisGroup.email;
-                    if(email){
-                        console.log(email);
-                        email.forEach(function(thisemail, eIndex){
-                        
-                        if(groupInfo.email.indexOf(thisemail) == -1){
-                            
-                            groupInfo.email.push(thisemail);
-                        }
-                        });
-                    }
-
-                    var website = thisGroup.website;
-                    if(website){
-                        website.forEach(function(thiswebsite, eIndex){
-                        if(groupInfo.website.indexOf(thiswebsite) == -1){
-                            console.log(thisGroup._id + " " + thiswebsite);
-                            groupInfo.website.push(thiswebsite);
-                        }
-                        });
-                    }
-                    */
 
                 });
 

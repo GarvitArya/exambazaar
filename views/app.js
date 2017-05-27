@@ -2311,6 +2311,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.addEmail = function(){
             $scope.provider.email.push('');
         };
+        $scope.addEmailSuggestion = function(emailId){
+            var emailExists = false;
+            $scope.provider.email.forEach(function(thisEmail, eindex){
+                if(thisEmail == emailId){
+                    emailExists = true;
+                }
+            });
+            if(!emailExists){
+                $scope.provider.email.push(emailId);
+            }else{
+                console.log('Email Exists');
+            }
+            
+        };
+        $scope.addWebsiteSuggestion = function(website){
+            var websiteExists = false;
+            $scope.provider.website.forEach(function(thisWebsite, eindex){
+                if(thisWebsite == website){
+                    websiteExists = true;
+                }
+            });
+            if(!websiteExists){
+                $scope.provider.website.push(website);
+            }else{
+                console.log('Website Exists');
+            }
+            
+        };
+        
         $scope.showDeleteEmailConfirm = function(ev) {
         var len = $scope.provider.email.length;
             if(len > 0){
@@ -6254,6 +6283,7 @@ function getLatLng(thisData) {
         [ '$scope', 'thisuser' , 'thisuserAssignedToVerify',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssignedToVerify, $http, $state, $rootScope){
         $scope.user = thisuser.data;
         $scope.assigned = thisuserAssignedToVerify.data;
+        console.log($scope.assigned);
         $scope.assignedCount = 0;
         if($scope.user.userType =='Master' || $scope.user.userType =='Intern - Business Development'){
             $scope.authorized = true;

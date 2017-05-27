@@ -42,15 +42,14 @@ mongoose.connect(configDB.url,  { server: { socketOptions: { connectTimeoutMS: 1
 });
 require('./config/passport')(passport);
 
+app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted('^/claim'));
+
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/views'));
-
-
-
 
 app.use(express.static('public'));
 app.engine('html', require('ejs').renderFile);
@@ -98,7 +97,7 @@ var addContactInfos = require('./app/addContactInfos.js',addContactInfos);
 var images = require('./app/images.js',images); 
 var awsCredentials = require('./app/awsCredentials.js',awsCredentials); 
 var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredentials); 
-app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted('^/claim'));
+
 
 app.use('/api/providers', providers);
 app.use('/api/targetStudyProviders', targetStudyProviders);

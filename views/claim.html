@@ -14,6 +14,9 @@
         font-size: 11px;
         
     }
+    .suggested{
+        
+    }
     #deleteBadge{
         background: white;
         border: 1px solid #333333;
@@ -985,10 +988,26 @@
                 
             </div>
         </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement height100" id="paneRight">
-            
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement height100 font10" id="paneRight">
+            <div layout="column" ng-if="editContact">
+                <div layout="row" class="bold">
+                Group based suggestions 
+                </div>
+                <div layout="column" class="suggested">
+                    <span class="bold">Email</span>
+                    <span ng-repeat="emailId in thisGroupInfo.email" ng-click="addEmailSuggestion(emailId)">
+                        {{emailId}}
+                    </span>
+                </div>
+                <div layout="column" class="suggested">
+                    <span class="bold">Website</span>
+                    <span ng-repeat="website in thisGroupInfo.website" ng-click="addWebsiteSuggestion(website)">
+                        {{website}}
+                    </span>
+                </div>
+            </div>
+        <!--</div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">-->
         </div>
     </div>
     <div layout="row" layout-xs="column" class="componentRow" id="Exams">
