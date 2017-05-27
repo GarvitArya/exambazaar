@@ -11,6 +11,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     groupChecked: {type: Boolean,default: false},
     targetStudyWebsite: String,
     website: [String],
+    otherlistings: [String],
     newwebsite: [String],
     facebookPage: String,
     youtubeChannel: String,
@@ -121,6 +122,10 @@ var targetStudyProviderSchema = mongoose.Schema({
         _added: { type: Date, default: Date.now }
     }],
     verfiyAssigned: {type: Boolean,default: false},
+    addContactInfoAssigned: {type: Boolean,default: false},
+    addContactInfoRequired: {type: Boolean,default: true},
+    addContactInfoDone: {type: Boolean,default: false},
+    contactInfoState: {type: String},
     rank: {type: Number,default: 0},
     ebNote: [{
         note: String,

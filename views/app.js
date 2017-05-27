@@ -462,6 +462,38 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.get('/api/tofillcis/user/'+userId, {userId: userId});
         };
     }]);
+    exambazaar.service('addContactInfoService', ['$http', function($http) {
+       
+        this.saveaddContactInfo = function(addContactInfoForm) {
+            return $http.post('/api/addContactInfos/save', addContactInfoForm);
+        };
+        
+        this.markDone = function(addContactInfoForm) {
+            return $http.post('/api/addContactInfos/markDone', addContactInfoForm);
+        };
+        this.changeUser = function() {
+            return $http.get('/api/addContactInfos/changeUser');
+        };
+        this.verifiedCount = function() {
+            return $http.get('/api/addContactInfos/verifiedCount');
+        };
+        this.institutesFilled = function() {
+            return $http.get('/api/addContactInfos/institutesFilled');
+        };
+        this.getaddContactInfo = function(addContactInfoId) {
+            return $http.get('/api/addContactInfos/edit/'+addContactInfoId, {addContactInfoId: addContactInfoId});
+        };
+        this.removeAssigned = function(addContactInfoId){
+            $http.get('/api/addContactInfos/remove/'+addContactInfoId, {addContactInfoId: addContactInfoId});
+        };
+        this.getaddContactInfos = function() {
+            return $http.get('/api/addContactInfos');
+        };
+        this.getuseraddContactInfos = function(userId) {
+            return $http.get('/api/addContactInfos/user/'+userId, {userId: userId});
+        };
+    }]);    
+        
     exambazaar.service('toverifyciService', ['$http', function($http) {
        
         this.savetoverifyci = function(toverifyciForm) {
@@ -658,6 +690,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.setEBVerifyState = function(verifyForm) {
             return $http.post('/api/targetStudyProviders/setEBVerifyState',verifyForm);
+        };
+        this.setEBContactInfoState = function(verifyForm) {
+            return $http.post('/api/targetStudyProviders/setEBContactInfoState',verifyForm);
         };
         this.saveProvider = function(provider) {
             return $http.post('/api/targetStudyProviders/savecoaching',provider);
@@ -1639,7 +1674,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
            
    
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService', 'ngMeta', 'thisGroupInfo', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService, ngMeta, thisGroupInfo){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService', 'ngMeta', 'thisGroupInfo', 'addContactInfoService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService, ngMeta, thisGroupInfo, addContactInfoService){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.videoTags = videoMediaTagList.data.mediaTypeTags;
@@ -2072,6 +2107,41 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         };
         
+        $scope.contactInfoStates = ["Found & Added", "Website not found"];
+        $scope.setEBContactInfoState = function(contactInfoState){
+            //$scope.editExam = true;
+            if($scope.editable){
+                $scope.provider.addContactInfoDone = true;
+                var contactInfoForm = {
+                    provider: $scope.provider._id,
+                    contactInfoState: contactInfoState,
+                    user: $scope.user.userId
+                };
+                console.info(contactInfoForm);
+                targetStudyProviderService.setEBContactInfoState(contactInfoForm).success(function (data, status, headers) {
+                    
+                    var addContactInfoForm = {
+                        institute: $scope.provider._id
+                    };
+                    addContactInfoService.markDone(addContactInfoForm)
+                    .success( function (data, status, headers) {
+                        $scope.showContactInfoAddedDialog();
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error");
+                });
+            }else{
+                alert('Cannot Edit without logging in or verifying identity');
+                $scope.showClaimDialog();
+            }
+        };
+        
         $scope.showDisableConfirm = function(provider, ev) {
         
             var confirm = $mdDialog.confirm()
@@ -2285,6 +2355,40 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         .cancel('Cancel');
                         $mdDialog.show(confirm).then(function() {
                           $scope.provider.website.pop();
+                        }, function() {
+                          //nothing
+                        });
+                    }
+                }
+        };
+        /*if(!$scope.provider.otherlistings){
+            $scope.provider.otherlistings=[];
+            $scope.provider.otherlistings.push('');
+        }*/
+        
+        $scope.addOtherListings = function(){
+            if(!$scope.provider.otherlistings){
+                $scope.provider.otherlistings=[];
+            }
+            $scope.provider.otherlistings.push('');
+        };
+        $scope.showDeleteOtherListingsConfirm = function(ev) {
+        var len = $scope.provider.otherlistings.length;
+            if(len > 0){
+                var lastOtherlistings = $scope.provider.otherlistings[len-1];
+                if(lastOtherlistings == ''){
+                    $scope.provider.otherlistings.pop();
+                }else{
+                    var confirm = $mdDialog.confirm()
+                        .title('Would you like to delete ' + lastOtherlistings + '?')
+                        .textContent('You will not be able to recover it after deleting!')
+                        .ariaLabel('Lucky day')
+                        .targetEvent(ev)
+                        .clickOutsideToClose(true)
+                        .ok('Confirm')
+                        .cancel('Cancel');
+                        $mdDialog.show(confirm).then(function() {
+                          $scope.provider.otherlistings.pop();
                         }, function() {
                           //nothing
                         });
@@ -3191,6 +3295,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $mdDialog.cancel();
             },1000)
         };
+        $scope.showContactInfoAddedDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#contactInfoAddedDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
         $scope.showMarkLocationDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#markLocationDialog',
@@ -4010,7 +4125,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
         
     exambazaar.controller("masterDashboardController", 
-        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'targetStudyProviderService', '$timeout', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, targetStudyProviderService, $timeout){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'targetStudyProviderService', '$timeout', 'addContactInfoService', 'addContactInfoList', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, targetStudyProviderService, $timeout, addContactInfoService, addContactInfoList){
             
             $scope.today = moment();
             var startOfWeek = moment().startOf('week').subtract(3, "days");
@@ -4099,6 +4214,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             var tofillGroupNames = $scope.tofillciList.map(function(a) {return a.institute.groupName;});
             $scope.toverifyciList = toverifyciList.data;
+            $scope.addContactInfoList = addContactInfoList.data;
+            //console.log($scope.addContactInfoList);
+            
             $scope.verifiedCount = verifiedCount.data;
             $scope.masterViewSummary = masterViewSummary.data;
             
@@ -4261,6 +4379,37 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     });
                 }
             };
+            
+            $scope.addContactInfoDeadline = new Date();
+            $scope.addContactInfoDeadline.setDate( $scope.addContactInfoDeadline.getDate() + 1);
+            $scope.assignAddContactInfo = function(){
+                var intern = $scope.addContactInfoIntern;
+                var addContactInfoCount = $scope.addContactInfoCount;
+                var addContactInfoDeadline = $scope.addContactInfoDeadline;
+                var addContactInfoCity = $scope.addContactInfoCity;
+                addContactInfoDeadline.setHours(23,59,59);
+                //var res = coaching.split("/");
+                //var coaching = res[res.length-1];
+                if(addContactInfoCount == '' || !addContactInfoDeadline){
+                    alert('Check Count or URL and deadline date');
+                }else{
+                    var addContactInfoForm = {
+                        addContactInfoCity: addContactInfoCity,
+                        addContactInfoCount: addContactInfoCount,
+                        user: intern,
+                        _deadline: addContactInfoDeadline,
+                    };
+                   console.info(addContactInfoForm); addContactInfoService.saveaddContactInfo(addContactInfoForm).success(function (data, status, headers) {
+                        console.info('Done');
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info(status + " " + data);
+                    });
+                }
+            };
+            
+            
             
             $scope.showRemoveConfirm = function(tofillci, ev) {
                 //console.log(JSON.stringify(tofillci.user));
@@ -6083,6 +6232,24 @@ function getLatLng(thisData) {
     });
 };    
       
+     exambazaar.controller("assignedToAddContactInfoController", 
+        [ '$scope', 'thisuser' , 'thisuserAssignedToAddContactInfo',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssignedToAddContactInfo, $http, $state, $rootScope){
+        $scope.user = thisuser.data;
+        $scope.assigned = thisuserAssignedToAddContactInfo.data;
+        $scope.assignedCount = 0;
+        if($scope.user.userType =='Master' || $scope.user.userType =='Intern - Business Development'){
+            $scope.authorized = true;
+        }
+        $scope.assigned.forEach(function(thisAssigned, index){
+            
+            if(thisAssigned.active){
+                $scope.assignedCount += 1;
+            }
+        });
+        //console.log($scope.assignedCount);
+        $rootScope.title =$scope.user.basic.name;
+    }]);    
+        
     exambazaar.controller("assignedToVerifyController", 
         [ '$scope', 'thisuser' , 'thisuserAssignedToVerify',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssignedToVerify, $http, $state, $rootScope){
         $scope.user = thisuser.data;
@@ -8740,6 +8907,10 @@ function getLatLng(thisData) {
                     function(toverifyciService) {
                     return toverifyciService.gettoverifycis();
                 }],
+                addContactInfoList: ['addContactInfoService',
+                    function(addContactInfoService) {
+                    return addContactInfoService.getaddContactInfos();
+                }],
                 verifiedCount: ['toverifyciService',
                     function(toverifyciService) {
                     return toverifyciService.verifiedCount();
@@ -9285,6 +9456,35 @@ function getLatLng(thisData) {
                 thisuserAssignedToVerify: ['toverifyciService', '$stateParams',
                     function(toverifyciService,$stateParams){
                     return toverifyciService.getusertoverifycis($stateParams.userId);
+                        //ABC
+                }],
+                
+                user: function() { return {}; }
+            }
+        })
+        .state('assignedToAddContactInfo', {
+            url: '/user/:userId/assignedToAddContactInfo',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'assignedToAddContactInfo.html',
+                    controller: 'assignedToAddContactInfoController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                thisuserAssignedToAddContactInfo: ['addContactInfoService', '$stateParams',
+                    function(addContactInfoService,$stateParams){
+                    return addContactInfoService.getuseraddContactInfos($stateParams.userId);
                         //ABC
                 }],
                 

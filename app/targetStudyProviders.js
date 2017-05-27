@@ -1110,6 +1110,37 @@ router.post('/setEBVerifyState', function(req, res) {
     });
 });
 
+router.post('/setEBContactInfoState', function(req, res) {
+    var verifyForm = req.body;
+    var provider = verifyForm.provider;
+    var contactInfoState = verifyForm.contactInfoState;
+    var user = verifyForm.user;
+    
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': provider}, {addContactInfoDone:1, addContactInfoRequired: 1, addContactInfoAssigned: 1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            
+            thisProvider.addContactInfoDone = true;
+            thisProvider.contactInfoState = contactInfoState;
+            thisProvider.save(function(err, thisProvider) {
+                if (err) return console.error(err);
+                res.json('Done');
+                console.log(thisProvider._id + " saved!");
+            });
+            
+            /*if(thisProvider.ebVerify && thisProvider.ebVerify.length > 0){
+                thisProvider.ebVerifyState = state;
+                thisProvider.ebVerify.push(newVerify);
+            }else{
+                thisProvider.ebVerify = [];
+                thisProvider.ebVerifyState = state;
+                thisProvider.ebVerify.push(newVerify);
+            }*/
+        } else {throw err;}
+    });
+});
+
 router.post('/bulksavecoaching', function(req, res) {
     var thisProviders = req.body;
     
@@ -1180,7 +1211,7 @@ router.post('/bulksavecoaching', function(req, res) {
 router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;
     var userId = req.body.user;
-    console.log(userId);
+    console.log("Other listings are: " + thisProvider.otherlistings);
     var coachingId = thisProvider._id;
     
     var oldProvider = targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, oldProvider) {

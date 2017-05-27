@@ -678,7 +678,7 @@
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder text-center secondFont textLightGrey paddingTB20" id="paneMiddle">
             <div layout="column">
-            <div layout="row" layout-align="center center" class="marginB10">
+            <div layout="row" layout-align="center center" class="marginB10 font12">
                 Only for EB Employees, update the verification tag after phone verification of {{provider.name}}
             </div>
             
@@ -701,7 +701,44 @@
         </div>
         
     </div>
-    
+    <div layout="row" layout-xs="column" class="" id="EBVerify" ng-if="ebuser">
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey paddingTB20" id="paneLeft" ng-class="{ editing: editEBVerify }">
+            <div class=""layout="row" layout-align="start start">
+                <span>
+                    EB Contact Info
+                </span>
+                <span ng-if="provider.addContactInfoDone">
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder text-center secondFont textLightGrey paddingTB20" id="paneMiddle">
+            <div layout="column">
+            <div layout="row" layout-align="center center" class="marginB10 font12">
+                Only for EB Employees, update the contact info added tag after looking for website of {{provider.name}}
+            </div>
+            
+            <div layout="row" layout-align="center center">
+                <span ng-repeat="contactInfoState in contactInfoStates">
+                    <span class="badge" id="examTagHolder" ng-if="provider.contactInfoState != contactInfoState" ng-click="setEBContactInfoState(contactInfoState)">
+                        {{contactInfoState}}
+                    </span>
+                    <span class="badge" id="existingExamTagHolder" ng-if="provider.contactInfoState == contactInfoState" ng-click="">
+                        {{contactInfoState}}
+                    </span>&nbsp;&nbsp;
+                </span>
+            </div>
+            </div>
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1" id="paneRight">
+            
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        
+    </div>
     
     <div layout="row" layout-xs="column" class="componentRow  " id="EBNotes" ng-if="ebuser">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
@@ -817,7 +854,7 @@
                         </span>
                     </div>
                 </div>
-                <div layout="row" ng-show="provider.email || editContact" class="marginB5">
+                <div layout="row" ng-show="provider.email.length > 0 && provider.email[0] !='' || editContact" class="marginB5">
                     <div flex="5">
                         <i class="md-title fa fa-envelope" aria-hidden="true"></i>
                     </div>
@@ -840,7 +877,7 @@
                         </span>
                     </div>
                 </div>
-                <div layout="row" ng-show="provider.newwebsite.length > 0 || editContact" class="marginB5">
+                <div layout="row" ng-show="provider.website.length > 0 && provider.website[0] !='' || editContact" class="marginB5">
                     <div flex="5">
                         <i class="md-title fa fa-link" aria-hidden="true"></i>
                     </div>
@@ -896,6 +933,33 @@
                         </span>
                     </div>
                 </div>
+                <div layout="row" ng-show="provider.otherlistings.length > 0 || editContact" class="marginB5">
+                    <div flex="5">
+                        <i class="fa fa-external-link" aria-hidden="true"></i>
+                    </div>
+                    <div flex="95">
+                        
+                        <span ng-repeat="otherlistings in provider.otherlistings track by $index" ng-if="editContact">
+                            <input type="text" class=" width25" ng-model="provider.otherlistings[$index]"  placeholder="Add Other Listings (Justdial, Sulekha)">&nbsp;
+                        </span>
+                        <span ng-if="editContact">
+                            <span ng-click="addOtherListings()">
+                            <i class="md-title fa fa-plus-circle" aria-hidden="true"></i>
+                            </span>
+                            <span ng-click="showDeleteOtherListingsConfirm($event)">
+                            <i class="md-title fa fa-minus-circle" aria-hidden="true" ></i>
+                        </span>
+                        </span>
+                        <span ng-repeat="otherlistings in provider.otherlistings track by $index" ng-if="!editContact">
+                            <a ng-href="{{otherlistings}}" target="_blank" ng-if="otherlistings">
+                            Link&nbsp;{{$index+1}}
+                            </a>&nbsp;
+                        </span> 
+                        
+                        
+                    </div>
+                </div>
+                
             </div>
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement height100" id="paneRight">
@@ -2554,6 +2618,23 @@
                 </span>
                 <span class="md-title">
                     CI {{provider.name}} verification marked to {{verifiedStateMarked}}!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="contactInfoAddedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    CI {{provider.name}} Contact Info marked to done!
                 </span>
                 
               </div>

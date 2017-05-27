@@ -353,6 +353,109 @@
         </div>
     
     </div>
+    
+    
+    <div class="row whiteBackground greyBorder top-buffer width100" id="assignTask">
+        <div layout="row" layout-xs="column" layout-margin  layout-align="center" class="font20">
+            Assign CI Add Contact Info Task
+        </div>
+        <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
+            <div flex="5" layout="row" layout-align="start center">
+                <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left" ng-model="addContactInfoCount" id="instituteInput" >
+            </div>
+            <div flex="35" layout="row" layout-align="start center">
+                <md-input-container class="width75 text-primary">
+                  <md-select ng-model="addContactInfoCity"  placeholder="Select City">
+                    <md-option ng-value="city" ng-repeat="city in rankedCities" class="text-primary">
+                      {{city}}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+            </div>
+            <div flex="20" layout="row" layout-align="start center">
+                <md-datepicker ng-model="addContactInfoDeadline" md-placeholder="Set Deadline"></md-datepicker>
+            </div>
+            <div flex="40" layout="row" layout-align="start center">
+                <md-input-container class="width75 text-primary">
+                  <md-select ng-model="addContactInfoIntern"  placeholder="Select Intern">
+                    <md-option ng-value="intern._id" ng-repeat="intern in activeInternList | orderBy: 'basic.name'" class="text-primary" ng-click="update(intern)">
+                      {{intern.basic.name}}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+                <md-button  class="md-green md-small font10" ng-click="assignAddContactInfo()" class="width25">Assign</md-button>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <div class="row whiteBackground greyBorder top-buffer width100" id="assignTask font10">
+        <div flex layout="row" class="width100 greyDashedBottomBorder bold">
+                
+            <div layout="column" layout="center center" flex="10">S. No.</div>
+            <div layout="column" layout="center center" flex="10">Created on</div>
+            <div layout="column" layout="center center" flex="10">Deadline</div>
+            <div layout="column" layout="center center" flex="10">Finished?</div>
+            <div layout="column" layout="center center" flex="10">Finished on</div>
+            <div layout="column" layout="center center" flex="10">Name</div>
+            <div layout="column" layout="center center" flex="20">Institute</div>
+            <div layout="column" layout="center center" flex="15">Id</div>
+        </div>
+        <div layout="row" ng-repeat="addContactInfo in addContactInfoList | orderBy:['-active','-_finished','_deadline','_created']" class="width100 greyDashedBottomBorder font10" ng-class="{ pending: addContactInfo.active }">
+            <div layout="row" layout="center center" flex="10">
+                {{$index + 1}}
+                <span ng-if="addContactInfo.institute.email && addContactInfo.institute.email.length > 0">
+                    
+                &nbsp;<i class="fa fa-envelope" aria-hidden="true"></i>
+                <md-tooltip>
+                    <span ng-repeat="email in addContactInfo.institute.email">
+                        {{email}}&nbsp;
+                    </span>
+                </md-tooltip>
+                </span>
+                <span ng-if="addContactInfo.institute.website && addContactInfo.institute.website.length > 0 && addContactInfo.institute.website[0] !=''">
+                    
+                &nbsp;<i class="fa fa-link" aria-hidden="true"></i>
+                <md-tooltip>
+                    <span ng-repeat="website in addContactInfo.institute.website">
+                        {{website}}&nbsp;
+                    </span>
+                </md-tooltip>
+                </span>
+                <span ng-if="addContactInfo.institute.facebookPage && addContactInfo.institute.facebookPage !=''">
+                    
+                &nbsp;<i class="fa fa-facebook-official" aria-hidden="true"></i>
+                <md-tooltip>
+                    {{addContactInfo.institute.facebookPage}}
+                </md-tooltip>
+                </span>
+                <span ng-if="addContactInfo.institute.youtubeChannel && addContactInfo.institute.youtubeChannel !=''">
+                    
+                &nbsp;<i class="fa fa-youtube" aria-hidden="true"></i>
+                <md-tooltip>
+                    {{addContactInfo.institute.youtubeChannel}}
+                </md-tooltip>
+                </span>
+            </div>
+            <div layout="column" layout="center center" flex="10">{{addContactInfo._created | date: "dd-MMM-yy HH:mm"}}</div>
+            <div layout="column" layout="center center" flex="10">{{addContactInfo._deadline | date: "dd-MMM-yy HH:mm"}}</div>
+            <div layout="column" layout="center center" flex="10" ng-class="{ pending2: addContactInfo.active }">{{!addContactInfo.active}}</div>
+            <div layout="column" layout="center center" flex="10">{{addContactInfo._finished | date: "dd-MMM-yy HH:mm"}}</div>
+            <div layout="column" layout="center center" flex="10">{{addContactInfo.user.basic.name}}</div>
+            <div layout="column" layout="center center" flex="20">
+                <a ui-sref="claim({ coachingId:{{'addContactInfo.institute._id'}} })" target="_blank" id="link">
+                <strong>{{addContactInfo.institute.name}}</strong>
+                </a>
+                
+            </div>
+            <div layout="column" layout="center center" flex="15">{{addContactInfo.institute._id}}</div>
+            
+        </div>
+    
+    </div>
+    
 </div>
 
 <div style="visibility: hidden">    
