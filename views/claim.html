@@ -662,6 +662,14 @@
         
     </div>
      -->
+    <!--
+    <div layout="row" class="width25">
+        <twitter-timeline>
+            <a class="twitter-timeline" href="https://twitter.com/IAmAru/lists/food-trucks" data-widget-id="673710543212052480"> Tweets from https://twitter.com/IAmAru/lists/food-trucks</a>
+        </twitter-timeline>
+    
+    </div>-->
+    
     
     <div layout="row" layout-xs="column" class="" id="EBVerify" ng-if="ebuser">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
@@ -930,6 +938,21 @@
                         </span>
                         <span ng-if="editContact">
                             <input type="text" class=" width50" ng-model="provider.youtubeChannel"  placeholder="Link Youtube Channel">&nbsp;
+                        </span>
+                    </div>
+                </div>
+                <div layout="row" ng-show="provider.twitter || editContact" class="marginB5">
+                    <div flex="5">
+                        <i class="fa fa-twitter" aria-hidden="true"></i>
+                    </div>
+                    <div flex="95">
+                        <span ng-if="!editContact">
+                        <a ng-href="{{provider.twitter}}" target="_blank" ng-if="provider.twitter">
+                        Twitter Feed
+                        </a>&nbsp;
+                        </span>
+                        <span ng-if="editContact">
+                            <input type="text" class=" width50" ng-model="provider.twitter"  placeholder="Link Twitter Handle">&nbsp;
                         </span>
                     </div>
                 </div>

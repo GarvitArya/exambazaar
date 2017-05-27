@@ -14,6 +14,7 @@ var targetStudyProviderSchema = mongoose.Schema({
     otherlistings: [String],
     newwebsite: [String],
     facebookPage: String,
+    twitter: String,
     youtubeChannel: String,
     //fbpage: String,
     email: [String],
