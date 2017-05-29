@@ -51,6 +51,7 @@
     "google-auth-library": "^0.10.0",
     "googleapis": "^19.0.0",
     "handsontable": "^0.32.0-beta1",
+    "headroom.js": "^0.9.3",
     "hover.css": "^2.0.2",
     "imgur": "^0.2.0",
     "mathjs": "^3.8.1",

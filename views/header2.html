@@ -47,6 +47,7 @@
   <strong>{{message}}</strong>
 </div>-->
 <!--transparent-->
+
 <nav class="navbar transparent navbar-default navbar-fixed-top nav-justified" role="navigation" id="mainNav">
     
 <div class="row" id="headerBar">
@@ -83,9 +84,13 @@
         </div>
         <ul class="nav navbar-nav navbar-right" ng-show="sessionuser">
             
-        <li><a href="#/" ng-click="logout()">Logout</a></li>
+        <li><a href="/" ng-click="logout()">Logout</a></li>
         </ul>
-        <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Partner'">
+        
+        
+        
+        
+        <!--<ul class="nav navbar-nav" ng-if="sessionuser.userType=='Partner'">
             <li><a ui-sref="partner-dashboard({ userId:{{'sessionuser.userId'}} })">Home</a></li>
             <li><a ui-sref="claim({ coachingId:{{'sessionuser.partner[0]'}} })">Edit Listing</a></li>
         </ul>
@@ -144,7 +149,7 @@
           <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a ui-sref="targetStudyProviders({ city:'New Delhi' })">Default Dataset</a></li>
-            <!--<li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>-->
+            
           </ul>
         </li>
         <li class="dropdown">
@@ -157,15 +162,11 @@
             </li>
           </ul>
         </li> 
-        </ul>
+        </ul>-->
         
         
         <ul class="nav navbar-nav navbar-right">
-        <!--<li>
-            <span ng-if="sessionuser.image">
-                <img ng-src="{{sessionuser.image}}" id="userPic"/>
-            </span>
-        </li>  -->     
+            
         <li class="dropdown" ng-if="sessionuser">
         <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span ng-if="sessionuser.basic.name">{{sessionuser.basic.name}}</span>

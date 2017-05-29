@@ -1,29 +1,7 @@
 <style>
-    #categories{
-        margin-top: 40px;
-    }
-    #categoryFont{
-        min-height: 7vh;
-        color: white;
-        min-width: 175px;
-        border-style: solid;
-        border-radius: 10px;
-        border-width: 1px;
-        background-color: rgba(0,0,0,0.6);
-        margin-top: 7px;
-        margin-bottom: 7px;
-        margin-right: 0px;
-        padding: 5px;
-        letter-spacing: 2px;
-        box-shadow: 1px 1px 1px #6A6968;
-        font-family: "Avenir";
-    }
-    #categoryFont:hover{
-        background-color: #20C39A;
-        font-weight: 900;
-    }
     
-    #categoryLink a:hover{
+    
+    #categoryLink:link, #categoryLink:hover{
       padding: 0px;
       color: white;
       text-decoration: none;
@@ -42,42 +20,56 @@
         min-height: 100vh;
     }
     #streamPageContent{
-        min-height: 75vh;
-    }
-    #streamContainer{
-        background: rgba(255, 255, 255, 0.5);
         min-height: 60vh;
-        padding-top: 20px;
     }
+    #streamBox{
+        max-width: 220px;
+    }
+    
 </style>
 
 <div>
 <div class="container-fluid" id="fullPage">
     <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="streamPage">
-        <div id="spacer">
+        <div id="spacer" class="">
         </div>
-        <div id="breadcrumbContainer" hide-xs>
+        
+        <div id="streamPageContent" layout="column" layout-align="start center">
+        <div flex id="landingContainer" layout="column" class="width80"> 
+        <div id="breadcrumbContainer" hide-xs class="">
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 text-center editFont " id="breadcrumb">
+            <span class="inactiveBreadCrumb activeSection">STREAM</span>
+            <span class="inactiveBreadCrumb"> > EXAM</span>
+            <span class="inactiveBreadCrumb"> > CITY</span>
+            </div>
         </div>
-        <div id="streamPageContent" layout="column" layout-align="center center" >
-        <div id="streamContainer" layout="column" class="width100">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center" id="pageHeader">
+            <!--<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1">
+            
+            <div layout="row" layout-align="center center" class="width100">
+                <ul class="breadcrumb">
+                    <li class="active"><a href="javascript:void(0);">Stream</a></li>
+                    <li class="completed"><a href="javascript:void(0);">Exam</a></li>
+                    <li><a href="javascript:void(0);">City</a></li>
+                </ul>
+            </div>
+        </div>-->
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center marginT20" id="pageHeader">
             <span class="text md-title" id="pageHeaderFont"><strong>SELECT YOUR EXAM STREAM</strong></span>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1 marginT40" id="categories">
 
-        </div>
-        <div class="row" id="">
-            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1" id="categories">
-
-            <div ng-repeat="category in streams" ng-if="category.name!='other'">
-            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 hvr-bob">
-                <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="category({ categoryName:{{'category.name'}} })">    
-                        <a ui-sref="category({ categoryName:{{'category.name'}} })" id="categoryLink">{{category.displayname | uppercase}}</a>
-                </div>
-            </div>
-            </div>
+        <div ng-repeat="category in streams" ng-if="category.name!='other'">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 hvr-bob" >
+            <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="category({ categoryName:{{'category.name'}} })">
+                
+                <!--<iframe src="icons/streams/Bank.svg"></iframe>-->
+                
+                <a ui-sref="category({ categoryName:{{'category.name'}} })" id="categoryLink">{{category.displayname | uppercase}}</a>
             </div>
         </div>
         </div>
-        <div layout="row" layout-align="center end" id="steps" class="width100">
+        </div>
+        <div flex layout="row" layout-align="center end" id="steps" class="width100">
             <div id="stepActive">
             </div>
             <div id="step">
@@ -85,6 +77,8 @@
             <div id="step">
             </div>
         </div>
+            
+        </div>  
         </div>
     </div>
 </div>

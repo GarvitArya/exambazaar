@@ -33,6 +33,7 @@
     
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="dropzone.css">
+    <link rel="stylesheet" href="breadcrumb.css">
     
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Gudea|Quattrocento+Sans|Rambla|Roboto|Roboto+Condensed|Scada|Lato" rel="stylesheet">
@@ -121,6 +122,7 @@
             /*color: rgba(0,0,0,0.6);*/
             color: #333333;
         }
+        
         .textBlack{
             color: black;
         }
@@ -293,6 +295,7 @@
             background: -webkit-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* FF3.6+ */ background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* W3C */
             min-height: 100vh;
         }
+        
         .subtle-gray-gradient { background: -webkit-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* FF3.6+ */ background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* W3C */ }
         #badgeLink{
             color: black;
@@ -455,6 +458,9 @@
         .marginT30{
             margin-top: 30px;
         }
+        .marginT40{
+            margin-top: 40px;
+        }
         .tolowercase {
             text-transform: none;
         }
@@ -563,6 +569,9 @@
         .width75{
             width: 75%;
         }
+        .width80{
+            width: 75%;
+        }
         .width100{
             width: 100%;
         }
@@ -581,24 +590,73 @@
         .italic{
             font-style: italic;
         }
+        .inactiveBreadCrumb{
+            color: whitesmoke;
+        }
+        .pastBreadCrumb{
+            color: rgba(0,0,0,0.7);
+        }
+        .activeSection{
+            border-bottom: solid 1px;
+            border-color: whitesmoke;
+        }
+        
         #breadcrumb{
             letter-spacing: 2px;
             font-weight: bold;
-            color: white;
+            color: #20C39A;
         }
         #breadcrumb a{
             text-decoration: underline;
             font-weight: bold;
+            color: rgba(0,0,0,0.7);
+            text-decoration: none;
+            border-bottom: solid 1px;
+            border-color: rgba(0,0,0,0.7);
         }
         #breadcrumbContainer{
-            min-height: 10vh;
-            
+/*            min-height: 10vh;
+            border-bottom: solid 1px #B8BAC8;*/
+            background-color: rgba(32,195,154,0.8);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        #landingContainer{
+            background: rgba(255, 255, 255, 0.9);
+            min-height: 60vh;
+            border-radius: 10px;
+        }
+        #categoryFont{
+            min-height: 7vh;
+            color: white;
+            min-width: 175px;
+            border-style: solid;
+            border-radius: 10px;
+            border-width: 1px;
+            background-color: rgba(0,0,0,0.7);
+            margin-top: 7px;
+            margin-bottom: 7px;
+            margin-right: 0px;
+            padding: 5px;
+            letter-spacing: 2px;
+            box-shadow: 1px 1px 1px #6A6968;
+            font-family: "Avenir";
+        }
+        #categoryFont:hover{
+            background-color: #20C39A;
+            font-weight: 900;
+        }
+        #categories{
+            margin-top: 40px;
         }
         button:focus {outline:0;}
         div:focus {outline:0;}
         a:focus {outline:0;}
         #steps{
             min-height: 10vh;
+            padding-bottom: 20px;
         }
         #mainContent{
             min-height: 55vh;
@@ -619,7 +677,7 @@
         #step{
             width: 50px;
             height: 6px;
-            background-color: #D3D3D3;
+            background-color: silver;
             margin-left: 5px;
             margin-right: 5px;
         }
@@ -753,6 +811,7 @@
           width: 100%;
           height: auto;
         }
+        
     </style>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
@@ -792,7 +851,7 @@
     www.exambazaar.com
     -->
     <div  layout="column">
-        <div ui-view="header" ></div>
+        <div ui-view="header"></div>
         <div ui-view="body" id="fullPageBackground"></div>
         <div ui-view="footer"></div>
     </div>
@@ -817,7 +876,8 @@
     
     <script type="text/javascript" src="moment-timezone-with-data-2010-2020.js"></script>
     <script src="moment-timezone-utils.js"></script>
-    
+    <script src="angular-headroom.js"></script>
+    <script src="headroom.js"></script>
     <script type="text/javascript" src="app.js"></script>
     
     <script type="text/javascript" src="match-media.js"></script>
@@ -862,6 +922,7 @@
     <script src="angular-seo.js"></script>
     <script src="ngtweet.min.js"></script>
     <script src="gmaps.js"></script>
+    
         
 </body>
 </html>

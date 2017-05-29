@@ -327,6 +327,10 @@ router.post('/save', function(req, res) {
                     } else {throw err;}
                 });
                 if(counter == nLength || assignedInstitutes == addContactInfoCount){
+                    console.log(counter);
+                    console.log(nLength);
+                    console.log(assignedInstitutes);
+                    console.log(addContactInfoCount);
                     res.json('Done');
                 }
                 

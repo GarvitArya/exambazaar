@@ -1,5 +1,5 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload','youtube-embed', 'ngMeta', 'ngtweet']);
+var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload','youtube-embed', 'ngMeta', 'ngtweet', 'headroom']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo'
     (function() {
     'use strict';
@@ -5706,7 +5706,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         if($scope.provider){
             $scope.suggestedLeft.push($scope.provider.city.toLowerCase());
             $scope.suggestedLeft.push($scope.provider.state.toLowerCase());
-            var url = $scope.provider.website;
+            
+            
+            var url = $scope.provider.website[0] || [];
             url = url.replace('www.','');
             url = url.replace('http://','');
             url = url.replace('https://','');
@@ -5722,7 +5724,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             var pName = $scope.provider.name;
             pName = pName.replace(/ /g,'').toLowerCase();
 
-            
             $scope.suggestedEmails.push(pName + '@gmail.com');
             $scope.suggestedEmails.push(pName + '@yahoo.com');
         }
@@ -8036,7 +8037,7 @@ function getLatLng(thisData) {
             url: '/stream',
             views: {
                 'header':{
-                    templateUrl: 'header.html',
+                    templateUrl: 'header2.html',
                     controller: 'headerController'
                 },
                 'body':{
@@ -8075,7 +8076,7 @@ function getLatLng(thisData) {
             url: '/stream/:categoryName',
             views: {
                 'header':{
-                    templateUrl: 'header.html',
+                    templateUrl: 'header2.html',
                     controller: 'headerController'
                 },
                 'body':{
@@ -8098,7 +8099,7 @@ function getLatLng(thisData) {
             url: '/stream/:categoryName/:subCategoryName/',
             views: {
                 'header':{
-                    templateUrl: 'header.html',
+                    templateUrl: 'header2.html',
                     controller: 'headerController'
                 },
                 'body':{
@@ -8341,7 +8342,7 @@ function getLatLng(thisData) {
             }
         })
         .state('sandbox', {
-            url: '/master/:masterId/sandbox', //masterId?
+            url: '/user/:userId/sandbox', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
