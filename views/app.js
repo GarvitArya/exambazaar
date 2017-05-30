@@ -607,7 +607,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.get('/api/targetStudyProviders/coachingAddressService');
         };
         this.searchProviders = function(query) {
-            return $http.get('/api/targetStudyProviders/query/'+query, {query: query});
+            return $http.post('/api/targetStudyProviders/query/'+query, {query: query});
+        };
+        this.searchCityProviders = function(cityQueryForm) {
+            return $http.post('/api/targetStudyProviders/cityQuery',cityQueryForm);
         };
         this.bulkSaveLatLng = function(LatLngForm) {
             return $http.post('/api/targetStudyProviders/bulkSaveLatLng',LatLngForm);
@@ -669,6 +672,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.getProvider = function(coachingId) {
             return $http.get('/api/targetStudyProviders/coaching/'+coachingId, {coachingId: coachingId});
+        };
+        this.getProviderReview = function(coachingId) {
+            return $http.get('/api/targetStudyProviders/coachingreview/'+coachingId, {coachingId: coachingId});
         };
         this.getGroupInfo = function(coachingId) {
             return $http.get('/api/targetStudyProviders/getGroupInfo/'+coachingId, {coachingId: coachingId});
@@ -1909,7 +1915,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.provider = thisProvider.data;
         $scope.thisGroupInfo = thisGroupInfo.data;
-        console.log($scope.thisGroupInfo);
+        //console.log($scope.thisGroupInfo);
         $scope.verifyClaim = function(){
             
             $state.go('verifyClaim', {coachingId: $scope.provider._id});
@@ -2080,7 +2086,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     state: verifyState,
                     user: $scope.user.userId
                 };
-                console.info(ebVerfiyForm);
+                //console.info(ebVerfiyForm);
                 targetStudyProviderService.setEBVerifyState(ebVerfiyForm).success(function (data, status, headers) {
                     
                     var toverifyciForm = {
@@ -2088,6 +2094,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     };
                     //GHI
                     $scope.verifiedStateMarked = verifyState;
+                    console.log(toverifyciForm);
                     toverifyciService.markDone(toverifyciForm)
                     .success( function (data, status, headers) {
                         $scope.showVerifiedDoneDialog();
@@ -6088,6 +6095,37 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.sendGridCredential = sendGridCredential;
         };
     }]);
+        
+    exambazaar.controller("autocompleteController2", 
+        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+            
+        this.selectedItemChange = selectedItemChange;
+        function selectedItemChange(item) {
+            console.info('Item changed to ' + JSON.stringify(item));
+            //$state.go('claim', {coachingId: item._id});
+            $rootScope.reviewInstitute = item;
+        };
+        this.querySearch = function(query){
+            if(query.length > 2){
+                var cityQueryForm = {
+                    query: query,
+                    city: $rootScope.city
+                };
+                
+                return targetStudyProviderService.searchCityProviders(cityQueryForm).then(function(response){
+                    //console.info(response.data);
+                    return response.data;
+                });
+            }
+            
+            /*return $http.get("https://api.github.com/search/users", {params: {q: query}})
+            .then(function(response){
+              return response.data.items;
+            })*/
+        };
+            $rootScope.title ='Sandbox';
+    }]);
+        
     exambazaar.controller("autocompleteController", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
             
@@ -6159,6 +6197,143 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
             $rootScope.title ='Sandbox 2';
     }]); 
+    
+    
+    exambazaar.controller("reviewController", 
+        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', 'allcities', function($scope, $http, $state, $rootScope, targetStudyProviderService, allcities){
+            
+            $scope.cities = allcities.data;
+            /*$scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];*/
+            $scope.rankedCities = ["Jaipur","Kota"];
+            $scope.update = function(city){
+                //alert(city);
+                $rootScope.city = city;
+            }
+            $rootScope.pageTitle ='Review your coaching institute';
+    }]);
+        
+    exambazaar.controller("reviewCenterController", 
+    [ '$scope', '$rootScope', 'thisProvider', function($scope,$rootScope, thisProvider){
+        $scope.provider = thisProvider.data;
+        var minRating = 1;
+        var maxRating = 5;
+        var step = 0.5;
+        $scope.ratings = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
+        $scope.ratingsClasses = ["rating1","rating2","rating3","rating4","rating5","rating6","rating7","rating8","rating9"];
+        var minCommentLength = 300;
+        
+        $scope.ratingParams = [
+            {name: "faculty", displayname:"Faculty", hoverVal: -1},
+            {name: "peerinteraction", displayname:"Peer Interaction", hoverVal: -1},
+            {name: "qualityofmaterial", displayname:"Quality of material", hoverVal: -1},
+            {name: "infrastructure", displayname:"Infrastructure", hoverVal: -1},
+              
+        ];
+        
+        $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + minCommentLength + " characters long :)";
+        
+        var paramNames = $scope.ratingParams.map(function(a) {return a.name;});
+        $scope.getBackgroundColour = function(ratingParam,  paramIndex){
+            var pIndex = paramNames.indexOf(ratingParam.name);
+            var className = "norating";
+            
+            var propName = $scope.ratingParams[pIndex].name;
+            var rating = $scope.userRating[propName];
+            
+            if(rating){
+                var rIndex = $scope.ratings.indexOf(rating);
+                //console.log(rIndex);
+                if(paramIndex <= rIndex){
+                    var rIndex2 = rIndex + 1;
+                    className = "rating" + rIndex2;    
+                }
+                
+            }
+            
+            if($scope.ratingParams[pIndex].hoverVal >= 0){
+                className = "norating";
+            };
+            
+            if($scope.ratingParams[pIndex].hoverVal >= paramIndex){
+                
+                var paramIndex2 = paramIndex + 1;
+                className = "rating" + paramIndex2;
+            }
+            
+            
+            return className;
+        };
+        
+        $scope.logMouseEvent = function(ratingParam,  paramIndex) {
+            switch (event.type) {
+              case "mouseenter":
+                    console.log("Hey Mouse Entered");
+                    break;
+              case "mouseover":{
+                    var pIndex = paramNames.indexOf(ratingParam.name);
+                    $scope.ratingParams[pIndex].hoverVal = paramIndex;
+                    break;
+              }
+              case "mouseout":{
+                    var pIndex = paramNames.indexOf(ratingParam.name);
+                    $scope.ratingParams[pIndex].hoverVal = -1;
+                    break;
+              }
+                    
+              case "mouseleave":
+                console.log("Mouse Gone");
+                break;
+
+              default:
+                console.log(event.type);
+                break;
+            };
+        };
+        $scope.checkRating = function(ratingParam, rateVal) {
+            
+            if($scope.userRating[ratingParam.name] >=rateVal){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        $scope.userRating = {
+            institute: thisProvider._id,
+            comment: ''
+        };
+        $scope.ratingParams.forEach(function(thisParam, index){
+            $scope.userRating[thisParam.name] = null;
+        });
+        
+        $scope.setRating = function(param, value){
+            $scope.userRating[param] = value;
+            //console.log($scope.userRating);
+        };
+        $scope.invalidSubmit = function(){
+            var invalid = false;
+            
+            $scope.ratingParams.forEach(function(thisParam, index){
+                if(!$scope.userRating[thisParam.name]){
+                    invalid = true;
+                }
+            });
+            $scope.userRating.comment = $scope.userRating.comment.trim();
+            $scope.userRating.comment = $scope.userRating.comment.replace(/\s+/g, " ");
+            
+            
+            
+            var commentLength = $scope.userRating.comment.length;
+            //console.log(commentLength);
+            if(commentLength < minCommentLength){
+                invalid = true;
+            }
+            
+            return invalid;
+        };
+        
+        
+        
+    }]);    
     
     exambazaar.controller("sandboxController", 
         [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList){
@@ -8360,6 +8535,58 @@ function getLatLng(thisData) {
                 targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService) {   
                     return targetStudyProviderService.coachingAddressService();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('review', {
+            url: '/review', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'review.html',
+                    controller: 'reviewController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                allcities: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService) {
+                    return targetStudyProviderService.getCities();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('reviewCenter', {
+            url: '/reviewcenter/:coachingId', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'reviewCenter.html',
+                    controller: 'reviewCenterController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisProvider: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {  
+                    return targetStudyProviderService.getProviderReview($stateParams.coachingId);
+                }],
+                allcities: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService) {
+                    return targetStudyProviderService.getCities();
                 }],
                 provider: function() { return {}; }
                 

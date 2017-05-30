@@ -1,0 +1,123 @@
+<style>
+    #autocompleteLogo{
+        max-height: 35px;
+        max-width: 70px;
+    }
+    .autocomplete-custom-template li {
+          border-bottom: 1px solid #ccc;
+          height: auto;
+          padding-top: 8px;
+          padding-bottom: 8px;
+          white-space: normal;
+        }
+        .autocomplete-custom-template li:last-child {
+          border-bottom-width: 0;
+        }
+        .autocomplete-custom-template .item-title,
+        .autocomplete-custom-template .item-metadata {
+          display: block;
+          line-height: 2;
+        }
+        .autocomplete-custom-template .item-title md-icon {
+          height: 18px;
+          width: 18px;
+        }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #questionSection{
+        min-height: 20vh;
+    }
+     
+    
+</style>
+
+
+<div class="whiteBackground mainContent" >
+    <div id="spacer">
+    </div>
+    <div layout="column" class="" layout-padding>
+        <div layout="column" layout-align="center center" >
+            <div layout="row" layout-align="center center" class="secondFont bold">
+                Review your Coaching Institute
+            </div>
+            <div layout="row" class="editFont">
+                Review your coaching institute to unlock discounts from Bansal Classes, Plancess, Handa ka Funda and Dominos
+            </div>
+        </div>
+        <div layout="row" layout-align="start center" class="editFont " id="questionSection">
+            <div layout="row" layout-padding flex="30">
+                <span>
+                1. Pick City
+                </span>
+            </div>
+            <div flex>
+                <md-input-container class="width100 text-primary">
+                  <md-select ng-model="city"  placeholder="Where did you study?">
+
+                    <md-option ng-value="thiscity" ng-repeat="thiscity in rankedCities" class="text-primary" ng-click="update(thiscity)">
+                      {{thiscity}}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+            </div>
+        </div>
+        <div layout="row" layout-align="start center" class="editFont " id="questionSection">
+            <div layout="row" layout-padding flex="30">
+                <span>
+                2. Coaching Centre
+                </span>
+            </div>
+            <div flex ng-controller="autocompleteController2 as ctrl">
+                
+                <md-autocomplete flex required 
+                md-selected-item="ctrl.selectedItem"
+                md-selected-item-change= "ctrl.selectedItemChange(item)"
+                md-search-text="ctrl.searchText"
+                md-items="item in ctrl.querySearch(ctrl.searchText)"
+                md-item-text="item.name"
+                md-delay="300"
+                md-require-match
+                placeholder="Search your coaching centre"
+                md-menu-class="autocomplete-custom-template"
+                class="width100">
+                    
+                    <md-item-template >
+                      <span class="item-title font12">
+                          <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                          <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
+                      </span>
+                      <span class="item-metadata">
+                        <span class="item-metastat font10">
+                          {{item.city}}:
+                        </span>&nbsp;
+                        <span class="item-metastat font10">
+                          {{item.address}}
+                        </span>
+                      </span>
+                    </md-item-template>
+                    <md-not-found>
+                        No matches found.
+                    </md-not-found>
+                </md-autocomplete>
+            </div>
+        </div>
+        <div layout="row" layout-align="center center" class="editFont " id="questionSection">
+            <md-button class="md-raised md-primary  font12"  id="doneButton" ng-disabled="!city || !reviewInstitute._id" ui-sref="reviewCenter({ coachingId:{{'reviewInstitute._id'}} })">Next</md-button>
+        </div>
+        
+    </div>
+    <div layout="column">
+    {{reviewInstitute}}
+        {{city}}
+    </div>
+    
+</div>

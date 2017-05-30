@@ -839,8 +839,6 @@ router.get('/coachingAddressService/', function(req, res) {
         }else {throw err;}
         }).limit(20).skip( Math.floor(Math.random() * (400 - 20 + 1)) + 20 );
     
-    
-    
 });
 
 router.post('/bulkSaveLatLng', function(req, res) {
@@ -990,6 +988,21 @@ router.get('/query/:query', function(req, res) {
     var query = req.params.query;
     
     targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}}, {name:1 , address:1, city:1, state:1, logo:1},function(err, docs) {
+    if (!err){
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
+});
+
+router.post('/cityQuery', function(req, res) {
+    var cityQueryForm = req.body;
+    var query = cityQueryForm.query;
+    var city = cityQueryForm.city;
+    
+    console.log(JSON.stringify(cityQueryForm));
+    
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city}, {name:1 , address:1, city:1, state:1, logo:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -1356,6 +1369,20 @@ router.get('/coaching/:coachingId', function(req, res) {
     var thisProvider = targetStudyProvider
         .findOne({'_id': coachingId})
         .deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam')
+        .exec(function (err, thisProvider) {
+        if (!err){
+            res.json(thisProvider);
+        } else {throw err;}
+    });
+});
+
+router.get('/coachingreview/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    //console.log('Fetching coaching ' + coachingId);
+    
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': coachingId, disabled: {$ne: true}},{name:1, groupName:1, email:1, address:1, location:1, city:1, state:1, pincode:1, logo:1, mobile:1, phone:1, course:1, exams:1})
+        .deepPopulate('exams exams.stream location')
         .exec(function (err, thisProvider) {
         if (!err){
             res.json(thisProvider);

@@ -90,17 +90,20 @@ router.get('/institutesFilled', function(req, res) {
 router.post('/markDone', function(req, res) {
     var toverifyciForm = req.body;
     var institute = toverifyciForm.institute;
-    
+    console.log("--------------");
+    console.log(JSON.stringify(toverifyciForm));
+    console.log("--------------");
     toverifyci
         .findOne({ 'institute': institute})
         .exec(function (err, thisVerification) {
         if (!err){
-            //console.log(docs);
+            console.log(thisVerification);
             if(thisVerification){
                 thisVerification.active = false;
                 thisVerification._finished = Date.now();
                 thisVerification.save(function(err, thisVerification) {
                     if (err) return console.error(err);
+                    console.log(thisVerification._id + " marked");
                     res.json(thisVerification._id);
                 });
             }else{

@@ -254,9 +254,15 @@
                 <a ui-sref="claim({ coachingId:{{'provider._id'}} })" target="_blank">
                 <strong>{{provider.name}}</strong>
                 </a>
+                <span>
                 <a ng-click="showDisableConfirm(provider)" target="_blank" class="danger font8" ng-if=" showLevel>5 || user.userId == '58c8e895bbaebf3560545f19'">
                 Disable
+                </a>&nbsp;&nbsp;
+                <a ui-sref="reviewCenter({ coachingId:{{'provider._id'}} })" target="_blank" class="text-primary font8" ng-if=" showLevel>5">
+                Review
                 </a>
+                </span>
+                
             </div>
             <div id="cell" flex="15">
                 {{provider.address}}
@@ -303,7 +309,7 @@
                 </span>
             </div>
             <div id="cell" flex="5">
-                <a ng-href="{{provider.website[0]}}" target="_blank" ng-if="provider.website.length > 0">
+                <a ng-href="{{provider.website[0]}}" target="_blank" ng-if="provider.website.length > 0 && provider.website[0] !=''">
                     Url
                 </a>&nbsp;
                 <a ng-href="{{provider.targetStudyWebsite}}" target="_blank" ng-if="provider.targetStudyWebsite && showLevel>5">
