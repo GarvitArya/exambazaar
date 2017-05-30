@@ -609,6 +609,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.searchProviders = function(query) {
             return $http.get('/api/targetStudyProviders/query/'+query, {query: query});
         };
+        this.searchCoachingGroupProviders = function(query) {
+            return $http.get('/api/targetStudyProviders/coachingGroupQuery/'+query, {query: query});
+        };
+        
         this.searchCityProviders = function(cityQueryForm) {
             return $http.post('/api/targetStudyProviders/cityQuery',cityQueryForm);
         };
@@ -6125,6 +6129,46 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
             $rootScope.title ='Sandbox';
     }]);
+    
+    exambazaar.controller("coachingGroupAutocompleteController", 
+        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+            
+        this.selectedItemChange = selectedItemChange;
+        function selectedItemChange(item) {
+            console.info('Item changed to ' + JSON.stringify(item));
+            $rootScope.coachingGroup = item;
+            
+            var items = $rootScope.coachingGroupItems;
+            console.log(items.length);
+            var coachingGroupItems = [];
+            items.forEach(function(thisItem, index){
+                if(thisItem.groupName == item.groupName){
+                    coachingGroupItems.push(thisItem);
+                }else{
+                    console.log(thisItem);
+                }
+                
+            });
+            $rootScope.coachingGroupItems = coachingGroupItems;
+            console.log(coachingGroupItems.length);
+        };
+        this.querySearch = function(query){
+            if(query.length > 2){
+                return targetStudyProviderService.searchCoachingGroupProviders(query).then(function(response){
+                    //console.info(response.data);
+                    
+                    $rootScope.coachingGroupItems = response.data;
+                    return response.data;
+                });
+            }
+            
+            /*return $http.get("https://api.github.com/search/users", {params: {q: query}})
+            .then(function(response){
+              return response.data.items;
+            })*/
+        };
+            $rootScope.title ='Sandbox';
+    }]);    
         
     exambazaar.controller("autocompleteController", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
@@ -6334,6 +6378,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
     }]);    
+    
+    exambazaar.controller("coachingGroupController", 
+        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+            
+            $rootScope.title ='Sandbox';
+    }]);
     
     exambazaar.controller("sandboxController", 
         [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList){
@@ -7726,6 +7776,49 @@ function getLatLng(thisData) {
             });
             };
     }]);
+        
+        
+    exambazaar.controller("bulkDisableController", 
+        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService){
+        $scope.user = thisuser.data;
+        if($scope.user.userType =='Master'){
+            $scope.showLevel = 10;
+        }
+        $scope.disableinstitutes =[];
+        $scope.disableinstitute = {
+            _id: ''
+        };
+        
+        $scope.disableInstitutes = function(){
+            var institutes = [];
+            $scope.disableinstitutes.forEach(function(thisinstitute, iIndex){
+                if(thisinstitute._id){
+                    //console.log(thisinstitute._id);
+                    institutes.push(thisinstitute);
+                }
+            });
+            
+            var disableForm = {
+                user: $scope.user._id,
+                instituteIds: institutes
+            };
+            $scope.disabledIds = institutes;
+            console.log(institutes.length);
+            targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+                //$scope.disabledIds = data;
+                console.info("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
+        $scope.claimInstitute = function(){
+            if($scope.addedInstituteId){
+                $state.go('claim', {coachingId: $scope.addedInstituteId});
+            }
+        };
+    }]);        
+        
     exambazaar.controller("addInstituteController", 
         [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService){
         $scope.user = thisuser.data;
@@ -7743,6 +7836,7 @@ function getLatLng(thisData) {
         };
         $scope.addInstitute = function(){
             //DEF
+            $scope.newInstitute.groupName = $scope.newInstitute.name;
              var saveProvider = {
                 targetStudyProvider:$scope.newInstitute,
                 user: $scope.user.userId
@@ -7760,6 +7854,7 @@ function getLatLng(thisData) {
             var institutes = [];
             $scope.newinstitutes.forEach(function(thisinstitute, iIndex){
                 if(thisinstitute.name && thisinstitute.name != ''){
+                    thisinstitute.groupName = thisinstitute.name;
                     var saveProvider = {
                         targetStudyProvider:thisinstitute,
                         user: $scope.user._id
@@ -8536,6 +8631,26 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService) {   
                     return targetStudyProviderService.coachingAddressService();
                 }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('coachingGroup', {
+            url: '/user/:userId/coachingGroup', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'coachingGroup.html',
+                    controller: 'coachingGroupController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
                 provider: function() { return {}; }
                 
             }
@@ -10161,6 +10276,30 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'addInstitute.html',
                     controller: 'addInstituteController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                //GHI
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                user: function() { return {}; }
+            }
+        })
+        .state('bulkDisable', {
+            url: '/master/:userId/bulkDisable',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'bulkDisable.html',
+                    controller: 'bulkDisableController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'

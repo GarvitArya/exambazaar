@@ -987,7 +987,18 @@ router.post('/addPhoto', function(req, res) {
 router.get('/query/:query', function(req, res) {
     var query = req.params.query;
     console.log(query);
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}}, {name:1 , address:1, city:1, state:1, logo:1},function(err, docs) {
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1},function(err, docs) {
+    if (!err){
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
+});
+
+router.get('/coachingGroupQuery/:query', function(req, res) {
+    var query = req.params.query;
+    console.log(query);
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1, phone:1, mobile:1, email:1, pincode:1, website:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);

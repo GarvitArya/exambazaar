@@ -62,18 +62,9 @@
         </div>
             
         <div>
-            <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="newinstitutes" min-rows="10" min-spare-rows="1" height="300" id="hotTable">
-                <hot-column data="name" title="'Institute Name'"></hot-column>
-                <!--<hot-column data="groupName" title="'Group Name'"></hot-column>-->
-                <hot-column data="address" title="'Address'" width="80"></hot-column>
-                <hot-column data="city" title="'City'"></hot-column>
-                <hot-column data="state" title="'State'"></hot-column>
-                <hot-column data="pincode" title="'Pincode'"></hot-column>
-                <hot-column data="logo" title="'Logo'"></hot-column>
-                <hot-column data="email" title="'Email'"></hot-column>
-                <hot-column data="phone" title="'Phone'"></hot-column>
-                <hot-column data="mobile" title="'Mobile'"></hot-column>
-                <hot-column data="website" title="'Website'"></hot-column>
+            <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="disableinstitutes" min-rows="10" min-spare-rows="1" height="300" id="hotTable">
+                <hot-column width="300" data="_id" title="'EB Institute Id'"></hot-column>
+                
             </hot-table>
         </div>    
             
@@ -126,15 +117,13 @@
             </div>    
         </div>-->
         <div flex layout="row" layout-align="start center" class="width100 marginT20">
-            <md-button class="md-green md-small width25" ng-click="addInstitutes()" >Add</md-button>
+            <md-button class="md-green md-small width25" ng-click="disableInstitutes()" >Disable</md-button>
         </div>
-        <div flex layout="column" layout-align="start center" class="width100 marginT10 fourthFont" ng-if="addedInstituteIds">
-            <div>Institute added sucessfully with id</div>
+        <div flex layout="column" layout-align="start center" class="width100 marginT10 fourthFont" ng-if="disabledIds">
+            <div>{{disabledIds.length}} Institutes disabled sucessfully with ids</div>
             <div>
-                <span ng-repeat="addedInstituteId in addedInstituteIds">
-                    <a ui-sref="claim({ coachingId:{{'addedInstituteId'}} })" target="_blank">
-                    <strong>{{addedInstituteId}}</strong>
-                    </a>&nbsp;
+                <span ng-repeat="disabledId in disabledIds">
+                    {{disabledId}}&nbsp;
                 </span>
             </div>
             

@@ -1,0 +1,124 @@
+<style>
+    #autocompleteLogo{
+        max-height: 35px;
+        max-width: 70px;
+    }
+    .autocomplete li {
+        border-bottom: 1px solid #ccc;
+        height: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        white-space: normal; 
+    }
+    .autocomplete .item-title,  .autocomplete .item-metadata {
+          display: block;
+          line-height: 2; 
+    }
+    
+    #link{
+        color: black;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    
+     
+    
+</style>
+
+
+<div class="whiteBackground mainContent padded2" >
+    <div id="spacer">
+    </div>
+    <div layout="column" ng-controller="coachingGroupAutocompleteController as ctrl">
+        <md-autocomplete flex 
+        md-selected-item="ctrl.selectedItem"
+        md-selected-item-change= "ctrl.selectedItemChange(item)"
+        md-search-text="ctrl.searchText"
+        md-items="item in ctrl.querySearch(ctrl.searchText)"
+        md-item-text="item.name"
+        md-delay="300"
+        md-menu-class="autocomplete"
+        placeholder="Search Coaching Group"
+        class="width100">
+            <md-item-template >
+              <span class="item-title font12">
+                  <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                  <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
+              </span>
+              <span class="item-metadata">
+                <span class="item-metastat font10">
+                  {{item.city}}:
+                </span>&nbsp;
+                <span class="item-metastat font10">
+                  {{item.address}}
+                </span>
+              </span>
+            </md-item-template>
+          
+        </md-autocomplete>
+    </div>
+    <div layout="column" class="marginT40 textBlack" ng-if="coachingGroup.groupName">
+        <div layout="row" class="secondFont textBlack  marginB20" ><span class="bold">Coaching Group:</span>&nbsp; {{coachingGroup.groupName}} <span class="badge">{{coachingGroupItems.length}}</span></div>
+        
+        <div layout="row" class="editFont font11 bold greyBottomBorder textBlack">
+            <div flex="5" class="padding1">S.No.</div>
+            <div flex="10" class="padding1">Institute Name</div>
+            <div flex="15" class="padding1">Address</div>
+            <div flex="10" class="padding1">City</div>
+            <div flex="10" class="padding1">State</div>
+            <div flex="5" class="padding1">Pin Code</div>
+            <div flex="10" class="padding1">Logo</div>
+            <div flex="10" class="padding1">Email</div>
+            <div flex="10" class="padding1">Phone</div>
+            <div flex="10" class="padding1">Mobile</div>
+            <div flex="5" class="padding1">Website</div>
+
+        </div>
+        <div layout="row" class="editFont font11 greyBottomBorder textBlack" ng-repeat="thisProvider in coachingGroupItems" ng-if="thisProvider.groupName == coachingGroup.groupName">
+            <div flex="5" class="padding1">{{$index + 1}}</div>
+            <div flex="10" class="padding1">
+                <a ui-sref="claim({ coachingId:{{'thisProvider._id'}} })" target="_blank" id="link">
+                <strong>{{thisProvider.name}}</strong>
+                </a>
+            
+            </div>
+            <div flex="15" class="padding1">{{thisProvider.address}}</div>
+            <div flex="10" class="padding1">{{thisProvider.city}}</div>
+            <div flex="10" class="padding1">{{thisProvider.state}}</div>
+            <div flex="5" class="padding1">{{thisProvider.pincode}}</div>
+            <div flex="10" class="padding1">
+                <img ng-src="{{thisProvider.logo}}" id="autocompleteLogo"/>
+            </div>
+            <div flex="10" class="padding1">
+                <span ng-repeat="email in thisProvider.email">
+                    Email
+                    <md-tooltip>{{email}}</md-tooltip>
+                    <span ng-if="!last">,&nbsp;</span>
+                </span>
+            </div>
+            <div flex="10" class="padding1">
+                <span ng-repeat="phone in thisProvider.phone">
+                    {{phone}}<span ng-if="!last">,&nbsp;</span>
+                </span>
+            </div>
+            <div flex="10" class="padding1">
+                <span ng-repeat="mobile in thisProvider.mobile">
+                    {{mobile}}<span ng-if="!last">,&nbsp;</span>
+                </span>
+            </div>
+            <div flex="5" class="padding1">
+            <a ng-href="{{thisProvider.website[0]}}" target="_blank" ng-if="thisProvider.website.length > 0 && thisProvider.website[0] !=''" id="link">
+                <md-tooltip>{{thisProvider.website[0]}}</md-tooltip>
+                Url
+            </a></div>
+            
+        </div>
+    </div>
+        
+        
+</div>
