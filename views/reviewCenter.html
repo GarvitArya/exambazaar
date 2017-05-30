@@ -658,6 +658,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <textarea class="font12 width100" ng-model="userRating.comment" placeholder="{{placeholder}}" rows="6" id="userComment"></textarea>
+                    <div class="font10 text-right" ng-if="userRating.comment.length > 10">{{userRating.comment.length}}/{{minCommentLength}} chars</div>
                 </div>
                 </div>
             </div>

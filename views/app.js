@@ -607,7 +607,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.get('/api/targetStudyProviders/coachingAddressService');
         };
         this.searchProviders = function(query) {
-            return $http.post('/api/targetStudyProviders/query/'+query, {query: query});
+            return $http.get('/api/targetStudyProviders/query/'+query, {query: query});
         };
         this.searchCityProviders = function(cityQueryForm) {
             return $http.post('/api/targetStudyProviders/cityQuery',cityQueryForm);
@@ -6220,7 +6220,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var step = 0.5;
         $scope.ratings = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
         $scope.ratingsClasses = ["rating1","rating2","rating3","rating4","rating5","rating6","rating7","rating8","rating9"];
-        var minCommentLength = 300;
+        $scope.minCommentLength = 300;
         
         $scope.ratingParams = [
             {name: "faculty", displayname:"Faculty", hoverVal: -1},
@@ -6230,7 +6230,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
               
         ];
         
-        $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + minCommentLength + " characters long :)";
+        $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + $scope.minCommentLength + " characters long :)";
         
         var paramNames = $scope.ratingParams.map(function(a) {return a.name;});
         $scope.getBackgroundColour = function(ratingParam,  paramIndex){
@@ -6324,7 +6324,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             var commentLength = $scope.userRating.comment.length;
             //console.log(commentLength);
-            if(commentLength < minCommentLength){
+            if(commentLength < $scope.minCommentLength){
                 invalid = true;
             }
             

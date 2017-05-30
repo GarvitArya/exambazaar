@@ -986,7 +986,7 @@ router.post('/addPhoto', function(req, res) {
 
 router.get('/query/:query', function(req, res) {
     var query = req.params.query;
-    
+    console.log(query);
     targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}}, {name:1 , address:1, city:1, state:1, logo:1},function(err, docs) {
     if (!err){
         //console.log(docs);
