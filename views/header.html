@@ -173,14 +173,7 @@
         </li>
         
         </ul>
-        <ul class="nav navbar-nav">
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sandbox<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a ui-sref="search">Quick Search</a></li>
-          </ul>
-        </li>
-        </ul>
+        
         
         
         <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Intern - Business Development'">
@@ -196,12 +189,20 @@
             <li><a ui-sref="addMediaTag">Add Media Tag</a></li>
           </ul>
         </li>
-        
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sandbox<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a ui-sref="search">Quick Search</a></li>
+          </ul>
+        </li>
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a ui-sref="targetStudyProviders({ city:'New Delhi' })">Default Dataset</a></li>
             <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
+            <li ng-if="sessionuser.userId == '5922d8dbe20d000011b025e5'"><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
+            <li ng-if="sessionuser.userId == '5922d8dbe20d000011b025e5'"><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
+            
             <!--<li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>-->
           </ul>
         </li>

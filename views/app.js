@@ -6392,48 +6392,73 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);
     
     exambazaar.controller("searchController", 
-        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$facebook', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $facebook){
+        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$facebook', '$location', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $facebook, $location){
             
             
-            $rootScope.pageTitle ='Search Coaching Institutes';
+            $rootScope.pageTitle ='Search & Review Coaching Institutes';
             
-            $scope.isLoggedIn = false;
+            $scope.isLoggedIn = null;
             $scope.fblogin = function() {
-                console.log('Loggin into fb');
+                //console.log('Loggin into fb');
                 $facebook.login().then(function() {
-                    console.log('Logged into fb');
+                    //console.log('Logged into fb');
                     refresh();
                 });
             };
+            var currURL = $location.absUrl();
+            currURL = currURL.replace("localhost:8000", "exambazaar.com");
+            currURL = "www.exambazaar.com/review";
+            console.log(currURL);
             $scope.fbshare = function() {
+                
                 
                 $facebook.ui(
                      {
                       method: 'share',
-                      href: 'http://www.exambazaar.com/'
+                      href: currURL
                     }, function(response){
                         console.log(response);
-                        
+                        if(response){
+                            alert('Done');
+                        }else{
+                            alert('Error');
+                        }
                     });
-                
             };
             
+            $scope.fbInvite = function(){
+                
+                
+                $facebook.ui({
+                    method: 'send',
+                    name: 'Review your coaching institute at Exambazaar.com',
+                    description: 'Be heard and help others by reviewing your coaching institute! As a goodie, unlock discounts from Exambazaar.com',
+                    link: currURL
+                },function(response) {
+                    if (response) {
+                        alert('Successfully Invited');
+                    } else {
+                        alert('Failed To Invite');
+                    }
+                });
+            };
             
             function refresh() {
                 $facebook.api("/me", {fields: 'name, first_name, last_name, age_range, link, gender, picture'}).then(
                     function(response) {
-                        console.log(response);
+                        //console.log(response);
                         
                         $scope.user = response;
                         $scope.welcomeMsg = "Welcome " + response.name;
                         $scope.isLoggedIn = true;
                     },
                     function(err) {
-                    $scope.welcomeMsg = "Please log in";
+                        $scope.welcomeMsg = "Please log in";
+                        $scope.isLoggedIn = false;
                 });
                 $facebook.api("/me/friends").then(
                     function(response) {
-                        console.log(response);
+                        //console.log(response);
                         $scope.userFriends=response;
                     },
                     function(err) {

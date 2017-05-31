@@ -34,7 +34,7 @@
 </style>
 
 
-<div class="whiteBackground mainContent" >
+<div class="whiteBackground mainContent padded2" >
     <div id="spacer">
     </div>
     <div layout="column" ng-controller="autocompleteController as ctrl">
@@ -65,25 +65,9 @@
           
         </md-autocomplete>
     </div>
+    <!--
     
-    <!--<div layout="column" layout-padding class="width100">
-        <input type="text" class="form-control text-center" ng-model="mapAddress" >
-        
-        <ng-map center="{{mapAddress}}" zoom="14" scrollwheel="true">
-        <marker position="{{mapAddress}}"
-              title="{{mapAddress}}"
-              animation="Animation.BOUNCE"
-              centered="true"></marker>
-        </ng-map>
-    </div>-->
-    <div id="map"></div>
-    
-    <!--<md-button class="md-raised md-primary md-small font12" ng-click="setData()" id="">Show</md-button>
-    <md-button class="md-raised md-primary md-small font12" ng-click="saveData()" id="">Save</md-button>
-    <div layout="column" class="padded">-->
-    
-    
-    <button type="button" ng-click="fblogin()" ng-hide="isLoggedIn" class="btn btn-default navbar-btn">
+    <button type="button" ng-click="fblogin()" ng-show="!isLoggedIn" class="btn btn-default navbar-btn">
         Login
     </button>
     
@@ -93,5 +77,11 @@
     
     <button type="button" ng-click="fbshare()" ng-show="isLoggedIn" class="btn btn-default navbar-btn">
         Share
-    </button>    
+    </button>
+    <button type="button" ng-click="fbInvite()" ng-show="isLoggedIn" class="btn btn-default navbar-btn">
+        Invite
+    </button>
+    <br/>
+    {{userFriends}}-->
+    
 </div>
