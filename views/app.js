@@ -527,7 +527,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getusertoverifycis = function(userId) {
             return $http.get('/api/toverifycis/user/'+userId, {userId: userId});
         };
-    }]);    
+    }]);
+    
+        
+    exambazaar.service('suggestCoachingService', ['$http', function($http) {
+       
+        this.savesuggestCoaching = function(suggestCoachingForm) {
+            return $http.post('/api/suggestCoachings/save', suggestCoachingForm);
+        };
+        
+        this.markDone = function(suggestCoachingForm) {
+            return $http.post('/api/suggestCoachings/markDone', suggestCoachingForm);
+        };
+        this.getsuggestCoaching = function(suggestCoachingId) {
+            return $http.get('/api/suggestCoachings/edit/'+suggestCoachingId, {suggestCoachingId: suggestCoachingId});
+        };
+        
+        this.getsuggestCoachings = function() {
+            return $http.get('/api/suggestCoachings');
+        };
+        this.getusersuggestCoachings = function(userId) {
+            return $http.get('/api/suggestCoachings/user/'+userId, {userId: userId});
+        };
+    }]);      
+        
     exambazaar.service('LocationService', ['$http', function($http) {
         this.saveLocation = function(location) {
             return $http.post('/api/locations/save', location);
@@ -6390,7 +6413,40 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             $rootScope.title ='Sandbox';
     }]);
-    
+        
+    exambazaar.controller("suggestCoachingController", 
+        [ '$scope', '$http','$state','$rootScope','suggestCoachingService','suggestedList', '$mdDialog', function($scope, $http, $state, $rootScope, suggestCoachingService, suggestedList, $mdDialog){
+            
+            $scope.suggestions = suggestedList.data;
+            
+            
+            
+            var suggestCoachingForm = {};
+                
+            suggestCoachingService.savesuggestCoaching()(suggestCoachingForm).success(function (data, status, headers) {
+               
+                $scope.showSavedDialog();
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });    
+            
+            $scope.showSavedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#savedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
+            $rootScope.pageTitle ='Search & Review Coaching Institutes';
+            
+    }]); 
+        
+        
     exambazaar.controller("searchController", 
         [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$facebook', '$location', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $facebook, $location){
             
@@ -7783,6 +7839,9 @@ function getLatLng(thisData) {
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
+        if($scope.user._id == '5922d8dbe20d000011b025e5'){
+            $scope.showLevel = 10;
+        }
         $scope.disableinstitutes =[];
         $scope.disableinstitute = {
             _id: ''
@@ -8634,6 +8693,32 @@ function getLatLng(thisData) {
                 targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService) {   
                     return targetStudyProviderService.coachingAddressService();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('suggestCoaching', {
+            url: '/user/:userId/suggestCoaching', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'suggestCoaching.html',
+                    controller: 'suggestCoachingController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                
+                
+                suggestedList: ['suggestCoachingService','$stateParams',
+                    function(suggestCoachingService) {   
+                    return suggestCoachingService.getsuggestCoachings();
                 }],
                 provider: function() { return {}; }
                 

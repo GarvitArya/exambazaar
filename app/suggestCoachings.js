@@ -83,12 +83,14 @@ router.post('/save', function(req, res) {
     var suggestCoachingForm = req.body;
     var user = suggestCoachingForm.user;
     var coachingName = suggestCoachingForm.coachingName;
-    var website = suggestCoachingForm.coachingName;
-    var nCenters = suggestCoachingForm.coachingName;
+    var website = suggestCoachingForm.website;
+    var nCenters = suggestCoachingForm.nCenters;
     
     var newsuggestCoaching = new suggestCoaching({
         user: user,
-        coachingName: coachingName
+        coachingName: coachingName,
+        website: coachingName,
+        nCenters: coachingName,
     });
     newsuggestCoaching.save(function(err, newsuggestCoaching) {
         if (err) return console.error(err);
