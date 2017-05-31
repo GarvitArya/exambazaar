@@ -9,17 +9,45 @@ var auth = function(req, res, next){
 module.exports = function(app, passport) {
     // route to test if the user is logged in or not
     app.get('/loggedin', function(req, res) {
+        //console.log(req);
       res.send(req.isAuthenticated() ? req.user : '0');
+    });
+    
+    
+    // =====================================
+    // FACEBOOK ROUTES =====================
+    // =====================================
+    // route for facebook authentication and login
+    
+    app.get('/auth/facebook', function(req, res) {
+        //console.log(req);
+      passport.authenticate('facebook', { scope : 'email' });
+    });
+   
+    
+    // handle the callback after facebook has authenticated the user
+    
+    app.get('/auth/facebook/callback', function(req, res) {
+        console.log(req);
+        passport.authenticate('facebook', {
+            successRedirect : '/profile',
+            failureRedirect : '/'
+        });
+        
     });
     
     // route to log in
     app.post('/login', passport.authenticate('local-login'), function(req, res) {
       res.send(req.user);
     });
+    
+    
 
     // route to log out
     app.post('/logout', function(req, res,next){
         req.logout();
         res.send('200');
-    });   
+    });
+    
+    
 };

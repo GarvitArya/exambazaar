@@ -1,14 +1,17 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload','youtube-embed', 'ngMeta', 'ngtweet', 'headroom']);
+var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload','youtube-embed', 'ngMeta', 'ngtweet','ngFacebook']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo'
     (function() {
     'use strict';
     angular
     .module('exambazaar')
-    .config(function($mdThemingProvider) {
+    .config(function($mdThemingProvider, $facebookProvider) {
         $mdThemingProvider
             .theme("default")
             .primaryPalette("teal");
+        $facebookProvider.setAppId('1236747093103286');
+        $facebookProvider.setPermissions("public_profile,email,user_friends, user_education_history");
+        
     })
     .controller('streamController', streamController);
     function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope, ngMeta) {
@@ -4776,6 +4779,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state','$cookies','$http','UserService','NotificationService','ipService','geolocation','$geolocation', function($scope,$rootScope,$state,$cookies,$http,UserService,NotificationService,ipService,geolocation,$geolocation){
+                
+        
         
         ipService.getip()
         .success(function (data, status, headers) {
@@ -6375,6 +6380,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return invalid;
         };
         
+        $rootScope.pageTitle = "Review " + $scope.provider.name + " " + $scope.provider.city;
         
         
     }]);    
@@ -6385,89 +6391,57 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $rootScope.title ='Sandbox';
     }]);
     
-    exambazaar.controller("sandboxController", 
-        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList){
-            $scope.providers = targetStudyProvidersList.data;
-            console.log($scope.providers.length);
+    exambazaar.controller("searchController", 
+        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$facebook', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $facebook){
             
-            $scope.setData = function(){
-               $scope.dataShow = true; 
-            };
             
-            $scope.saveData = function(){
-                targetStudyProviderService.bulkSaveLatLng($scope.providers).success(function (data, status, headers) {
-
-                    //alert('All Marked');
-                    $state.reload();
-                })
-                .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+            $rootScope.pageTitle ='Search Coaching Institutes';
+            
+            $scope.isLoggedIn = false;
+            $scope.fblogin = function() {
+                console.log('Loggin into fb');
+                $facebook.login().then(function() {
+                    console.log('Logged into fb');
+                    refresh();
                 });
+            };
+            $scope.fbshare = function() {
+                
+                $facebook.ui(
+                     {
+                      method: 'share',
+                      href: 'http://www.exambazaar.com/'
+                    }, function(response){
+                        console.log(response);
+                        
+                    });
                 
             };
-            $scope.dataShow = false;
             
-            /*$scope.providers.forEach(function(thisProvider, index){
-                var thisAddress = thisProvider.address;
-                if(thisAddress){
-                    
-                }
-            });*/
             
-            $scope.unavailableLatLng = 0;
-            var counter = 0;
-            for (var i=0;i<=$scope.providers.length-1;i++) {
-            (function(ind) {
-               setTimeout(function(){
-               GMaps.geocode({
-                address: $scope.providers[ind].address + ", " + $scope.providers[ind].city,
-                callback: function(results, status) {
-                    if(ind == $scope.providers.length-1){
-                        //console.info($scope.providers);
-                        $scope.saveData();
-                    }
-                    if (status == 'OK') {
-                        console.log(ind + ' ' + results[0].geometry.location.lat());
-                        $scope.providers[ind].latlng = {
-                            lat: results[0].geometry.location.lat(),
-                            lng: results[0].geometry.location.lng()
-                        };
+            function refresh() {
+                $facebook.api("/me", {fields: 'name, first_name, last_name, age_range, link, gender, picture'}).then(
+                    function(response) {
+                        console.log(response);
                         
-                        //console.log($scope.providers);
-                    }else{
-                        console.log(ind + ' '+ status + ' ' + $scope.providers[ind]._id);
-                        
-                        if(status == 'ZERO_RESULTS'){
-                        //console.info($scope.providers[ind]._id);    
-                        $scope.providers[ind].latlngna = true;
-                        $scope.unavailableLatLng += 1;   
-                        }
-                    }
-
-                }
-            });
-
-
-           }, 1000 + (1000 * ind));
-
-            })(i);
+                        $scope.user = response;
+                        $scope.welcomeMsg = "Welcome " + response.name;
+                        $scope.isLoggedIn = true;
+                    },
+                    function(err) {
+                    $scope.welcomeMsg = "Please log in";
+                });
+                $facebook.api("/me/friends").then(
+                    function(response) {
+                        console.log(response);
+                        $scope.userFriends=response;
+                    },
+                    function(err) {
+                    $scope.welcomeMsg = "Friends Error";
+                });
             };
-            
-           
-            
-            
-            var map = new GMaps({
-              el: '#map',
-              lat: -12.043333,
-              lng: -77.028333
-            });
-            
-            
-            
-            
-            //alert(imageExists('https://s3.ap-south-1.amazonaws.com/exambazaar/L_60725.gif'));
-            
-            $rootScope.title ='Sandbox';
+
+            refresh();
     }]); 
     
 function getLatLng(thisData) {
@@ -8611,16 +8585,16 @@ function getLatLng(thisData) {
                 
             }
         })
-        .state('sandbox', {
-            url: '/user/:userId/sandbox', //masterId?
+        .state('search', {
+            url: '/search', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
                     controller: 'headerController'
                 },
                 'body':{
-                    templateUrl: 'sandbox.html',
-                    controller: 'sandboxController',
+                    templateUrl: 'search.html',
+                    controller: 'searchController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -10667,6 +10641,24 @@ exambazaar.run(function($rootScope,$mdDialog, ngMeta) {
         $mdDialog.hide();
     });
     ngMeta.init();
+    
+    
+    // If we've already installed the SDK, we're done
+     if (document.getElementById('facebook-jssdk')) {return;}
+
+     // Get the first script element, which we'll use to find the parent node
+     var firstScriptElement = document.getElementsByTagName('script')[0];
+
+     // Create a new script element and set its id
+     var facebookJS = document.createElement('script'); 
+     facebookJS.id = 'facebook-jssdk';
+
+     // Set the new script's source to the source of the Facebook JS SDK
+     facebookJS.src = '//connect.facebook.net/en_US/all.js';
+
+     // Insert the Facebook JS SDK into the DOM
+     firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
+    
 });
 
 
