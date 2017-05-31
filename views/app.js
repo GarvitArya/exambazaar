@@ -7821,9 +7821,14 @@ function getLatLng(thisData) {
     exambazaar.controller("addInstituteController", 
         [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService){
         $scope.user = thisuser.data;
+        console.log($scope.user);
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
+        if($scope.user._id == '5922d8dbe20d000011b025e5'){
+            $scope.showLevel = 10;
+        }
+            
         $scope.newinstitutes =[];
         $scope.newInstitute = {
             name:'',
