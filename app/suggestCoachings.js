@@ -15,17 +15,6 @@ mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
 
-
-router.get('/verifiedCount', function(req, res) {
-    suggestCoaching.distinct( "institute",{active: false},function(err, docs) {
-    if (!err){
-        res.json(docs.length);
-    } else {throw err;}
-    });
-});
-
-
-
 router.post('/markDone', function(req, res) {
     var suggestCoachingForm = req.body;
     var institute = suggestCoachingForm.institute;
@@ -60,6 +49,14 @@ router.get('/', function(req, res) {
         .deepPopulate('user')
         .exec(function (err, suggestCoachings) {
         if (!err){
+            suggestCoachings.forEach(function(thisSuggestion, index){
+                var fulluser = thisSuggestion.user;
+                var basicuser = fulluser.basic;
+                thisSuggestion.user = basicuser;
+            });
+            
+            
+            
             res.json(suggestCoachings);
         } else {throw err;}
     });
@@ -84,17 +81,20 @@ router.post('/save', function(req, res) {
     var user = suggestCoachingForm.user;
     var coachingName = suggestCoachingForm.coachingName;
     var website = suggestCoachingForm.website;
+    var newCoachingGroup = suggestCoachingForm.newCoachingGroup;
     var nCenters = suggestCoachingForm.nCenters;
     
     var newsuggestCoaching = new suggestCoaching({
         user: user,
         coachingName: coachingName,
-        website: coachingName,
-        nCenters: coachingName,
+        website: website,
+        nCenters: nCenters,
+        newCoachingGroup: newCoachingGroup,
     });
     newsuggestCoaching.save(function(err, newsuggestCoaching) {
         if (err) return console.error(err);
         console.log('Suggestion added with id ' + newsuggestCoaching._id);
+        res.json(newsuggestCoaching._id);
     });
     
 });

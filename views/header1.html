@@ -123,6 +123,7 @@
             <li><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
             <li><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
             <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
+            <li><a ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a></li>
           </ul>
         </li>
         
@@ -203,6 +204,7 @@
             <li ng-if="sessionuser.userType=='Master'">
                 <a ui-sref="filledAll({ userId:{{'sessionuser.userId'}} })">Filled Institutes</a>
             </li>
+            <li><a ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a></li>
           </ul>
         </li>    
         

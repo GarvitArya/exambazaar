@@ -6130,7 +6130,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     exambazaar.controller("autocompleteController2", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
-            
+        
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
             console.info('Item changed to ' + JSON.stringify(item));
@@ -6415,21 +6415,42 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);
         
     exambazaar.controller("suggestCoachingController", 
-        [ '$scope', '$http','$state','$rootScope','suggestCoachingService','suggestedList', '$mdDialog', function($scope, $http, $state, $rootScope, suggestCoachingService, suggestedList, $mdDialog){
+        [ '$scope', '$http','$state','$rootScope','suggestCoachingService','suggestedList', '$mdDialog', '$timeout', 'thisuser', function($scope, $http, $state, $rootScope, suggestCoachingService, suggestedList, $mdDialog, $timeout, thisuser){
             
+            $scope.showSuggestions = true;
+            $scope.flipMode = function(){
+                $scope.showSuggestions = !$scope.showSuggestions;
+            };
             $scope.suggestions = suggestedList.data;
-            
-            
-            
-            var suggestCoachingForm = {};
+            $scope.user = thisuser.data;
+            $scope.suggestion ={
+                coachingName: '',
+                website: '',
+                nCenters: '',
+                newCoachingGroup: true,
                 
-            suggestCoachingService.savesuggestCoaching()(suggestCoachingForm).success(function (data, status, headers) {
-               
-                $scope.showSavedDialog();
-            })
-            .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
-            });    
+            };
+            
+            
+            
+            $scope.saveSuggestion = function(){
+                var suggestCoachingForm = {
+                    user: $scope.user._id,
+                    coachingName: $scope.suggestion.coachingName,
+                    website: $scope.suggestion.website,
+                    nCenters: $scope.suggestion.nCenters,
+                };
+                
+                suggestCoachingService.savesuggestCoaching(suggestCoachingForm).success(function (data, status, headers) {
+                    console.log('Done');
+                    $scope.showSavedDialog();
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });       
+                
+            };
             
             $scope.showSavedDialog = function(ev) {
                 $mdDialog.show({
@@ -8714,7 +8735,10 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
                 
                 suggestedList: ['suggestCoachingService','$stateParams',
                     function(suggestCoachingService) {   

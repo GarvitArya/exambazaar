@@ -7,6 +7,7 @@ var suggestCoachingSchema = mongoose.Schema({
     coachingName:{ type: String, required: true },
     website:{ type: String, required: true },
     nCenters:{ type: Number },
+    newCoachingGroup:{ type: Boolean, default: true },
     actioned: { type: Boolean, default: false },
     _created: { type: Date, default: Date.now }
 });
