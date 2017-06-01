@@ -10814,7 +10814,7 @@ function getLatLng(thisData) {
         
     })();
 
-exambazaar.run(function($rootScope,$mdDialog, ngMeta) {
+exambazaar.run(function($rootScope,$mdDialog, ngMeta, $location) {
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
     $rootScope.imageUrl = '';
