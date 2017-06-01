@@ -10,7 +10,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .theme("default")
             .primaryPalette("teal");
         $facebookProvider.setAppId('1236747093103286');
-        $facebookProvider.setPermissions("public_profile,email,user_friends, user_education_history");
+        $facebookProvider.setPermissions("public_profile,email,user_friends, user_education_history, publish_actions");
         
     })
     .controller('streamController', streamController);
@@ -6466,13 +6466,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $rootScope.pageTitle ='Search & Review Coaching Institutes';
             
     }]); 
-        
-        
-    exambazaar.controller("searchController", 
-        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$facebook', '$location', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $facebook, $location){
+    
+    exambazaar.controller("socialLoginController", 
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', function($scope, $http, $state, $rootScope, $facebook, $location){
             
             
             $rootScope.pageTitle ='Search & Review Coaching Institutes';
+            console.log('Here');
             
             $scope.isLoggedIn = null;
             $scope.fblogin = function() {
@@ -6492,9 +6492,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $facebook.ui(
                      {
                       method: 'share',
-                      href: currURL
+                      href: currURL,
+                      hashtag: '#exambazaar',
+                      quote: 'Exambazaar: Find best coaching institutes in your city for more than 50 exams',
+                      redirect_uri: 'http://www.exambazaar.com/',
+                      display: 'iframe',
+                      mobile_iframe: true
                     }, function(response){
-                        console.log(response);
+                        console.log("Response is: " + response);
                         if(response){
                             alert('Done');
                         }else{
@@ -6544,6 +6549,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
 
             refresh();
+    }]);     
+        
+    exambazaar.controller("searchController", 
+        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$facebook', '$location', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $facebook, $location){
+            
+            
+            $rootScope.pageTitle ='Search & Review Coaching Institutes';
+            
+            
     }]); 
     
 function getLatLng(thisData) {
@@ -8695,6 +8709,28 @@ function getLatLng(thisData) {
                 
             }
         })
+        
+        .state('socialLogin', {
+            url: '/socialLogin', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'socialLogin.html',
+                    controller: 'socialLoginController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                provider: function() { return {}; }
+                
+            }
+        })
+    
         .state('search', {
             url: '/search', //masterId?
             views: {
