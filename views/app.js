@@ -10,7 +10,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .theme("default")
             .primaryPalette("teal");
         $facebookProvider.setAppId('1236747093103286');
-        $facebookProvider.setPermissions("public_profile,email,user_friends, user_education_history");
+        $facebookProvider.setPermissions("public_profile,email");
+        
         
     })
     .controller('streamController', streamController);
@@ -6507,12 +6508,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
                 $facebook.ui(
                      {
-                      method: 'feed',
-                      link: currURL,
+                      method: 'share',
+                      href: currURL,
                       redirect_uri: 'http://www.exambazaar.com', 
-                      //hashtag: '#exambazaar',
-                      caption: 'Exambazaar: Find best coaching institutes in your city for more than 50 exams',
-                      //redirect_uri: 'http://www.exambazaar.com/',
+                      hashtag: '#exambazaar',
+                      quote: 'Exambazaar: Find best coaching institutes in your city for more than 50 exams',
+                      redirect_uri: 'http://www.exambazaar.com/',
                       display: 'iframe',
                       mobile_iframe: true
                     }, function(response){
@@ -6566,6 +6567,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
 
             refresh();
+            
+            
+            
+            
+            
+            
+            
     }]);     
         
     exambazaar.controller("searchController", 
