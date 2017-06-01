@@ -14,7 +14,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     })
     .controller('streamController', streamController);
-    function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope, ngMeta) {
+    function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope, ngMeta, $location) {
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location'); 
         }
@@ -22,6 +22,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         /*$rootScope.pageTitle = "Exambazaar: Select the stream you want to study";
         $rootScope.pageTitle = "Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching institutes in your city. Our easy-to-use website shows you all the coaching institutes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching institutes to succeed";*/
         $rootScope.pageTitle = 'Exambazaar: Select your Exam Stream';
+        
+        
         $rootScope.pageDescription = "Select your exam stream from Engineering, Medical, CA & CS, School, Mba, Law, Foreign Education, Civil Services, SSC, Bank, Defence, Insurance, Financial Certification";
         
         $rootScope.pageKeywords = "Exambazaar, Best Coaching India, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
@@ -6272,7 +6274,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
     
     exambazaar.controller("reviewController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', 'allcities', function($scope, $http, $state, $rootScope, targetStudyProviderService, allcities){
+        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', 'allcities', '$location', function($scope, $http, $state, $rootScope, targetStudyProviderService, allcities, $location){
             
             $scope.cities = allcities.data;
             /*$scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];*/
@@ -6282,10 +6284,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $rootScope.city = city;
             }
             $rootScope.pageTitle ='Review your coaching institute';
+            
+            var currURL = $location.absUrl();
+            $rootScope.pageURL = currURL;
+            $rootScope.pageImage = 'http://www.exambazaar.com/images/logo/eblogo.png';
     }]);
         
     exambazaar.controller("reviewCenterController", 
-    [ '$scope', '$rootScope', 'thisProvider', function($scope,$rootScope, thisProvider){
+    [ '$scope', '$rootScope', 'thisProvider','$location', function($scope,$rootScope, thisProvider, $location){
         $scope.provider = thisProvider.data;
         var minRating = 1;
         var maxRating = 5;
@@ -6405,6 +6411,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $rootScope.pageTitle = "Review " + $scope.provider.name + " " + $scope.provider.city;
         
+        var currURL = $location.absUrl();
+        $rootScope.pageURL = currURL;
+        $rootScope.pageImage = 'http://www.exambazaar.com/images/logo/eblogo.png';
         
     }]);    
     
@@ -6477,10 +6486,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.isLoggedIn = null;
             $scope.fblogin = function() {
                 //console.log('Loggin into fb');
-                $facebook.login().then(function() {
-                    //console.log('Logged into fb');
+                $facebook.login().then(function(response) {
+                    console.log(response);
+                    
+                    
+                    
                     refresh();
+                }, {
+                    scope: 'publish_actions', 
+                    return_scopes: true
                 });
+                
             };
             var currURL = $location.absUrl();
             currURL = currURL.replace("localhost:8000", "exambazaar.com");
@@ -10816,6 +10832,10 @@ exambazaar.run(function($rootScope,$mdDialog, ngMeta) {
         $mdDialog.hide();
     });
     ngMeta.init();
+    var currURL = $location.absUrl();
+    $rootScope.pageURL = currURL;
+    $rootScope.pageImage = 'http://www.exambazaar.com/images/logo/eblogo.png';
+    
     
     
     // If we've already installed the SDK, we're done
