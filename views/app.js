@@ -6273,7 +6273,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $rootScope.title ='Sandbox 2';
     }]); 
     
-    
+    exambazaar.controller("reviewedController", 
+        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', '$location', function($scope, $http, $state, $rootScope, targetStudyProviderService, $location){
+            
+            $rootScope.pageTitle ='Review your coaching institute';
+            
+            var currURL = $location.absUrl();
+            $rootScope.pageURL = currURL;
+            $rootScope.pageImage = 'http://www.exambazaar.com/images/logo/eblogo.png';
+    }]);
+        
     exambazaar.controller("reviewController", 
         [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', 'allcities', '$location', function($scope, $http, $state, $rootScope, targetStudyProviderService, allcities, $location){
             
@@ -6528,7 +6537,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                      {
                       method: 'share',
                       href: currURL,
-                      redirect_uri: 'http://www.exambazaar.com', 
+                      redirect_uri: 'http://www.exambazaar.com/', 
                       hashtag: '#exambazaar',
                       quote: 'Exambazaar: Find best coaching institutes in your city for more than 50 exams',
                       display: 'iframe',
@@ -6541,6 +6550,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                             alert('Error');
                         }
                     });
+            };
+            $scope.fbshare2 = function() {
+                $http.get('https://www.facebook.com/dialog/share?app_id=1236747093103286&display=popup&href=http%3A%2F%2Fwww.exambazaar.com/review%2F&redirect_uri=http%3A%2F%2Fwww.exambazaar.com/reviewed%2F')
+                .success(function(data) {
+                    console.log(data)
+                })
+                .error(function(data) {
+                    alert(data);
+                    console.log('Error: ' + data);
+                });
             };
             $scope.fbfeed = function() {
                 $facebook.ui(
@@ -6617,7 +6636,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.fbUser = true;
                 $scope.user.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken; 
                 console.info($scope.user);
-                console.info(fbUser);
+                console.info($scope.fbUser);
                 
                 
             }
@@ -8902,6 +8921,26 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService) {
                     return targetStudyProviderService.getCities();
                 }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('reviewed', {
+            url: '/reviewed', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'reviewed.html',
+                    controller: 'reviewedController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
                 provider: function() { return {}; }
                 
             }

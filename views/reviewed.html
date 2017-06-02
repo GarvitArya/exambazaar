@@ -1,0 +1,89 @@
+<style>
+    #autocompleteLogo{
+        max-height: 35px;
+        max-width: 70px;
+    }
+    .autocomplete-custom-template li {
+          border-bottom: 1px solid #ccc;
+          height: auto;
+          padding-top: 8px;
+          padding-bottom: 8px;
+          white-space: normal;
+        }
+        .autocomplete-custom-template li:last-child {
+          border-bottom-width: 0;
+        }
+        .autocomplete-custom-template .item-title,
+        .autocomplete-custom-template .item-metadata {
+          display: block;
+          line-height: 2;
+        }
+        .autocomplete-custom-template .item-title md-icon {
+          height: 18px;
+          width: 18px;
+        }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #questionSection{
+        min-height: 20vh;
+    }
+    #partnerlogo{
+        max-height: 50px;
+        max-width: 160px;
+    }
+    
+</style>
+
+
+<div class="whiteBackground mainContent" >
+    <div id="spacer">
+    </div>
+    <div layout="column" class="" layout-padding>
+        <!--<div layout="column" layout-align="center center" >
+            <div layout="row" layout-align="center center" class="secondFont bold">
+                Review your Coaching Institute
+            </div>
+            <div layout="row" class="editFont">
+                Review your coaching institute to unlock discounts from Bansal Classes, Plancess, Handa ka Funda and Dominos
+            </div>
+        </div>-->
+        <div layout="row" layout-align="center center" class="editFont " id="questionSection">
+            Thank you for Reviewing on Exambazaar.com.
+        </div>
+        <div layout="row" layout-xs="column" layout-align="center center" class="editFont " id="questionSection">
+            <div class="padding10">
+                <img src="images/partners/toppr.png" id="partnerlogo"/>
+            </div>
+            <div class="padding10">
+                <img src="images/partners/bansal.jpg" id="partnerlogo"/>
+            </div>
+            <div class="padding10">
+                <img src="images/partners/hkf.jpg" id="partnerlogo"/>
+            </div>
+            <div class="padding10">
+                <img src="images/partners/plancess.jpg" id="partnerlogo"/>
+            </div>
+            <div class="padding10">
+                <img src="images/partners/testbook.png" id="partnerlogo"/>
+            </div>
+        </div>
+        
+        <div layout="row" layout-align="center center" class="editFont " id="questionSection">
+            <md-button class="md-raised md-primary  font12"  id="doneButton" ng-disabled="!city || !reviewInstitute._id" ui-sref="reviewCenter({ coachingId:{{'reviewInstitute._id'}} })">Next</md-button>
+        </div>
+        
+    </div>
+    <div layout="column">
+    
+    </div>
+    
+</div>
