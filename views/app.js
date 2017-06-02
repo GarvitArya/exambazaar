@@ -6570,6 +6570,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                       //display: 'iframe',
                       //mobile_iframe: true
                     }, function(response){
+                        alert(response);
                         console.log("Response is: ");
                         console.log(response);
                         if(response){
