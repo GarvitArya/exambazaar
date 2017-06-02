@@ -10,7 +10,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .theme("default")
             .primaryPalette("teal");
         $facebookProvider.setAppId('1236747093103286');
-        $facebookProvider.setPermissions("public_profile,email");
+        $facebookProvider.setPermissions("public_profile,email"); //, user_education_history
         
         
     })
@@ -6299,7 +6299,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var step = 0.5;
         $scope.ratings = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
         $scope.ratingsClasses = ["rating1","rating2","rating3","rating4","rating5","rating6","rating7","rating8","rating9"];
-        $scope.minCommentLength = 300;
+        $scope.minCommentLength = 140;
         
         $scope.ratingParams = [
             {name: "faculty", displayname:"Faculty", hoverVal: -1},
@@ -6478,19 +6478,39 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
     
     exambazaar.controller("socialLoginController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', function($scope, $http, $state, $rootScope, $facebook, $location){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies){
             
             
             $rootScope.pageTitle ='Search & Review Coaching Institutes';
-            console.log('Here');
+            //console.log('Here');
             
             $scope.isLoggedIn = null;
+            $scope.fbLoginStatus = {};
+           
+            $scope.user = $cookies.getObject( 'sessionuser');
+            $scope.loggedIn = false;
+            if($scope.user && $scope.user.userId){
+                console.log('Here');
+                $scope.loggedIn = true;
+                $facebook.getLoginStatus().then(function(response) {
+                    $scope.fbLoginStatus = response;
+                    console.log($scope.fbLoginStatus);
+                });
+                refresh();
+                
+            }else{
+                $scope.loggedIn = false;
+                
+            }
+            
+            
             $scope.fblogin = function() {
                 //console.log('Loggin into fb');
                 $facebook.login().then(function(response) {
-                    console.log(response);
+                    //console.log(response);
                     
                     
+                    $scope.fbLoginStatus = response;
                     
                     refresh();
                 }, {
@@ -6502,10 +6522,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             var currURL = $location.absUrl();
             currURL = currURL.replace("localhost:8000", "exambazaar.com");
             currURL = "www.exambazaar.com/review";
-            console.log(currURL);
+            //console.log(currURL);
             $scope.fbshare = function() {
-                
-                
                 $facebook.ui(
                      {
                       method: 'share',
@@ -6513,7 +6531,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                       redirect_uri: 'http://www.exambazaar.com', 
                       hashtag: '#exambazaar',
                       quote: 'Exambazaar: Find best coaching institutes in your city for more than 50 exams',
-                      redirect_uri: 'http://www.exambazaar.com/',
                       display: 'iframe',
                       mobile_iframe: true
                     }, function(response){
@@ -6525,7 +6542,24 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         }
                     });
             };
-            
+            $scope.fbfeed = function() {
+                $facebook.ui(
+                     {
+                      method: 'feed',
+                      link: 'http://www.exambazaar.com',
+                      redirect_uri: 'http://www.exambazaar.com/review', 
+                      source: 'http://www.exambazaar.com/images/logo/eblogo.png',
+                      display: 'iframe',
+                      mobile_iframe: true
+                    }, function(response){
+                        console.log("Response is: " + response);
+                        if(response){
+                            alert('Done');
+                        }else{
+                            alert('Error');
+                        }
+                    });
+            };
             $scope.fbInvite = function(){
                 
                 
@@ -6544,32 +6578,51 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
             
             function refresh() {
-                $facebook.api("/me", {fields: 'name, first_name, last_name, age_range, link, gender, picture'}).then(
+                $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
                     function(response) {
                         //console.log(response);
-                        
-                        $scope.user = response;
-                        $scope.welcomeMsg = "Welcome " + response.name;
+                        $scope.user = {
+                            name: response.name,
+                            gender: response.gender,
+                            image: response.picture.data.url,
+                            email: response.email,
+                            facebook: {
+                                link: response.link,
+                                id: response.id,
+                            }
+                            
+                        };
                         $scope.isLoggedIn = true;
                     },
                     function(err) {
                         $scope.welcomeMsg = "Please log in";
                         $scope.isLoggedIn = false;
                 });
-                $facebook.api("/me/friends").then(
+                $facebook.api("/me/permissions").then(
                     function(response) {
                         //console.log(response);
-                        $scope.userFriends=response;
+                        $scope.permissions = response;
                     },
                     function(err) {
-                    $scope.welcomeMsg = "Friends Error";
+                    $scope.welcomeMsg = "Permissions Error";
                 });
+                
             };
 
-            refresh();
             
             
-            
+            $scope.$watch('[fbLoginStatus.status, user.facebook.id]', function (newValue, oldValue, scope) {
+                console.log(newValue);
+            if(newValue[0] == 'connected' && newValue[1]){
+                $scope.fbUser = true;
+                $scope.user.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken; 
+                console.info($scope.user);
+                console.info(fbUser);
+                
+                
+            }
+
+            }, true);
             
             
             

@@ -23,7 +23,14 @@ var userSchema = mongoose.Schema({
        category: [{type: String}],
        exam: [{type: String}],
     },
-    mobile : { type: String, required: true, unique:true },
+    mobile : { type: String, trim: true, index: true, unique: true, sparse: true}, //, required: true, unique:true
+    facebookId : { type: String, trim: true, index: true, unique: true, sparse: true},
+    facebook : {
+        link: { type: String},
+        id: { type: String},
+        accessToken: { type: String},
+    },
+    
     image : { type: String},
     partner: [{ type: Schema.ObjectId, ref: 'targetStudyProvider' }],
     shortlisted: [{
