@@ -67,6 +67,7 @@ angular.module('ngFacebook', [])
         $window.FB.init(
           angular.extend({ appId: $facebook.config('appId'), version: $facebook.config('version') }, $facebook.config("customInit"))
         );
+        $window.FB.AppEvents.logPageView();
         $rootScope.$broadcast("fb.load", $window.FB);
       };
 
