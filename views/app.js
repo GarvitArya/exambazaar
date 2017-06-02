@@ -6522,12 +6522,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     $scope.fbLoginStatus = response;
                     
                     refresh();
-                }, {
-                    scope: 'publish_actions', 
-                    return_scopes: true
                 });
                 
             };
+            $scope.fblogin();
+            
             var currURL = $location.absUrl();
             currURL = currURL.replace("localhost:8000", "exambazaar.com");
             currURL = "www.exambazaar.com/review";
@@ -6552,7 +6551,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     });
             };
             $scope.fbshare2 = function() {
-                $http.get('https://www.facebook.com/dialog/share?app_id=1236747093103286&display=popup&href=http%3A%2F%2Fwww.exambazaar.com/review%2F&redirect_uri=http%3A%2F%2Fwww.exambazaar.com/reviewed%2F')
+                $http.get('https://www.facebook.com/dialog/share?app_id=1236747093103286&display=popup&href=http%3A%2F%2Fwww.exambazaar.com/review%2F&redirect_uri=http%3A%2F%2Fwww.exambazaar.com/reviewed')
                 .success(function(data) {
                     console.log(data)
                 })
@@ -6566,12 +6565,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                      {
                       method: 'feed',
                       link: 'http://www.exambazaar.com',
-                      redirect_uri: 'http://www.exambazaar.com/review', 
+                      //redirect_uri: 'http://www.exambazaar.com/review', 
                       source: 'http://www.exambazaar.com/images/logo/eblogo.png',
-                      display: 'iframe',
-                      mobile_iframe: true
+                      //display: 'iframe',
+                      //mobile_iframe: true
                     }, function(response){
-                        console.log("Response is: " + response);
+                        console.log("Response is: ");
+                        console.log(response);
                         if(response){
                             alert('Done');
                         }else{
@@ -6586,6 +6586,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     method: 'send',
                     name: 'Review your coaching institute at Exambazaar.com',
                     description: 'Be heard and help others by reviewing your coaching institute! As a goodie, unlock discounts from Exambazaar.com',
+                    display: 'popup',
                     link: currURL
                 },function(response) {
                     if (response) {
@@ -8941,6 +8942,10 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
+                thisProvider: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {  
+                    return targetStudyProviderService.getProviderReview($stateParams.coachingId);
+                }],
                 provider: function() { return {}; }
                 
             }
