@@ -50,6 +50,176 @@ router.post('/save', function(req, res) {
     });
 });
 
+router.post('/fbSave', function(req, res) {
+    var thisUser = req.body;
+    console.log(JSON.stringify(thisUser));
+    var userId = thisUser.userId || null;
+    var thisFbUser = thisUser.fbuser;
+    var facebookId = thisFbUser.facebook.id;
+    var fbProperties = [];
+    
+    
+    if(userId){
+        var existingUser = user.findOne({ '_id': userId },function (err, existingUser) {
+            if(!existingUser){
+                
+                existingUser= new user({});
+                existingUser.userType = 'Student';
+                existingUser.facebookId = thisFbUser.facebook.id;
+                existingUser.facebook = {
+                    link: thisFbUser.facebook.link,
+                    accessToken: thisFbUser.facebook.accessToken
+                };
+                
+                if(thisFbUser.gender){
+                    existingUser.basic.gender = thisFbUser.gender;
+                }
+                if(thisFbUser.name){
+                    existingUser.basic.name = thisFbUser.name;
+                }
+                if(thisFbUser.image){
+                    if(existingUser.image){
+                        existingUser.fbimage = thisFbUser.image;
+                    }else{
+                        existingUser.image = thisFbUser.image;
+                        existingUser.fbimage = thisFbUser.image;
+                    } 
+                }
+                if(thisFbUser.email){
+                    if(existingUser.email){
+                        existingUser.fbemail = thisFbUser.email;
+                    }else{
+                        existingUser.email = thisFbUser.email;
+                        existingUser.fbemail = thisFbUser.email;
+                    } 
+                }
+                console.log(JSON.stringify(existingUser));
+                existingUser.save(function(err, existingUser) {
+                    if (err) return console.error(err);
+                    res.json(existingUser);
+                });
+                
+            }else{
+                existingUser.facebookId = thisFbUser.facebook.id;
+                existingUser.facebook = {
+                    link: thisFbUser.facebook.link,
+                    accessToken: thisFbUser.facebook.accessToken
+                };
+                
+                if(thisFbUser.gender){
+                    existingUser.basic.gender = thisFbUser.gender;
+                }
+                if(thisFbUser.name){
+                    existingUser.basic.name = thisFbUser.name;
+                }
+                if(thisFbUser.image){
+                    if(existingUser.image){
+                        existingUser.fbimage = thisFbUser.image;
+                    }else{
+                        existingUser.image = thisFbUser.image;
+                        existingUser.fbimage = thisFbUser.image;
+                    } 
+                }
+                if(thisFbUser.email){
+                    if(existingUser.email){
+                        existingUser.fbemail = thisFbUser.email;
+                    }else{
+                        existingUser.email = thisFbUser.email;
+                        existingUser.fbemail = thisFbUser.email;
+                    } 
+                }
+                
+                existingUser.save(function(err, existingUser) {
+                    if (err) return console.error(err);
+                    res.json(existingUser);
+                });
+            }
+
+        });
+        
+        
+    }else{
+        var existingUser = user.findOne({ 'facebookId': facebookId },function (err, existingUser) {
+        if(!existingUser){
+            existingUser= new user({});
+            existingUser.userType = 'Student';
+            existingUser.facebookId = thisFbUser.facebook.id;
+            existingUser.facebook = {
+                link: thisFbUser.facebook.link,
+                accessToken: thisFbUser.facebook.accessToken
+            };
+            
+            
+            if(thisFbUser.gender){
+                existingUser.basic.gender = thisFbUser.gender;
+            }
+            if(thisFbUser.name){
+                existingUser.basic.name = thisFbUser.name;
+            }
+            if(thisFbUser.image){
+                if(existingUser.image){
+                    existingUser.fbimage = thisFbUser.image;
+                }else{
+                    existingUser.image = thisFbUser.image;
+                    existingUser.fbimage = thisFbUser.image;
+                } 
+            }
+            if(thisFbUser.email){
+                if(existingUser.email){
+                    existingUser.fbemail = thisFbUser.email;
+                }else{
+                    existingUser.email = thisFbUser.email;
+                    existingUser.fbemail = thisFbUser.email;
+                } 
+            }
+            console.log(JSON.stringify(existingUser));
+            existingUser.save(function(err, existingUser) {
+                if (err) return console.error(err);
+                res.json(existingUser);
+            });
+
+        }else{
+            //existingUser.facebookId = thisFbUser.facebook.id;
+            existingUser.facebook = {
+                link: thisFbUser.facebook.link,
+                accessToken: thisFbUser.facebook.accessToken
+            };
+
+            if(thisFbUser.gender){
+                existingUser.basic.gender = thisFbUser.gender;
+            }
+            if(thisFbUser.name){
+                existingUser.basic.name = thisFbUser.name;
+            }
+            if(thisFbUser.image){
+                if(existingUser.image){
+                    existingUser.fbimage = thisFbUser.image;
+                }else{
+                    existingUser.image = thisFbUser.image;
+                    existingUser.fbimage = thisFbUser.image;
+                } 
+            }
+            if(thisFbUser.email){
+                if(existingUser.email){
+                    existingUser.fbemail = thisFbUser.email;
+                }else{
+                    existingUser.email = thisFbUser.email;
+                    existingUser.fbemail = thisFbUser.email;
+                } 
+            }
+
+            existingUser.save(function(err, existingUser) {
+                if (err) return console.error(err);
+                res.json(existingUser);
+            });
+        }
+
+    });
+    }
+    
+    
+});
+
 //to get all users
 router.get('/', function(req, res) {
     user.find({}, function(err, docs) {

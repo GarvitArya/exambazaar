@@ -27,17 +27,19 @@ var userSchema = mongoose.Schema({
     facebookId : { type: String, trim: true, index: true, unique: true, sparse: true},
     facebook : {
         link: { type: String},
-        id: { type: String},
         accessToken: { type: String},
     },
     
-    image : { type: String},
+    
     partner: [{ type: Schema.ObjectId, ref: 'targetStudyProvider' }],
     shortlisted: [{
         institute: { type: Schema.ObjectId, ref: 'targetStudyProvider' },
         _date: { type: Date, default: Date.now }
     }],
     email : { type: String},
+    image : { type: String},
+    fbemail : { type: String},
+    fbimage : { type: String},
     verified : { type: Boolean, default: false},
     active : { type: Boolean, default: true},
     _created: { type: Date, default: Date.now },

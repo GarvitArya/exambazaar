@@ -1,6 +1,6 @@
 // load all the things we need
 var LocalStrategy    = require('passport-local').Strategy;
-
+var FacebookStrategy = require('passport-facebook').Strategy;
 // load up the user model
 var User       = require('../app/models/user');
 
@@ -16,6 +16,19 @@ module.exports = function(passport) {
         });
     });
 
+    passport.use(new FacebookStrategy({
+        clientID: '1236747093103286',
+        clientSecret: 'c8137e970cc6dc5cfb1416695670c418',
+        callbackURL: "http://localhost:8000/auth/facebook/callback"
+      },
+      function(accessToken, refreshToken, profile, cb) {
+        User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+          return cb(err, user);
+        });
+      }
+    ));
+    
+    
     // =========================================================================
     // LOCAL LOGIN =============================================================
     // =========================================================================
