@@ -6670,27 +6670,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 console.info($scope.user);
                 //console.info($scope.fbUser);
                 
-                
-                UserService.fbSave($scope.user).success(function (data, status, headers) {
-                    var fulluser = data;
-                    console.log(fulluser);
-                    var sessionuser = {
-                        userId: fulluser._id,
-                        userType: fulluser.userType,
-                        basic: fulluser.basic,
-                        image: fulluser.image,
-                        mobile: fulluser.mobile,
-                        email: fulluser.email,
+                if(!$scope.user.userId){
+                    UserService.fbSave($scope.user).success(function (data, status, headers) {
+                        var fulluser = data;
+                        console.log(fulluser);
+                        var sessionuser = {
+                            userId: fulluser._id,
+                            userType: fulluser.userType,
+                            basic: fulluser.basic,
+                            image: fulluser.image,
+                            mobile: fulluser.mobile,
+                            email: fulluser.email,
 
-                    };
-                    $cookies.putObject('sessionuser', sessionuser);
-                    
-                    $scope.user = sessionuser;
-                    $state.reload();
-                })
-                .error(function (data, status, header, config) {
-                    console.info("Error ");
-                });
+                        };
+                        $cookies.putObject('sessionuser', sessionuser);
+
+                        $scope.user = sessionuser;
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                }
+                
                 
                 
                 
