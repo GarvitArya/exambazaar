@@ -54,6 +54,9 @@ router.post('/fbSave', function(req, res) {
     var thisUser = req.body;
     
     var userId = thisUser.userId || null;
+    
+    console.log(thisUser);
+    console.log(userId);
     var thisFbUser = thisUser.fbuser;
     var facebookId = thisFbUser.facebook.id;
     var fbProperties = [];
@@ -101,7 +104,7 @@ router.post('/fbSave', function(req, res) {
                 
             }else{
                 console.log('User exists - linking FB');
-                console.log(JSON.stringify(thisUser));
+                console.log(JSON.stringify(existingUser));
                 existingUser.facebookId = thisFbUser.facebook.id;
                 
                 
@@ -135,6 +138,7 @@ router.post('/fbSave', function(req, res) {
                 
                 existingUser.save(function(err, existingUser) {
                     if (err) return console.error(err);
+                    console.log('User saved: ' + existingUser._id);
                     res.json(existingUser);
                 });
             }

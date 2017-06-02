@@ -6497,6 +6497,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $rootScope.pageTitle ='Search & Review Coaching Institutes';
             //console.log('Here');
             
+            $rootScope.userSet = false;
             $scope.isLoggedIn = null;
             $scope.fbLoginStatus = {};
            
@@ -6660,18 +6661,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
             };
 
-            
+            console.info($scope.user);
             
             $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
                 //console.log(newValue);
             if(newValue[0] == 'connected' && newValue[1]){
                 $scope.fbUser = true;
                 $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken; 
-                console.info($scope.user);
-                //console.info($scope.fbUser);
                 
-                if(!$scope.user.userId){
+                
+                console.info($scope.user.userId);
+                console.info($rootScope.userSet);
+                
+                if(!$scope.user.userId || !$rootScope.userSet){
                     UserService.fbSave($scope.user).success(function (data, status, headers) {
+                        $rootScope.userSet = true;
+                        //alert($rootScope.userSet);
                         var fulluser = data;
                         console.log(fulluser);
                         var sessionuser = {
@@ -6684,9 +6689,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
 
                         };
                         $cookies.putObject('sessionuser', sessionuser);
-
+                        
                         $scope.user = sessionuser;
-                        $state.reload();
+                        
+                        //$state.reload();
                     })
                     .error(function (data, status, header, config) {
                         console.info("Error ");
