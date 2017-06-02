@@ -10,7 +10,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .theme("default")
             .primaryPalette("teal");
         $facebookProvider.setAppId('1236747093103286');
-        $facebookProvider.setPermissions("public_profile,email"); //, user_education_history
+        $facebookProvider.setPermissions("public_profile,email, publish_actions"); //, user_education_history
         
         
     })
