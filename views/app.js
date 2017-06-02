@@ -6487,7 +6487,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]); 
     
     exambazaar.controller("socialLoginController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', '$window', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $window){
             
             
             $rootScope.pageTitle ='Search & Review Coaching Institutes';
@@ -6597,6 +6597,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     }
                 });
             };
+            
+            $scope.fbInvite2 = function(){
+                var link ="http://www.exambazaar.com/review";
+                var app_id = "1236747093103286";
+                $window.open('fb-messenger://share?link=' + encodeURIComponent(link) + '&app_id=' + encodeURIComponent(app_id));
+            };
+            
+            
+            
             
             function refresh() {
                 $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
