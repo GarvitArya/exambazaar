@@ -14,16 +14,21 @@
 <div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
-    <div flex layout="row" layout-align="start center" class="padded">
-        <div flex layout="column" layout-align="center center">
+    <div flex layout="row" layout-xs="column" layout-align="start start" class="padded">
+        <div flex layout="column" layout-align="start start" class="padding20 secondFont ">
             <span ng-if="user.basic">Welcome, {{user.basic.name}}</span>
             <!--<span>User Type: {{user.userType}}</span>-->
-            <span ng-if="user.basic">Last Login: {{user.logins[user.logins.length-1] | date: 'dd-MMM-yyyy HH:mm'}}</span>
+            <!--<span ng-if="user.basic">Last Login: {{user.logins[user.logins.length-1] | date: 'dd-MMM-yyyy HH:mm'}}</span>-->
+            <button type="button" ng-click="fblogin()" ng-show="!user.facebookId" class="btn btn-default navbar-btn">
+                Link FB
+            </button>
+            <span ng-if="user.facebookId">
+                FacebookId: {{user.facebookId}}
+            </span>
             <span ng-if="!user.basic">
             Name: 
             </span>
-        </div>
-        <div flex layout="column" layout-align="start start">
+            
             <div layout="column" layout-align="center center" ng-if="user.image">
                 <img id="pic" ng-src="{{user.image}}" />
                 <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">Edit</span>
@@ -35,19 +40,20 @@
                 
             </div>
         </div>
-        
-    </div>
-    <div flex layout="column" layout-align="start start" class="padded">
-        <span>Tell us where you live</span>
-        <div ng-if="user.latlng" class="width50">
-            <ng-map center="current-location"  zoom="14">
-                
-                <marker position="current-location"
-                      title="ABC"
-                      animation="Animation.DROP"
-                      centered="true"></marker>
-              </ng-map>
+        <div flex layout="column" layout-align="start start" class="padding20">
+            <span>Tell us where you live</span>
+            <div ng-if="user.latlng" class="width50">
+                <ng-map center="current-location"  zoom="14">
+
+                    <marker position="current-location"
+                          title="ABC"
+                          animation="Animation.DROP"
+                          centered="true"></marker>
+                  </ng-map>
+            </div>
+            
         </div>
         
     </div>
+    
 </div>

@@ -54,18 +54,19 @@
     }
     #pageHeaderFont{
         letter-spacing: 4px;
-        font-family: "Avenir";
+        font-family: 'Roboto', sans-serif;
         /*border-bottom: solid 3px;
         border-color: #20C39A;*/
         color: white;
-        text-shadow: 2px 4px 3px rgba(0,0,0,0.6);
+        text-shadow: 0 0 10px #383838;
     }
     #subheading{
-        letter-spacing: 2px;
-        margin-top: 40px;
-        font-family: "Avenir";
+        letter-spacing: 4px;
+        font-family: 'Roboto', sans-serif;
+        
         color: white;
-        text-shadow: 2px 4px 3px rgba(0,0,0,0.6);
+        text-shadow: 0 0 10px #383838;
+        max-width: 700px;
     }
     a:hover{
         text-decoration: none;
@@ -85,9 +86,10 @@
     }
     
     .landingButton{
-        color: #20C39A;
-        margin-top: 25px;
-        margin-bottom: 25px;
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+        border-radius: 10px;
     }
     #rightLogo{
         max-height: 50px;
@@ -111,16 +113,27 @@
     <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="landingPage">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" >
         <div layout="column" layout-align="center center" id="leftSection" class="">
-            <span class="text md-display-3 animated bounce" id="pageHeaderFont"><strong>SEARCH <span class="hidden-xs">&#8226;</span> COMPARE <span class="hidden-xs">&#8226;</span> APPLY</strong>
-            </span>
-            <span class="md-title animated fadeIn" id="subheading">
-                BROWSE THROUGH THOUSANDS OF <span class="text-primary">EXAM PREPARATION INSTITUTES</span> OFFERING <span class="text-primary">AMAZING DISCOUNTS</span> AND FIND THE ONE RIGHT FOR <span class="text-primary">YOU</span>
-            </span>
-            <a class="animated pulse landingButton " ui-sref="main">
-            <span class="text-primary md-display-4 landingButton"><!--<strong>START</strong>-->
+            <div layout="row" layout-xs="column" hide-xs class="md-display-2 " id="pageHeaderFont">
+                <strong>SEARCH <span class="hidden-xs">&#8226;</span> COMPARE <span class="hidden-xs">&#8226;</span> APPLY</strong>
+            </div>
+            <div  class=" marginT20" id="subheading">
+                <span class="md-title" hide-xs>
+                    Browse through thousands of Exam Preparation Institutes offering Amazing Discounts and Find the one Right For You!
+                </span>
+                <span class="font18" hide-gt-xs>
+                    Thousands of Coaching Institutes offering Amazing Discounts. Find the one Right For You!
+                </span>
+            </div>
+            <div class="marginT40">
+                <md-button type="submit" class="md-large md-start width100 mainFont font20" ui-sref="main">Search</md-button>
+            </div>
+            
+            <!--<a class="landingButton " ui-sref="main">
+                Search
+            <span class="text-primary md-display-4 landingButton">
             <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>    
             </span>
-            </a>
+            </a>-->
             
         </div>
         </div>
