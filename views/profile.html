@@ -10,25 +10,53 @@
         max-width: 120px;
         border-radius: 4px;
     }
+    #profileSection{
+        min-height: 40vh;
+    }
 </style>
 <div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
     <div flex layout="row" layout-xs="column" layout-align="start start" class="padded">
-        <div flex layout="column" layout-align="start start" class="padding20 secondFont ">
+        <div flex layout="column" layout-align="start start" class="padding20 secondFont margin5 gainsboroBorder" id="profileSection">
             <span ng-if="user.basic">Welcome, {{user.basic.name}}</span>
             <!--<span>User Type: {{user.userType}}</span>-->
             <!--<span ng-if="user.basic">Last Login: {{user.logins[user.logins.length-1] | date: 'dd-MMM-yyyy HH:mm'}}</span>-->
-            <button type="button" ng-click="fblogin()" ng-show="!user.facebookId" class="btn btn-default navbar-btn">
-                Link FB
-            </button>
-            <span ng-if="user.facebookId">
-                FacebookId: {{user.facebookId}}
+            <span ng-if="!user.facebookId" class="editFont marginB20">
+                You can link Facebook to your existing account to enable seamless logging in.
             </span>
+            
+            <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase" ng-show="!user.facebookId">
+                <span class="font14" hide-xs>
+                    Link with Facebook
+                </span>
+                <span class="font12" hide-gt-xs>
+                    Link with Facebook
+                </span>
+            </md-button>
+            
+            
+            <div layout="column" ng-if="user.facebookId" class="marginT10">
+                <div>
+                    Facebook Linked <i class="fa fa-facebook-official" aria-hidden="true"></i>
+                </div>
+                <div>
+                <span>
+                <i class="fa fa-check font20 text-primary bold" aria-hidden="true"></i>
+                </span>
+                <span class="editFont marginB20">
+                    You are already linked to your Facebook account (id: {{user.facebookId}}). Enjoy seamless logging in with Facebook to your Exambazaar account.
+                </span>
+                </div>
+                
+            </div>
             <span ng-if="!user.basic">
             Name: 
             </span>
             
+            
+        </div>
+        <div flex layout="column" layout-align="start start" class="padding20 secondFont margin5 gainsboroBorder" id="profileSection">
             <div layout="column" layout-align="center center" ng-if="user.image">
                 <img id="pic" ng-src="{{user.image}}" />
                 <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">Edit</span>
@@ -39,8 +67,9 @@
                 </div>
                 
             </div>
+            
         </div>
-        <div flex layout="column" layout-align="start start" class="padding20">
+        <!--<div flex layout="column" layout-align="start start" class="padding20">
             <span>Tell us where you live</span>
             <div ng-if="user.latlng" class="width50">
                 <ng-map center="current-location"  zoom="14">
@@ -53,7 +82,25 @@
             </div>
             
         </div>
-        
+        -->
     </div>
     
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
 </div>

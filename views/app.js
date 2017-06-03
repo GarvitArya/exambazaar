@@ -7007,8 +7007,9 @@ function getLatLng(thisData) {
     }]);       
         
     exambazaar.controller("profileController", 
-        [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'Upload', 'ImageService', 'UserService', 'ipService', '$facebook', function($scope, thisuser,$http,$state,$rootScope, $cookies, Upload, ImageService, UserService, ipService, $facebook){
+        [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'Upload', 'ImageService', 'UserService', 'ipService', '$facebook', '$mdDialog', '$timeout', function($scope, thisuser,$http,$state,$rootScope, $cookies, Upload, ImageService, UserService, ipService, $facebook, $mdDialog, $timeout){
         $scope.user = thisuser.data;
+            
         if($cookies.getObject('sessionuser')){
             var sessionuser = $cookies.getObject( 'sessionuser');
         }
@@ -7084,7 +7085,7 @@ function getLatLng(thisData) {
             }
          };
         
-        GMaps.geolocate({
+        /*GMaps.geolocate({
           success: function(position) {
             map.setCenter(position.coords.latitude, position.coords.longitude);
           },
@@ -7106,7 +7107,7 @@ function getLatLng(thisData) {
                 lat: $scope.map.markers[0].getPosition().lat(),
                 lng: $scope.map.markers[0].getPosition().lng()
             };
-            console.info(latlng);
+            //console.info(latlng);
             if(latlng.lat && latlng.lng && latlng.lat !='' && latlng.lng !=''){
                 
                 //console.info('Hi');
@@ -7123,7 +7124,7 @@ function getLatLng(thisData) {
                     console.info(status + " " + data);    
                 });
             }
-        });
+        });*/
 
             
         if($scope.user.basic)
@@ -7132,12 +7133,7 @@ function getLatLng(thisData) {
         $facebook.getLoginStatus().then(function(response) {
             $scope.fbLoginStatus = response;
         });
-        if($scope.user && $scope.user.userId){
-            $scope.loggedIn = true; 
-            refresh();
-        }else{
-            $scope.loggedIn = false;
-        }
+        
 
         $scope.fblogin = function() {
             //console.log('Loggin into fb');
@@ -7148,54 +7144,55 @@ function getLatLng(thisData) {
         };
             
         function refresh() {
-                $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
-                    function(response) {
-                        //console.log($scope.user);
-                        
-                        if($scope.user && $scope.user.userId){
-                            //link the user's fb id to the current user
-                            $scope.user.fbuser = {
-                                name: response.name,
-                                gender: response.gender,
-                                image: response.picture.data.url,
-                                email: response.email,
-                                facebook: {
-                                    link: response.link,
-                                    id: response.id,
-                                }
-                            };
-                            
-                            
-                        }else{
-                            $scope.user = {};
-                            $scope.user.fbuser = {
-                                name: response.name,
-                                gender: response.gender,
-                                image: response.picture.data.url,
-                                email: response.email,
-                                facebook: {
-                                    link: response.link,
-                                    id: response.id,
-                                }
-                            };
-                            //add a new user with facebook id
-                        }
-                        
-                    },
-                    function(err) {
-                        $scope.welcomeMsg = "Please log in";
-                        $scope.isLoggedIn = false;
-                });
-                $facebook.api("/me/permissions").then(
-                    function(response) {
-                        //console.log(response);
-                        $scope.permissions = response;
-                    },
-                    function(err) {
-                    $scope.welcomeMsg = "Permissions Error";
-                });
+            
+            $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
+                function(response) {
+                    //console.log($scope.user);
+
+                    if($scope.user && $scope.user._id){
+                        //link the user's fb id to the current user
+                        $scope.user.fbuser = {
+                            name: response.name,
+                            gender: response.gender,
+                            image: response.picture.data.url,
+                            email: response.email,
+                            facebook: {
+                                link: response.link,
+                                id: response.id,
+                            }
+                        };
+
+
+                    }else{
+                        $scope.user = {};
+                        $scope.user.fbuser = {
+                            name: response.name,
+                            gender: response.gender,
+                            image: response.picture.data.url,
+                            email: response.email,
+                            facebook: {
+                                link: response.link,
+                                id: response.id,
+                            }
+                        };
+                        //add a new user with facebook id
+                    }
+
+                },
+                function(err) {
+                    $scope.welcomeMsg = "Please log in";
+                    $scope.isLoggedIn = false;
+            });
+            $facebook.api("/me/permissions").then(
+                function(response) {
+                    //console.log(response);
+                    $scope.permissions = response;
+                },
+                function(err) {
+                $scope.welcomeMsg = "Permissions Error";
+            });
                 
-            };
+        };
 
             //console.info($scope.user);
             
@@ -7204,11 +7201,12 @@ function getLatLng(thisData) {
             if(newValue[0] == 'connected' && newValue[1]){
                 $scope.fbUser = true;
                 $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
-                if(!$scope.user.facebookId){
+                if(!$scope.user.facebookId || $scope.user.facebookId == ''){
+                    console.log($scope.user);
                     UserService.fbSave($scope.user).success(function (data, status, headers) {
                         
                         var fulluser = data;
-                        console.log(fulluser);
+                        //console.log(fulluser);
                         var sessionuser = {
                             userId: fulluser._id,
                             facebookId: fulluser.facebookId,
@@ -7222,21 +7220,9 @@ function getLatLng(thisData) {
                         $cookies.putObject('sessionuser', sessionuser);
                         $scope.user = sessionuser;
                         
-                        console.log(sessionuser.userType);
-                        
-                        if(sessionuser.userType =='Master'){  
-                            $state.go('master-dashboard', {masterId: sessionuser.userId});
-                        }
-                        if(sessionuser.userType =='Intern - Business Development'){
-                             $state.go('assigned', {userId: sessionuser.userId});
-                        }
-                        if(sessionuser.userType =='Student'){
-                            $state.reload();
-                        }
-                        if(sessionuser.userType =='Partner'){
-                            $state.go('partner-dashboard', {userId: sessionuser.userId});
-                        }
-                        
+                        //console.log(sessionuser.userType);
+                        //alert('Done');
+                        $scope.showSavedDialog();
                         
                         //$state.reload();
                     })
@@ -7252,7 +7238,17 @@ function getLatLng(thisData) {
 
             }, true);
                 
-            
+            $scope.showSavedDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#savedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
             
             
     }]);    

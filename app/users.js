@@ -53,9 +53,11 @@ router.post('/save', function(req, res) {
 router.post('/fbSave', function(req, res) {
     var thisUser = req.body;
     
-    var userId = thisUser.userId || null;
+    var userId = thisUser._id || null;
     
+    console.log("User is:");
     console.log(thisUser);
+    console.log("Userid is:");
     console.log(userId);
     var thisFbUser = thisUser.fbuser;
     var facebookId = thisFbUser.facebook.id;
@@ -99,6 +101,7 @@ router.post('/fbSave', function(req, res) {
                 console.log(JSON.stringify(existingUser));
                 existingUser.save(function(err, existingUser) {
                     if (err) return console.error(err);
+                    existingUser.logins = [];
                     res.json(existingUser);
                 });
                 
@@ -139,6 +142,7 @@ router.post('/fbSave', function(req, res) {
                 existingUser.save(function(err, existingUser) {
                     if (err) return console.error(err);
                     console.log('User saved: ' + existingUser._id);
+                    existingUser.logins = [];
                     res.json(existingUser);
                 });
             }
