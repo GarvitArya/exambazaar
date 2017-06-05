@@ -23,40 +23,40 @@
                 </span>
             </a>
         </div>
-        <div hide-xs layout="row" layout-align="start center" ng-if="user.userId" >
+        <div hide-xs layout="row" layout-align="start center" ng-if="sessionuser.userId" >
         <ul class="nav navbar-nav">
         <li class="dropdown paddingR20" >
             <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                <span ng-if="user.basic.name">{{user.basic.name}}</span>
-                <span ng-if="!user.basic.name">Get Started</span>
+                <span ng-if="sessionuser.basic.name">{{sessionuser.basic.name}}</span>
+                <span ng-if="!sessionuser.basic.name">Get Started</span>
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" >
                 <li>
-                <a ui-sref="profile({ userId:{{'user.userId'}} })">Profile</a>
+                <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })">Profile</a>
                 </li>
                 <li>
-                <a ng-if="user.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'user.userId'}} })">Your Shortlisted Institutes</a>
+                <a ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
                 </li>
                 <li>
-                <a ng-if="user.userType != 'Partner'" ui-sref="viewed({ userId:{{'user.userId'}} })">Your Viewed Institutes</a>
+                <a ng-if="sessionuser.userType != 'Partner'" ui-sref="viewed({ userId:{{'sessionuser.userId'}} })">Your Viewed Institutes</a>
                 </li>
-                <li ng-if="user.userType=='Intern - Business Development' || user.userType=='Master'">
-                    <a ui-sref="assigned({ userId:{{'user.userId'}} })">Assigned Institutes</a>
+                <li ng-if="sessionuser.userType=='Intern - Business Development' || sessionuser.userType=='Master'">
+                    <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>
                 </li>
-                <li ng-if="user.userType=='Intern - Business Development'">
-                    <a ui-sref="filled({ userId:{{'user.userId'}} })">Your Filled Institutes</a>
+                <li ng-if="sessionuser.userType=='Intern - Business Development'">
+                    <a ui-sref="filled({ userId:{{'sessionuser.userId'}} })">Your Filled Institutes</a>
                 </li>
-                <li ng-if="user.userType=='Master'">
-                    <a ui-sref="filledAll({ userId:{{'user.userId'}} })">Filled Institutes</a>
+                <li ng-if="sessionuser.userType=='Master'">
+                    <a ui-sref="filledAll({ userId:{{'sessionuser.userId'}} })">Filled Institutes</a>
                 </li>
               </ul>
         </li>
         </ul>
         </div>
         <div layout="row" layout-align="start center" class="">
-            <md-button ng-if="!user.userId" class="md-large md-green2" ng-click = "showLoginForm()">Log in</md-button>
-            <a ng-if="user.userId" href="/" ng-click="logout()">Logout</a>
+            <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-green2" ng-click = "showLoginForm()">Log in</md-button>
+            <a ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
         </div>
     </div>
 </nav>

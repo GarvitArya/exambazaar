@@ -4810,19 +4810,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
             });
         };//login ends
-        $scope.logout = function(){
+        /*$scope.logout = function(){
             $cookies.remove('sessionuser');
             $http.post('/logout');
             $state.reload();
             //$state.go("main", {}, {reload: true});
-        };
+        };*/
             
     }]);
     
     
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','geolocation','$geolocation', '$facebook', '$mdDialog', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,geolocation,$geolocation, $facebook, $mdDialog){
-        $scope.isCollapsed = true;
+        
         $rootScope.stateName = $state.current.name;
         if($rootScope.stateName == 'showGroup'){
             $rootScope.coachingGroupName = $stateParams.groupName;
@@ -4830,8 +4830,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
-            
-            
             if($state.current.name == 'showGroup'){
                 $mdDialog.show({
                   contentElement: '#loginDialog',
@@ -4895,13 +4893,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         })
         .error(function (data, status, header, config) {
             console.info();
-        });    
+        });
             
-        $scope.showLogin = false;
         $scope.showLoginForm = function(){
-            //$scope.showLogin = !$scope.showLogin;
-            $scope.isCollapsed = true;
-            //console.log($scope.isCollapsed);
             $scope.showLoginDialog();
             
         };
@@ -4925,14 +4919,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         });*/
             
         if($cookies.getObject('sessionuser')){
-            $scope.user = $cookies.getObject('sessionuser');
+            $scope.sessionuser = $cookies.getObject('sessionuser');
         }
             
         
             
         $scope.login = function(){
-            //alert('Here');
-            //console.log($scope.loginuser);
+            console.log('Login Initiated');
             
             $http.post('/login', {
               mobile: $scope.login.mobile,
@@ -4967,6 +4960,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         console.info('User type is: ' + user.userType);
                         
                         sessionuser = {
+                            _id: fulluser._id,
                             userId: fulluser._id,
                             masterId: fulluser._id,
                             facebookId: fulluser.facebookId,
@@ -4993,7 +4987,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         });*/
                             console.info(JSON.stringify(sessionuser));
                         }
-                        if($state.current.name == 'main' || $state.current.name == 'landing'){
+                        if($state.current.name == 'main'){
                             if(sessionuser.userType =='Master'){
                                 
                                 $state.go('master-dashboard', {masterId: sessionuser.masterId});
@@ -5026,46 +5020,44 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             })
             .error(function(){
-              // Error: authentication failed
-              $scope.login.password="";
-              $rootScope.message = 'Incorrect mobile or password';
-              $state.go('login');
+                // Error: authentication failed
+                $scope.login.password="";
+                $rootScope.message = 'Incorrect mobile or password';
+
+                $state.go('login');
             });
         };//login ends
         $scope.logout = function(){
-            $cookies.remove('sessionuser');
-            $scope.user = {};
-            $state.go('landing');
-            if($state.current.name == 'landing'){
-                $state.reload;
-            }
-            console.log('Logout done');
-            /*if($scope.user && $scope.user.facebookId){
-                $http.post('/logout');
+            //$http.post('/logout');
+            
+            
+            
+            
+            if($scope.sessionuser && $scope.sessionuser.facebookId){
+                console.log('Facebook Logout Initiated');
                 $cookies.remove('sessionuser');
-                $state.reload();
+                $scope.sessionuser = {};
                 $facebook.logout().then(function(response) {
-                    //alert('Here');
-                    
-                    
+                    alert('Facebook Logout done');
+                    $state.reload();
                 });
             }else{
-                
-                $http.post('/logout');
+                console.log('Normal Logout Inititated');
                 $cookies.remove('sessionuser');
+                $scope.sessionuser = {};
+                $http.post('/logout');
                 $state.reload();
-                
-                
-            }*/
+            }
         }; 
         
 
         $scope.fblogin = function() {
             //alert('FB login');
+            console.log('FB Login Initiated');
             $facebook.getLoginStatus().then(function(response) {
                 $scope.fbLoginStatus = response;
             });
-            if($scope.user && $scope.user.userId){
+            if($scope.sessionuser && $scope.sessionuser.userId){
                 $scope.loggedIn = true; 
                 refresh();
             }else{
@@ -5076,17 +5068,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $facebook.login().then(function(response) {
                 $scope.fbLoginStatus = response;
                 refresh();
-            });   
+            });
         };
             
         function refresh() {
             $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
             function(response) {
-                //console.log($scope.user);
 
-                if($scope.user && $scope.user.userId){
+                if($scope.sessionuser && $scope.sessionuser.userId){
                     //link the user's fb id to the current user
-                    $scope.user.fbuser = {
+                    $scope.sessionuser.fbuser = {
                         name: response.name,
                         gender: response.gender,
                         image: response.picture.data.url,
@@ -5097,14 +5088,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         }
                     };
 
-                    if(!$scope.user.facebookId){
-                    console.log("Calls being made to adde user");
-                    $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
-                    UserService.fbSave($scope.user).success(function (data, status, headers) {
+                    if(!$scope.sessionuser.facebookId){
+                    console.log("Calls being made to add user");
+                    $scope.sessionuser.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
+                    UserService.fbSave($scope.sessionuser).success(function (data, status, headers) {
                         $mdDialog.hide();
                         var fulluser = data;
                         console.log(fulluser);
                         var sessionuser = {
+                            _id: fulluser._id,
                             userId: fulluser._id,
                             facebookId: fulluser.facebookId,
                             userType: fulluser.userType,
@@ -5115,7 +5107,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
 
                         };
                         $cookies.putObject('sessionuser', sessionuser);
-                        $scope.user = sessionuser;
+                        $scope.sessionuser = sessionuser;
                         $mdDialog.hide();
                         console.log(sessionuser.userType);
 
@@ -5126,6 +5118,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                              $state.go('assigned', {userId: sessionuser.userId});
                         }
                         if(sessionuser.userType =='Student'){
+                            //console.log('Here');
                             $state.reload();
                         }
                         if(sessionuser.userType =='Partner'){
@@ -5141,8 +5134,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     }
 
                 }else{
-                    $scope.user = {};
-                    $scope.user.fbuser = {
+                    $scope.sessionuser = {};
+                    $scope.sessionuser.fbuser = {
                         name: response.name,
                         gender: response.gender,
                         image: response.picture.data.url,
@@ -5152,15 +5145,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                             id: response.id,
                         }
                     };
-                    if(!$scope.user.facebookId){
+                    if(!$scope.sessionuser.facebookId){
                     //add a new user with facebook id
                     console.log("Calls being made to adde user");
-                    $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
-                    UserService.fbSave($scope.user).success(function (data, status, headers) {
+                    $scope.sessionuser.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
+                    UserService.fbSave($scope.sessionuser).success(function (data, status, headers) {
                         $mdDialog.hide();
                         var fulluser = data;
                         console.log(fulluser);
                         var sessionuser = {
+                            _id: fulluser._id,
                             userId: fulluser._id,
                             facebookId: fulluser.facebookId,
                             userType: fulluser.userType,
@@ -5171,9 +5165,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
 
                         };
                         $cookies.putObject('sessionuser', sessionuser);
-                        $scope.user = sessionuser;
+                        $scope.sessionuser = sessionuser;
                         $mdDialog.hide();
-                        console.log(sessionuser.userType);
+                        //console.log(sessionuser.userType);
 
                         if(sessionuser.userType =='Master'){  
                             $state.go('master-dashboard', {masterId: sessionuser.userId});
@@ -5213,7 +5207,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
             };
 
-            $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
+            /*$scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
             
             if(newValue[0] == 'connected' && newValue[1]){
                 $scope.fbUser = true;
@@ -5222,7 +5216,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     
                 }  
             }
-            }, true);    
+            }, true);  */  
             
         $scope.signup = {
             name: '',
@@ -5296,6 +5290,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 var fulluser = data;
                 
                 var sessionuser = {
+                    _id: fulluser._id,
                     userId: fulluser._id,
                     masterId: fulluser._id,
                     facebookId: fulluser.facebookId,
@@ -5307,6 +5302,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     
                 };
                 $cookies.putObject('sessionuser', sessionuser);
+                $scope.sessionuser = sessionuser;
                 $mdDialog.hide();
                 $state.reload();
                 
@@ -5416,12 +5412,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
             
         }
-        $scope.logout = function(){
+        /*$scope.logout = function(){
             $scope.user = {};
             $cookies.remove('sessionuser');
             $state.reload();
             
-        };
+        };*/
     }]);
     
     exambazaar.controller("internshipController", 
@@ -7218,6 +7214,8 @@ function getLatLng(thisData) {
             
         if($cookies.getObject('sessionuser')){
             var sessionuser = $cookies.getObject( 'sessionuser');
+        }else{
+            $scope.showLoginForm();
         }
         
         //console.log($scope.user);    
@@ -7336,12 +7334,13 @@ function getLatLng(thisData) {
         if($scope.user.basic)
             $rootScope.title =$scope.user.basic.name;
             
-        $facebook.getLoginStatus().then(function(response) {
-            $scope.fbLoginStatus = response;
-        });
+        
         
 
         $scope.fblogin = function() {
+            $facebook.getLoginStatus().then(function(response) {
+                $scope.fbLoginStatus = response;
+            });
             //console.log('Loggin into fb');
             $facebook.login().then(function(response) {
                 $scope.fbLoginStatus = response;
@@ -7402,61 +7401,61 @@ function getLatLng(thisData) {
 
             //console.info($scope.user);
             
-            $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
-                //console.log(newValue);
-            if(newValue[0] == 'connected' && newValue[1]){
-                $scope.fbUser = true;
-                $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
-                if(!$scope.user.facebookId || $scope.user.facebookId == ''){
-                    console.log($scope.user);
-                    UserService.fbSave($scope.user).success(function (data, status, headers) {
-                        
-                        var fulluser = data;
-                        //console.log(fulluser);
-                        var sessionuser = {
-                            userId: fulluser._id,
-                            facebookId: fulluser.facebookId,
-                            userType: fulluser.userType,
-                            basic: fulluser.basic,
-                            image: fulluser.image,
-                            mobile: fulluser.mobile,
-                            email: fulluser.email,
+        $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
+            //console.log(newValue);
+        if(newValue[0] == 'connected' && newValue[1]){
+            $scope.fbUser = true;
+            $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
+            if(!$scope.user.facebookId || $scope.user.facebookId == ''){
+                console.log($scope.user);
+                UserService.fbSave($scope.user).success(function (data, status, headers) {
 
-                        };
-                        $cookies.putObject('sessionuser', sessionuser);
-                        $scope.user = sessionuser;
-                        
-                        //console.log(sessionuser.userType);
-                        //alert('Done');
-                        $scope.showSavedDialog();
-                        
-                        //$state.reload();
-                    })
-                    .error(function (data, status, header, config) {
-                        console.info("Error ");
-                    });
-                }
-                
-                
-                
-                
+                    var fulluser = data;
+                    //console.log(fulluser);
+                    var sessionuser = {
+                        userId: fulluser._id,
+                        facebookId: fulluser.facebookId,
+                        userType: fulluser.userType,
+                        basic: fulluser.basic,
+                        image: fulluser.image,
+                        mobile: fulluser.mobile,
+                        email: fulluser.email,
+
+                    };
+                    $cookies.putObject('sessionuser', sessionuser);
+                    $scope.user = sessionuser;
+
+                    //console.log(sessionuser.userType);
+                    //alert('Done');
+                    $scope.showSavedDialog();
+
+                    //$state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
             }
 
-            }, true);
-                
-            $scope.showSavedDialog = function(ev) {
-            $mdDialog.show({
-                  contentElement: '#savedDialog',
-                  parent: angular.element(document.body),
-                  targetEvent: ev,
-                  clickOutsideToClose: true
-                });
-                $timeout(function(){
-                    $mdDialog.cancel();
-                },1000)
-            };
+
+
+
+        }
+
+        }, true);
+
+        $scope.showSavedDialog = function(ev) {
+        $mdDialog.show({
+              contentElement: '#savedDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
             
-            
+        console.log('Profile Controller finished');    
     }]);    
         
     exambazaar.controller("addAwsCredentialController", 

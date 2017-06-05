@@ -17,7 +17,7 @@
 <div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
-    <div flex layout="row" layout-xs="column" layout-align="start start" class="padded">
+    <div flex layout="row" layout-xs="column" layout-align="start start" class="padded" ng-if="user">
         <div flex layout="column" layout-align="start start" class="padding20 secondFont margin5 gainsboroBorder" id="profileSection">
             <span ng-if="user.basic">Welcome, {{user.basic.name}}</span>
             <!--<span>User Type: {{user.userType}}</span>-->
@@ -84,7 +84,7 @@
         </div>
         -->
     </div>
-    
+    {{sessionuser}}
 </div>
 
 <div style="visibility: hidden">    
