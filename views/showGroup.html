@@ -513,17 +513,18 @@
 </div>
 <!-- Claim the page section -->
 <div layout="column" layout-xs="column" class="whiteBackground mainContent" ng-cloak>
-    <div layout="row" layout-align="start center" id="breadcrumb" hide-xs>
+    <div layout="row" layout-align="start center" id="breadcrumb" class="marginTB5" hide-xs>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8  editFont textDarkGrey" id="paneMiddle">
-            <small>
-            <span><a ui-sref="main">EXAMBAZAAR</a></span>
-            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
-            <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
-            <span> > <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{city | uppercase}}</a></span>
-            <span> > {{provider.name | uppercase}}</span>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8  editFont text-primary" id="paneMiddle">
+            <small class="">
+            <span><a ui-sref="main">{{category.displayname | uppercase}}</a></span>
+            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a></span>
+            <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{city | uppercase}}</a></span>
+            <span> > <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{provider.name | uppercase}}</a></span>
             </small>
+            
+            
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>

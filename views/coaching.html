@@ -211,10 +211,9 @@
         <div class="row" hide-xs>
             <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 editFont text-primary" id="breadcrumb">
             <small>
-            <span><a ui-sref="main">EXAMBAZAAR</a></span>
-            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
-            <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
-            <span> > {{city | uppercase}}</span>
+            <span><a ui-sref="main">{{category.displayname | uppercase}}</a></span>
+            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a></span>
+            <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{city | uppercase}}</a></span>
             </small>
             </div>
         </div>
