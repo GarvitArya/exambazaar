@@ -45,9 +45,10 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="dropzone.css">
     <link rel="stylesheet" href="breadcrumb.css">
+    <link rel="stylesheet" href="ui-bootstrap-csp.css">
     
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
-    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Gudea|Quattrocento+Sans|Rambla|Roboto|Roboto+Condensed|Scada|Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Gudea|Quattrocento+Sans|Rambla|Roboto:100,300,400|Roboto+Condensed|Scada|Lato" rel="stylesheet">
     
     <!--
     font-family: 'Roboto', sans-serif;
@@ -59,6 +60,22 @@
     font-family: 'Rambla', sans-serif;
     -->
     <style>
+        .navbar.transparent {
+            border-width: 0px;
+            -webkit-box-shadow: 0px 0px;
+            box-shadow: 0px 0px;
+            background-color: rgba(0,0,0,0.0);
+            background-image: -webkit-gradient(linear, 50.00% 0.00%, 50.00% 100.00%, color-stop( 0% , rgba(0,0,0,0.00)),color-stop( 100% , rgba(0,0,0,0.00)));
+            background-image: -webkit-linear-gradient(270deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+            background-image: linear-gradient(180deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+        }
+        .navbar-brand{
+            font-family: "Avenir";
+            letter-spacing: 2px;
+            font-weight: 900;
+        }
+        
+        
         h1{
             margin: 0px;
             padding: 0px;
@@ -83,15 +100,15 @@
         .tab-caption {
         position: absolute;
         /* width: 100%; */ /* (remove this) width before rotation! */
-        top: 50%;
-        height: 2px;  /* actual text will overlap! */
-        margin-top: -1px;  /* subtract half the height */
-        line-height: 0px;  /* centre the text on the base line */
-        text-align: center;
-        left: 50%; /* added */
-        transform: translateX(-50%) rotate(90deg); /* added translateX */
-        white-space: nowrap;
-    }
+            top: 50%;
+            height: 2px;  /* actual text will overlap! */
+            margin-top: -1px;  /* subtract half the height */
+            line-height: 0px;  /* centre the text on the base line */
+            text-align: center;
+            left: 50%; /* added */
+            transform: translateX(-50%) rotate(90deg); /* added translateX */
+            white-space: nowrap;
+        }
         #userPic{
             max-height: 65px;
         }
@@ -293,9 +310,6 @@
             color: black;
             border: 1px solid gainsboro;
             font-size:12px;
-            
-            
-            
         }
         
         .black-chrome-gradient {background: -webkit-linear-gradient(90deg, #1C1C1C 10%, #494949 90%); background: -moz-linear-gradient(90deg, #1C1C1C 10%, #494949 90%); background: linear-gradient(90deg, #1C1C1C 10%, #494949 90%);}
@@ -369,7 +383,6 @@
             background: rgba(0,0,0,0.7);
             border-radius: 30px;
             
-            
         }
         .md-button.md-start:hover{
             
@@ -399,11 +412,26 @@
             background: #20C39A;
             color: white;
         }
-        .md-button.md-green2:hover{
+        .md-button.md-green2:hover, .md-button.md-green2:focus, .md-button.md-green2:active{
             margin: 0px;
             padding: 0px;
             border: 2px solid #20C39A;
             background: #20C39A;
+            color: white;
+            box-shadow: 0 0 5px #20C39A;
+        }
+        .md-button.md-black{
+            margin: 0px;
+            padding: 0px;
+            border: 2px solid black;
+            background: black;
+            color: white;
+        }
+        .md-button.md-black:hover, .md-button.md-black:focus, .md-button.md-black:active{
+            margin: 0px;
+            padding: 0px;
+            border: 2px solid black;
+            background: black;
             color: white;
             box-shadow: 0 0 5px #20C39A;
         }
@@ -583,9 +611,17 @@
             padding-top: 20px;
             padding-bottom: 20px;
         }
+        .paddingLR10{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
         .paddingLR20{
             padding-left: 20px;
             padding-right: 20px;
+        }
+        .paddingL20R40{
+            padding-left: 20px;
+            padding-right: 40px;
         }
         .paddingLR30{
             padding-left: 30px;
@@ -665,6 +701,9 @@
         }
         .paddingR10{
             padding-right: 10px;
+        }
+        .paddingR20{
+            padding-right: 20px;
         }
         .paddingLeft10{
             padding-left: 10px;
@@ -855,6 +894,9 @@
         a, a:hover, a:active, a:visited, a:focus {
             text-decoration:none;
         }
+        #linkFont{
+            color:#333333;
+        }
         #fullPageContent{
             min-height: 100vh;
         }
@@ -1018,10 +1060,17 @@
           background: #E74B37;
         }
         .md-dialog-container { height: 100vh !important; top: 0 !important; position: fixed !important; }
-        .md-backdrop.md-opaque.md-default-theme {
-            background-color: red;
-            position:fixed;
+        
+        
+        .navbar.navbar-default .navbar-collapse {
+            border: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
         }
+        
+        
+        
+        
     </style>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
@@ -1142,7 +1191,7 @@
         </div>
         
         <div class="marginT20  " ng-if="signupMode">
-        <form  ng-submit="signup()" ng-show="!sessionuser" name="signupForm">
+        <form  ng-submit="signupUser()" ng-show="!sessionuser" name="signupForm">
         <div layout="column" class="">
             <div class="paddingTB5 ">
             <input type="text" placeholder="Name" class="width100" ng-model="signup.name" id="loginInput" required>
@@ -1150,19 +1199,29 @@
             <div class="paddingTB5 ">
             <input type="email" placeholder="Email" class="width100" ng-model="signup.email" id="loginInput" required>
             </div>
-            <div layout="row" class="paddingTB5 ">
-            <div flex>
-            <input type="text" placeholder="Mobile" class="width100" ng-model="signup.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput" required>
-            </div>
-            <div flex ="50" ng-if="showVerifyOTP">
-                <md-button  class="md-green md-small font10" ng-click="verifyOTP()" class="width25" ng-if="">Verify</md-button>
+            <div layout="row"  class="paddingTB5 ">
+            <div layout="column" flex>
+                <input type="text" placeholder="Mobile" class="width100" ng-model="signup.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput" required>
                 
-                <input type="text" placeholder="4 digit OTP" class="width100" ng-model="signup.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits id="loginInput" required>
+            </div>
+            <div layout="row" layout-align="end center" flex-gt-xs="50" flex-xs="40" ng-if="showVerifyOTP">
+                <md-button class="md-green2 md-small font10 width80" ng-click="verifyPhone()" ng-if="!OTPsent">Verify by OTP</md-button>
+                
+                <input ng-if="OTPsent && !OTPVerified" type="text" placeholder="4 digit OTP" class="width80" ng-model="signup.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits id="loginInput" required >
+                
+                
+                <div ng-if="OTPsent && OTPVerified" class="text-primary font20 bold">
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                </div>
             </div>
             </div>
+            <span ng-if="userExistMessage" class="danger font8 text-right">{{userExistMessage}}</span>
+            <span ng-if="OTPmessage" class="danger font8 text-right">{{OTPmessage}}</span>
+            <span ng-if="OTPsent && !OTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="verifyPhone()" id="linkFont">Resend it</a></span>
+            
             <div class="paddingTB5">
             <input type="password" placeholder="Password" class="width100" ng-model="signup.password" id="loginInput" ng-minlength="6" required>
-            <div ng-messages="signupForm.signup.password.$error" class="font8 text-right">
+            <div ng-messages="signupForm.signup.password.$error" class="danger font8 text-right">
                 Password should be at least 6 characters long
             </div>
             </div>
@@ -1267,6 +1326,8 @@
     <script src="ngtweet.min.js"></script>
     <script src="gmaps.js"></script>
     <script src="ngFacebook.js"></script>
+    <script src="ui-bootstrap.js"></script>
+    <script src="ui-bootstrap-tpls.js"></script>
     
     
     <script type="text/javascript" src="app.js"></script>

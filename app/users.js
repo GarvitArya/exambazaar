@@ -20,34 +20,66 @@ var bcrypt   = require('bcrypt-nodejs');
 //to add a user
 router.post('/save', function(req, res) {
     var thisUser = req.body;
-    var mobileNumber = thisUser.contact.mobile;
     console.log("User is: " + JSON.stringify(thisUser));
-    var existingUser = user.findOne({ 'mobile': mobileNumber },function (err, existingUser) {
-        if(existingUser){
-            res.json(existingUser);
-        }else{
-            var hash = bcrypt.hashSync(thisUser.password, bcrypt.genSaltSync(10));
-            var this_user = new user({
-                userType : thisUser.userType,
-                password : hash,
-                
-                mobile: thisUser.contact.mobile,
-                email: thisUser.contact.email,
-                verified: thisUser.verified
-            });
-            if(thisUser.partner){
-                this_user.partner = [thisUser.partner];
+    var mobileNumber;
+    var userEmail;
+    
+    if(thisUser.contact && thisUser.contact.mobile){
+        mobileNumber = thisUser.contact.mobile;
+    }
+    if(thisUser && thisUser.mobile){
+        //console.log('Here');
+        mobileNumber = thisUser.mobile;
+    }
+    if(thisUser.contact && thisUser.contact.email){
+        mobileNumber = thisUser.contact.email;
+    }
+    if(thisUser && thisUser.email){
+        userEmail = thisUser.email;
+    }
+    //console.log(mobileNumber);
+    
+    
+    if(mobileNumber){
+        var existingUser = user.findOne({ 'mobile': mobileNumber },function (err, existingUser) {
+            if(existingUser){
+                console.log('I am existing');
+                res.json(existingUser);
+            }else{
+                console.log('I do not exist');
+                var hash = bcrypt.hashSync(thisUser.password, bcrypt.genSaltSync(10));
+                var this_user = new user({
+                    userType : thisUser.userType,
+                    password : hash,
+                    
+                    mobile: mobileNumber,
+                    email: userEmail,
+                    verified: thisUser.verified
+                });
+                if(thisUser.name){
+                    console.log('Adding Name ' +thisUser.name );
+                    this_user.basic ={
+                        name: thisUser.name
+                    }
+                }
+                if(thisUser.partner){
+                    this_user.partner = [thisUser.partner];
+                }
+                if(thisUser.basic){
+                    this_user.basic = thisUser.basic;
+                }
+                console.log(JSON.stringify(this_user));
+                this_user.save(function(err, this_user) {
+                    if (err) return console.error(err);
+                    console.log(this_user._id);
+                    res.json(this_user);
+                });
             }
-            if(thisUser.basic){
-                this_user.basic = thisUser.basic;
-            }
-            this_user.save(function(err, this_user) {
-                if (err) return console.error(err);
-                res.json(this_user);
-            });
-        }
-        
-    });
+
+        });
+    }else{
+        res.json([]);
+    }
 });
 
 router.post('/fbSave', function(req, res) {

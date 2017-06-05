@@ -1,218 +1,165 @@
 <style>
     #logo{
         color:black;
-        
     }
     #logo:hover{
-        color:white;
+        color:#20C39A;
     }
-    #headerBar{
-        margin-left: 25px;
-        margin-right: 25px;
-    }
-    .navbar.transparent {
-        border-width: 0px;
-        -webkit-box-shadow: 0px 0px;
-        box-shadow: 0px 0px;
-        background-color: rgba(0,0,0,0.0);
-        background-image: -webkit-gradient(linear, 50.00% 0.00%, 50.00% 100.00%, color-stop( 0% , rgba(0,0,0,0.00)),color-stop( 100% , rgba(0,0,0,0.00)));
-        background-image: -webkit-linear-gradient(270deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
-        background-image: linear-gradient(180deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+    a, a:hover, a:active, a:visited, a:focus, a:visited, a:visited:hover, a:link, a:link:hover{
+        color: #696969;
+        text-decoration:none;
     }
     .navbar {
         background-color: #20C39A;
     }
-    .navbar-brand{
-        font-family: "Avenir";
-        letter-spacing: 4px;
-        font-weight: 900;
-    }
-    
-    button{
-        background-color: black;
-        font-family: "Open Sans";
-        font-weight: bold;
-        color:white;
-    }
-    #headerInput{
-        background-color : white;
-        font-size:12px;
-        font-family: "Open Sans";
+    .navbar-default .navbar-nav > li > a, .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+        color: #696969;
     }
 </style>
 
-<!--<div class="alert alert-danger alert-dismissible" role="alert" ng-if="message !=''">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>{{message}}</strong>
-</div>-->
-<!--transparent-->
 <nav class="navbar navbar-default navbar-fixed-top nav-justified" role="navigation" id="mainNav">
-    
-<div class="row" id="headerBar">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        </button>
-
+    <div layout="row" layout-align="start center" class="paddingR20" >
+        <div layout="row" layout-align="start center" flex>
         <a class="navbar-brand" href="/">
             <span class="" id="logo">
                 EXAMBAZAAR
             </span>
         </a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-        <div class="navbar-right">
-        <form class="navbar-form animated fadeIn" ng-submit="login()" ng-show="!sessionuser && showLogin" name="loginForm">
-        <div class="form-group">
-        <input type="text" placeholder="Mobile" class="form-control text-center" ng-model="login.mobile" size="15" id="headerInput" focus-me="showLogin" only-digits limit-to="10" ng-minlength="10" ng-maxlength="10">
-        </div>
-        <div class="form-group">
-        <input type="password" placeholder="Password" class="form-control text-center" ng-model="login.password" size="15" id="headerInput">
-        </div>
-        <button type="submit" class="btn" ng-disabled="loginForm.$invalid">Log in</button>
-        <button type="submit" class="btn btn-primary" ui-sref="signup">Sign up</button>
-        </form>
-        <form class="navbar-form" ng-show="!showLogin">
-            <button type="submit" class="btn" ng-click = "showLoginForm()" ng-show="!showLogin && !sessionuser">Log in</button>
-        </form>
+        <div hide-xs layout="row" layout-align="start center" flex>
             
-        </div>
-        <ul class="nav navbar-nav navbar-right" ng-show="sessionuser">
-            
-        <li><a href="#/" ng-click="logout()">Logout</a></li>
-        </ul>
-        <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Partner'">
-            <li><a ui-sref="partner-dashboard({ userId:{{'sessionuser.userId'}} })">Home</a></li>
-            <li><a ui-sref="claim({ coachingId:{{'sessionuser.partner[0]'}} })">Edit Listing</a></li>
-        </ul>
-        <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
-        <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sandbox<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a ui-sref="search">Quick Search</a></li>
-            <li><a ui-sref="sandbox2({ masterId:{{'sessionuser.userId'}}, cityName:'New Delhi' } )">Show on Map</a></li>
-            <li><a ui-sref="eligibility({ userId:{{'sessionuser.userId'}}} )">Eligibility</a></li>
-            <li><a ui-sref="socialLogin">Social Login</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Send Email</a></li>
-            <li><a ui-sref="addMaster({ masterId:{{'sessionuser.userId'}} })">Add Master User</a></li>
-            <li><a ui-sref="addIntern({ userId:{{'sessionuser.userId'}} })">Add Intern User</a></li>
-            <li><a ui-sref="addExam">Add Exam</a></li>
-            <li><a ui-sref="addEligibility">Add Eligibility</a></li>
-            <li><a ui-sref="addStream">Add Stream</a></li>
-            <li><a ui-sref="addLocation">Add Location</a></li>
-            <li><a ui-sref="addMediaTag">Add Media Tag</a></li>
-            <li><a ui-sref="addAwsCredential({ masterId:{{'sessionuser.userId'}} })">Add AWS Credential</a></li>
-            <li><a ui-sref="addSendGridCredential({ masterId:{{'sessionuser.userId'}} })">Add SendGrid Credential</a></li>
-            <li><a ui-sref="providersWithAreas">Provider Name Change</a></li>
-            <li><a ui-sref="sitemap">Generate Sitemap</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a ui-sref="targetStudyProviders({ city:'New Delhi' })">Default Dataset</a></li>
-            <li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>
-            <li><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
-            <li><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
-            <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
-            <li><a ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a></li>
-          </ul>
-        </li>
-        
-        </ul>
-        
-        <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Intern - Business Development'">
-        <li><a ui-sref="intern-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li ng-if="sessionuser.userId == '58c8e895bbaebf3560545f19' || sessionuser.userId == '59085f0fc7289d0011d6ea8c' || sessionuser.userId == '58e5fdd86c9be422e4820d7e'"><a ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Send Email</a></li>
-            <li><a ui-sref="addExam">Add Exam</a></li>
-            <li><a ui-sref="addStream">Add Stream</a></li>
-            <li><a ui-sref="addLocation">Add Location</a></li>
-            <li><a ui-sref="addMediaTag">Add Media Tag</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sandbox<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a ui-sref="search">Quick Search</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a ui-sref="targetStudyProviders({ city:'New Delhi' })">Default Dataset</a></li>
-            <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
-            <li ng-if="sessionuser.userId == '5922d8dbe20d000011b025e5'"><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
-            <li ng-if="sessionuser.userId == '5922d8dbe20d000011b025e5'"><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
-            <!--<li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>-->
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Your Work<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li ng-if="sessionuser.userType=='Intern - Business Development'">
-                <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>
-                <a ui-sref="assignedToVerify({ userId:{{'sessionuser.userId'}} })">To Verify Institutes</a>
-                <a ui-sref="assignedToAddContactInfo({ userId:{{'sessionuser.userId'}} })">To Add Contact Info Institutes</a>
+            <ul class="nav navbar-nav" ng-if="user.userType=='Partner'">
+                <li><a ui-sref="partner-dashboard({ userId:{{'user.userId'}} })">Home</a></li>
+                <li><a ui-sref="claim({ coachingId:{{'user.partner[0]'}} })">Edit Listing</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav" ng-if="user.userType=='Master'">
+                <li><a ui-sref="master-dashboard({ masterId:{{'user.userId'}} })">Home</a></li>
+                <li class="dropdown">
+                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sandbox<span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a ui-sref="search">Quick Search</a></li>
+                    <li><a ui-sref="sandbox2({ masterId:{{'user.userId'}}, cityName:'New Delhi' } )">Show on Map</a></li>
+                    <li><a ui-sref="eligibility({ userId:{{'user.userId'}}} )">Eligibility</a></li>
+                    <li><a ui-sref="socialLogin">Social Login</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a ui-sref="sendEmail({ userId:{{'user.userId'}} })">Send Email</a></li>
+                    <li><a ui-sref="addMaster({ masterId:{{'user.userId'}} })">Add Master User</a></li>
+                    <li><a ui-sref="addIntern({ userId:{{'user.userId'}} })">Add Intern User</a></li>
+                    <li><a ui-sref="group({ userId:{{'user.userId'}} })">Group</a></li>
+                    <li><a ui-sref="addExam">Add Exam</a></li>
+                    <li><a ui-sref="addEligibility">Add Eligibility</a></li>
+                    <li><a ui-sref="addStream">Add Stream</a></li>
+                    <li><a ui-sref="addLocation">Add Location</a></li>
+                    <li><a ui-sref="addMediaTag">Add Media Tag</a></li>
+                    <li><a ui-sref="addGroup">Add Group</a></li>
+                    <li><a ui-sref="addAwsCredential({ masterId:{{'user.userId'}} })">Add AWS Credential</a></li>
+                    <li><a ui-sref="addSendGridCredential({ masterId:{{'user.userId'}} })">Add SendGrid Credential</a></li>
+                    <li><a ui-sref="providersWithAreas">Provider Name Change</a></li>
+                    <li><a ui-sref="sitemap">Generate Sitemap</a></li>
+                    <li><a ui-sref="checkLogo({ userId:{{'user.userId'}}, pageNumber:'1' } )">Check Logos</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a ui-sref="targetStudyProviders({ city:'New Delhi' })">Default Dataset</a></li>
+                    <li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>
+                    <li><a ui-sref="addInstitute({ userId:{{'user.userId'}} })">Add Coaching</a></li>
+                    <li><a ui-sref="bulkDisable({ userId:{{'user.userId'}} })">Bulk Disable</a></li>
+                    <li><a ui-sref="coachingGroup({ userId:{{'user.userId'}} })">Coaching Group</a></li>
+                    <li><a ui-sref="suggestCoaching({ userId:{{'user.userId'}} })">Suggest Coaching Group</a></li>
+                  </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav" ng-if="user.userType=='Intern - Business Development'">
+            <li><a ui-sref="targetStudyProviders({ city:'New Delhi' })">Home</a></li>
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li ng-if="user.userId == '58c8e895bbaebf3560545f19' || user.userId == '59085f0fc7289d0011d6ea8c' || user.userId == '58e5fdd86c9be422e4820d7e'"><a ui-sref="sendEmail({ userId:{{'user.userId'}} })">Send Email</a></li>  
+                <li><a ui-sref="group({ userId:{{'user.userId'}} })">Group</a></li>
+                <li><a ui-sref="addExam">Add Exam</a></li>
+                <li><a ui-sref="addStream">Add Stream</a></li>
+                <li><a ui-sref="addLocation">Add Location</a></li>
+                <li><a ui-sref="addMediaTag">Add Media Tag</a></li>
+              </ul>
             </li>
-          </ul>
-        </li> 
-        </ul>
-        
-        
-        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sandbox<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a ui-sref="search">Quick Search</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a ui-sref="targetStudyProviders({ city:'New Delhi' })">Default Dataset</a></li>
+                <li><a ui-sref="coachingGroup({ userId:{{'user.userId'}} })">Coaching Group</a></li>
+                <li ng-if="user.userId == '5922d8dbe20d000011b025e5'"><a ui-sref="addInstitute({ userId:{{'user.userId'}} })">Add Coaching</a></li>
+                <li ng-if="user.userId == '5922d8dbe20d000011b025e5'"><a ui-sref="bulkDisable({ userId:{{'user.userId'}} })">Bulk Disable</a></li>
+
+                <!--<li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>-->
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Your Work<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li ng-if="user.userType=='Intern - Business Development'">
+                    <a ui-sref="assigned({ userId:{{'user.userId'}} })">Assigned Institutes</a>
+                    <a ui-sref="assignedToVerify({ userId:{{'user.userId'}} })">To Verify Institutes</a>
+                    <a ui-sref="assignedToAddContactInfo({ userId:{{'user.userId'}} })">To Add Contact Info Institutes</a>
+                    <a ui-sref="suggestCoaching({ userId:{{'user.userId'}} })">Suggest Coaching Group</a>
+
+                </li>
+              </ul>
+            </li> 
+            </ul>
+        </div>
+        </div>
+        <div hide-xs layout="row" layout-align="start center" ng-if="user.userId" >
+        <ul class="nav navbar-nav">
         <li>
-            <span ng-if="sessionuser.image">
-                <img ng-src="{{sessionuser.image}}" id="userPic"/>
+            <span ng-if="user.image">
+                <img ng-src="{{user.image}}" id="userPic"/>
             </span>
-        </li>       
-        <li class="dropdown" ng-if="sessionuser">
-        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <span ng-if="sessionuser.basic.name">{{sessionuser.basic.name}}</span>
-            <span ng-if="!sessionuser.basic.name">Get Started</span>
-            <span class="badge">
-            {{notification.unread.length}}
-            </span>
-            <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu" >
-            <li>
-            <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })">Profile</a>
-            </li>
-            <li>
-            <a ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
-            </li>
-            <li>
-            <a ng-if="sessionuser.userType != 'Partner'" ui-sref="viewed({ userId:{{'sessionuser.userId'}} })">Your Viewed Institutes</a>
-            </li>
-            <li ng-if="sessionuser.userType=='Intern - Business Development' || sessionuser.userType=='Master'">
-                <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>
-            </li>
-            <li ng-if="sessionuser.userType=='Intern - Business Development'">
-                <a ui-sref="filled({ userId:{{'sessionuser.userId'}} })">Your Filled Institutes</a>
-            </li>
-            <li ng-if="sessionuser.userType=='Master'">
-                <a ui-sref="filledAll({ userId:{{'sessionuser.userId'}} })">Filled Institutes</a>
-            </li>
-            <li><a ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a></li>
-          </ul>
-        </li>    
-        
+        </li>
+        <li class="dropdown paddingR20" >
+            <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <span ng-if="user.basic.name">{{user.basic.name}}</span>
+                <span ng-if="!user.basic.name">Get Started</span>
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" >
+                <li>
+                <a ui-sref="profile({ userId:{{'user.userId'}} })">Profile</a>
+                </li>
+                <li>
+                <a ng-if="user.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'user.userId'}} })">Your Shortlisted Institutes</a>
+                </li>
+                <li>
+                <a ng-if="user.userType != 'Partner'" ui-sref="viewed({ userId:{{'user.userId'}} })">Your Viewed Institutes</a>
+                </li>
+                <li ng-if="user.userType=='Intern - Business Development' || user.userType=='Master'">
+                    <a ui-sref="assigned({ userId:{{'user.userId'}} })">Assigned Institutes</a>
+                </li>
+                <li ng-if="user.userType=='Intern - Business Development'">
+                    <a ui-sref="filled({ userId:{{'user.userId'}} })">Your Filled Institutes</a>
+                </li>
+                <li ng-if="user.userType=='Master'">
+                    <a ui-sref="filledAll({ userId:{{'user.userId'}} })">Filled Institutes</a>
+                </li>
+              </ul>
+        </li>
         </ul>
-        
-        
-        
-    </div><!--/.nav-collapse -->
-</div><!--/.container-fluid -->
+        </div>
+        <div layout="row" layout-align="start center" class="">
+            <md-button ng-if="!user.userId" class="md-large md-black tolowercase" ng-click = "showLoginForm()">Log in</md-button>
+            <a ng-if="user.userId" href="/" ng-click="logout()">Logout</a>
+        </div>
+    </div>
 </nav>
