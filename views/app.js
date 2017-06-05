@@ -4959,6 +4959,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 UserService.getUser(user._id).success(function (data, status, headers) {
                     $scope.hideLoginDialog();
                     var fulluser = data;
+                    console.log(fulluser);
                     var sessionuser;
                     //user.verified="true";
                     //console.log(user.verified);
@@ -5057,17 +5058,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
             }*/
         }; 
-        $facebook.getLoginStatus().then(function(response) {
-            $scope.fbLoginStatus = response;
-        });
-        if($scope.user && $scope.user.userId){
-            $scope.loggedIn = true; 
-            refresh();
-        }else{
-            $scope.loggedIn = false;
-        }
+        
 
         $scope.fblogin = function() {
+            //alert('FB login');
+            $facebook.getLoginStatus().then(function(response) {
+                $scope.fbLoginStatus = response;
+            });
+            if($scope.user && $scope.user.userId){
+                $scope.loggedIn = true; 
+                refresh();
+            }else{
+                $scope.loggedIn = false;
+            }
+            
             //console.log('Loggin into fb');
             $facebook.login().then(function(response) {
                 $scope.fbLoginStatus = response;
