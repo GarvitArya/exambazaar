@@ -9,6 +9,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $mdThemingProvider
             .theme("default")
             .primaryPalette("teal");
+        
         $facebookProvider.setAppId('1236747093103286');
         $facebookProvider.setPermissions("public_profile,email"); //, user_education_history, publish_actions
         
@@ -1335,6 +1336,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     exambazaar.controller("showGroupController", 
     [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', 'ngMeta', 'viewService', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, ngMeta, viewService){
         $scope.exam = thisExam.data;
+        
         $scope.category = thisStream.data;
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
@@ -1425,6 +1427,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             .error(function (data, status, header, config) {
                 console.info();
             });*/
+        }
+        
+        if(!$scope.user || !$scope.user.userId){
+            $scope.showLoginForm();
         }
         
         $scope.overviewIcons = [
@@ -4811,28 +4817,64 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]);
     
+    
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state','$cookies','$http','UserService','NotificationService','ipService','geolocation','$geolocation', '$facebook', '$mdDialog', function($scope,$rootScope,$state,$cookies,$http,UserService,NotificationService,ipService,geolocation,$geolocation, $facebook, $mdDialog){
-                
+        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','geolocation','$geolocation', '$facebook', '$mdDialog', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,geolocation,$geolocation, $facebook, $mdDialog){
         
+        $rootScope.stateName = $state.current.name;
+        if($rootScope.stateName == 'showGroup'){
+            $rootScope.coachingGroupName = $stateParams.groupName;
+            $rootScope.coachingGroupCity = $stateParams.cityName;
+        }
+        console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
-            $mdDialog.show({
-              contentElement: '#loginDialog',
-              parent: angular.element(document.body),
-              targetEvent: ev,
-              clickOutsideToClose: true,
-              openFrom: {
-                  top: -50,
-                  width: 30,
-                  height: 80
-                },
-             closeTo: {
-              left: 1500
-            }
-            });
-        };    
             
+            
+            if($state.current.name == 'showGroup'){
+                $mdDialog.show({
+                  contentElement: '#loginDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: false,
+                  escapeToClose: false,
+                  //hasBackdrop: true,
+                  openFrom: {
+                      top: -50,
+                      width: 30,
+                      height: 80
+                    },
+                 closeTo: {
+                  left: 1500
+                }
+                });
+            }else{
+                $mdDialog.show({
+                  contentElement: '#loginDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true,
+                  escapeToClose: true,
+                  //hasBackdrop: true,
+                  openFrom: {
+                      top: -50,
+                      width: 30,
+                      height: 80
+                    },
+                 closeTo: {
+                  left: 1500
+                }
+                });
+            }
+            
+        };    
+        $scope.hideLoginDialog = function(ev){
+            $mdDialog.hide();
+        };
         
+        $scope.signupMode = false;
+        $scope.signupToggle = function(){
+            $scope.signupMode = !$scope.signupMode;
+        };
         ipService.getip()
         .success(function (data, status, headers) {
             //console.info(data);
@@ -4913,6 +4955,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
             
         $scope.login = function(){
+            //alert('Here');
+            //console.log($scope.loginuser);
+            
             $http.post('/login', {
               mobile: $scope.login.mobile,
               password: $scope.login.password,
@@ -4936,6 +4981,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                
                 
                 UserService.getUser(user._id).success(function (data, status, headers) {
+                    $scope.hideLoginDialog();
                     var fulluser = data;
                     var sessionuser;
                     //user.verified="true";
@@ -5010,13 +5056,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             });
         };//login ends
         $scope.logout = function(){
-            $cookies.remove('sessionuser');
-            $http.post('/logout');
-            $state.reload();
-            //$state.go("main", {}, {reload: true});
-        };
-           
             
+            if($scope.user && $scope.user.facebookId){
+                $cookies.remove('sessionuser');
+                $http.post('/logout');
+                $state.reload();
+                $facebook.logout().then(function(response) {
+                    //alert('Here');
+                    
+                    
+                });
+            }else{
+                $cookies.remove('sessionuser');
+                $http.post('/logout');
+                $state.reload();
+            }
+        }; 
         $facebook.getLoginStatus().then(function(response) {
             $scope.fbLoginStatus = response;
         });
@@ -5036,109 +5091,255 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
             
         function refresh() {
-                $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
-                    function(response) {
-                        //console.log($scope.user);
-                        
-                        if($scope.user && $scope.user.userId){
-                            //link the user's fb id to the current user
-                            $scope.user.fbuser = {
-                                name: response.name,
-                                gender: response.gender,
-                                image: response.picture.data.url,
-                                email: response.email,
-                                facebook: {
-                                    link: response.link,
-                                    id: response.id,
-                                }
+            $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
+                function(response) {
+                    //console.log($scope.user);
+
+                    if($scope.user && $scope.user.userId){
+                        //link the user's fb id to the current user
+                        $scope.user.fbuser = {
+                            name: response.name,
+                            gender: response.gender,
+                            image: response.picture.data.url,
+                            email: response.email,
+                            facebook: {
+                                link: response.link,
+                                id: response.id,
+                            }
+                        };
+
+                        if(!$scope.user.facebookId){
+                        console.log("Calls being made to adde user");
+                        $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
+                        UserService.fbSave($scope.user).success(function (data, status, headers) {
+
+                            var fulluser = data;
+                            console.log(fulluser);
+                            var sessionuser = {
+                                userId: fulluser._id,
+                                facebookId: fulluser.facebookId,
+                                userType: fulluser.userType,
+                                basic: fulluser.basic,
+                                image: fulluser.image,
+                                mobile: fulluser.mobile,
+                                email: fulluser.email,
+
                             };
-                            
-                            
-                        }else{
-                            $scope.user = {};
-                            $scope.user.fbuser = {
-                                name: response.name,
-                                gender: response.gender,
-                                image: response.picture.data.url,
-                                email: response.email,
-                                facebook: {
-                                    link: response.link,
-                                    id: response.id,
-                                }
-                            };
-                            //add a new user with facebook id
+                            $cookies.putObject('sessionuser', sessionuser);
+                            $scope.user = sessionuser;
+                            $mdDialog.hide();
+                            console.log(sessionuser.userType);
+
+                            if(sessionuser.userType =='Master'){  
+                                $state.go('master-dashboard', {masterId: sessionuser.userId});
+                            }
+                            if(sessionuser.userType =='Intern - Business Development'){
+                                 $state.go('assigned', {userId: sessionuser.userId});
+                            }
+                            if(sessionuser.userType =='Student'){
+                                $state.reload();
+                            }
+                            if(sessionuser.userType =='Partner'){
+                                $state.go('partner-dashboard', {userId: sessionuser.userId});
+                            }
+
+
+                            //$state.reload();
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
                         }
-                        
-                    },
-                    function(err) {
-                        $scope.welcomeMsg = "Please log in";
-                        $scope.isLoggedIn = false;
-                });
-                $facebook.api("/me/permissions").then(
-                    function(response) {
-                        //console.log(response);
-                        $scope.permissions = response;
-                    },
-                    function(err) {
-                    $scope.welcomeMsg = "Permissions Error";
-                });
+
+                    }else{
+                        $scope.user = {};
+                        $scope.user.fbuser = {
+                            name: response.name,
+                            gender: response.gender,
+                            image: response.picture.data.url,
+                            email: response.email,
+                            facebook: {
+                                link: response.link,
+                                id: response.id,
+                            }
+                        };
+                        if(!$scope.user.facebookId){
+                        //add a new user with facebook id
+                        console.log("Calls being made to adde user");
+                        $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
+                        UserService.fbSave($scope.user).success(function (data, status, headers) {
+
+                            var fulluser = data;
+                            console.log(fulluser);
+                            var sessionuser = {
+                                userId: fulluser._id,
+                                facebookId: fulluser.facebookId,
+                                userType: fulluser.userType,
+                                basic: fulluser.basic,
+                                image: fulluser.image,
+                                mobile: fulluser.mobile,
+                                email: fulluser.email,
+
+                            };
+                            $cookies.putObject('sessionuser', sessionuser);
+                            $scope.user = sessionuser;
+                            $mdDialog.hide();
+                            console.log(sessionuser.userType);
+
+                            if(sessionuser.userType =='Master'){  
+                                $state.go('master-dashboard', {masterId: sessionuser.userId});
+                            }
+                            if(sessionuser.userType =='Intern - Business Development'){
+                                 $state.go('assigned', {userId: sessionuser.userId});
+                            }
+                            if(sessionuser.userType =='Student'){
+                                $state.reload();
+                            }
+                            if(sessionuser.userType =='Partner'){
+                                $state.go('partner-dashboard', {userId: sessionuser.userId});
+                            }
+
+
+                            //$state.reload();
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                        }
+                    }
+
+                },
+                function(err) {
+                    $scope.welcomeMsg = "Please log in";
+                    $scope.isLoggedIn = false;
+            });
+            $facebook.api("/me/permissions").then(
+                function(response) {
+                    //console.log(response);
+                    $scope.permissions = response;
+                },
+                function(err) {
+                $scope.welcomeMsg = "Permissions Error";
+            });
                 
             };
 
-            //console.info($scope.user);
-            
             $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
-                //console.log(newValue);
+            
             if(newValue[0] == 'connected' && newValue[1]){
                 $scope.fbUser = true;
-                $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
+                
                 if(!$scope.user.facebookId){
-                    UserService.fbSave($scope.user).success(function (data, status, headers) {
-                        
-                        var fulluser = data;
-                        console.log(fulluser);
-                        var sessionuser = {
-                            userId: fulluser._id,
-                            facebookId: fulluser.facebookId,
-                            userType: fulluser.userType,
-                            basic: fulluser.basic,
-                            image: fulluser.image,
-                            mobile: fulluser.mobile,
-                            email: fulluser.email,
-
-                        };
-                        $cookies.putObject('sessionuser', sessionuser);
-                        $scope.user = sessionuser;
-                        $mdDialog.hide();
-                        console.log(sessionuser.userType);
-                        
-                        if(sessionuser.userType =='Master'){  
-                            $state.go('master-dashboard', {masterId: sessionuser.userId});
-                        }
-                        if(sessionuser.userType =='Intern - Business Development'){
-                             $state.go('assigned', {userId: sessionuser.userId});
-                        }
-                        if(sessionuser.userType =='Student'){
-                            $state.reload();
-                        }
-                        if(sessionuser.userType =='Partner'){
-                            $state.go('partner-dashboard', {userId: sessionuser.userId});
-                        }
-                        
-                        
-                        //$state.reload();
-                    })
-                    .error(function (data, status, header, config) {
-                        console.info("Error ");
-                    });
-                }
-                
-                
-                
-                
+                    
+                }  
+            }
+            }, true);    
+            
+           
+        $scope.checkSignupForm = function(){
+            var disabled = false;
+            
+            if($scope.signup.name.length <3){
+                disabled = true;
+            }
+            if($scope.signup.password.length <6){
+                disabled = true;
+            }
+            return disabled;
+        };
+        
+        $scope.showVerifyOTP = false;
+        $scope.signup = {
+            name: '',
+            email: '',
+            mobile: '',
+            password: '',
+        }; 
+        $scope.showVerifyOTP = false;
+        $scope.$watch('signup.mobile', function (newValue, oldValue, scope) {
+            if(newValue)
+            newValue = newValue.toString();
+            if(newValue && newValue.length == 10){
+                console.log(newValue);
+                $scope.showVerifyOTP = true;
             }
 
-            }, true);    
+        }, true);
+        
+            
+        $scope.verifyPhone = function(){
+            $scope.generateUserOTP();
+            
+        };
+        $scope.verifyOTP = function(){
+            if($scope.newUser.OTP == $scope.setOTP){
+                $scope.step2 = false;
+                $scope.step3 = true;
+            }else{
+                $scope.OTPmessage = 'The OTP you have entered is incorrect.';
+            }
+        };
+        $scope.addUser = function(){
+            $scope.newUser.userType = 'Student';
+            $scope.newUser.verified = true;
+            var saveUser = UserService.saveUser($scope.newUser).success(function (data, status, headers) {
+                var fulluser = data;
+                
+                var sessionuser = {
+                    userId: fulluser._id,
+                    masterId: fulluser._id,
+                    facebookId: fulluser.facebookId,
+                    userType: fulluser.userType,
+                    basic: fulluser.basic,
+                    image: fulluser.image,
+                    mobile: fulluser.mobile,
+                    email: fulluser.email,
+                    
+                };
+                $cookies.putObject('sessionuser', sessionuser);
+                
+                $state.reload();
+                
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+        };
+        $scope.generateUserOTP = function(){
+            UserService.userexists($scope.newUser.contact.mobile).success(function (data, status, headers) {
+                var userExists = data;
+                console.info(userExists);
+                if(userExists){
+                    $scope.userExistMessage = "User with mobile " + $scope.newUser.contact.mobile + ' already exists!';    
+                }else{
+                    var thisOTP = {
+                        mobile:$scope.newUser.contact.mobile,
+                        otp: generateOtp(),
+                        reason : 'Signup'
+                    };
+                    OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
+                        $scope.enterOTP = true;
+                        $scope.setOTP = data.otp;
+                        console.info("OTP sent to mobile " + thisOTP.mobile);
+                    })
+                    .error(function (data, status, header, config) {
+
+                    });
+                    $scope.OTPgenerated=true;
+                    $scope.step1 = false;
+                    $scope.step2 = true;
+                    $scope.enterOTP = false;
+                }
+                //$state.go('main');
+
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+            
+        };
+            
+            
             
             
     }]); 
