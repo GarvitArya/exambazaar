@@ -415,7 +415,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     exambazaar.service('ipService', ['$http', function($http) {
         this.getip = function() {
-            return $http.get('http://ip-api.com/json');
+            return $http.get('https://ip-api.com/json');
         };
         
     }]);
@@ -6107,7 +6107,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             var url = $scope.provider.website[0] || [];
             url = url.replace('www.','');
-            url = url.replace('http://','');
+            url = url.replace('https://','');
             url = url.replace('https://','');
             var rightChar = url.substring(url.length-1, url.length);
             
@@ -6635,7 +6635,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             var currURL = $location.absUrl();
             $rootScope.pageURL = currURL;
-            $rootScope.pageImage = 'http://www.exambazaar.com/images/logo/eblogo.png';
+            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
     }]);
         
     exambazaar.controller("reviewController", 
@@ -6652,7 +6652,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             var currURL = $location.absUrl();
             $rootScope.pageURL = currURL;
-            $rootScope.pageImage = 'http://www.exambazaar.com/images/logo/eblogo.png';
+            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
     }]);
         
     exambazaar.controller("reviewCenterController", 
@@ -6778,7 +6778,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         var currURL = $location.absUrl();
         $rootScope.pageURL = currURL;
-        $rootScope.pageImage = 'http://www.exambazaar.com/images/logo/eblogo.png';
+        $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
         
     }]);    
     
@@ -6877,7 +6877,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                      {
                       method: 'share',
                       href: currURL,
-                      redirect_uri: 'http://www.exambazaar.com/', 
+                      redirect_uri: 'https://www.exambazaar.com/', 
                       hashtag: '#exambazaar',
                       quote: 'Exambazaar: Find best coaching institutes in your city for more than 50 exams',
                       display: 'iframe',
@@ -6905,9 +6905,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $facebook.ui(
                      {
                       method: 'feed',
-                      link: 'http://www.exambazaar.com',
-                      //redirect_uri: 'http://www.exambazaar.com/review', 
-                      source: 'http://www.exambazaar.com/images/logo/eblogo.png',
+                      link: 'https://www.exambazaar.com',
+                      //redirect_uri: 'https://www.exambazaar.com/review', 
+                      source: 'https://www.exambazaar.com/images/logo/eblogo.png',
                       //display: 'iframe',
                       //mobile_iframe: true
                     }, function(response){
@@ -8604,7 +8604,7 @@ function getLatLng(thisData) {
         
     exambazaar.controller("sitemapController", 
         [ '$scope','$http','$state','cities', function($scope,$http,$state,cities){
-        /*$scope.urlpart1 = 'http://www.exambazaar.com/stream/';
+        /*$scope.urlpart1 = 'https://www.exambazaar.com/stream/';
         $scope.urlpart2 = [
             'engineering/jee/',
             'engineering/bitsat/',
@@ -8662,7 +8662,7 @@ function getLatLng(thisData) {
         });*/
             
         
-        var part1 = ["http://www.exambazaar.com/stream/engineering/JEE%20Advanced/","http://www.exambazaar.com/stream/engineering/BITSAT/","http://www.exambazaar.com/stream/engineering/GATE/","http://www.exambazaar.com/stream/engineering/NATA/","http://www.exambazaar.com/stream/medical/AIPMT/","http://www.exambazaar.com/stream/medical/AIIMS/","http://www.exambazaar.com/stream/medical/AFMC/","http://www.exambazaar.com/stream/cacs/CA%20CPT/","http://www.exambazaar.com/stream/cacs/CS%20Foundation%20Exam/","http://www.exambazaar.com/stream/school/NTSE%20Exam/","http://www.exambazaar.com/stream/school/KVPY/","http://www.exambazaar.com/stream/mba/CAT/","http://www.exambazaar.com/stream/mba/XAT/","http://www.exambazaar.com/stream/mba/SNAP/","http://www.exambazaar.com/stream/law/CLAT/","http://www.exambazaar.com/stream/law/LSAT/","http://www.exambazaar.com/stream/law/AILET/","http://www.exambazaar.com/stream/foreigneducation/SAT/","http://www.exambazaar.com/stream/foreigneducation/GMAT/","http://www.exambazaar.com/stream/foreigneducation/GRE/","http://www.exambazaar.com/stream/foreigneducation/IELTS/","http://www.exambazaar.com/stream/foreigneducation/TOEFL/","http://www.exambazaar.com/stream/civilservices/Civil%20Services%20Exam/","http://www.exambazaar.com/stream/civilservices/IFS%20Exam/","http://www.exambazaar.com/stream/civilservices/IES~2FISS%20Exam/","http://www.exambazaar.com/stream/ssc/SSC%20CGLE/","http://www.exambazaar.com/stream/ssc/SSC%20CHSL%20Exam/","http://www.exambazaar.com/stream/ssc/SSC%20CMLE/","http://www.exambazaar.com/stream/ssc/SSC%20CPO%20(S.I)%20Exam/","http://www.exambazaar.com/stream/ssc/SSC%20JE/","http://www.exambazaar.com/stream/bank/SBI%20PO%20Exam/","http://www.exambazaar.com/stream/bank/IBPS%20PO%20CWE/","http://www.exambazaar.com/stream/bank/IBPS%20Clerk%20CWE/","http://www.exambazaar.com/stream/bank/RBI%20Assistant%20Exam/","http://www.exambazaar.com/stream/defence/NDA%20Exam/","http://www.exambazaar.com/stream/defence/CDS%20Exam/","http://www.exambazaar.com/stream/defence/I.A.F.%20Exam/","http://www.exambazaar.com/stream/defence/I.N.A%20Exam/","http://www.exambazaar.com/stream/defence/AFCAT/","http://www.exambazaar.com/stream/insurance/IRDA%20Exam/","http://www.exambazaar.com/stream/insurance/LIC%20AAO%20Exam/","http://www.exambazaar.com/stream/insurance/L.I.C%20D.O/","http://www.exambazaar.com/stream/insurance/G.I.C%20Exam/"];    
+        var part1 = ["https://www.exambazaar.com/stream/engineering/JEE%20Advanced/","https://www.exambazaar.com/stream/engineering/BITSAT/","https://www.exambazaar.com/stream/engineering/GATE/","https://www.exambazaar.com/stream/engineering/NATA/","https://www.exambazaar.com/stream/medical/AIPMT/","https://www.exambazaar.com/stream/medical/AIIMS/","https://www.exambazaar.com/stream/medical/AFMC/","https://www.exambazaar.com/stream/cacs/CA%20CPT/","https://www.exambazaar.com/stream/cacs/CS%20Foundation%20Exam/","https://www.exambazaar.com/stream/school/NTSE%20Exam/","https://www.exambazaar.com/stream/school/KVPY/","https://www.exambazaar.com/stream/mba/CAT/","https://www.exambazaar.com/stream/mba/XAT/","https://www.exambazaar.com/stream/mba/SNAP/","https://www.exambazaar.com/stream/law/CLAT/","https://www.exambazaar.com/stream/law/LSAT/","https://www.exambazaar.com/stream/law/AILET/","https://www.exambazaar.com/stream/foreigneducation/SAT/","https://www.exambazaar.com/stream/foreigneducation/GMAT/","https://www.exambazaar.com/stream/foreigneducation/GRE/","https://www.exambazaar.com/stream/foreigneducation/IELTS/","https://www.exambazaar.com/stream/foreigneducation/TOEFL/","https://www.exambazaar.com/stream/civilservices/Civil%20Services%20Exam/","https://www.exambazaar.com/stream/civilservices/IFS%20Exam/","https://www.exambazaar.com/stream/civilservices/IES~2FISS%20Exam/","https://www.exambazaar.com/stream/ssc/SSC%20CGLE/","https://www.exambazaar.com/stream/ssc/SSC%20CHSL%20Exam/","https://www.exambazaar.com/stream/ssc/SSC%20CMLE/","https://www.exambazaar.com/stream/ssc/SSC%20CPO%20(S.I)%20Exam/","https://www.exambazaar.com/stream/ssc/SSC%20JE/","https://www.exambazaar.com/stream/bank/SBI%20PO%20Exam/","https://www.exambazaar.com/stream/bank/IBPS%20PO%20CWE/","https://www.exambazaar.com/stream/bank/IBPS%20Clerk%20CWE/","https://www.exambazaar.com/stream/bank/RBI%20Assistant%20Exam/","https://www.exambazaar.com/stream/defence/NDA%20Exam/","https://www.exambazaar.com/stream/defence/CDS%20Exam/","https://www.exambazaar.com/stream/defence/I.A.F.%20Exam/","https://www.exambazaar.com/stream/defence/I.N.A%20Exam/","https://www.exambazaar.com/stream/defence/AFCAT/","https://www.exambazaar.com/stream/insurance/IRDA%20Exam/","https://www.exambazaar.com/stream/insurance/LIC%20AAO%20Exam/","https://www.exambazaar.com/stream/insurance/L.I.C%20D.O/","https://www.exambazaar.com/stream/insurance/G.I.C%20Exam/"];    
         var part2 = ["Delhi","Mumbai","New%20Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
         var urls = [];
         $scope.urls = [];
@@ -11466,7 +11466,7 @@ exambazaar.run(function($rootScope,$mdDialog, ngMeta, $location) {
     ngMeta.init();
     var currURL = $location.absUrl();
     $rootScope.pageURL = currURL;
-    $rootScope.pageImage = 'http://www.exambazaar.com/images/logo/eblogo.png';
+    $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
     
     
     
