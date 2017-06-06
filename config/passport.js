@@ -19,7 +19,7 @@ module.exports = function(passport) {
     passport.use(new FacebookStrategy({
         clientID: '1236747093103286',
         clientSecret: 'c8137e970cc6dc5cfb1416695670c418',
-        callbackURL: "http://localhost:8000/auth/facebook/callback"
+        callbackURL: "https://www.exambazaar.com/auth/facebook/callback"
       },
       function(accessToken, refreshToken, profile, cb) {
         User.findOrCreate({ facebookId: profile.id }, function (err, user) {
