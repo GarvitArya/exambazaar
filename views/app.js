@@ -4898,7 +4898,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         if($cookies.getObject('userlocation')){
             $scope.userlocation = $cookies.getObject('userlocation');
             
-            if(Object.keys($scope.userlocation).length === 0 && $scope.userlocation.constructor === Object){
+            if(!$scope.userPosition || $scope.userPosition.length < 4){
                 //console.log('Empty object');
                 $geolocation.getCurrentPosition({
                 timeout: 60000
