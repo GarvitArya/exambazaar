@@ -17,7 +17,8 @@
 <div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
-    <div flex layout="row" layout-xs="column" layout-align="start start" class="padded" ng-if="user">
+    <div class="padded" ng-if="user">
+    <div flex layout="row" layout-xs="column" layout-align="start start" >
         <div flex layout="column" layout-align="start start" class="padding20 secondFont margin5 gainsboroBorder" id="profileSection">
             <span ng-if="user.basic">Welcome, {{user.basic.name}}</span>
             <!--<span>User Type: {{user.userType}}</span>-->
@@ -69,19 +70,23 @@
             </div>
             
         </div>
-        <div flex layout="column" layout-align="start start" class="padding20">
+        
+    </div>
+    <div>
+        <div flex layout="column" layout-align="start start" class="">
             <span>Tell us where you live</span>
-            <div ng-if="user.latlng" class="width50">
-                <ng-map center="current-location"  zoom="14">
+            <div ng-if="userlatlng" class="width50">
+                <ng-map center="{{userlatlng}}"  zoom="14">
 
-                    <marker position="current-location"
-                          title="ABC"
-                          animation="Animation.DROP"
-                          centered="true"></marker>
+                    <marker position="{{userPosition}}"
+                      title="ABC"
+                      animation="Animation.DROP"
+                      centered="true"></marker>
                   </ng-map>
             </div>
-            
+            <span>{{userPosition}}</span>
         </div>
+    </div>
     </div>
 </div>
 

@@ -4894,6 +4894,48 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         .error(function (data, status, header, config) {
             console.info();
         });
+        
+        if($cookies.getObject('userlocation')){
+            $scope.userlocation = $cookies.getObject('userlocation');
+            
+            if(Object.keys($scope.userlocation).length === 0 && $scope.userlocation.constructor === Object){
+                //console.log('Empty object');
+                $geolocation.getCurrentPosition({
+                timeout: 60000
+                 }).then(function(position) {
+                    $cookies.putObject('userlocation', position);
+                    $scope.userlocation = position;
+                    if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                        $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
+                        
+                        
+                        
+                        $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+                    }
+                 });
+            }
+            
+            
+            if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
+                
+                
+                $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+            }
+            
+        }else{
+            $geolocation.getCurrentPosition({
+            timeout: 60000
+             }).then(function(position) {
+                $cookies.putObject('userlocation', position);
+                $scope.userlocation = position;
+                if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                    $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude); 
+                }
+                
+             });
+        }    
+        
             
         $scope.showLoginForm = function(){
             $scope.showLoginDialog();
@@ -4904,19 +4946,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
            $scope.showLoginForm();
         });
 
-        /*if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position){
-                
-                $scope.position = position;
-              
-            });
-        }*/
-        //geolocation.getLocation().then(function(data){
-        /*geolocation.getLocation().then(function(data){
-            $scope.coords = {lat:data.coords.latitude, long:data.coords.longitude, accuracy:data.coords.accuracy};
-            
-            $cookies.putObject('location', $scope.coords);
-        });*/
+        
             
         if($cookies.getObject('sessionuser')){
             $scope.sessionuser = $cookies.getObject('sessionuser');
@@ -7298,7 +7328,7 @@ function getLatLng(thisData) {
             }
          };
         
-        GMaps.geolocate({
+        /*GMaps.geolocate({
           success: function(position) {
             map.setCenter(position.coords.latitude, position.coords.longitude);
           },
@@ -7311,7 +7341,7 @@ function getLatLng(thisData) {
           always: function() {
             alert("Done!");
           }
-        });    
+        });    */
             
         $scope.$on('mapInitialized', function(evt, evtMap) {
             $scope.map = evtMap;
