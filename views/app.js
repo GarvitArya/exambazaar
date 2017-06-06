@@ -5040,7 +5040,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $cookies.remove('sessionuser');
                 $scope.sessionuser = {};
                 $facebook.logout().then(function(response) {
-                    alert('Facebook Logout done');
+                    console.log('Facebook Logout done');
                     $state.reload();
                 });
             }else{

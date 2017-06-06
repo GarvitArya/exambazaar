@@ -29,11 +29,11 @@ module.exports = function(app, passport) {
     
     app.get('/auth/facebook/callback', function(req, res) {
         console.log(req);
-        passport.authenticate('facebook', {
+        passport.authenticate('facebook');
+        /*, {
             successRedirect : '/profile',
             failureRedirect : '/'
-        });
-        
+        }*/
     });
     
     // route to log in
