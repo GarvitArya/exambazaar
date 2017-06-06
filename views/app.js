@@ -5057,9 +5057,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             //alert('FB login');
             console.log('FB Login Initiated');
             $facebook.getLoginStatus().then(function(response) {
-                /*$scope.fbLoginStatus = response;
+                $scope.fbLoginStatus = response;
                 console.log("Login Status is: " + $scope.fbLoginStatus);
-                
+                /*
                 if($scope.sessionuser && $scope.sessionuser.userId){
                     $scope.loggedIn = true; 
                     refresh();
