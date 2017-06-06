@@ -1167,7 +1167,7 @@
 
 
         <div class="marginT20  " ng-if="!signupMode">
-        <form  ng-submit="login()" ng-show="!sessionuser" name="loginForm">
+        <form  ng-submit="login()" ng-show="!sessionuser || !sessionuser.userId" name="loginForm">
         <div layout="column" class="">
             <div class="paddingTB5 ">
             <input type="text" placeholder="Mobile" class="width100" ng-model="login.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput">
@@ -1194,7 +1194,7 @@
         </div>
         
         <div class="marginT20  " ng-if="signupMode">
-        <form  ng-submit="signupUser()" ng-show="!sessionuser" name="signupForm">
+        <form  ng-submit="signupUser()" ng-show="!sessionuser || !sessionuser.userId" name="signupForm">
         <div layout="column" class="">
             <div class="paddingTB5 ">
             <input type="text" placeholder="Name" class="width100" ng-model="signup.name" id="loginInput" required>
