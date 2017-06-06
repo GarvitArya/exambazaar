@@ -3,8 +3,7 @@ var express  = require('express');
 var app      = express();
 var port     = process.env.PORT || 8000;
 var path = require('path');
-var forceHTTPS = require('node-force-secure-redirect');
-var secureEnvs = ['prod', 'staging'];
+
 
 //redirect(app); 
 /*
@@ -46,9 +45,6 @@ mongoose.connect(configDB.url,  { server: { socketOptions: { connectTimeoutMS: 1
 require('./config/passport')(passport);
 
 app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted('^/claim'));
-
-app.set('trust proxy'); // enable this to trust the proxy  
-app.use(forceHTTPS(secureEnvs)); // only redirect for said envs
 
 /*app.get('*', function(req, res, next) {
 //http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/TerminologyandKeyConcepts.html#x-forwarded-proto

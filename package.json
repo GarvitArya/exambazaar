@@ -78,7 +78,6 @@
     "ngGeolocation": "0.0.7",
     "ngmap": "^1.18.0",
     "ngtweet": "^0.6.1",
-    "node-force-secure-redirect": "^0.2.0",
     "nodemailer": "^4.0.1",
     "oclazyload": "^1.0.9",
     "passport": "~0.3.2",
