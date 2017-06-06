@@ -5067,6 +5067,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             //console.log('Loggin into fb');
             $facebook.login().then(function(response) {
                 $scope.fbLoginStatus = response;
+                console.log($scope.fbLoginStatus);
                 refresh();
             });
         };
@@ -5074,7 +5075,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         function refresh() {
             $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
             function(response) {
-
+                
                 if($scope.sessionuser && $scope.sessionuser.userId){
                     //link the user's fb id to the current user
                     $scope.sessionuser.fbuser = {
@@ -5147,7 +5148,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     };
                     if(!$scope.sessionuser.facebookId){
                     //add a new user with facebook id
-                    console.log("Calls being made to adde user");
+                    console.log("Calls being made to add user");
                     $scope.sessionuser.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
                     UserService.fbSave($scope.sessionuser).success(function (data, status, headers) {
                         $mdDialog.hide();

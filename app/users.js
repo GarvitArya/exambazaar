@@ -20,7 +20,7 @@ var bcrypt   = require('bcrypt-nodejs');
 //to add a user
 router.post('/save', function(req, res) {
     var thisUser = req.body;
-    console.log("User is: " + JSON.stringify(thisUser));
+    //console.log("User is: " + JSON.stringify(thisUser));
     var mobileNumber;
     var userEmail;
     
@@ -87,10 +87,6 @@ router.post('/fbSave', function(req, res) {
     
     var userId = thisUser._id || null;
     
-    console.log("User is:");
-    console.log(thisUser);
-    console.log("Userid is:");
-    console.log(userId);
     var thisFbUser = thisUser.fbuser;
     var facebookId = thisFbUser.facebook.id;
     var fbProperties = [];
@@ -185,6 +181,8 @@ router.post('/fbSave', function(req, res) {
     }else{
         var existingUser = user.findOne({ 'facebookId': facebookId },function (err, existingUser) {
         if(!existingUser){
+            console.log('FB login user does not exist');
+            
             existingUser= new user({});
             existingUser.userType = 'Student';
             existingUser.facebookId = thisFbUser.facebook.id;
@@ -223,7 +221,8 @@ router.post('/fbSave', function(req, res) {
             });
 
         }else{
-            //existingUser.facebookId = thisFbUser.facebook.id;
+            console.log('FB login user exists');
+            
             existingUser.facebook = {
                 link: thisFbUser.facebook.link,
                 accessToken: thisFbUser.facebook.accessToken
