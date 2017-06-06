@@ -2255,6 +2255,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             'In Installments',        
         ];
         $scope.editContact = false;
+        $scope.editEBVerify = false;
+        $scope.editEBRating = false;
+        
         $scope.editContacts= function(){
             $scope.editContact = true;
         };
@@ -3903,6 +3906,203 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
          };
         
+        
+        
+        
+        
+        $scope.ratingParams = [
+            {
+                name: "total_students",
+                displayname: "Total Students",
+                options: ["> 1000","500 - 1000","250 - 500","100 - 250","< 100"],
+                
+            },
+            {
+                name: "avg_batch_strength",
+                displayname: "Average Batch Strength",
+                options: ["20 - 30","30 - 50","50 - 70","70 - 100","> 100"],
+                
+            },
+            {
+                name: "student_to_faculty_ratio",
+                displayname: "Student to Faculty Ratio",
+                options: ["< 20","20 - 30","30 - 50","50 - 100","> 100"],
+                
+            },
+            {
+                name: "avg_teacher_experience",
+                displayname: "Average Teacher Experience (years)",
+                options: ["> 15","10 - 15","5 - 10","2 - 5","< 2"],
+                
+            },
+            {
+                name: "n_exams",
+                displayname: "No. of Exams",
+                options: ["> 5","4","3","2","1"],
+                
+            },
+            {
+                name: "n_centers",
+                displayname: "No. of Centres",
+                options: ["> 20","10 - 20","5 - 10","2 - 5","1"],
+                
+            },
+        ];
+        
+        $scope.ratingFacilities = [
+            {name:"printed_notes",displayname:"Printed Notes/ Study Material",description:"Does the CI supply printed notes?",},
+            {name:"test_series",displayname:"Test Series",description:"Does the CI have its own test series?",},
+            {name:"dlp",displayname:"DLP",description:"Does the CI have Distance Learning Program?",},
+            {name:"hostel",displayname:"Hostel",description:"Does the CI have hostel facilities?",},
+            {name:"doubt_sessions",displayname:"Doubt sessions",description:"Does the CI have periodic doubt sessions?",},
+            {name:"periodic_performance_tests",displayname:"Periodic Performance Tests",description:"Does the CI have periodic performance tests?",},
+            {name:"online_lectures",displayname:"Online Lectures",description:"Does the CI have online lectures?",},
+            {name:"n_classrooms",displayname:"Classrooms > 5",description:"Does the CI have more than 5 classrooms in the centre?",},
+            {name:"counselling",displayname:"Counselling",description:"Does the CI offer counselling?",},
+            {name:"library",displayname:"Library",description:"Does the CI have a library and reading room?",},
+
+        ];
+        
+        $scope.examRatingParams = [
+            {
+                name: "percent_students_selected",
+                displayname: "% of students selected in the Exam",
+                options: ["> 50%","25% - 50%","10% - 25%","5% - 10%","< 5%"],
+                
+            },
+            {
+                name: "ranks_top100",
+                displayname: "Ranks of students in top 100",
+                options: ["> 25","15 - 25","10 - 15","5 - 10","1 - 5"],
+                
+            },
+            {
+                name: "ranks_top1000",
+                displayname: "Ranks of students in top 1000",
+                options: ["> 200","100 - 200","50 - 100","10 - 50","< 10"],
+                
+            },
+        ];
+        
+        $scope.ratingParamValues = {};
+        $scope.examRatingParamValues = [];
+        $scope.ratingFacilitiesValues = {};
+        
+        $scope.ratingParams.forEach(function(thisRP, rpIndex){
+            $scope.ratingParamValues[thisRP.name] = null;
+        });
+        
+        $scope.ratingFacilities.forEach(function(thisF, fIndex){
+            $scope.ratingFacilitiesValues[thisF.name] = false;
+        });
+        
+        
+        $scope.provider.exams.forEach(function(thisExam, examIndex){
+            var examRating = {
+                exam: thisExam,
+                rating: {},
+            };
+            $scope.examRatingParams.forEach(function(thisRP, rpIndex){
+                examRating.rating[thisRP.name] = null;
+            });
+            $scope.examRatingParamValues.push(examRating);
+        });
+        //console.log($scope.examRatingParamValues);
+        
+        if($scope.provider.rating){
+            /*$scope.ratingParamValues = {};
+            $scope.examRatingParamValues = [];
+            $scope.ratingFacilitiesValues = {};*/
+            
+            for (var property in $scope.ratingParamValues) {
+                if($scope.provider.rating[property]){
+                    $scope.ratingParamValues[property] = $scope.provider.rating[property];
+                }
+            }
+            $scope.examRatingParamValues = $scope.provider.rating.examRating;
+            $scope.ratingFacilitiesValues = $scope.provider.rating.facilities;
+            
+            console.log($scope.provider.rating);
+            console.log($scope.examRatingParamValues);
+        }
+        
+        
+        $scope.setRatingParam = function(ratingParam, option){
+            $scope.ratingParamValues[ratingParam.name] = option;
+        };
+        $scope.setRatingFacility = function(ratingFacility){
+            $scope.ratingFacilitiesValues[ratingFacility.name] = true;
+        };
+        $scope.unsetRatingFacility = function(ratingFacility){
+            $scope.ratingFacilitiesValues[ratingFacility.name] = false;
+        };
+        $scope.setExamRatingParam = function(examRatingParamValue, examRatingParam, option){
+            examRatingParamValue.rating[examRatingParam.name] = option;
+            //console.log($scope.examRatingParamValues);
+        };
+        
+        
+        
+        $scope.checkRatingFilled = function(){
+            var disabled = false;
+            for (var property in $scope.ratingParamValues) {
+                if(!$scope.ratingParamValues[property]){
+                    disabled = true;
+                }
+            } $scope.examRatingParamValues.forEach(function(examRatingParamValue, erpIndex){
+                for (var property in examRatingParamValue.rating) {
+                    if(!examRatingParamValue.rating[property]){
+                        disabled = true;
+                    }
+                }
+            });
+            return disabled;
+        };
+        
+        
+        
+        
+        $scope.saveProviderRating = function (){
+            if(!$scope.provider.rating){
+                $scope.provider.rating = {};
+            }
+            for (var property in $scope.ratingParamValues) {
+                $scope.provider.rating[property] = $scope.ratingParamValues[property];
+            }
+            
+            $scope.provider.rating.facilities = $scope.ratingFacilitiesValues;
+            
+            $scope.provider.rating.examRating = [];
+            $scope.examRatingParamValues.forEach(function(examRatingParamValue, erpIndex){
+                console.log(examRatingParamValue);
+                var examRatingElem = {
+                    exam: examRatingParamValue.exam._id,
+                    rating: examRatingParamValue.rating,
+                }
+                console.log(examRatingElem);
+                $scope.provider.rating.examRating.push(examRatingElem);
+            });
+            
+            console.log($scope.provider.rating);
+            $scope.saveProvider();
+        };
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         $rootScope.pageTitle = $scope.provider.name;
         var pageTitle = $scope.provider.name + ' listing in ' + $scope.provider.city + ' - Claim Now';
         
@@ -4286,6 +4486,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             $scope.changeUser = function(){
                 toverifyciService.changeUser().success(function (data, status, headers) {
+                    $scope.showSavedDialog();
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info(status + " " + data);
+                });
+            };
+            
+            $scope.changeUserContactInfo = function(){
+                addContactInfoService.changeUser().success(function (data, status, headers) {
                     $scope.showSavedDialog();
                     $state.reload();
                 })

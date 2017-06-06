@@ -142,7 +142,39 @@ var targetStudyProviderSchema = mongoose.Schema({
         user: { type: Schema.ObjectId, ref: 'user' },
         _time: { type: Date, default: Date.now }
     }],
-    _created: { type: Date, default: Date.now }
+    _created: { type: Date, default: Date.now },
+    rating: {
+        total_students: String,
+        avg_batch_strength: String,
+        student_to_faculty_ratio: String,
+        avg_teacher_experience: String,
+        n_centers: String,
+        n_exams: String,
+        percent_students_selected: String,
+        ranks_top100: String,
+        ranks_top1000: String,
+        facilities:{
+            printed_notes: Boolean,
+            test_series: Boolean,
+            dlp: Boolean,
+            hostel: Boolean,
+            doubt_sessions: Boolean,
+            periodic_performance_tests: Boolean,
+            online_lectures: Boolean,
+            n_classrooms: Boolean,
+            counselling: Boolean,
+            library: Boolean,
+        },
+        examRating:[{
+            exam: { type: Schema.ObjectId, ref: 'exam' },
+            rating: {
+                percent_students_selected: String,
+                ranks_top100: String,
+                ranks_top1000: String,
+            }
+        }],
+    },
+    
 });
 
 

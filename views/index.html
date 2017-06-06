@@ -38,7 +38,7 @@
     <meta name="google-site-verification" content="RdnJwXl2LG_A6UgOCrtR7Jv8KV5gOmnslKdO9dbpdGk" />
     <meta name="msvalidate.01" content="DBC3BD884FD14A25F2B7F6B33CAD7C0B" />
     
-    <link rel="stylesheet" href="angular-material.min.css">
+    <link rel="stylesheet" href="angular-material.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css">
     <link rel='stylesheet' href="loading-bar.min.css" type='text/css' media='all' />
     
@@ -559,6 +559,9 @@
         .marginR10{
             margin-right: 10px;
         }
+        .marginR20{
+            margin-right: 20px;
+        }
         .marginLR10{
             margin-left: 10px;
             margin-right: 10px;
@@ -953,8 +956,32 @@
             border-radius: 0;
         }
         md-autocomplete{
-            background-color: #F5F5F5;
+            background-color: white;
+            
         }
+        .md-autocomplete-suggestions-container{  
+            background: white;
+            z-index:100000 !important; /* any number of choice > 1050*/
+          }
+        
+        #autocompleteLogo{
+            max-height: 35px;
+            max-width: 70px;
+            margin-left: 10px;
+        }
+        .autocomplete li {
+            border-bottom: 1px solid #ccc;
+            height: auto;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            white-space: normal; 
+        }
+        .autocomplete .item-title,  .autocomplete .item-metadata {
+            padding-top: 10px;
+            display: block;
+            line-height: 1; 
+        }
+        
         .danger{
             color: #FF5A5F;
         }
@@ -1070,7 +1097,6 @@
             -webkit-box-shadow: none;
             box-shadow: none;
         }
-        
         
         
         
@@ -1273,7 +1299,7 @@
     <script src="svg-assets-cache.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-aria.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-messages.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+    <script src="angular-material.min.js"></script>
     
     <script src="//unpkg.com/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

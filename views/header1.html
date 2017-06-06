@@ -15,6 +15,9 @@
     .navbar-default .navbar-nav > li > a, .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
         color: #696969;
     }
+    md-autocomplete{
+        background-color: rgba(32, 195, 154, 0.1);
+    }
 </style>
 
 <nav class="navbar navbar-default navbar-fixed-top nav-justified" role="navigation" id="mainNav">
@@ -118,6 +121,35 @@
                 </li>
               </ul>
             </li> 
+            </ul>
+            <ul flex class="nav navbar-nav marginR20" ng-controller="autocompleteController as ctrl">
+                <md-autocomplete flex 
+                    md-selected-item="ctrl.selectedItem"
+                    md-selected-item-change= "ctrl.selectedItemChange(item)"
+                    md-search-text="ctrl.searchText"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-item-text="item.name"
+                    md-delay="300"
+                    md-menu-class="autocomplete"
+                    placeholder="Search for Coaching Institutes"
+                    class="md-hide-clear-button width100 ">
+                        <md-item-template >
+                          <div class="item-title font12">
+                              <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                              <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
+                          </div>
+                          <div class="item-metadata">
+                            <span class="item-metastat font10 bold">
+                              {{item.city}}:
+                            </span>&nbsp;
+                            <span class="item-metastat font10">
+                              {{item.address}}
+                            </span>
+                          </div>
+                        </md-item-template>
+
+                </md-autocomplete>
+                
             </ul>
         </div>
         </div>

@@ -116,7 +116,37 @@
               </ul>
             </li> 
             </ul>
-        </div>
+            <ul flex class="nav navbar-nav marginR20" ng-controller="autocompleteController as ctrl">
+                <md-autocomplete flex 
+                    md-selected-item="ctrl.selectedItem"
+                    md-selected-item-change= "ctrl.selectedItemChange(item)"
+                    md-search-text="ctrl.searchText"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-item-text="item.name"
+                    md-delay="300"
+                    md-menu-class="autocomplete"
+                    placeholder="Search for Coaching Institutes"
+                    class="md-hide-clear-button width100 ">
+                        <md-item-template >
+                          <div class="item-title font12">
+                              <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                              <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
+                          </div>
+                          <div class="item-metadata">
+                            <span class="item-metastat font10 bold">
+                              {{item.city}}:
+                            </span>&nbsp;
+                            <span class="item-metastat font10">
+                              {{item.address}}
+                            </span>
+                          </div>
+                        </md-item-template>
+
+                </md-autocomplete>
+                
+            </ul>
+        </div>   
+            
         </div>
         <div hide-xs layout="row" layout-align="start center" ng-if="sessionuser.userId" >
         <ul class="nav navbar-nav">

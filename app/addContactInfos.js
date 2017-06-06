@@ -51,15 +51,18 @@ router.get('/verifiedCount', function(req, res) {
 });
 
 router.get('/changeUser', function(req, res) {
-    var userId = '58f65c7bb84f2a00119eae7a';
+    var userId = '5922df90e20d000011b0262b';
     
     var addContactInfos = addContactInfo
-        .find({user: userId})
+        .find({user: userId, active: true})
+        .limit(50)
         .exec(function (err, addContactInfos) {
         if (!err){
             nLength = addContactInfos.length;
+            console.log(nLength);
             addContactInfos.forEach(function(thisFillTask, index){
-                thisFillTask.user = '58900bd8fc519c0a04be52e8';
+                //thisFillTask._deadline = Date.parse('2017-06-08T18:29:59.000Z');
+                //thisFillTask.user = '5908207f94e6450011ad7bdb';
                 thisFillTask.save(function(err, thisFillTask) {
                     if (err) return console.error(err);
                     console.log(thisFillTask._id + ' updated');

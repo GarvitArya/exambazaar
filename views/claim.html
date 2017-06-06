@@ -434,6 +434,19 @@
         min-height: 200px;
         border-left: 1px solid #ccc;
     }
+    
+    #ratingLeftContainer{
+        min-height: 150px;
+        /*background: #20C39A;
+        color: white;*/
+        position: relative;
+        display: inline-block;
+    }
+    #ratingRightContainer{
+        min-height: 150px;
+        border-left: 1px solid #ccc;
+    }
+    
     .inner {
         white-space: nowrap;
       position: absolute;
@@ -672,7 +685,140 @@
         </twitter-timeline>
     
     </div>-->
-    
+    <div layout="row" layout-xs="column" class="" id="EBRating" ng-if="ebuser">
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey paddingTB20" id="paneLeft" ng-class="{ editing: editEBRating }">
+            <div class=""layout="row" layout-align="start start">
+                <span>
+                    EB Rating
+                </span>
+                <!--<span ng-if="provider.ebVerifyState && ebVerifyState!=''">
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                </span>-->
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement thirdFont textDarkGrey" id="paneMiddle">
+            <div layout="row" layout-align="center center" class="marginB10 editFont  ">
+                Only for EB Employees, update the rating of  {{provider.name}}, if it has been assigned to you.
+            </div>
+            <div layout="row" class="marginB5 secondFont  bold">
+                <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5">
+                    Group Parameters
+                </div>
+                <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
+                    Mark the value
+                </div>
+            </div>
+            <!--<div>
+                
+            </div>-->
+            <div layout="row" layout-align="center center" ng-repeat="ratingParam in ratingParams" class="marginTB5">
+                <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5">
+                    <span >
+                        {{ratingParam.displayname}}
+                    </span>
+                </div>
+                <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
+                    <span ng-repeat="option in ratingParam.options">
+                        <span class="badge" id="examTagHolder" ng-if="!ratingParamValues[ratingParam.name] || option!=ratingParamValues[ratingParam.name]" ng-click="setRatingParam(ratingParam, option)">
+                            {{option}}
+                        </span>
+                        <span class="badge" id="existingExamTagHolder" ng-if="ratingParamValues[ratingParam.name] && option==ratingParamValues[ratingParam.name]" ng-click="setRatingParam(ratingParam, option)">
+                            {{option}}
+                        </span>
+                    </span>
+                    
+                </div>
+            </div>
+            <div class="paddingTB10"></div>
+            
+            <div layout="row" class="marginB5 secondFont  ">
+                <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5">
+                    <div class="bold">Facilities</div>
+                    
+                    <div class="editFont">
+                        Mark all the facilites available at the coaching institute
+                    </div>
+                </div>
+                <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
+                    <span ng-repeat="ratingFacility in ratingFacilities" class="marginTB5">
+                        <span class="badge" id="examTagHolder" ng-if="!ratingFacilitiesValues[ratingFacility.name]" ng-click="setRatingFacility(ratingFacility)">
+                            {{ratingFacility.displayname}}
+                            <md-tooltip>{{ratingFacility.description}}</md-tooltip>
+                        </span>
+                        <span class="badge" id="existingExamTagHolder" ng-if="ratingFacilitiesValues[ratingFacility.name]" ng-click="unsetRatingFacility(ratingFacility)">
+                            {{ratingFacility.displayname}}
+                            <md-tooltip>{{ratingFacility.description}}</md-tooltip>
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="paddingTB10"></div>
+            
+            <div layout="row" ng-repeat="examRatingParamValue in examRatingParamValues" class="greyBorder marginB10">
+                <div layout="column" layout-align="center center" flex="5" id="ratingLeftContainer">
+                    <div layout="row" >
+                        <div class="secondFont inner rotate">
+                        {{examRatingParamValue.exam.displayname}}
+                        </div>
+                        
+                    </div>
+                </div>
+                <div layout="column" layout-align="center start" flex="95" id="ratingRightContainer" >
+                    <div layout="row" class="secondFont  bold width100">
+                        <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5">
+                            Exam Parameters
+                        </div>
+                        <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
+                            Mark the value
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="center center" ng-repeat="examRatingParam in examRatingParams" class="marginTB5 width100">
+                        <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5" class="showBorder">
+                            <span >
+                                {{examRatingParam.displayname}}
+                            </span>
+                        </div>
+                        <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
+                            <span ng-repeat="option in examRatingParam.options">
+                                <span class="badge" id="examTagHolder" ng-if="!examRatingParamValue.rating[examRatingParam.name] || option!=examRatingParamValue.rating[examRatingParam.name]" ng-click="setExamRatingParam(examRatingParamValue, examRatingParam, option)">
+                                    {{option}}
+                                </span>
+                                <span class="badge" id="existingExamTagHolder" ng-if="examRatingParamValue.rating[examRatingParam.name] &&  option==examRatingParamValue.rating[examRatingParam.name]" ng-click="setExamRatingParam(examRatingParamValue, examRatingParam, option)">
+                                    {{option}}
+                                </span>
+                            </span>
+
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            <div layout="row" layout-align="center center" class="editFont">
+                <span class="text-center">
+                    Note, mark all of the rating params of {{provider.name}}, and click on Save Rating below. Clicking on Save at bottom of screen wouldn't work.
+                </span>
+            </div>
+            <div layout="row" layout-align="center center" class="">
+                <md-button class="md-raised md-primary width100 tolowercase" ng-disabled="checkRatingFilled()" ng-click="saveProviderRating()">
+                    Save Rating
+                </md-button>
+            </div>
+            
+            
+                
+            
+            
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1" id="paneRight">
+            
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        
+    </div>
     
     <div layout="row" layout-xs="column" class="" id="EBVerify" ng-if="ebuser">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">

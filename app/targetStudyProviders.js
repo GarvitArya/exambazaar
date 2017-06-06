@@ -1236,6 +1236,7 @@ router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;
     var userId = req.body.user;
     console.log("Other listings are: " + thisProvider.otherlistings);
+    console.log(thisProvider.rating);
     var coachingId = thisProvider._id;
     
     var oldProvider = targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, oldProvider) {
@@ -1249,6 +1250,10 @@ router.post('/savecoaching', function(req, res) {
                 if(property=='latlng'){
                     //console.log('Yes location is there: ' + thisProvider[property]);
                     oldProvider['latlngna'] = false;
+                }
+                if(property=='rating'){
+                    
+                    console.log(JSON.stringify(oldProvider[property]));
                 }
             }
             if(userId){
@@ -1379,7 +1384,7 @@ router.get('/coaching/:coachingId', function(req, res) {
     
     var thisProvider = targetStudyProvider
         .findOne({'_id': coachingId})
-        .deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam')
+        .deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam rating.examRating.exam')
         .exec(function (err, thisProvider) {
         if (!err){
             res.json(thisProvider);
