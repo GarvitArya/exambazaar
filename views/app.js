@@ -7298,7 +7298,7 @@ function getLatLng(thisData) {
             }
          };
         
-        /*GMaps.geolocate({
+        GMaps.geolocate({
           success: function(position) {
             map.setCenter(position.coords.latitude, position.coords.longitude);
           },
@@ -7337,7 +7337,7 @@ function getLatLng(thisData) {
                     console.info(status + " " + data);    
                 });
             }
-        });*/
+        });
 
             
         if($scope.user.basic)
