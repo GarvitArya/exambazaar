@@ -415,7 +415,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     exambazaar.service('ipService', ['$http', function($http) {
         this.getip = function() {
-            return $http.get('https://ip-api.com/json');
+            return $http.get('http://ip-api.com/json');
         };
         
     }]);
@@ -4920,6 +4920,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
         if($cookies.getObject('sessionuser')){
             $scope.sessionuser = $cookies.getObject('sessionuser');
+        }else{
+            $scope.sessionuser = {};
         }
             
         
