@@ -1172,13 +1172,22 @@
      <div layout="column"  flex-gt-sm="100" class="padding30" >
         
         <div layout="row" layout-align="center center" class="mainFont textBlack paddingB10 gainsboroBottomBorder">
+            <span ng-if="!signupMode">
             <span class="md-title" hide-xs>
                 Log into Exambazaar
             </span>
             <span class="font16" hide-gt-xs>
                 Log into Exambazaar
             </span>
-            
+            </span>
+            <span ng-if="signupMode">
+            <span class="md-title" hide-xs>
+                Create an account
+            </span>
+            <span class="font16" hide-gt-xs>
+                Create an account
+            </span>
+            </span>
         </div>
         <div layout="row" layout-align="center center" class="marginT20 marginB10" >
             <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase">
