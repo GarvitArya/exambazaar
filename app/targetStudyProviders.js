@@ -1080,7 +1080,7 @@ router.post('/cityCourse', function(req, res) {
         .deepPopulate('stream')
         .exec(function (err, thisExam) {
         if (!err){
-            targetStudyProvider.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1, group:1, groupName:1, logo:1, results:1},{sort: '-rank'},function(err, providerList) {
+            targetStudyProvider.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1, group:1, groupName:1, logo:1, results:1, latlng:1},{sort: '-rank'},function(err, providerList) {
             if (!err){
                 //console.log(providerList);
                 res.json(providerList);

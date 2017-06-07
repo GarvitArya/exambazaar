@@ -1095,27 +1095,23 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.userlocation = $cookies.getObject('userlocation');
             //console.log($scope.userlocation);
             if(!$scope.userPosition || $scope.userPosition.length < 4){
-                console.log('Empty object');
+                //console.log('Empty object');
                 $geolocation.getCurrentPosition({
                 timeout: 60000
                  }).then(function(position) {
-                    console.log(position);
                     $cookies.putObject('userlocation', position);
                     $scope.userlocation = position;
                     if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
                         $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
                         $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
-                        console.log($scope.userlatlng);
-                        console.log($scope.userPosition);
                         
                     }
                  });
             }
             
-            
             if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
                 $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
-                
+                console.log($scope.userlatlng);
                 
                 $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
             }
@@ -1134,6 +1130,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         }
         
         
+        
+        
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
         $scope.city = $stateParams.cityName;
@@ -1146,7 +1144,61 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.providersList = targetStudyProvidersList.data;
         $scope.uniqueProviders = [];
         $scope.uniqueInstitutes = [];
+        var origins = [];
+        var destinations = [];
+        
+        var directionsService = new google.maps.DirectionsService;
+        
+        var getDrivingDistance = function(origin, destination, index){
+            
+            directionsService.route({
+              origin: origin,
+              destination: destination,
+              travelMode: 'DRIVING'
+            }, function(response, status) {
+                if (status === 'OK') {
+                    //console.log(index + " " + JSON.stringify(response.routes[0].legs[0].distance));
+                    //console.log(index);
+                    $scope.providersList[index].distance = response.routes[0].legs[0].distance;  
+                       
+                }
+                else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
+                    setTimeout(function() {
+                        getDrivingDistance(origin, destination, index);
+                    }, 10 );
+                }
+                else {
+                    console.log("Geocode was not successful for the following reason: " + status);
+                }
+            });
+        };
+        
         $scope.providersList.forEach(function(thisProvider, providerIndex){
+            var thisLatLng = thisProvider.latlng;
+            if(thisLatLng && thisLatLng.lat && thisLatLng.lng && thisLatLng.lat !='' && thisLatLng.lng !=''){
+                var gLatLng = new google.maps.LatLng(thisLatLng.lat, thisLatLng.lng);
+                var distance = google.maps.geometry.spherical.computeDistanceBetween($scope.userlatlng, gLatLng)/1000;
+                thisProvider.SLdistance = distance;
+                //console.log(distance);
+                origins.push($scope.userlatlng);
+                destinations.push(gLatLng);
+                
+                var origin1 = $scope.userlatlng;
+                var destination1 = gLatLng;
+                
+                getDrivingDistance(origin1, destination1, providerIndex);
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+            };
+            
             var position = $scope.uniqueProviders.indexOf(thisProvider.name);
             if(position==-1){
                 $scope.uniqueProviders.push(thisProvider.name);

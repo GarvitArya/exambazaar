@@ -243,7 +243,14 @@
                             </a>
                             </h2>
                             <div layout="row" layout-align="start center" class="bold marginT10">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;{{coachingGroup.institutes.length}} centre<span ng-if="coachingGroup.institutes.length > 1">s&nbsp;</span> in {{city}}
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
+                                <span>{{coachingGroup.institutes.length}} centre<span ng-if="coachingGroup.institutes.length > 1">s&nbsp;</span> in {{city}}
+                                </span>
+                                <span class="marginLR10">
+                                    <span ng-repeat="thisInstitute in coachingGroup.institutes | orderBy: 'distance.value'" ng-if="thisInstitute.distance" class="badge">
+                                        {{thisInstitute.distance.text}}
+                                    </span>
+                                </span>
                             </div>
                             <div layout="row" id="coachingCourses">
                                 <!--{{category.displayname}} -->
