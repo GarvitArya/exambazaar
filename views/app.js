@@ -1078,7 +1078,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
     
     exambazaar.controller("coachingController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam','streamExams', 'ngMeta','$mdDialog', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams, ngMeta, $mdDialog){
+    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam','streamExams', 'ngMeta','$mdDialog', '$geolocation', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams, ngMeta, $mdDialog, $geolocation){
        
         $scope.hideLoginDialog();
         $scope.editable = false;
@@ -1088,6 +1088,51 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.editable = true;
             }
         }
+        $scope.userPosition = null;
+        
+        //Gaurav
+        if($cookies.getObject('userlocation')){
+            $scope.userlocation = $cookies.getObject('userlocation');
+            //console.log($scope.userlocation);
+            if(!$scope.userPosition || $scope.userPosition.length < 4){
+                console.log('Empty object');
+                $geolocation.getCurrentPosition({
+                timeout: 60000
+                 }).then(function(position) {
+                    console.log(position);
+                    $cookies.putObject('userlocation', position);
+                    $scope.userlocation = position;
+                    if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                        $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
+                        
+                        
+                        
+                        $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+                    }
+                 });
+            }
+            
+            
+            if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
+                
+                
+                $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+            }
+            
+        }else{
+            $geolocation.getCurrentPosition({
+            timeout: 60000
+             }).then(function(position) {
+                $cookies.putObject('userlocation', position);
+                $scope.userlocation = position;
+                if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                    $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude); 
+                }
+                
+             });
+        }
+        
         
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
@@ -4831,8 +4876,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         console.info("Error ");
                     });
                     
-                    //tofillGroupNames
-                    //Gaurav 
+                    //tofillGroupNames 
                     /*tofillciService.prevFilled(newValue).success(function (prevfilleddata, status, headers) {
                         $scope.prevFilledLength = prevfilleddata;
                         
@@ -5213,7 +5257,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 }
                 
              });
-        }    
+        } 
         
             
         $scope.showLoginForm = function(){
