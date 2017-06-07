@@ -422,6 +422,26 @@
         border: 1px solid #fff;
     }
     
+    #ratingTagHolder{
+        padding:5px;
+        font-size: 16px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    #ratingTagHolder:hover{
+        color: white;
+        
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #existingRatingTagHolder{
+        padding:5px;
+        font-size: 16px;
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
     
     #courseLeftContainer{
         min-height: 200px;
@@ -688,7 +708,7 @@
     <div layout="row" layout-xs="column" class="" id="EBRating" ng-if="ebuser">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey paddingTB20" id="paneLeft" ng-class="{ editing: editEBRating }">
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey paddingTB20" id="paneLeft" ng-class="{ editing: editRating }">
             <div class=""layout="row" layout-align="start start">
                 <span>
                     EB Rating
@@ -699,9 +719,15 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement thirdFont textDarkGrey" id="paneMiddle">
-            <div layout="row" layout-align="center center" class="marginB10 editFont  ">
-                Only for EB Employees, update the rating of  {{provider.name}}, if it has been assigned to you.
-            </div>
+        <div layout="row" layout-align="center center" class="marginB10 editFont  ">
+            Only for EB Employees, update the rating of  {{provider.name}}, if it has been assigned to you.
+        </div>
+        <div layout="row" layout-align="center center" id="upload2" ng-show="!editRating && editable && !disabled" ng-click="editRatings()">
+            <span>
+                <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
+            </span>
+        </div>
+        <div ng-if="editRating">  
             <div layout="row" class="marginB5 secondFont  bold">
                 <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5">
                     Group Parameters
@@ -713,7 +739,7 @@
             <!--<div>
                 
             </div>-->
-            <div layout="row" layout-align="center center" ng-repeat="ratingParam in ratingParams" class="marginTB5">
+            <div layout="row" layout-align="center center" ng-repeat="ratingParam in ratingParams" class="marginTB5  gainsboroBottomBorder">
                 <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5">
                     <span >
                         {{ratingParam.displayname}}
@@ -721,14 +747,17 @@
                 </div>
                 <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
                     <span ng-repeat="option in ratingParam.options">
-                        <span class="badge" id="examTagHolder" ng-if="!ratingParamValues[ratingParam.name] || option!=ratingParamValues[ratingParam.name]" ng-click="setRatingParam(ratingParam, option)">
+                        <span class="badge" id="ratingTagHolder" ng-if="!ratingParamValues[ratingParam.name] || option!=ratingParamValues[ratingParam.name]" ng-click="setRatingParam(ratingParam, option)">
                             {{option}}
                         </span>
-                        <span class="badge" id="existingExamTagHolder" ng-if="ratingParamValues[ratingParam.name] && option==ratingParamValues[ratingParam.name]" ng-click="setRatingParam(ratingParam, option)">
+                        <span class="badge" id="existingRatingTagHolder" ng-if="ratingParamValues[ratingParam.name] && option==ratingParamValues[ratingParam.name]" ng-click="setRatingParam(ratingParam, option)">
                             {{option}}
                         </span>
                     </span>
-                    
+                    <div class="marginT10">
+                        <input type="checkbox" ng-model="ratingParamEstimate[ratingParam.name]">Rough Estimate?&nbsp;&nbsp;
+                        <input type="text" class="" ng-model="ratingParamValue[ratingParam.name]"  placeholder="Value">
+                    </div>
                 </div>
             </div>
             <div class="paddingTB10"></div>
@@ -743,11 +772,11 @@
                 </div>
                 <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
                     <span ng-repeat="ratingFacility in ratingFacilities" class="marginTB5">
-                        <span class="badge" id="examTagHolder" ng-if="!ratingFacilitiesValues[ratingFacility.name]" ng-click="setRatingFacility(ratingFacility)">
+                        <span class="badge" id="ratingTagHolder" ng-if="!ratingFacilitiesValues[ratingFacility.name]" ng-click="setRatingFacility(ratingFacility)">
                             {{ratingFacility.displayname}}
                             <md-tooltip>{{ratingFacility.description}}</md-tooltip>
                         </span>
-                        <span class="badge" id="existingExamTagHolder" ng-if="ratingFacilitiesValues[ratingFacility.name]" ng-click="unsetRatingFacility(ratingFacility)">
+                        <span class="badge" id="existingRatingTagHolder" ng-if="ratingFacilitiesValues[ratingFacility.name]" ng-click="unsetRatingFacility(ratingFacility)">
                             {{ratingFacility.displayname}}
                             <md-tooltip>{{ratingFacility.description}}</md-tooltip>
                         </span>
@@ -782,23 +811,27 @@
                         </div>
                         <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
                             <span ng-repeat="option in examRatingParam.options">
-                                <span class="badge" id="examTagHolder" ng-if="!examRatingParamValue.rating[examRatingParam.name] || option!=examRatingParamValue.rating[examRatingParam.name]" ng-click="setExamRatingParam(examRatingParamValue, examRatingParam, option)">
+                                <span class="badge" id="ratingTagHolder" ng-if="!examRatingParamValue.rating[examRatingParam.name].option || option!=examRatingParamValue.rating[examRatingParam.name].option" ng-click="setExamRatingParam(examRatingParamValue, examRatingParam, option)">
                                     {{option}}
                                 </span>
-                                <span class="badge" id="existingExamTagHolder" ng-if="examRatingParamValue.rating[examRatingParam.name] &&  option==examRatingParamValue.rating[examRatingParam.name]" ng-click="setExamRatingParam(examRatingParamValue, examRatingParam, option)">
+                                <span class="badge" id="existingRatingTagHolder" ng-if="examRatingParamValue.rating[examRatingParam.name].option &&  option==examRatingParamValue.rating[examRatingParam.name].option" ng-click="setExamRatingParam(examRatingParamValue, examRatingParam, option)">
                                     {{option}}
                                 </span>
                             </span>
-
+                            <div class="marginT10">
+                                <input type="checkbox" ng-model="examRatingParamValue.rating[examRatingParam.name].estimate">Rough Estimate?&nbsp;&nbsp;
+                                <input type="text" class="" ng-model="examRatingParamValue.rating[examRatingParam.name].value"  placeholder="Value">
+                            </div>
                         </div>
                     </div>
                     
                     
                 </div>
             </div>
+            
             <div layout="row" layout-align="center center" class="editFont">
                 <span class="text-center">
-                    Note, mark all of the rating params of {{provider.name}}, and click on Save Rating below. Clicking on Save at bottom of screen wouldn't work.
+                    Note: mark all of the rating params of {{provider.name}}, and click on Save Rating below. Clicking on Save at bottom of screen wouldn't work.
                 </span>
             </div>
             <div layout="row" layout-align="center center" class="">
@@ -811,6 +844,7 @@
                 
             
             
+        </div>
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1" id="paneRight">
             

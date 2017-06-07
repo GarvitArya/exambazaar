@@ -474,6 +474,37 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.get('/api/tofillcis/user/'+userId, {userId: userId});
         };
     }]);
+    exambazaar.service('rateInstituteService', ['$http', function($http) {
+       
+        this.saverateInstitute = function(rateInstituteForm) {
+            return $http.post('/api/rateInstitutes/save', rateInstituteForm);
+        };
+        
+        this.markDone = function(rateInstituteForm) {
+            return $http.post('/api/rateInstitutes/markDone', rateInstituteForm);
+        };
+        this.ratedCount = function() {
+            return $http.get('/api/rateInstitutes/ratedCount');
+        };
+        this.institutesRated = function() {
+            return $http.get('/api/rateInstitutes/institutesRated');
+        };
+        this.getrateInstitute = function(rateInstituteId) {
+            return $http.get('/api/rateInstitutes/edit/'+rateInstituteId, {rateInstituteId: rateInstituteId});
+        };
+        this.prevRated = function(groupName) {
+            return $http.get('/api/rateInstitutes/prevRated/'+groupName, {groupName: groupName});
+        };
+        this.removeAssigned = function(rateInstituteId){
+            $http.get('/api/rateInstitutes/remove/'+rateInstituteId, {rateInstituteId: rateInstituteId});
+        };
+        this.getrateInstitutes = function() {
+            return $http.get('/api/rateInstitutes');
+        };
+        this.getuserrateInstitutes = function(userId) {
+            return $http.get('/api/rateInstitutes/user/'+userId, {userId: userId});
+        };
+    }]);
     exambazaar.service('addContactInfoService', ['$http', function($http) {
        
         this.saveaddContactInfo = function(addContactInfoForm) {
@@ -3984,56 +4015,74 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             },
         ];
         
+        $scope.editRating = false;
+        $scope.editRatings = function(){
+            $scope.editRating = true;
+        };
+        
         $scope.ratingParamValues = {};
+        $scope.ratingParamEstimate = {};
+        $scope.ratingParamValue = {};
+        
         $scope.examRatingParamValues = [];
         $scope.ratingFacilitiesValues = {};
         
         $scope.ratingParams.forEach(function(thisRP, rpIndex){
             $scope.ratingParamValues[thisRP.name] = null;
+            $scope.ratingParamEstimate[thisRP.name] = false;
+            $scope.ratingParamValue[thisRP.name] = '';
         });
         
         $scope.ratingFacilities.forEach(function(thisF, fIndex){
             $scope.ratingFacilitiesValues[thisF.name] = false;
+            
         });
         
         
         $scope.provider.exams.forEach(function(thisExam, examIndex){
             var examRating = {
                 exam: thisExam,
-                rating: {},
+                rating: {
+                },
             };
+            /*var ratingParam = {
+                    option: null, 
+                    estimate: false, 
+                    value: '',
+            },*/
             $scope.examRatingParams.forEach(function(thisRP, rpIndex){
-                examRating.rating[thisRP.name] = null;
+                examRating.rating[thisRP.name] = {
+                    option: null, 
+                    estimate: false, 
+                    value: '',
+                };
             });
             $scope.examRatingParamValues.push(examRating);
         });
-        console.log($scope.examRatingParamValues);
+        //console.log($scope.examRatingParamValues);
         
         if($scope.provider.rating){
-            /*$scope.ratingParamValues = {};
-            $scope.examRatingParamValues = [];
-            $scope.ratingFacilitiesValues = {};*/
-            
             for (var property in $scope.ratingParamValues) {
                 if($scope.provider.rating[property]){
-                    $scope.ratingParamValues[property] = $scope.provider.rating[property];
+                    $scope.ratingParamValues[property] = $scope.provider.rating[property].option;
+                    $scope.ratingParamEstimate[property] = $scope.provider.rating[property].estimate;
+                    $scope.ratingParamValue[property] = $scope.provider.rating[property].value;
                 }
             }
             
             if($scope.provider.rating.examRating && $scope.provider.rating.examRating.length > 0){
-                console.log('Am here');
+                //console.log('Am here');
                 $scope.examRatingParamValues = $scope.provider.rating.examRating;
             }
             
             if($scope.provider.rating.facilities){
                 $scope.ratingFacilitiesValues = $scope.provider.rating.facilities;
             }
-            
-            
-            
-            
-            console.log($scope.provider.rating);
-            console.log($scope.examRatingParamValues);
+            //console.log($scope.provider.rating);
+            console.log($scope.ratingParamValues);
+            console.log($scope.ratingParamEstimate);
+            console.log($scope.ratingParamValue);
+            //console.log($scope.examRatingParamValues);
         }
         
         
@@ -4047,7 +4096,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.ratingFacilitiesValues[ratingFacility.name] = false;
         };
         $scope.setExamRatingParam = function(examRatingParamValue, examRatingParam, option){
-            examRatingParamValue.rating[examRatingParam.name] = option;
+            examRatingParamValue.rating[examRatingParam.name].option = option;
             //console.log($scope.examRatingParamValues);
         };
         
@@ -4059,13 +4108,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if(!$scope.ratingParamValues[property]){
                     disabled = true;
                 }
-            } $scope.examRatingParamValues.forEach(function(examRatingParamValue, erpIndex){
+            } /*$scope.examRatingParamValues.forEach(function(examRatingParamValue, erpIndex){
                 for (var property in examRatingParamValue.rating) {
                     if(!examRatingParamValue.rating[property]){
                         disabled = true;
                     }
                 }
-            });
+            });*/
             return disabled;
         };
         
@@ -4076,20 +4125,34 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             if(!$scope.provider.rating){
                 $scope.provider.rating = {};
             }
-            for (var property in $scope.ratingParamValues) {
+            //console.log($scope.examRatingParamValues);
+            $scope.ratingParams.forEach(function(thisRP, rpIndex){
+                var ratingObj = {
+                    option: $scope.ratingParamValues[thisRP.name], 
+                    estimate: $scope.ratingParamEstimate[thisRP.name], 
+                    value: $scope.ratingParamValue[thisRP.name],
+                };
+                $scope.provider.rating[thisRP.name] = ratingObj;
+                /*
+                $scope.ratingParamValues[thisRP.name] = null;
+                $scope.ratingParamEstimate[thisRP.name] = false;
+                $scope.ratingParamValue[thisRP.name] = '';*/
+            });
+            
+            /*for (var property in $scope.ratingParamValues) {
                 $scope.provider.rating[property] = $scope.ratingParamValues[property];
-            }
+            }*/
             
             $scope.provider.rating.facilities = $scope.ratingFacilitiesValues;
             
             $scope.provider.rating.examRating = [];
             $scope.examRatingParamValues.forEach(function(examRatingParamValue, erpIndex){
-                console.log(examRatingParamValue);
+                //console.log(examRatingParamValue);
                 var examRatingElem = {
                     exam: examRatingParamValue.exam._id,
                     rating: examRatingParamValue.rating,
                 }
-                console.log(examRatingElem);
+                //console.log(examRatingElem);
                 $scope.provider.rating.examRating.push(examRatingElem);
             });
             
@@ -4419,7 +4482,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
         
     exambazaar.controller("masterDashboardController", 
-        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'targetStudyProviderService', '$timeout', 'addContactInfoService', 'addContactInfoList', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, targetStudyProviderService, $timeout, addContactInfoService, addContactInfoList){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'targetStudyProviderService', '$timeout', 'addContactInfoService', 'addContactInfoList', 'rateInstituteService', 'rateInstituteList', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, targetStudyProviderService, $timeout, addContactInfoService, addContactInfoList, rateInstituteService, rateInstituteList){
             
             $scope.today = moment();
             var startOfWeek = moment().startOf('week').subtract(3, "days");
@@ -4519,6 +4582,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             var tofillGroupNames = $scope.tofillciList.map(function(a) {return a.institute.groupName;});
             $scope.toverifyciList = toverifyciList.data;
             $scope.addContactInfoList = addContactInfoList.data;
+            $scope.rateInstituteList = rateInstituteList.data;
             //console.log($scope.addContactInfoList);
             
             $scope.verifiedCount = verifiedCount.data;
@@ -10338,6 +10402,10 @@ function getLatLng(thisData) {
                 addContactInfoList: ['addContactInfoService',
                     function(addContactInfoService) {
                     return addContactInfoService.getaddContactInfos();
+                }],
+                rateInstituteList: ['rateInstituteService',
+                    function(rateInstituteService) {
+                    return rateInstituteService.getrateInstitutes();
                 }],
                 verifiedCount: ['toverifyciService',
                     function(toverifyciService) {

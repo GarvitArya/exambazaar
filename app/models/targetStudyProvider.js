@@ -144,15 +144,15 @@ var targetStudyProviderSchema = mongoose.Schema({
     }],
     _created: { type: Date, default: Date.now },
     rating: {
-        total_students: String,
-        avg_batch_strength: String,
-        student_to_faculty_ratio: String,
-        avg_teacher_experience: String,
-        n_centers: String,
-        n_exams: String,
-        percent_students_selected: String,
-        ranks_top100: String,
-        ranks_top1000: String,
+        total_students: {option: String, estimate: Boolean, value: String,},
+        avg_batch_strength: {option: String, estimate: Boolean, value: String,},
+        student_to_faculty_ratio: {option: String, estimate: Boolean, value: String,},
+        avg_teacher_experience: {option: String, estimate: Boolean, value: String,},
+        n_centers: {option: String, estimate: Boolean, value: String,},
+        n_exams: {option: String, estimate: Boolean, value: String,},
+        percent_students_selected: {option: String, estimate: Boolean, value: String,},
+        ranks_top100: {option: String, estimate: Boolean, value: String,},
+        ranks_top1000: {option: String, estimate: Boolean, value: String,},
         facilities:{
             printed_notes: Boolean,
             test_series: Boolean,
@@ -168,9 +168,9 @@ var targetStudyProviderSchema = mongoose.Schema({
         examRating:[{
             exam: { type: Schema.ObjectId, ref: 'exam' },
             rating: {
-                percent_students_selected: String,
-                ranks_top100: String,
-                ranks_top1000: String,
+                percent_students_selected: {option: String, estimate: Boolean, value: String,},
+                ranks_top100: {option: String, estimate: Boolean, value: String,},
+                ranks_top1000: {option: String, estimate: Boolean, value: String,},
             }
         }],
     },
