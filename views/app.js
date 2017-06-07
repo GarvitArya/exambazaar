@@ -1175,7 +1175,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.providersList.forEach(function(thisProvider, providerIndex){
             var thisLatLng = thisProvider.latlng;
-            if(thisLatLng && thisLatLng.lat && thisLatLng.lng && thisLatLng.lat !='' && thisLatLng.lng !=''){
+            if($scope.userlatlng && thisLatLng && thisLatLng.lat && thisLatLng.lng && thisLatLng.lat !='' && thisLatLng.lng !=''){
                 var gLatLng = new google.maps.LatLng(thisLatLng.lat, thisLatLng.lng);
                 var distance = google.maps.geometry.spherical.computeDistanceBetween($scope.userlatlng, gLatLng)/1000;
                 thisProvider.SLdistance = distance;
