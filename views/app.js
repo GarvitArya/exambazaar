@@ -4078,11 +4078,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             if($scope.provider.rating.facilities){
                 $scope.ratingFacilitiesValues = $scope.provider.rating.facilities;
             }
-            //console.log($scope.provider.rating);
-            console.log($scope.ratingParamValues);
-            console.log($scope.ratingParamEstimate);
-            console.log($scope.ratingParamValue);
-            //console.log($scope.examRatingParamValues);
+            
         }
         
         
@@ -4156,7 +4152,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.provider.rating.examRating.push(examRatingElem);
             });
             
-            console.log($scope.provider.rating);
             $scope.saveProvider();
         };
         
