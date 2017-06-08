@@ -5095,7 +5095,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     console.log(JSON.stringify(rateInstituteForm));
                     rateInstituteService.saverateInstitute(rateInstituteForm).success(function (data, status, headers) {
                         $scope.showSavedDialog();
-                        //$state.reload();
+                        $state.reload();
                     })
                     .error(function (data, status, header, config) {
                         console.info(status + " " + data);
