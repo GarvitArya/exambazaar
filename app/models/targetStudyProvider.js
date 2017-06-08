@@ -163,7 +163,7 @@ var targetStudyProviderSchema = mongoose.Schema({
             online_lectures: Boolean,
             n_classrooms: Boolean,
             counselling: Boolean,
-            library: Boolean,
+            entrance_test: Boolean,
         },
         examRating:[{
             exam: { type: Schema.ObjectId, ref: 'exam' },

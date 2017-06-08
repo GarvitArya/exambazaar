@@ -4100,7 +4100,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             {name:"online_lectures",displayname:"Online Lectures",description:"Does the CI have online lectures?",},
             {name:"n_classrooms",displayname:"Classrooms > 5",description:"Does the CI have more than 5 classrooms in the centre?",},
             {name:"counselling",displayname:"Counselling",description:"Does the CI offer counselling?",},
-            {name:"library",displayname:"Library",description:"Does the CI have a library and reading room?",},
+            {name:"entrance_test",displayname:"Entrance Test",description:"Does the CI have an entrance test?",},
 
         ];
         
@@ -5095,7 +5095,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     console.log(JSON.stringify(rateInstituteForm));
                     rateInstituteService.saverateInstitute(rateInstituteForm).success(function (data, status, headers) {
                         $scope.showSavedDialog();
-                        $state.reload();
+                        //$state.reload();
                     })
                     .error(function (data, status, header, config) {
                         console.info(status + " " + data);
