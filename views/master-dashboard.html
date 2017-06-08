@@ -454,8 +454,163 @@
             <div layout="column" layout="center center" flex="15">{{addContactInfo.institute._id}}</div>
             
         </div>
-    
+        
     </div>
+    
+    
+    <div class="row whiteBackground greyBorder" id="assignTask">
+        <div layout="row" layout-xs="column" layout-margin  layout-align="center" class="font20">
+            Assign CI Rate Task
+        </div>
+        <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
+            <div flex="40" layout="row" layout-align="start center">
+                <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left" ng-model="rateInstitute" id="rateInstitute" >
+            </div>
+            <div flex="20" layout="row" layout-align="start center">
+                <md-datepicker ng-model="ciRateDeadline" md-placeholder="Set Deadline"></md-datepicker>
+            </div>
+            <div flex="40" layout="row" layout-align="start center">
+                <md-input-container class="width75 text-primary">
+                  <md-select ng-model="ciRateIntern"  placeholder="Select Intern">
+
+                    <md-option ng-value="intern._id" ng-repeat="intern in activeInternList | orderBy: 'basic.name'" class="text-primary" ng-click="update(intern)">
+                      {{intern.basic.name}}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+                <md-button  class="md-green md-small font10" ng-click="assignCIRate()" class="width25">Assign</md-button>
+            </div>
+        </div>
+        <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
+            <span ng-if="rateInstitutefetching">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </span>
+            <span ng-if="prevRateLength > 0" class="danger">
+                {{assignGroup}}: Another institute from this group has been filled before! Check before assigning.
+            </span>
+            <span ng-if="prevRateLength == 0" class="text-primary bold">
+                {{assignGroup}}: Go ahead, assign it to an intern!
+            </span>
+            <span ng-if="assignError" class="danger">
+                Something went wrong!
+            </span>
+        </div>
+    </div>
+    
+    <div class="row whiteBackground greyBorder" id="assignTask">
+        <div layout="column"   layout-align="center center" class="font10">
+            <span class="top-buffer">
+                <span class="font20">Assigned Rating Tasks</span>
+                
+                <!--&nbsp;<span class="badge" id="badge">{{fillsAssigned}}</span>
+                <br/>
+                <span class="font20">Due Deadline</span>&nbsp;<span class="badge" id="badge">{{fillsDue}}</span>-->
+            </span>
+            <!--<div flex layout="row" class="width100">
+                <div flex="50" layout="column" class="font12 padded2">
+                    <span class="secondFont bold">
+                    Intern Roaster
+                    </span>
+                <div layout="column">
+                    <div flex layout="row" class="width100">
+                        <div flex="40">
+                            Name
+                        </div>
+                        <div flex="15">
+                            Assigned
+                        </div>
+                        <div flex="15">
+                            Due
+                        </div>
+                        <div flex="15">
+                            Completed
+                        </div>
+                        <div flex="15">
+                            Timeline
+                        </div>
+                    </div>
+                    
+                    <div ng-repeat="due in internDueList | orderBy: '-done'" ng-if="due.intern.active" flex layout="row" class="width100">
+                        <div flex="40">
+                            {{due.intern.basic.name}}
+                        </div>
+                        <div flex="15">
+                            {{due.assigned}}
+                        </div>
+                        <div flex="15">
+                            {{due.due}}
+                        </div>
+                        <div flex="15">
+                            {{due.done}}
+                        </div>
+                        <div flex="15">
+                        <span ng-click="getInternAssigned(due)">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        </span>
+                        
+                        </div>
+                    </div>
+                    
+                    </div>
+                </div>
+                <div flex="50" layout="column"  class="font12 padded2">
+                    <span class="secondFont bold">
+                    Marked as Done Yesterday (after {{yesterday | date: "dd-MMM-yy HH:mm"}})<span class="badge" id="badge">{{yesterdayTasks.length}}</span>
+                    </span>
+                    <div ng-repeat="yesterdayTask in yesterdayTasks | orderBy:'_finished'">
+                        <a ui-sref="claim({ coachingId:{{'yesterdayTask.institute._id'}} })" target="_blank" id="link">
+                        <strong>{{yesterdayTask.institute.name}}</strong>
+                        </a>
+                         by 
+                        {{yesterdayTask.user.basic.name}} on {{yesterdayTask._finished | date: "dd-MMM-yy HH:mm"}}
+                    </div>
+                </div>
+            </div>
+            -->
+            
+            <div flex layout="row" class="width100 greyDashedBottomBorder bold">
+                
+                <div layout="column" layout="center center" flex="5">S. No.</div>
+                <div layout="column" layout="center center" flex="10">Created on</div>
+                <div layout="column" layout="center center" flex="10">Deadline</div>
+                <div layout="column" layout="center center" flex="10">Finished?</div>
+                <div layout="column" layout="center center" flex="10">Finished on</div>
+                <div layout="column" layout="center center" flex="10">Name</div>
+                <div layout="column" layout="center center" flex="20">Institute</div>
+                <div layout="column" layout="center center" flex="15">Id</div>
+                <div layout="column" layout="center center" flex="5">Summary</div>
+            </div>
+            <div layout="row" ng-repeat="rateInstitute in rateInstituteList | orderBy:['-active','-_finished','_deadline','_created']" class="width100 greyDashedBottomBorder" ng-class="{ pending: rateInstitute.active, noEmail: rateInstitute.noEmail }">
+                <div layout="column" layout="center center" flex="5">{{$index + 1}}</div>
+                <div layout="column" layout="center center" flex="10">{{rateInstitute._created | date: "dd-MMM-yy HH:mm"}}</div>
+                <div layout="column" layout="center center" flex="10">{{rateInstitute._deadline | date: "dd-MMM-yy HH:mm"}}</div>
+                <div layout="column" layout="center center" flex="10" ng-class="{ pending2: rateInstitute.active }">{{!rateInstitute.active}}</div>
+                <div layout="column" layout="center center" flex="10">{{rateInstitute._finished | date: "dd-MMM-yy HH:mm"}}</div>
+                <div layout="column" layout="center center" flex="10">{{rateInstitute.user.basic.name}}</div>
+                <div layout="column" layout="center center" flex="20">
+                    <a ui-sref="claim({ coachingId:{{'rateInstitute.institute._id'}} })" target="_blank" id="link">
+                    <strong>{{rateInstitute.institute.name}}</strong>
+                    </a>
+                </div>
+                <div layout="row" layout="center center" flex="15">{{rateInstitute.institute._id}}</div>
+                <div layout="row" layout="center center" flex="5">
+                    <!--<span ng-click="getSummary(rateInstitute)">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                    </span>&nbsp;&nbsp;&nbsp;&nbsp;-->
+                    <span ng-if="rateInstitute.active" ng-click="showRateRemoveConfirm(rateInstitute)"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            
+        </div>
+        
+        
+        
+        
+    </div>
+    
+    
+    
+    
     
 </div>
 

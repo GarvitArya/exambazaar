@@ -170,11 +170,13 @@ router.get('/prevRated/:instituteId', function(req, res) {
 });
 
 router.post('/markDone', function(req, res) {
+    console.log('Marking Done for Rating Task');
+    
     var rateInstituteForm = req.body;
     var institute = rateInstituteForm.institute;
-    var user = rateInstituteForm.user;
+    //var user = rateInstituteForm.user;
     rateInstitute
-        .findOne({ 'institute': institute, 'user':user })
+        .findOne({ 'institute': institute})
         .exec(function (err, thisTask) {
         if (!err){
             //console.log(docs);
@@ -185,6 +187,8 @@ router.post('/markDone', function(req, res) {
                     if (err) return console.error(err);
                     res.json(thisTask._id);
                 });
+            }else{
+                res.json([]);
             }
             
         } else {throw err;}

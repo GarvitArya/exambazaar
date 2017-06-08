@@ -501,7 +501,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getrateInstitutes = function() {
             return $http.get('/api/rateInstitutes');
         };
-        this.getuserrateInstitutes = function(userId) {
+        this.getuserrateInstitute = function(userId) {
             return $http.get('/api/rateInstitutes/user/'+userId, {userId: userId});
         };
     }]);
@@ -1855,7 +1855,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
            
    
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService', 'ngMeta', 'thisGroupInfo', 'addContactInfoService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService, ngMeta, thisGroupInfo, addContactInfoService){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService', 'ngMeta', 'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService, ngMeta, thisGroupInfo, addContactInfoService, rateInstituteService){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.videoTags = videoMediaTagList.data.mediaTypeTags;
@@ -3509,6 +3509,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $mdDialog.cancel();
             },1000)
         };
+        
+        $scope.showRatingDoneDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#ratingDoneDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
+        
         $scope.showContactInfoAddedDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#contactInfoAddedDialog',
@@ -4249,7 +4262,40 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.provider.rating.examRating.push(examRatingElem);
             });
             
-            $scope.saveProvider();
+            
+            var saveProvider = {
+                targetStudyProvider:$scope.provider,
+                user: $scope.user.userId
+            };
+            
+            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+                
+                var rateInstituteForm = {
+                    institute: $scope.provider._id
+                };
+                console.log(rateInstituteForm);
+                rateInstituteService.markDone(rateInstituteForm)
+                .success( function (data, status, headers) {
+                    $scope.showRatingDoneDialog();
+                    //$state.reload();
+                    console.info("Rating Marked");
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+                
+                
+                
+                
+                
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+             
+            
+            
+            //$scope.saveProvider();
         };
         
         
@@ -4675,6 +4721,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.toverifyciList = toverifyciList.data;
             $scope.addContactInfoList = addContactInfoList.data;
             $scope.rateInstituteList = rateInstituteList.data;
+            
+            var rateGroupNames = $scope.rateInstituteList.map(function(a) {return a.institute.groupName;});
+            
             //console.log($scope.addContactInfoList);
             
             $scope.verifiedCount = verifiedCount.data;
@@ -4890,9 +4939,34 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             };
             
             
+            $scope.showRateRemoveConfirm = function(rateInstitute, ev) {
+                //console.log(JSON.stringify(rateInstitute.user));
+                var confirm = $mdDialog.confirm()
+                    .title('Would you like to remove ' + rateInstitute.institute.name + ' for ' +  rateInstitute.user.basic.name + '?')
+                    .textContent('Assigned on: ' + moment(rateInstitute._created).format('DD-MMM HH:mm') + ', Deadline: ' + moment(rateInstitute._deadline).format('DD-MMM HH:mm') + '!')
+                    .ariaLabel('Lucky day')
+                    .targetEvent(ev)
+                    .clickOutsideToClose(true)
+                    .ok('Confirm')
+                    .cancel('Cancel');
+                    $mdDialog.show(confirm).then(function() {
+                      $scope.removeRateAssigned(rateInstitute);
+                    }, function() {
+                      //nothing
+                    });
+
+            };
+            
+            
             $scope.removeAssigned = function(tofillci){
                 console.log(tofillci);
                 tofillciService.removeAssigned(tofillci._id);
+                $state.reload();
+            };
+            
+            $scope.removeRateAssigned = function(rateInstitute){
+                console.log(rateInstitute);
+                rateInstituteService.removeAssigned(rateInstitute._id);
                 $state.reload();
             };
             
@@ -4946,6 +5020,89 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
 
             }, true);
+            
+            
+            
+            
+            $scope.rateInstitutefetching = false;
+            $scope.$watch('rateInstitute', function (newValue, oldValue, scope) {
+            if(newValue != null && newValue != ''){
+                //console.info(newValue);
+                //DEF
+                var newValueArr = newValue.split("/");
+                newValue = newValueArr[newValueArr.length-1];
+                //$scope.email.instituteId = newValue;
+                //console.info(newValue);
+                if(newValue.length > 5){
+                    $scope.fetching = true;
+                    $scope.assignError = false;
+                    console.log(newValue);
+                    targetStudyProviderService.getGroupName(newValue).success(function (data, status, headers) {
+                        console.log(data);
+                        if(data){
+                            $scope.assignGroup = data;
+                            if(rateGroupNames.indexOf(data) == -1){
+                                $scope.prevRateLength = 0;
+                            }else{
+                                $scope.prevRateLength = 1;
+                            }
+                        }else{
+                            $scope.assignError = true;
+                        }
+                        
+                        $scope.fetching = false;
+                    }).error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                    
+                    //tofillGroupNames 
+                    /*tofillciService.prevFilled(newValue).success(function (prevfilleddata, status, headers) {
+                        $scope.prevFilledLength = prevfilleddata;
+                        
+                        $scope.fetching = false;
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info(status + " " + data);
+                    });*/
+                    
+                    
+                    
+                    
+                }
+
+            }
+
+            }, true);
+            
+            $scope.ciRateDeadline = new Date();
+            $scope.ciRateDeadline.setDate( $scope.ciRateDeadline.getDate() + 1);
+            $scope.assignCIRate = function(){
+                var intern = $scope.ciRateIntern;
+                var coaching = $scope.rateInstitute;
+                var ciRateDeadline = $scope.ciRateDeadline;
+                ciRateDeadline.setHours(23,59,59);
+                var res = coaching.split("/");
+                var coaching = res[res.length-1];
+                if(coaching.length < 15 || !ciRateDeadline){
+                    alert('Check Coaching Id or URL and deadline date');
+                }else{
+                    //ABC
+                    var rateInstituteForm = {
+                        institute: coaching,
+                        user: intern,
+                        _deadline: ciRateDeadline,
+                    };
+                    console.log(JSON.stringify(rateInstituteForm));
+                    rateInstituteService.saverateInstitute(rateInstituteForm).success(function (data, status, headers) {
+                        $scope.showSavedDialog();
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info(status + " " + data);
+                    });
+                }
+            };
+            
             
             
     }]);
@@ -7525,6 +7682,27 @@ function getLatLng(thisData) {
         $rootScope.title =$scope.user.basic.name;
     }]);  
       
+    exambazaar.controller("assignedToRateController", 
+        [ '$scope', 'thisuser' , 'thisuserAssignedToRate',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssignedToRate, $http, $state, $rootScope){
+        $scope.user = thisuser.data;
+        $scope.assigned = thisuserAssignedToRate.data;
+        console.log($scope.assigned);
+        $scope.assignedCount = 0;
+        if($scope.user.userType =='Master' || $scope.user.userType =='Intern - Business Development'){
+            $scope.authorized = true;
+        }
+        $scope.assigned.forEach(function(thisAssigned, index){
+            
+            if(thisAssigned.active){
+                $scope.assignedCount += 1;
+            }
+        });
+        //console.log($scope.assignedCount);
+        $rootScope.title =$scope.user.basic.name;
+    }]);    
+        
+        
+        
     exambazaar.controller("assignedController", 
         [ '$scope', 'thisuser' , 'thisuserAssigned',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssigned, $http, $state, $rootScope){
         $scope.user = thisuser.data;
@@ -11043,6 +11221,35 @@ function getLatLng(thisData) {
                 thisuserAssignedToVerify: ['toverifyciService', '$stateParams',
                     function(toverifyciService,$stateParams){
                     return toverifyciService.getusertoverifycis($stateParams.userId);
+                        //ABC
+                }],
+                
+                user: function() { return {}; }
+            }
+        })
+        .state('assignedToRate', {
+            url: '/user/:userId/assignedToRate',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'assignedToRate.html',
+                    controller: 'assignedToRateController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                thisuserAssignedToRate: ['rateInstituteService', '$stateParams',
+                    function(rateInstituteService,$stateParams){
+                    return rateInstituteService.getuserrateInstitute($stateParams.userId);
                         //ABC
                 }],
                 
