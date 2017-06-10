@@ -223,7 +223,7 @@
         
         
         <div layout="row" layout-align="center center" class="width100 secondFont bold font10" id="submitSection">
-            <div layout="column" layout-align="center center" ng-if="reviewStream" class="greyBorder marginLR10">
+            <div layout="column" layout-align="center center" ng-if="reviewStream" class="greyBorder marginLR10" ng-click="clearAll()">
                 <div layout="row" layout-align="center center" class="primaryBackground textWhite width100 paddingLR5">
                     Stream
                 </div>    
@@ -231,7 +231,7 @@
                     {{reviewStream.displayname}}
                 </div>
             </div>
-            <div layout="column" layout-align="center center" ng-if="reviewExam" class="greyBorder marginLR10">
+            <div layout="column" layout-align="center center" ng-if="reviewExam" class="greyBorder marginLR10" ng-click="examStep()">
                 <div layout="row" layout-align="center center" class="primaryBackground textWhite width100 paddingLR5">
                     Exam
                 </div>    
@@ -239,7 +239,7 @@
                     {{reviewExam.displayname}}
                 </div>
             </div>
-            <div layout="column" layout-align="center center" ng-if="reviewCity" class="greyBorder marginLR10">
+            <div layout="column" layout-align="center center" ng-if="reviewCity" class="greyBorder marginLR10" ng-click="cityStep()">
                 <div layout="row" layout-align="center center" class="primaryBackground textWhite width100 paddingLR5">
                     City
                 </div>    

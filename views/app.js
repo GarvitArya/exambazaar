@@ -7670,6 +7670,23 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 });
             };
             
+            $scope.examStep = function(){
+                $scope.selectStream = false;
+                $scope.selectExam = true;
+                $scope.selectCity = false;
+                $scope.searchCoaching = false;
+                $rootScope.reviewExam = null;
+                $rootScope.reviewCity = null;
+                $rootScope.reviewInstitute = null;
+            };
+            $scope.cityStep = function(){
+                $scope.selectStream = false;
+                $scope.selectExam = false;
+                $scope.selectCity = true;
+                $scope.searchCoaching = false;
+                $rootScope.reviewCity = null;
+                $rootScope.reviewInstitute = null;
+            };
             $scope.selectStream = true;
             $scope.selectExam = false;
             $scope.selectCity = false;
