@@ -470,6 +470,19 @@
             color: white;
             box-shadow: 0 0 5px #20C39A;
         }
+        .md-button.md-danger{
+            padding: 0px;
+            border: 2px solid #C00000;
+            background: #C00000;
+            color: white;
+        }
+        .md-button.md-danger:hover, .md-button.md-danger:focus, .md-button.md-green2:danger{
+            padding: 0px;
+            border: 2px solid #C00000;
+            background: #C00000;
+            color: white;
+            box-shadow: 0 0 5px #C00000;
+        }
         .md-button.md-black{
             margin: 0px;
             padding: 0px;
@@ -1530,7 +1543,7 @@
             </div>
         </div>
         <div layout="row" layout-align="end center">
-            <md-button class="md-green2 md-small font10 width8" ng-click="goToReview()">
+            <md-button class="md-danger md-small font10 width8" ng-click="goToReview()">
             Review Now
             </md-button>
         </div>
