@@ -6083,19 +6083,25 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         $cookies.putObject('sessionuser', sessionuser);
                         $scope.sessionuser = sessionuser;
                         $mdDialog.hide();
-                        //console.log(sessionuser.userType);
-
-                        if(sessionuser.userType =='Master'){  
-                            $state.go('master-dashboard', {masterId: sessionuser.userId});
-                        }
-                        if(sessionuser.userType =='Intern - Business Development'){
-                             $state.go('assigned', {userId: sessionuser.userId});
-                        }
-                        if(sessionuser.userType =='Student'){
+                        
+                        if($state.current.name == 'main'){
+                            if(sessionuser.userType =='Master'){
+                                
+                                $state.go('master-dashboard', {masterId: sessionuser.userId});
+                                
+                                
+                            }
+                            if(sessionuser.userType =='Intern - Business Development'){
+                                 $state.go('assigned', {userId: sessionuser.userId});
+                            }
+                            if(sessionuser.userType =='Student'){
+                                $state.reload();
+                            }
+                            if(sessionuser.userType =='Partner'){
+                                $state.go('partner-dashboard', {userId: sessionuser.userId});
+                            }
+                        }else{
                             $state.reload();
-                        }
-                        if(sessionuser.userType =='Partner'){
-                            $state.go('partner-dashboard', {userId: sessionuser.userId});
                         }
 
 
