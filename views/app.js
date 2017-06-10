@@ -1935,9 +1935,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
                 $scope.reviewParams.forEach(function(thisParam, index){
                                 
-                var pIndex = $scope.reviews.indexOf(parseInt(thisReview[thisParam.name]));
-                //console.log(parseInt(thisReview[thisParam.name]) + " " + pIndex);
-                $scope.setReview(thisParam.name,parseInt(thisReview[thisParam.name]), $scope.otherReviews[rindex]);
+                var pIndex = $scope.reviews.indexOf(parseFloat(thisReview[thisParam.name]));
+                    
+                //console.log(thisReview[thisParam.name] + " "+ parseFloat(thisReview[thisParam.name]) + " " + pIndex);
+                $scope.setReview(thisParam.name,parseFloat(thisReview[thisParam.name]), $scope.otherReviews[rindex]);
 
                 });
                 
@@ -1989,14 +1990,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         if($scope.userReview){
                             $scope.reviewParams.forEach(function(thisParam, index){
                                 
-                            var pIndex = $scope.reviews.indexOf(parseInt($scope.userReview[thisParam.name]));
-                            $scope.setReview(thisParam.name,parseInt($scope.userReview[thisParam.name]), $scope.userReview);
+                            var pIndex = $scope.reviews.indexOf(parseFloat($scope.userReview[thisParam.name]));
+                            $scope.setReview(thisParam.name,parseFloat($scope.userReview[thisParam.name]), $scope.userReview);
                                 
                             });
                         }
                         
                     }else{
-                        console.log('Here');
+                        //console.log('Here');
                         if($scope.user){
                             $scope.showUserReviewDialog();
                         }
