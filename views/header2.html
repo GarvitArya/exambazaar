@@ -32,6 +32,9 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" >
+                <li ng-if="sessionuser.userType=='Master'"><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
+                
+                
                 <li>
                 <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })">Profile</a>
                 </li>

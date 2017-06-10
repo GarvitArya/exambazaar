@@ -511,31 +511,48 @@
     #successOTP{
         background: green;
     }
-    #ratingCell{
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #reviewCell{
         margin: 1px;
         width: 20px;
         height: 20px;
         border-radius: 5px;
     }
     
-    #ratingCellEmpty{
+    #reviewCellEmpty{
         margin: 1px;
         margin-left: 10px;
         width: 20px;
         height: 20px;
         border-radius: 5px;
     }
-    .norating{background-color: #CBCBCB;}
-    .rating1{background-color:#CD1C26;}
-    .rating2{background-color:#DE1D0F;}
-    .rating3{background-color:#FF7800;}
-    .rating4{background-color:#FFBA00;}
-    .rating5{background-color:#CDD614;}
-    .rating6{background-color:#9ACD32;}
-    .rating7{background-color:#5BA829;}
-    .rating8{background-color:#3F7E00;}
-    .rating9{background-color:#305D02;}
+    .noreview{background-color: #CBCBCB;}
+    .review1{background-color:#CD1C26;}
+    .review2{background-color:#DE1D0F;}
+    .review3{background-color:#FF7800;}
+    .review4{background-color:#FFBA00;}
+    .review5{background-color:#CDD614;}
+    .review6{background-color:#9ACD32;}
+    .review7{background-color:#5BA829;}
+    .review8{background-color:#3F7E00;}
+    .review9{background-color:#305D02;}
     .hover{background-color: red;}
+    
+    
+    
+    
+    
+    
+    
+    
     
     input[type="text"]
     {
@@ -556,7 +573,7 @@
         border: solid 1px #707070;
         box-shadow: 0 0 5px 1px #969696;
     }
-    #userComment{
+    #userText{
         min-height: 20vh;
     }
     textarea{
@@ -567,6 +584,7 @@
         border-radius: 4px;
         box-sizing: border-box;
         margin-top: 10px;
+        color: #333333;
     }
     textarea:hover {
     }
@@ -621,31 +639,30 @@
     
     
     <div layout="row" layout-xs="column" class="componentRow secondFont">
-        
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1  bottomBorder textLightGrey" id="paneLeft" >
             <div class="componentRowElement height100" layout="column" layout-align="start start" >
-                Review
+                Reviews
             </div>
         </div>
         <div class="col-xs-12 hidden-sm hidden-md hidden-lg bottomBorder textLightGrey" id="paneLeft">
-            Review
+            Reviews
         </div>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement editFont" id="paneMiddle">
-            <div layout="row" ng-repeat="ratingParam in ratingParams" class="marginB5">
+            <div layout="row" ng-repeat="reviewParam in reviewParams" class="marginB5">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 textBlack  text-left">
-                    {{ratingParam.displayname}}
+                <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 textBlack  text-left">
+                    {{reviewParam.displayname}}
                 </div>
-                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+                <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
                 <div layout="row" layout-align="start center" >
-                    <div ng-repeat="rating in ratings" layout-align="center" id="ratingCell" ng-click="setRating(ratingParam.name, rating)" ng-mouseenter="logMouseEvent(ratingParam,  $index)"  ng-mouseleave="logMouseEvent(ratingParam,  $index)" class="norating" ng-class="getBackgroundColour(ratingParam,  $index)">
+                    <div ng-repeat="review in reviews" layout-align="center" id="reviewCell" ng-click="setReview(reviewParam.name, review)" ng-mouseenter="logMouseEvent(reviewParam,  $index)"  ng-mouseleave="logMouseEvent(reviewParam,  $index)" class="noreview" ng-class="getBackgroundColour(reviewParam,  $index)">
                     </div>
                     <div layout="row" layout-align="center center"  class="secondFont bold">
-                    <div layout="row" layout-align="center center" id="ratingCellEmpty">
-                    <span ng-if="userRating[ratingParam.name]" class="textBlack">
-                        {{userRating[ratingParam.name] | number:1}}
+                    <div layout="row" layout-align="center center" id="reviewCellEmpty">
+                    <span ng-if="userReview[reviewParam.name]" class="textBlack">
+                        {{userReview[reviewParam.name] | number:1}}
                     </span>
                     </div>
                 </div>
@@ -657,28 +674,40 @@
             <div layout="row" class="marginT10 marginB5">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <textarea class="font12 width100" ng-model="userRating.comment" placeholder="{{placeholder}}" rows="6" id="userComment"></textarea>
-                    <div class="font10 text-right" ng-if="userRating.comment.length > 10">{{userRating.comment.length}}/{{minCommentLength}} chars</div>
+                    <textarea class="font12 width100" ng-model="userReview.text" placeholder="{{placeholder}}" rows="6" id="userText"></textarea>
+                    <div class="font10 text-right" ng-if="userReview.text.length > 10 && userReview.text.length < minTextLength">{{userReview.text.length}}/{{minTextLength}} chars</div>
                 </div>
                 </div>
             </div>
             <div layout="row" layout-align="center center" class="marginTB20">
-                <md-button class="md-raised md-primary  font12"  id="doneButton" ng-disabled="invalidSubmit()" >Submit</md-button>
+                <md-button class="md-raised md-primary  font12"  id="doneButton" ng-disabled="invalidSubmit()" ng-click="submitReview()">Submit</md-button>
             </div>
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
-        
-        
-        
-        
-        
-        
-        
     </div>
     
     
     
  </div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedReviewDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Review Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>

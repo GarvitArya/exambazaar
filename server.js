@@ -95,6 +95,7 @@ var routes = require('./app/routes.js')(app, passport);
 //var institutes = require('./app/institutes.js',institutes); 
 var providers = require('./app/providers.js',providers); 
 var targetStudyProviders = require('./app/targetStudyProviders.js',targetStudyProviders); 
+var reviews = require('./app/reviews.js',reviews); 
 var groups = require('./app/groups.js',groups); 
 var logourls = require('./app/logourls.js',logourls); 
 var masters = require('./app/masters.js',masters); 
@@ -126,6 +127,7 @@ var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredent
 
 app.use('/api/providers', providers);
 app.use('/api/targetStudyProviders', targetStudyProviders);
+app.use('/api/reviews', reviews);
 app.use('/api/groups', groups);
 app.use('/api/logourls', logourls);
 //app.use('/api/admins', admins);

@@ -339,7 +339,7 @@ input {
     -webkit-transition: opacity 0.3s cubic-bezier(0.4, 0, 1, 1);
     transition: opacity 0.3s cubic-bezier(0.4, 0, 1, 1); }
 
-md-autocomplete {
+md-autocomplete{
   border-radius: 2px;
   display: block;
   height: 40px;
@@ -427,7 +427,7 @@ md-autocomplete {
     outline: none;
     background: transparent;
     width: 100%;
-    padding: 0 15px;
+    padding: 0 5px;
     line-height: 40px;
     height: 40px; }
     md-autocomplete input:not(.md-input)::-ms-clear {
@@ -555,13 +555,13 @@ md-backdrop {
   md-backdrop.md-click-catcher {
     position: absolute; }
   md-backdrop.md-opaque {
-    opacity: .48; }
+    opacity: .94; }
     md-backdrop.md-opaque.ng-enter {
       opacity: 0; }
     md-backdrop.md-opaque.ng-enter.md-opaque.ng-enter-active {
-      opacity: .48; }
+      opacity: .94; }
     md-backdrop.md-opaque.ng-leave {
-      opacity: .48;
+      opacity: .94;
       -webkit-transition: opacity 400ms;
       transition: opacity 400ms; }
     md-backdrop.md-opaque.ng-leave.md-opaque.ng-leave-active {

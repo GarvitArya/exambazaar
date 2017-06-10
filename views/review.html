@@ -34,9 +34,11 @@
         background: #20C39A;
     }
     #questionSection{
-        min-height: 20vh;
+        min-height: 30vh;
     }
-     
+    #submitSection{
+        min-height: 15vh;
+    }
     
 </style>
 
@@ -44,74 +46,220 @@
 <div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
-    <div layout="column" class="" layout-padding>
-        <div layout="column" layout-align="center center" >
-            <div layout="row" layout-align="center center" class="secondFont bold">
-                Review your Coaching Institute
-            </div>
-            <div layout="row" class="editFont">
-                Review your coaching institute to unlock discounts from Bansal Classes, Plancess, Handa ka Funda and Dominos
-            </div>
-        </div>
-        <div layout="row" layout-align="start center" class="editFont " id="questionSection">
-            <div layout="row" layout-padding flex="30">
-                <span>
-                1. Pick City
-                </span>
-            </div>
-            <div flex>
-                <md-input-container class="width100 text-primary">
-                  <md-select ng-model="city"  placeholder="Where did you study?">
+    
+    <div layout="row" id="offerRow" ng-controller="offerController">
 
-                    <md-option ng-value="thiscity" ng-repeat="thiscity in rankedCities" class="text-primary" ng-click="update(thiscity)">
-                      {{thiscity}}
-                    </md-option>
-                  </md-select>
-                </md-input-container>
-            </div>
-        </div>
-        <div layout="row" layout-align="start center" class="editFont " id="questionSection">
-            <div layout="row" layout-padding flex="30">
-                <span>
-                2. Coaching Centre
-                </span>
-            </div>
-            <div flex ng-controller="autocompleteController2 as ctrl">
-                
-                <md-autocomplete flex required 
-                md-selected-item="ctrl.selectedItem"
-                md-selected-item-change= "ctrl.selectedItemChange(item)"
-                md-search-text="ctrl.searchText"
-                md-items="item in ctrl.querySearch(ctrl.searchText)"
-                md-item-text="item.name"
-                md-delay="300"
-                md-require-match
-                placeholder="Search your coaching centre"
-                md-menu-class="autocomplete-custom-template"
-                class="width100">
-                    
-                    <md-item-template >
-                      <span class="item-title font12">
-                          <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
-                          <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
-                      </span>
-                      <span class="item-metadata">
-                        <span class="item-metastat font10">
-                          {{item.city}}:
-                        </span>&nbsp;
-                        <span class="item-metastat font10">
-                          {{item.address}}
+              <div layout="column" layout-align="center center" class=" width100 secondFont ">
+                  <!-- href="#userReview" du-smooth-scroll du-scrollspy offset="200"-->
+                <div layout="column" layout-align="center center" class="translucentBackground width100 padding10">
+
+                <div layout="column" layout-align="center center" class="secondFont marginTB10" style="display:inline-block" >
+                    <div layout="row" layout-align="center center" class="marginB10 offerFont spacedLetter1">
+                        <span hide-xs class="text-center font20">
+                        <!--
+                        Review your coaching institute at Exambazaar to unlock amazing discounts and offers from
+                        -->
+                            You’d love our discounts on the most popular exam prep courses!
                         </span>
-                      </span>
-                    </md-item-template>
-                    <md-not-found>
-                        No matches found.
-                    </md-not-found>
-                </md-autocomplete>
+                        <span hide-gt-xs class="font12 text-center">
+                            You’d love our discounts on the most popular exam prep courses!
+                        </span>
+                    </div>
+
+
+                    <div layout="row" layout-align="center center" class="translucentWhiteBackground textBlack spacedLetter1 paddingT10">
+                        <span hide-xs class="font14 text-center">
+                            Unlock discounts from 20% - 50% on
+                        </span>
+                        <span hide-gt-xs class="font10 text-center">
+                            Unlock discounts from 20% - 50% on
+                        </span>
+
+
+                    </div>
+                    <div layout="row" layout-align="center center" class="translucentWhiteBackground">
+
+                        <div hide-xs layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10 paddingTB10">
+                            <div>
+                                <img ng-src="{{offer.image}}" id="offerImage"/>
+                            </div>
+                            <div class="font12 bold textBlack paddingT5">
+                                {{offer.displayname}}
+                            </div>
+                        </div>
+                        <div hide-gt-xs layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5 paddingTB10">
+                            <div layout="row" layout-align="center center" class="marginT5">
+                                <img ng-src="{{offer.image}}" id="smallofferImage"/>
+                            </div>
+                            <div layout="row" layout-align="center center" class="font8 textBlack text-center narrowLine paddingT5" >
+                                {{offer.displayname}}
+                            </div>
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="center center" class=" marginB10 secondFont dangerBackground" ng-click="goToReview()">
+                        <span hide-xs class="text-center">
+                            Review your Coaching Institute
+                        </span>
+                        <span hide-gt-xs class="font14 text-center">
+                            Review your Coaching Institute
+                        </span>
+
+                    </div>
+                </div>
+
+                <!--<div hide-gt-xs layout="row" layout-align="center center" class="paddingB10 secondFont ">
+                <md-button class="md-small md-green2  font12 tolowercase width50"  ng-click="">Review Now</md-button>
+                </div>-->
+
+                </div>
+
+                </div>
+
+
+
+        </div>
+            
+    
+    <div layout="column" layout-align="start center" id="Reviews" class="greyBorder textBlack margin10 marginB80 padding10">
+        <div layout="column" layout-align="start center">
+            <div layout="row" layout-align="center center" class="secondFont bold">
+                Find you Coaching Institute to review
             </div>
         </div>
-        <div layout="row" layout-align="center center" class="editFont " id="questionSection">
-            <md-button class="md-raised md-primary  font12"  id="doneButton" ng-disabled="!city || !reviewInstitute._id" ui-sref="reviewCenter({ coachingId:{{'reviewInstitute._id'}} })">Next</md-button>
+        
+        <div layout="row" layout-align="center start" id="questionSection" ng-if="selectStream" class="width100">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 secondFont text-center marginTB10">
+                    1. Select Stream
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 paddingLR10" ng-repeat="stream in streams | orderBy:'-rank'" ng-if="stream.name !='other'" ng-click="updateStream(stream)">
+                    <div id="categoryFont" class="text-center">
+                    {{stream.displayname}}
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row" layout-align="center start" id="questionSection" ng-if="selectExam" class="width100">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 secondFont text-center marginTB10">
+                    2. Select Exam
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 paddingLR10" ng-repeat="exam in exams | orderBy:'-rank'" ng-if="exam.stream._id == reviewStream._id" ng-click="updateExam(exam)">
+                    <div id="categoryFont" class="text-center">
+                    {{exam.displayname}}
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row" layout-align="center start" id="questionSection" ng-if="selectCity" class="width100">
+            <div class="row width100">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 secondFont text-center marginTB10">
+                    3. Select City
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 width100" >
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 paddingLR10" ng-repeat="city in rankedCities" ng-click="updateCity(city)">
+                    <div id="categoryFont" class="text-center">
+                    {{city}}
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row" layout-align="center center" id="questionSection" ng-if="searchCoaching" class="width100">
+            <div class="row width100">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 secondFont text-center marginTB10">
+                    4. Select Coaching Centre
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 width100" >
+                    <div flex ng-controller="cityGroupExamQueryController as ctrl" class="width100">
+
+                    <md-autocomplete flex required 
+                    md-selected-item="ctrl.selectedItem"
+                    md-selected-item-change= "ctrl.selectedItemChange(item)"
+                    md-search-text="ctrl.searchText"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-item-text="item.name"
+                    md-delay="300"
+                    md-require-match
+                    placeholder="Search your coaching centre"
+                    md-menu-class="autocomplete-custom-template"
+                    class="width100">
+
+                        <md-item-template >
+                          <span class="item-title font12">
+                              <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                              <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
+                          </span>
+                          <span class="item-metadata">
+                            <span class="item-metastat font10">
+                              {{item.city}}:
+                            </span>&nbsp;
+                            <span class="item-metastat font10">
+                              {{item.address}}
+                            </span>
+                          </span>
+                        </md-item-template>
+                        <md-not-found>
+                            No matches found.
+                        </md-not-found>
+                    </md-autocomplete>
+                </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+        
+        
+        <div layout="row" layout-align="center center" class="secondFont bold font10" id="submitSection">
+            <div layout="column" layout-align="center center" ng-if="reviewStream" class="greyBorder marginLR10">
+                <div layout="row" layout-align="center center" class="primaryBackground textWhite width100 paddingLR5">
+                    Stream
+                </div>    
+                <div layout="row" layout-align="center center" class="paddingLR5">
+                    {{reviewStream.displayname}}
+                </div>
+            </div>
+            <div layout="column" layout-align="center center" ng-if="reviewExam" class="greyBorder marginLR10">
+                <div layout="row" layout-align="center center" class="primaryBackground textWhite width100 paddingLR5">
+                    Exam
+                </div>    
+                <div layout="row" layout-align="center center" class="paddingLR5">
+                    {{reviewExam.displayname}}
+                </div>
+            </div>
+            <div layout="column" layout-align="center center" ng-if="reviewCity" class="greyBorder marginLR10">
+                <div layout="row" layout-align="center center" class="primaryBackground textWhite width100 paddingLR5">
+                    City
+                </div>    
+                <div layout="row" layout-align="center center" class="paddingLR5">
+                    {{reviewCity}}
+                </div>
+            </div>
+            <div layout="column" layout-align="center center" ng-if="reviewInstitute" class="greyBorder marginLR10">
+                <div layout="row" layout-align="center center" class="primaryBackground textWhite width100 paddingLR5">
+                    Coaching Centre
+                </div>    
+                <div layout="row" layout-align="center center" class="paddingLR5">
+                    {{reviewInstitute.name}}
+                </div>
+            </div>
+        </div>
+        
+        <div layout="row" layout-align="end center" class="editFont " id="submitSection">
+            <div ng-show="reviewStream"  class="editFont marginR10 font10">
+                <a ng-click="clearAll()">
+                    Clear All
+                </a>
+            </div>
+            
+            <md-button ng-show="reviewStream" class="md-raised md-primary font12 tolowercase"  id="doneButton" ng-disabled="checkReviewButton()" ng-click="goToReview()">
+                Review {{reviewInstitute.name}}
+            </md-button>
         </div>
         
     </div>

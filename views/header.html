@@ -117,7 +117,7 @@
               </ul>
             </li> 
             </ul>
-            <ul flex class="nav navbar-nav marginR20" ng-controller="autocompleteController as ctrl">
+            <ul flex class="nav navbar-nav marginR20" ng-controller="autocompleteController as ctrl" ng-if="sessionuser.userType=='Intern - Business Development' || sessionuser.userType=='Master'">
                 <md-autocomplete flex 
                     md-selected-item="ctrl.selectedItem"
                     md-selected-item-change= "ctrl.selectedItemChange(item)"
@@ -153,7 +153,7 @@
         <ul class="nav navbar-nav">
         <li>
             <span ng-if="sessionuser.image">
-                <img ng-src="{{sessionuser.image}}" id="userPic"/>
+                <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle"/>
             </span>
         </li>
         <li class="dropdown paddingR20" >

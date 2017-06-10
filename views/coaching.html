@@ -277,37 +277,26 @@
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             
                             
-                        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="result in coachingGroup.groupResults" id="imageContainer">
+                        <div class="col-xs-4 col-sm-4 col-md-1 col-lg-1 text-center" ng-repeat="result in coachingGroup.groupResults" id="imageContainer" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                          <!--
                         ng-click="showResultDialog($event, $index, result)"
                         && result.image && result.image!=''-->
                         <div ng-if="$index < 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
-                            <div layout="row" layout-align="end center" class="text-white" id="thumbnailResultText">
-                                <div flex="60" layout="row" layout-padding layout-align="start center" class="font10">
+                            <div layout="row" layout-align="center center" class="text-white font7" id="thumbnailResultText">
+                                <div flex="60" layout="row"  layout-align="start center" class="paddingL5">
                                     <span ng-if="subcategory.resultFormat == 'Rank'">
                                         AIR {{result.rank}}
                                     </span>
                                     <span ng-if="subcategory.resultFormat == 'Marks'">
                                         {{result.marks}}
                                     </span>
-                                    
-                                    
                                 </div>
-                                <div flex="40" layout="row" layout-padding layout-align="end center" class="font8">
+                                <div flex="40" layout="row"  layout-align="end center" class="paddingR5">
                                     {{result.year}}
                                 </div>
-                                
-                            
-                                
-                                <!--<div flex layout="row">
-                                    <span class="font8">
-                                    AIR {{result.rank}}
-                                    {{result.category}}
-                                    {{result.name}}
-                                    </span>
-                                    
-                                </div>-->
-                                 
+                            </div>
+                            <div layout="row" layout-align="center center" class="text-white font7" id="thumbnailResultTextTop">
+                                {{result.name}}
                             </div>
                         </div>
                         <div ng-if="$index == 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">

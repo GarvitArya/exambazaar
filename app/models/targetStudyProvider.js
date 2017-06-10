@@ -167,6 +167,7 @@ var targetStudyProviderSchema = mongoose.Schema({
         },
         examRating:[{
             exam: { type: Schema.ObjectId, ref: 'exam' },
+            resultType: {type: String, default: 'CLP+DLP'},
             rating: {
                 percent_students_selected: {option: String, estimate: Boolean, value: String,},
                 ranks_top100: {option: String, estimate: Boolean, value: String,},

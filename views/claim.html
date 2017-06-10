@@ -44,16 +44,7 @@
         border-left: 4px solid #20C39A;
     }
     
-    .saveCancel{
-        position:fixed; 
-        bottom:0%;
-        width:100%;
-        padding-left:40px;
-        padding-right:40px;
-        background: #f7f7f7;
-        color: black;
-        border-top: 1px solid #ccc;
-    }
+    
     .componentRow{
         min-height: 20vh;
     }
@@ -755,8 +746,9 @@
                         </span>
                     </span>
                     <div class="marginT10">
-                        <input type="checkbox" ng-model="ratingParamEstimate[ratingParam.name]">Rough Estimate?&nbsp;&nbsp;
-                        <input type="text" class="" ng-model="ratingParamValue[ratingParam.name]"  placeholder="Value">
+                        
+                        <input type="text" class="" ng-model="ratingParamValue[ratingParam.name]"  placeholder="Value">&nbsp;&nbsp;
+                        <input type="checkbox" ng-model="ratingParamEstimate[ratingParam.name]">Is it a Rough Estimate?
                     </div>
                 </div>
             </div>
@@ -803,7 +795,24 @@
                             Mark the value
                         </div>
                     </div>
-                    <div layout="row" layout-align="center center" ng-repeat="examRatingParam in examRatingParams" class="marginTB5 width100">
+                    <div layout="row" layout-align="center center" class="marginTB5 width100 gainsboroBottomBorder">
+                    <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5" class="showBorder">
+                        <span >
+                            Result Type
+                        </span>
+                    </div>
+                    <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
+                        <span ng-repeat="examRatingResultType in examRatingResultTypes">
+                            <span class="badge" id="ratingTagHolder" ng-if="!examRatingParamValue.resultType || examRatingResultType!=examRatingParamValue.resultType" ng-click="setExamRatingResultType(examRatingResultType, examRatingParamValue)">
+                                {{examRatingResultType}}
+                            </span>
+                            <span class="badge" id="existingRatingTagHolder" ng-if="examRatingParamValue.resultType && examRatingResultType==examRatingParamValue.resultType" ng-click="setExamRatingResultType(examRatingResultType, examRatingParamValue)">
+                                {{examRatingResultType}}
+                            </span>
+                        </span>
+                    </div>
+                    </div>
+                    <div layout="row" layout-align="center center" ng-repeat="examRatingParam in examRatingParams" class="marginTB5 width100 gainsboroBottomBorder">
                         <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5" class="showBorder">
                             <span >
                                 {{examRatingParam.displayname}}
@@ -819,8 +828,9 @@
                                 </span>
                             </span>
                             <div class="marginT10">
-                                <input type="checkbox" ng-model="examRatingParamValue.rating[examRatingParam.name].estimate">Rough Estimate?&nbsp;&nbsp;
-                                <input type="text" class="" ng-model="examRatingParamValue.rating[examRatingParam.name].value"  placeholder="Value">
+                                <input type="text" class="" ng-model="examRatingParamValue.rating[examRatingParam.name].value"  placeholder="Value">&nbsp;&nbsp;
+                                <input type="checkbox" ng-model="examRatingParamValue.rating[examRatingParam.name].estimate">Is it a Rough Estimate?
+                                
                             </div>
                         </div>
                     </div>
@@ -3047,7 +3057,7 @@
 
 
 
-<div class="saveCancel">
+<div class="bottomBar">
     <div layout="row" ng-show="editContact || editExam || editCourse || editResult || editResult2 ||  editPhoto || editResultPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
         <div flex ="80">
             <span>
@@ -3062,7 +3072,7 @@
             </span>
         </div>
         <div layout="row" flex = "20">
-            <md-button class="md-green md-small font10 width8" ng-click="saveProvider()">
+            <md-button class="md-green2 md-small font10 width8" ng-click="saveProvider()">
             Save
             </md-button>
             <!--<md-button class="md-default md-cancel md-small  minwidth10" ng-click="dontsaveChanges()">

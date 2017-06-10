@@ -474,6 +474,37 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.get('/api/tofillcis/user/'+userId, {userId: userId});
         };
     }]);
+        
+    
+    exambazaar.service('reviewService', ['$http', function($http) {
+       
+        this.savereview = function(reviewForm) {
+            return $http.post('/api/reviews/save', reviewForm);
+        };
+        this.existingReview = function(userInstituteForm) {
+            return $http.post('/api/reviews/existingReview', userInstituteForm);
+        };
+        this.groupReviews = function(groupReviews) {
+            return $http.post('/api/reviews/groupReviews', groupReviews);
+        };
+        
+        this.reviewsCount = function() {
+            return $http.get('/api/reviews/reviewsCount');
+        };
+        this.getreview = function(reviewId) {
+            return $http.get('/api/reviews/edit/'+reviewId, {reviewId: reviewId});
+        };
+        this.removereview = function(reviewId){
+            $http.get('/api/reviews/remove/'+reviewId, {reviewId: reviewId});
+        };
+        this.getreviews = function() {
+            return $http.get('/api/reviews');
+        };
+        this.getuserreview = function(userId) {
+            return $http.get('/api/reviewServices/user/'+userId, {userId: userId});
+        };
+    }]);
+        
     exambazaar.service('rateInstituteService', ['$http', function($http) {
        
         this.saverateInstitute = function(rateInstituteForm) {
@@ -681,6 +712,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         this.searchCityProviders = function(cityQueryForm) {
             return $http.post('/api/targetStudyProviders/cityQuery',cityQueryForm);
+        };
+        this.cityGroupExamQueryForm = function(cityGroupExamQueryForm) {
+            return $http.post('/api/targetStudyProviders/cityGroupExamQuery',cityGroupExamQueryForm);
         };
         this.bulkSaveLatLng = function(LatLngForm) {
             return $http.post('/api/targetStudyProviders/bulkSaveLatLng',LatLngForm);
@@ -999,7 +1033,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]); 
     exambazaar.controller("landingController", 
-        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','metaService', function($scope,$stateParams,$cookies,$state,categories,$rootScope,metaService){
+        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','metaService', '$mdDialog', function($scope,$stateParams,$cookies,$state,categories,$rootScope,metaService, $mdDialog){
         $scope.hideLoginDialog();
         $scope.number = 24;
         $scope.getNumber = function(num) {
@@ -1015,6 +1049,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $rootScope.pageDescription = "Search and apply to the best coaching institutes and get the education that you deserve. Browse through courses, photos, videos and results for 26000+ institutes in 90+ cities";
         $rootScope.pageKeywords = "Exambazaar, Best Coaching Institutes, Top Coaching Centre, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
         
+        
+            
         $scope.goToCity = function(subcategory){ 
             $cookies.putObject('subcategory', subcategory);
             $state.go('city');
@@ -1463,9 +1499,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
    
     exambazaar.controller("showGroupController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', 'ngMeta', 'viewService', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, ngMeta, viewService){
-        $scope.exam = thisExam.data;
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout', 'ngMeta', 'viewService', 'reviewService', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout, ngMeta, viewService, reviewService){
+        $rootScope.reviewStream = null;
+        $rootScope.reviewExam = null;
+        $rootScope.reviewCity = null;
+        $rootScope.reviewInstitute = null;
         
+        
+        $scope.exam = thisExam.data;
         $scope.category = thisStream.data;
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
@@ -1593,9 +1634,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             'Photos',
             'Videos',
             'Faculty',
-            'Location'
+            'Location',
+            'Reviews'
         ];
-        
         $scope.rankCategories = [
             'GENERAL',    
             'OBC-NCL',    
@@ -1623,7 +1664,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.group = thisGroup.data;
         var groupDisabled = $scope.group.map(function(a) {return a.disabled;});
-        console.log(groupDisabled);
+        var groupIds = $scope.group.map(function(a) {return a._id;});
+        //console.log(groupDisabled);
         $scope.provider = {
             name: $stateParams.groupName,
             city: $stateParams.cityName
@@ -1812,7 +1854,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
         var instituteIds = $scope.group.map(function(a) {return a._id;});
-        console.log(instituteIds);
+        //console.log(instituteIds);
         $scope.user = $cookies.getObject('sessionuser');
         var viewForm = {
             institutes: instituteIds,
@@ -1851,6 +1893,294 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         var groupKeywords = "Top " + $stateParams.subCategoryName + " Coaching in " + $stateParams.cityName + ", " + $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ", " + $scope.group.length + " " + $stateParams.groupName + " Centers in " + $scope.city + ", ";
         $rootScope.pageKeywords = groupKeywords + examNamesKeywords;
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        $scope.years = ["2017","2016","2015","2014","2013","2012","2011","2010","2009","2008","2007","2006","2005","2004","2003"];
+        $scope.updateUserReviewYear = function(year){
+            if($scope.userReview){
+                UserService.year_of_start = year;
+            }
+        };
+        $scope.userReviewMode = false;
+        
+        $scope.showUserReviewDialog = function(ev,index) {
+            $mdDialog.show({
+              contentElement: '#userReviewDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            }).finally(function() {
+                $scope.userReviewMode = true;
+            });
+        };
+        
+        
+        
+        $scope.editUserReviewMode = function(){
+            $scope.userReviewMode = !$scope.userReviewMode;
+        };
+        reviewService.groupReviews(groupIds).success(function (data, status, headers) {
+            $scope.otherReviews = data;
+            $scope.otherReviews.forEach(function(thisReview, rindex){
+                var instituteId = thisReview.institute;
+                var iIndex = groupIds.indexOf(instituteId);
+                thisReview.institute = $scope.group[iIndex];
+                
+                $scope.reviewParams.forEach(function(thisParam, index){
+                                
+                var pIndex = $scope.reviews.indexOf(parseInt(thisReview[thisParam.name]));
+                //console.log(parseInt(thisReview[thisParam.name]) + " " + pIndex);
+                $scope.setReview(thisParam.name,parseInt(thisReview[thisParam.name]), $scope.otherReviews[rindex]);
+
+                });
+                
+                
+                
+            });
+            
+            
+        })
+        .error(function (data, status, header, config) {
+            console.info('Error ' + data + ' ' + status);
+        });
+        groupIds
+        $scope.updateReviewInstitute = function(thisGroup){
+            $scope.userReview.institute = thisGroup._id;
+            console.log($scope.userReview.institute);
+        };
+        $scope.reviewParams = [
+            {name: "faculty", displayname:"Faculty and Teaching Experience", hoverVal: -1},
+            {name: "competitive_environment", displayname:"Competitive Environment", hoverVal: -1},
+            {name: "quality_of_material", displayname:"Quality of material", hoverVal: -1},
+            {name: "infrastructure", displayname:"Infrastructure", hoverVal: -1},
+        ];
+        
+        $scope.userReview = {
+            institute: null,
+            exam: $scope.exam._id,
+            stream: $scope.category._id,
+            text: ''
+        };
+        if($scope.user && $scope.user.userId){
+            $scope.userReview.user = $scope.user.userId;
+        }
+        $scope.reviewParams.forEach(function(thisParam, index){
+            $scope.userReview[thisParam.name] = null;
+        });
+        var noReview = false;
+        var reviewsQueried = false;
+        $scope.$watch('user.userId', function (newValue, oldValue, scope) {
+            if(newValue && !reviewsQueried){
+                reviewsQueried = true;
+                var userInstituteForm = {
+                    user: newValue,   
+                    instituteIdArray: groupIds,   
+                }; reviewService.existingReview(userInstituteForm).success(function (data, status, headers) {
+                    if(data && data.length > 0){
+                        $scope.userReview = data[0];
+                        
+                        if($scope.userReview){
+                            $scope.reviewParams.forEach(function(thisParam, index){
+                                
+                            var pIndex = $scope.reviews.indexOf(parseInt($scope.userReview[thisParam.name]));
+                            $scope.setReview(thisParam.name,parseInt($scope.userReview[thisParam.name]), $scope.userReview);
+                                
+                            });
+                        }
+                        
+                    }else{
+                        console.log('Here');
+                        if($scope.user){
+                            $scope.showUserReviewDialog();
+                        }
+                    } 
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                }); 
+            }else{
+            }
+        }, true);
+        $scope.reviews = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
+        $scope.reviewsClasses = ["review1","review2","review3","review4","review5","review6","review7","review8","review9"];
+        $scope.minTextLength = 140;
+        
+        $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + $scope.minTextLength + " characters long :)";
+        
+        var paramNames = $scope.reviewParams.map(function(a) {return a.name;});
+        
+        $scope.getBackgroundColour = function(reviewParam,  paramIndex, userReview){
+            var pIndex = paramNames.indexOf(reviewParam.name);
+            var className = "noreview";
+            
+            var propName = $scope.reviewParams[pIndex].name;
+            
+            if(userReview && userReview[propName]){
+                var review = userReview[propName];
+                var rIndex = $scope.reviews.indexOf(review);
+                //console.log(rIndex);
+                if(paramIndex <= rIndex){
+                    var rIndex2 = rIndex + 1;
+                    className = "review" + rIndex2;    
+                }
+            }
+            
+            if($scope.reviewParams[pIndex].hoverVal >= 0){
+                className = "noreview";
+            };
+            
+            if($scope.reviewParams[pIndex].hoverVal >= paramIndex){
+                
+                var paramIndex2 = paramIndex + 1;
+                className = "review" + paramIndex2;
+            }
+            
+            
+            return className;
+        };
+        
+        
+        $scope.getSelectedColour = function(thisGroup){
+            var className = "notselected";
+            if($scope.userReview && $scope.userReview.institute && $scope.userReview.institute == thisGroup._id){
+                className = "selected";
+            }
+            
+            return className;
+        };
+        $scope.logMouseEvent = function(reviewParam,  paramIndex) {
+            switch (event.type) {
+              case "mouseenter":
+                    console.log("Hey Mouse Entered");
+                    break;
+              case "mouseover":{
+                    var pIndex = paramNames.indexOf(reviewParam.name);
+                    $scope.reviewParams[pIndex].hoverVal = paramIndex;
+                    break;
+              }
+              case "mouseout":{
+                    var pIndex = paramNames.indexOf(reviewParam.name);
+                    $scope.reviewParams[pIndex].hoverVal = -1;
+                    break;
+              }
+                    
+              case "mouseleave":
+                console.log("Mouse Gone");
+                break;
+
+              default:
+                console.log(event.type);
+                break;
+            };
+        };
+        $scope.reviewCentreError = false;
+        $scope.showSelectReviewCentreDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#selectReviewCentreDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        
+        $scope.showSavedReviewDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#savedReviewDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
+        
+        $scope.selectReviewCentre = function(){
+            if($scope.group.length > 1){
+                $scope.showSelectReviewCentreDialog();
+            }else{
+                $scope.updateReviewInstitute($scope.group[0]);
+                $scope.submitReview();
+            }
+        };
+        $scope.cancelSelectReviewCentre = function(){
+            $scope.reviewCentreError = false;
+            $mdDialog.hide();
+        };
+        
+        
+        $scope.submitReview = function(){
+            if(!$scope.userReview.institute){
+                $scope.reviewCentreError = true;
+            }else{
+                if($scope.userReview.user){
+                    reviewService.savereview($scope.userReview).success(function (data, status, headers) {
+                        $scope.showSavedReviewDialog();
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error ' + data + ' ' + status);
+                    });
+                }else{
+                    console.log('No user set');
+                    $scope.showLoginForm();
+                }
+            }
+            
+            
+        };
+        
+        
+        
+        $scope.checkReview = function(reviewParam, rateVal) {   
+            if($scope.userReview[reviewParam.name] >=rateVal){return true;}else{return false;}
+        }
+        
+        $scope.setReview = function(param, value, userReview){
+            //console.log(userReview);
+            if(userReview){
+                userReview[param] = value;
+            }
+            
+        };
+        $scope.invalidSubmit = function(){
+            var invalid = false;
+            
+            $scope.reviewParams.forEach(function(thisParam, index){
+                if(!$scope.userReview || !$scope.userReview[thisParam.name]){
+                    invalid = true;
+                }
+            });
+            if($scope.userReview){
+                $scope.userReview.text = $scope.userReview.text.trim();
+                $scope.userReview.text = $scope.userReview.text.replace(/\s+/g, " ");
+
+                var textLength = $scope.userReview.text.length;
+                //console.log(textLength);
+                if(textLength < $scope.minTextLength){
+                    invalid = true;
+                }
+            }
+            if(!$scope.userReview.exam ||  !$scope.userReview.stream ||  !$scope.userReview.year_of_start){
+                invalid = true;
+            }
+            
+            return invalid;
+        };
+        
+        
+        
+        
+        
+        
+        
     }]);    
            
    
@@ -4053,6 +4383,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $scope.ratingParams = [
             {
+                name: "n_centers",
+                displayname: "No. of Centres",
+                options: ["> 20","10 - 20","5 - 10","2 - 5","1"],
+                
+            },
+            {
+                name: "n_exams",
+                displayname: "No. of Exams",
+                options: ["> 5","4","3","2","1"],
+                
+            },
+            {
                 name: "total_students",
                 displayname: "Total Students",
                 options: ["> 1000","500 - 1000","250 - 500","100 - 250","< 100"],
@@ -4076,18 +4418,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 options: ["> 15","10 - 15","5 - 10","2 - 5","< 2"],
                 
             },
-            {
-                name: "n_exams",
-                displayname: "No. of Exams",
-                options: ["> 5","4","3","2","1"],
-                
-            },
-            {
-                name: "n_centers",
-                displayname: "No. of Centres",
-                options: ["> 20","10 - 20","5 - 10","2 - 5","1"],
-                
-            },
+            
         ];
         
         $scope.ratingFacilities = [
@@ -4114,13 +4445,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             {
                 name: "ranks_top100",
                 displayname: "Ranks of students in top 100",
-                options: ["> 25","15 - 25","10 - 15","5 - 10","1 - 5"],
+                options: ["> 25","15 - 25","10 - 15","5 - 10","1 - 5","0"],
                 
             },
             {
                 name: "ranks_top1000",
                 displayname: "Ranks of students in top 1000",
-                options: ["> 200","100 - 200","50 - 100","10 - 50","< 10"],
+                options: ["> 200","100 - 200","50 - 100","10 - 50","< 10", "0"],
                 
             },
         ];
@@ -4148,10 +4479,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
         });
         
+        $scope.setExamRatingResultType = function (examRatingResultType, examRatingParamValue){
+            examRatingParamValue.resultType = examRatingResultType;
+        };
+        $scope.examRatingResultTypes = ['CLP only','CLP+DLP'];
         
         $scope.provider.exams.forEach(function(thisExam, examIndex){
             var examRating = {
                 exam: thisExam,
+                resultType: 'CLP+DLP',
                 rating: {
                 },
             };
@@ -5406,6 +5742,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.signupMode = false;
         $scope.signupToggle = function(){
             $scope.signupMode = !$scope.signupMode;
+            console.log($scope.signupMode);
         };
         ipService.getip()
         .success(function (data, status, headers) {
@@ -7085,7 +7422,78 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
             $rootScope.title ='Sandbox';
     }]);
+        
+      
     
+    exambazaar.controller("offerController", 
+        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document){
+        
+        /*$scope.offers = [
+            {
+                image: "images/partners/careerpoint.png",
+                name: "careerpoint",
+                displayname: "Career Point",
+            },
+            {
+                image: "images/partners/toppr.png",
+                name: "toppr",
+                displayname: "Toppr",
+            },
+            {
+                image: "images/partners/bansal.jpg",
+                name: "bansal",
+                displayname: "Bansal Classes",
+            },
+            {
+                image: "images/partners/plancess.png",
+                name: "plancess",
+                displayname: "Plancess",
+            },
+            {
+                image: "images/partners/testbook.png",
+                name: "testbook",
+                displayname: "Testbook",
+            },
+            {
+                image: "images/partners/hkf.jpg",
+                name: "hkf",
+                displayname: "Handa ka Funda",
+            },
+        ];*/
+            $scope.offers=[];
+        $scope.instituteHolder = "your Coaching Institute";    
+        $scope.goToReview = function(){
+            var statesToShow = ["landing","main","category","city","findCoaching"];
+            var sIndex = statesToShow.indexOf($state.current.name);
+            
+            if($state.current.name == 'showGroup'){
+                $mdDialog.hide();
+                var someElement = angular.element(document.getElementById('Reviews'));
+                $document.scrollToElement(someElement, -200, 1000);
+            }else if($state.current.name == 'review'){
+                var someElement = angular.element(document.getElementById('Reviews'));
+                $document.scrollToElement(someElement, 0, 1000);
+            }else if(sIndex != -1){
+                
+                $state.go('review');
+            }
+            
+            
+        };
+        
+        $scope.showBottomOfferBar = function(){
+            var showMe = false;
+            var statesToShow = ["landing","main","category","city","findCoaching"];
+            var sIndex = statesToShow.indexOf($state.current.name);
+            
+            if(sIndex != -1){
+                showMe = true;
+            }
+            
+            return showMe;
+        }; 
+    }]);    
+        
     exambazaar.controller("coachingGroupAutocompleteController", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
             
@@ -7207,17 +7615,106 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $rootScope.pageURL = currURL;
             $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
     }]);
+    exambazaar.controller("cityGroupExamQueryController", 
+        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        
+        this.selectedItemChange = selectedItemChange;
+        function selectedItemChange(item) {
+            console.info('Item changed to ' + JSON.stringify(item));
+            //$state.go('claim', {coachingId: item._id});
+            $rootScope.reviewInstitute = item;
+        };
+        this.querySearch = function(query){
+            if(query.length > 2){
+                var cityGroupExamQuery = {
+                    query: query,
+                    city: $rootScope.reviewCity,
+                    exam: $rootScope.reviewExam,
+                    stream: $rootScope.reviewStream,
+                };
+                
+                return targetStudyProviderService.cityGroupExamQueryForm(cityGroupExamQuery).then(function(response){
+                    //console.info(response.data);
+                    return response.data;
+                });
+            }
+            
+            /*return $http.get("https://api.github.com/search/users", {params: {q: query}})
+            .then(function(response){
+              return response.data.items;
+            })*/
+        };
+            $rootScope.title ='Sandbox';
+    }]);  
+        
         
     exambazaar.controller("reviewController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', 'allcities', '$location', function($scope, $http, $state, $rootScope, targetStudyProviderService, allcities, $location){
+        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', 'allcities', '$location', 'streamList', 'examList', '$mdDialog', function($scope, $http, $state, $rootScope, targetStudyProviderService, allcities, $location, streamList, examList, $mdDialog){
+            $mdDialog.hide();
+            $scope.streams = streamList.data;
+            $scope.exams = examList.data;
             
             $scope.cities = allcities.data;
             /*$scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];*/
             $scope.rankedCities = ["Jaipur","Kota"];
-            $scope.update = function(city){
-                //alert(city);
-                $rootScope.city = city;
-            }
+            
+            $scope.selectStream = true;
+            $scope.selectExam = false;
+            $scope.selectCity = false;
+            $scope.searchCoaching = false;
+            $scope.updateStream = function(stream){
+                $rootScope.reviewStream = stream;
+                $scope.selectStream = false;
+                $scope.selectExam = true;
+                $scope.selectCity = false;
+                $scope.searchCoaching = false;
+            };
+            $scope.updateExam = function(exam){
+                $rootScope.reviewExam = exam;
+                $scope.selectStream = false;
+                $scope.selectExam = false;
+                $scope.selectCity = true;
+                $scope.searchCoaching = false;
+            };
+            $scope.updateCity = function(city){
+                $rootScope.reviewCity = city;
+                $scope.selectStream = false;
+                $scope.selectExam = false;
+                $scope.selectCity = false;
+                $scope.searchCoaching = true;
+            };
+            $scope.clearAll = function(){
+                $scope.selectStream = true;
+                $scope.selectExam = false;
+                $scope.selectCity = false;
+                $scope.searchCoaching = false;
+                $rootScope.reviewStream = null;
+                $rootScope.reviewExam = null;
+                $rootScope.reviewCity = null;
+                $rootScope.reviewInstitute = null;
+            };
+            
+            $scope.checkReviewButton = function(){
+                var disabled = false;
+                if(!$rootScope.reviewStream || !$rootScope.reviewExam || !$rootScope.reviewCity || !$rootScope.reviewInstitute){
+                    disabled = true;
+                }
+                return disabled;
+            };
+            $scope.goToReview = function(){
+                var stream = $rootScope.reviewStream;
+                var exam = $rootScope.reviewExam;
+                var city = $rootScope.reviewCity;
+                var institute = $rootScope.reviewInstitute;
+                
+                
+                ///group/:categoryName/:subCategoryName/:cityName/:groupName
+                console.log(stream.name);
+                console.log(exam.name);
+                console.log(city);
+                console.log(institute.groupName);
+                $state.go('showGroup', {categoryName: stream.name, subCategoryName: exam.name, cityName: city, groupName: institute.groupName});
+            };
             $rootScope.pageTitle ='Review your coaching institute';
             
             var currURL = $location.absUrl();
@@ -7225,71 +7722,106 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
     }]);
         
-    exambazaar.controller("reviewCenterController", 
-    [ '$scope', '$rootScope', 'thisProvider','$location', function($scope,$rootScope, thisProvider, $location){
+    /*exambazaar.controller("reviewCenterController", 
+    [ '$scope', '$rootScope', 'thisProvider','$location', 'reviewService', '$cookies', '$mdDialog', '$timeout', function($scope,$rootScope, thisProvider, $location, reviewService, $cookies, $mdDialog, $timeout){
         $scope.provider = thisProvider.data;
-        var minRating = 1;
-        var maxRating = 5;
-        var step = 0.5;
-        $scope.ratings = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
-        $scope.ratingsClasses = ["rating1","rating2","rating3","rating4","rating5","rating6","rating7","rating8","rating9"];
-        $scope.minCommentLength = 140;
+        if($cookies.getObject( 'sessionuser')){
+            $scope.user = $cookies.getObject( 'sessionuser');
+        }
         
-        $scope.ratingParams = [
-            {name: "faculty", displayname:"Faculty", hoverVal: -1},
-            {name: "peerinteraction", displayname:"Peer Interaction", hoverVal: -1},
-            {name: "qualityofmaterial", displayname:"Quality of material", hoverVal: -1},
+        
+        $scope.reviewParams = [
+            {name: "faculty", displayname:"Faculty and Teaching Experience", hoverVal: -1},
+            {name: "competitive_environment", displayname:"Competitive Environment", hoverVal: -1},
+            {name: "quality_of_material", displayname:"Quality of material", hoverVal: -1},
             {name: "infrastructure", displayname:"Infrastructure", hoverVal: -1},
-              
         ];
+        $scope.userReview = {
+            institute: $scope.provider._id,
+            text: ''
+        };
+        if($scope.user && $scope.user.userId){
+            $scope.userReview.user = $scope.user.userId;
+        }
+        $scope.reviewParams.forEach(function(thisParam, index){
+            $scope.userReview[thisParam.name] = null;
+        });
+        var noReview = false;
+        $scope.$watch('[user.userId, provider._id]', function (newValue, oldValue, scope) {
+            if(newValue[0] && newValue[1] && !noReview){
+                var userInstituteForm = {
+                    user: newValue[0],   
+                    institute: newValue[1],   
+                };
+                reviewService.existingReview(userInstituteForm).success(function (data, status, headers) {
+                    if(data){
+                        $scope.userReview = data;
+                        $scope.reviewParams.forEach(function(thisParam, index){
+                            var pIndex = $scope.reviews.indexOf(parseInt($scope.userReview[thisParam.name]));
+                            $scope.setReview(thisParam.name,parseInt($scope.userReview[thisParam.name]));
+                        });
+                    }else{
+                        noReview = true;
+                    }
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                }); 
+            }
+        }, true);
+        $scope.reviews = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
+        $scope.reviewsClasses = ["review1","review2","review3","review4","review5","review6","review7","review8","review9"];
+        $scope.minTextLength = 140;
         
-        $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + $scope.minCommentLength + " characters long :)";
+        $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + $scope.minTextLength + " characters long :)";
         
-        var paramNames = $scope.ratingParams.map(function(a) {return a.name;});
-        $scope.getBackgroundColour = function(ratingParam,  paramIndex){
-            var pIndex = paramNames.indexOf(ratingParam.name);
-            var className = "norating";
+        var paramNames = $scope.reviewParams.map(function(a) {return a.name;});
+        
+        $scope.getBackgroundColour = function(reviewParam,  paramIndex){
+            var pIndex = paramNames.indexOf(reviewParam.name);
+            var className = "noreview";
             
-            var propName = $scope.ratingParams[pIndex].name;
-            var rating = $scope.userRating[propName];
+            var propName = $scope.reviewParams[pIndex].name;
+            var review = $scope.userReview[propName];
             
-            if(rating){
-                var rIndex = $scope.ratings.indexOf(rating);
+            if(review){
+                var rIndex = $scope.reviews.indexOf(review);
                 //console.log(rIndex);
                 if(paramIndex <= rIndex){
                     var rIndex2 = rIndex + 1;
-                    className = "rating" + rIndex2;    
+                    className = "review" + rIndex2;    
                 }
                 
             }
             
-            if($scope.ratingParams[pIndex].hoverVal >= 0){
-                className = "norating";
+            if($scope.reviewParams[pIndex].hoverVal >= 0){
+                className = "noreview";
             };
             
-            if($scope.ratingParams[pIndex].hoverVal >= paramIndex){
+            if($scope.reviewParams[pIndex].hoverVal >= paramIndex){
                 
                 var paramIndex2 = paramIndex + 1;
-                className = "rating" + paramIndex2;
+                className = "review" + paramIndex2;
             }
             
             
             return className;
         };
         
-        $scope.logMouseEvent = function(ratingParam,  paramIndex) {
+        $scope.logMouseEvent = function(reviewParam,  paramIndex) {
             switch (event.type) {
               case "mouseenter":
                     console.log("Hey Mouse Entered");
                     break;
               case "mouseover":{
-                    var pIndex = paramNames.indexOf(ratingParam.name);
-                    $scope.ratingParams[pIndex].hoverVal = paramIndex;
+                    var pIndex = paramNames.indexOf(reviewParam.name);
+                    $scope.reviewParams[pIndex].hoverVal = paramIndex;
                     break;
               }
               case "mouseout":{
-                    var pIndex = paramNames.indexOf(ratingParam.name);
-                    $scope.ratingParams[pIndex].hoverVal = -1;
+                    var pIndex = paramNames.indexOf(reviewParam.name);
+                    $scope.reviewParams[pIndex].hoverVal = -1;
                     break;
               }
                     
@@ -7302,42 +7834,55 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 break;
             };
         };
-        $scope.checkRating = function(ratingParam, rateVal) {
-            
-            if($scope.userRating[ratingParam.name] >=rateVal){
-                return true;
-            }else{
-                return false;
-            }
-        }
-        $scope.userRating = {
-            institute: thisProvider._id,
-            comment: ''
-        };
-        $scope.ratingParams.forEach(function(thisParam, index){
-            $scope.userRating[thisParam.name] = null;
-        });
         
-        $scope.setRating = function(param, value){
-            $scope.userRating[param] = value;
-            //console.log($scope.userRating);
+        $scope.showSavedReviewDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#savedReviewDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
+        
+        $scope.submitReview = function(){
+            if($scope.userReview.user){
+                reviewService.savereview($scope.userReview).success(function (data, status, headers) {
+                    $scope.showSavedReviewDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });
+            }else{
+                console.log('No user set');
+            }
+        };
+        $scope.checkReview = function(reviewParam, rateVal) {   
+            if($scope.userReview[reviewParam.name] >=rateVal){return true;}else{return false;}
+        }
+        
+        $scope.setReview = function(param, value){
+            $scope.userReview[param] = value;
+            //console.log($scope.userReview);
         };
         $scope.invalidSubmit = function(){
             var invalid = false;
             
-            $scope.ratingParams.forEach(function(thisParam, index){
-                if(!$scope.userRating[thisParam.name]){
+            $scope.reviewParams.forEach(function(thisParam, index){
+                if(!$scope.userReview[thisParam.name]){
                     invalid = true;
                 }
             });
-            $scope.userRating.comment = $scope.userRating.comment.trim();
-            $scope.userRating.comment = $scope.userRating.comment.replace(/\s+/g, " ");
+            $scope.userReview.text = $scope.userReview.text.trim();
+            $scope.userReview.text = $scope.userReview.text.replace(/\s+/g, " ");
             
             
             
-            var commentLength = $scope.userRating.comment.length;
-            //console.log(commentLength);
-            if(commentLength < $scope.minCommentLength){
+            var textLength = $scope.userReview.text.length;
+            //console.log(textLength);
+            if(textLength < $scope.minTextLength){
                 invalid = true;
             }
             
@@ -7350,7 +7895,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $rootScope.pageURL = currURL;
         $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
         
-    }]);    
+    }]);    */
     
     exambazaar.controller("coachingGroupController", 
         [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
@@ -10039,6 +10584,14 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService) {
                     return targetStudyProviderService.getCities();
                 }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
                 provider: function() { return {}; }
                 
             }
@@ -10067,7 +10620,7 @@ function getLatLng(thisData) {
                 
             }
         })
-        .state('reviewCenter', {
+        /*.state('reviewCenter', {
             url: '/reviewcenter/:coachingId', //masterId?
             views: {
                 'header':{
@@ -10094,7 +10647,7 @@ function getLatLng(thisData) {
                 provider: function() { return {}; }
                 
             }
-        })
+        })*/
         .state('sandbox2', {
             url: '/master/:masterId/sandbox2/:cityName', //masterId?
             views: {

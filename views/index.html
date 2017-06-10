@@ -48,7 +48,7 @@
     <link rel="stylesheet" href="ui-bootstrap-csp.css">
     
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
-    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Gudea|Quattrocento+Sans|Rambla|Roboto:100,300,400|Roboto+Condensed|Scada|Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Roboto:100,300,400|Roboto+Condensed|Chewy" rel="stylesheet">
     
     <!--
     font-family: 'Roboto', sans-serif;
@@ -112,8 +112,17 @@
         #userPic{
             max-height: 65px;
         }
+        #userPicSmall{
+            max-height: 30px;
+        }
+        .img-circle {
+            border-radius: 50%;
+        }
         .spacedLetter2{
             letter-spacing: 2px;
+        }
+        .spacedLetter1{
+            letter-spacing: 1px;
         }
         .mainFont{
             font-family: "Avenir";
@@ -142,6 +151,9 @@
             font-family: 'Fira Sans', sans-serif;
             color: #999999;
             font-size: 13px;
+        }
+        .offerFont{
+            font-family: 'Roboto', sans-serif;
         }
         .textLightGrey{
             color: #9DA3A4;
@@ -231,7 +243,7 @@
             color: #FF4136;
         }
         .showBorder{
-            border: solid 3px;
+            border: black solid 3px;
         }
         #greyBorder{
             border: 1px solid #ccc;
@@ -273,6 +285,34 @@
             background-image: url("images/background/background-min.jpg");
             background-size:     cover;
             background-position: center center;
+        }
+        #offerinfo{
+            height: 15vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/partners/partner-header.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #offerImage{
+            max-height: 40px;
+        }
+        #smallofferImage{
+            max-height: 25px;
+        }
+        #bottomBarOfferImage{
+            max-height: 30px;
+        }
+        #offerRow{
+            color: white;
+            background-image: url("images/partners/partner-header.jpg");
+                background-size:     cover;
+                background-position: center center;
+        }
+        #offerRow:hover {
+            /*background: #FF5A5F;
+            color: white;
+            border: 1px solid #FF5A5F;*/
         }
         #examinfo{
             height: 15vh;
@@ -367,6 +407,18 @@
         .whiteBackground{
             background-color: white;
         }
+        .translucentWhiteBackground{
+            background-color: rgba(255,255,255,0.5);
+        }
+        .translucentBackground{
+            background-color: rgba(0,0,0,0.4);
+        }
+        .dangerBackground{
+            background-color: #C00000;
+        }
+        .primaryBackground{
+            background-color: #20C39A;
+        }
         .blackBackground{
             background-color: black;
         }
@@ -406,14 +458,12 @@
             color: white;
         }
         .md-button.md-green2{
-            margin: 0px;
             padding: 0px;
             border: 2px solid #20C39A;
             background: #20C39A;
             color: white;
         }
         .md-button.md-green2:hover, .md-button.md-green2:focus, .md-button.md-green2:active{
-            margin: 0px;
             padding: 0px;
             border: 2px solid #20C39A;
             background: #20C39A;
@@ -436,16 +486,14 @@
             box-shadow: 0 0 5px #20C39A;
         }
         .md-button.md-signup{
-            margin: 0px;
             padding: 0px;
-            border: 2px solid gray;
+            border: 2px solid black;
             background: white;
             color: gray;
         }
         .md-button.md-signup:hover{
-            margin: 0px;
             padding: 0px;
-            border: 2px solid gray;
+            border: 2px solid black;
             background: white;
             color: gray;
             box-shadow: 0 0 5px gray;
@@ -497,9 +545,18 @@
             color: white;
         }
         #thumbnailResultText{ 
-           position: absolute; 
-           top: 80%; 
-           left: 0; 
+            position: absolute; 
+            top: 80%; 
+            left: 0; 
+            width: 100%;
+            height:20%;
+            text-shadow: 0 0 5px black;
+            background: rgba(0,0,0,0.5);
+        }
+        #thumbnailResultTextTop{ 
+            position: absolute; 
+            top: 0%; 
+            left: 0; 
             width: 100%;
             height:20%;
             text-shadow: 0 0 5px black;
@@ -575,11 +632,27 @@
         .marginL20{
             margin-left: 20px;
         }
+        .marginL40{
+            margin-left: 40px;
+        }
+        .marginLR60{
+            margin-left: 60px;
+            margin-right: 60px;
+        }
         .marginB20{
             margin-bottom: 20px;
         }
         .marginB30{
             margin-bottom: 30px;
+        }
+        .marginB40{
+            margin-bottom: 40px;
+        }
+        .marginB80{
+            margin-bottom: 80px;
+        }
+        .paddingB80{
+            padding-bottom: 80px;
         }
         .marginT10{
             margin-top: 10px;
@@ -619,6 +692,10 @@
         .paddingTB20{
             padding-top: 20px;
             padding-bottom: 20px;
+        }
+        .paddingLR5{
+            padding-left: 5px;
+            padding-right: 5px;
         }
         .paddingLR10{
             padding-left: 10px;
@@ -699,6 +776,9 @@
         .paddingL20{
             padding-left: 20px;
         }
+        .paddingL60{
+            padding-left: 60px;
+        }
         .paddingL10{
             padding-left: 10px;
         }
@@ -726,11 +806,17 @@
         .paddingRight5{
             padding-right: 5px;
         }
+        .narrowLine{
+            line-height: 100%;
+        }
         .width8{
             width: 100px;
         }
         .width25{
             width: 25%;
+        }
+        .width40{
+            width: 40%;
         }
         .minwidth25{
             width: 25%;
@@ -825,6 +911,28 @@
         #categoryFont:hover{
             background-color: #20C39A;
             font-weight: 900;
+        }
+        .bottomBar{
+            position:fixed; 
+            bottom:0%;
+            width:100%;
+            padding-left:40px;
+            padding-right:40px;
+            background: #f7f7f7;
+            color: black;
+            border-top: 1px solid #ccc;
+        }
+        .bottomOfferBar{
+            position:fixed; 
+            bottom:0%;
+            width:100%;
+            padding-left:20px;
+            padding-right:20px;
+            background:rgba(0,0,0,0.5);
+            color: black;
+        }
+        .bottomOfferLogo{
+            
         }
         #categories{
             margin-top: 40px;
@@ -961,6 +1069,15 @@
             top: 5vh;
             border-radius: 0;
         }
+        md-dialog.offer-dialog {
+            z-index: 20000;
+            max-width: 80%;
+            width: 80%;
+            max-height: 80%;
+            top: 5vh;
+            border-radius: 0;
+        }
+        
         md-autocomplete{
             background-color: white;
             
@@ -968,7 +1085,11 @@
         .md-autocomplete-suggestions-container{  
             background: white;
             z-index:100000 !important; /* any number of choice > 1050*/
-          }
+            
+        }
+        .md-virtual-repeat-container.md-autocomplete-suggestions-container{
+            box-shadow: none;
+        }
         
         #autocompleteLogo{
             max-height: 35px;
@@ -1062,8 +1183,13 @@
         .loginBtn:active {
           box-shadow: inset 0 0 0 32px rgba(0,0,0,0.1);
         }
-
-
+        textarea, input, button { outline: none; }
+        input:focus,
+        select:focus,
+        textarea:focus,
+        button:focus {
+            outline: none;
+        }
         /* Facebook */
         .loginBtn--facebook {
           background-color: #4C69BA;
@@ -1228,7 +1354,7 @@
             </md-button>
         </div>
         <div flex class="paddingL5">
-            <md-button ng-click="signupToggle()" class="md-small md-signup width100 tolowercase" >
+            <md-button ng-click="signupToggle()" class="md-small md-cancel width100 tolowercase" >
                 Sign up
             </md-button>
         </div>
@@ -1237,7 +1363,7 @@
         </div>
         
         <div class="marginT20  " ng-if="signupMode">
-        <form  ng-submit="signupUser()" ng-show="" name="signupForm">
+        <form  ng-submit="signupUser()" name="signupForm">
         <div layout="column" class="">
             <div class="paddingTB5 ">
             <input type="text" placeholder="Name" class="width100" ng-model="signup.name" id="loginInput" required>
@@ -1284,7 +1410,7 @@
             </md-button>
         </div>
         <div flex class="paddingL5">
-            <md-button class="md-small md-signup  width100 tolowercase" ng-click="signupToggle()">
+            <md-button class="md-small md-cancel  width100 tolowercase" ng-click="signupToggle()">
                 Log in
             </md-button>
             
@@ -1301,8 +1427,119 @@
   </md-dialog>
 </div>    
 </div>    
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="userReviewDialog">
+      <md-dialog class="offer-dialog">
+          <div layout="row" id="offerRow" ng-controller="offerController">
+
+              <div layout="column" layout-align="center center" class=" width100 secondFont ">
+                  <!-- href="#userReview" du-smooth-scroll du-scrollspy offset="200"-->
+                <div layout="column" layout-align="center center" class="translucentBackground width100 padding10">
+
+                <div layout="column" layout-align="center center" class="secondFont marginTB10" style="display:inline-block" >
+                    <div layout="row" layout-align="center center" class="marginB10 offerFont spacedLetter1">
+                        <span hide-xs class="text-center font20">
+                        <!--
+                        Review your coaching institute at Exambazaar to unlock amazing discounts and offers from
+                        -->
+                            You’d love our discounts on the most popular exam prep courses!
+                        </span>
+                        <span hide-gt-xs class="font12 text-center">
+                            You’d love our discounts on the most popular exam prep courses!
+                        </span>
+                    </div>
+
+
+                    <div layout="row" layout-align="center center" class="translucentWhiteBackground textBlack spacedLetter1 paddingT10">
+                        <span hide-xs class="font14 text-center">
+                            Unlock discounts from 20% - 50%
+                        </span>
+                        <span hide-gt-xs class="font10 text-center">
+                            Unlock discounts from 20% - 50%
+                        </span>
+
+
+                    </div>
+                    <div layout="row" layout-align="center center" class="translucentWhiteBackground">
+
+                        <div hide-xs layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10 paddingTB10">
+                            <div>
+                                <img ng-src="{{offer.image}}" id="offerImage"/>
+                            </div>
+                            <div class="font12 bold textBlack paddingT5">
+                                {{offer.displayname}}
+                            </div>
+                        </div>
+                        <div hide-gt-xs layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5 paddingTB10">
+                            <div layout="row" layout-align="center center" class="marginT5">
+                                <img ng-src="{{offer.image}}" id="smallofferImage"/>
+                            </div>
+                            <div layout="row" layout-align="center center" class="font8 textBlack text-center narrowLine paddingT5" >
+                                {{offer.displayname}}
+                            </div>
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="center center" class=" marginB10 secondFont dangerBackground" ng-click="goToReview()">
+                        <span hide-xs class="text-center">
+                            Review your Coaching Institute
+                        </span>
+                        <span hide-gt-xs class="font14 text-center">
+                            Review your Coaching Institute
+                        </span>
+
+                    </div>
+                </div>
+
+                <!--<div hide-gt-xs layout="row" layout-align="center center" class="paddingB10 secondFont ">
+                <md-button class="md-small md-green2  font12 tolowercase width50"  ng-click="">Review Now</md-button>
+                </div>-->
+
+                </div>
+
+                </div>
+
+
+
+        </div>
+      </md-dialog>
+    </div>    
+</div>
+
+        
+   
+<div class="bottomOfferBar" ng-show="showBottomOfferBar()" ng-controller="offerController">
+    <div layout="row"  layout-align="start center">
+        <div hide-xs layout="row" layout-align="center center" flex>
+            <div layout="row" layout-align="center center" class="textWhite">
+            You’d love our discounts on the most popular exam prep courses!
+            </div>
+            <div layout="row" layout-align="start center" class="marginL40">
+                <div ng-repeat="offer in offers" class="paddingLR10">
+                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                    <md-tooltip>{{offer.displayname}}</md-tooltip>
+                </div>
+                
+            </div>
+            <!--
+            bottomBarOfferImage
+            -->
+        </div>
+        <div hide-gt-xs layout="row" layout-align="start center" flex>
+            <div layout="row" layout-align="start center" class="textWhite">
+            You’d love our discounts on the most popular exam prep courses!
+            </div>
+        </div>
+        <div layout="row" layout-align="end center">
+            <md-button class="md-green2 md-small font10 width8" ng-click="goToReview()">
+            Review Now
+            </md-button>
+        </div>
         
     </div>
+</div>        
+        
+        
+        </div>
 
 
         
