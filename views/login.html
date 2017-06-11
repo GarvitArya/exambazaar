@@ -10,7 +10,7 @@
     <span class="font14 top-buffer">
     Login using your registered mobile number and password below
     </span>
-    <form ng-submit="login()" ng-show="!sessionuser" class="minwidth25" name="loginForm">
+    <form ng-submit="login()" ng-show="!sessionuser.userId" class="minwidth25" name="loginForm">
         <div class="form-group">
         <input type="text" placeholder="10 Digit Mobile" class="form-control text-center" ng-model="login.mobile" size="15" ng-minlength="10" ng-maxlength="10" id="headerInput" focus-me="showLogin" only-digits limit-to="10">
         </div>

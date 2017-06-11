@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var request = require("request");
 
 var config = require('../config/mydatabase.js');
 var user = require('../app/models/user');
@@ -7,6 +8,8 @@ var email = require('../app/models/email');
 var cisaved = require('../app/models/cisaved');
 var mongoose = require('mongoose');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
+var helper = require('sendgrid').mail;
+var sendGridCredential = require('../app/models/sendGridCredential');
 var moment = require('moment');
 moment().format();
 
@@ -16,6 +19,102 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 var bcrypt   = require('bcrypt-nodejs');
+
+
+function sendWelcome(user){
+    console.log("User is: " + user);
+    if(user.email){
+    var templateName = 'Welcome Email';
+    var fromEmail = {
+        email: 'always@exambazaar.com',
+        name: 'Always Exambazaar'
+    };
+    var to = user.email;
+    var username = user.basic.name;
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+                if(thisEmailTemplate.name == templateName){
+                    templateFound = true;
+                    templateId = thisEmailTemplate.templateKey;
+                    var from_email = new helper.Email(fromEmail);
+                    
+                    var to_email = new helper.Email(to);
+                    var html = ' ';
+                    var subject = ' ';
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+                    sg.API(request, function(error, response) {
+                        if(error){
+                            console.log('Could not send email! ' + error);
+                        }else{
+                            console.log(response);
+                        }
+                    });
+                }
+                if(counter == nLength){
+                    if(!templateFound){
+                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    }
+                }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+    }else{
+        console.log('User not set');
+    }
+    
+    if(user.mobile){
+        console.log("Sending Welcome SMS");
+        var message = "Hi " + user.basic.name + "\nWe are so happy you are here!\n\nThank you for signing up and check our exclusive discounts at Exambazaar.com\n https://www.exambazaar.com";
+        
+        //console.log(message.length + " " + message);
+        var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
+        url += user.mobile;
+        url += "&message=";
+        url += message;
+        url += "&sender=EXMBZR&type=3";
+        request({
+                url: url,
+                json: true
+            }, function (error, response, body) {
+                if (!error && response.statusCode === 200) {
+                    console.log(body); // Print the json response
+                }else{
+                    console.log(error + " " + response);
+                }
+        });
+        
+        
+        
+    }else{
+        console.log("No user mobile set");
+    }
+};
+
+
 
 //to add a user
 router.post('/save', function(req, res) {
@@ -46,7 +145,7 @@ router.post('/save', function(req, res) {
                 console.log('I am existing');
                 res.json(existingUser);
             }else{
-                console.log('I do not exist');
+                //console.log('I do not exist');
                 var hash = bcrypt.hashSync(thisUser.password, bcrypt.genSaltSync(10));
                 var this_user = new user({
                     userType : thisUser.userType,
@@ -71,6 +170,7 @@ router.post('/save', function(req, res) {
                 console.log(JSON.stringify(this_user));
                 this_user.save(function(err, this_user) {
                     if (err) return console.error(err);
+                    sendWelcome(this_user);
                     console.log(this_user._id);
                     res.json(this_user);
                 });
@@ -170,6 +270,7 @@ router.post('/fbSave', function(req, res) {
                 existingUser.save(function(err, existingUser) {
                     if (err) return console.error(err);
                     console.log('User saved: ' + existingUser._id);
+                    
                     existingUser.logins = [];
                     res.json(existingUser);
                 });
@@ -217,6 +318,7 @@ router.post('/fbSave', function(req, res) {
             console.log(JSON.stringify(existingUser));
             existingUser.save(function(err, existingUser) {
                 if (err) return console.error(err);
+                sendWelcome(existingUser);
                 res.json(existingUser);
             });
 
@@ -740,18 +842,56 @@ router.get('/editShortlist/:userId', function(req, res) {
 });
 
 router.post('/updatePassword', function(req, res) {
-    var userId = req.body.userId;
-    var newPassword = req.body.newPassword;
-    var hash = bcrypt.hashSync(newPassword, bcrypt.genSaltSync(10));
-    console.log(userId + " " +newPassword + " " + hash);
-    user.update({_id: userId}, {
-        verified: true, 
-        password: hash
-    }, function(err, docs) {
-        if (!err){
-        res.json(docs);
-        } else {throw err;}
-    });
+    var userId = null;
+    var mobile = null;
+    var newPassword = null;
+    var hash = null;
+    console.log(req.body);
+    if(req.body.userId){
+        userId = req.body.userId;
+    }
+    if(req.body.mobile){
+        mobile = req.body.mobile;
+    }
+    if(req.body.newPassword){
+        newPassword = req.body.newPassword;
+        hash = bcrypt.hashSync(newPassword, bcrypt.genSaltSync(10));
+    }
+    
+    if(userId && newPassword){
+        
+        var thisUser = user
+            .findOne({ '_id': userId })
+            .exec(function (err, thisUser) {
+            if (!err){
+                thisUser.password = hash;
+                thisUser.save(function(err, thisUser) {
+                    if (err) return console.error(err);
+                    //console.log('User password set: ' + newPassword);
+                    res.json(thisUser._id);
+                });
+            }
+        });
+        
+    }else if(mobile && newPassword){
+        
+        var thisUser = user
+            .findOne({ 'mobile': mobile })
+            .exec(function (err, thisUser) {
+            if (!err){ 
+                thisUser.password = hash;
+                thisUser.save(function(err, thisUser) {
+                    if (err) return console.error(err);
+                    //console.log('User password set: ' + newPassword);
+                    res.json(thisUser._id);
+                });
+            }
+        });
+        
+    }else{
+        res.json([]);
+    }
+    
 });
 
 module.exports = router;

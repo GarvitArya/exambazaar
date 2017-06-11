@@ -286,7 +286,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.sendGrid = function(email) {
             return $http.post('/api/emails/sendGrid', email);
         };
-        
+        this.welcomeEmail = function(email) {
+            return $http.post('/api/emails/welcomeEmail', email);
+        };
     }]);    
     
     exambazaar.service('EligibilityService', ['$http', function($http) {
@@ -5575,11 +5577,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
     
     exambazaar.controller("loginController", 
-        [ '$scope','$rootScope','$state','$cookies','$http','UserService', function($scope,$rootScope,$state,$cookies,$http,UserService){
+        [ '$scope','$rootScope','$state','$cookies','$http','UserService', '$mdDialog', function($scope,$rootScope,$state,$cookies,$http,UserService,$mdDialog){
+        $mdDialog.hide();
         $scope.login = {
             mobile: '',
             password: ''
-        }
+        };
         if(typeof($cookies.getObject('sessionuser'))!= 'undefined'){
             $scope.sessionuser = $cookies.getObject('sessionuser');
         }
@@ -5644,7 +5647,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                             
                         
                         $cookies.putObject('sessionuser', sessionuser);
-                        if($state.current.name == 'main' || $state.current.name == 'landing' || $state.current.name == 'login'){
+                        if($state.current.name == 'landing' || $state.current.name == 'login'){
                             if(sessionuser.userType =='Master'){
                                 $state.go('master-dashboard', {masterId: sessionuser.masterId});
                                 
@@ -5690,7 +5693,33 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
     
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','geolocation','$geolocation', '$facebook', '$mdDialog', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,geolocation,$geolocation, $facebook, $mdDialog){
+        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','geolocation','$geolocation', '$facebook', '$mdDialog', 'EmailService', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,geolocation,$geolocation, $facebook, $mdDialog, EmailService){
+            
+            
+        $scope.sendWelcomeEmail = function(){
+            if(!$scope.user){
+                $scope.user = $cookies.getObject('sessionuser');
+            }
+            console.log($scope.user);
+            if($scope.user && $scope.user.email){
+                $scope.email = {
+                    to: $scope.user.email,
+                    templateName: 'Welcome Email',
+                    username: $scope.user.basic.name
+                };
+                EmailService.welcomeEmail($scope.email).success(function (data, status, headers) {
+                    var response = data;
+                    console.info(JSON.stringify(response));
+
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });  
+                
+            }else{
+                console.log('Either no user or no email for the user');
+            }
+        }; 
         
         $rootScope.stateName = $state.current.name;
         if($rootScope.stateName == 'showGroup'){
@@ -5741,10 +5770,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
         $scope.signupMode = false;
+        $scope.resetMode = false;
         $scope.signupToggle = function(){
             $scope.signupMode = !$scope.signupMode;
-            console.log($scope.signupMode);
         };
+        $scope.resetToggle = function(){
+            $scope.resetMode = !$scope.resetMode;
+        };
+            
+          
+            
         ipService.getip()
         .success(function (data, status, headers) {
             //console.info(data);
@@ -5824,14 +5859,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.sessionuser = {};
         }
             
-        
+        $scope.userlogin = {
+            mobile: '',
+            password: ''
+        };
             
         $scope.login = function(){
             console.log('Login Initiated');
             
+            
             $http.post('/login', {
-              mobile: $scope.login.mobile,
-              password: $scope.login.password,
+              mobile: $scope.userlogin.mobile,
+              password: $scope.userlogin.password,
             })
             .success(function(user){
                 var loginForm = {
@@ -5848,9 +5887,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 .error(function (data, status, header, config) {
                     console.info(status + " " + data);    
                 });
-                
-               
-                
                 UserService.getUser(user._id).success(function (data, status, headers) {
                     $scope.hideLoginDialog();
                     var fulluser = data;
@@ -5859,7 +5895,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     //user.verified="true";
                     //console.log(user.verified);
                     if(user.verified===true){
-                        console.info('User type is: ' + user.userType);
                         
                         sessionuser = {
                             _id: fulluser._id,
@@ -5877,7 +5912,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                             sessionuser.partner = user.partner;
                         }
                         $cookies.putObject('sessionuser', sessionuser);
-                        console.info(sessionuser);
                         if(sessionuser.userType =='Partner'){
                         //ABC
                         /*UserService.getPartner(fulluser._id).success(function (data, status, headers) {
@@ -5889,7 +5923,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         });*/
                             console.info(JSON.stringify(sessionuser));
                         }
-                        if($state.current.name == 'main'){
+                        if($state.current.name == 'landing'){
                             if(sessionuser.userType =='Master'){
                                 
                                 $state.go('master-dashboard', {masterId: sessionuser.masterId});
@@ -5922,17 +5956,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             })
             .error(function(){
-                // Error: authentication failed
                 $scope.login.password="";
-                $rootScope.message = 'Incorrect mobile or password';
+                $scope.loginErrorMessage = 'Incorrect mobile or password';
 
-                $state.go('login');
+                //$state.go('login');
             });
         };//login ends
         $scope.logout = function(){
             //$http.post('/logout');
-            
-            
             
             
             if($scope.sessionuser && $scope.sessionuser.facebookId){
@@ -6022,7 +6053,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         
                         
                         
-                        if($state.current.name == 'main'){
+                        if($state.current.name == 'landing'){
                             if(sessionuser.userType =='Master'){
                                 
                                 $state.go('master-dashboard', {masterId: sessionuser.userId});
@@ -6085,7 +6116,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         $scope.sessionuser = sessionuser;
                         $mdDialog.hide();
                         
-                        if($state.current.name == 'main'){
+                        if($state.current.name == 'landing'){
                             if(sessionuser.userType =='Master'){
                                 
                                 $state.go('master-dashboard', {masterId: sessionuser.userId});
@@ -6161,27 +6192,76 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
             return disabled;
         };
+        $scope.checkResetForm = function(){
+            var disabled = false;
+            if($scope.reset.mobile){
+                $scope.reset.mobile = $scope.reset.mobile.toString();
+            }
+            if(!$scope.reset.mobile || $scope.reset.mobile.length != 10){
+                disabled = true;
+            }
+            if(!$scope.reset.password || $scope.reset.password.length < 6){
+                disabled = true;
+            }
+            if(!$scope.ResetOTPVerified){
+                disabled = true;
+            }
+            return disabled;
+        };
         
         $scope.showVerifyOTP = false;
+        $scope.showResetVerifyOTP = false;
         $scope.OTPsent = false;
+        $scope.ResetOTPsent = false;
         
         
         $scope.$watch('signup.mobile', function (newValue, oldValue, scope) {
             if(newValue)
             newValue = newValue.toString();
             if(newValue && newValue.length == 10){
-                console.log(newValue);
                 $scope.showVerifyOTP = true;
                 $scope.userExistMessage = null;
             }
 
         }, true);
-        
-        $scope.$watch('signup.otp', function (newValue, oldValue, scope) {
+        $scope.reset = {
+            mobile: '',
+            otp: '',
+            password: '',
+        }
+        $scope.$watch('reset.mobile', function (newValue, oldValue, scope) {
+            if(newValue)
+            newValue = newValue.toString();
+            if(newValue && newValue.length == 10){
+                $scope.showResetVerifyOTP = true;
+                $scope.userExistMessage = null;
+            }else{
+                $scope.showResetVerifyOTP = false;
+                $scope.userExistMessage = null;
+            }
+
+        }, true);      
+            
+        $scope.$watch('reset.otp', function (newValue, oldValue, scope) {
             if(newValue)
                 newValue = newValue.toString();
             if(newValue && newValue.length == 4){
                 console.log(newValue);
+                if($scope.setResetOTP == newValue){
+                    $scope.ResetOTPVerified = true;
+                    $scope.ResetOTPmessage = null;
+                }else{
+                    $scope.ResetOTPmessage = 'Incorrect OTP';
+                }
+                
+            }
+
+        }, true);    
+            
+        $scope.$watch('signup.otp', function (newValue, oldValue, scope) {
+            if(newValue)
+                newValue = newValue.toString();
+            if(newValue && newValue.length == 4){
                 if($scope.setOTP == newValue){
                     $scope.OTPVerified = true;
                     $scope.OTPmessage = null;
@@ -6196,8 +6276,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
         $scope.verifyPhone = function(){
             $scope.generateUserOTP();
-            
         };
+        $scope.resetPhone = function(){
+            $scope.generateUserResetOTP();
+        };    
+            
         $scope.verifyOTP = function(){
             if($scope.newUser.OTP == $scope.setOTP){
                 $scope.step2 = false;
@@ -6234,6 +6317,38 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 console.info('Error ' + data + ' ' + status);
             });
         };
+            
+        $scope.generateUserResetOTP = function(){
+            console.log('Sending Reset Message');
+            UserService.userexists($scope.reset.mobile).success(function (data, status, headers) {
+                var userExists = data;
+                if(userExists){
+                     var thisOTP = {
+                        mobile:$scope.reset.mobile,
+                        otp: generateOtp(),
+                        reason : 'Reset'
+                    };
+                    OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
+                        $scope.ResetOTPsent = true;
+                        $scope.setResetOTP = data.otp;
+                        console.info("OTP sent to mobile " + thisOTP.mobile);
+                    })
+                    .error(function (data, status, header, config) {
+
+                    });
+                }else{
+                    $scope.userResetExistMessage = "User with mobile " + $scope.reset.mobile + ' does not exist!';   
+                    
+                }
+                //$state.go('main');
+
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+            
+        };
+            
         $scope.generateUserOTP = function(){
             UserService.userexists($scope.signup.mobile).success(function (data, status, headers) {
                 var userExists = data;
@@ -6265,7 +6380,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
             
             
+        $scope.resetPassword = function(){
+            console.log($scope.reset);
+           var userPassword = {
+               mobile: $scope.reset.mobile,
+               newPassword: $scope.reset.password,
+           };
+            UserService.updatePassword(userPassword).success(function (data, status, headers) {
+                //console.log('User verified & password updated! Please login again.');
+                $scope.userlogin.mobile = $scope.reset.mobile;
+                $scope.userlogin.password = $scope.reset.password;
+                //console.log($scope.userlogin);
+                $scope.login();
+                //$scope.logout();
+                //$state.go('main');
+            })
+            .error(function (data, status, header, config) {
+                $scope.ServerResponse =  htmlDecode("Data: " + data +
+                    "\n\n\n\nstatus: " + status +
+                    "\n\n\n\nheaders: " + header +
+                    "\n\n\n\nconfig: " + config);
+            });
             
+        }    
             
     }]); 
     
