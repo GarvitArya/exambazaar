@@ -146,7 +146,7 @@
                     <input type="text" class="form-control text-center" ng-model="enterOTP[1]" ng-minlength="1" ng-maxlength="1" id="otpInput" only-digits limit-to="1" move-next-on-maxlength>
                     <input type="text" class="form-control text-center" ng-model="enterOTP[2]" ng-minlength="1" ng-maxlength="1" id="otpInput" only-digits limit-to="1" move-next-on-maxlength>
                     <input type="text" class="form-control text-center" ng-model="enterOTP[3]" ng-minlength="1" ng-maxlength="1" id="otpInput" only-digits limit-to="1" move-next-on-maxlength>
-                    <md-button  class="md-green md-small font10" ng-click="verifyOTP()" class="width25"  ng-disabled="currStep<2">Verify</md-button>
+                    <md-button  class="md-green md-small font10" ng-click="verifyOTP()" class="width25"  ng-disabled="currStep<2" ng-if="incorrectOTP">Verify</md-button>
                     
                     <span class="danger" ng-if="enterOTP[0] && enterOTP[1] && enterOTP[2] && enterOTP[3] && incorrectOTP">
                         Incorrect OTP, please try again!

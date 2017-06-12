@@ -570,7 +570,7 @@ router.get('/edit/:userId', function(req, res) {
     //console.log("User fetched is " + userId);
     user
         .findOne({ '_id': userId },{logins:0})
-        //.deepPopulate('_master.contact')
+        //.deepPopulate('partner')
         .exec(function (err, thisuser) {
         if (!err){
             

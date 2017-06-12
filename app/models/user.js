@@ -30,7 +30,7 @@ var userSchema = mongoose.Schema({
         accessToken: { type: String},
     },
     
-    offers: [{ type: Schema.ObjectId, ref: 'offer' }],
+    
     partner: [{ type: Schema.ObjectId, ref: 'targetStudyProvider' }],
     shortlisted: [{
         institute: { type: Schema.ObjectId, ref: 'targetStudyProvider' },

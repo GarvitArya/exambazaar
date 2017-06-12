@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 var targetStudyProviderSchema = mongoose.Schema({
     type: {type: String, default:'Coaching'},
     name: {type: String,required: true},
+    description: {type: String},
     group: { type: Schema.ObjectId, ref: 'group' },
     groupName: {type: String},
     groupChecked: {type: Boolean,default: false},

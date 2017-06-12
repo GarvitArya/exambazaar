@@ -51,7 +51,7 @@ router.post('/bulkDisableProviders', function(req, res) {
     instituteIds.forEach(function(thisInstituteId, index){
         //JHI
         
-        var thisProvider = targetStudyProvider.findOne( {"_id" : thisInstituteId}, {disabled:1},function(err, thisProvider) {
+        var thisProvider = targetStudyProvider.findOne( {"_id" : thisInstituteId, type: 'Coaching'}, {disabled:1},function(err, thisProvider) {
         if (!err){
             counter = counter +1;
             thisProvider.disabled = true;
@@ -114,11 +114,8 @@ router.get('/count', function(req, res) {
 });
 router.get('/city/:city', function(req, res) {
     var city = req.params.city;
-    //console.log("City is: "+city);
-    //, 'exams.0': { $exists: true }, "logo": { $ne: "/img/bullets/box-orange-arrow.gif" }
-    //$where: "this.exams && this.exams.length == 0"
     var cityProviders = targetStudyProvider
-        .find({'city': city, disabled: {$ne: true} },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1, latlng:1, latlngna:1, ebVerifyState:1, groupName:1})
+        .find({'city': city, disabled: {$ne: true}, type: 'Coaching' },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1, latlng:1, latlngna:1, ebVerifyState:1, groupName:1})
         .deepPopulate('exams location ebNote.user')
         .exec(function (err, cityProviders) {
         if (!err){
@@ -128,12 +125,6 @@ router.get('/city/:city', function(req, res) {
             
         } else {throw err;}
     });
-    /*targetStudyProvider.find({"city" : city}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1,exams:1},{sort: '-rank'},function(err, docs) {
-    if (!err){ 
-        //console.log(docs);
-        res.json(docs);
-    } else {throw err;}
-    }); //.limit(500)*/
 });
 
 router.get('/cityCount', function(req, res) {
@@ -181,7 +172,7 @@ router.post('/bulkAddResult', function(req, res) {
     
     
     console.log('Express received: ' + tResults + " results");
-    
+    //, type: 'Coaching'
     var thisProvider = targetStudyProvider
         .findOne({ _id: providerId }, {results:1})
         .exec(function (err, thisProvider) {
@@ -319,8 +310,9 @@ router.post('/addResult', function(req, res) {
     var newResult = newResultForm.result;
     var providerId = newResultForm.providerId;
     console.log('Express received: ' + JSON.stringify(newResultForm));
+    //, type: 'Coaching' 
     var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {results:1})
+        .findOne({ _id: providerId}, {results:1})
         .exec(function (err, thisProvider) {
         if (!err){
             
@@ -386,8 +378,9 @@ router.post('/addPrimaryManagement', function(req, res) {
     var mobile = newManagement.mobile;
     var providerId = newManagementForm.providerId;
     console.log('Express received: ' + JSON.stringify(newManagementForm));
+    //, type: 'Coaching' 
     var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {management:1})
+        .findOne({ _id: providerId}, {management:1})
         .exec(function (err, thisProvider) {
         if (!err){
             if(thisProvider){
@@ -413,7 +406,7 @@ router.post('/removeManagement', function(req, res) {
     var providerId = newManagementForm.providerId;
     console.log('Express received to remove: ' + JSON.stringify(newManagementForm));
     var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {management:1})
+        .findOne({ _id: providerId, type: 'Coaching' }, {management:1})
         .exec(function (err, thisProvider) {
         if (!err){
             if(thisProvider){
@@ -461,8 +454,9 @@ router.post('/addManagement', function(req, res) {
     var mobile = newManagement.mobile;
     var providerId = newManagementForm.providerId;
     console.log('Express received: ' + JSON.stringify(newManagementForm));
+    //, type: 'Coaching' 
     var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {management:1})
+        .findOne({ _id: providerId}, {management:1})
         .exec(function (err, thisProvider) {
         if (!err){
             if(thisProvider){
@@ -545,6 +539,7 @@ router.post('/addFaculty', function(req, res) {
     var newFaculty = newFacultyForm.faculty;
     var providerId = newFacultyForm.providerId;
     console.log('Express received: ' + JSON.stringify(newFacultyForm));
+    //, type: 'Coaching'
     var thisProvider = targetStudyProvider
         .findOne({ _id: providerId }, {faculty:1})
         .exec(function (err, thisProvider) {
@@ -612,8 +607,9 @@ router.post('/addCourse', function(req, res) {
     var courseId = newCourseForm.course._id || '';
     var providerId = newCourseForm.providerId;
     console.log('Express received: ' + JSON.stringify(newCourseForm));
+    //, type: 'Coaching' 
     var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {course:1})
+        .findOne({ _id: providerId}, {course:1})
         .exec(function (err, thisProvider) {
         if (!err){
             
@@ -675,8 +671,9 @@ router.post('/addVideo', function(req, res) {
     var newVideo = newVideoForm.video;
     var providerId = newVideoForm.providerId;
     console.log('Express received: ' + JSON.stringify(newVideoForm));
+    //, type: 'Coaching' 
     var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {video:1})
+        .findOne({ _id: providerId}, {video:1})
         .exec(function (err, thisProvider) {
         if (!err){
             
@@ -731,40 +728,6 @@ router.post('/addVideo', function(req, res) {
     });
     
 });
-
-/*
-router.post('/setResultExam', function(req, res) {
-    var resultExamForm = req.body;
-    var providerId = resultExamForm.providerId;
-    var examId = resultExamForm.examId;
-    var resultId = resultExamForm.resultId;
-    console.log('Set Result Exam: Express received: ' + JSON.stringify(resultExamForm));
-    
-    var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {results:1})
-        .exec(function (err, thisProvider) {
-        if (!err){
-            if(thisProvider){ 
-                thisProvider.results.forEach(function(thisResult, index){
-                    if(thisResult._id == resultId){
-                        thisResult.exam = examId;
-                        thisProvider.save(function(err, thisProvider) {
-                            if (err) return console.error(err);
-                            console.log("Result Exam saved for " + thisResult._id);
-                            res.json('Done');
-                        });
-                    }
-                });
-                
-            }else{
-                console.log('No such provider');
-                res.json('Error');
-            }
-        } else {throw err;}
-    });
-});
-*/
-
 router.post('/addResultPic', function(req, res) {
     var newResultPicForm = req.body;
     var image = newResultPicForm.image;
@@ -772,9 +735,9 @@ router.post('/addResultPic', function(req, res) {
     var resultId = newResultPicForm.resultId;
     
     console.log('Add Result Pic: Express received: ' + JSON.stringify(newResultPicForm));
-    
+    //, type: 'Coaching' 
     var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {results:1})
+        .findOne({ _id: providerId}, {results:1})
         .exec(function (err, thisProvider) {
         if (!err){
             
@@ -805,9 +768,9 @@ router.post('/addLogo', function(req, res) {
     var logo = newLogoForm.logo;
     var providerId = newLogoForm.providerId;
     console.log('Express received: ' + JSON.stringify(newLogoForm));
-    
+    //, type: 'Coaching' 
     var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {logo:1, oldlogo:1})
+        .findOne({ _id: providerId}, {logo:1, oldlogo:1})
         .exec(function (err, thisProvider) {
         if (!err){
             
@@ -831,7 +794,7 @@ router.get('/coachingAddressService/', function(req, res) {
     var allproviders =  targetStudyProvider.find({
             /*'city':'Noida',*/
             $or: [{'latlngna': {$exists: false}}, {'latlngna': false}],
-            latlng: {$exists: false},
+            latlng: {$exists: false}, type: 'Coaching',
         }, {address:1, city:1},function(err, allproviders) {
         if (!err){
             //console.log(allproviders);
@@ -849,7 +812,7 @@ router.post('/bulkSaveLatLng', function(req, res) {
     LatLngForm.forEach(function(thisLatLng, index){
         //JHI
         
-        var thisProvider = targetStudyProvider.findOne( {"_id" : thisLatLng._id}, {latlng:1, latlngna:1},function(err, thisProvider) {
+        var thisProvider = targetStudyProvider.findOne( {"_id" : thisLatLng._id, type: 'Coaching'}, {latlng:1, latlngna:1},function(err, thisProvider) {
         if (!err){
             counter = counter +1;
             var latlng = thisLatLng.latlng;
@@ -900,7 +863,7 @@ router.post('/bulkCheckLogos', function(req, res) {
     instituteIds.forEach(function(thisInstituteId, index){
         //JHI
         
-        var thisProvider = targetStudyProvider.findOne( {"_id" : thisInstituteId}, {logoChecked:1},function(err, thisProvider) {
+        var thisProvider = targetStudyProvider.findOne( {"_id" : thisInstituteId, type: 'Coaching'}, {logoChecked:1},function(err, thisProvider) {
         if (!err){
             counter = counter +1;
             thisProvider.logoChecked = true;
@@ -927,8 +890,9 @@ router.post('/addPhoto', function(req, res) {
     var newPhoto = newPhotoForm.photo;
     var providerId = newPhotoForm.providerId;
     console.log('Express received: ' + JSON.stringify(newPhotoForm));
+    //, type: 'Coaching' 
     var thisProvider = targetStudyProvider
-        .findOne({ _id: providerId }, {photo:1})
+        .findOne({ _id: providerId}, {photo:1})
         .exec(function (err, thisProvider) {
         if (!err){
             
@@ -987,7 +951,7 @@ router.post('/addPhoto', function(req, res) {
 router.get('/query/:query', function(req, res) {
     var query = req.params.query;
     console.log(query);
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1},function(err, docs) {
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -998,7 +962,7 @@ router.get('/query/:query', function(req, res) {
 router.get('/coachingGroupQuery/:query', function(req, res) {
     var query = req.params.query;
     console.log(query);
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1, phone:1, mobile:1, email:1, pincode:1, website:1},function(err, docs) {
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1, phone:1, mobile:1, email:1, pincode:1, website:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -1013,7 +977,7 @@ router.post('/cityQuery', function(req, res) {
     
     console.log(JSON.stringify(cityQueryForm));
     
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city}, {name:1 , address:1, city:1, state:1, logo:1},function(err, docs) {
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -1028,9 +992,9 @@ router.post('/cityGroupExamQuery', function(req, res) {
     var stream = cityGroupExamQueryForm.stream;
     var exam = cityGroupExamQueryForm.exam;
     
-    console.log(JSON.stringify(cityGroupExamQueryForm));
+    //console.log(JSON.stringify(cityGroupExamQueryForm));
     //, exams: exam
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city}, {name:1 , address:1, city:1, state:1, logo:1, groupName: 1},function(err, docs) {
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, groupName: 1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -1040,7 +1004,7 @@ router.post('/cityGroupExamQuery', function(req, res) {
 
 router.get('/group/:query', function(req, res) {
     var query = req.params.query;
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}}, {name:1 ,group:1, groupName:1, address:1, city:1, state:1, logo:1, website:1, targetStudyWebsite:1},function(err, docs) {
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, type: 'Coaching'}, {name:1 ,group:1, groupName:1, address:1, city:1, state:1, logo:1, website:1, targetStudyWebsite:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -1050,7 +1014,7 @@ router.get('/group/:query', function(req, res) {
 
 
 router.get('/providersWithAreas', function(req, res) {
-    targetStudyProvider.find({"name" : {$regex : ".*-.*"}}, {name:1 , address:1},function(err, docs) {
+    targetStudyProvider.find({"name" : {$regex : ".*-.*"}, type: 'Coaching'}, {name:1 , address:1},function(err, docs) {
     if (!err){ 
         //console.log(docs);
         res.json(docs);
@@ -1062,7 +1026,7 @@ router.get('/providersWithAreas', function(req, res) {
 router.get('/changeProvidersStartingWith/:startsWith', function(req, res) {
     var startsWith = req.params.startsWith;
     console.log("Starts with is: "+startsWith);
-    targetStudyProvider.find({"name" : {$regex : ".*"+startsWith+".*"}}, {name:1 , website:1},function(err, allProviders) {
+    targetStudyProvider.find({"name" : {$regex : ".*"+startsWith+".*"}, type: 'Coaching'}, {name:1 , website:1},function(err, allProviders) {
     if (!err){ 
         
         allProviders.forEach(function(thisprovider, index){
@@ -1097,7 +1061,7 @@ router.post('/cityCourse', function(req, res) {
         .deepPopulate('stream')
         .exec(function (err, thisExam) {
         if (!err){
-            targetStudyProvider.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1, group:1, groupName:1, logo:1, results:1, latlng:1},{sort: '-rank'},function(err, providerList) {
+            targetStudyProvider.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}, type: 'Coaching'}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1, group:1, groupName:1, logo:1, results:1, latlng:1},{sort: '-rank'},function(err, providerList) {
             if (!err){
                 //console.log(providerList);
                 res.json(providerList);
@@ -1119,7 +1083,7 @@ router.post('/setEBVerifyState', function(req, res) {
     var provider = verifyForm.provider;
     var state = verifyForm.state;
     var user = verifyForm.user;
-    
+    //, type: 'Coaching'
     var thisProvider = targetStudyProvider
         .findOne({'_id': provider}, {ebVerifyState:1, ebVerify: 1})
         .exec(function (err, thisProvider) {
@@ -1156,7 +1120,7 @@ router.post('/setEBContactInfoState', function(req, res) {
     var provider = verifyForm.provider;
     var contactInfoState = verifyForm.contactInfoState;
     var user = verifyForm.user;
-    
+    //, type: 'Coaching'
     var thisProvider = targetStudyProvider
         .findOne({'_id': provider}, {addContactInfoDone:1, addContactInfoRequired: 1, addContactInfoAssigned: 1})
         .exec(function (err, thisProvider) {
@@ -1337,14 +1301,14 @@ router.post('/savecoaching', function(req, res) {
 router.get('/getGroupInfo/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     console.log('Fetching group info for: ' + coachingId);
-    
+    //type: 'Coaching'
     var thisProvider = targetStudyProvider
         .findOne({'_id': coachingId},{groupName:1})
         .exec(function (err, thisProvider) {
         if (!err){
             var groupName = thisProvider.groupName;
             var thisGroupProviders = targetStudyProvider
-                .find({'groupName': groupName},{name:1, address:1, email:1, website:1, facebookPage: 1, youtubeChannel:1, logo:1,photo:1, video:1})
+                .find({'groupName': groupName},{name:1, description:1, address:1, email:1, website:1, facebookPage: 1, youtubeChannel:1, logo:1,photo:1, video:1})
                 .exec(function (err, thisGroupProviders) {
                 if (!err){
                 console.log('There are: ' + thisGroupProviders.length + " centers");
@@ -1398,7 +1362,7 @@ router.get('/getGroupInfo/:coachingId', function(req, res) {
 router.get('/coaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     console.log('Fetching coaching ' + coachingId);
-    
+    //, type: 'Coaching'
     var thisProvider = targetStudyProvider
         .findOne({'_id': coachingId})
         .deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam rating.examRating.exam')
@@ -1414,7 +1378,7 @@ router.get('/coachingreview/:coachingId', function(req, res) {
     //console.log('Fetching coaching ' + coachingId);
     
     var thisProvider = targetStudyProvider
-        .findOne({'_id': coachingId, disabled: {$ne: true}},{name:1, groupName:1, email:1, address:1, location:1, city:1, state:1, pincode:1, logo:1, mobile:1, phone:1, course:1, exams:1})
+        .findOne({'_id': coachingId, disabled: {$ne: true}, type: 'Coaching'},{name:1, description:1, groupName:1, email:1, address:1, location:1, city:1, state:1, pincode:1, logo:1, mobile:1, phone:1, course:1, exams:1})
         .deepPopulate('exams exams.stream location')
         .exec(function (err, thisProvider) {
         if (!err){
@@ -1428,7 +1392,7 @@ router.get('/fillSummary/:coachingId', function(req, res) {
     //console.log('Fetching coaching ' + coachingId);
     
     var thisProvider = targetStudyProvider
-        .findOne({'_id': coachingId})
+        .findOne({'_id': coachingId, type: 'Coaching'})
         //.deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam')
         .exec(function (err, thisProvider) {
         if (!err){
@@ -1471,12 +1435,10 @@ router.post('/coachingGroup', function(req, res) {
     var groupCity = req.body;
     var groupName = groupCity.groupName;
     var cityName = groupCity.cityName;
-    console.log('Group city is: ' + groupCity);
-    console.log('Fetching coaching group: ' + groupName);
     
     //city: cityName,
     var thisGroup = targetStudyProvider
-        .find({'groupName': groupName, disabled:false})
+        .find({'groupName': groupName, disabled:false, type: 'Coaching'})
         .deepPopulate('exams exams.stream location results.exam')
         .exec(function (err, thisGroup) {
         if (!err){
@@ -1490,7 +1452,7 @@ router.get('/getGroupName/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     if(mongoose.Types.ObjectId.isValid(coachingId)){
         var thisProvider = targetStudyProvider
-        .findOne({'_id': coachingId},{name:1, groupName:1})
+        .findOne({'_id': coachingId, type: 'Coaching'},{name:1, groupName:1})
             .exec(function (err, thisProvider) {
             if (!err){
                 if(thisProvider){
@@ -1511,7 +1473,7 @@ router.get('/basiccoaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     if(mongoose.Types.ObjectId.isValid(coachingId)){
         var thisProvider = targetStudyProvider
-        .findOne({'_id': coachingId},{name:1, website: 1, address:1, city:1, state:1, logo:1,email:1, mobile:1, phone:1, groupName:1})
+        .findOne({'_id': coachingId, type: 'Coaching'},{name:1, website: 1, address:1, city:1, state:1, logo:1,email:1, mobile:1, phone:1, groupName:1})
             /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
             .exec(function (err, thisProvider) {
             if (!err){
@@ -1612,7 +1574,7 @@ router.get('/cisavedUsers/:coachingId', function(req, res) {
 
 router.get('/setRank0', function(req, res) {
     console.log("Starting now");
-    var allproviders =  targetStudyProvider.find({}, {},function(err, allproviders) {
+    var allproviders =  targetStudyProvider.find({type: 'Coaching'}, {},function(err, allproviders) {
     if (!err){
          allproviders.forEach(function(thisprovider, index){
              console.log(index);
@@ -1632,7 +1594,7 @@ router.get('/checkLogo/:pageNumber', function(req, res) {
     if(!pageNumber){
         pageNumber=1;
     }
-    var allproviders =  targetStudyProvider.find({ logo: { $exists: true, $ne: ''}, logoChecked: {$ne: true}}, {logo:1, newlogo:1, logoBackup:1, name:1},function(err, allproviders) {
+    var allproviders =  targetStudyProvider.find({ logo: { $exists: true, $ne: ''}, logoChecked: {$ne: true}, type: 'Coaching'}, {logo:1, newlogo:1, logoBackup:1, name:1},function(err, allproviders) {
         if (!err){
             res.json(allproviders);
             /*var counter = 0;
@@ -1674,7 +1636,7 @@ router.get('/sandbox2Service/:cityName', function(req, res) {
     }
     console.log("Sandbox2 Service Starting now for " + city);
     /*, $where: "this.exams && this.exams.length > 0"*/
-    targetStudyProvider.find({city: city, latlng: {$exists: true}}, {latlng:1, name:1, address:1, mobile:1, phone:1, website:1, email:1, logo:1, ebVerifyState:1},function(err, allproviders) {
+    targetStudyProvider.find({city: city, latlng: {$exists: true}, type: 'Coaching'}, {latlng:1, name:1, address:1, mobile:1, phone:1, website:1, email:1, logo:1, ebVerifyState:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;
         var nLength = allproviders.length;
@@ -1734,7 +1696,7 @@ router.get('/databaseService', function(req, res) {
         
     });*/
     
-    targetStudyProvider.find({"website": { $exists: true,$ne:'' }}, {website:1, newwebsite:1},function(err, allproviders) {
+    targetStudyProvider.find({"website": { $exists: true,$ne:'' }, type: 'Coaching'}, {website:1, newwebsite:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;
         var nLength = allproviders.length;
@@ -1890,7 +1852,7 @@ router.get('/databaseService', function(req, res) {
 
 router.get('/logoService', function(req, res) {
     console.log("Logo Service Starting now");
-    var allproviders =  targetStudyProvider.find({"logo": { $exists: true, $ne: null } }, {logo:1},function(err, allproviders) {
+    var allproviders =  targetStudyProvider.find({"logo": { $exists: true, $ne: null }, type: 'Coaching' }, {logo:1},function(err, allproviders) {
     if (!err){
          res.json('Done');
          var counter = 0;
@@ -1927,7 +1889,7 @@ router.get('/UniqueLogoService', function(req, res) {
     console.log("Getting all logos");
     
     
-    targetStudyProvider.find({logo: {$exists: true, $ne: ''}},{groupName:1, logo:1},function(err, allProviders) {
+    targetStudyProvider.find({logo: {$exists: true, $ne: ''}, type: 'Coaching'},{groupName:1, logo:1},function(err, allProviders) {
     if (!err){
         var uniqueGroups = [];
         var uniqueLogos = [];
@@ -1963,7 +1925,7 @@ router.get('/UniqueLogoService', function(req, res) {
 router.get('/allDistinct', function(req, res) {
     console.log("Getting all distinct institutes with count");
     
-    targetStudyProvider.find({},{name:1, groupName:1},function(err, allProviders) {
+    targetStudyProvider.find({type: 'Coaching'},{name:1, groupName:1},function(err, allProviders) {
     if (!err){
         res.json('Done');
         allProviders.forEach(function(thisprovider, index){
@@ -2021,7 +1983,7 @@ router.get('/allDistinct', function(req, res) {
 router.get('/getAllCourses', function(req, res) {
     //console.log("Starting now");
     var allCourses = [];
-    var allproviders =  targetStudyProvider.find({}, {coursesOffered:1, exams:1,name:1},function(err, allproviders) {
+    var allproviders =  targetStudyProvider.find({type: 'Coaching'}, {coursesOffered:1, exams:1,name:1},function(err, allproviders) {
     if (!err){
         var courseExam = [];
          /*allproviders.forEach(function(thisprovider, index){
@@ -2157,7 +2119,7 @@ router.get('/getAllCourses', function(req, res) {
 router.get('/uprank/:targetStudyProviderId', function(req, res) {
     var targetStudyProviderId = req.params.targetStudyProviderId;
     //console.log(targetStudyProviderId);
-    var thisProvider = targetStudyProvider.findOne({"_id" : targetStudyProviderId}, {},function(err, thisProvider) {
+    var thisProvider = targetStudyProvider.findOne({"_id" : targetStudyProviderId, type: 'Coaching'}, {},function(err, thisProvider) {
     if (!err){
         
         if(thisProvider.rank){
@@ -2178,7 +2140,7 @@ router.get('/uprank/:targetStudyProviderId', function(req, res) {
 router.get('/downrank/:targetStudyProviderId', function(req, res) {
     var targetStudyProviderId = req.params.targetStudyProviderId;
     //console.log(targetStudyProviderId);
-    var thisProvider = targetStudyProvider.findOne({"_id" : targetStudyProviderId}, {},function(err, thisProvider) {
+    var thisProvider = targetStudyProvider.findOne({"_id" : targetStudyProviderId, type: 'Coaching'}, {},function(err, thisProvider) {
     if (!err){
         
         if(thisProvider.rank){
@@ -2198,7 +2160,7 @@ router.get('/downrank/:targetStudyProviderId', function(req, res) {
 });
 
 router.get('/cleanTargetstudyurls', function(req, res) {
-    var allproviders =  targetStudyProvider.find({}, { website:1, name:1, city:1},function(err, allproviders) {
+    var allproviders =  targetStudyProvider.find({type: 'Coaching'}, { website:1, name:1, city:1},function(err, allproviders) {
     if (!err){
         console.log('Here');
          allproviders.forEach(function(thisprovider, index){
@@ -2274,7 +2236,7 @@ router.get('/cleanTargetstudyurls', function(req, res) {
 router.get('/edit/removeDuplicates/:city', function(req, res) {
     var city = req.params.city;
     console.log("City is: "+city);
-    var allproviders =  targetStudyProvider.find({"city" : city}, { address:1, name:1},function(err, allproviders) {
+    var allproviders =  targetStudyProvider.find({"city" : city, type: 'Coaching'}, { address:1, name:1},function(err, allproviders) {
     if (!err){
         console.log("There are " + allproviders.length + " providers right now.");
         allproviders.forEach(function(thisprovider, index){

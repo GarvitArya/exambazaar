@@ -608,7 +608,7 @@
             <div flex layout="column" layout-align="end start" class="paddingL20 paddingB10">
                 <span class="hidden-xs text md-headline mainFont" id="coachingHeader">
                     {{provider.name | uppercase}}
-                    <span class="badge" ng-if="editable && !disabled" ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })"><small>
+                    <span class="badge" ng-if="editable && !disabled && ebuser" ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })"><small>
                             Edit
                     </small>
                     </span>
@@ -620,7 +620,7 @@
                 <span class="hidden-sm hidden-md hidden-lg text md-subhead" id="coachingHeader">
                     {{provider.name | uppercase}}
                 </span>
-                <span>
+                <span ng-if="provider.address">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                     <span ng-if="provider.location">
                     {{provider.location.area}},
@@ -989,7 +989,35 @@
         
     </div>
     
-    
+    <div layout="row" layout-xs="column" class="componentRow  " id="EBDescription" ng-if="ebuser">
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft" ng-class="{ editing: editDescription }">
+            <div class="componentRowElement"layout="row" layout-align="start start">
+                <span>
+                    Description
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center secondFont textLightGrey" id="paneMiddle">
+            <div layout="row" layout-align="center center" id="upload2" ng-click="addeditDescription()" ng-if="!editDescription">
+                <span>
+                    <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
+                </span>
+            </div>
+            <div layout="row" layout-margin layout-align="center center" ng-if="editDescription" >
+                <textarea class="font12 width100" ng-model="provider.description" placeholder="Add description of the institute" rows="4"></textarea>
+                
+            </div>
+            
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
+            
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        
+    </div>
     <div layout="row" layout-xs="column" class="componentRow secondFont" id="Contact">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
@@ -2208,7 +2236,7 @@
     
     
     
-    <div layout="row" layout-xs="column" class="componentRow " id="Location">
+    <div layout="row" layout-xs="column" class="componentRow " id="Location" ng-if="provider.address">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft" ng-class="{ editing: editLocation }">
@@ -2298,7 +2326,7 @@
     
     
     
-    <div layout="row" layout-xs="column" class="componentRow  lastRow2 lastRow" id="SavedHistory" ng-if="ebuser">
+    <div layout="row" layout-xs="column" class="componentRow " id="SavedHistory" ng-if="ebuser">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft" ng-class="{ editing: editEBnote }">
@@ -2343,6 +2371,29 @@
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         
+    </div>
+    <div layout="row" layout-xs="column" class="componentRow  lastRow" id="Preview" ng-if="preview.exam && provider.city">
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft">
+            <div class="componentRowElement2"layout="row" layout-align="start start">
+                <span>
+                    Preview
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement2 text-center thirdFont textDarkGrey" id="paneMiddle" >
+            <div layout="row" layout-align="center center" >
+                <md-button class="md-green2 md-small width50 secondFont tolowercase" ui-sref="showGroup({ categoryName:{{'preview.stream'}}, subCategoryName:{{'preview.exam'}}, cityName:{{'provider.city'}}, groupName:{{'provider.groupName'}} })" id="coachingHeader" target="_blank">
+                
+                Preview as Student
+                </md-button>
+            </div>
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
     </div>
  </div>
 
@@ -3026,8 +3077,8 @@
                         
                     </div>
                     <div layout="row" layout-align="center center" layout-padding class="">
-                        <button type="submit" class="btn btn-primary" ui-sref="verifyClaim({ coachingId:{{'provider._id'}} })">Claim Institute</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button type="submit" class="btn" ng-click="showHeaderLogin()" hide-xs>Login</button>
+                        <md-button type="submit" class="md-small md-green2 tolowercase padding5" ui-sref="verifyClaim({ coachingId:{{'provider._id'}} })">Claim Institute</md-button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <md-button type="submit" class="md-small md-danger tolowercase padding5" ng-click="showLoginForm()" hide-xs>Login</md-button>
                         <!--<div layout="column" layout-align="center center" flex="50">
                             <div layout="column" layout-align="center center" id="claimButton" ng-click="verifyClaim()">
                                 <span class="">
@@ -3058,7 +3109,7 @@
 
 
 <div class="bottomBar">
-    <div layout="row" ng-show="editContact || editExam || editCourse || editResult || editResult2 ||  editPhoto || editResultPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
+    <div layout="row" ng-show="editDescription || editContact || editExam || editCourse || editResult || editResult2 ||  editPhoto || editResultPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
         <div flex ="80">
             <span>
             Do you want to save your changes to {{provider.name}}? 

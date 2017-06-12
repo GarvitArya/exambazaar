@@ -33,9 +33,9 @@
             </a>
             <ul class="dropdown-menu" >
                 <li ng-if="sessionuser.userType=='Master'"><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
+                <li ng-if="sessionuser.userType=='Partner'"><a ui-sref="partner-dashboard({ userId:{{'sessionuser.userId'}} })">Home</a></li>
                 
-                
-                <li>
+                <li ng-if="sessionuser.userType != 'Partner'">
                 <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })">Profile</a>
                 </li>
                 <li>

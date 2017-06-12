@@ -27,6 +27,7 @@
             <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Partner'">
                 <li><a ui-sref="partner-dashboard({ userId:{{'sessionuser.userId'}} })">Home</a></li>
                 <li><a ui-sref="claim({ coachingId:{{'sessionuser.partner[0]'}} })">Edit Listing</a></li>
+                <li><a ui-sref="offers({ coachingId:{{'sessionuser.partner[0]'}} })">Your Offers</a></li>
             </ul>
 
             <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
@@ -158,7 +159,7 @@
                 <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle"/>
             </span>
         </li>
-        <li class="dropdown paddingR20" >
+        <li class="dropdown paddingR20" ng-if="sessionuser.userType != 'Partner'">
             <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <span ng-if="sessionuser.basic.name">{{sessionuser.basic.name}}</span>
                 <span ng-if="!sessionuser.basic.name">Get Started</span>

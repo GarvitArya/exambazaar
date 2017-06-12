@@ -1,0 +1,346 @@
+<style>
+    .md-block{
+        padding: 10px;
+        border: 1px solid #ccc; 
+    }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    #heroHeader{
+        margin-top: 0px;
+        background-color: rgba(32,195,154,0.8);
+        color: white;
+        min-height: 25vh;
+        padding-top: 10px;
+    }
+    #pageLogoHolder{
+        border: 1px solid rgba(0,0,0,0.8);
+        height: 90px;
+        width: 90px;
+        border-radius: 4px;
+    }
+    #upload2{
+        background: white;
+        color: black;
+        border: 1px solid #000;
+        padding: 5px;
+    }
+    #upload2:hover {
+        background: #FF5A5F;
+        color: white;
+        border: 1px solid #FF5A5F;
+    }
+    .textInput{
+        color: #6E75A8;
+    }
+    .md-datepicker-input[placeholder] {
+      color:#6E75A8;
+    }
+</style>
+
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<!-- Claim the page section -->
+<div layout="row" layout-align="center start" class="whiteBackground paddingT20" ng-if="user">
+    <div layout="column" flex="90"  ng-cloak>
+        <div layout="row" layout-align="start start" class="gainsboroBorder padding20">
+            <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder" ng-if="provider.logo">
+                <img  ng-src="{{provider.logo}}" class="pageLogo"/>
+            </div>
+            <div flex layout="column" layout-align="center start" class="text secondFont font20 paddingL20">
+                <div class="textBlack">
+                    {{provider.name }}
+                </div>
+                <div ng-if="provider.website.length > 0" class="font12">
+                    <a ng-href="{{provider.website[0]}}" target="_blank">{{provider.website[0]}}</a>
+                </div>
+                <div>
+                    <span ng-repeat="mobile in provider.mobile" ng-if="provider.mobile.length > 0" class="font12">
+                        {{mobile}}
+                        <span ng-if="!$last">, </span>
+                    </span>
+                    <!--{{provider.description}}-->
+                </div>
+            </div>
+        </div>
+        <div layout="column" layout-align="start start" class="gainsboroBorder padding20">
+            <div layout="row" layout-align="start start" class="secondFont font20 textBlack">
+            Your Offers
+            </div>
+            <div layout="row" layout-align="start center" class="editFont">
+                <div>
+                    You have no outstanding offers 
+                </div>
+                <md-button class="md-raised md-primary" ng-click="addOffer()" ng-disabled="offerForm.$invalid">Add New Offer</md-button>
+            </div>
+        </div>
+        <div layout="column" layout-align="start start" class="gainsboroBorder padding20 paddingB80" ng-if="offer">
+            <div layout="column" layout-align="start center" class="width100 paddingB40">
+                <div flex layout="row" layout-align="start center" class="width100">
+                    <div flex="25" class="secondFont">
+                    Offer Name
+                    </div>
+                    <div layout="column" layout-align="start start" flex class="">
+                        <input type="text" placeholder="Offer Name" class="form-control width100 editFont textInput" ng-model="offer.name" required >
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font8 width100">
+                Offer name is not revealed to student, and is only used for communication with Exambazaar Team
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 paddingB40">
+                <div layout="column" layout-align="start start" class="width100">
+                    <div flex layout="row" layout-align="start center" class="width100">
+                        <div flex="25" class="secondFont">
+                        Primary Contact
+                        </div>
+                        <div flex="25" class="paddingR10">
+                            <input type="text" placeholder="Primary Contact Name" class="form-control width100 editFont textInput" ng-model="offer.primaryContact.name" required >
+                        </div>
+                        <div flex="25" class="paddingR10">
+                            <input type="text" placeholder="Primary Contact Email" class="form-control width100 editFont textInput" ng-model="offer.primaryContact.email" required >
+                        </div>
+                        <div flex="25" class="paddingR10">
+                            <input type="text" placeholder="Primary Contact Mobile" class="form-control width100 editFont textInput" ng-model="offer.primaryContact.mobile" required >
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="end center" class="font8 width100">
+                        Details of Primary point of contact at {{provider.name}} for all matters related to this offer
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div layout="column" layout-align="start center" class="width100 paddingB40">
+                <div layout="row" class="width100">
+                    <div flex="25" class="secondFont">
+                        Contact Emails
+                    </div>
+                    <div flex="5">
+                        <i class="md-title fa fa-envelope" aria-hidden="true"></i>
+                    </div>
+                    <div flex="95">
+                        <span ng-repeat="email in offer.otheremails track by $index">
+                            <input type="text" class=" width25 textInput" ng-model="offer.otheremails[$index]"  placeholder="Add Email">&nbsp;
+                        </span>
+                        <span>
+                            <span ng-click="addEmail()">
+                            <i class="md-title fa fa-plus-circle" aria-hidden="true"></i>
+                            </span>
+                            <span ng-click="showDeleteEmailConfirm($event)">
+                            <i class="md-title fa fa-minus-circle" aria-hidden="true" ></i>
+                        </span>
+                        </span>
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font8 width100">
+                    Add emails of all individuals at {{provider.name}} to receive updates about progress of this offer
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" class="width100 paddingB40">
+                <div layout="row" layout-align="start center" class="width100">
+                    <div flex="25" layout="row" layout-align="start center" class="secondFont">
+                        Campaign Validity
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100">
+                    <div flex="20" layout="row" layout-align="start center" class="secondFont">
+                        Start Date
+                    </div>
+                    <div flex="30" class="textInput">
+                        <md-datepicker ng-model="offer._start" md-placeholder="Start Date" class="textInput"></md-datepicker>
+                    </div>
+                    <div flex="20" layout="row" layout-align="start center" class="secondFont">
+                        End Date
+                    </div>
+                    <div flex="25" class="textInput">
+                        <md-datepicker ng-model="offer._end" md-placeholder="End Date" class="textInput"></md-datepicker>
+                    </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font8 width100">
+                    Add the start date and end date of this offer. Coupons will be issued by Exambazaar only during this date range
+                </div>
+            </div>
+            <div layout="column" layout-align="start start" class="width100 paddingTB20">
+                <div flex layout="row" layout-align="start start" class="width100">
+                    <div flex class="secondFont">
+                    Tell us about the coupons you want to issue in <span class="bold">{{offer.name}}</span>
+                    </div>
+                </div>
+            <div flex layout="column" layout-align="start start" class="padding20  width100" ng-repeat="coupon in offer.couponBuilder track by $index">
+            <div class="width100 padding20 gainsboroBorder">
+            <div layout="column" layout-align="start start" class="width100 paddingB10">
+            </div>
+            <div layout="column" layout-align="start start" class="width100 paddingB10">
+                <div flex layout="row" layout-align="start center" class="width100">
+                    <div flex="25" class="secondFont">
+                    Coupon Name
+                    </div>
+                    <div layout="column" layout-align="start start" flex class="">
+                        <input type="text" placeholder="Coupon Name" class="form-control width100 editFont textInput" ng-model="offer.couponBuilder[$index].name" required >
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font8 width100">
+                Coupon name is not revealed to student, and is only used for communication with Exambazaar Team
+                </div>
+            </div>
+            <div layout="column" layout-align="start start" class="width100 paddingB10">
+                <div flex layout="row" layout-align="start center" class="width100">
+                    <div flex="25" class="secondFont">
+                    Applicable Courses
+                    </div>
+                    <div layout="column" layout-align="start start" flex class="">
+                        <input type="text" placeholder="Coupon Name" class="form-control width100 editFont textInput" ng-model="offer.couponBuilder[$index].validfor" required >
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font8 width100">
+                Enter all courses on which this coupon will be honored by {{provider.name}}. Kept as "All Courses" by default. This information is shown to students.
+                </div>
+            </div>
+            <div layout="column" layout-align="start start" class="width100 paddingB10">
+                <div flex layout="row" layout-align="start center" class="width100">
+                    <div flex="25" class="secondFont">
+                    Discount Details
+                    </div>
+                    <div flex="75" layout="row" layout-align="start center" flex class="width100">
+                        <div flex="25" class="secondFont">
+                        Discount Type
+                        </div>
+                        <div flex="25" class="secondFont textInput">
+                        <md-input-container class="textInput">
+                          <md-select ng-model="offer.couponBuilder[$index].discountType"  placeholder="Select Discount Type" class="textInput">
+
+                            <md-option ng-value="discountType" ng-repeat="discountType in discountTypes" ng-click="updateDiscountType(coupon, discountType)" class="textInput">
+                              {{discountType}}
+                            </md-option>
+                          </md-select>
+                        </md-input-container>
+                        </div>
+                        <div flex="25" class="secondFont" ng-if="offer.couponBuilder[$index].discountType !=''">
+                            <span ng-if="offer.couponBuilder[$index].discountType == 'Percentage Discount'">
+                                Percentage Off
+                            </span>
+                            <span ng-if="offer.couponBuilder[$index].discountType == 'Flat Discount'">
+                                Flat Discount Amount (&#8377;)
+                            </span>
+                        </div>
+                        <div flex="25" class="secondFont" ng-if="offer.couponBuilder[$index].discountType !=''">
+                            <input only-digits type="text" placeholder="Percentage Off in % (eg: 50)" class="form-control width100 editFont textInput" ng-model="offer.couponBuilder[$index].percentageDiscount" required ng-if="offer.couponBuilder[$index].discountType == 'Percentage Discount'">
+                            <input only-digits  type="text" placeholder="Flat Discount in &#8377; (eg: 1000)" class="form-control width100 editFont textInput" ng-model="offer.couponBuilder[$index].flatDiscount" required ng-if="offer.couponBuilder[$index].discountType == 'Flat Discount'">
+                        </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font8 width100">
+                Enter the details of percentage or flat discount you are offering in this coupon
+                </div>
+            </div>
+            
+                
+                
+            <div layout="column" layout-align="start start" class="width100 paddingB10">
+                <div flex layout="row" layout-align="start center" class="width100">
+                    <div flex="25" class="secondFont">
+                    Validty Details
+                    </div>
+                    <div flex="75" layout="row" layout-align="start center" flex class="width100">
+                        <div flex="15" class="secondFont">
+                        Expiry Type
+                        </div>
+                        <div flex="35" class="secondFont textInput">
+                        <md-input-container class="textInput">
+                          <md-select ng-model="offer.couponBuilder[$index].validityType"  placeholder="Select Validity Type" class="textInput">
+
+                            <md-option ng-value="validityType" ng-repeat="validityType in validityTypes" ng-click="updateValidityType(coupon, validityType)" class="textInput">
+                              {{validityType}}
+                            </md-option>
+                          </md-select>
+                        </md-input-container>
+                        </div>
+                        <div flex="20" class="secondFont" ng-if="offer.couponBuilder[$index].validityType !=''">
+                            <span ng-if="offer.couponBuilder[$index].validityType == 'From date of issue by Exambazaar'">
+                                Duration (in months)
+                            </span>
+                            <span ng-if="offer.couponBuilder[$index].validityType == 'Fixed Expiry Date'">
+                                Select end date
+                            </span>
+                        </div>
+                        <div flex="30" class="secondFont" ng-if="offer.couponBuilder[$index].validityType !=''">
+                            <input only-digits type="text" placeholder="Duration in days (eg: 90)" class="form-control width100 editFont textInput" ng-model="offer.couponBuilder[$index].validtyDuration" required ng-if="offer.couponBuilder[$index].validityType == 'From date of issue by Exambazaar'">
+                            <md-datepicker ng-model="offer.couponBuilder[$index].fixedExpiryDate" md-placeholder="Start Date" required ng-if="offer.couponBuilder[$index].validityType == 'Fixed Expiry Date'"></md-datepicker>
+                        </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font8 width100">
+                Enter the details of validty type and expiry date method to be used by Exambazaar
+                </div>
+            </div>   
+            <div layout="column" layout-align="start start" class="width100 paddingB10">
+                <div flex layout="row" layout-align="start center" class="width100">
+                    <div flex="25" class="secondFont">
+                    Coupon Details
+                    </div>
+                    <div flex="75" layout="row" layout-align="start center" flex class="width100">
+                        <div flex="25" class="secondFont">
+                        Coupon Generation
+                        </div>
+                        <div flex="35" class="secondFont textInput">
+                        <md-input-container class="textInput">
+                          <md-select ng-model="offer.couponBuilder[$index].generationType"  placeholder="Select Coupon Generation" class="textInput">
+
+                            <md-option ng-value="generationType" ng-repeat="generationType in generationTypes" ng-click="updateGenerationType(coupon, generationType)" class="textInput">
+                              {{generationType}}
+                            </md-option>
+                          </md-select>
+                        </md-input-container>
+                        </div>
+                        <div flex="10" class="secondFont">
+                        </div>
+                        
+                        <div flex="30" class="secondFont" ng-if="offer.couponBuilder[$index].generationType !=''">
+                            <span ng-if="offer.couponBuilder[$index].generationType == 'Generated by Exambazaar'">
+                                Generate Coupons
+                            </span>
+                            <span ng-if="offer.couponBuilder[$index].generationType != 'Generated by Exambazaar'">
+                                Upload Coupons
+                            </span>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font8 width100">
+                Enter the details of validty type and expiry date method to be used by Exambazaar
+                </div>
+            </div>
+
+            </div>
+
+            </div>
+                <div layout="row" layout-align="center center" id="upload2" ng-click="addCoupon()" class="marginTB20 secondFont textLightGrey width100">
+                <span class="">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Add Coupons
+                </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
