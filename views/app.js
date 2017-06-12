@@ -670,6 +670,23 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
     }]);
+    
+    exambazaar.service('offerService', ['$http', function($http) {
+        this.saveOffer = function(offer) {
+            return $http.post('/api/offers/save', offer);
+        };
+        this.getOffer = function(offerId) {
+            return $http.get('/api/offers/edit/'+offerId, {offerId: offerId});
+        };
+        this.getOffers = function() {
+            return $http.get('/api/offers');
+        };
+        this.getOfferByName = function(offerName) {
+            return $http.get('/api/offers/offer/'+offerName, {offerName: offerName});
+        };
+        
+        
+    }]);
         
     exambazaar.service('StreamService', ['$http', function($http) {
         this.saveStream = function(stream) {
@@ -4755,7 +4772,206 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
     }]);    
         
-        
+    exambazaar.controller("offersDashboardController", 
+        [ '$scope', '$state','thisOffers', '$mdDialog','$timeout', function($scope, $state, thisOffers, $mdDialog, $timeout){
+            $scope.thisOffers = thisOffers.data;
+            $scope.listing = $scope.partner.partner[0];
+            $scope.editManagement = false;
+            $scope.management = $scope.listing.management;
+            $scope.primaryManagement = $scope.listing.primaryManagement;
+            
+            $scope.addPrimaryManagement = false;
+            $scope.showOtherManagement = false;
+            if(!$scope.primaryManagement || $scope.primaryManagement.mobile =='' || $scope.primaryManagement.name ==''){
+                $scope.addPrimaryManagement = true;
+                $scope.primaryManagement ={
+                    name: '',
+                    mobile: '',
+                    role: '',
+                    email: '',
+                }
+            }
+            $scope.showOthers = function(){
+                $scope.showOtherManagement = true;
+            };
+            $scope.unShowOthers = function(){
+                $scope.showOtherManagement = false;
+            };
+            $scope.editAll = function(){
+                $scope.editManagement = true;
+                $scope.management.forEach( function(thisPerson, index){
+                    thisPerson.editable = true;
+                });
+            }
+            $scope.editPrimaryManagement = function(){
+                $scope.addPrimaryManagement = true;
+                $scope.showOthers();
+                $scope.editAll();
+            };
+            if(!$scope.management){
+                $scope.management = [];
+            }
+            var newManagement = {
+                name: '',
+                mobile: '',
+                role: '',
+                email: '',
+                editable: true
+            };
+            $scope.addNewManagement = function(){
+                $scope.management.push(newManagement);
+            };
+            $scope.removeManagement = function(thisManagement, index){
+                
+                if(!thisManagement._id){
+                    $scope.management.splice(index, 1);
+                }else{
+                    var managementIds = $scope.management.map(function(a) {return a._id;});
+                    var mIndex = managementIds.indexOf(thisManagement._id);
+                    if(mIndex != -1){
+                        var newManagementForm ={
+                            management: thisManagement,
+                            providerId: $scope.listing._id
+                        };
+                         targetStudyProviderService.removeManagement(newManagementForm).success(function (data, status, headers) {
+                            $scope.showSavedDialog();
+                            $state.reload();
+                            console.info("Done");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                        
+                    }else{
+                        $scope.management.splice(index, 1);
+                    }
+                }
+            };
+            
+            
+            $scope.savePrimaryManagement = function(){
+                var thisManagement = $scope.primaryManagement;
+                var newMobile = thisManagement.mobile;
+                var newName = thisManagement.name;
+                var managementMobiles = $scope.management.map(function(a) {return a.mobile;});
+                if(newMobile !='' && newName != ''){
+                    var mIndex = managementMobiles.indexOf(newMobile);
+                    
+                    if(mIndex == -1){
+                        var newManagementForm ={
+                            management: thisManagement,
+                            providerId: $scope.listing._id
+                        };
+                         targetStudyProviderService.addPrimaryManagement(newManagementForm).success(function (data, status, headers) {
+                            $scope.showSavedDialog();
+                            $state.reload();
+                            console.info("Done");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                    }else{
+                        $scope.existingManagement = $scope.management[mIndex];
+                        $scope.showMobileExistDialog();
+                        //alert('Cant add two management people with same mobile');
+                    }
+                }else{
+                    $scope.showErrorDialog();
+                }
+                
+            };
+            
+            $scope.editManagementFunc = function(thisManagement){
+                thisManagement.editable = true;
+            };
+            
+            
+            $scope.saveManagement = function(thisManagement){
+                var newMobile = thisManagement.mobile;
+                var newName = thisManagement.name;
+                var managementMobiles = $scope.management.map(function(a) {
+                    if(a.editable){
+                        return null;
+                    }else{
+                        return a.mobile;
+                    }
+                    
+                });
+                if(newMobile !='' && newName != ''){
+                    var mIndex = managementMobiles.indexOf(newMobile);
+                    
+                    if(mIndex == -1){
+                        var newManagementForm ={
+                            management: thisManagement,
+                            providerId: $scope.listing._id
+                        };
+                         targetStudyProviderService.addManagement(newManagementForm).success(function (data, status, headers) {
+                            $scope.showSavedDialog();
+                            $state.reload();
+                            console.info("Done");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                    }else{
+                        $scope.existingManagement = $scope.management[mIndex];
+                        $scope.showMobileExistDialog();
+                        //alert('Cant add two management people with same mobile');
+                    }
+                }else{
+                    $scope.showErrorDialog();
+                }
+                
+            };
+            
+            
+            $scope.dontsaveChanges= function(){
+                $state.reload();
+            };
+            $scope.showSavedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#savedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
+            
+            
+            
+            
+            
+            $scope.showMobileExistDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#mobileExistDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },5000)
+            };
+            $scope.showErrorDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#errorDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },5000)
+            };
+            $scope.edit = function(){
+                $state.go('claim', {coachingId: $scope.listing._id});
+            };
+           
+            
+    }]);        
         
     exambazaar.controller("partnerDashboardController", 
         [ '$scope', '$state','thisPartner', 'targetStudyProviderService', '$mdDialog','$timeout', function($scope, $state, thisPartner, targetStudyProviderService, $mdDialog, $timeout){
@@ -7807,7 +8023,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.exams = examList.data;
             
             $scope.cities = allcities.data;
-            $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bhubaneswar","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Sonbhadra","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
+            $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bhubaneswar","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mangalore","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Sonbhadra","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
             //$scope.rankedCities = ["Jaipur","Kota"];
             
             $scope.cancelDialog = function(){
@@ -9740,7 +9956,24 @@ function getLatLng(thisData) {
             $scope.stream = stream;
         };
     }]);
+    
+    exambazaar.controller("addOfferController", 
+        [ '$scope',  'offersList','offerService','$http','$state', function($scope, offersList, offerService,$http,$state){
+        $scope.offersList = offersList.data;
+        $scope.addOffer = function () {
+            var saveOffer = offerService.saveOffer($scope.offer).success(function (data, status, headers) {
+               //$state.go('master-dashboard', {masterId: masterId});
             
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+        };
+        $scope.setOffer = function(offer){
+            $scope.offer = offer;
+        };
+    }]);    
+        
     exambazaar.controller("addInternController", 
         [ '$scope', 'UserService','$http','$state', function($scope, UserService,$http,$state){
         $scope.genders = ["Female", "Male"];
@@ -11471,6 +11704,30 @@ function getLatLng(thisData) {
                 provider: function() { return {}; }
             }
         })
+        .state('offers-dashboard', {
+            url: '/offers/:userId/dashboard',
+            views: {
+                'header':{
+                    templateUrl: 'header1.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'offers-dashboard.html',
+                    controller: 'offersDashboardController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                //DEF
+                thisOffers: ['UserService','$stateParams',
+                    function(UserService,$stateParams) {  
+                    return UserService.getOffers($stateParams.userId);
+                }],
+                provider: function() { return {}; }
+            }
+        })
         .state('master-manageBatchStudents', {
             url: '/master/:masterId/manageBatchStudents',
             views: {
@@ -12222,7 +12479,29 @@ function getLatLng(thisData) {
                 stream: function() { return {}; }
             }
         })
-    
+        .state('addOffer', {
+            url: '/addOffer',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'addOffer.html',
+                    controller: 'addOfferController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                offersList: ['offerService',
+                    function(offerService){
+                    return offerService.getOffers();
+                }],
+                stream: function() { return {}; }
+            }
+        })
         .state('addLocation', {
             url: '/addLocation',
             views: {
