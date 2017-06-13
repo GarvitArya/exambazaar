@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var offer = require('../app/models/offer');
+var coupon = require('../app/models/coupon');
 
 var user = require('../app/models/user');
 var email = require('../app/models/email');
@@ -61,84 +62,98 @@ router.get('/', function(req, res) {
     });
 });
 
+router.get('/providerOffers/:providerId', function(req, res) {
+    var providerId = req.params.providerId;
+    console.log("Provider is: " + providerId);
+    var offers = offer
+        .find({provider: providerId})
+        .deepPopulate('coupons')
+        .exec(function (err, offers) {
+        if (!err){
+            res.json(offers);
+        } else {throw err;}
+    });
+});
+
 
 router.post('/save', function(req, res) {
     var offerForm = req.body;
+    var couponBuilder = offerForm.couponBuilder;
     
     
-    var offerId = offerForm._id;
-    var user = offerForm.user;
-    var institute = offerForm.institute;
-    var faculty = offerForm.faculty;
-    var competitive_environment = offerForm.competitive_environment;
-    var quality_of_material = offerForm.quality_of_material;
-    var infrastructure = offerForm.infrastructure;
-    var year_of_start = offerForm.year_of_start;
-    var exam = offerForm.exam;
-    var stream = offerForm.stream;
-    var text = offerForm.text;
     
-    if(offerId){
-        var existingReview = offer
-        .findOne({user: user, institute: institute})
-        .exec(function (err, existingReview) {
-            if (!err){
-                if(existingReview){
-                    for (var property in offerForm) {
-                        if(property != '_id'){
-                            existingReview[property] = offerForm[property];
+    var newoffer = new offer({
+    });
+    for (var property in offerForm) {
+        if(property != 'couponBuilder'){
+            newoffer[property] = offerForm[property];
+        }
+        
+    }
+    
+    newoffer.save(function(err, newoffer) {
+        if (err) return console.error(err);
+        var nLength = couponBuilder.length;
+        var counter = 0;
+        var couponIds = [];
+        couponBuilder.forEach(function(thisCouponBuilder, index){
+            var couponCodes = thisCouponBuilder.couponCodes;
+            var nCouponLength = couponCodes.length;
+            var couponcounter = 0;
+            couponCodes.forEach(function(thisCode, cindex){
+                var newcoupon = new coupon({
+                    provider: newoffer.provider,
+                    offer: newoffer._id,
+                    code: thisCode.code,
+                    socialShareCode: thisCode.socialShareCode,
+                });
+                for (var property in thisCouponBuilder) {
+                    if(property != 'couponCodes'){
+                        newcoupon[property] = thisCouponBuilder[property];
+                    }
+                }
+                newcoupon.save(function(err, newcoupon) {
+                    couponcounter += 1;
+                    if(couponIds.indexOf(newcoupon._id) == -1){
+                        couponIds.push(newcoupon._id);
+                    }
+                    /*if(newoffer.coupons.indexOf(newcoupon._id) == -1){
+                        newoffer.coupons.push(newcoupon);
+                        newoffer.save(function(err, newoffer) {
+                            console.log(newcoupon._id + " added to coupons of " +  newoffer._id);
+                            
+                        });
+                        
+                    }*/
+                    console.log(couponcounter + " " + nCouponLength);
+                    if(couponcounter == nCouponLength){
+                    counter += 1;
+                    console.log(counter + " " + nLength);
+                        if(counter == nLength){
+                            console.log(couponIds);
+                            newoffer.coupons = couponIds;
+                            newoffer.save(function(err, newoffer) {
+                                if (err) return console.error(err);
+                                console.log(newoffer);
+                                res.json(newoffer._id);
+                            });
                         }
                     }
-                    existingReview.save(function(err, existingReview) {
-                        if (err) return console.error(err);
-                        res.json(existingReview._id);
-                    });
-                }else{
-                    var newoffer = new offer({
-                        institute: institute,
-                        user: user,
-                        faculty: faculty,
-                        competitive_environment: competitive_environment,
-                        quality_of_material: quality_of_material,
-                        infrastructure: infrastructure,
-                        year_of_start: year_of_start,
-                        exam: exam,
-                        stream: stream,
-                        text: text,
-
-                    });
-                    newoffer.save(function(err, newoffer) {
-                        if (err) return console.error(err);
-                        res.json(newoffer._id);
-                    });
-                }
-
-            } else {throw err;}
+                    
+                });
+                
+                
+            });
+            
         });
         
         
-    }else{
-        var newoffer = new offer({
-            institute: institute,
-            user: user,
-            faculty: faculty,
-            competitive_environment: competitive_environment,
-            quality_of_material: quality_of_material,
-            infrastructure: infrastructure,
-            year_of_start: year_of_start,
-            exam: exam,
-            stream: stream,
-            text: text,
-
-        });
-        newoffer.save(function(err, newoffer) {
-            if (err) return console.error(err);
-            res.json(newoffer._id);
-        });
-    }
+        
+    });
     
     
     
 });
+
 
 module.exports = router;

@@ -48,7 +48,7 @@ app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.pr
 
 //http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/TerminologyandKeyConcepts.html#x-forwarded-proto
 
-
+/*
 app.get('*', function(req, res, next) {
     if (req.get('x-forwarded-proto') != "https") {
         res.set('x-forwarded-proto', 'https');
@@ -56,7 +56,7 @@ app.get('*', function(req, res, next) {
     } else {
         next();     
     }
-});
+});*/
 
 app.get('/auth/facebook',
   passport.authenticate('facebook'));
@@ -98,6 +98,7 @@ var routes = require('./app/routes.js')(app, passport);
 var providers = require('./app/providers.js',providers); 
 var targetStudyProviders = require('./app/targetStudyProviders.js',targetStudyProviders); 
 var offers = require('./app/offers.js',offers); 
+var coupons = require('./app/coupons.js',coupons); 
 var reviews = require('./app/reviews.js',reviews); 
 var groups = require('./app/groups.js',groups); 
 var logourls = require('./app/logourls.js',logourls); 
@@ -131,6 +132,7 @@ var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredent
 app.use('/api/providers', providers);
 app.use('/api/targetStudyProviders', targetStudyProviders);
 app.use('/api/offers', offers);
+app.use('/api/coupons', coupons);
 app.use('/api/reviews', reviews);
 app.use('/api/groups', groups);
 app.use('/api/logourls', logourls);

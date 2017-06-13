@@ -1,3 +1,4 @@
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
 <style>
     .md-block{
         padding: 10px;
@@ -52,6 +53,17 @@
     .md-datepicker-input[placeholder] {
       color:#6E75A8;
     }
+    .socialShare{
+        background-color: #AFCBFF;
+    }
+    #closeButton{
+        color: #ccc;
+        font-size: 15px;
+        outline-style: none;
+    }
+    #closeButton:hover{
+        color: #20C39A;
+    }
 </style>
 
 
@@ -74,27 +86,41 @@
                     <a ng-href="{{provider.website[0]}}" target="_blank">{{provider.website[0]}}</a>
                 </div>
                 <div>
-                    <span ng-repeat="mobile in provider.mobile" ng-if="provider.mobile.length > 0" class="font12">
-                        {{mobile}}
-                        <span ng-if="!$last">, </span>
-                    </span>
-                    <!--{{provider.description}}-->
+                    <md-button class="md-raised md-primary" ng-click="addOffer()" ng-disabled="offerForm.$invalid">Add New Offer</md-button>
                 </div>
             </div>
         </div>
-        <div layout="column" layout-align="start start" class="gainsboroBorder padding20">
+        <div layout="column" layout-align="start start" class="gainsboroBorder paddingLR20 paddingTB10">
             <div layout="row" layout-align="start start" class="secondFont font20 textBlack">
             Your Offers
             </div>
-            <div layout="row" layout-align="start center" class="editFont">
+            <div layout-wrap layout="row" layout-align="start center" class="editFont width100" ng-if="provideroffers.length>0">
+                <div flex="50" ng-repeat="provideroffer in provideroffers" layout="column" layout="start start" class="width100 marginTB10 padding10 textBlack">
+                    <div layout="column" layout="start start" class="gainsboroBorder width100" ng-click="setExistingOffer(provideroffer)">
+                        <div layout="row" layout-align="center center" class="primaryBackground textWhite width100 padding5 gainsboroBottomBorder">
+                            {{provideroffer.name}}
+                        </div>
+                        <div layout="column" layout-align="center center" class="width100">
+                            {{provideroffer.coupons.length}}
+                        </div>
+                    
+                    </div>
+                    
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="editFont" ng-if="provideroffers.length==0">
                 <div>
                     You have no outstanding offers 
                 </div>
-                <md-button class="md-raised md-primary" ng-click="addOffer()" ng-disabled="offerForm.$invalid">Add New Offer</md-button>
+                
             </div>
         </div>
-        <div layout="column" layout-align="start start" class="gainsboroBorder padding20 paddingB80" ng-if="offer">
+        <div layout="column" layout-align="start start" class="gainsboroBorder padding20 paddingB40 marginB20" ng-if="offer">
+            <form name="offerForm" class="width100">
             <div layout="column" layout-align="start center" class="width100 paddingB40">
+                <div flex layout="row" layout-align="center center" class="width100 secondFont bold textBlack marginB20 font20 paddingB10 gainsboroBottomBorder">
+                    New Offer by {{provider.name}}
+                </div>
                 <div flex layout="row" layout-align="start center" class="width100">
                     <div flex="25" class="secondFont">
                     Offer Name
@@ -157,6 +183,32 @@
                 </div>
             </div>
             <div layout="column" layout-align="start center" class="width100 paddingB40">
+                <div layout="row" class="width100">
+                    <div flex="25" class="secondFont">
+                        Contact Mobiles
+                    </div>
+                    <div flex="5">
+                        <i class="md-title fa fa-envelope" aria-hidden="true"></i>
+                    </div>
+                    <div flex="95">
+                        <span ng-repeat="mobile in offer.othermobiles track by $index">
+                            <input only-digits ng-minlength="10" ng-maxlength="10" limit-to="10" required type="text" class=" width25 textInput" ng-model="offer.othermobiles[$index]"  placeholder="Add Mobile">&nbsp;
+                        </span>
+                        <span>
+                            <span ng-click="addMobile()">
+                            <i class="md-title fa fa-plus-circle" aria-hidden="true"></i>
+                            </span>
+                            <span ng-click="showDeleteMobileConfirm($event)">
+                            <i class="md-title fa fa-minus-circle" aria-hidden="true" ></i>
+                        </span>
+                        </span>
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font8 width100">
+                    Add emails of all individuals at {{provider.name}} to receive updates about progress of this offer
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" class="width100 paddingB40">
                 <div layout="row" layout-align="start center" class="width100">
                     <div flex="25" layout="row" layout-align="start center" class="secondFont">
                         Campaign Validity
@@ -181,14 +233,21 @@
                 </div>
             </div>
             <div layout="column" layout-align="start start" class="width100 paddingTB20">
-                <div flex layout="row" layout-align="start start" class="width100">
-                    <div flex class="secondFont">
-                    Tell us about the coupons you want to issue in <span class="bold">{{offer.name}}</span>
-                    </div>
+            <div flex layout="row" layout-align="start start" class="width100">
+                <div flex class="secondFont">
+                Tell us about the coupons you want to issue in <span class="bold">{{offer.name}}</span>
                 </div>
+            </div>
+            <div layout="row" layout-align="center center" id="upload2" ng-click="addCoupon()" class="marginTB20 secondFont textLightGrey width25">
+            <span class="">
+                <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Add New Coupon Builder
+            </span>
+            </div>
             <div flex layout="column" layout-align="start start" class="padding20  width100" ng-repeat="coupon in offer.couponBuilder track by $index">
+            
             <div class="width100 padding20 gainsboroBorder">
-            <div layout="column" layout-align="start start" class="width100 paddingB10">
+            <div layout="row" layout-align="end center" class="width100">
+                <md-button  class="md-danger md-small tolowercase font12" ng-click="removeCouponBuilder($index)">Remove Coupon Builder</md-button>
             </div>
             <div layout="column" layout-align="start start" class="width100 paddingB10">
                 <div flex layout="row" layout-align="start center" class="width100">
@@ -221,7 +280,7 @@
                     <div flex="25" class="secondFont">
                     Discount Details
                     </div>
-                    <div flex="75" layout="row" layout-align="start center" flex class="width100">
+                    <div layout-wrap flex="75" layout="row" layout-align="start center" flex class="width100">
                         <div flex="25" class="secondFont">
                         Discount Type
                         </div>
@@ -240,12 +299,27 @@
                                 Percentage Off
                             </span>
                             <span ng-if="offer.couponBuilder[$index].discountType == 'Flat Discount'">
-                                Flat Discount Amount (&#8377;)
+                                Flat Off (in &#8377;)
                             </span>
                         </div>
                         <div flex="25" class="secondFont" ng-if="offer.couponBuilder[$index].discountType !=''">
                             <input only-digits type="text" placeholder="Percentage Off in % (eg: 50)" class="form-control width100 editFont textInput" ng-model="offer.couponBuilder[$index].percentageDiscount" required ng-if="offer.couponBuilder[$index].discountType == 'Percentage Discount'">
                             <input only-digits  type="text" placeholder="Flat Discount in &#8377; (eg: 1000)" class="form-control width100 editFont textInput" ng-model="offer.couponBuilder[$index].flatDiscount" required ng-if="offer.couponBuilder[$index].discountType == 'Flat Discount'">
+                        </div>
+                        <div flex="50" layout="row" layout-align="start center" class="secondFont" ng-if="offer.couponBuilder[$index].discountType !=''">
+                            <div flex="50" class="secondFont">
+                            Social Share Benefit&nbsp;
+                            <span ng-if="offer.couponBuilder[$index].discountType == 'Percentage Discount'">
+                            %
+                            </span>
+                            <span ng-if="offer.couponBuilder[$index].discountType == 'Flat Discount'">
+                            &#8377;
+                            </span>
+                            </div>
+                            <div flex="50" class="secondFont">
+                            <input only-digits type="text" placeholder="Social Share Benefit in % (eg: 15)" class="form-control width100 editFont textInput" ng-model="offer.couponBuilder[$index].percentageSocialShareBenefit" required ng-if="offer.couponBuilder[$index].discountType == 'Percentage Discount'">
+                            <input only-digits  type="text" placeholder="Social Share Benefit in &#8377; (eg: 250)" class="form-control width100 editFont textInput" ng-model="offer.couponBuilder[$index].flatSocialShareBenefit" required ng-if="offer.couponBuilder[$index].discountType == 'Flat Discount'">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -277,7 +351,7 @@
                         </div>
                         <div flex="20" class="secondFont" ng-if="offer.couponBuilder[$index].validityType !=''">
                             <span ng-if="offer.couponBuilder[$index].validityType == 'From date of issue by Exambazaar'">
-                                Duration (in months)
+                                Duration (in days)
                             </span>
                             <span ng-if="offer.couponBuilder[$index].validityType == 'Fixed Expiry Date'">
                                 Select end date
@@ -296,7 +370,10 @@
             <div layout="column" layout-align="start start" class="width100 paddingB10">
                 <div flex layout="row" layout-align="start center" class="width100">
                     <div flex="25" class="secondFont">
-                    Coupon Details
+                    Coupon Details&nbsp;
+                        <span class="badge">
+                            {{offer.couponBuilder[$index].couponCodes.length}}
+                        </span>
                     </div>
                     <div flex="75" layout="row" layout-align="start center" flex class="width100">
                         <div flex="25" class="secondFont">
@@ -315,12 +392,17 @@
                         <div flex="10" class="secondFont">
                         </div>
                         
-                        <div flex="30" class="secondFont" ng-if="offer.couponBuilder[$index].generationType !=''">
-                            <span ng-if="offer.couponBuilder[$index].generationType == 'Generated by Exambazaar'">
-                                Generate Coupons
-                            </span>
+                        <div flex="30" layout="row" layout-align="start center" class="secondFont" ng-if="offer.couponBuilder[$index].generationType !=''">
+                            <div layout="row" layout-align="start center" ng-if="offer.couponBuilder[$index].generationType == 'Generated by Exambazaar'">
+                                <div layout="row" layout-align="start center">
+                                <input only-digits  type="text" placeholder="Number of coupons" class="form-control width100 editFont textInput marginR10" ng-model="offer.couponBuilder[$index].nCoupons" required ng-if="offer.couponBuilder[$index].generationType == 'Generated by Exambazaar'">
+                                </div>
+                                <md-button  class="md-green2 md-small tolowercase font12" ng-click="generateCoupons(offer.couponBuilder[$index])" ng-disabled="readyToAddCoupons(offer.couponBuilder[$index])" ng-if="offer.couponBuilder[$index].couponCodes.length == 0">Generate Codes</md-button>
+                            </div>
                             <span ng-if="offer.couponBuilder[$index].generationType != 'Generated by Exambazaar'">
-                                Upload Coupons
+                                <md-button  class="md-green2 md-small tolowercase font12" ng-click="showUploadCouponsDialog(offer.couponBuilder[$index])" ng-if="offer.couponBuilder[$index].couponCodes.length == 0">Upload Codes</md-button>
+                                
+                                
                             </span>
                         </div>
                         
@@ -330,17 +412,159 @@
                 Enter the details of validty type and expiry date method to be used by Exambazaar
                 </div>
             </div>
-
-            </div>
-
-            </div>
-                <div layout="row" layout-align="center center" id="upload2" ng-click="addCoupon()" class="marginTB20 secondFont textLightGrey width100">
-                <span class="">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Add Coupons
-                </span>
+            <div layout="column" layout-align="start start" class="width100 paddingB10" ng-if="offer.couponBuilder[$index].couponCodes.length > 0">
+                <div layout-wrap layout="row" layout-align="start center" class="width100 marginB10">
+                    Coupon Codes
+                </div>
+                <div layout-wrap layout="row" layout-align="start center" class="width100">
+                    <div layout="column" layout-align="center center" flex="5" ng-repeat="coupon in offer.couponBuilder[$index].couponCodes" class="font8 marginLR5 marginB10 gainsboroBorder">
+                        
+                        <span>{{coupon.code}}</span>
+                        <span class="socialShare">{{coupon.socialShareCode}}</span>
+                    
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font10 width100">
+                <div class="marginR10 danger">
+                    <span ng-click="removeCodes($index)">
+                        Remove Coupon Codes
+                    </span> 
+                </div>
+                <div>
+                Coupon codes pairs linked to your offer. There are two sets of coupon code generated&nbsp;
+                <span ng-if="offer.couponBuilder[$index].discountType == 'Percentage Discount'">
+                    (normal for {{offer.couponBuilder[$index].percentageDiscount - offer.couponBuilder[$index].percentageSocialShareBenefit}}% off, <span class="socialShare">social share</span> for {{offer.couponBuilder[$index].percentageDiscount}}% off)
+                </span>    
+                <span ng-if="offer.couponBuilder[$index].discountType == 'Flat Discount'">
+                    (normal for {{offer.couponBuilder[$index].flatDiscount - offer.couponBuilder[$index].flatSocialShareBenefit}}&#8377; off, <span class="socialShare">social share</span> for {{offer.couponBuilder[$index].flatDiscount}}&#8377; off)
+                </span>  
+                </div>
+                  
                 </div>
             </div>
+            </div>
+            
+            </div>
+                
+            </div>
+            
+            <div layout="row" layout-align="center center" class="width100">
+                <md-button  class="md-green2 md-small tolowercase font16 width50" ng-click="saveOffer(offer)" ng-disabled="offerForm.$invalid">I am done! Add Offer</md-button>
+            </div>
+            <div layout="row" layout-align="center center" class="width100 font10 danger" ng-if="saveOfferError">
+                <div ng-repeat="error in saveOfferError">
+                {{$index+1}}. {{error}}
+                </div>
+            </div>
+            </form>
+        </div>
+        
+        <div layout="column" layout-align="start start" class="gainsboroBorder padding20 paddingB40 marginB20" ng-if="existingOffer">
+            <div layout="row" layout-align="center center" class="width100 secondFont textBlack">
+                Offer Name: {{existingOffer.name}}
+            </div>
+            <div layout="row" layout-align="start center" class="width100 editFont textBlack">
+                <div flex layout="column">
+                    <div>
+                    
+                    </div>
+                </div>
+            </div>
+            <div layout="column" layout-align="start start" ng-repeat="couponName in existingOffer.couponNames" class="font10 width100 marginTB10">
+            <div layout="row" layout-align="start center" class="width100 editFont textBlack marginTB5">
+                Coupon Name: {{couponName}}
+            </div>
+            <div layout="row" layout-align="start start" class="width100 bold">
+                <div flex="10">Valid For</div>
+                <div flex="10">Code</div>
+                <div flex="10">Social Share Code</div>
+                <div flex="10">Discount Type</div>
+                <div flex="10">Discount Value</div>
+                <div flex="10">Validity Rule</div>
+                <div flex="10">
+                    Expiry Date/Rule
+                </div>
+                <div flex="10">
+                    Status
+                </div>
+            </div>    
+            <div layout="column" layout-align="start start" ng-repeat="coupon in existingOffer.coupons" class="font10 width100" ng-if="coupon.name == couponName">
+                <div layout="row" layout-align="start start" class="width100">
+                    <!--<div flex class="font8">{{coupon.name}}</div>-->
+                    <div flex="10">{{coupon.validfor}}</div>
+                    <div flex="10">{{coupon.code}}</div>
+                    <div flex="10">{{coupon.socialShareCode}}</div>
+                    <div flex="10">{{coupon.discountType}}</div>
+                    <div flex="10" ng-if="coupon.discountType=='Percentage Discount'">{{coupon.percentageDiscount - coupon.percentageSocialShareBenefit}}% +  {{coupon.percentageSocialShareBenefit}}%</div>
+                    <div flex="10" ng-if="coupon.discountType=='Flat Discount'">{{coupon.flatDiscount - coupon.flatSocialShareBenefit}}&#8377; + {{coupon.flatSocialShareBenefit}}&#8377; </div>
+                    <div flex="10">{{coupon.validityType}}</div>
+                    <div flex="10" ng-if="coupon.validityType=='Fixed Expiry Date'">
+                        {{coupon.fixedExpiryDate | date:'MMM d, y'}}
+                    </div>
+                    <div flex="10" ng-if="coupon.validityType=='From date of issue by Exambazaar'">{{coupon.validtyDuration}}
+                    </div>
+                    <div flex="10">
+                        <span ng-if="coupon.user">
+                        Issued
+                        </span>
+                        <span ng-if="!coupon.user">
+                        Not Issued
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            </div>
+            
         </div>
     </div>
 </div>
 
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="uploadCouponsDialog">
+      <md-dialog class="fullscreen-dialog2 dialogText">
+        <div layout="row" layout-xs="column" layout-fill layout-margin>
+            <div hide-gt-xs flex-xs="5">
+            <span class="pull-right" id="closeButton" ng-click="cancelDialog()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            </div>
+            <div flex="95" layout = "column" class="marginLR60">
+                <div layout="row" layout-align="center center" class="secondFont textBlack">
+                    Upload Coupons for&nbsp;<span class="bold">
+                        {{uploadCouponBuilder.name}}
+                    </span>
+                </div>
+                <div layout="row" layout-align="center center" class="secondFont textBlack">
+                    <md-button  class="md-green2 md-small tolowercase font12" ng-click="submitUploadedCoupons(uploadCouponBuilder)">Submit Coupon Codes</md-button>
+                </div>
+                <div layout="row" layout-align="center center" class="editFont textBlack marginT20 width100">
+                    <span ng-if="uploadCouponBuilder.discountType == 'Percentage Discount'">
+                        Normal Coupon will offer  {{uploadCouponBuilder.percentageDiscount - uploadCouponBuilder.percentageSocialShareBenefit}}% off and <span class="socialShare">Social Share coupon</span> will offer  {{uploadCouponBuilder.percentageDiscount}}% off
+                    </span>    
+                    <span ng-if="uploadCouponBuilder.discountType == 'Flat Discount'">
+                        Normal Coupon will offer  {{uploadCouponBuilder.flatDiscount - uploadCouponBuilder.flatSocialShareBenefit}}&#8377; off and <span class="socialShare">Social Share coupon</span> will offer  {{uploadCouponBuilder.flatDiscount}}% off
+                    </span>  
+                </div>
+                <div layout="column" layout-align="center center" ng-if="uploadErrorMessages">
+                    <div class="font8 danger" ng-repeat="uploadErrorMessage in uploadErrorMessages">
+                        {{$index+1}}. {{uploadErrorMessage}}
+                    </div>
+                </div>
+                <div layout="row" layout-align="center center" class="marginT10">
+                    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="uploadedCoupons" min-rows="10" min-spare-rows="1" height="300" width="600" id="hotTable">
+                    <hot-column data="code" title="'Normal Coupon Codes'" width="300"></hot-column>
+                    <hot-column data="socialShareCode" title="'Social Share Coupons Codes'"  width="300"></hot-column>
+                        <!--width="80"-->
+                    </hot-table>
+                </div>
+                
+                
+            </div>
+            
+            <div hide-xs flex-gt-xs="5" class="" layout="row" layout-align="end start">
+            <span class="pull-right" ng-click="cancelDialog()" id="closeButton"><i class="fa fa-times" aria-hidden="true"></i></span>
+            </div>
+        </div>
+      </md-dialog>
+</div>    
+</div>

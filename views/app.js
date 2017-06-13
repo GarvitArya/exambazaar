@@ -670,6 +670,28 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
     }]);
+        
+    exambazaar.service('couponService', ['$http', function($http) {
+        this.saveCoupon = function(coupon) {
+            return $http.post('/api/coupons/save', coupon);
+        };
+        this.getCoupon = function(couponId) {
+            return $http.get('/api/coupons/edit/'+couponId, {couponId: couponId});
+        };
+        this.getCoupons = function() {
+            return $http.get('/api/coupons');
+        };
+        this.getAllCodes = function() {
+            return $http.get('/api/coupons/allCodes');
+        };
+        
+        this.getProviderCoupons = function(providerId) {
+            return $http.get('/api/coupons/providerCoupons/'+providerId, {providerId: providerId});
+        };
+        this.getCouponByName = function(couponName) {
+            return $http.get('/api/coupons/coupon/'+couponName, {couponName: couponName});
+        };
+    }]);
     
     exambazaar.service('offerService', ['$http', function($http) {
         this.saveOffer = function(offer) {
@@ -681,12 +703,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getOffers = function() {
             return $http.get('/api/offers');
         };
+        this.getProviderOffers = function(providerId) {
+            return $http.get('/api/offers/providerOffers/'+providerId, {providerId: providerId});
+        };
         this.getOfferByName = function(offerName) {
             return $http.get('/api/offers/offer/'+offerName, {offerName: offerName});
         };
         
         
     }]);
+        
+    
         
     exambazaar.service('StreamService', ['$http', function($http) {
         this.saveStream = function(stream) {
@@ -2207,11 +2234,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         
     }]);    
-           
+    function onlyUnique(value, index, self) { 
+        return self.indexOf(value) === index;
+    }       
     exambazaar.controller("offersController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', function($scope,$rootScope, targetStudyProviderService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', 'offersList', 'couponsList', 'offerService', function($scope,$rootScope, targetStudyProviderService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo, offersList, couponsList, offerService){
         $scope.provider = thisProvider.data;
-        //console.log($scope.provider);
+        $scope.provideroffers = offersList.data;
+        
+        $scope.provideroffers.forEach(function(thisoffer, pIndex){
+            var couponNames = thisoffer.coupons.map(function(a) {return a.name;});
+            thisoffer.couponNames = couponNames.filter(onlyUnique );
+            console.log(thisoffer.couponNames);
+        });
+        
+        $scope.uniqueOffers = $scope.provideroffers;
+        $scope.couponsList = couponsList.data;
         $scope.groupInfo = thisProvider.groupInfo;
         if($cookies.getObject('sessionuser')){
             $scope.user = $cookies.getObject('sessionuser');
@@ -2219,12 +2257,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var today = moment();
         var sixMonths = moment().add(6, "months");
         var threeMonths = moment().add(3, "months");
-        var offerName = "Exambazaar - " + $scope.provider.name + " - " + today.format('MMM D, YYYY');
+        var offerName = "40% Off";
         $scope.newoffer = {
             name: offerName,
             provider: $scope.provider._id,
             primaryContact: {},
             otheremails: [],
+            othermobiles: [],
             _start: today,
             _end: sixMonths,
             active: true,
@@ -2235,6 +2274,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 $scope.newoffer.otheremails = [];
             }
             $scope.newoffer.otheremails.push('');
+        };
+        $scope.addMobile = function(){
+            if(!$scope.newoffer.othermobiles){
+                $scope.newoffer.othermobiles = [];
+            }
+            $scope.newoffer.othermobiles.push('');
+        };
+        $scope.showDeleteMobileConfirm = function(ev) {
+        var len = $scope.newoffer.othermobiles.length;
+            if(len > 0){
+                var lastMobile = $scope.newoffer.othermobiles[len-1];
+                if(lastMobile == ''){
+                    $scope.newoffer.othermobiles.pop();
+                }else{
+                    var confirm = $mdDialog.confirm()
+                        .title('Would you like to delete ' + lastMobile + '?')
+                        .textContent('You will not be able to recover it after deleting!')
+                        .ariaLabel('Lucky day')
+                        .targetEvent(ev)
+                        .clickOutsideToClose(true)
+                        .ok('Confirm')
+                        .cancel('Cancel');
+                        $mdDialog.show(confirm).then(function() {
+                          $scope.newoffer.othermobiles.pop();
+                        }, function() {
+                          //nothing
+                        });
+                    }
+                }
         };
         $scope.showDeleteEmailConfirm = function(ev) {
         var len = $scope.newoffer.otheremails.length;
@@ -2270,6 +2338,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
             if($scope.provider.primaryManagement.mobile){
                 $scope.newoffer.primaryContact.mobile = $scope.provider.primaryManagement.mobile;
+                $scope.newoffer.othermobiles.push($scope.provider.primaryManagement.mobile);
             }
         }
             
@@ -2278,10 +2347,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var generatedByProvider = "Generated by " + $scope.provider.name;
         $scope.generationTypes = ['Generated by Exambazaar'];
         $scope.generationTypes.push(generatedByProvider);
-        $scope.offer = $scope.newoffer;
+        //$scope.offer = $scope.newoffer;
         $scope.addOffer = function(){
             $scope.offer = $scope.newoffer;
+            $scope.existingOffer = null;
         };
+        $scope.setExistingOffer = function(offer){
+            $scope.existingOffer = offer;
+            $scope.offer = null;
+        };
+        
         $scope.addCoupon = function(){
             var couponNo = $scope.offer.couponBuilder.length + 1;
             var couponName = $scope.offer.name + ": Coupon " + couponNo.toString();
@@ -2289,12 +2364,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 name: couponName,
                 discountType: 'Percentage Discount',
                 validfor: 'All Courses',
-                validityType: 'From date of issue by Exambazaar',
-                generationType: 'Generated by Exambazaar',
-                flatDiscount: '',
-                percentageDiscount: '',
-                validtyDuration: '',
+                validityType: 'Fixed Expiry Date',
+                generationType: generatedByProvider,
+                flatDiscount: '500',
+                percentageDiscount: '40',
+                validtyDuration: '30',
                 fixedExpiryDate: threeMonths,
+                nCoupons: 1000,
+                percentageSocialShareBenefit: 15,
+                flatSocialShareBenefit: 250,
+                couponCodes: [],
             };
             $scope.offer.couponBuilder.push(newCouponTemplate);
         };
@@ -2311,7 +2390,263 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             coupon.generationType = generationType;
             //console.log(coupon.validityType);
         };
-        //alert('Hii');
+        
+        $scope.readyToAddCoupons = function(couponTemplate){
+            //console.log(couponTemplate);
+            var disabled = false;
+            var properties = ["name", "discountType", "validfor", "validityType", "generationType"];
+            //"flatDiscount", "percentageDiscount", "validtyDuration", "fixedExpiryDate"
+            properties.forEach(function(thisProperty, pIndex){
+                if(!couponTemplate[thisProperty] || couponTemplate[thisProperty] == ''){
+                    disabled = true;
+                }
+            });
+            if(couponTemplate.discountType && couponTemplate.discountType == 'Percentage Discount'){
+                if(!couponTemplate.percentageDiscount || couponTemplate.percentageDiscount == ''){
+                    disabled = true;
+                }
+            }
+            if(couponTemplate.discountType && couponTemplate.discountType == 'Flat Discount'){
+                if(!couponTemplate.flatDiscount || couponTemplate.flatDiscount == ''){
+                    disabled = true;
+                }
+            }
+            if(couponTemplate.validityType && couponTemplate.validityType == 'From date of issue by Exambazaar'){
+                if(!couponTemplate.validtyDuration || couponTemplate.validtyDuration == ''){
+                    disabled = true;
+                }
+            }
+            if(couponTemplate.validityType && couponTemplate.validityType == 'Fixed Expiry Date'){
+                if(!couponTemplate.fixedExpiryDate || couponTemplate.fixedExpiryDate == ''){
+                    disabled = true;
+                }
+            }
+            return disabled;
+            
+        };
+        
+        
+        $scope.generateCoupons = function(couponTemplate){
+            var nCoupons = couponTemplate.nCoupons;
+            var genCodes = uniqueCodeGenerator(nCoupons*2, $scope.couponsList);
+            
+            $scope.couponsList = $scope.couponsList.concat(genCodes);
+            
+            var nLength = genCodes.length;
+            var codesArray = genCodes.splice(0,nCoupons);
+            var socialCodesArray = genCodes;
+            codesArray.forEach(function(thisCode, cIndex){
+                var codePair = {
+                    code: codesArray[cIndex],
+                    socialShareCode: socialCodesArray[cIndex],
+                };
+                couponTemplate.couponCodes.push(codePair);
+            });
+            
+            //console.log(couponTemplate.couponCodes);
+        };
+        $scope.removeCouponBuilder = function($index, ev) {
+            var couponBuilder = $scope.offer.couponBuilder[$index];
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to remove ' + couponBuilder.name + '?')
+                .textContent('You will not be able to recover the changes in your coupon builder!')
+                .ariaLabel('Lucky day')
+                .targetEvent(ev)
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.offer.couponBuilder.splice($index, 1);
+                    //$state.reload();
+                }, function() {
+                  //nothing
+                });
+            
+        };
+        $scope.showUploadCouponsDialog = function(couponBuilder, ev) {
+            $scope.uploadCouponBuilder = couponBuilder;
+            $mdDialog.show({
+              contentElement: '#uploadCouponsDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.cancelDialog = function(){
+            $mdDialog.hide();
+        };
+        $scope.uploadedCoupons = [];
+        
+        function correctCode(code){
+            var ALPHABET = '23456789ABDEGJKMNPQRVWXYZ';
+            var conforms = true;
+            if(code.length != 8){
+                conforms = false;
+            }
+            if(code[0] != 'E' && code[0] != 'B'){
+                conforms = false;
+            }
+            
+            for (var i = 0, len = code.length; i < len; i++) {
+                if(ALPHABET.indexOf(code[i]) == -1){
+                    conforms = false;
+                    console.log(code);
+                }
+            }
+            return conforms;
+        };
+        
+        $scope.submitUploadedCoupons = function(couponTemplate){
+            var excelCodesArray = $scope.uploadedCoupons.map(function(a) {return a.code;});
+            var excelSocialCodesArray = $scope.uploadedCoupons.map(function(a) {return a.socialShareCode;});
+            
+            $scope.uploadErrorMessages = null;
+            var codesArray = [];
+            var socialCodesArray = [];
+            
+            excelCodesArray.forEach(function(thisCode, cIndex){
+                if(thisCode && thisCode!= ''){
+                    if(correctCode(thisCode)){
+                        codesArray.push(thisCode);
+                    }else{
+                        if(!$scope.uploadErrorMessages){
+                            $scope.uploadErrorMessages = [];
+                        }
+                        $scope.uploadErrorMessages.push('Incorrect Code: ' + thisCode);
+                    }
+                }
+            });
+            excelSocialCodesArray.forEach(function(thisCode, cIndex){
+                if(thisCode && thisCode!= ''){
+                    if(correctCode(thisCode)){
+                        socialCodesArray.push(thisCode);
+                    }else{
+                        if(!$scope.uploadErrorMessages){
+                            $scope.uploadErrorMessages = [];
+                        }
+                        $scope.uploadErrorMessages.push('Incorrect Social Share Code: ' + thisCode);
+                    }
+                }
+            });
+            
+            if(!$scope.uploadErrorMessages && codesArray.length > 0 && socialCodesArray.length > 0 && codesArray.length == socialCodesArray.length){
+                console.log('We are set to add coupons');
+                codesArray.forEach(function(thisCode, cIndex){
+                    var codePair = {
+                        code: codesArray[cIndex],
+                        socialShareCode: socialCodesArray[cIndex],
+                    };
+                    couponTemplate.couponCodes.push(codePair);
+                });
+                $mdDialog.hide();
+            }else{
+                if(!$scope.uploadErrorMessages){
+                    $scope.uploadErrorMessages = [];
+                }
+                $scope.uploadErrorMessages.push('Please add equal valid normal and social coupon codes before submitting');
+            }
+            
+            console.log();  
+        };
+        
+        $scope.removeCodes = function($index, ev) {
+            var couponBuilder = $scope.offer.couponBuilder[$index];
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to remove ' + couponBuilder.couponCodes.length + ' coupons for ' + couponBuilder.name + '?')
+                .textContent('You can regenerate the codes in your coupon builder!')
+                .ariaLabel('Lucky day')
+                .targetEvent(ev)
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.uploadedCoupons = [];
+                    couponBuilder.couponCodes = [];
+                    //$state.reload();
+                }, function() {
+                  //nothing
+                });
+            
+        };
+        
+        $scope.disabledAddOffer = function(){
+            var disabled = false;
+        };
+        
+        $scope.saveOffer = function(offer){
+            $scope.saveOfferError = null;
+            if(offer.couponBuilder.length == 0){
+                if(!$scope.saveOfferError){
+                    $scope.saveOfferError = [];
+                }
+                $scope.saveOfferError.push('Add atleast one coupon builder and coupon codes');
+            }else if(offer.couponBuilder.length > 0){
+                
+                offer.couponBuilder.forEach(function(thisCouponBuilder, index){
+                    if(thisCouponBuilder.couponCodes.length == 0){
+                        if(!$scope.saveOfferError){
+                            $scope.saveOfferError = [];
+                        }
+                        $scope.saveOfferError.push('Generate or upload atleast one coupon code for ' + thisCouponBuilder.name);
+                    }
+                });
+                
+                if(!$scope.saveOfferError){
+                    console.log(offer);
+                    var saveOffer = offerService.saveOffer($scope.offer).success(function (data, status, headers) {
+                        console.log(data);
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error ' + data + ' ' + status);
+                    });
+                    
+                    
+                }
+            }
+        };
+        
+        function uniqueCodeGenerator(count, previous){
+            var ALPHABET = '23456789ABDEGJKMNPQRVWXYZ';
+            var ALPHABET_LENGTH = ALPHABET.length;
+            var ID_LENGTH = 6;
+            var UNIQUE_RETRIES = 9999;
+            var HashID = {};
+            HashID.generate = function() {
+              var rtn = '';
+              for (var i = 0; i < ID_LENGTH; i++) {
+                rtn += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET_LENGTH));
+              }
+              return rtn;
+            };
+
+            HashID.generateUnique = function(previous) {
+              previous = previous || [];
+              var retries = 0;
+              var id;
+
+              // Try to generate a unique ID,
+              // i.e. one that isn't in the previous.
+              while(!id && retries < UNIQUE_RETRIES) {
+                id = HashID.generate();
+                if(previous.indexOf(id) !== -1) {
+                  id = null;
+                  retries++;
+                }
+              }
+
+              return id;
+            };
+            var codesArray = [];
+
+            while (codesArray.length < count) {
+                var newCode = "EB" + HashID.generateUnique(codesArray);
+                codesArray.push(newCode);
+            }
+            return codesArray;
+
+        };
+        
         
         
     }]);  
@@ -5111,7 +5446,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
            
             
     }]);    
-        
+    function compareDates(dateTimeA, dateTimeB) {
+        //returns 1 if dateTimeA > dateTimeB
+        dateTimeA = new Date(dateTimeA);
+        var momentA = moment(dateTimeA,"DD/MM/YYYY");
+        var momentB = moment(dateTimeB,"DD/MM/YYYY");
+        if (momentA > momentB) return 1;
+        else if (momentA < momentB) return -1;
+        else return 0;
+    };
     exambazaar.controller("masterDashboardController", 
         [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'targetStudyProviderService', '$timeout', 'addContactInfoService', 'addContactInfoList', 'rateInstituteService', 'rateInstituteList', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, targetStudyProviderService, $timeout, addContactInfoService, addContactInfoList, rateInstituteService, rateInstituteList){
             
@@ -7771,7 +8114,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 displayname: "Handa ka Funda",
             },
         ];*/
-            $scope.offers=[];
+        $scope.offers=[];
         $scope.instituteHolder = "your Coaching Institute";    
         $scope.goToReview = function(){
             var statesToShow = ["landing","main","category","city","findCoaching"];
@@ -10823,6 +11166,14 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getProvider($stateParams.coachingId);
                 }],
+                offersList: ['offerService','$stateParams',
+                    function(offerService,$stateParams) {  
+                    return offerService.getProviderOffers($stateParams.coachingId);
+                }],
+                couponsList: ['couponService',
+                    function(couponService) {  
+                    return couponService.getAllCodes();
+                }],
                 thisGroupInfo: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getGroupInfo($stateParams.coachingId);
@@ -13097,6 +13448,8 @@ function compare(dateTimeA, dateTimeB) {
     else if (momentA < momentB) return -1;
     else return 0;
 };
+
+
 
 
 

@@ -7,20 +7,24 @@ var couponSchema = mongoose.Schema({
     offer: { type: Schema.ObjectId, ref: 'offer' },
     name: String,
     validfor: String,
-    validityType: String,//Fixed End Date
-    discountType: String, //flat/percentage
+    validityType: String,//'From date of issue by Exambazaar','Fixed Expiry Date'
+    discountType: String, //'Percentage Discount','Flat Discount'
     validtyDuration: String, //in days
     fixedExpiryDate: String, //in months
     flatDiscount: String,
+    flatSocialShareBenefit: String,
     percentageDiscount: String,
+    percentageSocialShareBenefit: String,
     generationType: String,
     code: String,
+    socialShareCode: String,
+    
+    user: { type: Schema.ObjectId, ref: 'user' },
     delivered: {
         state: { type: Boolean, default: false },
         _created: { type: Date, default: Date.now },
         _deliverDate: { type: Date },
-        user: { type: Schema.ObjectId, ref: 'user' },
-        expiry: { type: Date },
+        expiryDate: { type: Date },
     },
     attemped: {
         state: { type: Boolean, default: false },
@@ -31,7 +35,7 @@ var couponSchema = mongoose.Schema({
         state: { type: Boolean, default: false },
         _created: { type: Date, default: Date.now },
         _redeemDate: { type: Date },
-    }
+    },
     _created: { type: Date, default: Date.now },
     
     
