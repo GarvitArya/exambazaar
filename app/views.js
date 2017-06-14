@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var view = require('../app/models/view');
+var targetStudyProvider = require('../app/models/targetStudyProvider');
 
 
 var mongoose = require('mongoose');
@@ -106,32 +107,32 @@ router.get('/', function(req, res) {
         .deepPopulate('institute user')
         .exec(function (err, views) {
         if (!err){
-            var basicFillTasks = [];
+            var basicViews = [];
             var counter = 0;
             var nLength = views.length;
-            views.forEach(function(thisFillTask, index){
+            views.forEach(function(thisView, index){
                 var newTask = {
                     user: {
-                        _id: thisFillTask.user._id,
-                        name: thisFillTask.user.basic.name,
+                        _id: thisView.user._id,
+                        name: thisView.user.basic.name,
                     },
                     institute: {
-                        _id: thisFillTask.institute._id,
-                        name: thisFillTask.institute.name,
-                        address: thisFillTask.institute.address,
-                        city: thisFillTask.institute.city,
-                        pincode: thisFillTask.institute.pincode
+                        _id: thisView.institute._id,
+                        name: thisView.institute.name,
+                        address: thisView.institute.address,
+                        city: thisView.institute.city,
+                        pincode: thisView.institute.pincode
                     },
-                    _created: thisFillTask._created,
-                    _deadline: thisFillTask._deadline,
-                    _finished: thisFillTask._finished,
-                    active: thisFillTask.active,
+                    _created: thisView._created,
+                    _deadline: thisView._deadline,
+                    _finished: thisView._finished,
+                    active: thisView.active,
 
                 };
                 counter = counter + 1;
-                basicFillTasks.push(newTask);
+                basicViews.push(newTask);
                 if(counter == nLength){
-                    res.json(basicFillTasks);
+                    res.json(basicViews);
                 }
             });
             if(nLength == 0){
@@ -145,32 +146,92 @@ router.get('/user/:userId', function(req, res) {
     var userId = req.params.userId;
     var views = view
         .find({user: userId})
-        .deepPopulate('institute')
+        .sort( { _date: -1 } )
+        //.deepPopulate('institute institute.exams institute.exams.stream')
         .exec(function (err, views) {
         if (!err){
             var basicViews = [];
+            var groupNames = [];
             var counter = 0;
             var nLength = views.length;
-            views.forEach(function(thisView, index){
-                var newView = {
-                    user: userId,
-                    institute: {
-                        _id: thisView.institute._id,
-                        name: thisView.institute.name,
-                        logo: thisView.institute.logo,
-                        address: thisView.institute.address,
-                        city: thisView.institute.city,
-                        pincode: thisView.institute.pincode
-                    },
-                    _date: thisView._date
-                };
-                counter = counter + 1;
-                basicViews.push(newView);
-                if(counter == nLength){
-                    res.json(basicViews);
-                }
+            
+            var viewInstituteIds =  views.map(function(a) {return a.institute;});
+            var allProviderViews = targetStudyProvider
+                .find({_id : { $in : viewInstituteIds }, disabled: {$ne: true}},{name:1 , groupName:1, exams:1, disabled: 1, city:1, logo:1})
+                .deepPopulate('exams exams.stream')
+                .exec(function (err, allProviderViews) {
+                if (!err){
+                var instituteIds = allProviderViews.map(function(a) {return a._id.toString();});
+                     
+                views.forEach(function(thisView, index){
+                    var iIndex = instituteIds.indexOf(thisView.institute.toString());
+                    thisView.institute = allProviderViews[iIndex];
+                    
+                    if(thisView.institute && !thisView.institute.disabled && thisView.institute.exams.length > 0){
+
+                    var gIndex = groupNames.indexOf(thisView.institute.groupName);
+
+                    if(gIndex == -1){
+                        var newView = {
+                            user: userId,
+                            groupName: thisView.institute.groupName,
+                            logo: thisView.institute.logo,
+
+                            viewSummary: [{
+                                exam: thisView.institute.exams[0].name,
+                                stream: thisView.institute.exams[0].stream.name,
+                                city: thisView.institute.city,
+                                _date: thisView._date
+                            }],
+
+                        };
+                        basicViews.push(newView);
+                        groupNames.push(thisView.institute.groupName);
+                    }else{
+                        var thisViewSummary = basicViews[gIndex].viewSummary;
+                        var currCities = thisViewSummary.map(function(a) {return a.city;});
+
+
+                        var cIndex = currCities.indexOf(thisView.institute.city);
+
+                        if(cIndex == -1){
+                            var newViewSummary = {
+                                exam: thisView.institute.exams[0].name,
+                                stream: thisView.institute.exams[0].stream.name,
+                                city: thisView.institute.city,
+                                _date: thisView.institute._date
+                            };
+                            basicViews[gIndex].viewSummary.push(newViewSummary);
+                            //console.log(newViewSummary);
+                        }else{
+                            //do nothing
+                        }
+                    }
+
+                    }
+
+
+                    counter = counter + 1;
+                    if(counter == nLength){
+                        //console.log(basicViews);
+
+                        res.json(basicViews);
+                    }
+
+
+
+
+                    });
+                    
+                    
+                    //res.json(cityProviders);
+
+                } else {throw err;}
             });
             
+            /*
+            
+            */
             if(nLength == 0){
                 res.json([]);
             }
@@ -221,7 +282,7 @@ router.post('/save', function(req, res) {
     var ip = viewForm.ip;
     var claim = viewForm.claim;
     
-    console.log(JSON.stringify(ip));
+    //console.log(JSON.stringify(ip));
     var nLength = institutes.length;
     var counter = 0;
     

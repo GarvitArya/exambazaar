@@ -1216,8 +1216,8 @@ router.post('/bulksavecoaching', function(req, res) {
 router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;
     var userId = req.body.user;
-    console.log("Other listings are: " + thisProvider.otherlistings);
-    console.log(thisProvider.rating);
+    //console.log("Other listings are: " + thisProvider.otherlistings);
+    //console.log(thisProvider.rating);
     var coachingId = thisProvider._id;
     
     var oldProvider = targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, oldProvider) {

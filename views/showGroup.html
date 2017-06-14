@@ -195,8 +195,9 @@
         color:#333333;
     }
     #breadcrumb{
-        padding-top: 10px;
-        padding-bottom: 0px;
+        letter-spacing: 0px;
+        color: #20C39A;
+        
     }
     #paneLeft{
         
@@ -623,7 +624,7 @@
         <div layout="column" flex id="heroHeaderContent" >
             <div layout="row" layout-align="end start" class="">
                 <span hide-gt-xs>
-                    <button class="btn actionButton  tolowercase"><i class="fa fa-heart-o" aria-hidden="true" ng-if="!shortlisted"></i><i class="fa fa-heart" aria-hidden="true" ng-if="shortlisted"></i>
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-heart-o" aria-hidden="true" ng-if="shortlistedIds.length == 0"></i><i class="fa fa-heart" aria-hidden="true" ng-if="shortlistedIds.length > 0"></i>
                     </button>
                     <button class="btn actionButton  tolowercase"><i class="fa fa-inr" aria-hidden="true"></i>
                     </button>
@@ -632,10 +633,10 @@
                 </span>
                 <span hide-xs>
                     <button class="btn actionButton heroButton tolowercase" ng-if="user.userId" ng-click="shortlistInstitute()">
-                        <span ng-if="!shortlisted">
+                        <span ng-if="shortlistedIds.length == 0">
                             <i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;Shortlist
                         </span>
-                        <span ng-if="shortlisted">
+                        <span ng-if="shortlistedIds.length > 0">
                             <i class="fa fa-heart" aria-hidden="true"></i>&nbsp;&nbsp;Shortlisted
                         </span>
                         
@@ -1893,50 +1894,109 @@
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="selectReviewCentreDialog">
-      <md-dialog class="padding20">
-          <div layout="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 paddingB10 secondFont font12">
-                    Select the centre of {{provider.name}} in {{city}} you want to review
-                </div>    
-                <div flex ng-repeat="thisGroup in group" layout="column" class="editFont font10 textDarkGrey col-xs-12 col-sm-4 col-md-3 col-lg-3 paddingLRB10" ng-if="thisGroup.city == city" ng-click="updateReviewInstitute(thisGroup)" >
-                <div class="lightGreyBorder padding10" ng-class="getSelectedColour(thisGroup)">
-                    <div id="contactDialogbox" >
-                    <div layout="row" class="secondFont font12 bold greyBottomBorder">
-                        <span ng-if="!thisGroup.location.area">
-                            Centre
-                        </span>
-                        <span ng-if="thisGroup.location.area">
-                            {{thisGroup.location.area}}
-                        </span>
+      <md-dialog class="halfscreen-dialog2 padding20">
+          <div layout="column" layout-align="center center" class="width100">
+              <div layout="row" layout-align="center center" class="width100 paddingB20 marginB20 secondFont textBlack bold text-center">
+                Select the centre of {{provider.name}} in {{city}} you want to review
+              </div>
+              
+              <div layout-wrap layout="row" layout-align="center center" class="width100 marginTB20">
+                  <div flex-xs="100" flex-gt-xs="33" ng-repeat="thisGroup in group" layout="column" class="editFont font10 textDarkGrey paddingLRB10" ng-if="thisGroup.city == city" ng-click="updateReviewInstitute(thisGroup)" >
+                    <div class="lightGreyBorder padding10" ng-class="getReviewSelectedColour(thisGroup)">
+                        <div id="contactDialogbox" >
+                        <div layout="row" class="secondFont font12 bold greyBottomBorder">
+                            <span ng-if="!thisGroup.location.area">
+                                Centre
+                            </span>
+                            <span ng-if="thisGroup.location.area">
+                                {{thisGroup.location.area}}
+                            </span>
+
+                        </div>
+                        <div layout="row" id="addressRow" class="textLightGrey marginB5">
+                            {{thisGroup.address}}
+                        </div>
 
                     </div>
-                    <div layout="row" id="addressRow" class="textLightGrey marginB5">
-                        {{thisGroup.address}}
                     </div>
-                    
-                </div>
-                </div>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 paddingB10 font8 danger" ng-if="reviewCentreError">
+                    </div>
+                  
+              </div>
+              
+              <div layout-wrap layout="row" layout-align="center center" class="width100 paddingB10 font10 danger" ng-if="reviewCentreError">
                     Pick a centre    
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 paddingB10 editFont font6 danger">
-                
-                    <span class="marginR20">   
-                        <md-button class="md-small md-signup font12 tolowercase width40"  ng-click="cancelSelectReviewCentre()">Cancel</md-button>
-                    </span>
-                    <span>
-                        <md-button class="md-small md-green2  font12 tolowercase width40"  ng-disabled="invalidSubmit()" ng-click="submitReview()">Submit</md-button>
-                    </span>
-                </div>
-            </div>
+              </div>
+              
+              <div layout-wrap layout="row" layout-align="center center" class="width100 paddingB10 paddingT20 font10 danger">
+                    <div flex="35" class="marginR20">   
+                        <md-button class="md-small md-signup font12 tolowercase width100"  ng-click="cancelSelectReviewCentre()">Cancel</md-button>
+                    </div>
+                    <div flex="35">
+                        <md-button class="md-small md-green2  font12 tolowercase width100"  ng-disabled="invalidSubmit()" ng-click="submitReview()">Submit</md-button>
+                    </div>    
+              </div>
+              
         </div>
       </md-dialog>
     </div>    
 </div>
 
 
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="selectShortlistCentreDialog">
+      <md-dialog class="halfscreen-dialog2 padding20">
+          <div layout="column" layout-align="center center" class="width100">
+              <div layout="row" layout-align="center center" class="width100 paddingB20 marginB20 secondFont textBlack bold text-center">
+                Shortlist centres of {{provider.name}} in {{city}}
+              </div>
+              
+              <div layout-wrap layout="row" layout-align="center center" class="width100 marginTB20">
+                  <div flex-xs="100" flex-gt-xs="33" ng-repeat="thisGroup in group" layout="column" class="editFont font10 textDarkGrey paddingLRB10" ng-if="thisGroup.city == city" ng-click="updateShortlistInstitute(thisGroup)" >
+                    <div class="lightGreyBorder padding10" ng-class="getShortlistSelectedColour(thisGroup)">
+                        <div id="contactDialogbox" >
+                        <div layout="row" class="secondFont font12 bold greyBottomBorder">
+                            <span ng-if="!thisGroup.location.area">
+                                Centre
+                            </span>
+                            <span ng-if="thisGroup.location.area">
+                                {{thisGroup.location.area}}
+                            </span>
+
+                        </div>
+                        <div layout="row" id="addressRow" class="marginB5">
+                            {{thisGroup.address}}
+                        </div>
+                        <div layout="row" layout-align="start center" class="marginB5" ng-if="shortlistedIds.indexOf(thisGroup._id) != -1">
+                            <div>
+                            <i class="fa fa-heart" aria-hidden="true"></i>
+                            &nbsp;Shortlisted on 
+                            {{shortlistDetails[shortlistedIds.indexOf(thisGroup._id)]._date | date:'dd MMM yy'}}
+                            </div>
+                    </div>
+                    </div>
+                    </div>
+                  
+              </div>
+              
+              <div layout-wrap layout="row" layout-align="center center" class="width100 paddingB10 font10 danger" ng-if="reviewCentreError">
+                    Pick a centre    
+              </div>
+              
+              <div layout-wrap layout="row" layout-align="center center" class="width100 paddingB10 paddingT20 font10 danger">
+                    <div flex="35" class="marginR20">   
+                        <md-button class="md-small md-signup font12 tolowercase width100"  ng-click="cancelSelectReviewCentre()">Cancel</md-button>
+                    </div>
+                    <div flex="35">
+                        <md-button class="md-small md-green2  font12 tolowercase width100"  ng-disabled="invalidSubmit()" ng-click="submitReview()">Submit</md-button>
+                    </div>    
+              </div>
+              
+        </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<!--selectShortlistCentreDialog-->
 
 
 

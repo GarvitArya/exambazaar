@@ -62,6 +62,90 @@ router.get('/', function(req, res) {
     });
 });
 
+router.get('/activeOffers', function(req, res) {
+    var activeOffers = offer
+        .find({active: true})
+        .deepPopulate('provider')
+        .exec(function (err, activeOffers) {
+        if (!err){
+            var providerOffers = [];
+            var providerIds = [];
+            var nLength = activeOffers.length;
+            var counter = 0;
+            activeOffers.forEach(function(thisOffer, index){
+                var thisProvider = thisOffer.provider;
+                thisOffer.provider = {
+                    _id: thisProvider._id,    
+                    name: thisProvider.name,    
+                    logo: thisProvider.logo,    
+                };
+                var providerIds =  providerOffers.map(function(a) {return a._id;});
+                
+                var pIndex = providerIds.indexOf(thisProvider._id);
+                if(pIndex == -1){
+                    var newProviderOffer = {
+                        _id: thisProvider._id,
+                        image: thisProvider.logo,
+                        displayname: thisProvider.name,
+                        offers: [thisOffer],
+                    };
+                    providerOffers.push(newProviderOffer);
+                }else{
+                    var thisProviderOffer = providerOffers[pIndex];
+                    thisProviderOffer.offers.push(thisOffer);
+                }
+                counter += 1;
+                if(counter == nLength){
+                    res.json(providerOffers);
+                }
+            });
+            
+        } else {throw err;}
+    });
+});
+
+router.get('/activeOffersBasic', function(req, res) {
+    var activeOffers = offer
+        .find({active: true})
+        .deepPopulate('provider')
+        .exec(function (err, activeOffers) {
+        if (!err){
+            var providerOffers = [];
+            var providerIds = [];
+            var nLength = activeOffers.length;
+            var counter = 0;
+            activeOffers.forEach(function(thisOffer, index){
+                var thisProvider = thisOffer.provider;
+                thisOffer.provider = {
+                    _id: thisProvider._id,    
+                    name: thisProvider.name,    
+                    logo: thisProvider.logo,    
+                };
+                var providerIds =  providerOffers.map(function(a) {return a._id;});
+                
+                var pIndex = providerIds.indexOf(thisProvider._id);
+                if(pIndex == -1){
+                    var newProviderOffer = {
+                        _id: thisProvider._id,
+                        image: thisProvider.logo,
+                        displayname: thisProvider.name,
+                        //offers: [thisOffer],
+                    };
+                    providerOffers.push(newProviderOffer);
+                }else{
+                    //var thisProviderOffer = providerOffers[pIndex];
+                    //thisProviderOffer.offers.push(thisOffer);
+                }
+                counter += 1;
+                if(counter == nLength){
+                    res.json(providerOffers);
+                }
+            });
+            
+        } else {throw err;}
+    });
+});
+
 router.get('/providerOffers/:providerId', function(req, res) {
     var providerId = req.params.providerId;
     console.log("Provider is: " + providerId);

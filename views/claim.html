@@ -1018,6 +1018,29 @@
         </div>
         
     </div>
+    <div layout="row" layout-xs="column" class="componentRow" id="Preview" ng-if="preview.exam && provider.city">
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft">
+            <div class="componentRowElement2"layout="row" layout-align="start start">
+                <span>
+                    Preview
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement2 text-center thirdFont textDarkGrey" id="paneMiddle" >
+            <div layout="row" layout-align="center center" >
+                <md-button class="md-green2 md-small width50 secondFont tolowercase" ui-sref="showGroup({ categoryName:{{'preview.stream'}}, subCategoryName:{{'preview.exam'}}, cityName:{{'provider.city'}}, groupName:{{'provider.groupName'}} })" id="coachingHeader" target="_blank">
+                
+                Preview as Student
+                </md-button>
+            </div>
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+    </div>
     <div layout="row" layout-xs="column" class="componentRow secondFont" id="Contact">
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
@@ -2372,29 +2395,7 @@
         </div>
         
     </div>
-    <div layout="row" layout-xs="column" class="componentRow  lastRow" id="Preview" ng-if="preview.exam && provider.city">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft">
-            <div class="componentRowElement2"layout="row" layout-align="start start">
-                <span>
-                    Preview
-                </span>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement2 text-center thirdFont textDarkGrey" id="paneMiddle" >
-            <div layout="row" layout-align="center center" >
-                <md-button class="md-green2 md-small width50 secondFont tolowercase" ui-sref="showGroup({ categoryName:{{'preview.stream'}}, subCategoryName:{{'preview.exam'}}, cityName:{{'provider.city'}}, groupName:{{'provider.groupName'}} })" id="coachingHeader" target="_blank">
-                
-                Preview as Student
-                </md-button>
-            </div>
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div>
+    
  </div>
 
 <!-- Page on unathorized access-->

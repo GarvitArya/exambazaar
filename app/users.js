@@ -789,13 +789,14 @@ router.get('/editFilled/:userId', function(req, res) {
 
 router.get('/editShortlist/:userId', function(req, res) {
     var userId = req.params.userId;
-    console.log(userId);
+    //console.log(userId);
     user
         .findOne({ '_id': userId },{shortlisted:1})
-        .deepPopulate('shortlisted._id')
+        .deepPopulate('shortlisted')
         .exec(function (err, docs) {
         if (!err){ 
             var shortlisted = docs.shortlisted;
+            
             var shortlistedIds = shortlisted.map(function(a) {return a._id;});
             //console.log('Shortlisted are: ' + JSON.stringify(shortlistedIds));
             var basicShortlisted = [];
@@ -837,6 +838,43 @@ router.get('/editShortlist/:userId', function(req, res) {
             }
             //res.json(basicShortlisted);
             //process.exit();
+        } else {throw err;}
+    });
+});
+
+router.get('/userShortlist/:userId', function(req, res) {
+    var userId = req.params.userId;
+    
+    var allShortlists = user
+        .findOne({ '_id': userId },{shortlisted:1})
+        //.deepPopulate('shortlisted')
+        .exec(function (err, allShortlists) {
+        if (!err){ 
+            var shortlisted = allShortlists.shortlisted;
+            var nShortlisted = shortlisted.length;
+            if(nShortlisted==0){
+                res.json([]);
+            }else{
+                var basicShortlisted = [];
+                var counter = 0;
+                shortlisted.forEach(function(thisShortlist, index){
+                    var thisInstitute = targetStudyProvider
+                    .findOne({'_id': thisShortlist._id},{name:1, website: 1, address:1, city:1, state:1, logo:1})
+                    .exec(function (err, thisInstitute) {
+                    if (!err){
+                        
+                        thisShortlist.institute = thisInstitute;
+                        basicShortlisted.push(thisShortlist);
+                        counter = counter + 1;
+                        if(counter == nShortlisted){
+                            console.log(basicShortlisted);
+                            res.json(basicShortlisted);
+                        }
+                        } else {throw err;}
+                    });
+                });
+                
+            }
         } else {throw err;}
     });
 });

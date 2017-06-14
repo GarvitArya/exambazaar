@@ -51,6 +51,27 @@
         color: #fff;
         text-decoration: none;
     }
+    
+    #examTagHolder{
+        padding:5px;
+        font-size: 16px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    #examTagHolder:hover{
+        color: white;
+        
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #existingExamTagHolder{
+        padding:5px;
+        font-size: 16px;
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
 </style>
 <div class="whiteBackground mainContent padded" >
     <div id="spacer">
@@ -58,7 +79,7 @@
     <div flex layout="column" layout-align="start center" ng-if="showLevel>5">
         <form class="width100" name="addInstituteForm">
         <div class="secondFont listingHeader bold">
-            Add New Institutes
+            Add Details of the Institutes
         </div>
             
         <div>
@@ -76,60 +97,32 @@
                 <hot-column data="website" title="'Website'"></hot-column>
             </hot-table>
         </div>    
+           
+        <div class="secondFont listingHeader bold">
+            Mark the common exams taught at each center&nbsp;<span class="badge">{{commonExams.length}}</span>
+        </div>
+        <div layout="row" layout-align="start center" ng-repeat="stream in streams">
+            <div layout="row" layout-align="start center" flex="25" class="secondFont">
+            <strong>{{stream.displayname}}</strong>
+            </div>
+            <div layout-wrap layout="row" layout-align="start center">
+                <div class="padding2" ng-repeat="thisExam in exams" ng-if="thisExam.stream._id == stream._id">
+                    <span class="badge" id="examTagHolder" ng-if="commonExams.indexOf(thisExam._id) == -1" ng-click="addExam(thisExam._id)">
+                        {{thisExam.displayname}}
+                    </span>
+                    <span class="badge" id="existingExamTagHolder" ng-if="commonExams.indexOf(thisExam._id) != -1" ng-click="removeExam(thisExam._id)">
+                        {{thisExam.displayname}}
+                    </span>
+                </div>
+            </div>
+        </div>
             
-        <!--<div flex layout="row" layout-align="start center" class="width100">
-            <div flex="25">
-                Institute Name
-            </div>
-            <div flex="75">
-                <input required type="text" ng-model="newInstitute.name"  placeholder="Institute Name" class="width75">
-            </div>    
+            
+        <div flex layout="row" layout-align="center center" class="width100 marginB20 marginT40">
+            <md-button class="md-green md-small width50" ng-click="addInstitutes()" >Add</md-button>
         </div>
-        <div flex layout="row" layout-align="start center" class="width100">
-            <div flex="25">
-                Group Name
-            </div>
-            <div flex="75">
-                <input required type="text" ng-model="newInstitute.groupName"  placeholder="Group Name" class="width75">
-            </div>    
-        </div>
-        <div flex layout="row" layout-align="start center" class="width100">
-            <div flex="25">
-                Address
-            </div>
-            <div flex="75">
-                <input required type="text" ng-model="newInstitute.address"  placeholder="Address" class="width75">
-            </div>    
-        </div>
-        <div flex layout="row" layout-align="start center" class="width100">
-            <div flex="25">
-                City
-            </div>
-            <div flex="75">
-                <input required type="text" ng-model="newInstitute.city"  placeholder="City" class="width75">
-            </div>    
-        </div>
-        <div flex layout="row" layout-align="start center" class="width100">
-            <div flex="25">
-                State
-            </div>
-            <div flex="75">
-                <input required type="text" ng-model="newInstitute.state"  placeholder="State" class="width75">
-            </div>    
-        </div>
-        <div flex layout="row" layout-align="start center" class="width100">
-            <div flex="25">
-                Pincode
-            </div>
-            <div flex="75">
-                <input required type="text" ng-model="newInstitute.pincode"  placeholder="Pincode" class="width75">
-            </div>    
-        </div>-->
-        <div flex layout="row" layout-align="start center" class="width100 marginT20">
-            <md-button class="md-green md-small width25" ng-click="addInstitutes()" >Add</md-button>
-        </div>
-        <div flex layout="column" layout-align="start center" class="width100 marginT10 fourthFont" ng-if="addedInstituteIds">
-            <div>Institute added sucessfully with id</div>
+        <div flex layout="column" layout-align="start center" class="width100 marginT10 fourthFont" ng-if="addedInstituteIds.length > 0">
+            <div>{{addedInstituteIds.length}} Institutes added sucessfully with ids</div>
             <div>
                 <span ng-repeat="addedInstituteId in addedInstituteIds">
                     <a ui-sref="claim({ coachingId:{{'addedInstituteId'}} })" target="_blank">

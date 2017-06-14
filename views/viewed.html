@@ -7,10 +7,7 @@
     #logoHolder{
         height: 50px;
     }
-    #logo{
-        max-height: 40px;
-        max-width: 100px;
-    }
+    
     #link{
         color: rgba(0,0,0,0.6);
     }
@@ -23,39 +20,71 @@
     }
 </style>
 
-<div class="whiteBackground mainContent" >
-    <div id="spacer">
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<!-- Claim the page section -->
+<div layout="column" layout-align="center start" class="whiteBackground paddingTB20 paddingLR80 width100" ng-if="user">
+    <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
+        <div layout="row" layout-align="center center" class="width100 font16">
+            <div ng-if="user.image">
+            <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
+            </div>
+            <div class="marginL10">
+                {{user.basic.name}}
+            </div>
+        </div>
+        <div layout="row" layout-align="center center" class="width100 font20">
+            Take a look back&nbsp;
+            <span class="badge" id="badge">{{viewed.length}}</span>
+        </div>
+        <div layout="row" layout-align="center center" class="width100 editFont font12">
+            Review all the institutes you may want to join!
+        </div>
     </div>
-    <div layout="column" layout-align="start center" class="">
-        <div layout="row" layout-align="center center" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <span class="font20 paddingTB20">
-                Your History <span class="badge" id="badge">{{viewed.length}}</span>
-            </span>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div ng-if="viewed.length == 0">
-                You have not viewed any institutes yet. Start shortlisting now!
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" ng-repeat="view in viewed | orderBy:'-_date'" id="instituteHolder">
-                <div layout="column" layout-align="center center">
-                    <div id="logoHolder" class="">
-                        <div layout="column" layout-align="center center" class="height100">
-                        <img ng-src="{{view.institute.logo}}" id="logo"/>
-                        </div>
-                    </div>
-                    
-                    <div class="font14">
-                        <a ui-sref="claim({ coachingId:{{'view.institute._id'}} })" target="_blank" id="link">
-                        {{view.institute.name}}
-                        </a>
-                        
-                    </div>
-                    <div class="font9">
-                        on {{view._date | date}}
-                    </div>
+    <div layout="row" layout-align="center center" ng-if="viewed.length == 0" class="secondFont textBlack width100 paddingT20">
+        You have not viewed any institutes yet.&nbsp;
+        <a ui-sref="main" class="bold" id="dangerLink" target="_blank">Start browsing now!</a>
+    </div>
+    <div layout="row" layout-align="start center" layout-wrap ng-if="viewed.length > 0" class="width100">
+        <div layout="column" layout-align="center center" ng-repeat="view in viewed | orderBy:'-_date'" flex="33" class="width100 padding10">
+            <div layout="column" layout-align="start start" class="width100 gainsboroBorder padding10">
+            <div layout="row" layout-align="start start" class="width100 gainsboroBottomBorder">
+                <div layout="row" layout-align="start start" id="logoHolder">
+                    <img ng-src="{{view.logo}}" id="logo"/>
                 </div>
-                
+                <div layout="column" layout-align="start start" class="paddingL20">
+                <div layout="column" layout-align="start start" class="secondFont bold">
+                    <div>{{view.groupName}}</div>
+                    
+                </div>
+                </div>
+            </div>
+            <div layout="row" layout-align="start start" layout-wrap class="width100 paddingT10 editFont">
+                <div class="paddingR10">
+                    Cities:
+                </div>
+                <div layout="column" layout-aling="center center" ng-repeat="cityView in view.viewSummary | orderBy:'-_date'" class="paddingR10">
+                <div layout="row" layout-align="center center">
+                    <a ui-sref="showGroup({ categoryName:{{'cityView.stream'}}, subCategoryName:{{'cityView.exam'}}, cityName:{{'cityView.city'}}, groupName:{{'view.groupName'}} })" target="_blank">{{cityView.city}}</a>
+                </div>    
+                <div layout="row" layout-align="center center" class="font8">   
+                    {{cityView._date | date:'dd MMM yy'}}
+                </div>
+                </div>
+            </div>
             </div>
         </div>
+        
+        
+        
+        
+            
+        
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        
+        
     </div>
 </div>

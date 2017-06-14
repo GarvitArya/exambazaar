@@ -234,6 +234,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getUserShortlisted = function(userId) {
             return $http.get('/api/users/editShortlist/'+userId, {userId: userId});
         };
+        this.getUserShortlistedInstitutes = function(userId) {
+            return $http.get('/api/users/userShortlist/'+userId, {userId: userId});
+        };
         this.getUsers = function() {
             return $http.get('/api/users');
         };
@@ -702,6 +705,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.getOffers = function() {
             return $http.get('/api/offers');
+        };
+        this.getActiveOffers = function() {
+            return $http.get('/api/offers/activeOffers');
+        };
+        this.getActiveOffersBasic = function() {
+            return $http.get('/api/offers/activeOffersBasic');
         };
         this.getProviderOffers = function(providerId) {
             return $http.get('/api/offers/providerOffers/'+providerId, {providerId: providerId});
@@ -1556,6 +1565,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $rootScope.reviewCity = null;
         $rootScope.reviewInstitute = null;
         
+        $scope.group = thisGroup.data;
+        var groupDisabled = $scope.group.map(function(a) {return a.disabled;});
+        var groupIds = $scope.group.map(function(a) {return a._id;});
         
         $scope.exam = thisExam.data;
         $scope.category = thisStream.data;
@@ -1572,27 +1584,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         //console.log($scope.allExams);
         if($cookies.getObject('sessionuser')){
             $scope.user = $cookies.getObject('sessionuser');
-            /*var viewForm = {
-                institute: $scope.provider._id,
-                user: $scope.user.userId,
-                claim: true
-            };
-            if($cookies.getObject('ip')){
-                var ip = $cookies.getObject('ip');
-                viewForm.ip = ip;
-            }
-            viewService.saveview(viewForm).success(function (data, status, headers) {
-                //console.info('View Marked');
-            })
-            .error(function (data, status, header, config) {
-                console.info();
-            });*/
-            UserService.getUserShortlisted($scope.user.userId).success(function (data, status, headers) {
-                var shortlistedIds = data.map(function(a) {return a._id;});
-                if(shortlistedIds.indexOf($scope.provider._id) != -1){
+             UserService.getUserShortlistedInstitutes($scope.user.userId).success(function (data, status, headers) {
+                 var allShortlistData = data;
+                 var allShortlistedIds = allShortlistData.map(function(a) {return a.institute._id;});
+                 $scope.shortlistedIds = [];
+                 $scope.shortlistDetails = [];
+                 groupIds.forEach(function(thisGroupId, gindex){
+                     var sIndex = allShortlistedIds.indexOf(thisGroupId);
+                     if(sIndex != -1){
+                     $scope.shortlistedIds.push(thisGroupId); $scope.shortlistDetails.push(allShortlistData[sIndex]);
+                     }
+                 });
+                if($scope.shortlistedIds.indexOf($scope.provider._id) != -1){
                     $scope.shortlisted = true;
                 }
-                //console.info(data);
             })
             .error(function (data, status, header, config) {
                 console.info('Shortlist Error' + status + " " + data);    
@@ -1713,9 +1718,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         ];
         
         
-        $scope.group = thisGroup.data;
-        var groupDisabled = $scope.group.map(function(a) {return a.disabled;});
-        var groupIds = $scope.group.map(function(a) {return a._id;});
+        
+        
         //console.log(groupDisabled);
         $scope.provider = {
             name: $stateParams.groupName,
@@ -1847,6 +1851,52 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
               clickOutsideToClose: true
             });
         };
+        
+        $scope.getShortlistSelectedColour = function(thisGroup){
+            var className = "notselected";
+            if($scope.shortlistedIds){
+                var sIndex = $scope.shortlistedIds.indexOf(thisGroup._id);
+                if(sIndex == -1){
+                }else{
+                    className = "selected";
+                }
+            }
+            
+            
+            
+            return className;
+        };
+        
+        
+        $scope.updateShortlistInstitute = function(thisGroup){
+            var sIndex = $scope.shortlistedIds.indexOf(thisGroup._id);
+            
+            if(sIndex == -1){
+                $scope.shortlistedIds.push(thisGroup._id);
+            }else{
+                $scope.shortlistedIds.splice(sIndex, 1);
+            }
+            
+        };
+        
+        $scope.shortlistInstitute = function(){
+            console.log($scope.shortlistedIds);
+            $scope.showSelectShortlistCentreDialog();
+            if($scope.user.userId && $scope.provider._id){
+                var shortListForm = {
+                    userId: $scope.user.userId,
+                    instituteId: $scope.provider._id
+                };
+                UserService.shortlistInstitute(shortListForm).success(function (data, status, headers) {
+                    console.info('Institute Shortlisted');
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Shortlist error: ' + status + " " + data);    
+                });  
+            }
+              
+        };
         $scope.prevFaculty = function(){
             var index = $scope.activeFacultyIndex - 1;
             $scope.changeFacultyImage(index);
@@ -1904,7 +1954,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
         
-        var instituteIds = $scope.group.map(function(a) {return a._id;});
+        var instituteIds = []; //$scope.group.map(function(a) {return a._id;});
+        
+        $scope.group.forEach(function(thisGroup, index){
+            if(thisGroup.city == $stateParams.cityName){
+                instituteIds.push(thisGroup._id);
+            }
+        });
+        
         //console.log(instituteIds);
         $scope.user = $cookies.getObject('sessionuser');
         var viewForm = {
@@ -2099,7 +2156,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
         
-        $scope.getSelectedColour = function(thisGroup){
+        $scope.getReviewSelectedColour = function(thisGroup){
             var className = "notselected";
             if($scope.userReview && $scope.userReview.institute && $scope.userReview.institute == thisGroup._id){
                 className = "selected";
@@ -2141,7 +2198,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
               clickOutsideToClose: true
             });
         };
-        
+        $scope.showSelectShortlistCentreDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#selectShortlistCentreDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
         $scope.showSavedReviewDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#savedReviewDialog',
@@ -3211,6 +3275,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
         $scope.shortlistInstitute = function(){
+
             if($scope.user.userId){
                 var shortListForm = {
                     userId: $scope.user.userId,
@@ -8080,41 +8145,52 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
       
     
     exambazaar.controller("offerController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document){
+        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document, offerService){
+            /*$scope.offers = [
+                {
+                    image: "images/partners/careerpoint.png",
+                    displayname: "Career Point",
+                },
+                {
+                    image: "images/partners/toppr.png",
+                    displayname: "Toppr",
+                },
+                {
+                    image: "images/partners/bansal.jpg",
+                    displayname: "Bansal Classes",
+                },
+                {
+                    image: "images/partners/plancess.png",
+                    displayname: "Plancess",
+                },
+                {
+                    image: "images/partners/testbook.png",
+                    displayname: "Testbook",
+                },
+                {
+                    image: "images/partners/hkf.jpg",
+                    displayname: "Handa ka Funda",
+                },
+            ];*/
+            $scope.offers = [];
+            offerService.getActiveOffersBasic().success(function (data, status, headers) {
+                $scope.offersList = data;
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+            
+            $scope.$watch('offersList', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue != ''){
+                    $scope.offers = newValue;
+                    //console.log(newValue);
+                }
+            }, true);
+            
+            
+            
         
-        /*$scope.offers = [
-            {
-                image: "images/partners/careerpoint.png",
-                name: "careerpoint",
-                displayname: "Career Point",
-            },
-            {
-                image: "images/partners/toppr.png",
-                name: "toppr",
-                displayname: "Toppr",
-            },
-            {
-                image: "images/partners/bansal.jpg",
-                name: "bansal",
-                displayname: "Bansal Classes",
-            },
-            {
-                image: "images/partners/plancess.png",
-                name: "plancess",
-                displayname: "Plancess",
-            },
-            {
-                image: "images/partners/testbook.png",
-                name: "testbook",
-                displayname: "Testbook",
-            },
-            {
-                image: "images/partners/hkf.jpg",
-                name: "hkf",
-                displayname: "Handa ka Funda",
-            },
-        ];*/
-        $scope.offers=[];
+        //$scope.offers=[];
         $scope.instituteHolder = "your Coaching Institute";    
         $scope.goToReview = function(){
             var statesToShow = ["landing","main","category","city","findCoaching"];
@@ -8991,6 +9067,8 @@ function getLatLng(thisData) {
         [ '$scope', 'thisuser' , 'thisuserViewed',  '$http','$state','$rootScope', function($scope, thisuser, thisuserViewed, $http, $state, $rootScope){
         $scope.user = thisuser.data;
         $scope.viewed = thisuserViewed.data;
+        console.log($scope.viewed);    
+            
         
         $rootScope.title =$scope.user.basic.name;
     }]);     
@@ -10374,9 +10452,12 @@ function getLatLng(thisData) {
     }]);        
         
     exambazaar.controller("addInstituteController", 
-        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService){
+        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', 'examList', 'streamList', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService, examList, streamList){
         $scope.user = thisuser.data;
-        console.log($scope.user);
+        $scope.exams = examList.data;
+            console.log($scope.exams);
+        $scope.streams = streamList.data;
+        
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
@@ -10385,6 +10466,22 @@ function getLatLng(thisData) {
         }
             
         $scope.newinstitutes =[];
+        $scope.commonExams = [];
+            
+        $scope.addExam = function(examId){
+            if($scope.commonExams.indexOf(examId) == -1){
+                
+                $scope.commonExams.push(examId);
+                console.log($scope.commonExams);
+            }
+        };
+        $scope.removeExam = function(examId){
+            var eIndex = $scope.commonExams.indexOf(examId);
+            
+            if(eIndex != -1){
+                $scope.commonExams.splice(eIndex,1);
+            }
+        };
         $scope.newInstitute = {
             name:'',
             groupName:'',
@@ -10416,9 +10513,13 @@ function getLatLng(thisData) {
                     thisinstitute.groupName = thisinstitute.name;
                     var saveProvider = {
                         targetStudyProvider:thisinstitute,
-                        user: $scope.user._id
+                        user: $scope.user._id,
+                        
                     };
-                    
+                    if($scope.commonExams.length > 0){
+                        saveProvider.targetStudyProvider.exams = $scope.commonExams;
+                    }
+                        
                     institutes.push(saveProvider);
                 }
             });
@@ -13021,6 +13122,14 @@ function getLatLng(thisData) {
                 thisuser: ['UserService', '$stateParams',
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
                 }],
                 user: function() { return {}; }
             }

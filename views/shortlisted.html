@@ -23,39 +23,55 @@
     }
 </style>
 
-<div class="whiteBackground mainContent" >
-    <div id="spacer">
-    </div>
-    <div layout="column" layout-align="start center">
-        <div layout="row" layout-align="center center" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <span class="font20 paddingTB20">
-                Your Shortlisted Institutes <span class="badge" id="badge">{{shortlisted.length}}</span>
-            </span>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div ng-if="shortlisted.length == 0">
-                You have not shortlisted any institutes yet. Start shortlisting now!
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<!-- Claim the page section -->
+<div layout="column" layout-align="center start" class="whiteBackground paddingTB20 paddingLR80 width100" ng-if="user">
+
+    <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
+        <div layout="row" layout-align="center center" class="width100 font16">
+            <div ng-if="user.image">
+            <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
             </div>
-            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" ng-repeat="institute in shortlisted | orderBy:'-_date'" id="instituteHolder">
-                <div layout="column" layout-align="center center">
-                    <div id="logoHolder" class="">
-                        <div layout="column" layout-align="center center" class="height100">
-                        <img ng-src="{{institute.logo}}" id="logo"/>
-                        </div>
-                    </div>
-                    
-                    <div class="font14">
-                        <a ui-sref="claim({ coachingId:{{'institute._id'}} })" target="_blank" id="link">
-                        {{institute.name}}
-                        </a>
-                        
-                    </div>
+            <div class="marginL10">
+                {{user.basic.name}}
+            </div>
+        </div>
+        <div layout="row" layout-align="center center" class="width100 font20">
+            Institutes you shortlisted&nbsp;
+            <span class="badge" id="badge">{{shortlisted.length}}</span>
+        </div>
+        <div layout="row" layout-align="center center" class="width100 editFont font12">
+            Proceed ahead, compare and apply to institutes of your choice!
+        </div>
+    </div>    
+    <div layout="row" layout-align="center center" ng-if="shortlisted.length == 0" class="secondFont textBlack width100 paddingT20">
+        You have not shortlisted any institutes yet.&nbsp;
+        <a ui-sref="main" class="bold" id="dangerLink" target="_blank">Start browsing now!</a>
+    </div>
+    <div layout="row" layout-align="start center" layout-wrap ng-if="shortlisted.length > 0" class="width100">
+        <div layout="column" layout-align="center center" ng-repeat="institute in shortlisted | orderBy:'-_date'" flex="33" class="width100 padding10">
+            <div layout="column" layout-align="start start" class="width100 gainsboroBorder padding10">
+            <div layout="row" layout-align="start start" class="width100 gainsboroBottomBorder">
+                <div layout="row" layout-align="start start" id="logoHolder">
+                    <img ng-src="{{institute.logo}}" id="logo"/>
+                </div>
+                <div layout="column" layout-align="start start" class="paddingL20">
+                <div layout="column" layout-align="start start" class="secondFont bold">
+                    <div>{{institute.name}}</div>
                     <div class="font9">
                         on {{institute._date | date}}
                     </div>
                 </div>
-                
+                </div>
             </div>
+            </div>
+            
+            
+            
         </div>
     </div>
 </div>
