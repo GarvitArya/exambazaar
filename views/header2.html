@@ -39,6 +39,9 @@
                 <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })">Profile</a>
                 </li>
                 <li>
+                <a ui-sref="reviewed({ userId:{{'sessionuser.userId'}} })">Your Reviews</a>
+                </li>
+                <li>
                 <a ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
                 </li>
                 <li>

@@ -16,19 +16,7 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
-//to get a particular review with _id reviewId
-router.get('/edit/:reviewId', function(req, res) {
-    var reviewId = req.params.reviewId;
-    //console.log(reviewId);
-    review
-        .findOne({ '_id': reviewId })
-        .exec(function (err, docs) {
-        if (!err){
-            //console.log(docs);
-            res.json(docs);
-        } else {throw err;}
-    });
-});
+
 
 router.get('/remove/:reviewId', function(req, res) {
     var reviewId = req.params.reviewId;
@@ -59,48 +47,79 @@ router.get('/', function(req, res) {
         } else {throw err;}
     });
 });
+//to get a particular review with _id reviewId
+router.get('/edit/:reviewId', function(req, res) {
+    var reviewId = req.params.reviewId;
+    var thisReview = review
+        .findOne({ '_id': reviewId, active: true })
+        //.deepPopulate('coupon')
+        .exec(function (err, thisReview) {
+            
+        if (!err){
+            var instituteId = thisReview.institute;
+            var thisProvider = targetStudyProvider
+            .findOne({_id : instituteId, disabled: {$ne: true}},{name:1 , groupName:1, disabled: 1, city:1, logo:1, address:1, pincode:1})
+            //.deepPopulate('exams exams.stream')
+            .exec(function (err, thisProvider) {
+            if (!err){
+                thisReview.institute = thisProvider;
+                res.json(thisReview);
+                } else {throw err;}
+            });
+        } else {throw err;}
+    });
+});
 
 //to get all reviews for a user
 router.get('/user/:userId', function(req, res) {
+    
     var userId = req.params.userId;
+    
     var reviews = review
-        .find({user: userId})
-        .deepPopulate('institute user')
-        .exec(function (err, reviews) {
-        if (!err){
-            var basicReviews = [];
-            var counter = 0;
-            var nLength = reviews.length;
-            reviews.forEach(function(thisReview, index){
-                var newTask = {
-                    user: {
-                        _id: thisReview.user._id,
-                        name: thisReview.user.basic.name,
-                    },
-                    institute: {
-                        _id: thisReview.institute._id,
-                        name: thisReview.institute.name,
-                        address: thisReview.institute.address,
-                        city: thisReview.institute.city,
-                        pincode: thisReview.institute.pincode
-                    },
-                    _created: thisReview._created,
-                    _deadline: thisReview._deadline,
-                    _finished: thisReview._finished,
-                    active: thisReview.active,
+    .find({user: userId, active: true})
+    .sort( { _created: -1 } )
+    //.deepPopulate('institute institute.exams institute.exams.stream')
+    .exec(function (err, reviews) {
+    if (!err){
+        var basicReviews = [];
+        var groupNames = [];
+        var counter = 0;
+        var nLength = reviews.length;
+        
+        var reviewInstituteIds =  reviews.map(function(a) {return a.institute;});
+        
+        var allProviderReviews = targetStudyProvider
+            .find({_id : { $in : reviewInstituteIds }, disabled: {$ne: true}},{name:1 , groupName:1, exams:1, disabled: 1, city:1, logo:1, address:1, pincode:1})
+            .deepPopulate('exams exams.stream')
+            .exec(function (err, allProviderReviews) {
+            if (!err){
+                
+            var instituteIds = allProviderReviews.map(function(a) {return a._id.toString();});
 
-                };
+            reviews.forEach(function(thisReview, rindex){
+                var iIndex = instituteIds.indexOf(thisReview.institute.toString());
+                thisReview.institute = allProviderReviews[iIndex];
+
+                if(thisReview.institute && !thisReview.institute.disabled){
+                    
+                    basicReviews.push(thisReview);
+                 
+                }
                 counter = counter + 1;
-                basicReviews.push(newTask);
                 if(counter == nLength){
+
                     res.json(basicReviews);
                 }
-            });
-            
-            if(nLength == 0){
-                res.json([]);
-            }
-        } else {throw err;}
+                });
+                
+                
+            } else {throw err;}
+        });
+
+        if(nLength == 0){
+            res.json([]);
+        }
+    } else {throw err;}
     });
 });
 

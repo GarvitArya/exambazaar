@@ -1,5 +1,5 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload','youtube-embed', 'ngMeta', 'ngtweet','ngFacebook', 'ui.bootstrap']);
+var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload','youtube-embed', 'ngMeta', 'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo'
     (function() {
     'use strict';
@@ -12,8 +12,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         $facebookProvider.setAppId('1236747093103286');
         $facebookProvider.setPermissions("public_profile,email"); //, user_education_history, publish_actions
-        
-        
     })
     .controller('streamController', streamController);
     function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope, ngMeta, $location) {
@@ -249,6 +247,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.userexists = function(mobile) {
             return $http.get('/api/users/userexists/'+mobile, {mobile: mobile});
+        };
+        this.referexists = function(mobile) {
+            return $http.get('/api/users/referexists/'+mobile, {mobile: mobile});
         };
         this.markLogin = function(loginForm) {
             
@@ -505,8 +506,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getreviews = function() {
             return $http.get('/api/reviews');
         };
-        this.getuserreview = function(userId) {
-            return $http.get('/api/reviewServices/user/'+userId, {userId: userId});
+        this.getuserReviews = function(userId) {
+            return $http.get('/api/reviews/user/'+userId, {userId: userId});
         };
     }]);
         
@@ -681,11 +682,23 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getCoupon = function(couponId) {
             return $http.get('/api/coupons/edit/'+couponId, {couponId: couponId});
         };
+        this.nameExists = function(name) {
+            return $http.post('/api/coupons/nameExists/', name);
+        };
+        this.getOneActiveCouponCode = function(couponForm) {
+            return $http.post('/api/coupons/getOneActiveCouponCode/', couponForm);
+        };
+        this.deliver = function(deliverForm) {
+            return $http.post('/api/coupons/deliver/', deliverForm);
+        };
         this.getCoupons = function() {
             return $http.get('/api/coupons');
         };
         this.getAllCodes = function() {
             return $http.get('/api/coupons/allCodes');
+        };
+        this.getOneOfEachActiveCoupon = function() {
+            return $http.get('/api/coupons/oneOfEachActiveCoupon');
         };
         
         this.getProviderCoupons = function(providerId) {
@@ -703,6 +716,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getOffer = function(offerId) {
             return $http.get('/api/offers/edit/'+offerId, {offerId: offerId});
         };
+        this.nameExists = function(name) {
+            return $http.post('/api/offers/nameExists/', name);
+        };
         this.getOffers = function() {
             return $http.get('/api/offers');
         };
@@ -711,6 +727,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         this.getActiveOffersBasic = function() {
             return $http.get('/api/offers/activeOffersBasic');
+        };
+        this.getActiveOffersMedium = function() {
+            return $http.get('/api/offers/activeOffersMedium');
         };
         this.getProviderOffers = function(providerId) {
             return $http.get('/api/offers/providerOffers/'+providerId, {providerId: providerId});
@@ -1873,19 +1892,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             if(sIndex == -1){
                 $scope.shortlistedIds.push(thisGroup._id);
+                $scope.shortlistInstitute(thisGroup._id);
             }else{
-                $scope.shortlistedIds.splice(sIndex, 1);
+                //$scope.shortlistedIds.splice(sIndex, 1);
             }
             
         };
         
-        $scope.shortlistInstitute = function(){
-            console.log($scope.shortlistedIds);
-            $scope.showSelectShortlistCentreDialog();
-            if($scope.user.userId && $scope.provider._id){
+        
+        $scope.shortlistInstitute = function(instituteId){
+            //console.log($scope.shortlistedIds);
+            //$scope.showSelectShortlistCentreDialog();
+            if($scope.user.userId && instituteId){
                 var shortListForm = {
                     userId: $scope.user.userId,
-                    instituteId: $scope.provider._id
+                    instituteId: instituteId
                 };
                 UserService.shortlistInstitute(shortListForm).success(function (data, status, headers) {
                     console.info('Institute Shortlisted');
@@ -2121,7 +2142,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $scope.reviewsClasses = ["review1","review2","review3","review4","review5","review6","review7","review8","review9"];
         $scope.minTextLength = 140;
         
-        $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + $scope.minTextLength + " characters long :)";
+        $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + $scope.minTextLength + " characters long. The best review will be featured on our main page :)";
         
         var paramNames = $scope.reviewParams.map(function(a) {return a.name;});
         
@@ -2302,14 +2323,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         return self.indexOf(value) === index;
     }       
     exambazaar.controller("offersController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', 'offersList', 'couponsList', 'offerService', function($scope,$rootScope, targetStudyProviderService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo, offersList, couponsList, offerService){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', 'offersList', 'couponsList', 'offerService', 'couponService', function($scope,$rootScope, targetStudyProviderService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo, offersList, couponsList, offerService, couponService){
         $scope.provider = thisProvider.data;
         $scope.provideroffers = offersList.data;
         
         $scope.provideroffers.forEach(function(thisoffer, pIndex){
             var couponNames = thisoffer.coupons.map(function(a) {return a.name;});
             thisoffer.couponNames = couponNames.filter(onlyUnique );
-            console.log(thisoffer.couponNames);
+            //console.log(thisoffer.couponNames);
         });
         
         $scope.uniqueOffers = $scope.provideroffers;
@@ -2321,7 +2342,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         var today = moment();
         var sixMonths = moment().add(6, "months");
         var threeMonths = moment().add(3, "months");
-        var offerName = "40% Off";
+        var offerName = $scope.provider.name + " - " + today.format('DD MMM YY');
         $scope.newoffer = {
             name: offerName,
             provider: $scope.provider._id,
@@ -2332,6 +2353,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             _end: sixMonths,
             active: true,
             couponBuilder: [],
+            offerNameError: '',
         };
         $scope.addEmail = function(){
             if(!$scope.newoffer.otheremails){
@@ -2422,10 +2444,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
         $scope.addCoupon = function(){
-            var couponNo = $scope.offer.couponBuilder.length + 1;
-            var couponName = $scope.offer.name + ": Coupon " + couponNo.toString();
+            var steps = [];
+            steps.push('Go to ' + $scope.provider.website);
+            steps.push('Choose the product (test series, correspondence course) you want to purchase');
+            steps.push('Enter exclusive promo code at checkout on ' + $scope.provider.website);
+            
+            var providerEmailText = '';
+            if($scope.offer.otheremails.length > 0){
+                providerEmailText = " or " +  $scope.offer.otheremails[0];
+            }
+            
+            steps.push('For any help email: always@exambazaar.com' + providerEmailText);
+            
             var newCouponTemplate = {
-                name: couponName,
+                name: '',
                 discountType: 'Percentage Discount',
                 validfor: 'All Courses',
                 validityType: 'Fixed Expiry Date',
@@ -2437,7 +2469,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 nCoupons: 1000,
                 percentageSocialShareBenefit: 15,
                 flatSocialShareBenefit: 250,
+                steps: steps,
                 couponCodes: [],
+                couponNameError: ''
             };
             $scope.offer.couponBuilder.push(newCouponTemplate);
         };
@@ -2644,6 +2678,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     $scope.saveOfferError = [];
                 }
                 $scope.saveOfferError.push('Add atleast one coupon builder and coupon codes');
+            }else if(offer.offerNameError != ''){
+                console.log(offer.offerNameError);
+                if(!$scope.saveOfferError){
+                    $scope.saveOfferError = [];
+                }
+                $scope.saveOfferError.push("Offer Name already exists! Choose another name");
             }else if(offer.couponBuilder.length > 0){
                 
                 offer.couponBuilder.forEach(function(thisCouponBuilder, index){
@@ -2653,12 +2693,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         }
                         $scope.saveOfferError.push('Generate or upload atleast one coupon code for ' + thisCouponBuilder.name);
                     }
+                    if(thisCouponBuilder.couponNameError != ''){
+                        $scope.saveOfferError.push("Coupon Name already exists! Choose another name: " + thisCouponBuilder.name);
+                        
+                    }
                 });
                 
                 if(!$scope.saveOfferError){
-                    console.log(offer);
+                    console.log($scope.offer);
                     var saveOffer = offerService.saveOffer($scope.offer).success(function (data, status, headers) {
-                        console.log(data);
+                        //console.log(data);
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
@@ -2712,6 +2756,56 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         
         
+        $scope.$watch('offer.name', function (newValue, oldValue, scope) {
+            if(newValue != null && newValue != '' && newValue!=oldValue){
+                //$scope.offerNameError = '';
+                var nameForm = {
+                    name: newValue
+                };
+                offerService.nameExists(nameForm).success(function (data, status, headers) {
+                    if(data){
+                        $scope.offer.offerNameError = "Offer Name already exists! Choose another name";
+                    }else{
+                        $scope.offer.offerNameError = ''
+                    }
+
+                    $scope.fetching = false;
+                }).error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            }
+        }, true);
+        
+        $scope.$watch('offer.couponBuilder', function (newValue, oldValue, scope) {
+            if(newValue != null && newValue != '' && newValue.length > 0 &&  newValue!=oldValue){
+                
+            newValue.forEach(function(thisCouponBuilder, index){
+                //thisCouponBuilder.couponNameError = '';
+                var nameForm = {
+                    name: thisCouponBuilder.name
+                };
+                if(!oldValue[index] || thisCouponBuilder.name != oldValue[index].name){
+                    couponService.nameExists(nameForm).success(function (data, status, headers) {
+                    //console.log(data);
+                    if(data){
+                        thisCouponBuilder.couponNameError = "Coupon Name already exists! Choose another name";
+                        
+                        }else{
+                            thisCouponBuilder.couponNameError = '';
+                        }
+
+                        $scope.fetching = false;
+                    }).error(function (data, status, header, config) {
+                        console.info("Error ");
+                    }); 
+                    
+                }
+                
+                
+            });
+                
+            }
+        }, true);
         
     }]);  
     
@@ -8175,6 +8269,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.offers = [];
             offerService.getActiveOffersBasic().success(function (data, status, headers) {
                 $scope.offersList = data;
+                //console.log($scope.offersList);
             })
             .error(function (data, status, header, config) {
                 console.info('Error ' + data + ' ' + status);
@@ -8334,15 +8429,368 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 
             };
             $rootScope.title ='Sandbox 2';
-    }]); 
+    }]);
+    
+        
+    exambazaar.controller("thankyouController", 
+        [ '$scope', '$http','$state', '$rootScope','thisuser', '$location', 'Socialshare', '$mdDialog', '$timeout', function($scope, $http, $state, $rootScope, thisuser, $location, Socialshare, $mdDialog, $timeout){
+            $scope.user = thisuser.data;
+            var redirectUrl = "https://www.exambazaar.com/" + "/user/" + $scope.user._id + "/thankyou";
+            $scope.shareFacebook = function(){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'share',
+                    'socialshareUrl': 'https://www.exambazaar.com/review',
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': redirectUrl,
+                  }
+                });    
+            };
+            
+            $scope.shareText = "Receive amazing discounts at Exambazaar.com by reviewing your coaching institute! Go ahead, review your coaching and get your discount at www.exambazaar.com/review/";
+            
+            $rootScope.pageTitle = 'Thank you for reviewing your coaching institute!';
+            $rootScope.pageURL = 'https://www.exambazaar.com/review';
+            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
+    }]);
+    
+    
+    exambazaar.controller("availOfferController", 
+        [ '$scope', '$http','$state', '$rootScope','thisuser','targetStudyProviderService', 'UserService', 'couponService', '$location', 'thisReview', 'activeOfferInstitutes', 'activeCoupons', 'Socialshare', '$mdDialog', '$timeout', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, UserService, couponService, $location, thisReview, activeOfferInstitutes, activeCoupons, Socialshare, $mdDialog, $timeout){
+            $scope.user = thisuser.data;
+            $scope.activeOfferInstitutes = activeOfferInstitutes.data;
+            $scope.activeCoupons = activeCoupons.data;
+            $scope.thisReview = thisReview.data;
+            $scope.states = ["Browse","Refer","Coupon",];
+            $scope.currState = "Browse";
+            
+            var deliveredCouponId = null;
+            if($scope.thisReview.coupon){
+                $scope.currState='Coupon';
+                deliveredCouponId = $scope.thisReview.coupon;
+            }
+            
+            $scope.$watch('currState', function (newValue, oldValue, scope) {
+                if(deliveredCouponId){
+                    couponService.getCoupon(deliveredCouponId).success(function (data, status, headers) {
+                        $scope.deliveredCoupon = data;
+                        console.log($scope.deliveredCoupon);
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error ' + data + ' ' + status);
+                    });
+                    
+                }
+
+            }, true);
+            
+            $scope.chooseCoupon = function(activeCoupon, activeOfferInstitute){
+                $scope.selectedCoupon = activeCoupon;
+                $scope.selectedOfferInstitute = activeOfferInstitute;
+                $scope.currState = "Refer";
+            };
+            $scope.getBreadCrumbClass = function(state){
+                var className = "";
+                if(state == $scope.currState){
+                    className = "active";
+                }
+                return className;
+            };
+            $scope.navigate = function(clickstate){
+                var clickIndex = $scope.states.indexOf(clickstate);
+                var currIndex = $scope.states.indexOf($scope.currState);
+                
+                if(clickIndex < currIndex && $scope.currState != 'Coupon'){
+                    $scope.currState = clickstate;
+                }
+            };
+            
+            $scope.shareOnFacebook = true;
+            $scope.shareText = "I have received an amazing discount at Exambazaar.com by reviewing " +  $scope.thisReview.institute.name + "! Go ahead, review your coaching and get your discount at www.exambazaar.com/review/";
+            var redirectUrl = "https://www.exambazaar.com/" + "/user/" + $scope.user._id + "/thankyou";
+           
+            $scope.shareFacebook = function(){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'send',
+                    'socialshareUrl': 'https://www.exambazaar.com/review/',
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': redirectUrl,
+                  }
+                });    
+            };
+            
+            $scope.postFacebook = function(){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'feed',
+                    'socialshareUrl': 'https://www.exambazaar.com/review/',
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com/',
+                  }
+                });    
+            };
+
+            $scope.fail = function (err) {
+                console.error('Error!', err);
+            };
+            
+            var messageText = function(){
+                var totalDiscount = '';
+                if($scope.selectedCoupon.discountType == 'Percentage Discount'){
+                    totalDiscount = $scope.selectedCoupon.percentageDiscount + "%";
+                }
+                if($scope.selectedCoupon.discountType == 'Flat Discount'){
+                    totalDiscount = $scope.selectedCoupon.flatDiscount +"Rs.";
+                }
+                
+                var smsMessage = $scope.user.basic.name + " received an amazing discount of " + totalDiscount + " on " + $scope.selectedOfferInstitute.displayname + " via Exambazaar by reviewing " +  $scope.thisReview.institute.name + ", " +$scope.thisReview.institute.city + "! Review your coaching institute now to avail amazing discounts at www.exambazaar.com/review";  
+                return smsMessage;
+            };
+            
+            $scope.showCopiedDialog = function(text, ev) {
+                $scope.copiedText = text;
+                $mdDialog.show({
+                  contentElement: '#copiedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },500)
+            };
+            $scope.refermobiles = [];
+            var i =1;
+            for (i=1;i<=5;i++) {
+                
+                var newMobile = {
+                    mobile: '',
+                    exists: null,
+                    placeholder: "10 Digit Mobile " + i,
+                };
+                $scope.refermobiles.push(newMobile);
+            };
+            
+            $scope.$watch('refermobiles', function (newValue, oldValue, scope) {
+                newValue.forEach(function(thisMobile, mindex){
+                    if(thisMobile.mobile && thisMobile.mobile != oldValue[mindex].mobile){
+                         UserService.referexists(thisMobile.mobile).success(function (data, status, headers) {
+                            thisMobile.exists = data;
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info('Error ' + data + ' ' + status);
+                        });
+                    }   
+                });
+            }, true);
+            
+            
+            $scope.inviteMobiles = function(){
+                var invalid = false;
+                $scope.referMobilesError = null;
+                $scope.refermobiles.forEach(function(thisMobile, mindex){
+                    if(thisMobile.mobile){
+                        thisMobile.mobile = thisMobile.mobile.toString();
+                    }
+                    if(thisMobile.mobile.length != 10 || thisMobile.exists){
+                        console.log(thisMobile.mobile.length + thisMobile.mobile);
+                        invalid = true;
+                    }
+                });
+                
+                if(invalid){
+                    $scope.referMobilesError = "Please enter 5 valid mobile numbers";
+                }else{
+                    var smsMessage = messageText();
+                    console.log(smsMessage.length);
+                    console.log(smsMessage);
+                    
+                    //alert('Valid');
+                }
+            };
+            
+            $scope.showSkipDialog = function(ev) {
+                var totalDiscount = '';
+                if($scope.selectedCoupon.discountType == 'Percentage Discount'){
+                    totalDiscount = $scope.selectedCoupon.percentageSocialShareBenefit + "% !";
+                }
+                if($scope.selectedCoupon.discountType == 'Flat Discount'){
+                    totalDiscount = $scope.selectedCoupon.flatSocialShareBenefit +" Rs !";
+                }
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to skip referring your friends to Exambazaar?')
+                .textContent('You will not receive the additional Exambazaar discount of ' + totalDiscount)
+                .ariaLabel('Lucky day')
+                .targetEvent(ev)
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.issueCoupon(false);
+                }, function() {
+                  //nothing
+                });
+                    
+            };
+            
+            $scope.issueCoupon = function(social){
+                
+                var couponForm = {
+                    name: $scope.selectedCoupon.name,
+                    offer: $scope.selectedCoupon.offer,
+                };
+                couponService.getOneActiveCouponCode(couponForm).success(function (data, status, headers) {
+                    if(data){
+                        $scope.selectedCoupon = data;
+                        $scope.selectedCoupon.user = $scope.user._id;
+                        
+                        $scope.selectedCoupon.delivered = {
+                            social: social,
+                            state: 'Delivered',
+                        };
+                        if(social){
+                            $scope.selectedCoupon.delivered.usercode = $scope.selectedCoupon.socialShareCode;
+                        }else{
+                            $scope.selectedCoupon.delivered.usercode = $scope.selectedCoupon.code;
+                            
+                        }
+                        var timeNow = moment();
+                        $scope.selectedCoupon.delivered._deliverDate = timeNow;
+                        if($scope.selectedCoupon.validityType == 'From date of issue by Exambazaar'){
+                            var nDays = $scope.selectedCoupon.validtyDuration;
+                            var ebExpiry = timeNow.add(nDays, "days");
+                            $scope.selectedCoupon.delivered._expiryDate = ebExpiry;
+                        }
+                        
+                        if($scope.selectedCoupon.validityType == 'Fixed Expiry Date'){
+                            var fixedExpiryDate = $scope.selectedCoupon.fixedExpiryDate;
+                            $scope.selectedCoupon.delivered._expiryDate = fixedExpiryDate;
+                        }
+                        
+                        var deliverForm = {
+                            selectedCoupon: $scope.selectedCoupon,
+                            review: $scope.thisReview._id,
+                        };
+                        
+                        couponService.deliver(deliverForm).success(function (data, status, headers) {
+                            console.log(data);
+                            if(data){
+                                $scope.selectedCoupon = data;
+                                deliveredCouponId = $scope.selectedCoupon._id;
+                                $scope.currState = "Coupon";
+                                console.log($scope.selectedCoupon);
+                            }else{
+                                console.log('Something went wrong');
+                            }
+                            
+                            
+                        
+                        }).error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                        
+                        
+                        
+                    }else{
+                        console.log('Error: No more active coupon for this offer! Sorry');
+                    }
+                }).error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+
+            
+            /*var currURL = $location.absUrl();
+            $rootScope.pageURL = currURL;*/
+            $rootScope.pageTitle = 'Review your coaching institute to get rewarded!';
+            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
+    }]);
+    
     
     exambazaar.controller("reviewedController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', '$location', function($scope, $http, $state, $rootScope, targetStudyProviderService, $location){
+        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', '$location', 'thisuserReviewed', 'activeOffers', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, $location, thisuserReviewed, activeOffers){
+            $scope.user = thisuser.data;
+            $scope.activeOffers = activeOffers.data;
+            console.log($scope.activeOffers);
+            $scope.userReviewed = thisuserReviewed.data;
+            //console.log($scope.reviewed);
+            $rootScope.pageTitle ='Reviews by ' + $scope.user.basic.name;
+            $scope.reviews = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
+            $scope.reviewsClasses = ["review1","review2","review3","review4","review5","review6","review7","review8","review9"];
+            $scope.reviewParams = [
+                {name: "faculty", displayname:"Faculty and Teaching Experience", hoverVal: -1},
+                {name: "competitive_environment", displayname:"Competitive Environment", hoverVal: -1},
+                {name: "quality_of_material", displayname:"Quality of material", hoverVal: -1},
+                {name: "infrastructure", displayname:"Infrastructure", hoverVal: -1},
+            ];
+            var paramNames = $scope.reviewParams.map(function(a) {return a.name;});
             
-            $rootScope.pageTitle ='Review your coaching institute';
+            $scope.getBackgroundColour = function(reviewParam, paramIndex, userReview){
+                var pIndex = paramNames.indexOf(reviewParam.name);
+                var className = "noreview";
+
+                var propName = $scope.reviewParams[pIndex].name;
+                
+                if(userReview && userReview[propName]){
+                    var review = userReview[propName];
+                    var rIndex = $scope.reviews.indexOf(Number(review));
+                    if(paramIndex <= rIndex){
+                        var rIndex2 = rIndex + 1;
+                        className = "review" + rIndex2;    
+                    }
+                }
+
+                if($scope.reviewParams[pIndex].hoverVal >= 0){
+                    className = "noreview";
+                };
+
+                if($scope.reviewParams[pIndex].hoverVal >= paramIndex){
+
+                    var paramIndex2 = paramIndex + 1;
+                    className = "review" + paramIndex2;
+                }
+
+                //console.log(propName + " " + className);
+                return className;
+            };
             
-            var currURL = $location.absUrl();
-            $rootScope.pageURL = currURL;
+            
+            $scope.logMouseEvent = function(reviewParam,  paramIndex) {
+                switch (event.type) {
+                  case "mouseenter":
+                        console.log("Hey Mouse Entered");
+                        break;
+                  case "mouseover":{
+                        var pIndex = paramNames.indexOf(reviewParam.name);
+                        $scope.reviewParams[pIndex].hoverVal = paramIndex;
+                        break;
+                  }
+                  case "mouseout":{
+                        var pIndex = paramNames.indexOf(reviewParam.name);
+                        $scope.reviewParams[pIndex].hoverVal = -1;
+                        break;
+                  }
+
+                  case "mouseleave":
+                    console.log("Mouse Gone");
+                    break;
+
+                  default:
+                    console.log(event.type);
+                    break;
+                };
+            };
+            
+            
+            //$scope.showCouponOptions = false;
+            $scope.flipShowCoupon = function(userReview){
+                $state.go('availOffer', {userId: $scope.user._id, reviewId: userReview._id});
+                
+            };
+            
+            /*var currURL = $location.absUrl();
+            $rootScope.pageURL = currURL;*/
             $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
     }]);
     exambazaar.controller("cityGroupExamQueryController", 
@@ -8387,6 +8835,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.cities = allcities.data;
             $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bilaspur","Bhubaneswar","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mangalore","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Sonbhadra","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
             //$scope.rankedCities = ["Jaipur","Kota"];
+            
+            $scope.reviewPolicy = "I certify that this review is based on my own experience and is my genuine opinion of this coaching institute, and that I have no personal or business relationship with this establishment, and have not been offered any incentive or payment originating from the establishment to write this review. I understand that Exambazaar has a zero-tolerance policy on fake reviews.";
             
             $scope.cancelDialog = function(){
                 $mdDialog.hide();
@@ -9069,7 +9519,6 @@ function getLatLng(thisData) {
         $scope.viewed = thisuserViewed.data;
         console.log($scope.viewed);    
             
-        
         $rootScope.title =$scope.user.basic.name;
     }]);     
         
@@ -11436,7 +11885,7 @@ function getLatLng(thisData) {
             }
         })
         .state('reviewed', {
-            url: '/reviewed', //masterId?
+            url: '/user/:userId/reviewed', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -11451,9 +11900,78 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProviderReview($stateParams.coachingId);
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                activeOffers: ['offerService', '$stateParams',
+                    function(offerService,$stateParams){
+                    return offerService.getActiveOffersMedium();
+                }],
+               
+                thisuserReviewed: ['reviewService', '$stateParams',
+                    function(reviewService, $stateParams){
+                    return reviewService.getuserReviews($stateParams.userId);
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('availOffer', {
+            url: '/user/:userId/:reviewId/availoffer', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'availOffer.html',
+                    controller: 'availOfferController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                activeOfferInstitutes: ['offerService',
+                    function(offerService){
+                    return offerService.getActiveOffersMedium();
+                }],
+                activeCoupons: ['couponService',
+                    function(couponService){
+                    return couponService.getOneOfEachActiveCoupon();
+                }],
+                thisReview: ['reviewService', '$stateParams',
+                    function(reviewService, $stateParams){
+                    return reviewService.getreview($stateParams.reviewId);
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('thankyou', {
+            url: '/user/:userId/thankyou', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'thankyou.html',
+                    controller: 'thankyouController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
                 }],
                 provider: function() { return {}; }
                 

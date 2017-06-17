@@ -95,13 +95,17 @@
             Your Offers
             </div>
             <div layout-wrap layout="row" layout-align="start center" class="editFont width100" ng-if="provideroffers.length>0">
-                <div flex="50" ng-repeat="provideroffer in provideroffers" layout="column" layout="start start" class="width100 marginTB10 padding10 textBlack">
+                <div flex="33" ng-repeat="provideroffer in provideroffers" layout="column" layout="start start" class="width100 marginTB10 padding10 textBlack">
                     <div layout="column" layout="start start" class="gainsboroBorder width100" ng-click="setExistingOffer(provideroffer)">
-                        <div layout="row" layout-align="center center" class="primaryBackground textWhite width100 padding5 gainsboroBottomBorder">
-                            {{provideroffer.name}}
+                        <div layout="row" layout-align="center center" class="width100 padding5 gainsboroBottomBorder">
+                            Offer Name: {{provideroffer.name}}
                         </div>
                         <div layout="column" layout-align="center center" class="width100">
-                            {{provideroffer.coupons.length}}
+                            <div class="width100">
+                                Coupons: {{provideroffer.coupons.length}}
+                            </div>
+                            <div class="width100">
+                            </div>
                         </div>
                     
                     </div>
@@ -129,8 +133,14 @@
                         <input type="text" placeholder="Offer Name" class="form-control width100 editFont textInput" ng-model="offer.name" required >
                     </div>
                 </div>
-                <div layout="row" layout-align="end center" class="font8 width100">
-                Offer name is not revealed to student, and is only used for communication with Exambazaar Team
+                <div layout="column" layout-align="center end " class="font8 width100">
+                <div class="danger bold font10" ng-if="offer.offerNameError != ''">
+                    {{offer.offerNameError}}
+                </div>
+                <div>
+                    Offer Name is not revealed to student but needs to be unique, and is only used for communication with Exambazaar Team
+                </div>
+                
                 </div>
             </div>
             <div layout="row" layout-align="start center" class="width100 paddingB40">
@@ -258,8 +268,14 @@
                         <input type="text" placeholder="Coupon Name" class="form-control width100 editFont textInput" ng-model="offer.couponBuilder[$index].name" required >
                     </div>
                 </div>
-                <div layout="row" layout-align="end center" class="font8 width100">
-                Coupon name is not revealed to student, and is only used for communication with Exambazaar Team
+                <div layout="column" layout-align="center end" class="font8 width100">
+                <div layout="row" layout-align="end center" class="danger bold font10 width100">
+                    {{coupon.couponNameError}}
+                </div>
+                <div layout="row" layout-align="end center" class="width100">
+                    Coupon Name is revealed to student and needs to be unique. Keep it attractive and simple!
+                </div>
+                
                 </div>
             </div>
             <div layout="column" layout-align="start start" class="width100 paddingB10">
@@ -366,11 +382,35 @@
                 <div layout="row" layout-align="end center" class="font8 width100">
                 Enter the details of validty type and expiry date method to be used by Exambazaar
                 </div>
-            </div>   
+            </div>
+            <div layout="column" layout-align="start start" class="width100 paddingTB10">
+                <div flex layout="row" layout-align="start center" class="width100">
+                    <div flex="25" class="secondFont">
+                    Coupon Steps
+                    </div>
+                    <div flex="75" layout="column" layout-align="start start" class="width100">
+                        <div layout="row" layout-align="start center" ng-repeat="step in offer.couponBuilder[$index].steps" class="width100">
+                            <div layout="row" layout-align="center center" flex="10">
+                                {{$index+1}}.
+                            </div>
+                            <div layout="row" layout-align="start center" flex>
+                                <input type="text" placeholder="Enter step information" class="form-control width100 editFont textInput" ng-model="coupon.steps[$index]">
+                            </div>
+                            
+                        
+                        </div>
+                        
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="font8 width100">
+                Enter detailed steps for students to avail discount
+                </div>
+            </div>    
+                
             <div layout="column" layout-align="start start" class="width100 paddingB10">
                 <div flex layout="row" layout-align="start center" class="width100">
                     <div flex="25" class="secondFont">
-                    Coupon Details&nbsp;
+                    Coupon Codes&nbsp;
                         <span class="badge">
                             {{offer.couponBuilder[$index].couponCodes.length}}
                         </span>
@@ -389,12 +429,12 @@
                           </md-select>
                         </md-input-container>
                         </div>
-                        <div flex="10" class="secondFont">
+                        <div flex="5" class="secondFont">
                         </div>
                         
-                        <div flex="30" layout="row" layout-align="start center" class="secondFont" ng-if="offer.couponBuilder[$index].generationType !=''">
+                        <div flex="35" layout="row" layout-align="start center" class="secondFont" ng-if="offer.couponBuilder[$index].generationType !=''">
                             <div layout="row" layout-align="start center" ng-if="offer.couponBuilder[$index].generationType == 'Generated by Exambazaar'">
-                                <div layout="row" layout-align="start center">
+                                <div flex="25" layout="row" layout-align="start center">
                                 <input only-digits  type="text" placeholder="Number of coupons" class="form-control width100 editFont textInput marginR10" ng-model="offer.couponBuilder[$index].nCoupons" required ng-if="offer.couponBuilder[$index].generationType == 'Generated by Exambazaar'">
                                 </div>
                                 <md-button  class="md-green2 md-small tolowercase font12" ng-click="generateCoupons(offer.couponBuilder[$index])" ng-disabled="readyToAddCoupons(offer.couponBuilder[$index])" ng-if="offer.couponBuilder[$index].couponCodes.length == 0">Generate Codes</md-button>
@@ -413,10 +453,10 @@
                 </div>
             </div>
             <div layout="column" layout-align="start start" class="width100 paddingB10" ng-if="offer.couponBuilder[$index].couponCodes.length > 0">
-                <div layout-wrap layout="row" layout-align="start center" class="width100 marginB10">
+                <div layout-wrap layout="row" layout-align="center center" class="width100 marginB10">
                     Coupon Codes
                 </div>
-                <div layout-wrap layout="row" layout-align="start center" class="width100">
+                <div layout-wrap layout="row" layout-align="center center" class="width100">
                     <div layout="column" layout-align="center center" flex="5" ng-repeat="coupon in offer.couponBuilder[$index].couponCodes" class="font8 marginLR5 marginB10 gainsboroBorder">
                         
                         <span>{{coupon.code}}</span>
@@ -424,7 +464,7 @@
                     
                     </div>
                 </div>
-                <div layout="row" layout-align="end center" class="font10 width100">
+                <div layout="row" layout-align="center center" class="font10 width100">
                 <div class="marginR10 danger">
                     <span ng-click="removeCodes($index)">
                         Remove Coupon Codes

@@ -18,13 +18,16 @@ var couponSchema = mongoose.Schema({
     generationType: String,
     code: String,
     socialShareCode: String,
-    
+    steps: [String],
+    review: { type: Schema.ObjectId, ref: 'review' },
     user: { type: Schema.ObjectId, ref: 'user' },
     delivered: {
-        state: { type: Boolean, default: false },
+        social: { type: Boolean, default: false },
+        usercode: String,
+        state: String,
         _created: { type: Date, default: Date.now },
-        _deliverDate: { type: Date },
-        expiryDate: { type: Date },
+        _deliverDate: { type: Date, default: Date.now },
+        _expiryDate: { type: Date },
     },
     attemped: {
         state: { type: Boolean, default: false },

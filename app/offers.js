@@ -71,6 +71,10 @@ router.get('/activeOffers', function(req, res) {
             var providerOffers = [];
             var providerIds = [];
             var nLength = activeOffers.length;
+            if(nLength == 0){
+                res.json([]);
+            }
+            
             var counter = 0;
             activeOffers.forEach(function(thisOffer, index){
                 var thisProvider = thisOffer.provider;
@@ -113,6 +117,9 @@ router.get('/activeOffersBasic', function(req, res) {
             var providerOffers = [];
             var providerIds = [];
             var nLength = activeOffers.length;
+            if(nLength == 0){
+                res.json([]);
+            }
             var counter = 0;
             activeOffers.forEach(function(thisOffer, index){
                 var thisProvider = thisOffer.provider;
@@ -146,6 +153,92 @@ router.get('/activeOffersBasic', function(req, res) {
     });
 });
 
+router.get('/activeOffersMedium', function(req, res) {
+    var activeOffers = offer
+        .find({active: true})
+        .deepPopulate('provider')
+        .exec(function (err, activeOffers) {
+        if (!err){
+            
+            
+            /*var uniqueCouponNames = coupon.distinct( "name",function(err, uniqueCouponNames) {
+            if (!err){
+            console.log(uniqueCouponNames);    
+            var nCouponNames = uniqueCouponNames.length;
+            var couponcounter = 0;
+            uniqueCouponNames.forEach(function(thisCouponName, cindex){
+                console.log(thisCouponName + " " + thisOffer._id);
+                var uniqueCoupon = coupon.findOne({user: { $exists: false }, offer: thisOffer._id, name: thisCouponName})
+                //.deepPopulate('provider')
+                .exec(function (err, uniqueCoupon) {
+                    if (!err){
+                        couponcounter += 1;
+                        if(uniqueCoupon)
+                        console.log(uniqueCoupon);
+
+
+                        couponcounter += 1;
+                    }
+                });
+
+            });
+            
+            } else {throw err;}
+            });*/    
+            
+            var nOffer = activeOffers.length;
+            
+            
+            var providerOffers = [];
+            var providerIds = [];
+            var nLength = activeOffers.length;
+            if(nLength == 0){
+                res.json([]);
+            }
+            var offercounter = 0;
+            
+            activeOffers.forEach(function(thisOffer, index){
+                
+                var thisProvider = thisOffer.provider;
+                thisOffer.provider = {
+                    _id: thisProvider._id,    
+                    name: thisProvider.name,    
+                    logo: thisProvider.logo,    
+                };
+                var providerIds =  providerOffers.map(function(a) {return a._id;});
+                
+                var pIndex = providerIds.indexOf(thisProvider._id);
+                if(pIndex == -1){
+                    var newProviderOffer = {
+                        _id: thisProvider._id,
+                        image: thisProvider.logo,
+                        displayname: thisProvider.name,
+                        offers: [thisOffer],
+                    };
+                    providerOffers.push(newProviderOffer);
+                }else{
+                    var thisProviderOffer = providerOffers[pIndex];
+                    thisProviderOffer.offers.push(thisOffer);
+                }
+                offercounter += 1;
+                if(offercounter == nLength){
+                    res.json(providerOffers);
+                }
+                
+                
+                
+                
+            });
+            
+            
+            
+            
+            
+            
+            
+        } else {throw err;}
+    });
+});
 router.get('/providerOffers/:providerId', function(req, res) {
     var providerId = req.params.providerId;
     console.log("Provider is: " + providerId);
@@ -159,6 +252,23 @@ router.get('/providerOffers/:providerId', function(req, res) {
     });
 });
 
+router.post('/nameExists', function(req, res) {
+    var nameForm = req.body;
+    var name = nameForm.name;
+    //console.log("Name is: " + name);
+    var offers = offer
+        .find({name: name})
+        .exec(function (err, offers) {
+        if (!err){
+            //console.log(name + offers.length);
+            if(offers && offers.length > 0){
+                res.json(true);
+            }else{
+                res.json(false);    
+            }
+        } else {throw err;}
+    });
+});
 
 router.post('/save', function(req, res) {
     var offerForm = req.body;
@@ -196,6 +306,7 @@ router.post('/save', function(req, res) {
                         newcoupon[property] = thisCouponBuilder[property];
                     }
                 }
+                console.log(JSON.stringify(newcoupon));
                 newcoupon.save(function(err, newcoupon) {
                     couponcounter += 1;
                     if(couponIds.indexOf(newcoupon._id) == -1){

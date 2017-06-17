@@ -3,8 +3,10 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var coupon = require('../app/models/coupon');
+var review = require('../app/models/review');
 
 var user = require('../app/models/user');
+var targetStudyProvider = require('../app/models/targetStudyProvider');
 var email = require('../app/models/email');
 
 
@@ -20,12 +22,24 @@ mongoose.Promise = require('bluebird');
 router.get('/edit/:couponId', function(req, res) {
     var couponId = req.params.couponId;
     //console.log(couponId);
-    coupon
+    var thisCoupon = coupon
         .findOne({ '_id': couponId })
-        .exec(function (err, docs) {
+        .exec(function (err, thisCoupon) {
         if (!err){
             //console.log(docs);
-            res.json(docs);
+            var instituteId = thisCoupon.provider;
+            var thisProvider = targetStudyProvider
+            .findOne({_id : instituteId, disabled: {$ne: true}},{name:1 , groupName:1, disabled: 1, city:1, logo:1, address:1, pincode:1})
+            //.deepPopulate('exams exams.stream')
+            .exec(function (err, thisProvider) {
+            if (!err){
+                thisCoupon.provider = thisProvider;
+                res.json(thisCoupon);
+                } else {throw err;}
+            });
+            
+            
+            
         } else {throw err;}
     });
 });
@@ -74,6 +88,71 @@ router.get('/allCodes', function(req, res) {
     });
 });
 
+
+router.get('/oneOfEachActiveCoupon', function(req, res) {
+    var uniqueCoupons = [];
+    var uniqueCouponNames = coupon.distinct( "name",function(err, uniqueCouponNames) {
+        if (!err){
+        var nCouponNames = uniqueCouponNames.length;
+        var couponcounter = 0;
+
+        uniqueCouponNames.forEach(function(thisCouponName, cindex){
+            //console.log(thisCouponName);
+            var uniqueCoupon = coupon.findOne({user: { $exists: false }, name: thisCouponName})
+            //.deepPopulate('provider')
+            .exec(function (err, uniqueCoupon) {
+                if (!err){
+                    couponcounter += 1;
+                    if(uniqueCoupon){
+                        //console.log(uniqueCoupon);
+                        uniqueCoupons.push(uniqueCoupon);
+                    }
+                    if(couponcounter == nCouponNames){
+                        res.json(uniqueCoupons);
+                    } 
+                    
+                }
+            });
+
+        });
+
+        } else {throw err;}
+    });
+    
+    
+});
+
+
+router.post('/nameExists', function(req, res) {
+    var nameForm = req.body;
+    var name = nameForm.name;
+    //console.log("Name is: " + name);
+    var coupons = coupon
+        .find({name: name})
+        .exec(function (err, coupons) {
+        if (!err){
+            //console.log(name + coupons.length);
+            if(coupons && coupons.length > 0){
+                res.json(true);
+            }else{
+                res.json(false);    
+            }
+        } else {throw err;}
+    });
+});
+
+router.post('/getOneActiveCouponCode', function(req, res) {
+    var couponForm = req.body;
+    var name = couponForm.name;
+    var offerId = couponForm.offer;
+    var thisCoupon = coupon
+        .findOne({name: name, offer: offerId, user: { $exists: false }})
+        .exec(function (err, thisCoupon) {
+        if (!err){
+            res.json(thisCoupon);
+        } else {throw err;}
+    });
+});
 
 router.post('/save', function(req, res) {
     var couponForm = req.body;
@@ -153,5 +232,76 @@ router.post('/save', function(req, res) {
     
     
 });
+
+
+router.post('/deliver', function(req, res) {
+    var deliverForm = req.body;
+    var reviewId = deliverForm.review;
+    var selectedCoupon = deliverForm.selectedCoupon;
+    var couponId = selectedCoupon._id;
+    console.log('Delivering coupon');
+    console.log(JSON.stringify(deliverForm));
+    if(couponId){
+        var thisSelectedCoupon = coupon
+        .findOne({_id: couponId, user: { $exists: false }})
+        .exec(function (err, thisSelectedCoupon) {
+            if (!err){
+                if(thisSelectedCoupon){
+                for (var property in selectedCoupon) {
+                    if(property != '_id'){
+                        thisSelectedCoupon[property] = selectedCoupon[property];
+                    }
+                }
+                thisSelectedCoupon.review = reviewId;
+                    //console.log(JSON.stringify(thisSelectedCoupon));    
+                thisSelectedCoupon.save(function(err, thisSelectedCoupon) {
+                if (err) return console.error(err);
+
+
+                var thisReview = review
+                .findOne({_id: reviewId}, {coupon: 1})
+                .exec(function (err, thisReview) {
+                if (!err){
+                    if(thisReview){
+                        thisReview.coupon = thisSelectedCoupon._id;
+                        thisReview.save(function(err, thisReview) {
+                            if (err) return console.error(err);
+                            console.log('Review saved: ' + thisReview._id);
+                            //res.json(thisReview._id);
+                        });
+
+                    }else{
+                        console.log('This review doesnt exist anymore');
+                    }
+                }else {throw err;}
+                });
+
+
+
+
+
+                res.json(thisSelectedCoupon);
+                });
+                    
+                }else{
+                    console.log('Error: Coupon already issued!');
+                    res.json(null);
+                }
+                
+
+            } else {throw err;}
+        });
+        
+        
+    }else{
+        console.log('Error: No coupon id set!');
+        res.json(null);
+        
+    }
+    
+    
+    
+});
+
 
 module.exports = router;

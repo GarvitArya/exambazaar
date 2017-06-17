@@ -174,10 +174,13 @@
                 <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })">Profile</a>
                 </li>
                 <li>
+                <a ui-sref="reviewed({ userId:{{'sessionuser.userId'}} })">Your Reviews</a>
+                </li>
+                <li>
                 <a ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
                 </li>
                 <li>
-                <a ng-if="sessionuser.userType != 'Partner'" ui-sref="viewed({ userId:{{'sessionuser.userId'}} })">Your Viewed Institutes</a>
+                <a ng-if="sessionuser.userType != 'Partner'" ui-sref="viewed({ userId:{{'sessionuser.userId'}} })">Take a Lookback</a>
                 </li>
                 <li ng-if="sessionuser.userType=='Intern - Business Development' || sessionuser.userType=='Master'">
                     <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>

@@ -199,7 +199,7 @@ router.get('/user/:userId', function(req, res) {
                                 exam: thisView.institute.exams[0].name,
                                 stream: thisView.institute.exams[0].stream.name,
                                 city: thisView.institute.city,
-                                _date: thisView.institute._date
+                                _date: thisView._date
                             };
                             basicViews[gIndex].viewSummary.push(newViewSummary);
                             //console.log(newViewSummary);

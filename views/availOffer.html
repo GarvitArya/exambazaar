@@ -1,0 +1,522 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #upload2{
+        background: white;
+        color: black;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    #upload2:hover {
+        background: #ccc;
+        cursor: pointer;
+    }
+    #copyLink{
+        cursor: pointer;
+    }
+    #fullHeightPage{
+        min-height: 90vh;
+    }
+    #instituteSection{
+        min-height: 30vh;
+    }
+    .min30vh{
+        min-height: 30vh;
+    }
+    .min50vh{
+        min-height: 50vh;
+    }
+    #partner{
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
+    }
+    #loginInput{
+        border: 0;
+        outline: 0;
+        background: transparent;
+        padding: 5px;
+        margin-bottom: 2px;
+        text-align: left;
+        font-family: "Open Sans";
+        color: black;
+        border: 1px solid gainsboro;
+        font-size:12px;
+    }
+    
+    
+    
+    
+    .breadcrumb {
+        /*centering*/
+        display: inline-block;
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        border-radius: 5px;
+        /*Lets add the numbers for each link using CSS counters. flag is the name of the counter. to be defined using counter-reset in the parent element of the links*/
+        counter-reset: flag; 
+    }
+
+    .breadcrumb a {
+        text-decoration: none;
+        outline: none;
+        display: block;
+        float: left;
+        font-size: 12px;
+        line-height: 36px;
+        color: white;
+        /*need more margin on the left of links to accomodate the numbers*/
+        padding: 0 10px 0 60px;
+        background: #666;
+        background: linear-gradient(#666, #333);
+        position: relative;
+    }
+    /*since the first link does not have a triangle before it we can reduce the left padding to make it look consistent with other links*/
+    .breadcrumb a:first-child {
+        padding-left: 46px;
+        border-radius: 5px 0 0 5px; /*to match with the parent's radius*/
+    }
+    .breadcrumb a:first-child:before {
+        left: 14px;
+    }
+    .breadcrumb a:last-child {
+        border-radius: 0 5px 5px 0; /*this was to prevent glitches on hover*/
+        padding-right: 20px;
+    }
+
+    /*hover/active styles*/
+    .breadcrumb a.active, .breadcrumb a:hover{
+        background: #333;
+        background: linear-gradient(#333, #000);
+    }
+    .breadcrumb a.active:after, .breadcrumb a:hover:after {
+        background: #333;
+        background: linear-gradient(135deg, #333, #000);
+    }
+
+    /*adding the arrows for the breadcrumbs using rotated pseudo elements*/
+    .breadcrumb a:after {
+        content: '';
+        position: absolute;
+        top: 0; 
+        right: -18px; /*half of square's length*/
+        /*same dimension as the line-height of .breadcrumb a */
+        width: 36px; 
+        height: 36px;
+        /*as you see the rotated square takes a larger height. which makes it tough to position it properly. So we are going to scale it down so that the diagonals become equal to the line-height of the link. We scale it to 70.7% because if square's: 
+        length = 1; diagonal = (1^2 + 1^2)^0.5 = 1.414 (pythagoras theorem)
+        if diagonal required = 1; length = 1/1.414 = 0.707*/
+        transform: scale(0.707) rotate(45deg);
+        /*we need to prevent the arrows from getting buried under the next link*/
+        z-index: 1;
+        /*background same as links but the gradient will be rotated to compensate with the transform applied*/
+        background: #666;
+        background: linear-gradient(135deg, #666, #333);
+        /*stylish arrow design using box shadow*/
+        box-shadow: 
+            2px -2px 0 2px rgba(0, 0, 0, 0.4), 
+            3px -3px 0 2px rgba(255, 255, 255, 0.1);
+        /*
+            5px - for rounded arrows and 
+            50px - to prevent hover glitches on the border created using shadows*/
+        border-radius: 0 5px 0 50px;
+    }
+    /*we dont need an arrow after the last link*/
+    .breadcrumb a:last-child:after {
+        content: none;
+    }
+    /*we will use the :before element to show numbers*/
+    .breadcrumb a:before {
+        content: counter(flag);
+        counter-increment: flag;
+        /*some styles now*/
+        border-radius: 100%;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        margin: 8px 0;
+        position: absolute;
+        top: 0;
+        left: 30px;
+        background: #444;
+        background: linear-gradient(#444, #222);
+        font-weight: bold;
+    }
+
+
+    .flat a, .flat a:after {
+        background: white;
+        color: black;
+        transition: all 0.5s;
+    }
+    .flat a:before {
+        background: white;
+        box-shadow: 0 0 0 1px #ccc;
+    }
+    .flat a:hover, .flat a.active, 
+    .flat a:hover:after, .flat a.active:after{
+        background: #20C39A;
+        color: black;
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    .coupon {
+        border: 3px dashed #bcbcbc;
+        border-radius: 10px;
+        background: whitesmoke;
+    }
+    
+    
+    
+    
+    
+    
+    
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
+<div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="paddingTB10 height100 width100" ng-if="user._id">
+    <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
+        <div layout="row" layout-align="center center" class="width100 font16">
+            <div ng-if="user.image">
+            <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
+            </div>
+            <div class="marginL10">
+                {{user.basic.name}}
+            </div>
+        </div>
+        <div layout="row" layout-align="center center" class="width100 font12 gainsboroBottomBorder">
+            Thank you for reviewing {{thisReview.institute.name}}!
+        </div>
+        
+        <div layout="row" layout-align="center center" class="width100 editFont font16 paddingLR20 textBlack text-center">
+            <div class="breadcrumb flat">
+                <a ng-click="navigate(state)" ng-class="getBreadCrumbClass(state)" ng-repeat="state in states">{{state}}</a>
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" class="width100 editFont font16 marginTB10 paddingLR20 textBlack text-center" ng-if="currState == 'Browse'">
+            <div layout="row" layout-align="center center">
+                We have curated amazing discounts for you from our partners. Choose one:
+            </div>
+            <div layout="row" layout-align="center center" class="editFont font10">
+                Coupon is valid for use only once and can be transferred to others
+            </div>
+            
+        </div>
+        
+        
+        
+        <div layout="row" layout-xs="column" layout-align="center center" layout-wrap class="width100 marginB20" ng-if="currState == 'Browse'">
+            <div flex="33" flex-xs="100" layout="column" layout-align="start start" ng-repeat="activeOfferInstitute in activeOfferInstitutes" class="width100 paddingTB10 paddingLR20">
+            <div layout="column" layout-align="start center" class=" width100 padding10 gainsboroBorder" id="partner">
+            <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder paddingB5">
+                <div layout="row" layout-align="start center" id="logoHolder" class="marginLR10">
+                    <img ng-src="{{activeOfferInstitute.image}}" id="logo"/>
+                </div>
+                <div flex layout="row" layout-align="start center" class="secondFont textBlack font20 marginL20">
+                    {{activeOfferInstitute.displayname}}
+                </div>
+            </div>
+            <div layout="column" layout-align="center center" class="width100 min30vh">
+                <div layout="column" layout-align="center center" class="width100 editFont textBlack" ng-repeat="activeOffer in activeOfferInstitute.offers" >
+                    <div flex layout="column" layout-align="start center" class="editFont textBlack width100" ng-repeat="activeCoupon in activeCoupons" ng-if="activeCoupon.offer == activeOffer._id" id="upload2" ng-click="chooseCoupon(activeCoupon, activeOfferInstitute)">
+                    <div layout="column" layout-align="center center" class="width100">
+                        <div flex layout="column" layout-align="center center" class="width100">
+                            <div>
+                                {{activeCoupon.name }}
+                            </div>
+                            
+                            <div layout="row" layout-align="center center" class="width100 font8">
+                                Valid for: {{activeCoupon.validfor}}
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="center center" class="width100">
+                            <md-button class="md-danger md-small font10 width8 marginR10">
+                                I want this!
+                            </md-button>
+                        </div>
+                    </div>    
+                    
+                        
+                    </div>
+                </div>
+            </div>
+                
+            </div>    
+            </div>
+
+
+        </div>
+        
+        
+        <div layout="column" layout-align="center center" layout-wrap class="width100 marginB20" ng-if="currState == 'Refer'" id="partner">
+            <div layout="column" layout-align="center center" class="width100 paddingB5 gainsboroBottomBorder" >   
+                <div layout="row" layout-align="start center" id="logoHolder" class="marginLR10">
+                    <div>
+                    <img ng-src="{{selectedOfferInstitute.image}}" id="logo"/>
+                    </div>
+                    <div class="marginL20 secondFont textBlack bold">
+                    {{selectedOfferInstitute.displayname}}
+                    </div>
+                </div>
+                <div layout="row" layout-align="center center" class="width100 ">
+                    {{selectedCoupon.name}}
+                </div>
+                <div layout="row" layout-align="center center" class="width100 font8">
+                    Valid for: {{selectedCoupon.validfor}}
+                </div>
+                <div layout="row" layout-align="center center" class="secondFont textBlack width100 text-center paddingLR10">
+                    <span>
+                    Spread the word about Exambazaar to atleast 5 of your friends <br/>& we will offer you an <span class="bold">extra discount of</span> 
+                    <span ng-if="selectedCoupon.discountType == 'Percentage Discount'" class="bold">
+                      {{selectedCoupon.percentageSocialShareBenefit}}%
+                    </span>
+                    <span ng-if="selectedCoupon.discountType == 'Flat Discount'" class="bold">
+                      {{selectedCoupon.flatSocialShareBenefit}} Rs
+                    </span>!
+                    </span>
+                </div>
+            </div>
+            <div layout="row" layout-align="center center" class="width100">
+            <div flex="100" flex-xs="100" layout="column" layout-align="center center" class="width100 paddingTB10 paddingLR20" >
+                
+                <div layout="row" layout-xs="column" layout-align="center center" class="width100 paddingTB20" >
+                    <div flex="auto" layout="column" layout-align="start start" class="width100 paddingTB10 paddingLR20"  id="instituteSection">
+                    <div layout="column" layout-align="start start" id="partner" class="padding20 width100 min50vh">
+                        <div class="editFont textBlack bold marginB5 width100">
+                        Invite 5 Friends by Mobile Number
+                        </div>
+                        <div layout="row" layout-align="start center" class="editFont textBlack width100" ng-repeat="mobile in refermobiles">
+                        <div flex="50" layout="row" layout-align="start center">
+                            <input type="text" placeholder="{{mobile.placeholder}}" class="width100" ng-model="refermobiles[$index].mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput">   
+                            
+                        </div>
+                        <div flex layout="row" layout-align="start center" class="paddingL10">
+                            <div ng-if="mobile.exists" class="width100 font8 danger">
+                                User already exists or referred!
+                            </div>
+                            <div ng-if="mobile.exists ==false">
+                                <i class="fa fa-check-square text-primary font20" aria-hidden="true"></i>
+                            </div>
+                            
+                        </div>
+                        </div>
+                        
+                        <div flex layout="column" layout-align="end center" class="width100">
+                            <md-button class="md-small md-danger width100 tolowercase" ng-click="inviteMobiles()">
+                                Send SMS to 5 friends
+                            </md-button>
+                            <div ng-if="referMobilesError" class="danger font8">
+                                {{referMobilesError}}
+                            </div>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div flex="auto" layout="column" layout-align="center start" class="width100 paddingTB10 paddingLR20"  >
+                    <div layout="column" layout-align="start start" id="partner" class="padding20 min50vh">
+                        <div class="editFont textBlack bold marginB5">
+                        Spread Exambazaar to 5 of your friends via Facebook message
+                        </div>
+                        <div layout="column" layout-align="center center">
+                            <blockquote class="blockquote">
+                            <p class="mb-0">
+                              {{shareText}}
+                            </p>
+                            </blockquote>
+                            <div>
+                            <a clipboard supported="supported" text="shareText" on-copied="showCopiedDialog(shareText)" on-error="fail(err)" id="copyLink" class="textPrimary">Copy Above Message for FB</a>
+                            </div>
+                        </div>
+                        <div flex layout="column" layout-align="end center" class="width100">
+                            <md-button class="loginBtn loginBtn--facebook width100 tolowercase" ng-click="shareFacebook()">
+                                Send message to 5 friends
+                            </md-button>
+                        
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            
+            <div layout="row" layout-align="end center" class="width100 paddingB10 paddingL20R40">
+                <div layout="column" layout-align="center center" class="marginR10" ng-click="showSkipDialog()">
+                No thanks
+                </div>
+                <md-button class="width25 md-small md-green2 tolowercase" ng-click="issueCoupon()">
+                    Submit
+                </md-button>
+                
+            </div>
+        </div>
+        
+        
+        
+        <div layout="column" layout-align="center center" layout-wrap class="width100 marginB20" ng-if="currState == 'Coupon'" id="partner">
+            <div layout="column" layout-align="center center" class="width100 paddingB5 gainsboroBottomBorder" >   
+                <div layout="row" layout-align="start center" id="logoHolder" class="marginLR10">
+                    <div>
+                    <img ng-src="{{deliveredCoupon.provider.logo}}" id="logo"/>
+                    </div>
+                    <div class="marginL20 secondFont textBlack bold">
+                    {{deliveredCoupon.provider.displayname}}
+                    </div>
+                </div>
+                <div layout="row" layout-align="center center" class="width100 ">
+                    {{deliveredCoupon.name}}
+                </div>
+                <div layout="row" layout-align="center center" class="width100 font8">
+                    Valid for: {{deliveredCoupon.validfor}}
+                </div>
+                <div layout="row" layout-align="center center" class="secondFont textBlack width100 text-center paddingLR10">
+                    <span>
+                    You have unlocked a coupon from Exambazaar!
+                    </span> 
+                </div>
+            </div>
+            <div layout="column" layout-align="start start" class="width100 paddingTB10 paddingLR20 min50vh" >
+                
+                <div layout="row" layout-xs="column" layout-align="center center" class="width100 paddingTB10 ">
+                    <div layout="column" layout-align=" center center" class="padding20 ">
+                        <div layout="column" layout-align=" center center"  class="coupon padding20 width100">
+                        <div layout="column" layout-align=" center center" class="secondFont font20 textBlack bold marginB5">
+                            <div>Exclusive Promo Code</div>
+                            <div class="editFont font10">for {{user.basic.name}}</div>
+                        </div>
+                        <div class="secondFont font20 text-primary bold marginB5">
+                        {{deliveredCoupon.delivered.usercode}}
+                        </div>
+                        <div class="editFont font8">
+                            <a clipboard supported="supported" text="deliveredCoupon.delivered.usercode" on-copied="showCopiedDialog(deliveredCoupon.delivered.usercode)" on-error="fail(err)" id="copyLink" class="danger">Copy Me</a>
+                        
+                        </div>
+                        </div>
+                    </div>
+                    <div layout="column" layout-align=" center center" class="paddingTB10 paddingLR20 ">
+                        <div layout="column" layout-align=" center center" class="width100 gainsboroBorder padding20">
+                        <div class="secondFont textBlack bold marginB10 gainsboroBottomBorder width100">
+                            How to avail this coupon?
+                        </div>
+                        <div layout="row" layout-align=" start center" class="editFont width100" ng-repeat="step in deliveredCoupon.steps">
+                        {{$index+1}}. {{step}}
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                <div layout="column" layout-align="center center" layout-wrap class="width100 marginB20 paddingT30 paddingB20 paddingLR20">
+                <div class="textBlack secondFont text-center">Help us make Exambazaar even better! Spread the word!</div>
+                <div layout="row" layout-align="center center" class="width100  text-center">
+                We are building India's biggest student led coaching institute review website. Your first-hand study experiences really help other students.
+                </div>
+                <div layout-wrap layout="row" layout-xs="column" layout-align="center center" class="width100">
+                    <div flex="33" flex-xs="100" layout="column" layout-align="center center" class="min15vh paddingLR20 paddingTB40">
+                        <div layout="row" layout-align="center center" class="width100 secondFont textBlack">
+                            <a href="#"
+                            socialshare 
+                            socialshare-provider="whatsapp"
+                            socialshare-text="{{shareText}}" 
+                            socialshare-url="https://www.exambazaar.com/review">
+                            <i class="fa fa-whatsapp text-primary font40 marginR10" aria-hidden="true"></i> Whatsapp
+                            </a>
+
+
+                        </div>
+                        <div layout="row" layout-align="center center" class="text-center font10  width100">
+                        Share it with your friends & groups!
+                        </div>
+                    </div>
+                    <div flex="33" flex-xs="100" layout="column" layout-align="center center" class="min15vh paddingLR20 paddingTB40">
+                        <div class="width100">
+                            <md-button class="loginBtn loginBtn--facebook width100 tolowercase" ng-click="postFacebook()">
+                                Post on Facebook
+                            </md-button>
+                        </div>
+                        <div layout="row" layout-align="start center" class="text-center font10  width100">
+                        We'll never post without your permission
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            </div>
+            
+        </div>
+        
+        
+        
+    </div>
+    
+</div>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="copiedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+            <div layout="column" layout-align="center center" class="margin10 padding5">
+                <div layout="row" layout-align="center center" class="margin10 padding5">    
+                    <span class="text-primary md-headline">
+                    <i class="fa fa-check-square" aria-hidden="true"></i>
+                    </span>
+                    <span class="md-title">
+                    Copied!
+                    </span>
+                </div>
+                <div layout="row" layout-align="center center" class="editFont font10 danger margin10 padding5">
+                    {{copiedText}}
+                </div>
+            </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+
+<!--
+<a href="#"
+socialshare 
+socialshare-provider="facebook"
+socialshare-type="send" 
+socialshare-source="https://www.exambazaar.com/"
+socialshare-via="1236747093103286" 
+socialshare-redirect-uri="https://www.exambazaar.com/"
+socialshare-text="Exambazaar.com" 
+socialshare-url="https://www.exambazaar.com/review">
+Share me
+</a>-->

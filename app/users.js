@@ -4,6 +4,7 @@ var request = require("request");
 
 var config = require('../config/mydatabase.js');
 var user = require('../app/models/user');
+var userrefer = require('../app/models/userrefer');
 var email = require('../app/models/email');
 var cisaved = require('../app/models/cisaved');
 var mongoose = require('mongoose');
@@ -493,6 +494,32 @@ router.get('/userexists/:mobile', function(req, res) {
         } else {throw err;}
     });
     
+});
+
+router.get('/referexists/:mobile', function(req, res) {
+    var mobile = req.params.mobile;
+    var thisUser = user
+        .findOne({ 'mobile': mobile },{mobile:1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            console.log(thisUser);
+            if(!thisUser || thisUser.length==0){
+                var thisUserRefer = userrefer
+                .findOne({ 'mobile': mobile },{mobile:1})
+                .exec(function (err, thisUserRefer) {
+                if (!err){
+                    if(!thisUserRefer || thisUserRefer.length==0){
+                        res.send(false);
+                    }else{
+                        res.send(true);
+                    }
+                }
+                });
+            }else{
+                res.send(true);
+            }
+        } else {throw err;}
+    }); 
 });
 
 router.post('/markLatLng', function(req, res) {

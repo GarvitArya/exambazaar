@@ -28,8 +28,9 @@
 </div>
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
-<!-- Claim the page section -->
-<div layout="column" layout-align="center start" class="whiteBackground paddingTB20 paddingLR80 width100" ng-if="user">
+
+<div flex layout="row" layout-align="center center" class="whiteBackground">
+<div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center start" class="whiteBackground paddingTB20 width100 paddingLR20" ng-if="user">
 
     <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
         <div layout="row" layout-align="center center" class="width100 font16">
@@ -45,18 +46,18 @@
             <span class="badge" id="badge">{{shortlisted.length}}</span>
         </div>
         <div layout="row" layout-align="center center" class="width100 editFont font12">
-            Proceed ahead, compare and apply to institutes of your choice!
+            Proceed ahead, compare and apply to join institute of your choice!
         </div>
     </div>    
-    <div layout="row" layout-align="center center" ng-if="shortlisted.length == 0" class="secondFont textBlack width100 paddingT20">
+    <div layout="row" layout-xs="column" layout-align="center center" ng-if="shortlisted.length == 0" class="secondFont textBlack width100 paddingT20">
         You have not shortlisted any institutes yet.&nbsp;
         <a ui-sref="main" class="bold" id="dangerLink" target="_blank">Start browsing now!</a>
     </div>
     <div layout="row" layout-align="start center" layout-wrap ng-if="shortlisted.length > 0" class="width100">
-        <div layout="column" layout-align="center center" ng-repeat="institute in shortlisted | orderBy:'-_date'" flex="33" class="width100 padding10">
+        <div layout="column" layout-align="center center" ng-repeat="institute in shortlisted | orderBy:'-_date'" flex-xs="100" flex-gt-xs="33" class="width100 padding10">
             <div layout="column" layout-align="start start" class="width100 gainsboroBorder padding10">
-            <div layout="row" layout-align="start start" class="width100 gainsboroBottomBorder">
-                <div layout="row" layout-align="start start" id="logoHolder">
+            <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder">
+                <div layout="row" layout-align="start center" id="logoHolder">
                     <img ng-src="{{institute.logo}}" id="logo"/>
                 </div>
                 <div layout="column" layout-align="start start" class="paddingL20">
@@ -68,10 +69,18 @@
                 </div>
                 </div>
             </div>
+               
+            <div layout="column" layout-align="start start" class="width100 paddingT20">    
+                <div layout="row" layout-align="start start" class="width100">
+                    Address: {{institute.address}}, {{institute.city}}
+                </div>
+            </div>
+                
             </div>
             
             
             
         </div>
     </div>
+</div>
 </div>

@@ -13,6 +13,7 @@ var reviewSchema = mongoose.Schema({
     year_of_start: String,
     exam: { type: Schema.ObjectId, ref: 'exam' },
     stream: { type: Schema.ObjectId, ref: 'stream' },
+    coupon: { type: Schema.ObjectId, ref: 'coupon' },
     
     
     checked: { type: Boolean, default: false },

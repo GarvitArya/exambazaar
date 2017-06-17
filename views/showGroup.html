@@ -632,7 +632,7 @@
                     </button>
                 </span>
                 <span hide-xs>
-                    <button class="btn actionButton heroButton tolowercase" ng-if="user.userId" ng-click="shortlistInstitute()">
+                    <button class="btn actionButton heroButton tolowercase" ng-if="user.userId" ng-click="showSelectShortlistCentreDialog()">
                         <span ng-if="shortlistedIds.length == 0">
                             <i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;Shortlist
                         </span>
@@ -1579,9 +1579,6 @@
                     
                 </div>
                 <div layout="row" layout-align="end center" class="paddingR10">
-                <!--<md-button class="md-raised  font12"  id="doneButton" ng-click="editUserReviewMode()">Cancel</md-button>
-                year_of_start
-                -->
                 <md-input-container class="text-primary">
                   <md-select required ng-model="userReview.year_of_start"  placeholder="Select Year of Study (start)">
 
@@ -1972,7 +1969,7 @@
                             &nbsp;Shortlisted on 
                             {{shortlistDetails[shortlistedIds.indexOf(thisGroup._id)]._date | date:'dd MMM yy'}}
                             </div>
-                    </div>
+                        </div>
                     </div>
                     </div>
                   
@@ -1982,15 +1979,16 @@
                     Pick a centre    
               </div>
               
-              <div layout-wrap layout="row" layout-align="center center" class="width100 paddingB10 paddingT20 font10 danger">
+              <!--<div layout-wrap layout="row" layout-align="center center" class="width100 paddingB10 paddingT20 font10 danger">
                     <div flex="35" class="marginR20">   
                         <md-button class="md-small md-signup font12 tolowercase width100"  ng-click="cancelSelectReviewCentre()">Cancel</md-button>
                     </div>
                     <div flex="35">
                         <md-button class="md-small md-green2  font12 tolowercase width100"  ng-disabled="invalidSubmit()" ng-click="submitReview()">Submit</md-button>
                     </div>    
-              </div>
+              </div>-->
               
+        </div>
         </div>
       </md-dialog>
     </div>    
