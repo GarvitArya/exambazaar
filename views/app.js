@@ -8447,7 +8447,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 });    
             };
             
-            $scope.shareText = "Receive amazing discounts at Exambazaar.com by reviewing your coaching institute! Go ahead, review your coaching and get your discount at www.exambazaar.com/review/";
+            $scope.shareText = "Receive amazing discounts at Exambazaar.com by reviewing your coaching institute! Go ahead, review your coaching and get your discount at ";
             
             $rootScope.pageTitle = 'Thank you for reviewing your coaching institute!';
             $rootScope.pageURL = 'https://www.exambazaar.com/review';
