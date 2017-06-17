@@ -8433,9 +8433,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
         
     exambazaar.controller("thankyouController", 
-        [ '$scope', '$http','$state', '$rootScope','thisuser', '$location', 'Socialshare', '$mdDialog', '$timeout', function($scope, $http, $state, $rootScope, thisuser, $location, Socialshare, $mdDialog, $timeout){
-            $scope.user = thisuser.data;
-            var redirectUrl = "https://www.exambazaar.com/" + "/user/" + $scope.user._id + "/thankyou";
+        [ '$scope', '$http','$state', '$rootScope', '$location', 'Socialshare', '$mdDialog', '$timeout', function($scope, $http, $state, $rootScope, $location, Socialshare, $mdDialog, $timeout){
+            //var redirectUrl = "https://www.exambazaar.com/" + "/user/" + $scope.user._id + "/thankyou";
+            var redirectUrl = "https://www.exambazaar.com/thankyou";
             $scope.shareFacebook = function(){
                 Socialshare.share({
                   'provider': 'facebook',
@@ -11954,7 +11954,7 @@ function getLatLng(thisData) {
             }
         })
         .state('thankyou', {
-            url: '/user/:userId/thankyou', //masterId?
+            url: '/thankyou', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -11967,14 +11967,6 @@ function getLatLng(thisData) {
                 'footer': {
                     templateUrl: 'footer.html'
                 }
-            },
-            resolve: {
-                thisuser: ['UserService', '$stateParams',
-                    function(UserService,$stateParams){
-                    return UserService.getUser($stateParams.userId);
-                }],
-                provider: function() { return {}; }
-                
             }
         })
         /*.state('reviewCenter', {
