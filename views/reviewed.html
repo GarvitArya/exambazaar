@@ -154,25 +154,18 @@
                 <div layout="row" layout-align="start start" class="font12 paddingT20">
                     {{userReview.text}}
                 </div>
-                <div layout="row" layout-xs="column" layout-align="start center" class="width100  marginT10 paddingTB10" ng-if="!userReview.coupon">
+                <div layout="row" layout-xs="column" layout-align="start center" class="width100  marginT10 paddingTB10">
                     <div flex layout="row" layout-align="center center" class="bold">
                         Thank you for reviewing {{userReview.institute.name}}, unlock exclusive discounts brought to you by Exambazaar!
                     </div>
                     <div  layout="row" layout-align="end center" class="">
-                        <!--<div layout="row" layout-align="end center" class="">
-                        <div flex>
-                            <span ng-if="user.image">
-                            <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
-                            </span>
-                            <span class="marginL10">
-                                {{user.basic.name}}
-                            </span>
-                        </div>
-                        </div>-->
                         
-                        
-                        <md-button class="md-danger md-small font10 width8" ng-click="flipShowCoupon(userReview)" class="marginL10">
+                        <md-button class="md-danger md-small font10 width8" ng-click="flipShowCoupon(userReview)" class="marginL10" ng-if="!userReview.coupon">
                             Avail Discount
+                        </md-button>
+                        
+                        <md-button class="md-green2 md-small font10 width8" ng-click="flipShowCoupon(userReview)" class="marginL10" ng-if="userReview.coupon">
+                            Your Coupon
                         </md-button>
                     </div>
                 </div>

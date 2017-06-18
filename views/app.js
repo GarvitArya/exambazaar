@@ -213,6 +213,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             return $http.post('/api/users/save', user);
         };
+        this.deliverVoucher = function(voucherForm) {
+            
+            return $http.post('/api/users/deliverVoucher', voucherForm);
+        };
+        
+        
         this.fbSave = function(user) {
             
             return $http.post('/api/users/fbSave', user);
@@ -7826,10 +7832,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             
             var url = $scope.provider.website[0] || [];
+            if(url && url.length > 0){
             url = url.replace('www.','');
             url = url.replace('https://','');
             url = url.replace('https://','');
             var rightChar = url.substring(url.length-1, url.length);
+            }
+            
             
             var pivot1 = url.indexOf('/');
             if(pivot1 != -1)
@@ -8435,22 +8444,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     exambazaar.controller("thankyouController", 
         [ '$scope', '$http','$state', '$rootScope', '$location', 'Socialshare', '$mdDialog', '$timeout', function($scope, $http, $state, $rootScope, $location, Socialshare, $mdDialog, $timeout){
             //var redirectUrl = "https://www.exambazaar.com/" + "/user/" + $scope.user._id + "/thankyou";
-            var redirectUrl = "https://www.exambazaar.com/thankyou";
+            var redirectUrl = "https://www.exambazaar.com";
             $scope.shareFacebook = function(){
                 Socialshare.share({
                   'provider': 'facebook',
                   'attrs': {
                     'socialshareType': 'share',
-                    'socialshareUrl': 'https://www.exambazaar.com/review',
+                    'socialshareUrl': 'https://www.exambazaar.com',
                     'socialshareVia':"1236747093103286",  'socialshareRedirectUri': redirectUrl,
                   }
                 });    
             };
             
-            $scope.shareText = "Receive amazing discounts at Exambazaar.com by reviewing your coaching institute! Go ahead, review your coaching and get your discount at ";
+            $scope.shareText = "Receive amazing discounts at Exambazaar by reviewing your coaching institute! Go ahead, review your coaching and get discount at ";
             
             $rootScope.pageTitle = 'Thank you for reviewing your coaching institute!';
-            $rootScope.pageURL = 'https://www.exambazaar.com/review';
+            $rootScope.pageURL = 'https://www.exambazaar.com';
             $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
     }]);
     
@@ -8507,14 +8516,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             $scope.shareOnFacebook = true;
             $scope.shareText = "I have received an amazing discount at Exambazaar.com by reviewing " +  $scope.thisReview.institute.name + "! Go ahead, review your coaching and get your discount at www.exambazaar.com/review/";
-            var redirectUrl = "https://www.exambazaar.com/" + "/user/" + $scope.user._id + "/thankyou";
+            var redirectUrl = "https://www.exambazaar.com" + "/user/" + $scope.user._id + "/thankyou";
            
             $scope.shareFacebook = function(){
                 Socialshare.share({
                   'provider': 'facebook',
                   'attrs': {
                     'socialshareType': 'send',
-                    'socialshareUrl': 'https://www.exambazaar.com/review/',
+                    'socialshareUrl': 'https://www.exambazaar.com',
                     'socialshareVia':"1236747093103286",  'socialshareRedirectUri': redirectUrl,
                   }
                 });    
@@ -8525,8 +8534,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                   'provider': 'facebook',
                   'attrs': {
                     'socialshareType': 'feed',
-                    'socialshareUrl': 'https://www.exambazaar.com/review/',
-                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com/',
+                    'socialshareUrl': 'https://www.exambazaar.com',
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
                   }
                 });    
             };
@@ -8674,15 +8683,26 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         };
                         
                         couponService.deliver(deliverForm).success(function (data, status, headers) {
-                            console.log(data);
-                            if(data){
-                                $scope.selectedCoupon = data;
-                                deliveredCouponId = $scope.selectedCoupon._id;
-                                $scope.currState = "Coupon";
-                                console.log($scope.selectedCoupon);
-                            }else{
-                                console.log('Something went wrong');
-                            }
+                        console.log(data);
+                        if(data){
+                            $scope.selectedCoupon = data;
+                            deliveredCouponId = $scope.selectedCoupon._id;
+                            $scope.currState = "Coupon";
+                            console.log($scope.selectedCoupon);
+                            var voucherForm = {
+                                user: $scope.user._id,    
+                                coupon: $scope.selectedCoupon._id,    
+                            };
+                            UserService.deliverVoucher().success(function (data, status, headers) {
+                                console.log('Delivered');
+                                
+                            }).error(function (data, status, header, config) {
+                                console.info("Error ");
+                            });
+
+                        }else{
+                            console.log('Something went wrong');
+                        }
                             
                             
                         
@@ -8699,7 +8719,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     console.info("Error ");
                 });
             };
+            
+            $scope.deliverCoupon = function(){
+                var voucherForm = {
+                    user: $scope.user._id,    
+                    coupon: $scope.deliveredCoupon._id,    
+                };
+                UserService.deliverVoucher(voucherForm).success(function (data, status, headers) {
+                    console.log('Delivered');
 
+                }).error(function (data, status, header, config) {
+                    console.info("Error ");
+                });    
+            };
             
             /*var currURL = $location.absUrl();
             $rootScope.pageURL = currURL;*/
@@ -9231,7 +9263,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                      {
                       method: 'feed',
                       link: 'https://www.exambazaar.com',
-                      //redirect_uri: 'https://www.exambazaar.com/review', 
+                      //redirect_uri: 'https://www.exambazaar.com', 
                       source: 'https://www.exambazaar.com/images/logo/eblogo.png',
                       //display: 'iframe',
                       //mobile_iframe: true

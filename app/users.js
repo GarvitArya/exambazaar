@@ -4,6 +4,7 @@ var request = require("request");
 
 var config = require('../config/mydatabase.js');
 var user = require('../app/models/user');
+var coupon = require('../app/models/coupon');
 var userrefer = require('../app/models/userrefer');
 var email = require('../app/models/email');
 var cisaved = require('../app/models/cisaved');
@@ -115,6 +116,199 @@ function sendWelcome(user){
     }
 };
 
+
+function sendVoucher(voucherForm){
+    var user = voucherForm.user;
+    var provider = voucherForm.provider;
+    var coupon = voucherForm.coupon;
+    
+    //console.log("Voucher Form is: " + JSON.stringify(voucherForm));
+    
+    if(user.email){
+    var templateName = 'Voucher Email';
+    var fromEmail = {
+        email: 'always@exambazaar.com',
+        name: 'Always Exambazaar'
+    };
+    var to = user.email;
+    var username = user.basic.name;
+    var couponprovider = provider.name;
+    var usercode = coupon.delivered.usercode;
+    var steps = ['','','',''];
+    coupon.steps.forEach(function(thisStep, index){
+        var stepNo = index + 1;
+        steps[index] = stepNo + ". " + thisStep;
+    });
+    console.log(steps);
+    var discount = '';
+    discount = discount + " " + coupon.discountType;
+        
+    if(coupon.discountType == 'Percentage Discount'){
+        var nonsocial = coupon.percentageDiscount - coupon.percentageSocialShareBenefit;
+        if(coupon.delivered.social){
+            discount = discount + " of " + coupon.percentageDiscount +"%";
+        }else{
+            discount = discount + " of " + nonsocial +"%";
+        }
+    }    
+    if(coupon.discountType == 'Flat Discount'){
+        var nonsocial = coupon.flatDiscount - coupon.flatSocialShareBenefit;
+        if(coupon.delivered.social){
+            discount = discount + " of " + coupon.flatDiscount +"%";
+        }else{
+            discount = discount + " of " + nonsocial +"%";
+        }
+    }        
+    discount = discount + " on " + coupon.validfor;
+    var expiry = moment(coupon.delivered._expiryDate).format("dddd, MMMM Do YYYY");
+    expiry = "Offer expires on " + expiry;  
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+                if(thisEmailTemplate.name == templateName){
+                    templateFound = true;
+                    templateId = thisEmailTemplate.templateKey;
+                    var from_email = new helper.Email(fromEmail);
+                    
+                    var to_email = new helper.Email(to);
+                    var html = ' ';
+                    var subject = ' ';
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-couponprovider-', couponprovider));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-usercode-', usercode));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-discount-', discount));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-expiry-', expiry));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-step1-', steps[0]));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-step2-', steps[1]));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-step3-', steps[2]));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-step4-', steps[3]));
+                   
+                    
+                    
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+                    sg.API(request, function(error, response) {
+                        if(error){
+                            console.log('Could not send email! ' + error);
+                        }else{
+                            console.log('Email sent');
+                            console.log(response);
+                        }
+                    });
+                }
+                if(counter == nLength){
+                    if(!templateFound){
+                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    }
+                }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+    }else{
+        console.log('User email not set');
+    }
+    
+    if(user.mobile){
+        console.log("Sending Voucher SMS");
+        
+        var message = user.basic.name + ", congratulations your promo code for " + voucher.provider + " is " + voucher.usercode + "\n Spread the joy to your friends and family. https://www.exambazaar.com";
+        
+        
+        var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
+        url += user.mobile;
+        url += "&message=";
+        url += message;
+        url += "&sender=EXMBZR&type=3";
+        request({
+                url: url,
+                json: true
+            }, function (error, response, body) {
+                if (!error && response.statusCode === 200) {
+                    console.log(body); // Print the json response
+                }else{
+                    console.log(error + " " + response);
+                }
+        });
+        
+        
+        
+    }else{
+        console.log("No user mobile set");
+    }
+};
+
+router.post('/deliverVoucher', function(req, res) {
+    var voucherForm = req.body;
+    var userId = voucherForm.user;
+    var couponId = voucherForm.coupon;
+    
+    var thisUser = user.findOne({ '_id': userId },{mobile:1, email:1, basic:1},function (err, thisUser) {
+        if (!err){
+        
+            if(!thisUser._id){
+                console.log('User does not exist');
+                res.json(null);
+            }else{
+            var thisCoupon = coupon.findOne({_id: couponId },function (err, thisCoupon) {
+            if (!err){
+                if(!thisCoupon._id){
+                    console.log('Coupon does not exist');
+                    res.json(null);
+                }else{
+                    var providerId = thisCoupon.provider;
+                    var thisProvider = targetStudyProvider.findOne({ '_id': providerId }, {name:1, logo:1},function (err, thisProvider) {
+                    if (!err){
+                        if(!thisProvider._id){
+                            console.log('Coupon does not exist');
+                            res.json(null);
+                        }else{
+                            var voucherForm = {
+                                user: thisUser,
+                                coupon: thisCoupon,
+                                provider: thisProvider,
+                            };
+                            sendVoucher(voucherForm);
+                            /*console.log(JSON.stringify(thisUser));
+                            console.log(JSON.stringify(thisCoupon));
+                            console.log(JSON.stringify(thisProvider));*/
+                            res.json(true);
+                        }
+                    } else {throw err;}
+                    });
+
+                }
+            } else {throw err;}
+            });    
+
+
+
+            }
+        } else {throw err;}
+    });
+    
+    
+});
 
 
 //to add a user
