@@ -49,14 +49,14 @@ app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.pr
 //http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/TerminologyandKeyConcepts.html#x-forwarded-proto
 
 
-/*app.get('*', function(req, res, next) {
+app.get('*', function(req, res, next) {
     if (req.get('x-forwarded-proto') != "https") {
         res.set('x-forwarded-proto', 'https');
         res.redirect('https://' + req.get('host') + req.url);
     } else {
         next();     
     }
-});*/
+});
 
 app.get('/auth/facebook',
   passport.authenticate('facebook'));
