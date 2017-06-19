@@ -131,7 +131,7 @@ router.post('/groupReviews', function(req, res) {
     var basicReviews = [];
     
     var reviews = review
-        .find({institute: { $in : instituteIdArray }})
+        .find({institute: { $in : instituteIdArray }, active: true})
         .deepPopulate('user')
         .exec(function(err, reviews) {
         if (!err){

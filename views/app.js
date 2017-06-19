@@ -2101,7 +2101,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         .error(function (data, status, header, config) {
             console.info('Error ' + data + ' ' + status);
         });
-        groupIds
+        //groupIds
         $scope.updateReviewInstitute = function(thisGroup){
             $scope.userReview.institute = thisGroup._id;
             console.log($scope.userReview.institute);
