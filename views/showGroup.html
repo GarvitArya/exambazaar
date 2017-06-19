@@ -1565,7 +1565,7 @@
                 
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <textarea class="font12 width100" ng-model="userReview.text" placeholder="{{placeholder}}" rows="3" id="userText" ng-class="userReview.text >= minTextLength"></textarea>
-                    <div class="font10 text-right" ng-if="userReview.text.length > 10 && userReview.text.length < minTextLength">{{userReview.text.length}} chars. Review needs to be atleast {{minTextLength}} characters long</div>
+                    <div class="font10 text-right" ng-if="userReview.text.length < minTextLength">{{userReview.text.length}} chars. Review needs to be atleast {{minTextLength}} characters long</div>
                     <div class="font10 text-right" ng-if="userReview.text.length > 10 && userReview.text.length >= minTextLength">{{userReview.text.length}} chars <i class="fa fa-check-circle text-primary" aria-hidden="true"></i></div>
                 </div>
             </div>

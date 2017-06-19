@@ -789,6 +789,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getProviders = function(city) {
             return $http.get('/api/targetStudyProviders/city/'+city, {city: city});
         };
+        this.allResults = function(examId) {
+            return $http.get('/api/targetStudyProviders/allResults/'+examId, {examId: examId});
+        };
         this.getProvidersWithAreas = function() {
             return $http.get('/api/targetStudyProviders/providersWithAreas');
         };
@@ -2278,6 +2281,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if($scope.userReview.user){
                     reviewService.savereview($scope.userReview).success(function (data, status, headers) {
                         $scope.showSavedReviewDialog();
+                        var url = $state.href('reviewed', {userId: $scope.user.userId});
+                        window.open(url,'_blank');
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
@@ -9501,6 +9506,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             
     }]);     
+    
+    exambazaar.controller("rankerswallController", 
+        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService','allResults', function($scope, $http, $state, $rootScope, targetStudyProviderService, allResults){
+            $scope.allResults = allResults.data;
+            console.log($scope.allResults);
+            $rootScope.pageTitle ='Rankers Wall';
+            
+            
+    }]); 
         
     exambazaar.controller("searchController", 
         [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$facebook', '$location', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $facebook, $location){
@@ -11906,7 +11920,31 @@ function getLatLng(thisData) {
                 
             }
         })
-    
+        
+        .state('rankerswall', {
+            url: '/rankerswall/:examId', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'rankerswall.html',
+                    controller: 'rankerswallController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                allResults: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService, $stateParams) {   
+                    return targetStudyProviderService.allResults($stateParams.examId);
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
         .state('search', {
             url: '/search', //masterId?
             views: {

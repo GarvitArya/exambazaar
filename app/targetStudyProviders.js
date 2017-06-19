@@ -970,6 +970,52 @@ router.get('/coachingGroupQuery/:query', function(req, res) {
     }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
 });
 
+router.get('/allResults/:examId', function(req, res) {
+    var examId = req.params.examId;
+    console.log("Exam id is: " + examId);
+    
+    //{results: {$exists: true}}
+    //$where: "this.results.length > 1" 
+    var allResultProviders = targetStudyProvider.find({results: {$exists: true}}, {groupName:1, results:1},function(err, allResultProviders) {
+    if (!err){
+        var allResults = [];
+        var nProviders = allResultProviders.length;
+        var counter = 0;
+        console.log(nProviders);
+        allResultProviders.forEach(function(thisprovider, index){
+            var thisResults = thisprovider.results;
+            var nResults = thisResults.length;
+            var rCounter = 0;
+            
+            if(nResults > 0){
+                thisResults.forEach(function(currResult, rindex){
+                    if(currResult.exam == examId){
+                        currResult.coaching = thisprovider.groupName;
+                        
+                        var newResult ={
+                            coaching: thisprovider.groupName,
+                            result: currResult,
+                        };
+                        //console.log(thisprovider.groupName);
+                        allResults.push(newResult);
+                    }
+                    rCounter += 1;
+                });
+            }
+            counter = counter + 1;
+            if(counter == nProviders && rCounter == nResults){
+                //console.log(allResults);
+                res.json(allResults);
+            }
+            
+        });
+        
+        //res.json(allResultProviders);
+    } else {throw err;}
+    }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
+});
+
+
 router.post('/cityQuery', function(req, res) {
     var cityQueryForm = req.body;
     var query = cityQueryForm.query;

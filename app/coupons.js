@@ -65,7 +65,7 @@ router.get('/couponsCount', function(req, res) {
     });
 });
 
-router.get('/databaseServices', function(req, res) {
+/*router.get('/databaseServices', function(req, res) {
     var coupons = coupon
         .find({provider:'588b2321be75182698430a58', fixedExpiryDate:'2017-09-19T12:09:27.748Z'})
         .exec(function (err, coupons) {
@@ -86,7 +86,7 @@ router.get('/databaseServices', function(req, res) {
             res.json(coupons);
         } else {throw err;}
     });
-});
+});*/
 
 
 router.get('/issuedcouponsCount', function(req, res) {
