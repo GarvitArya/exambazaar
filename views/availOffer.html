@@ -372,7 +372,7 @@
             </div>
             
             <div layout="row" layout-align="end center" class="width100 paddingB10 paddingL20R40">
-                <div layout="column" layout-align="center center" class="marginR10" ng-click="showSkipDialog()">
+                <div layout="column" layout-align="center center" class="marginR10" ng-click="showSkipDialog()" ng-if="selectedCoupon.code && selectedCoupon.code !=''">
                 No thanks
                 </div>
                 <md-button class="width25 md-small md-green2 tolowercase" ng-click="issueCoupon()">

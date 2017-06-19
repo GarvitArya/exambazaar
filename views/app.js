@@ -218,7 +218,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             return $http.post('/api/users/deliverVoucher', voucherForm);
         };
         
-        
+        this.sendReferrals = function(referralForm) {
+            
+            return $http.post('/api/users/sendReferrals', referralForm);
+        };
         this.fbSave = function(user) {
             
             return $http.post('/api/users/fbSave', user);
@@ -2453,7 +2456,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             var steps = [];
             steps.push('Go to ' + $scope.provider.website);
             steps.push('Choose the product (test series, correspondence course) you want to purchase');
-            steps.push('Enter exclusive promo code at checkout on ' + $scope.provider.website);
+            steps.push('Enter exclusive promo code (if applicable) at checkout on ' + $scope.provider.website);
             
             var providerEmailText = '';
             if($scope.offer.otheremails.length > 0){
@@ -2584,6 +2587,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         function correctCode(code){
             var ALPHABET = '23456789ABDEGJKMNPQRVWXYZ';
             var conforms = true;
+            /*
             if(code.length != 8){
                 conforms = false;
             }
@@ -2596,7 +2600,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     conforms = false;
                     console.log(code);
                 }
-            }
+            }*/
             return conforms;
         };
         
@@ -2609,15 +2613,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             var socialCodesArray = [];
             
             excelCodesArray.forEach(function(thisCode, cIndex){
-                if(thisCode && thisCode!= ''){
-                    if(correctCode(thisCode)){
+                if(thisCode ){//&& thisCode!= ''
+                    codesArray.push(thisCode);
+                    /*if(correctCode(thisCode)){
                         codesArray.push(thisCode);
                     }else{
                         if(!$scope.uploadErrorMessages){
                             $scope.uploadErrorMessages = [];
                         }
                         $scope.uploadErrorMessages.push('Incorrect Code: ' + thisCode);
+                    }*/
+                }else{
+                    if(cIndex < excelSocialCodesArray.length-1){
+                        codesArray.push(thisCode);
                     }
+                    
                 }
             });
             excelSocialCodesArray.forEach(function(thisCode, cIndex){
@@ -2647,6 +2657,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if(!$scope.uploadErrorMessages){
                     $scope.uploadErrorMessages = [];
                 }
+                console.log(codesArray.length + " " +  socialCodesArray.length);
                 $scope.uploadErrorMessages.push('Please add equal valid normal and social coupon codes before submitting');
             }
             
@@ -8493,6 +8504,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
 
             }, true);
             
+            
+            
+            
             $scope.chooseCoupon = function(activeCoupon, activeOfferInstitute){
                 $scope.selectedCoupon = activeCoupon;
                 $scope.selectedOfferInstitute = activeOfferInstitute;
@@ -8516,29 +8530,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             $scope.shareOnFacebook = true;
             $scope.shareText = "I have received an amazing discount at Exambazaar.com by reviewing " +  $scope.thisReview.institute.name + "! Go ahead, review your coaching and get your discount at www.exambazaar.com/review/";
-            var redirectUrl = "https://www.exambazaar.com" + "/user/" + $scope.user._id + "/thankyou";
+            var redirectUrl = "https://www.exambazaar.com/thankyou";
            
-            $scope.shareFacebook = function(){
-                Socialshare.share({
-                  'provider': 'facebook',
-                  'attrs': {
-                    'socialshareType': 'send',
-                    'socialshareUrl': 'https://www.exambazaar.com',
-                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': redirectUrl,
-                  }
-                });    
-            };
             
-            $scope.postFacebook = function(){
-                Socialshare.share({
-                  'provider': 'facebook',
-                  'attrs': {
-                    'socialshareType': 'feed',
-                    'socialshareUrl': 'https://www.exambazaar.com',
-                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
-                  }
-                });    
-            };
+            
+            
 
             $scope.fail = function (err) {
                 console.error('Error!', err);
@@ -8553,7 +8549,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     totalDiscount = $scope.selectedCoupon.flatDiscount +"Rs.";
                 }
                 
-                var smsMessage = $scope.user.basic.name + " received an amazing discount of " + totalDiscount + " on " + $scope.selectedOfferInstitute.displayname + " via Exambazaar by reviewing " +  $scope.thisReview.institute.name + ", " +$scope.thisReview.institute.city + "! Review your coaching institute now to avail amazing discounts at www.exambazaar.com/review";  
+                var smsMessage = $scope.user.basic.name + " received " + totalDiscount + " on prep material via www.exambazaar.com. Review your coaching institute and lock-in your 50% off now!";
+                
                 return smsMessage;
             };
             
@@ -8594,10 +8591,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 });
             }, true);
             
+            $scope.shareFacebook = function(){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'send',
+                    'socialshareUrl': 'https://www.exambazaar.com',
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': redirectUrl,
+                  }
+                });
+                
+                $scope.userSocial = true;
+            };
             
+            $scope.postFacebook = function(){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'feed',
+                    'socialshareUrl': 'https://www.exambazaar.com',
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
+                  }
+                });    
+            };
             $scope.inviteMobiles = function(){
                 var invalid = false;
                 $scope.referMobilesError = null;
+               
+                var sendmobiles = $scope.refermobiles.map(function(a) {return a.mobile;});
+                
                 $scope.refermobiles.forEach(function(thisMobile, mindex){
                     if(thisMobile.mobile){
                         thisMobile.mobile = thisMobile.mobile.toString();
@@ -8615,7 +8637,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     console.log(smsMessage.length);
                     console.log(smsMessage);
                     
-                    //alert('Valid');
+                    
+                    
+                    var referralForm = {
+                        user: $scope.user._id,
+                        message: smsMessage,
+                        mobiles: $scope.refermobiles,
+                        
+                    };
+                    console.log(referralForm);
+                    UserService.sendReferrals(referralForm).success(function (data, status, headers) {
+                        console.log('Delivered');
+                        $scope.userSocial = true;
+                    }).error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                    
                 }
             };
             
@@ -8642,6 +8679,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 });
                     
             };
+            
+            $scope.$watch('userSocial', function (newValue, oldValue, scope) {
+                if(newValue){
+                    $scope.issueCoupon(true);
+                }
+            }, true);
             
             $scope.issueCoupon = function(social){
                 
@@ -8693,13 +8736,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                                 user: $scope.user._id,    
                                 coupon: $scope.selectedCoupon._id,    
                             };
-                            UserService.deliverVoucher().success(function (data, status, headers) {
+                            UserService.deliverVoucher(voucherForm).success(function (data, status, headers) {
                                 console.log('Delivered');
                                 
                             }).error(function (data, status, header, config) {
                                 console.info("Error ");
                             });
-
+                            
                         }else{
                             console.log('Something went wrong');
                         }

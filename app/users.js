@@ -116,6 +116,94 @@ function sendWelcome(user){
     }
 };
 
+function sendReferralSMS(smsForm){
+    var user = smsForm.user;
+    var mobiles = smsForm.mobiles;
+    var message = smsForm.message;
+    console.log("Sending SMSs");
+    console.log(smsForm);
+    
+    /*var sendmobiles = smsForm.mobiles.map(function(a) {return a.mobile;});
+    var mobilesString = "";
+    sendmobiles.forEach(function(thisMobile, index){
+        mobilesString += thisMobile + ",";
+    });
+    */
+    
+    mobiles.forEach(function(thisMobile, index){
+        var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
+        url += thisMobile.mobile;
+        url += "&message=";
+        url += message;
+        url += "&sender=EXMBZR&type=3";
+        console.log(url);
+        request({
+                url: url,
+                json: true
+            }, function (error, response, body) {
+                if (!error && response.statusCode === 200) {
+                    console.log("Message sent to: " + thisMobile.mobile); // Print the json response
+                    var thisUserRefer = userrefer
+                    .findOne({ 'mobile': thisMobile.mobile },{mobile:1})
+                    .exec(function (err, thisUserRefer) {
+                    if (!err){
+                        if(thisUserRefer){
+                            console.log('Already Referred');
+                        }else{
+                            var newUserRefer = new userrefer({
+                                user: user,
+                                mobile: thisMobile.mobile
+                            });
+                            
+                            newUserRefer.save(function(err, newUserRefer) {
+                                if (err) return console.error(err);
+                                console.log(newUserRefer._id);
+                                
+                            });
+                            //res.send(true);
+                        }
+                    }
+                    });
+                    
+                    
+                }else{
+                    console.log(error + " " + response);
+                }
+        });
+    });
+};
+
+router.post('/sendReferrals', function(req, res) {
+    var referralForm = req.body;
+    var message = referralForm.message;
+    var mobiles = referralForm.mobiles;
+    var userId = referralForm.user;
+    console.log("Sending Referrals");
+    console.log(referralForm);
+    var thisUser = user.findOne({ '_id': userId },{mobile:1, email:1, basic:1},function (err, thisUser) {
+        if (!err){
+        
+            if(!thisUser._id){
+                console.log('User does not exist');
+                res.json(null);
+            }else{
+                var smsForm = {
+                    message: message,
+                    mobiles: mobiles,
+                    user: userId,
+                }
+                console.log("Sending SMS with form");
+                console.log(smsForm);
+                sendReferralSMS(smsForm);
+                res.json(true);
+            }
+        } else {throw err;}
+    });
+    
+    
+});
+
+
 
 function sendVoucher(voucherForm){
     var user = voucherForm.user;
@@ -134,12 +222,15 @@ function sendVoucher(voucherForm){
     var username = user.basic.name;
     var couponprovider = provider.name;
     var usercode = coupon.delivered.usercode;
+    if(!usercode){
+        usercode = "";
+    }
     var steps = ['','','',''];
     coupon.steps.forEach(function(thisStep, index){
         var stepNo = index + 1;
         steps[index] = stepNo + ". " + thisStep;
     });
-    console.log(steps);
+    //console.log(steps);
     var discount = '';
     discount = discount + " " + coupon.discountType;
         
@@ -154,7 +245,7 @@ function sendVoucher(voucherForm){
     if(coupon.discountType == 'Flat Discount'){
         var nonsocial = coupon.flatDiscount - coupon.flatSocialShareBenefit;
         if(coupon.delivered.social){
-            discount = discount + " of " + coupon.flatDiscount +"%";
+            discount = discount + " of " + coupon.flatDiscount +"Rs";
         }else{
             discount = discount + " of " + nonsocial +"%";
         }
@@ -232,7 +323,7 @@ function sendVoucher(voucherForm){
     if(user.mobile){
         console.log("Sending Voucher SMS");
         
-        var message = user.basic.name + ", congratulations your promo code for " + voucher.provider + " is " + voucher.usercode + "\n Spread the joy to your friends and family. https://www.exambazaar.com";
+        var message = user.basic.name + ", congratulations your promo code for " + provider.name + " is " + coupon.delivered.usercode + "\n Spread the joy to your friends and family. https://www.exambazaar.com";
         
         
         var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";

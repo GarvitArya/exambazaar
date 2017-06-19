@@ -18,6 +18,10 @@
     md-autocomplete{
         background-color: rgba(32, 195, 154, 0.1);
     }
+    #link{
+        color: #696969;
+        text-decoration:none;
+    }
 </style>
 
 <nav class="navbar navbar-default navbar-fixed-top nav-justified" role="navigation" id="mainNav">
@@ -197,7 +201,7 @@
         </div>
         <div layout="row" layout-align="start center" class="">
             <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-black tolowercase" ng-click = "showLoginForm()">Log in</md-button>
-            <a ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
+            <a ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()" id="link">Logout</a>
         </div>
     </div>
 </nav>

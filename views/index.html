@@ -1381,7 +1381,7 @@
         <form  ng-submit="login()" name="loginForm" ng-if="!resetMode">
         <div layout="column" class="">
             <div class="paddingTB5 ">
-            <input type="text" placeholder="Mobile" class="width100" ng-model="userlogin.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput">
+            <input type="text" placeholder="Mobile" class="width100" ng-model="userlogin.mobile"  ng-minlength="10" ng-maxlength="10" only-digits id="loginInput">
             </div>
             <div class="paddingB5">
             <input type="password" placeholder="Password" class="width100" ng-model="userlogin.password" id="loginInput">
