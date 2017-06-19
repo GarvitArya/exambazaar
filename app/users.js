@@ -252,6 +252,7 @@ function sendVoucher(voucherForm){
     }        
     discount = discount + " on " + coupon.validfor;
     var expiry = moment(coupon.delivered._expiryDate).format("dddd, MMMM Do YYYY");
+    var couponname =coupon.name; moment(coupon.delivered._expiryDate).format("dddd, MMMM Do YYYY");
     expiry = "Offer expires on " + expiry;  
     var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
         if (err) return handleError(err);
@@ -278,6 +279,7 @@ function sendVoucher(voucherForm){
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-couponprovider-', couponprovider));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-usercode-', usercode));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-couponname-', couponname));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-discount-', discount));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-expiry-', expiry));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-step1-', steps[0]));
@@ -875,6 +877,7 @@ router.post('/markLogin', function(req, res) {
     
 });
 
+
 //to get a particular user with _id userId
 router.get('/edit/:userId', function(req, res) {
     var userId = req.params.userId;
@@ -1005,7 +1008,7 @@ router.get('/editBasic/:userId', function(req, res) {
     //var mobile = req.params.mobile;
     console.log("User is " + userId);
     user
-        .findOne({ '_id': userId },{basic:1})
+        .findOne({ '_id': userId },{basic:1, mobile:1, email:1})
         //.deepPopulate('_master.contact')
         .exec(function (err, docs) {
         if (!err){ 

@@ -247,7 +247,7 @@
                     {{activeOfferInstitute.displayname}}
                 </div>
             </div>
-            <div layout="column" layout-align="center center" class="width100 min30vh">
+            <div layout="column" layout-align="center center" class="width100 min50vh">
                 <div layout="column" layout-align="center center" class="width100 editFont textBlack" ng-repeat="activeOffer in activeOfferInstitute.offers" >
                     <div flex layout="column" layout-align="start center" class="editFont textBlack width100" ng-repeat="activeCoupon in activeCoupons" ng-if="activeCoupon.offer == activeOffer._id" id="upload2" ng-click="chooseCoupon(activeCoupon, activeOfferInstitute)">
                     <div layout="column" layout-align="center center" class="width100">
@@ -418,9 +418,13 @@
                         <div class="secondFont font20 text-primary bold marginB5">
                         {{deliveredCoupon.delivered.usercode}}
                         </div>
+                        
                         <div class="editFont font8">
                             <a clipboard supported="supported" text="deliveredCoupon.delivered.usercode" on-copied="showCopiedDialog(deliveredCoupon.delivered.usercode)" on-error="fail(err)" id="copyLink" class="danger">Copy Me</a>
                         
+                        </div>
+                        <div class="editFont font12 marginT10">
+                            Expires on: {{deliveredCoupon.delivered._expiryDate | date:'MMM d, y'}}
                         </div>
                         </div>
                     </div>

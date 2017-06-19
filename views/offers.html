@@ -97,14 +97,12 @@
             <div layout-wrap layout="row" layout-align="start center" class="editFont width100" ng-if="provideroffers.length>0">
                 <div flex="33" ng-repeat="provideroffer in provideroffers" layout="column" layout="start start" class="width100 marginTB10 padding10 textBlack">
                     <div layout="column" layout="start start" class="gainsboroBorder width100" ng-click="setExistingOffer(provideroffer)">
-                        <div layout="row" layout-align="center center" class="width100 padding5 gainsboroBottomBorder">
+                        <div layout="row" layout-align="center center" class="width100 padding5 gainsboroBottomBorder primaryBackground textWhite">
                             Offer Name: {{provideroffer.name}}
                         </div>
-                        <div layout="column" layout-align="center center" class="width100">
-                            <div class="width100">
+                        <div layout="row" layout-align="center center" class="width100">
+                            <div layout="row" layout-align="center center" class="width100">
                                 Coupons: {{provideroffer.coupons.length}}
-                            </div>
-                            <div class="width100">
                             </div>
                         </div>
                     
@@ -500,10 +498,10 @@
         </div>
         
         <div layout="column" layout-align="start start" class="gainsboroBorder padding20 paddingB40 marginB20" ng-if="existingOffer">
-            <div layout="row" layout-align="center center" class="width100 secondFont textBlack">
+            <div layout="row" layout-align="start center" class="width100 secondFont textBlack bold">
                 Offer Name: {{existingOffer.name}}
             </div>
-            <div layout="row" layout-align="start center" class="width100 editFont textBlack">
+            <div layout="row" layout-align="center center" class="width100 editFont textBlack">
                 <div flex layout="column">
                     <div>
                     
@@ -526,6 +524,9 @@
                 </div>
                 <div flex="10">
                     Status
+                </div>
+                <div flex="10">
+                    Student
                 </div>
             </div>    
             <div layout="column" layout-align="start start" ng-repeat="coupon in existingOffer.coupons" class="font10 width100" ng-if="coupon.name == couponName">
@@ -550,6 +551,9 @@
                         <span ng-if="!coupon.user">
                         Not Issued
                         </span>
+                    </div>
+                    <div flex="10">
+                        {{coupon.user.basic.name}}
                     </div>
                 </div>
                 

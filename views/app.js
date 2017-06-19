@@ -703,8 +703,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         this.getCoupons = function() {
             return $http.get('/api/coupons');
         };
+        this.databaseServices = function() {
+            return $http.get('/api/coupons/databaseServices');
+        };
         this.getAllCodes = function() {
             return $http.get('/api/coupons/allCodes');
+        };
+        this.couponsCount = function() {
+            return $http.get('/api/coupons/couponsCount');
+        };
+        this.issuedcouponsCount = function() {
+            return $http.get('/api/coupons/issuedcouponsCount');
         };
         this.getOneOfEachActiveCoupon = function() {
             return $http.get('/api/coupons/oneOfEachActiveCoupon');
@@ -2332,13 +2341,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         return self.indexOf(value) === index;
     }       
     exambazaar.controller("offersController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', 'offersList', 'couponsList', 'offerService', 'couponService', function($scope,$rootScope, targetStudyProviderService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo, offersList, couponsList, offerService, couponService){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', 'offersList', 'couponsList', 'offerService', 'couponService', 'UserService', function($scope,$rootScope, targetStudyProviderService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo, offersList, couponsList, offerService, couponService, UserService){
         $scope.provider = thisProvider.data;
         $scope.provideroffers = offersList.data;
-        
+        //console.log($scope.provideroffers);
         $scope.provideroffers.forEach(function(thisoffer, pIndex){
             var couponNames = thisoffer.coupons.map(function(a) {return a.name;});
-            thisoffer.couponNames = couponNames.filter(onlyUnique );
+            thisoffer.couponNames = couponNames.filter(onlyUnique);
             //console.log(thisoffer.couponNames);
         });
         
@@ -2451,6 +2460,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             $scope.existingOffer = offer;
             $scope.offer = null;
         };
+        
+        if($scope.provideroffers.length > 0){
+            $scope.setExistingOffer($scope.provideroffers[0]);
+        }
+        
+        //ABC
+        
+        $scope.$watch('existingOffer.coupons', function (newValue, oldValue, scope) {
+            
+            if(newValue && newValue.length > 0){
+                newValue.forEach(function(thisCoupon, cindex){
+                if(thisCoupon.user && !thisCoupon.user._id){
+                    var userId = thisCoupon.user;
+                    UserService.getUserBasic(userId).success(function (data, status, headers) {
+                        //console.log(data);
+                        thisCoupon.user = data;
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error ' + data + ' ' + status);
+                    });
+
+
+
+                }
+                    
+                });
+            }
+
+        }, true);
         
         $scope.addCoupon = function(){
             var steps = [];
@@ -5632,7 +5670,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         else return 0;
     };
     exambazaar.controller("masterDashboardController", 
-        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'targetStudyProviderService', '$timeout', 'addContactInfoService', 'addContactInfoList', 'rateInstituteService', 'rateInstituteList', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, targetStudyProviderService, $timeout, addContactInfoService, addContactInfoList, rateInstituteService, rateInstituteList){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', 'reviewsCount', 'couponsCount', 'issuedcouponsCount' , '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'targetStudyProviderService', '$timeout', 'addContactInfoService', 'addContactInfoList', 'rateInstituteService', 'rateInstituteList', 'couponService', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, reviewsCount, couponsCount, issuedcouponsCount,  $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, targetStudyProviderService, $timeout, addContactInfoService, addContactInfoList, rateInstituteService, rateInstituteList, couponService){
             
             $scope.today = moment();
             var startOfWeek = moment().startOf('week').subtract(3, "days");
@@ -5676,6 +5714,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                     $scope.activeInternList.push(thisIntern);    
                 }
             });
+            
+            $scope.couponDatabaseEdit = function(){
+                console.log('Database edit starting');
+                couponService.databaseServices().success(function (data, status, headers) {
+                    alert('All Done');
+                })
+                .error(function (data, status, header, config) {
+                    console.info(status + " " + data);
+                });
+                
+            };
             
             $scope.showSavedDialog = function(ev) {
                 $mdDialog.show({
@@ -5727,6 +5776,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 });
             };
             $scope.filledCount = filledCount.data;
+            $scope.reviewsCount = reviewsCount.data;
+            $scope.couponsCount = couponsCount.data;
+            $scope.issuedcouponsCount = issuedcouponsCount.data;
+            
             $scope.tofillciList = tofillciList.data;
             
             var tofillGroupNames = $scope.tofillciList.map(function(a) {return a.institute.groupName;});
@@ -5817,7 +5870,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if(coaching.length < 15 || !ciDeadline){
                     alert('Check Coaching Id or URL and deadline date');
                 }else{
-                    //ABC
+                    
                     var tofillciForm = {
                         institute: coaching,
                         user: intern,
@@ -5884,7 +5937,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if(instituteVerifyCount == '' || !ciVerifyDeadline){
                     alert('Check Count or URL and deadline date');
                 }else{
-                    //ABC
+                    
                     var toverifyciForm = {
                         verifyCity: verifyCity,
                         instituteVerifyCount: instituteVerifyCount,
@@ -6098,7 +6151,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if(coaching.length < 15 || !ciRateDeadline){
                     alert('Check Coaching Id or URL and deadline date');
                 }else{
-                    //ABC
+                    
                     var rateInstituteForm = {
                         institute: coaching,
                         user: intern,
@@ -6199,7 +6252,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                 if(coaching.length < 15 || !ciDeadline){
                     alert('Check Coaching Id or URL and deadline date');
                 }else{
-                    //ABC
+                    
                     var tofillciForm = {
                         institute: coaching,
                         user: intern,
@@ -6586,7 +6639,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
                         }
                         $cookies.putObject('sessionuser', sessionuser);
                         if(sessionuser.userType =='Partner'){
-                        //ABC
+                        
                         /*UserService.getPartner(fulluser._id).success(function (data, status, headers) {
                             $scope.partnerList = data;
                             console.info('Partners Loaded');
@@ -7687,7 +7740,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         };
         //var tempFilterText = '',
         //    filterTextTimeout;
-        //ABC
+        
         /*$scope.$watch('searchText', function (newValue, oldValue, scope) {
             if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
             
@@ -12637,6 +12690,18 @@ function getLatLng(thisData) {
                     function(tofillciService) {
                     return tofillciService.filledCount();
                 }],
+                reviewsCount: ['reviewService',
+                    function(reviewService) {
+                    return reviewService.reviewsCount();
+                }],
+                couponsCount: ['couponService',
+                    function(couponService) {
+                    return couponService.couponsCount();
+                }],
+                issuedcouponsCount: ['couponService',
+                    function(couponService) {
+                    return couponService.issuedcouponsCount();
+                }],
                 tofillciList: ['tofillciService',
                     function(tofillciService) {
                     return tofillciService.gettofillcis();
@@ -13170,7 +13235,7 @@ function getLatLng(thisData) {
                 thisuserAssigned: ['tofillciService', '$stateParams',
                     function(tofillciService,$stateParams){
                     return tofillciService.getusertofillcis($stateParams.userId);
-                        //ABC
+                        
                 }],
                 
                 user: function() { return {}; }
@@ -13199,7 +13264,7 @@ function getLatLng(thisData) {
                 thisuserAssignedToVerify: ['toverifyciService', '$stateParams',
                     function(toverifyciService,$stateParams){
                     return toverifyciService.getusertoverifycis($stateParams.userId);
-                        //ABC
+                        
                 }],
                 
                 user: function() { return {}; }
@@ -13228,7 +13293,7 @@ function getLatLng(thisData) {
                 thisuserAssignedToRate: ['rateInstituteService', '$stateParams',
                     function(rateInstituteService,$stateParams){
                     return rateInstituteService.getuserrateInstitute($stateParams.userId);
-                        //ABC
+                        
                 }],
                 
                 user: function() { return {}; }
@@ -13257,7 +13322,7 @@ function getLatLng(thisData) {
                 thisuserAssignedToAddContactInfo: ['addContactInfoService', '$stateParams',
                     function(addContactInfoService,$stateParams){
                     return addContactInfoService.getuseraddContactInfos($stateParams.userId);
-                        //ABC
+                        
                 }],
                 
                 user: function() { return {}; }

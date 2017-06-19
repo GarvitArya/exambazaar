@@ -97,6 +97,24 @@
             </div>
             <div  class="panel panel-default">
                 <div class="panel-heading">
+                    <strong>Reviews</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{reviewsCount}}</font>
+                    </div>
+                    <div layout-align="center">
+                        <strong>Active:</strong><br/>
+                        <font size="10" class="text-primary" >{{couponsCount}}</font>
+                    </div>
+                    <div layout-align="center">
+                        <strong>Issued:</strong><br/>
+                        <font size="10" class="text-primary" >{{issuedcouponsCount}}</font>
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
                     <strong>Views (GMT)</strong>
                 </div>
                 <div class="panel-body">
@@ -122,7 +140,9 @@
         <md-divider></md-divider>
         
     </div>
-    
+   <!-- <div>
+        <md-button  class="md-green md-small font10" ng-click="couponDatabaseEdit()" class="width25">Coupon Database Service</md-button>
+    </div>-->
     <div class="row whiteBackground greyBorder" id="assignTask">
         <div layout="row" layout-xs="column" layout-margin  layout-align="center" class="font20">
             Assign CI Claim Task
