@@ -76,7 +76,7 @@ router.get('/user/:userId', function(req, res) {
     var userId = req.params.userId;
     
     var reviews = review
-    .find({user: userId, active: true})
+    .find({user: userId})
     .sort( { _created: -1 } )
     //.deepPopulate('institute institute.exams institute.exams.stream')
     .exec(function (err, reviews) {

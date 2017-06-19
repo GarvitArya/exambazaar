@@ -69,20 +69,31 @@
 </div>
 <div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
 <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="paddingTB10 height100 width100">
-    <div layout="row" layout-align="start center" ng-repeat="resultPair in allResults | orderBy: 'resultPair.result.rank'" ng-if="resultPair.result.year=='2017'">
-        <div class="marginR5">
-        {{resultPair.result.name}}
+    <!--<div layout="row" layout-align="start center" ng-repeat="resultPair in allResults | orderBy: 'result.rank'" ng-if="resultPair.result.year=='2017'">
+    </div> -->   
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        
+        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="resultPair in allResults | orderBy: 'result.rank'" ng-if="resultPair.result.year=='2017'" id="imageContainer">
+            
+        <div  id="thumbnailImage" ng-style="{'background-image':'url({{resultPair.result.image}})'}">
+            <div layout="row" layout-align="end center" class="text-white" id="thumbnailResultText">
+                <div flex="60" layout="row" layout-padding layout-align="start center" class="font10">
+                    <span>
+                        AIR {{result.rank}}
+                    </span>
+
+                </div>
+                <div flex="40" layout="row" layout-padding layout-align="end center" class="font8">
+                    {{result.year}}
+                </div>
+            </div>
         </div>
-        <div class="marginR5">
-        {{resultPair.result.rank}}
         </div>
-        <div class="marginR5">
-        {{resultPair.result.year}}
         </div>
-        <div class="marginR5">
-        {{resultPair.coaching}}
-        </div>
-    </div>
+        
+        
+        
+    
     
     
 </div>

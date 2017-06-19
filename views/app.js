@@ -9511,6 +9511,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         [ '$scope', '$http','$state','$rootScope','targetStudyProviderService','allResults', function($scope, $http, $state, $rootScope, targetStudyProviderService, allResults){
             $scope.allResults = allResults.data;
             console.log($scope.allResults);
+            $scope.allResults.forEach(function(thisResultPair, rindex){
+                thisResultPair.result.rank = parseInt(thisResultPair.result.rank);
+            });
+            
             $rootScope.pageTitle ='Rankers Wall';
             
             
