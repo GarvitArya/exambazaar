@@ -77,16 +77,20 @@
             
         <div  id="thumbnailImage" ng-style="{'background-image':'url({{resultPair.result.image}})'}">
             <div layout="row" layout-align="end center" class="text-white" id="thumbnailResultText">
-                <div flex="60" layout="row" layout-padding layout-align="start center" class="font10">
+                <div flex="50" layout="row" layout-padding layout-align="start center" class="font10">
                     <span>
-                        AIR {{result.rank}}
+                        AIR {{resultPair.result.rank}}
                     </span>
 
                 </div>
-                <div flex="40" layout="row" layout-padding layout-align="end center" class="font8">
-                    {{result.year}}
+                <div flex="50" layout="row" layout-padding layout-align="end center" class="font8">
+                    <!--{{resultPair.result.year}}-->
+                    {{resultPair.coaching}}
                 </div>
             </div>
+        </div>
+        <div layout="row" layout-align="center center" class="text-white font10" id="thumbnailResultTextTop">
+            {{resultPair.result.name}}
         </div>
         </div>
         </div>
