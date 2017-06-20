@@ -43,7 +43,39 @@ router.get('/', function(req, res) {
         .find({})
         .exec(function (err, reviews) {
         if (!err){
-            res.json(reviews);
+            var allReviews = [];
+            var nReviews = reviews.length;
+            var counter = 0;
+            
+            reviews.forEach(function(thisReview, rindex){
+                var userId = thisReview.user;
+                var instituteId = thisReview.institute;
+                
+                var thisUser = user.findOne({ '_id': userId },{mobile:1, email:1, basic:1, image:1},function (err, thisUser) {
+                    if (!err){
+                        thisReview.user = thisUser;
+                        
+                        var thisProvider = targetStudyProvider.findOne({ '_id': instituteId },{name:1, logo:1},function (err, thisProvider) {
+                            if (!err){
+                                thisReview.institute = thisProvider;
+                                allReviews.push(thisReview);
+                                counter += 1;
+                                if(counter == nReviews){
+                                    //console.log(allReviews);   
+                                    res.json(allReviews);   
+                                }
+                                
+                            }else {throw err;}
+                        });
+                        
+                        
+                        
+                    }else {throw err;}
+                });
+                
+            });
+            
+            //res.json(reviews);
         } else {throw err;}
     });
 });

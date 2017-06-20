@@ -1155,7 +1155,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     exambazaar.controller("cityController", 
         [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog','thisStream','thisExam', 'ngMeta', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog,thisStream,thisExam, ngMeta){
         $scope.hideLoginDialog();
-        $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
+        $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Sonbhadra","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
         
         $scope.cities = cities;
         $scope.exam = thisExam.data;
@@ -9506,16 +9506,41 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
             
     }]);     
+        
+        
+    
+    exambazaar.controller("allreviewsController", 
+        [ '$scope', '$http', '$rootScope','reviewService','allReviews', function($scope, $http, $rootScope, reviewService, allReviews){
+            $scope.allReviews = allReviews.data;
+            
+            $rootScope.pageTitle = 'All Reviews';
+            
+            
+    }]); 
     
     exambazaar.controller("rankerswallController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService','allResults', function($scope, $http, $state, $rootScope, targetStudyProviderService, allResults){
+        [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam){
             $scope.allResults = allResults.data;
-            console.log($scope.allResults);
+            $scope.exam = thisExam.data;
+            $scope.year = $stateParams.year;
+            console.log($scope.year);
+            $scope.yearResults = [];
+            
+            for (var i=1;i<=100;i++) {
+                $scope.yearResults.push({});
+            };
             $scope.allResults.forEach(function(thisResultPair, rindex){
                 thisResultPair.result.rank = parseInt(thisResultPair.result.rank);
+                var thisRank = thisResultPair.result.rank -1;
+                
+                if(thisResultPair.result.year == $scope.year && thisRank<100){
+                    
+                    $scope.yearResults[thisRank] = thisResultPair;
+                    //$scope.yearResults.push(thisResultPair);
+                }
             });
             
-            $rootScope.pageTitle ='Rankers Wall';
+            $rootScope.pageTitle =$scope.exam.displayname + ' Rankers Wall';
             
             
     }]); 
@@ -11924,9 +11949,32 @@ function getLatLng(thisData) {
                 
             }
         })
-        
+        .state('allreviews', {
+            url: '/allreviews', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'allreviews.html',
+                    controller: 'allreviewsController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                allReviews: ['reviewService',
+                    function(allreviews) {   
+                    return allreviews.getreviews();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
         .state('rankerswall', {
-            url: '/rankerswall/:examId', //masterId?
+            url: '/rankerswall/:examName/:year', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -11941,9 +11989,13 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamByName($stateParams.examName);
+                }],
                 allResults: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService, $stateParams) {   
-                    return targetStudyProviderService.allResults($stateParams.examId);
+                    return targetStudyProviderService.allResults($stateParams.examName);
                 }],
                 provider: function() { return {}; }
                 

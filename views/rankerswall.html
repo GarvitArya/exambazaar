@@ -68,29 +68,43 @@
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 <div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
-<div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="paddingTB10 height100 width100">
-    <!--<div layout="row" layout-align="start center" ng-repeat="resultPair in allResults | orderBy: 'result.rank'" ng-if="resultPair.result.year=='2017'">
-    </div> -->   
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    
+    
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 height100 width100">
+        <div layout-wrap layout="row" layout-align="center center" class="secondFont font20 textBlack bold paddingB20">
+            {{exam.displayname}} {{year}} <span class="badge font12 marginL5" id="badge">{{yearResults.length}}</span>
+        </div>
         
-        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="resultPair in allResults | orderBy: 'result.rank'" ng-if="resultPair.result.year=='2017'" id="imageContainer">
-            
-        <div  id="thumbnailImage" ng-style="{'background-image':'url({{resultPair.result.image}})'}">
-            <div layout="row" layout-align="end center" class="text-white" id="thumbnailResultText">
-                <div flex="50" layout="row" layout-padding layout-align="start center" class="font10">
-                    <span>
-                        AIR {{resultPair.result.rank}}
-                    </span>
+        <div layout-wrap layout="row" layout-align="start start">
+        
+        <div flex="10" class="text-center padding10" ng-repeat="resultPair in yearResults "  >
+        <!--| orderBy: 'result.rank'-->    
+        <div class="gainsboroBorder min30vh">
+            <div  id="thumbnailImage" ng-style="{'background-image':'url({{resultPair.result.image}})'}">
+            <div layout="row" layout-align="end center" class="text-white" id="thumbnailResultText" ng-if="resultPair.result.rank && resultPair.result.year">
+                <div flex="50" layout="row" layout-align="start center" class="font10 paddingLR2" ng-if="resultPair.result.rank">
+                    
+                    AIR {{resultPair.result.rank}}
+                    
 
                 </div>
-                <div flex="50" layout="row" layout-padding layout-align="end center" class="font8">
-                    <!--{{resultPair.result.year}}-->
-                    {{resultPair.coaching}}
+                <div flex="50" layout="row" layout-align="end center" class="font8 paddingLR2">
+                    {{resultPair.result.year}}
+                    
                 </div>
             </div>
-        </div>
-        <div layout="row" layout-align="center center" class="text-white font10" id="thumbnailResultTextTop">
-            {{resultPair.result.name}}
+            
+            </div>
+        
+            <div layout="column" layout-align="center center" class="editFont font10" id="">
+                <div class="textBlack marginTB5">{{resultPair.result.name}}</div>
+                <div>{{resultPair.coaching}}</div>
+                <!--{{resultPair.coaching}}-->
+            </div>
+            
+            <div layout="column" layout-align="center center" ng-if="!resultPair.result.year" class="danger">
+                Claim
+            </div>
         </div>
         </div>
         </div>

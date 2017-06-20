@@ -1599,15 +1599,18 @@
                 User Reviews
                 </div>
                      
-                <div layout="column" layout-align="start start" ng-repeat="otherReview in otherReviews" class="paddingTB10 paddingLR20">
+                <div layout="column" layout-align="center start" ng-repeat="otherReview in otherReviews" class="paddingTB10 paddingLR20">
                     <div layout="column" layout-align="start start" class="marginB10 width100">
-                        <div layout="row" layout-align="start start">
+                        <div layout="row" layout-align="start center">
                             <div ng-if="otherReview.user.image">
                             <img ng-src="{{otherReview.user.image}}" id="userPicSmall" class="img-circle"/>
                             </div>
-                            <div class="marginL10">
+                            <div layout="column" layout-align="center start" class="marginL10">
+                            <div layout="row" layout-align="start center">
+                                <span>
                                 {{otherReview.user.basic.name}}
-                                <span class="font12 textLightGrey">
+                                </span>
+                                <span class="font12 textLightGrey marginL5">
                                 reviewed 
                                 <span>
                                     {{otherReview.institute.name}} Centre
@@ -1621,10 +1624,13 @@
                                 </span>    
                                 </span>
                             </div>
+                            <div layout="row" layout-align="start center" class="font12 textLightGrey">
+                                {{otherReview.institute.address}}
+                            </div>    
+                                
+                            </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="font12 textLightGrey">
-                            {{otherReview.institute.address}}
-                        </div>
+                        
                     </div>
                     <div layout="row" layout-align="start start" class="marginB10 width100">
                         
@@ -1655,8 +1661,29 @@
                     </div>
                         
                     </div>
-                    <div layout="row" layout-align="start start" class="font12">
+                    <div layout="row" layout-align="start start" class="font12 marginT10">
                         {{otherReview.text}}
+                    </div>
+                    <div layout="row" layout-xs="column" layout-align="start center" class="width100 font12 marginT10 paddingTB10 gainsboroBorder" ng-if="otherReview.user._id == user.userId">
+                        <div flex layout="row" layout-align="start center" class="bold paddingL10">
+                            Thank you for reviewing {{otherReview.institute.name}}, unlock exclusive discounts brought to you by Exambazaar!
+                        </div>
+                        
+                        
+                        <div  layout="row" layout-align="end center" class="">
+                        
+                            <md-button class="md-danger md-small font10 width8" class="marginL10" ng-if="!otherReview.coupon && otherReview.active" ui-sref="availOffer({ userId:{{'user.userId'}}, reviewId:{{'otherReview._id'}} })">
+                                Avail Discount
+                            </md-button>
+
+                            <md-button class="md-green2 md-small font10 width8"  class="marginL10" ng-if="otherReview.coupon && otherReview.active" ui-sref="availOffer({ userId:{{'user.userId'}}, reviewId:{{'otherReview._id'}} })">
+                                Your Coupon
+                            </md-button>
+
+                            <div ng-if="!otherReview.active" class="danger bold">
+                            Review Disabled by Admin
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

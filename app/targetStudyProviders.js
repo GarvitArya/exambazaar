@@ -970,49 +970,62 @@ router.get('/coachingGroupQuery/:query', function(req, res) {
     }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
 });
 
-router.get('/allResults/:examId', function(req, res) {
-    var examId = req.params.examId;
-    console.log("Exam id is: " + examId);
+router.get('/allResults/:examName', function(req, res) {
+    var examName = req.params.examName;
+    console.log("Exam name is: " + examName);
     
     //{results: {$exists: true}}
     //$where: "this.results.length > 1" 
-    var allResultProviders = targetStudyProvider.find({results: {$exists: true}}, {groupName:1, results:1},function(err, allResultProviders) {
-    if (!err){
-        var allResults = [];
-        var nProviders = allResultProviders.length;
-        var counter = 0;
-        console.log(nProviders);
-        allResultProviders.forEach(function(thisprovider, index){
-            var thisResults = thisprovider.results;
-            var nResults = thisResults.length;
-            var rCounter = 0;
+    
+    var thisExam = exam.findOne({name: examName}, {name:1, displayname:1},function(err, thisExam) {
+        if (!err){
+            var examId = thisExam._id.toString();
+            console.log('Exam Id is: ' + examId);
             
-            if(nResults > 0){
-                thisResults.forEach(function(currResult, rindex){
-                    if(currResult.exam == examId){
-                        currResult.coaching = thisprovider.groupName;
-                        
-                        var newResult ={
-                            coaching: thisprovider.groupName,
-                            result: currResult,
-                        };
-                        //console.log(thisprovider.groupName);
-                        allResults.push(newResult);
+            var allResultProviders = targetStudyProvider.find({results: {$exists: true}}, {groupName:1, results:1},function(err, allResultProviders) {
+            if (!err){
+                var allResults = [];
+                var nProviders = allResultProviders.length;
+                var counter = 0;
+                console.log(nProviders);
+                allResultProviders.forEach(function(thisprovider, index){
+                    var thisResults = thisprovider.results;
+                    var nResults = thisResults.length;
+                    var rCounter = 0;
+
+                    if(nResults > 0){
+                        thisResults.forEach(function(currResult, rindex){
+                            if(currResult.exam == examId){
+                                currResult.coaching = thisprovider.groupName;
+
+                                var newResult ={
+                                    coaching: thisprovider.groupName,
+                                    result: currResult,
+                                };
+                                //console.log(thisprovider.groupName);
+                                allResults.push(newResult);
+                            }
+                            rCounter += 1;
+                        });
                     }
-                    rCounter += 1;
+                    counter = counter + 1;
+                    if(counter == nProviders && rCounter == nResults){
+                        //console.log(allResults);
+                        res.json(allResults);
+                    }
+
                 });
-            }
-            counter = counter + 1;
-            if(counter == nProviders && rCounter == nResults){
-                //console.log(allResults);
-                res.json(allResults);
-            }
-            
-        });
-        
-        //res.json(allResultProviders);
-    } else {throw err;}
-    }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
+
+                //res.json(allResultProviders);
+            } else {throw err;}
+            });
+
+        }else {throw err;}
+    });
+    
+    
+    
+    
 });
 
 
