@@ -1,5 +1,5 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria','material.svgAssetsCache','angular-loading-bar','vAccordion', 'ngAnimate','ngCookies','angularMoment','materialCalendar','ngSanitize','angularFileUpload','matchMedia','geolocation','ngGeolocation','ngMap','720kb.tooltips','ngHandsontable','duScroll','mgcrea.bootstrap.affix','ngFileUpload','youtube-embed', 'ngMeta', 'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard']);
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'angularFileUpload', 'geolocation', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo'
     (function() {
     'use strict';
@@ -14,7 +14,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $facebookProvider.setPermissions("public_profile,email"); //, user_education_history, publish_actions
     })
     .controller('streamController', streamController);
-    function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope, ngMeta, $location) {
+    function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope,  $location) {
         $scope.hideLoginDialog();
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location'); 
@@ -28,48 +28,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         $rootScope.pageDescription = "Select your exam stream from Engineering, Medical, CA & CS, School, Mba, Law, Foreign Education, Civil Services, SSC, Bank, Defence, Insurance, Financial Certification";
         
         $rootScope.pageKeywords = "Exambazaar, Best Coaching India, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
-        /*
-        var streamNames = '';
-        $scope.streams.forEach(function(thisStream, sIndex){
-            if(true){
-                streamNames += thisStream.displayname 
-                if(sIndex != $scope.streams.length - 1){
-                    streamNames += ', ';
-                }    
-                    
-            }
-            
-        });
-        var pageTitle = "Choose your Study Stream for over 50 Exams in India"
-        var pageDescription = "Search over 20,000 coaching institutes in India to study across " + streamNames + ' at Exambazaar | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India';
-        $rootScope.pageDescription = pageDescription;
-        ngMeta.setTitle(pageTitle);
-        ngMeta.setTag('description', pageDescription);
-        */
-        /*
-        $scope.showSubCategories = 0;
-        $scope.category = '';
-        $scope.setCategory = function(category){
-            $scope.showSubCategories = 1;
-            $scope.category = category;
-        };
-        $scope.unsetCategory = function(){
-            $scope.showSubCategories = 0;
-            $scope.category = '';
-        };
-        $scope.goToCategory = function(category){
-            
-            $cookies.putObject('category', category);
-            $state.go('category', {categoryName: category.name});
-        };
-        $scope.categories = categories;
         
-            
-            {
-            name: "Educational",
-            sub: "UGC NET, SET, CTET, B.Ed. Entrance, ARS NET and more"
-            },
-        */
     };
     exambazaar.constant('cities',['Jaipur','Hyderabad','Noida','Ajmer','Alwar','Kota','Bikaner','Ganganagar','Sikar','Bhilwara','Juhnjhunu','New Delhi','Delhi','Lucknow','Indore','Bhopal','Roorkee','Thrissur','Mohali','Patiala','Ahmedabad','Vadodara','Surat','Rajkot','Ghaziabad','Agra','Dehradun','Meerut','Allahabad','Amritsar','Bangalore','Guwahati','Kolkata','Gwalior','Pune','Trivandrum','Mumbai','Rohtak','Nasik','Kurukshetra','Shimla','Kanpur','Ludhiana','Coimbatore','Ambala','Mathura','Patna','Mysore','Chandigarh','Chennai','Vishakhapatnam','Vellore']);
     
@@ -1097,7 +1056,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]); 
     exambazaar.controller("categoryController", 
-        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','examList', 'ngMeta', function($scope,$stateParams,$cookies,$state,categories,$rootScope,examList, ngMeta){
+        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','examList',  function($scope,$stateParams,$cookies,$state,categories,$rootScope,examList){
         $scope.hideLoginDialog();
         $scope.exams = examList.data;
             $scope.categoryName = $stateParams.categoryName;
@@ -1115,11 +1074,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             }
         });
         
-        /*var pageTitle = "Choose the exam you are preparing for within " + $scope.category.displayname;
-        var pageDescription = "Study for " + examNames + " at the best coaching institutes across 90 cities of India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
-        $rootScope.pageDescription = pageDescription;
-        ngMeta.setTitle(pageTitle);
-        ngMeta.setTag('description', pageDescription);*/
         
         $rootScope.pageTitle = "Choose exam within " + $scope.category.displayname + " Stream";
         $rootScope.pageDescription = "Study for " + examNames + " at the best coaching institutes across 90 cities of India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
@@ -1153,7 +1107,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
             
     }]); 
     exambazaar.controller("cityController", 
-        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog','thisStream','thisExam', 'ngMeta', function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog,thisStream,thisExam, ngMeta){
+        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog','thisStream','thisExam',  function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog,thisStream,thisExam){
         $scope.hideLoginDialog();
         $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Sonbhadra","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
         
@@ -1209,7 +1163,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     }]);    
     
     exambazaar.controller("coachingController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam','streamExams', 'ngMeta','$mdDialog', '$geolocation', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams, ngMeta, $mdDialog, $geolocation){
+    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam','streamExams', '$mdDialog', '$geolocation', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams,  $mdDialog, $geolocation){
        
         $scope.hideLoginDialog();
         $scope.editable = false;
@@ -1599,7 +1553,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
    
     exambazaar.controller("showGroupController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout', 'ngMeta', 'viewService', 'reviewService', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout, ngMeta, viewService, reviewService){
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService){
         $rootScope.reviewStream = null;
         $rootScope.reviewExam = null;
         $rootScope.reviewCity = null;
@@ -2875,7 +2829,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
     
     
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService', 'ngMeta', 'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService, ngMeta, thisGroupInfo, addContactInfoService, rateInstituteService){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService',  'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService,  thisGroupInfo, addContactInfoService, rateInstituteService){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.videoTags = videoMediaTagList.data.mediaTypeTags;
@@ -5375,10 +5329,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router','ngMaterial','ngAria'
         
         var pageDescription = "Study at " + $scope.provider.name + ", " +$scope.city +  " for " + examNames+ ". | Exambazaar - results, fees, faculty, photos, vidoes, reviews of " + $stateParams.groupName;
         $rootScope.pageDescription = pageDescription;
-        ngMeta.setTitle(pageTitle);
-        //console.info(pageDescription);
         
-        ngMeta.setTag('description', pageDescription);
         
     }]);     
    
@@ -11480,30 +11431,7 @@ function getLatLng(thisData) {
         function setDescription(newDescription) {
             description = newDescription;
         }
-    });
-        
-    exambazaar.config(['tooltipsConfProvider', function configConf(tooltipsConfProvider) {
-      tooltipsConfProvider.configure({
-        'tooltip-append-to-body': true,
-        'smart':true,
-        'size':'large',
-        'speed': 'slow',
-        'tooltipTemplateUrlCache': true
-        //etc...
-      });
-    }]);
-        
-    exambazaar.config(['ngMetaProvider', function configConf(ngMetaProvider) {
-        ngMetaProvider.useTitleSuffix(true);
-        ngMetaProvider.setDefaultTitle('Search, Compare and Apply for Exam Preparation');
-        ngMetaProvider.setDefaultTitleSuffix(' | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India');
-        ngMetaProvider.setDefaultTag('description', 'Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching institutes in your city. Our easy-to-use website shows you all the coaching institutes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching institutes to succeed | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India');
-        ngMetaProvider.setDefaultTag('author', 'Gaurav Parashar');
-    }]);    
-    //exambazaar.constant('moment', require('moment-timezone'));
-    /*exambazaar.value('angularMomentConfig', {
-        timezone: 'Asia/Calcutta|Asia/Kolkata' // e.g. 'Europe/London'
-    });*/   
+    });  
     
     exambazaar.config(function ($httpProvider) {
         $httpProvider.interceptors.push(function($q, $location) {
@@ -14237,7 +14165,7 @@ function getLatLng(thisData) {
         
     })();
 
-exambazaar.run(function($rootScope,$mdDialog, ngMeta, $location, $window) {
+exambazaar.run(function($rootScope,$mdDialog,  $location, $window) {
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
     $rootScope.imageUrl = '';
@@ -14254,7 +14182,7 @@ exambazaar.run(function($rootScope,$mdDialog, ngMeta, $location, $window) {
        document.body.scrollTop = document.documentElement.scrollTop = 0;
         $mdDialog.hide();
     });
-    ngMeta.init();
+    
     var currURL = $location.absUrl();
     $rootScope.pageURL = currURL;
     $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
