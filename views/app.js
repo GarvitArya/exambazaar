@@ -2007,6 +2007,27 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         
         $scope.years = ["2017","2016","2015","2014","2013","2012","2011","2010","2009","2008","2007","2006","2005","2004","2003"];
+        $scope.reviewTags = ["Great Faculty", "Supportive Administration", "Value for Money", "Hi-Tech", "Exhaustive Content", "Realistic Test Series"];
+        $scope.addRemoveReviewTag = function(reviewTag){
+            if(!$scope.userReview.tags){
+                $scope.userReview.tags = [];
+            }
+            var rIndex = $scope.userReview.tags.indexOf(reviewTag);
+            if(rIndex == -1){
+                $scope.userReview.tags.push(reviewTag);
+            }else{
+                $scope.userReview.tags.splice(rIndex, 1);
+            }
+        };
+        $scope.setReviewTagColor = function(reviewTag){
+            var className = "unfilledTag";
+            var rIndex = $scope.userReview.tags.indexOf(reviewTag);
+            if(rIndex -= -1){
+                className = "filledTag";
+            }
+            return className;
+        };
+        
         $scope.updateUserReviewYear = function(year){
             if($scope.userReview){
                 UserService.year_of_start = year;
@@ -2071,7 +2092,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             institute: null,
             exam: $scope.exam._id,
             stream: $scope.category._id,
-            text: ''
+            text: '',
+            tags:[]
         };
         if($scope.user && $scope.user.userId){
             $scope.userReview.user = $scope.user.userId;
@@ -2234,8 +2256,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }else{
                 if($scope.userReview.user){
                     reviewService.savereview($scope.userReview).success(function (data, status, headers) {
+                        var reviewId = data;
                         $scope.showSavedReviewDialog();
-                        var url = $state.href('reviewed', {userId: $scope.user.userId});
+                        var url = $state.href('availOffer', {userId: $scope.user.userId, reviewId: reviewId});
                         window.open(url,'_blank');
                         $state.reload();
                     })

@@ -31,7 +31,7 @@
     <meta name="google-site-verification" content="RdnJwXl2LG_A6UgOCrtR7Jv8KV5gOmnslKdO9dbpdGk" />
     <meta name="msvalidate.01" content="DBC3BD884FD14A25F2B7F6B33CAD7C0B" />
     
-    <link rel="stylesheet" href="angular-material.min.css">
+    <link rel="stylesheet" href="angular-material.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css">
     <link rel='stylesheet' href="loading-bar.min.css" type='text/css' media='all' />
     
@@ -212,6 +212,9 @@
         }
         .font20{
             font-size:20px;
+        }
+        .font36{
+            font-size:36px;
         }
         .font40{
             font-size:40px;
@@ -559,7 +562,7 @@
             width: 100%;
             height:20%;
             text-shadow: 0 0 5px black;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.7);
         }
         #thumbnailResultTextTop{ 
             position: absolute; 
@@ -1209,7 +1212,8 @@
         .loginBtn:active {
           box-shadow: inset 0 0 0 32px rgba(0,0,0,0.1);
         }
-        textarea, input, button { outline: none; }
+        span, textarea, input, button { outline: none; }
+        span:focus,
         input:focus,
         select:focus,
         textarea:focus,
@@ -1293,23 +1297,9 @@
     
     </head>
     
-    <body twitter-widget-initialize>
-    <!--<div layout="column" id="greyBackground">
-    www.exambazaar.com
-    -->
-    <!--<div id="fb-root"></div>
-    <script>
-        (function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) return;
-          js = d.createElement(s); js.id = id;
-          js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9&appId=1236747093103286";
-          fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    </script>-->    
-        
-        
-    <div  layout="column" ng-controller="headerController">
+    <body twitter-widget-initialize ng-cloak>
+    
+    <div  layout="column" ng-controller="headerController" ng-cloak>
         <div ui-view="header"></div>
         <div ui-view="body" id="fullPageBackground"></div>
         <div ui-view="footer"></div>
@@ -1610,7 +1600,7 @@
 
         
    
-<div class="bottomOfferBar" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
+<div class="bottomOfferBar" ng-if="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
     <div layout="row"  layout-align="start center">
         <div hide-xs layout="row" layout-align="center center" flex>
             <div layout="row" layout-align="center center" class=" offerFont">

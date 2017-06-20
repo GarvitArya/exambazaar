@@ -14,7 +14,7 @@ var reviewSchema = mongoose.Schema({
     exam: { type: Schema.ObjectId, ref: 'exam' },
     stream: { type: Schema.ObjectId, ref: 'stream' },
     coupon: { type: Schema.ObjectId, ref: 'coupon' },
-    
+    tags: [String],
     
     checked: { type: Boolean, default: false },
     active: { type: Boolean, default: true },

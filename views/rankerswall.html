@@ -39,6 +39,12 @@
     #instituteSection{
         min-height: 30vh;
     }
+    .min8vh{
+        min-height: 8vh;
+    }
+    .min20vh{
+        min-height: 20vh;
+    }
     .min30vh{
         min-height: 30vh;
     }
@@ -60,6 +66,19 @@
         border: 1px solid gainsboro;
         font-size:12px;
     }
+    .numberCircle {
+        border-radius: 50%;
+
+        width: 36px;
+        height: 36px;
+        padding: 4px;
+
+        background: #fff;
+        border: 2px solid black;
+        color: black;
+        text-align: center;
+        font-size: 16px;
+    }
     
 </style>
 
@@ -71,39 +90,30 @@
     
     
 <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 height100 width100">
-        <div layout-wrap layout="row" layout-align="center center" class="secondFont font20 textBlack bold paddingB20">
-            {{exam.displayname}} {{year}} <span class="badge font12 marginL5" id="badge">{{yearResults.length}}</span>
+        <div layout-wrap layout="column" layout-align="center center" class="secondFont textBlack paddingTB20">
+            <div class="bold font36 narrowLine">RANKERS WALL</div>
+            <div class="font20">{{exam.displayname}} {{year}}</div>
+            
         </div>
         
         <div layout-wrap layout="row" layout-align="start start">
         
-        <div flex="10" class="text-center padding10" ng-repeat="resultPair in yearResults "  >
+        <div flex="10" class="text-center padding10 marginB20" ng-repeat="resultPair in yearResults " >
         <!--| orderBy: 'result.rank'-->    
-        <div class="gainsboroBorder min30vh">
-            <div  id="thumbnailImage" ng-style="{'background-image':'url({{resultPair.result.image}})'}">
-            <div layout="row" layout-align="end center" class="text-white" id="thumbnailResultText" ng-if="resultPair.result.rank && resultPair.result.year">
-                <div flex="50" layout="row" layout-align="start center" class="font10 paddingLR2" ng-if="resultPair.result.rank">
-                    
-                    AIR {{resultPair.result.rank}}
-                    
-
-                </div>
-                <div flex="50" layout="row" layout-align="end center" class="font8 paddingLR2">
-                    {{resultPair.result.year}}
-                    
-                </div>
+        <div class="min20vh">
+            <div layout="column" layout-align="start center" class="editFont textBlack marginB5">
+                <div class="numberCircle">{{$index + 1}}</div>
             </div>
-            
+            <div  id="thumbnailImage" ng-style="{'background-image':'url({{resultPair.result.image}})'}" ng-if="resultPair.result.name">
             </div>
-        
-            <div layout="column" layout-align="center center" class="editFont font10" id="">
-                <div class="textBlack marginTB5">{{resultPair.result.name}}</div>
-                <div>{{resultPair.coaching}}</div>
-                <!--{{resultPair.coaching}}-->
+            <div  id="thumbnailImage" ng-style="{'background-image':'url(icons/student.png)'}" ng-if="!resultPair.result.name">
+            </div>
+            <div layout="column" layout-align="start center" class="editFont textBlack marginT5">
+                <div class="font14">{{resultPair.result.name}}</div>
             </div>
             
             <div layout="column" layout-align="center center" ng-if="!resultPair.result.year" class="danger">
-                Claim
+                
             </div>
         </div>
         </div>

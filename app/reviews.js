@@ -212,70 +212,32 @@ router.post('/existingReview', function(req, res) {
 router.post('/save', function(req, res) {
     var reviewForm = req.body;
     var reviewId = reviewForm._id;
-    var user = reviewForm.user;
     var institute = reviewForm.institute;
-    var faculty = reviewForm.faculty;
-    var competitive_environment = reviewForm.competitive_environment;
-    var quality_of_material = reviewForm.quality_of_material;
-    var infrastructure = reviewForm.infrastructure;
-    var year_of_start = reviewForm.year_of_start;
-    var exam = reviewForm.exam;
-    var stream = reviewForm.stream;
-    var text = reviewForm.text;
+    var user = reviewForm.user;
+    
     
     if(reviewId){
         var existingReview = review
         .findOne({user: user, institute: institute})
         .exec(function (err, existingReview) {
             if (!err){
-                if(existingReview){
-                    for (var property in reviewForm) {
-                        if(property != '_id'){
-                            existingReview[property] = reviewForm[property];
-                        }
-                    }
-                    existingReview.save(function(err, existingReview) {
-                        if (err) return console.error(err);
-                        res.json(existingReview._id);
-                    });
-                }else{
-                    var newreview = new review({
-                        institute: institute,
-                        user: user,
-                        faculty: faculty,
-                        competitive_environment: competitive_environment,
-                        quality_of_material: quality_of_material,
-                        infrastructure: infrastructure,
-                        year_of_start: year_of_start,
-                        exam: exam,
-                        stream: stream,
-                        text: text,
-
-                    });
-                    newreview.save(function(err, newreview) {
-                        if (err) return console.error(err);
-                        res.json(newreview._id);
-                    });
+                for (var property in reviewForm) {
+                    existingReview[property] = reviewForm[property];
                 }
+                existingReview.save(function(err, existingReview) {
+                    if (err) return console.error(err);
+                    res.json(existingReview._id);
+                });
 
             } else {throw err;}
         });
         
         
     }else{
-        var newreview = new review({
-            institute: institute,
-            user: user,
-            faculty: faculty,
-            competitive_environment: competitive_environment,
-            quality_of_material: quality_of_material,
-            infrastructure: infrastructure,
-            year_of_start: year_of_start,
-            exam: exam,
-            stream: stream,
-            text: text,
-
-        });
+        var newreview = new review({});
+        for (var property in reviewForm) {
+            newreview[property] = reviewForm[property];
+        }
         newreview.save(function(err, newreview) {
             if (err) return console.error(err);
             res.json(newreview._id);
