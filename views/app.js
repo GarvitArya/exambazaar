@@ -1,5 +1,5 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'angularFileUpload', 'geolocation', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard']);
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'angularFileUpload', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo'
     (function() {
     'use strict';
@@ -6375,7 +6375,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','geolocation','$geolocation', '$facebook', '$mdDialog', 'EmailService', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,geolocation,$geolocation, $facebook, $mdDialog, EmailService){
+        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','$geolocation', '$facebook', '$mdDialog', 'EmailService', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,$geolocation, $facebook, $mdDialog, EmailService){
             
             
         $scope.sendWelcomeEmail = function(){
@@ -9759,20 +9759,6 @@ function getLatLng(thisData) {
             }
          };
         
-        /*GMaps.geolocate({
-          success: function(position) {
-            map.setCenter(position.coords.latitude, position.coords.longitude);
-          },
-          error: function(error) {
-            alert('Geolocation failed: '+error.message);
-          },
-          not_supported: function() {
-            alert("Your browser does not support geolocation");
-          },
-          always: function() {
-            alert("Done!");
-          }
-        });    */
             
         $scope.$on('mapInitialized', function(evt, evtMap) {
             $scope.map = evtMap;

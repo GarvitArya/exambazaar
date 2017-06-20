@@ -329,13 +329,13 @@
                         </span>
                     </div>-->
                     
-                    <div class="row text-center"  >
+                    <div class="row text-center marginT20"  >
                         <!--ui-sref="showCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, coachingId:{{'coachingGroup._id'}} })"-->
-                        <md-button class="md-small md-green2 tolowercase" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
-                        Know More
+                        <md-button class="md-small md-green2 tolowercase" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })"><span class="textWhite">Know More</span>
+                        
                         </md-button>
-                        <md-button class="md-small md-danger tolowercase" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })">
-                        Review Now
+                        <md-button class="md-small md-danger tolowercase textWhite" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })"><span class="textWhite">Review Now</span>
+                        
                         </md-button>
                         <!--<button type="button" class="btn" id="knowmore" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" id="coachingHeader">
                         <span class="md-subhead text"><strong>KNOW MORE</strong>
@@ -346,28 +346,7 @@
                 </div>
                 
                 </div>
-                <div class="bs-callout bs-callout-success col-xs-12 col-sm-2 col-md-2 col-lg-2 " ng-show="coachingGroup.showDetails" id="rightTabs">
-                    <!--<div layout="column" layout-align="center left">
-
-                    <div layout="row" layout-align="start center">
-                        <h6 class="md-subhead text" id="coachingHeader">
-                            <strong><span>
-                                {{coachingGroup.name | uppercase}}
-                            </span></strong>
-                            &nbsp;
-                        </h6>
-                        <a ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
-                        <span class="secondFont"><strong>GROUP</strong>
-                        </span>
-                        </a>
-                         
-                        </div>
-                        <md-divider></md-divider>
-                        <div layout="row" ng-if="coachingGroup.address">
-                            Address: {{coachingGroup.address}}, {{coachingGroup.city}} - {{coachingGroup.pincode}}
-                        </div>
-                    </div>-->
-                </div>
+                
                     
                     
                 </div>
