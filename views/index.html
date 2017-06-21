@@ -44,9 +44,13 @@
     
     <style>
         .offerFont{
-            font-family: 'Robot', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 16px;
             color: white;
+        }
+        .offerPopupFont{
+            font-family: 'Unica One', sans-serif;
+            
         }
         .bottomOfferBar{
             position:fixed; 
@@ -121,6 +125,9 @@
         .spacedLetter1{
             letter-spacing: 1px;
         }
+        .spacedLetter050{
+            letter-spacing: 0.50px;
+        }
         .mainFont{
             font-family: "Avenir";
         }
@@ -155,6 +162,9 @@
         }
         .textWhiteSmoke{
             color: whitesmoke;
+        }
+        .textGainsboro{
+            color: gainsboro;
         }
         .textDarkGrey{
             /*color: rgba(0,0,0,0.6);*/
@@ -234,11 +244,38 @@
         #landingPage{
             min-height: 100vh;
         }
+        .min100vh{
+            min-height: 100vh;
+        }
+        .min50vh{
+            min-height: 50vh;
+        }
+        .min40vh{
+            min-height: 40vh;
+        }
+        .min30vh{
+            min-height: 30vh;
+        }
+        .min25vh{
+            min-height: 25vh;
+        }
+        .min20vh{
+            min-height: 20vh;
+        }
+        .min15vh{
+            min-height: 15vh;
+        }
+        .min10vh{
+            min-height: 10vh;
+        }
         .pending{
             background: #DDDDDD;
         }
         .pending2{
             color: #FF4136;
+        }
+        .boxShadow{
+            box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
         }
         .showBorder{
             border: black solid 3px;
@@ -280,6 +317,10 @@
         .greyDashedTopBorder{
             border-top: 1px dashed #0074D9;
         }
+        .inputBoxBorder{
+            border: 2px inset lightgray;
+            border-radius: 4px;
+        }
         #logo{
             max-height: 50px;
             max-width: 100px;
@@ -290,6 +331,14 @@
             padding: 0px;
             background-image: url("images/background/background-min.jpg");
             background-size:     cover;
+            background-position: center center;
+        }
+        #rankersWallPage{
+            min-height: 90vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/rankerswall/image16.jpg");
+            background-size: contain;
             background-position: center center;
         }
         #offerinfo{
@@ -320,6 +369,26 @@
             color: white;
             border: 1px solid #FF5A5F;*/
         }
+        #reviewHeaderRow{
+            min-height: 35vh;
+            background-image: url("images/partners/review-popup.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #reviewHeaderRow2{
+            min-height: 20vh;
+            background-image: url("images/partners/review-popup.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #reviewSearchRow{
+            min-height: 20vh;
+            background: white;
+        }
+        #reviewSearchRow:hover {
+        }
+        
+        
         #examinfo{
             height: 15vh;
             margin: 0px;
@@ -423,6 +492,9 @@
         }
         .dangerBackground{
             background-color: #C00000;
+        }
+        .dangerBorder{
+            border: solid 2px #C00000;
         }
         .primaryBackground{
             background-color: #20C39A;
@@ -555,6 +627,9 @@
             background-color: #FF5A5F;
             color: white;
         }
+        .textShadow{
+            text-shadow: 0 0 10px black;
+        }
         #thumbnailResultText{ 
             position: absolute; 
             top: 80%; 
@@ -686,6 +761,11 @@
         .tolowercase {
             text-transform: none;
         }
+        
+        .toUppercase {
+            text-transform: uppercase;
+        }
+        
         .marginTB5{
             margin-top: 5px;
             margin-bottom: 5px;
@@ -872,6 +952,9 @@
         }
         .width100{
             width: 100%;
+        }
+         .height30{
+            height: 30%;
         }
         .height80{
             height: 80%;
@@ -1124,6 +1207,10 @@
             max-height: 35px;
             max-width: 70px;
             margin-left: 10px;
+        }
+        #autocompleteLogo2{
+            max-height: 35px;
+            max-width: 70px;
         }
         .autocomplete li {
             border-bottom: 1px solid #ccc;
@@ -1524,7 +1611,6 @@
     <div class="md-dialog-container" id="userReviewDialog">
       <md-dialog class="offer-dialog">
           <div layout="row" id="offerRow" ng-controller="offerController">
-
               <div layout="column" layout-align="center center" class=" width100 secondFont ">
                   <!-- href="#userReview" du-smooth-scroll du-scrollspy offset="200"-->
                 <div layout="column" layout-align="center center" class="translucentBackground width100 padding10">
@@ -1598,6 +1684,97 @@
     </div>    
 </div>
 
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="userReviewSearchDialog">
+      <md-dialog class="offer-dialog">
+          <div layout="column" ng-controller="reviewRedirectController">
+              <div hide-xs layout="row" layout-align="center center" id="reviewHeaderRow" class="" >
+                <div layout="column" layout-align="center center" class="offerPopupFont text-center textWhite font36 textShadow translucentBackground width100">
+                    <div layout-wrap class="width75">
+                        You’ll love our discounts on the most popular exam prep courses!
+                    </div>
+                
+                </div>
+              </div>
+              <div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="" >
+                <div hide-gt-xs class="offerPopupFont text-center textWhite font20 textShadow translucentBackground width100">
+                    <div layout-wrap class="width100">
+                        You’ll love our discounts on the most popular exam prep courses!
+                    </div>
+                </div>
+              </div>
+              
+                
+              
+              <div  layout="row" layout-xs="column" layout-align="center center" class="secondFont paddingLR20 width100" id="reviewSearchRow">
+                 
+              <div layout="row" layout-align="center center" flex-gt-xs="20" ng-controller="citySearchController as ctrl" class="paddingLR10 min10vh width100">
+                    <md-autocomplete flex 
+                    md-selected-item="ctrl.selectedItem"
+                    md-selected-item-change= "ctrl.selectedItemChange(item)"
+                    md-search-text="ctrl.searchText"
+                    md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-item-text="item"
+                    md-delay="300"
+                    md-min-length="0"
+                    md-menu-class="autocomplete"
+                    placeholder="Choose City"
+                    class="width100" ng-class="{ dangerBorder: newReviewError }">
+                        <md-item-template >
+                          <span class="item-title font12">
+                              <span class="font14 bold">{{item}}</span>
+                          </span>
+                          
+                        </md-item-template>
+
+                    </md-autocomplete>
+                </div>
+                  
+                  
+                <div layout="row" layout-align="center center" flex-gt-xs="40" ng-controller="coachingSearchController as ctrl" class="paddingLR10 min10vh width100" >
+                    <md-autocomplete flex 
+                    md-selected-item="ctrl.selectedItem"
+                    md-selected-item-change= "ctrl.selectedItemChange(item)"
+                    md-search-text="ctrl.searchText"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-no-cache ="true"
+                    md-item-text="item.name"
+                    md-min-length="0"
+                    focus-me="newReviewCity && newReviewCity!=''"
+                    md-delay="300"
+                    md-menu-class="autocomplete"
+                    placeholder="Search for Coaching Institute"
+                    class="width100">
+                        <md-item-template >
+                          <div layout="row" layout-align="start center" class="item-title font12">
+                              <div class="secondFont font14 textBlack">
+                                  {{item.name}}
+                              </div>
+                              
+                              <div>
+                                <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo2" class="marginT10"/>
+                              </div>
+                              
+                          </div>
+                        </md-item-template>
+
+                    </md-autocomplete>
+                </div>
+                <div layout="row" layout-align="center center" flex-gt-xs="20" class="paddingLR10 min10vh width100">
+                    <md-button class="md-small md-green2 width100 tolowercase" ng-click="redirectToReview()">
+                        Review
+                    </md-button>
+                </div>
+              </div>
+            
+
+
+        </div>
+      </md-dialog>
+    </div>    
+</div>        
         
    
 <div class="bottomOfferBar" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
@@ -1623,7 +1800,8 @@
             </div>
         </div>
         <div layout="row" layout-align="end center">
-            <md-button class="md-danger md-small font10 width8" ng-click="goToReview()">
+            <md-button class="md-danger md-small font10 width8" ng-click="showUserReviewSearchDialog()">
+                <!--goToReview-->
             Review Now
             </md-button>
         </div>

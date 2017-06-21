@@ -21,14 +21,14 @@ mongoose.Promise = require('bluebird');
 router.get('/cities', function(req, res) {
     
     targetStudyProvider.aggregate(
-            [
-                {"$group": { "_id": { city: "$city", state: "$state" } } }
-            ],function(err, docs) {
-            if (!err){
-                //console.log(docs);
-                res.json(docs);
-            } else {throw err;}
-            });
+    [
+        {"$group": { "_id": { city: "$city", state: "$state" } } }
+    ],function(err, docs) {
+    if (!err){
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    });
     
     
     /*
@@ -38,6 +38,28 @@ router.get('/cities', function(req, res) {
         res.json(docs);
     } else {throw err;}
     });*/
+});
+
+router.get('/providercities/:query', function(req, res) {
+    var query = req.params.query.toLowerCase();
+    console.log(query);
+    var cities = targetStudyProvider.distinct( ("city"),function(err, cities) {
+    if (!err){
+        if(query == "exambazaar"){
+            res.json(cities);
+        }else{
+            var queryCities = [];
+            cities.forEach(function(thisCity, index){
+                if(thisCity.toLowerCase().indexOf(query) != -1){
+                    queryCities.push(thisCity);
+                }
+
+            });
+            console.log(queryCities);
+            res.json(queryCities);
+        }
+    } else {throw err;}
+    });
 });
 
 router.post('/bulkDisableProviders', function(req, res) {
@@ -1029,19 +1051,103 @@ router.get('/allResults/:examName', function(req, res) {
 });
 
 
+router.post('/showGroupHelper', function(req, res) {
+    var cityCoachingForm = req.body;
+    var city = cityCoachingForm.city;
+    var coachingName = cityCoachingForm.coachingName;
+    
+    var cityProvider = targetStudyProvider.findOne({name: coachingName, city: city, exams: {$exists: true}, $where:'this.exams.length>0'}, {exams:1},function(err, cityProvider) {
+    if (!err){
+        var thisExam = cityProvider.exams[0];
+        
+        var thisExam =exam
+            .findOne({_id: thisExam})
+            .deepPopulate('stream')
+            .exec(function (err, thisExam) {
+            if (!err){
+                var examName = thisExam.name;
+                var streamName = thisExam.stream.name;
+                
+                var examStream = {
+                    exam: examName,
+                    stream: streamName,
+                };
+                res.json(examStream);
+            } else {throw err;}
+        });
+    } else {throw err;}
+    }).sort( { name: 1 } ).limit(20); //.limit(500) .sort( { rank: -1 } )
+});
+
 router.post('/cityQuery', function(req, res) {
     var cityQueryForm = req.body;
     var query = cityQueryForm.query;
     var city = cityQueryForm.city;
     
-    console.log(JSON.stringify(cityQueryForm));
+    console.log(query);
+    if(query == 'exambazaar'){
+        query = '';
+    }
     
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1},function(err, docs) {
+    var cityProviders = targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching' }, {name:1 , address:1, city:1, state:1, logo:1, exams:1},function(err, cityProviders) {
     if (!err){
-        //console.log(docs);
-        res.json(docs);
+        res.json(cityProviders);
     } else {throw err;}
-    }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
+    }).sort( { name: 1 } ).limit(20); //.limit(500) .sort( { rank: -1 } )
+});
+
+router.post('/cityReviewQuery', function(req, res) {
+    var cityQueryForm = req.body;
+    var query = cityQueryForm.query;
+    var city = cityQueryForm.city;
+    
+    
+    if(query == 'exambazaar'){
+        query = '';
+    }
+    console.log('Query is: ' + query);
+    var groupNames = targetStudyProvider.aggregate(
+    [
+        {$match: {name:{'$regex' : query, '$options' : 'i'}, city: city} },
+        {"$group": { "_id": { name: "$name" }, count:{$sum:1}, logo: { $first: "$logo" } } },
+        {$sort:{"count":-1}}
+
+    ],function(err, groupNames) {
+    if (!err){
+        groupNames = groupNames.slice(0, 20);
+        console.log(groupNames);
+        var queryGroups = [];
+        groupNames.forEach(function(thisGroup, index){
+            var qGroup = {
+                name: thisGroup._id.name,
+                centers: thisGroup.count,
+                logo: thisGroup.logo,
+            };
+            queryGroups.push(qGroup);
+        });
+        //console.log(queryGroups);
+        res.json(queryGroups);
+    } else {throw err;}
+    });
+    /*
+    
+    var cityProviders = targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, exams:1},function(err, cityProviders) {
+    if (!err){
+        var providerNames = cityProviders.map(function(a) {return a.name;});
+        var uniqueProviderNames = [];
+        var cityQueryProviders = [];
+        
+        
+        providerNames.forEach(function(thisprovider, index){
+            if(uniqueProviderNames.indexOf(thisprovider) == -1){
+                uniqueProviderNames.push(thisprovider);
+            }
+        });
+        
+        
+        res.json(cityProviders);
+    } else {throw err;}
+    }).sort( { name: 1 } ).limit(20); //.limit(500) .sort( { rank: -1 } )*/
 });
 
 router.post('/cityGroupExamQuery', function(req, res) {
@@ -1711,6 +1817,35 @@ router.get('/databaseService', function(req, res) {
     console.log("Database Service Starting now");
     res.json('Done');
     
+    
+    var allproviders = targetStudyProvider.find({"name" : {$regex : ".*Pvt Ltd."}}, {name:1, groupName: 1},function(err, allproviders) {
+        
+        var counter = 0;
+        var changes = 0;
+        var nLength = allproviders.length;
+        console.log(nLength);
+        allproviders.forEach(function(thisprovider, index){
+            var thisName = thisprovider.name;
+            var pIndex = thisName.indexOf("Pvt Ltd.");
+            thisName = thisName.substr(0, pIndex);
+            thisName = thisName.trim();
+            
+            console.log(thisprovider.name + " : " + thisName);
+            thisprovider.name = thisName;
+            thisprovider.groupName = thisName;
+            
+            changes = changes + 1;
+            
+            
+            thisprovider.save(function(err, thisprovider) {
+                if (err) return console.error(err);
+                console.log(thisprovider._id + " saved!");
+            });
+            
+        });
+        console.log("To change: " + changes + " providers!");
+        
+    });
     /*targetStudyProvider.find({"email": { $exists: true}, _id: '5870ef3280ea0e0698890917'}, {email:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;
@@ -1754,7 +1889,7 @@ router.get('/databaseService', function(req, res) {
         console.log("To change: " + changes + " providers!");
         
     });*/
-    
+    /*
     targetStudyProvider.find({"website": { $exists: true,$ne:'' }, type: 'Coaching'}, {website:1, newwebsite:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;
@@ -1771,18 +1906,18 @@ router.get('/databaseService', function(req, res) {
                 }
             });
             
-            /*thisprovider.website = thisprovider.newwebsite;
+            thisprovider.website = thisprovider.newwebsite;
             console.log(index +" " + thisprovider.newwebsite);
             thisprovider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
                 console.log(thisprovider._id + " saved!");
-            });*/
+            });
             
         });
         console.log("To change: " + changes + " providers!");
         
     });
-    
+    */
     //"email": { $exists: true, $ne: null } 
     /*var states = [
         "Andhra Pradesh",
