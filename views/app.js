@@ -1585,6 +1585,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $rootScope.reviewInstitute = null;
         $mdDialog.hide();
         
+        $scope.cancel = function() {
+          $mdDialog.cancel();
+        };
         
         $scope.group = thisGroup.data;
         var groupDisabled = $scope.group.map(function(a) {return a.disabled;});
@@ -1623,6 +1626,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             .error(function (data, status, header, config) {
                 console.info('Shortlist Error' + status + " " + data);    
             }); 
+            
+            if($scope.user.userType=='Master'){
+                $scope.ebuser = true;
+            }
             
             /*if($scope.user.userType=='Master'){
                 $scope.editable = true;
@@ -2346,7 +2353,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         
         
-    }]);    
+    }]);
+        
+        
+        
     function onlyUnique(value, index, self) { 
         return self.indexOf(value) === index;
     }       
@@ -8384,7 +8394,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.showBottomOfferBar = function(){
             var showMe = false;
-            var statesToShow = ["landing","main","category","city","findCoaching"];
+            var statesToShow = ["landing","main","category","city","findCoaching","rankerswall"];
             var sIndex = statesToShow.indexOf($state.current.name);
             
             if(sIndex != -1){
@@ -9617,8 +9627,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]); 
     
     exambazaar.controller("rankerswallController", 
-        [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam){
+        [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam','$location', 'Socialshare', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam,$location, Socialshare){
             
+            
+            $scope.currURL = $location.absUrl();
+            $scope.shareText = "Hey! This list of Top 100 AIRs (JEE 2017) on Exambazaar is sensational. Do check it out!";
+            $scope.shareText2 = "Check out the inspirational list of Top 100 (JEE 2017)!";
             $scope.allResults = allResults.data;
             $scope.exam = thisExam.data;
             var examStream = {
@@ -9634,6 +9648,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             $scope.flipRank = function(resultPair){
                 resultPair.coachingMode = !resultPair.coachingMode;
+            };
+            
+            $scope.shareFacebook = function(){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'send',
+                    'socialshareUrl': $scope.currURL,
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
+                  }
+                });
             };
             
             $scope.logMouseEvent = function(resultPair) {

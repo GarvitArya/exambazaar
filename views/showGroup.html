@@ -860,7 +860,13 @@
                 <div layout="row" class="secondFont font12 bold greyBottomBorder">
                     <!--<a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank"></a>-->
                     <span ng-if="!thisGroup.location.area">
-                        Centre {{$index+1}}
+                        <span ng-if="!ebuser">
+                            Centre {{$index+1}}
+                        </span>
+                        <span ng-if="ebuser">
+                            <a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank">Centre {{$index+1}}
+                            </a>
+                        </span>
                         <!--<a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank">
                         
                         </a>-->

@@ -89,21 +89,38 @@
  /*     -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
       -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);*/
     }
-    .unselectedTag{
-        padding: 10px 15px 10px 15px;
+    .unselectedTagLeft{
+        padding: 10px 15px 10px 25px;
+        border-radius: 40px 0px 0px 40px;
         color: #333333;
         background: white;
     }
-    .unselectedTag:hover{
+    .unselectedTagLeft:hover{
         color: white;
         background: #FF5A5F;
     }
-    .selectedTag{
-        padding: 10px 15px 10px 15px;
+    .selectedTagLeft{
+        padding: 10px 15px 10px 25px;
+        border-radius: 40px 0px 0px 40px;
         color: white;
         background: #FF5A5F;
     }
-    
+    .unselectedTagRight{
+        padding: 10px 25px 10px 15px;
+        border-radius: 0px 40px 40px 0px;
+        color: #333333;
+        background: white;
+    }
+    .unselectedTagRight:hover{
+        color: white;
+        background: #FF5A5F;
+    }
+    .selectedTagRight{
+        padding: 10px 25px 10px 15px;
+        border-radius: 0px 40px 40px 0px;
+        color: white;
+        background: #FF5A5F;
+    }
 </style>
 
 <div id="rankersWallPage">
@@ -121,10 +138,10 @@
         </div>
         <div layout-wrap layout="row" layout-xs="column" layout-align="start center" class="thirdFont width100 paddingTB5">
             <div flex layout="row" layout-align="start center" class="font14 paddingTB5 marginLR20">
-                <div class="unselectedTag" ng-class="{selectedTag: !coachingMode}" ng-click="flipAll()">
+                <div class="unselectedTagLeft" ng-class="{selectedTagLeft: !coachingMode}" ng-click="flipAll()">
                     Top Students
                 </div>
-                <div class="unselectedTag" ng-class="{selectedTag: coachingMode}" ng-click="flipAll()">
+                <div class="unselectedTagRight" ng-class="{selectedTagRight: coachingMode}" ng-click="flipAll()">
                     Top Coachings
                 </div>
             </div>
@@ -133,9 +150,33 @@
                 <div class="font11 thirdFont textWhiteSmoke">All results are from Classroom Programmes only</div>
             
             </div>
-            <div flex layout="column" layout-align="center center" class="paddingTB5">
-            
-            
+            <div flex layout="row" layout-align="end center" class="paddingTB5 font12">
+                <div hide-gt-xs class="marginR5">
+                    <a href="#"
+                    socialshare 
+                    socialshare-provider="whatsapp"
+                    socialshare-text="{{shareText}}" 
+                    socialshare-url="{{currURL}}">
+                    <img src="icons/whatsapp.png" class="socialIcon"/>    
+                    </a>
+                </div>
+                <div class="marginR5">
+                    <md-button class="loginBtn loginBtn--facebook tolowercase" ng-click="shareFacebook()">
+                        <span class="font12">Message</span>
+
+                    </md-button>
+                </div>
+                <div class="marginR5">
+                    <a href="#"
+                    socialshare
+                    socialshare-provider="twitter"
+                    socialshare-text="{{shareText2}}"
+                    socialshare-hashtags="exambazaar, jee2017, iit"
+                    socialshare-url="{{currURL}}">
+                    <img src="icons/twitter.png" class="socialIcon"/>
+                    </a>
+                </div>
+                
             </div>
             
             
