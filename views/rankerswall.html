@@ -151,7 +151,7 @@
             
             </div>
             <div flex layout="row" layout-align="end center" class="paddingTB5 font12">
-                <div hide-gt-xs class="marginR5">
+                <div hide-gt-xs class="marginR10">
                     <a href="#"
                     socialshare 
                     socialshare-provider="whatsapp"
@@ -160,13 +160,21 @@
                     <img src="icons/whatsapp.png" class="socialIcon"/>    
                     </a>
                 </div>
-                <div class="marginR5">
+                <div hide-xs class="marginR10">
                     <md-button class="loginBtn loginBtn--facebook tolowercase" ng-click="shareFacebook()">
                         <span class="font12">Message</span>
 
                     </md-button>
                 </div>
-                <div class="marginR5">
+                <div hide-gt-xs class="marginR10">
+                    <a href="#"
+                    socialshare
+                    socialshare-provider="facebook-messenger"
+                    socialshare-url="{{currURL}}">
+                        <img src="icons/facebook.png" class="socialIcon"/>
+                    </a>
+                </div>
+                <div class="marginR10">
                     <a href="#"
                     socialshare
                     socialshare-provider="twitter"
