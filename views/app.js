@@ -9631,8 +9631,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             
             $scope.currURL = $location.absUrl();
-            $scope.shareText = "Hey! This list of Top 100 AIRs (JEE 2017) on Exambazaar is sensational. Do check it out!";
-            $scope.shareText2 = "Check out the inspirational list of Top 100 (JEE 2017)!";
+            $scope.shareText = "Hey! This list of Top 100 AIRs (JEE 2017) on Exambazaar is sensational. Do check it out! ";
+            $scope.shareText2 = "Check out the inspirational list of Top 100 (JEE 2017)! ";
             $scope.allResults = allResults.data;
             $scope.exam = thisExam.data;
             var examStream = {
