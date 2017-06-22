@@ -313,7 +313,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         
     }]); 
+       
+    exambazaar.service('subscriberService', ['$http', function($http) {
+        this.saveSubscribers = function(subscriberList) {
+            return $http.post('/api/subscribers/bulksave', subscriberList);
+        };
         
+        this.getSubscriber = function(subscriberId) {
+            return $http.get('/api/subscribers/edit/'+subscriberId, {subscriberId: subscriberId});
+        };
+        this.getSubscribers = function() {
+            return $http.get('/api/subscribers');
+        };
+        
+        
+    }]);    
     exambazaar.service('AwsCredentialService', ['$http', function($http) {
         this.saveAwsCredential = function(awsCredential) {
             return $http.post('/api/awsCredentials/save', awsCredential);
@@ -8505,7 +8519,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);  
         
     exambazaar.controller("reviewRedirectController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document){
+        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', 'offerService', '$mdDialog', '$document', function($scope, $http, $state, $rootScope, targetStudyProviderService, offerService, $mdDialog, $document){
             $scope.redirectToReview = function(){
                 if($rootScope.newReviewCity && $rootScope.newReviewCoaching){
                     //ABC
@@ -8527,6 +8541,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 }
             };
+            
+            $scope.offers = [];
+            offerService.getActiveOffersBasic().success(function (data, status, headers) {
+                $scope.offersList = data;
+                //console.log($scope.offersList);
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+            
+            $scope.$watch('offersList', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue != ''){
+                    $scope.offers = newValue;
+                    //console.log(newValue);
+                }
+            }, true);
             
     }]);      
         
@@ -9588,23 +9618,71 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     exambazaar.controller("rankerswallController", 
         [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam){
+            
             $scope.allResults = allResults.data;
             $scope.exam = thisExam.data;
+            var examStream = {
+                exam: $scope.exam.name,
+                stream: $scope.exam.stream.name,
+            };
             $scope.year = $stateParams.year;
-            console.log($scope.year);
+            //console.log($scope.exam);
             $scope.yearResults = [];
+            $scope.coachingMode = false;
+            $scope.flipAll = function(){
+                $scope.coachingMode = !$scope.coachingMode;
+            };
+            $scope.flipRank = function(resultPair){
+                resultPair.coachingMode = !resultPair.coachingMode;
+            };
+            
+            $scope.logMouseEvent = function(resultPair) {
+                switch (event.type) {
+                  case "mouseenter":
+                        
+                        console.log("Hey Mouse Entered");
+                        break;
+                  case "mouseover":{
+                        //$scope.flipRank(resultPair);
+                        resultPair.coachingMode = true;
+                        console.log("Hey Mouse Over");
+                        break;
+                  }
+                  case "mouseout":{
+                        resultPair.coachingMode = false;
+                        console.log("Hey Mouse Out");
+                        break;
+                  }
+
+                  case "mouseleave":
+                    console.log("Mouse Gone");
+                    break;
+
+                  default:
+                    console.log(event.type);
+                    break;
+                };
+            };
             
             for (var i=1;i<=100;i++) {
                 $scope.yearResults.push({});
             };
+            
+            $scope.goToCoaching = function(resultPair){
+                
+                var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: resultPair.coaching.city, groupName: resultPair.coaching.name});
+                window.open(url,'_blank');
+                
+            };
             $scope.allResults.forEach(function(thisResultPair, rindex){
                 thisResultPair.result.rank = parseInt(thisResultPair.result.rank);
                 var thisRank = thisResultPair.result.rank -1;
+                thisResultPair.coachingMode = false;
                 
                 if(thisResultPair.result.year == $scope.year && thisRank<100){
                     
                     $scope.yearResults[thisRank] = thisResultPair;
-                    //$scope.yearResults.push(thisResultPair);
+                   
                 }
             });
             
@@ -10030,6 +10108,39 @@ function getLatLng(thisData) {
             
         console.log('Profile Controller finished');    
     }]);    
+        
+    
+    exambazaar.controller("addSubscriberController", 
+        [ '$scope',  'subscribersList','subscriberService','$http','$state', function($scope, subscribersList, subscriberService,$http,$state){
+        
+            $scope.subscribersList = subscribersList.data;
+            $scope.newSubscribers = [
+                {
+                    name: '',
+                    email: '',
+                    mobile: '',
+                }
+            ];
+            
+            
+            $scope.addSubscribers = function(){
+                var toAddSubscribers = [];
+                $scope.newSubscribers.forEach(function(thisSubscriber, index){
+                    if(thisSubscriber && thisSubscriber.name && (thisSubscriber.email ||  thisSubscriber.mobile)){
+                        toAddSubscribers.push(thisSubscriber);
+                    }
+                });
+                
+                subscriberService.saveSubscribers(toAddSubscribers).success(function (data, status, headers) {
+               
+                    alert("Subscribers saved!");
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });
+                
+            };
+    }]);
         
     exambazaar.controller("addAwsCredentialController", 
         [ '$scope',  'awsCredentialList','AwsCredentialService','$http','$state', function($scope, awsCredentialList, AwsCredentialService,$http,$state){
@@ -13799,6 +13910,29 @@ function getLatLng(thisData) {
                     return AwsCredentialService.getAwsCredentials();
                 }],
                 awsCredential: function() { return {}; }
+            }
+        })
+        .state('addSubscriber', {
+            url: '/addSubscriber',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'addSubscriber.html',
+                    controller: 'addSubscriberController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                subscribersList: ['subscriberService',
+                    function(subscriberService){
+                    return subscriberService.getSubscribers();
+                }],
+                subscriber: function() { return {}; }
             }
         })
         .state('addExam', {

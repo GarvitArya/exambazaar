@@ -83,14 +83,29 @@
     .imgBorder {
 /*      padding: 15px 15px 0;*/
         background-color: white;
-        box-shadow: 0 0 10px darkgray;
+        box-shadow: 0 0 10px black;
         border-radius: 4px;
         border: 0px;
  /*     -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
       -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);*/
     }
- 
-    
+    .leftButton:{
+        border-radius: 50px 0px 0px 50px;
+    }
+    .unselectedTag{
+        padding: 2px 5px 2px 5px;
+        color: #333333;
+        background: white;
+    }
+    .unselectedTag:hover{
+        color: white;
+        background: #20C39A;
+    }
+    .selectedTag{
+        padding: 2px 5px 2px 5px;
+        color: white;
+        background: #20C39A;
+    }
     
 </style>
 
@@ -103,42 +118,80 @@
     
     
 <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 height100 width100">
-        <div layout-wrap layout="column" layout-align="center center" class="secondFont textWhite paddingTB20 textShadow">
-            <div class="bold font36 narrowLine">RANKERS WALL</div>
+        <div layout-wrap layout="column" layout-align="center center" class="secondFont textWhite paddingTB10 textShadow">
+            <div class="rankersWallFont font36 narrowLine">Rankers Wall</div>
             <div class="font20">{{exam.displayname}} {{year}}</div>
+        </div>
+        <div layout-wrap layout="row" layout-xs="column" layout-align="start center" class="secondFont width100 paddingTB5">
+            <div flex layout="row" layout-align="start center" class="font14 paddingTB5">
+                <div class="unselectedTag" ng-class="{selectedTag: !coachingMode}" ng-click="flipAll()">
+                    Top Students
+                </div>
+                <div class="unselectedTag" ng-class="{selectedTag: coachingMode}" ng-click="flipAll()">
+                    Top Coachings
+                </div>
+            </div>
+            <div flex layout="column" layout-align="center center" class="rankersWallFont paddingTB5">
+                <div class="font24 textWhiteSmoke">Congratulations Stars!</div>
+                <div class="font11 thirdFont textWhiteSmoke">All results are from Classroom Programmes only</div>
+            
+            </div>
+            <div flex layout="column" layout-align="center center" class="paddingTB5">
+            
+            
+            </div>
+            
+            
             
         </div>
-        
+    
+    
         <div layout-wrap layout="row" layout-align="center start">
         
-        <div flex="10" class="text-center padding10 marginB10" ng-repeat="resultPair in yearResults " >
+        <div flex-gt-xs="10" flex-xs="50" class="text-center padding10 marginB10" ng-repeat="resultPair in yearResults" ng-click="goToCoaching(resultPair)">
         <!--| orderBy: 'result.rank'-->    
         <div class=" ">
-            <div layout="column" layout-align="start center" class="editFont font20 textWhite marginB5 bold textShadow">
+            <div layout="column" layout-align="start center" class="thirdFont font20 textWhite marginB5 textShadow">
                 AIR {{$index + 1}}
             </div>
             
             <div class="imgBorder">
-                <div  id="thumbnailImage" ng-style="{'background-image':'url({{resultPair.result.image}})'}" ng-if="resultPair.result.name">
+                
+                <div ng-if="!coachingMode && !resultPair.coachingMode" ng-click="flipRank(resultPair)" ng-mouseenter="logMouseEvent(resultPair)"  ng-mouseleave="logMouseEvent(resultPair)">
+                    <div  id="thumbnailImage" ng-style="{'background-image':'url({{resultPair.result.image}})'}" ng-if="resultPair.result.name">
+                    </div>
+                    <div  id="thumbnailImage" ng-style="{'background-image':'url(icons/student.jpg)'}" ng-if="!resultPair.result.name">
+                    </div>
                 </div>
-                <div  id="thumbnailImage" ng-style="{'background-image':'url(icons/student.jpg)'}" ng-if="!resultPair.result.name">
+                
+                <div ng-if="coachingMode || resultPair.coachingMode" ng-click="flipRank(resultPair)" ng-mouseenter="logMouseEvent(resultPair)"  ng-mouseleave="logMouseEvent(resultPair)">
+                    <div  id="thumbnailImage" >
+                        
+                        <div layout="row" layout-align="center center" id="thumbnailLogo" class="padding5">
+                            <img ng-src="{{resultPair.coaching.logo}}"/>
+                            
+                        </div>
+                        
+                        
+                        
+                    </div>
+                    
+                    
                 </div>
+                
             </div>
             
             
             
-            <div layout="column" layout-align="start center" class="editFont textWhite textShadow marginTB5 spacedLetter050 bold">
-                <div class="font11 textGainsboro">
+            <div layout="column" layout-align="start center" class="editFont textWhite textShadow marginTB5 spacedLetter050">
+                <div ng-if="!coachingMode" class="font11 textGainsboro">
                     {{resultPair.result.name }}
                 </div>
-                <div class="font8 textGainsboro" ng-if="resultPair.coaching">
-                    ({{resultPair.coaching}})
+                <div ng-if="coachingMode" class="font11 textGainsboro">
+                    {{resultPair.coaching.name }}
                 </div>
             </div>
             
-            <div layout="column" layout-align="center center" ng-if="!resultPair.result.year" class="danger">
-        
-            </div>
         
         </div>
         </div>

@@ -996,15 +996,12 @@ router.get('/allResults/:examName', function(req, res) {
     var examName = req.params.examName;
     console.log("Exam name is: " + examName);
     
-    //{results: {$exists: true}}
-    //$where: "this.results.length > 1" 
-    
-    var thisExam = exam.findOne({name: examName}, {name:1, displayname:1},function(err, thisExam) {
+    var thisExam = exam.findOne({name: examName}, {name:1},function(err, thisExam) {
         if (!err){
             var examId = thisExam._id.toString();
             console.log('Exam Id is: ' + examId);
             
-            var allResultProviders = targetStudyProvider.find({results: {$exists: true}}, {groupName:1, results:1},function(err, allResultProviders) {
+            var allResultProviders = targetStudyProvider.find({results: {$exists: true}, $where:'this.results.length>0', exams:{$elemMatch:{$eq:thisExam._id}} }, {groupName:1, results:1, logo:1, city:1},function(err, allResultProviders) {
             if (!err){
                 var allResults = [];
                 var nProviders = allResultProviders.length;
@@ -1021,7 +1018,12 @@ router.get('/allResults/:examName', function(req, res) {
                                 currResult.coaching = thisprovider.groupName;
 
                                 var newResult ={
-                                    coaching: thisprovider.groupName,
+                                coaching: {
+                                    name: thisprovider.groupName,
+                                    logo: thisprovider.logo,
+                                    _id: thisprovider._id,
+                                    city: thisprovider.city,
+                                },
                                     result: currResult,
                                 };
                                 //console.log(thisprovider.groupName);
@@ -1105,7 +1107,7 @@ router.post('/cityReviewQuery', function(req, res) {
     if(query == 'exambazaar'){
         query = '';
     }
-    console.log('Query is: ' + query);
+    //console.log('Query is: ' + query);
     var groupNames = targetStudyProvider.aggregate(
     [
         {$match: {name:{'$regex' : query, '$options' : 'i'}, city: city} },
@@ -1115,7 +1117,7 @@ router.post('/cityReviewQuery', function(req, res) {
     ],function(err, groupNames) {
     if (!err){
         groupNames = groupNames.slice(0, 20);
-        console.log(groupNames);
+        //console.log(groupNames);
         var queryGroups = [];
         groupNames.forEach(function(thisGroup, index){
             var qGroup = {

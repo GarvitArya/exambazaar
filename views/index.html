@@ -40,7 +40,8 @@
     <link rel="stylesheet" href="ui-bootstrap-csp.css">
     
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
-    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Roboto:100,300,400|Roboto+Condensed|Amatica+SC|Bubblegum+Sans|Chewy|Chicle|Concert+One|Passion+One|Pompiere|Unica+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Roboto:100,300,400|Roboto+Condensed|Unica+One|Seaweed+Script" rel="stylesheet">
+    <!--Amatica+SC|Bubblegum+Sans|Chewy|Chicle|Concert+One|Passion+One|Pompiere|-->
     
     <style>
         .offerFont{
@@ -48,9 +49,12 @@
             font-size: 16px;
             color: white;
         }
+        .rankersWallFont{
+            font-family: 'Seaweed Script', sans-serif;
+            
+        }
         .offerPopupFont{
             font-family: 'Unica One', sans-serif;
-            
         }
         .bottomOfferBar{
             position:fixed; 
@@ -223,6 +227,9 @@
         .font20{
             font-size:20px;
         }
+        .font24{
+            font-size:24px;
+        }
         .font36{
             font-size:36px;
         }
@@ -334,7 +341,7 @@
             background-position: center center;
         }
         #rankersWallPage{
-            min-height: 90vh;
+            /*min-height: 90vh;*/
             margin: 0px;
             padding: 0px;
             background-image: url("images/rankerswall/image16.jpg");
@@ -630,6 +637,13 @@
         .textShadow{
             text-shadow: 0 0 10px black;
         }
+        #thumbnailLogo{ 
+            position: absolute; 
+            top: 0%; 
+            left: 0; 
+            width: 100%;
+            height:100%;
+        }
         #thumbnailResultText{ 
             position: absolute; 
             top: 80%; 
@@ -790,6 +804,7 @@
             padding-top: 20px;
             padding-bottom: 20px;
         }
+        
         .paddingTB40{
             padding-top: 40px;
             padding-bottom: 40px;
@@ -1690,11 +1705,13 @@
       <md-dialog class="offer-dialog">
           <div layout="column" ng-controller="reviewRedirectController">
               <div hide-xs layout="row" layout-align="center center" id="reviewHeaderRow" class="" >
-                <div layout="column" layout-align="center center" class="offerPopupFont text-center textWhite font36 textShadow translucentBackground width100">
-                    <div layout-wrap class="width75">
-                        You’ll love our discounts on the most popular exam prep courses!
+                <div layout="column" layout-align="center center" class=" text-center textWhite   translucentBackground width100">
+                    <div layout-wrap class="width75 offerPopupFont font36 textShadow">
+                        You’ll love our discounts on the best-selling exam prep material!
                     </div>
-                
+                    <div layout-wrap class="width75 editFont textWhite font14">
+                        Limited coupons only
+                    </div>
                 </div>
               </div>
               <div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="" >
@@ -1707,7 +1724,18 @@
               
                 
               
-              <div  layout="row" layout-xs="column" layout-align="center center" class="secondFont paddingLR20 width100" id="reviewSearchRow">
+              <div  layout="column" layout-align="center center" class="secondFont paddingLR20 width100">
+              <div layout="row" layout-xs="column" layout-align="center center" class="secondFont padding10 width100">
+                  Review your coaching institute and unlock 50% OFF on
+              </div>
+              <div layout="row" layout-align="start center" class="marginL40">
+                <div ng-repeat="offer in offers" class="paddingLR10">
+                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                    <md-tooltip>{{offer.displayname}}</md-tooltip>
+                </div>
+                
+                </div>
+              <div  layout="row" layout-xs="column" layout-align="center center" class="secondFont paddingLR20 paddingTB10 width100" id="reviewSearchRow">
                  
               <div layout="row" layout-align="center center" flex-gt-xs="20" ng-controller="citySearchController as ctrl" class="paddingLR10 min10vh width100">
                     <md-autocomplete flex 
@@ -1768,6 +1796,7 @@
                     </md-button>
                 </div>
               </div>
+              </div>
             
 
 
@@ -1780,7 +1809,7 @@
 <div class="bottomOfferBar" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
     <div layout="row"  layout-align="start center">
         <div hide-xs layout="row" layout-align="center center" flex>
-            <div layout="row" layout-align="center center" class=" offerFont">
+            <div layout="row" layout-align="center center" class="offerFont">
             You’ll love our discounts on the most popular exam prep packages!
             </div>
             <div layout="row" layout-align="start center" class="marginL40">
