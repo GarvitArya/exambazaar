@@ -89,22 +89,19 @@
  /*     -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
       -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);*/
     }
-    .leftButton:{
-        border-radius: 50px 0px 0px 50px;
-    }
     .unselectedTag{
-        padding: 2px 5px 2px 5px;
+        padding: 10px 15px 10px 15px;
         color: #333333;
         background: white;
     }
     .unselectedTag:hover{
         color: white;
-        background: #20C39A;
+        background: #FF5A5F;
     }
     .selectedTag{
-        padding: 2px 5px 2px 5px;
+        padding: 10px 15px 10px 15px;
         color: white;
-        background: #20C39A;
+        background: #FF5A5F;
     }
     
 </style>
@@ -122,8 +119,8 @@
             <div class="rankersWallFont font36 narrowLine">Rankers Wall</div>
             <div class="font20">{{exam.displayname}} {{year}}</div>
         </div>
-        <div layout-wrap layout="row" layout-xs="column" layout-align="start center" class="secondFont width100 paddingTB5">
-            <div flex layout="row" layout-align="start center" class="font14 paddingTB5">
+        <div layout-wrap layout="row" layout-xs="column" layout-align="start center" class="thirdFont width100 paddingTB5">
+            <div flex layout="row" layout-align="start center" class="font14 paddingTB5 marginLR20">
                 <div class="unselectedTag" ng-class="{selectedTag: !coachingMode}" ng-click="flipAll()">
                     Top Students
                 </div>
