@@ -181,6 +181,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             return $http.post('/api/users/sendReferrals', referralForm);
         };
+        
         this.fbSave = function(user) {
             
             return $http.post('/api/users/fbSave', user);
@@ -318,7 +319,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.saveSubscribers = function(subscriberList) {
             return $http.post('/api/subscribers/bulksave', subscriberList);
         };
-        
+        this.sendReviewInvites = function(reviewInviteForm) {
+            
+            return $http.post('/api/subscribers/sendReviewInvites', reviewInviteForm);
+        };
         this.getSubscriber = function(subscriberId) {
             return $http.get('/api/subscribers/edit/'+subscriberId, {subscriberId: subscriberId});
         };
@@ -10163,6 +10167,37 @@ function getLatLng(thisData) {
                 .error(function (data, status, header, config) {
                     console.info('Error ' + data + ' ' + status);
                 });
+                
+            };
+            $scope.selectedUser = null;
+            $scope.setUser = function(subscriber){
+                if(!$scope.selectedUser){
+                    $scope.selectedUser = [];
+                }
+                var selectedUserIds = $scope.selectedUser.map(function(a) {return a._id;});
+                var sIndex = selectedUserIds.indexOf(subscriber._id);
+                if(sIndex == -1){
+                    $scope.selectedUser.push(subscriber);
+                }else{
+                    console.log(subscriber._id + " already exists!");
+                }
+                
+                
+            };
+            $scope.sendReviewInvite = function(){
+                
+                if($scope.selectedUser){
+                    var reviewInviteForm = {
+                        userList: $scope.selectedUser,
+                    };
+                    subscriberService.sendReviewInvites(reviewInviteForm).success(function (data, status, headers) {
+                        console.log('Delivered');
+                        $scope.userSocial = true;
+                    }).error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });    
+                }
+                
                 
             };
     }]);

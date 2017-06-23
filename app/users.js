@@ -56,12 +56,12 @@ function sendWelcome(user){
                     var mail = new helper.Mail(fromEmail, subject, to_email, content);
                     mail.setTemplateId(templateId);
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
-                    var request = sg.emptyRequest({
+                    var emailrequest = sg.emptyRequest({
                       method: 'POST',
                       path: '/v3/mail/send',
                       body: mail.toJSON(),
                     });
-                    sg.API(request, function(error, response) {
+                    sg.API(emailrequest, function(error, response) {
                         if(error){
                             console.log('Could not send email! ' + error);
                         }else{
@@ -90,7 +90,7 @@ function sendWelcome(user){
     
     if(user.mobile){
         console.log("Sending Welcome SMS");
-        var message = "Hi " + user.basic.name + "\nWe are so happy you are here!\n\nThank you for signing up and check our exclusive discounts at Exambazaar.com\n https://www.exambazaar.com";
+        var message = "Hi " + user.basic.name + "\nWe are so happy you are here!\n\nThank you for signing up and check our exclusive discounts at Exambazaar.com\n https://www.exambazaar.com/review";
         
         //console.log(message.length + " " + message);
         var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
@@ -115,6 +115,9 @@ function sendWelcome(user){
         console.log("No user mobile set");
     }
 };
+
+
+
 
 function sendReferralSMS(smsForm){
     var user = smsForm.user;

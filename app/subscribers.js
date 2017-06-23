@@ -1,9 +1,14 @@
 var express = require('express');
 var router = express.Router();
+var request = require("request");
 
 var config = require('../config/mydatabase.js');
 var subscriber = require('../app/models/subscriber');
 
+var email = require('../app/models/email');
+var helper = require('sendgrid').mail;
+var sendGridCredential = require('../app/models/sendGridCredential');
+var moment = require('moment');
 
 var mongoose = require('mongoose');
 var db = mongoose.connection;
@@ -14,6 +19,148 @@ mongoose.createConnection(config.url);
 
 mongoose.Promise = require('bluebird');
 
+
+router.post('/sendReviewInvites', function(req, res) {
+    var reviewInviteForm = req.body;
+    var userList = reviewInviteForm.userList;
+    
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+        var nLength = userList.length;
+        var counter = 0;
+        var emailsSent = 0;
+        var smssSent = 0;
+            
+        userList.forEach(function(thisUser, index){
+            var subscriberId = thisUser._id;
+            var existingSubscriber = subscriber.findOne({ 'email': thisEmail},function (err, existingSubscriber) {
+            
+            if(existingSubscriber){
+                
+                    if(thisUser.email){
+                    var templateName = 'Review Promotional Email';
+                    var fromEmail = {
+                        email: 'always@exambazaar.com',
+                        name: 'Always Exambazaar'
+                    };
+                    var to = thisUser.email;
+                    var username = '';
+                    if(thisUser.name){
+                        username = thisUser.name;
+                    }
+
+                    var apiKey = existingSendGridCredential.apiKey;
+                    var sg = require("sendgrid")(apiKey);
+                    var emailTemplate = existingSendGridCredential.emailTemplate;
+                    var templateNames = emailTemplate.map(function(a) {return a.name;});
+                    var tIndex = templateNames.indexOf(templateName);
+                    //console.log(tIndex);
+                    if(tIndex != -1){
+                        var templateId = emailTemplate[tIndex].templateKey;
+                        console.log(templateId);
+                        var from_email = new helper.Email(fromEmail);
+
+                        var to_email = new helper.Email(to);
+                        var html = ' ';
+                        var subject = ' ';
+                        var content = new helper.Content('text/html', html);
+                        var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                        mail.setTemplateId(templateId);
+                        mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                        var emailrequest = sg.emptyRequest({
+                          method: 'POST',
+                          path: '/v3/mail/send',
+                          body: mail.toJSON(),
+                        });
+                        sg.API(emailrequest, function(error, response) {
+                            if(error){
+                                console.log('Could not send email! ' + error);
+                            }else{
+                                emailsSent += 1;
+                                var currTime = moment().toDate();
+                                existingSubscriber.emailSent.push(currTime);
+                                existingSubscriber.save(function(err, existingSubscriber) {
+                                    if (err) return console.error(err);
+                                    console.log(existingSubscriber._id + " updated!");
+                                });
+                                
+                                console.log("Email sent to: " + username + " at "+ to);
+                            }
+                        });
+                    }else{
+                        console.log('Could not send email as there is no template with name: ' + templateName);
+                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    }
+                }else{
+                    console.log('No user email');
+                }
+
+                if(thisUser.mobile){
+                    console.log("Sending Welcome SMS");
+                    var message = "Hi " + thisUser.name + "\nBe heard. Review your coaching institute and lock-in 50% OFF on the best-selling exam prep material now. Limited coupons only.\nwww.exambazaar.com";
+
+                    //console.log(message.length + " " + message);
+                    var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
+                    url += thisUser.mobile;
+                    url += "&message=";
+                    url += message;
+                    url += "&sender=EXMBZR&type=3";
+                    request({
+                            url: url,
+                            json: true
+                        }, function (error, response, body) {
+                            if (!error && response.statusCode === 200) {
+                                
+                                smssSent += 1;
+                                console.log("SMS sent to: " + username + " at "+ thisUser.mobile);
+                                existingSubscriber.smsSent.push(currTime);
+                                existingSubscriber.save(function(err, existingSubscriber) {
+                                    if (err) return console.error(err);
+                                    console.log(existingSubscriber._id + " updated!");
+                                });
+                                
+                                
+                            }else{
+                                console.log(error + " " + response);
+                            }
+                    });
+
+
+
+                }else{
+                    console.log("No user mobile set");
+                }
+
+                counter += 1;
+                if(counter == nLength){
+                    console.log("Total Emails sent: " + emailsSent);
+                    console.log("Total SMSs sent: " + smssSent);
+                    res.json(true);
+                }
+                
+                
+            }else{
+                counter += 1;
+                if(counter == nLength){
+                    console.log("Total Emails sent: " + emailsSent);
+                    console.log("Total SMSs sent: " + smssSent);
+                    res.json(true);
+                }
+            } 
+            
+            
+            });
+                                                        
+                
+        });
+        
+        
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+});
 
 router.post('/bulksave', function(req, res) {
     var thisSubscriberList = req.body;

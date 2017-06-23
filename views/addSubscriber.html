@@ -25,13 +25,11 @@
     }
 </style>
 <div class="container">
-    <div id="spacer1">
+    <div id="spacer">
     </div>
-    <div class="row top-buffer">
-        <div class="col-md-12" ng-repeat="subscriber in subscribersList">
-            <div class="row text-center">
-                <strong>{{subscriber.name}}</strong>
-            </div>
+    <div layout="row" layout-wrap>
+        <div ng-repeat="subscriber in subscribersList" class="paddingR5 font8 narrowLine" ng-click="setUser(subscriber)">
+            {{subscriber.name}}
         </div>
     </div>
     
@@ -75,7 +73,12 @@
         <hot-column data="email" width="200"  title="'Email'"></hot-column>
         <hot-column data="mobile" width="200"  title="'Mobile'"></hot-column>
     </hot-table>
-        <md-button class="md-raised md-primary" ng-click="addSubscribers()">Add Subscribers</md-button>
+    <md-button class="md-small md-green2" ng-click="addSubscribers()">Add Subscribers</md-button>
+    </div>
+    
+    <div layout="column" layout-margin layout-padding>
+    {{selectedUser}}
+    <md-button class="md-small md-danger" ng-click="sendReviewInvite()">Invite {{selectedUser.name}}</md-button>
     </div>
     
 </div>
