@@ -872,7 +872,16 @@
                         </a>-->
                     </span>
                     <span ng-if="thisGroup.location.area">
-                        {{thisGroup.location.area}}
+                        
+                        <span ng-if="!ebuser">
+                            {{thisGroup.location.area}}
+                        </span>
+                        <span ng-if="ebuser">
+                            <a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank">{{thisGroup.location.area}}
+                            </a>
+                        </span>
+                        
+                        
                     </span>
                     
                 </div>

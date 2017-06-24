@@ -10181,9 +10181,17 @@ function getLatLng(thisData) {
                 }else{
                     console.log(subscriber._id + " already exists!");
                 }
-                
-                
             };
+            $scope.selectedBackground = function(subscriber){
+                var selectedUserIds = $scope.selectedUser.map(function(a) {return a._id;});
+                var sIndex = selectedUserIds.indexOf(subscriber._id);
+                if(sIndex == -1){
+                    return false;
+                }else{
+                    return true;
+                }
+            };
+            
             $scope.sendReviewInvite = function(){
                 
                 if($scope.selectedUser){

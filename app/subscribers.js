@@ -34,7 +34,7 @@ router.post('/sendReviewInvites', function(req, res) {
             
         userList.forEach(function(thisUser, index){
             var subscriberId = thisUser._id;
-            var existingSubscriber = subscriber.findOne({ 'email': thisEmail},function (err, existingSubscriber) {
+            var existingSubscriber = subscriber.findOne({ '_id': subscriberId},function (err, existingSubscriber) {
             
             if(existingSubscriber){
                 
@@ -98,7 +98,7 @@ router.post('/sendReviewInvites', function(req, res) {
 
                 if(thisUser.mobile){
                     console.log("Sending Welcome SMS");
-                    var message = "Hi " + thisUser.name + "\nBe heard. Review your coaching institute and lock-in 50% OFF on the best-selling exam prep material now. Limited coupons only.\nwww.exambazaar.com";
+                    var message = "Hi " + thisUser.name + "\nGet 50% off! Review your coaching institute and lock-in discounts on the best-selling exam prep material now. Limited coupons only.\nwww.exambazaar.com";
 
                     //console.log(message.length + " " + message);
                     var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
@@ -114,6 +114,7 @@ router.post('/sendReviewInvites', function(req, res) {
                                 
                                 smssSent += 1;
                                 console.log("SMS sent to: " + username + " at "+ thisUser.mobile);
+                                var currTime = moment().toDate();
                                 existingSubscriber.smsSent.push(currTime);
                                 existingSubscriber.save(function(err, existingSubscriber) {
                                     if (err) return console.error(err);
