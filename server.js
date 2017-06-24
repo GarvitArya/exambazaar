@@ -1,5 +1,6 @@
 var express  = require('express');
 //var redirect = require("express-redirect");
+var compression = require('compression');
 var app      = express();
 var port     = process.env.PORT || 8000;
 var path = require('path');
@@ -46,6 +47,7 @@ require('./config/passport')(passport);
 
 app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted('^/claim'));
 
+app.use(compression());
 //http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/TerminologyandKeyConcepts.html#x-forwarded-proto
 
 
