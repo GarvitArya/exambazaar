@@ -9,6 +9,7 @@ var viewSchema = mongoose.Schema({
     ip: {
         city: {type: String},
         country: {type: String},
+        region: {type: String},
         lat: {type: String},
         long: {type: String},
         zip: {type: String},

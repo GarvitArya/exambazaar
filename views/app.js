@@ -407,7 +407,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
     exambazaar.service('ipService', ['$http', function($http) {
         this.getip = function() {
-            return $http.get('http://ip-api.com/json');
+            return $http.get('https://freegeoip.net/json/');
         };
         
     }]);
@@ -2893,7 +2893,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'ipService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService',  'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, ipService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService,  thisGroupInfo, addContactInfoService, rateInstituteService){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService',  'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService,  thisGroupInfo, addContactInfoService, rateInstituteService){
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.videoTags = videoMediaTagList.data.mediaTypeTags;
@@ -3197,6 +3197,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             if($cookies.getObject('ip')){
                 var ip = $cookies.getObject('ip');
+                console.log(ip);
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
@@ -6524,27 +6525,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.resetMode = !$scope.resetMode;
         };
             
-          
+        if($cookies.getObject('ip')){
+            console.log("IP exists");
+        }else{
+            ipService.getip()
+            .success(function (data, status, headers) {
+                //console.log(data);
+                var ip = {
+                    city: data.city,
+                    country: data.country_name,
+                    region: data.region_name,
+                    lat: data.latitude,
+                    long: data.longitude,
+                    zip: data.zip_code,
+                    query: data.ip,
+                };
+                console.log(ip);
+                $cookies.putObject('ip', ip);
+            })
+            .error(function (data, status, header, config) {
+                console.info();
+            });
+        }
             
-        ipService.getip()
-        .success(function (data, status, headers) {
-            //console.info(data);
-            var ip = {
-                city: data.city,
-                country: data.country,
-                lat: data.lat,
-                lng: data.lon,
-                zip: data.zip,
-                org: data.org,
-                as: data.as,
-                isp: data.isp,
-                query: data.query,
-            };
-            $cookies.putObject('ip', ip);
-        })
-        .error(function (data, status, header, config) {
-            console.info();
-        });
+        
         
         if($cookies.getObject('userlocation')){
             $scope.userlocation = $cookies.getObject('userlocation');
@@ -9903,7 +9907,7 @@ function getLatLng(thisData) {
     }]);       
         
     exambazaar.controller("profileController", 
-        [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'Upload', 'ImageService', 'UserService', 'ipService', '$facebook', '$mdDialog', '$timeout', function($scope, thisuser,$http,$state,$rootScope, $cookies, Upload, ImageService, UserService, ipService, $facebook, $mdDialog, $timeout){
+        [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'Upload', 'ImageService', 'UserService', '$facebook', '$mdDialog', '$timeout', function($scope, thisuser,$http,$state,$rootScope, $cookies, Upload, ImageService, UserService, $facebook, $mdDialog, $timeout){
         $scope.user = thisuser.data;
             
         if($cookies.getObject('sessionuser')){
