@@ -48,7 +48,15 @@ require('./config/passport')(passport);
 app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted('^/claim'));
 
 app.use(compression());
-//http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/TerminologyandKeyConcepts.html#x-forwarded-proto
+app.get('/*', function (req, res, next) {
+
+  if (req.url.indexOf("/images/") === 0 || req.url.indexOf("/stylesheets/") === 0) {
+    res.setHeader("Cache-Control", "public, max-age=2592000");
+    res.setHeader("Expires", new Date(Date.now() + 2592000000).toUTCString());
+  }
+  next();
+});
+
 
 
 app.get('*', function(req, res, next) {
