@@ -8,6 +8,7 @@ var email = require('../app/models/email');
 var disableProvider = require('../app/models/disableProvider');
 var oldtargetStudyProvider = require('../app/models/oldtargetStudyProvider');
 var exam = require('../app/models/exam');
+var result = require('../app/models/result');
 var group = require('../app/models/group');
 var logourl = require('../app/models/logourl');
 var mongoose = require('mongoose');
@@ -1014,7 +1015,7 @@ router.get('/allResults/:examName', function(req, res) {
 
                     if(nResults > 0){
                         thisResults.forEach(function(currResult, rindex){
-                            if(currResult.exam == examId){
+                            if(currResult.exam == examId && (!currResult.category || currResult.category=='' || currResult.category =='General')){
                                 currResult.coaching = thisprovider.groupName;
 
                                 var newResult ={
@@ -1819,8 +1820,51 @@ router.get('/databaseService', function(req, res) {
     console.log("Database Service Starting now");
     res.json('Done');
     
+    var allResultProviders = targetStudyProvider.find({results: {$exists: true}, $where:'this.results.length>0'}, {groupName:1, results:1, logo:1, city:1},function(err, allResultProviders) {
+        if (!err){
+            var resultsLength = 0;
+            var nProviders = allResultProviders.length;
+            var counter = 0;
+            console.log("There are " + nProviders + " providers!");
+            
+            allResultProviders.forEach(function(thisprovider, index){
+                //console.log(JSON.stringify(thisprovider.results));
+                resultsLength += thisprovider.results.length;
+                counter += 1;
+                
+                var nResults = thisprovider.results.length;
+                var rCounter = 0;
+                
+                thisprovider.results.forEach(function(thisresult, rindex){
+                    
+                    var newResult = new result({
+                    });
+                    var rProperties = ["exam","year","name","category","rank","subgroup","percentile","percentage","marks","passFail","active","course","image","_added"];  
+                        
+                    rProperties.forEach(function(thisproperty, pindex){
+                        newResult[thisproperty] = thisresult[thisproperty];
+                    });
+                        
+                    newResult.provider = thisprovider._id.toString();
+                   
+                    newResult.save(function(err, newResult) {
+                        if (err) return console.error(err);
+                        console.log(newResult._id + " saved!");
+                    });
+                    rCounter += 1;
+                    if(rCounter && counter == nProviders){
+                        console.log("Total Results are: " + resultsLength);
+                    }
+                    
+                });
+                
+                
+            });
+            
+        }
+    });
     
-    var allproviders = targetStudyProvider.find({"name" : {$regex : ".*Pvt Ltd."}}, {name:1, groupName: 1},function(err, allproviders) {
+    /*var allproviders = targetStudyProvider.find({"name" : {$regex : ".*Pvt Ltd."}}, {name:1, groupName: 1},function(err, allproviders) {
         
         var counter = 0;
         var changes = 0;
@@ -1847,7 +1891,7 @@ router.get('/databaseService', function(req, res) {
         });
         console.log("To change: " + changes + " providers!");
         
-    });
+    });*/
     /*targetStudyProvider.find({"email": { $exists: true}, _id: '5870ef3280ea0e0698890917'}, {email:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;

@@ -59,14 +59,14 @@ app.get('/*', function (req, res, next) {
 
 
 
-app.get('*', function(req, res, next) {
+/*app.get('*', function(req, res, next) {
     if (req.get('x-forwarded-proto') != "https") {
         res.set('x-forwarded-proto', 'https');
         res.redirect('https://' + req.get('host') + req.url);
     } else {
         next();     
     }
-});
+});*/
 
 app.get('/auth/facebook',
   passport.authenticate('facebook'));
@@ -107,6 +107,7 @@ var routes = require('./app/routes.js')(app, passport);
 //var institutes = require('./app/institutes.js',institutes); 
 var providers = require('./app/providers.js',providers); 
 var targetStudyProviders = require('./app/targetStudyProviders.js',targetStudyProviders); 
+var results = require('./app/results.js',results); 
 var offers = require('./app/offers.js',offers); 
 var coupons = require('./app/coupons.js',coupons); 
 var reviews = require('./app/reviews.js',reviews); 
@@ -142,6 +143,7 @@ var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredent
 
 app.use('/api/providers', providers);
 app.use('/api/targetStudyProviders', targetStudyProviders);
+app.use('/api/results', results);
 app.use('/api/offers', offers);
 app.use('/api/coupons', coupons);
 app.use('/api/reviews', reviews);

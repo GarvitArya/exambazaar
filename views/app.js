@@ -3197,7 +3197,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             if($cookies.getObject('ip')){
                 var ip = $cookies.getObject('ip');
-                console.log(ip);
+                //console.log(ip);
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
@@ -4108,7 +4108,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
         $scope.saveProvider = function(){
-                console.info($scope.provider);
+                //console.info($scope.provider);
                 var saveProvider = {
                     targetStudyProvider:$scope.provider,
                     user: $scope.user.userId
@@ -4175,7 +4175,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });
                 
             }); targetStudyProviderService.bulkAddResult(finalExamResult).success(function (data, status, headers) {
-                console.info("Done");
+                //console.info("Done");
                 if(data == 'Done'){
                     var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                     $scope.provider = refreshedProvider;
@@ -6526,7 +6526,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
             
         if($cookies.getObject('ip')){
-            console.log("IP exists");
+            //console.log("IP exists");
         }else{
             ipService.getip()
             .success(function (data, status, headers) {
@@ -6540,7 +6540,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     zip: data.zip_code,
                     query: data.ip,
                 };
-                console.log(ip);
+                //console.log(ip);
                 $cookies.putObject('ip', ip);
             })
             .error(function (data, status, header, config) {
@@ -9639,8 +9639,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             
             $scope.currURL = $location.absUrl();
-            $scope.shareText = "Hey! This list of Top 100 AIRs (JEE 2017) on Exambazaar is sensational. Do check it out! ";
-            $scope.shareText2 = "Check out the inspirational list of Top 100 (JEE 2017)! ";
+            
             $scope.allResults = allResults.data;
             $scope.exam = thisExam.data;
             var examStream = {
@@ -9719,7 +9718,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
             });
             
-            $rootScope.pageTitle =$scope.exam.displayname + ' Rankers Wall';
+            $scope.shareText = "Hey! This list of Top 100 AIRs (" + $scope.exam.displayname + " " + $scope.year + ") on Exambazaar is sensational. Do check it out! ";
+            $scope.shareText2 = "Check out the inspirational list of Top 100 (" + $scope.exam.displayname + " " + $scope.year + ")! ";
+            $scope.hashtags = "exambazaar, " + $scope.exam.displayname;
+            $rootScope.pageTitle =$scope.exam.displayname + " " + $scope.year + ' Rankers Wall';
             
             
     }]); 
