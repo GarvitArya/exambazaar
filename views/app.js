@@ -467,6 +467,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
     }]);
         
+    exambazaar.service('resultService', ['$http', function($http) {
+       
+        this.saveresult = function(resultForm) {
+            return $http.post('/api/results/save', resultForm);
+        };
+        this.existingResult = function(userInstituteForm) {
+            return $http.post('/api/results/existingResult', userInstituteForm);
+        };
+        this.groupResults = function(groupResultForm) {
+            return $http.post('/api/results/groupResults', groupResultForm);
+        };
+        
+        this.resultsCount = function() {
+            return $http.get('/api/results/resultsCount');
+        };
+        this.getresult = function(resultId) {
+            return $http.get('/api/results/edit/'+resultId, {resultId: resultId});
+        };
+        this.removeresult = function(resultId){
+            $http.get('/api/results/remove/'+resultId, {resultId: resultId});
+        };
+        this.getresults = function() {
+            return $http.get('/api/results');
+        };
+        this.getuserResults = function(userId) {
+            return $http.get('/api/results/user/'+userId, {userId: userId});
+        };
+    }]);    
+        
     
     exambazaar.service('reviewService', ['$http', function($http) {
        
@@ -1582,7 +1611,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
    
     exambazaar.controller("showGroupController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService){
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
         $rootScope.reviewStream = null;
         $rootScope.reviewExam = null;
         $rootScope.reviewCity = null;
@@ -1593,6 +1622,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
           $mdDialog.cancel();
         };
         
+        $scope.thisGroupR = thisGroupResults.data;
+        console.log($scope.thisGroupR);
         $scope.group = thisGroup.data;
         var groupDisabled = $scope.group.map(function(a) {return a.disabled;});
         var groupIds = $scope.group.map(function(a) {return a._id;});
@@ -12006,6 +12037,17 @@ function getLatLng(thisData) {
                     };
                     return targetStudyProviderService.getGroupCity(groupCity);
                 }],
+                thisGroupResults: ['resultService','$stateParams',
+                    function(resultService,$stateParams) {
+                    var groupCity = {
+                        groupName: $stateParams.groupName,
+                        cityName: $stateParams.cityName
+                        
+                    };
+                    return resultService.groupResults(groupCity);
+                }],
+                
+                
                 provider: function() { return {}; }
                 
             }

@@ -1111,7 +1111,7 @@ router.post('/cityReviewQuery', function(req, res) {
     //console.log('Query is: ' + query);
     var groupNames = targetStudyProvider.aggregate(
     [
-        {$match: {name:{'$regex' : query, '$options' : 'i'}, city: city} },
+        {$match: {name:{'$regex' : query, '$options' : 'i'}, city: city, disabled: false} },
         {"$group": { "_id": { name: "$name" }, count:{$sum:1}, logo: { $first: "$logo" } } },
         {$sort:{"count":-1}}
 

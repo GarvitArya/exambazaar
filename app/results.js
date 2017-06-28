@@ -158,32 +158,47 @@ router.get('/user/:userId', function(req, res) {
 
 //to get all results for an institute
 router.post('/groupResults', function(req, res) {
-    var instituteIdArray = req.body;
-    //console.log(instituteIdArray);
-    var basicResults = [];
+    console.log("Group results starting");
     
-    var results = result
-        .find({institute: { $in : instituteIdArray }, active: true})
-        .deepPopulate('user')
-        .exec(function(err, results) {
+    var groupCity = req.body;
+    var groupName = groupCity.groupName;
+    var cityName = groupCity.cityName;
+    
+    var allGroupInstitutes = targetStudyProvider.find({ 'groupName': groupName },{_id:1},function (err, allGroupInstitutes) {
         if (!err){
-            
-            var counter = 0;
-            var nLength = results.length;
-            results.forEach(function(thisResult, index){
-                thisResult.user.logins = [];
-                counter = counter + 1;
-                basicResults.push(thisResult);
-                if(counter == nLength){
-                    res.json(basicResults);
-                }
+            allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
+            console.log(allGroupInstitutes);
+            console.log(allGroupInstitutes.length);
+            var basicResults = [];
+    
+            var results = result
+                .find({institute: { $in : allGroupInstitutes }, active: true})
+                .deepPopulate('user')
+                .exec(function(err, results) {
+                if (!err){
+
+                    var counter = 0;
+                    var nLength = results.length;
+                    results.forEach(function(thisResult, index){
+                        thisResult.user.logins = [];
+                        counter = counter + 1;
+                        basicResults.push(thisResult);
+                        if(counter == nLength){
+                            res.json(basicResults);
+                        }
+                    });
+
+                    if(nLength == 0){
+                        res.json([]);
+                    }
+                } else {throw err;}
             });
             
-            if(nLength == 0){
-                res.json([]);
-            }
-        } else {throw err;}
+            
+        }else {throw err;}
     });
+    
+    
 });
 
 router.post('/existingResult', function(req, res) {

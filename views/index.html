@@ -778,6 +778,9 @@
         .paddingB80{
             padding-bottom: 80px;
         }
+        .marginT5{
+            margin-top: 5px;
+        }
         .marginT10{
             margin-top: 10px;
         }
@@ -1824,16 +1827,17 @@
 </div>        
         
    
-<div class="bottomOfferBar" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
+<div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
     <div layout="row"  layout-align="start center">
         <div hide-xs layout="row" layout-align="center center" flex>
-            <div layout="row" layout-align="center center" class="offerFont">
-            You’ll love our discounts on the most popular exam prep packages!
+            <div layout="column" layout-align="center center" class="offerFont">
+                <div class="text-center">You’ll love our discounts on the most popular exam prep packages!</div>
+                <div class="text-center textGainsboro">Upto 80% discount on bestselling courses</div>
             </div>
             <div layout="row" layout-align="start center" class="marginL40">
-                <div ng-repeat="offer in offers" class="paddingLR10">
+                <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10" ng-click="showUserReviewSearchDialog()">
                     <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                    <md-tooltip>{{offer.displayname}}</md-tooltip>
+                    <div class="textWhite font10 marginT5">{{offer.displayname}}</div>
                 </div>
                 
             </div>
@@ -1842,8 +1846,9 @@
             -->
         </div>
         <div hide-gt-xs layout="row" layout-align="start center" flex>
-            <div layout="row" layout-align="start center" class="textWhite">
-            You’d love our discounts on the most popular exam prep courses!
+            <div layout="column" layout-align="center center" class="textWhite">
+                <div class="text-center">You’ll love our discounts on the most popular exam prep packages!</div>
+                <div class="text-center textGainsboro">Upto 80% off</div>
             </div>
         </div>
         <div layout="row" layout-align="end center">
