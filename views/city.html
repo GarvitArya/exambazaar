@@ -71,14 +71,15 @@
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1" id="">
 
             <div ng-repeat="city in rankedCities" ng-if="$index<11">
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 hvr-bob">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+                <!--hvr-bob-->
                 <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">
                     <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })" id="categoryLink">{{city | uppercase}}
                     </a>
                 </div>
             </div>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 hvr-bob">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                 <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ng-click="showPrerenderedDialog($event)">
                     OTHER
                 </div>
