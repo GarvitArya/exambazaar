@@ -6507,7 +6507,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
-            if($state.current.name == 'showGroup' || $state.current.name == 'claim'){
+            if($state.current.name == 'showGroup' || $state.current.name == 'claim' || $state.current.name == 'rankerswall'){
                 $mdDialog.show({
                   contentElement: '#loginDialog',
                   parent: angular.element(document.body),
@@ -9683,8 +9683,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]); 
     
     exambazaar.controller("rankerswallController", 
-        [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam','$location', 'Socialshare', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam,$location, Socialshare){
+        [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam','$location', 'Socialshare','$cookies', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam,$location, Socialshare, $cookies){
             
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+            }else{
+                
+            }
+            
+            if(!$scope.user || !$scope.user.userId){
+                $scope.showLoginForm();
+            }
             
             $scope.currURL = $location.absUrl();
             
@@ -9764,7 +9773,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.yearResults[thisRank] = thisResultPair;
                    
                 }
+                
             });
+            
             
             $scope.shareText = "Hey! This list of Top 100 AIRs (" + $scope.exam.displayname + " " + $scope.year + ") on Exambazaar is sensational. Do check it out! ";
             $scope.shareText2 = "Check out the inspirational list of Top 100 (" + $scope.exam.displayname + " " + $scope.year + ")! ";
@@ -10303,7 +10314,19 @@ function getLatLng(thisData) {
             $scope.awsCredential = awsCredential;
         };
     }]);
-     
+    
+    exambazaar.controller("whyReviewController", 
+        [ '$scope','$http','$state','$rootScope', function($scope, $http, $state, $rootScope){
+            $rootScope.pageTitle = 'Exambazaar: Find best coaching institutes in your city for 50+ Indian exams';
+            
+            $scope.questions = [
+                {
+                    name: '1',
+                    text: '1',
+                }
+            ];
+            
+    }]);    
     exambazaar.controller("addMediaTagController", 
         [ '$scope',  'mediaTagList','mediaTypeList','MediaTagService','$http','$state', function($scope, mediaTagList,mediaTypeList, MediaTagService,$http,$state){
             
@@ -12588,6 +12611,22 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'privacyPolicy.html',
                     controller: 'headerController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
+        .state('why', {
+            url: '/why',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'whyReview.html',
+                    controller: 'whyReviewController'
                 },
                 'footer': {
                     templateUrl: 'footer.html'
