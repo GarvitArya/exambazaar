@@ -1894,7 +1894,7 @@
                 </div>
             </div>
             
-            <div layout="row" layout-align="end center" class="">
+            <div hide-xs layout="row" layout-align="end center" class="">
                 <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
                 Review
             </md-button>    
@@ -1910,12 +1910,16 @@
                 </div>
             </div>
             <div flex layout="row" layout-align="end center" class="width100">
-            <div layout="row" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10" ng-click="showUserReviewSearchDialog()">
-                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-            </div>
+            <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
+                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5" ng-click="showUserReviewSearchDialog()">
+                        <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                        <!--<div class="textBlack thirdFont narrowLine font8 marginT5">{{offer.displayname}} </div>-->
+                    </div>
+
+                </div>
             <div flex layout="row" layout-align="end center" class="">
                 <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
-                Review
+                Go
             </md-button>    
             </div>
             
@@ -1926,8 +1930,6 @@
     </div>
 </div>        
         
-        
-        </div>
 
 
         
