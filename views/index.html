@@ -1876,23 +1876,24 @@
 <div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
     <div layout="row"  layout-align="start center">
         <div hide-xs layout="row" layout-align="center center" flex>
-            <div layout="column" layout-align="center center" >
+            <div flex layout="row" layout-align="center center" >
                 <div layout="row" layout-align="center center" class="text-center thirdFont font14 spacedLetter1 textWhite">Review your coaching institute <span class="font24 marginLR20">|</span> Avail upto&nbsp;<span class="textWhite bold">50% discount</span>&nbsp;on the best exam resources
                 </div>
-
-            </div>
-            <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
-                <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10" ng-click="showUserReviewSearchDialog()">
-                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                    <div class="textBlack thirdFont narrowLine font8 marginT5">{{offer.displayname}} </div>
-                </div>
                 
-            </div>
-            <div layout="column" layout-align="center center" >
-                <div layout="row" layout-align="center center" class="text-center thirdFont font14 spacedLetter1 textWhite"><span class="font24 marginLR20">|</span><span class="bold">SUCCEED</span>&nbsp;
-            
+                <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
+                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10" ng-click="showUserReviewSearchDialog()">
+                        <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                        <div class="textBlack thirdFont narrowLine font8 marginT5">{{offer.displayname}} </div>
+                    </div>
+
+                </div>
+                <div layout="column" layout-align="center center" >
+                    <div layout="row" layout-align="center center" class="text-center thirdFont font14 spacedLetter1 textWhite"><span class="font24 marginLR20">|</span><span class="bold">SUCCEED</span>&nbsp;
+
+                    </div>
                 </div>
             </div>
+            
             <div layout="row" layout-align="end center" class="">
                 <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
                 Review
