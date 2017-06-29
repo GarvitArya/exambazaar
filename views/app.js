@@ -10317,7 +10317,7 @@ function getLatLng(thisData) {
     
     exambazaar.controller("whyReviewController", 
         [ '$scope','$http','$state','$rootScope', function($scope, $http, $state, $rootScope){
-            $rootScope.pageTitle = 'Exambazaar: Find best coaching institutes in your city for 50+ Indian exams';
+            $rootScope.pageTitle = 'Why review at Exambazaar?';
             
             $scope.questions = [
                 {
