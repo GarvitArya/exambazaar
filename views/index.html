@@ -1259,7 +1259,23 @@
             display: block;
             line-height: 1; 
         }
-        
+        .autocompletedemoCustomTemplate md-autocomplete-wrap:after {
+          font-family: "Material Icons";
+          content: "\E5C5";
+          line-height: 1;
+          font-size: 24px;
+          font-weight: normal;
+          padding: 8px 10px 10px 8px;
+        }
+
+        .autocompletedemoCustomTemplate md-autocomplete-wrap:before {
+          font-family: "Material Icons";
+          content: "\E8B6";
+          line-height: 1;
+          padding: 8px 0px 0px 8px;
+          font-weight: normal;
+          font-size: 24px;
+        }
         .danger{
             color: #FF5A5F;
         }
@@ -1385,7 +1401,7 @@
         
         
     </style>
-    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     
     
@@ -1734,21 +1750,21 @@
                     </div>
                 </div>
               </div>
-              <div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="" >
+              <!--<div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="" >
                 <div hide-gt-xs class="offerPopupFont text-center textWhite font20 textShadow translucentBackground width100">
                     <div layout-wrap class="width100">
                         You’ll love our discounts on the most popular exam prep courses!
                     </div>
                 </div>
-              </div>
+              </div>-->
               
                 
               
               <div  layout="column" layout-align="center center" class="secondFont paddingLR20 width100">
-              <div layout="row" layout-xs="column" layout-align="center center" class="secondFont padding10 width100">
+              <div layout="row" layout-xs="column" layout-align="center center" class="secondFont padding10 width100 text-center">
                   Review your coaching institute and unlock 50% OFF on
               </div>
-              <div layout="row" layout-align="start center" class="marginL40">
+              <div layout="row" layout-align="start center" class="text-center">
                 <div ng-repeat="offer in offers" class="paddingLR10">
                     <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
                     <md-tooltip>{{offer.displayname}}</md-tooltip>
@@ -1757,7 +1773,7 @@
                 </div>
               <div  layout="row" layout-xs="column" layout-align="center center" class="secondFont paddingLR20 paddingTB10 width100" id="reviewSearchRow">
                  
-              <div layout="row" layout-align="center center" flex-gt-xs="20" ng-controller="citySearchController as ctrl" class="paddingLR10 min10vh width100">
+              <div layout="row" layout-align="center center" flex-gt-xs="30" flex-xs="100" ng-controller="citySearchController as ctrl" class="paddingLR10 min10vh width100 autocompletedemoCustomTemplate">
                     <md-autocomplete flex 
                     md-selected-item="ctrl.selectedItem"
                     md-selected-item-change= "ctrl.selectedItemChange(item)"
@@ -1768,7 +1784,7 @@
                     md-delay="300"
                     md-min-length="0"
                     md-menu-class="autocomplete"
-                    placeholder="Choose City"
+                    placeholder="Choose from 90+ cities"
                     class="width100" ng-class="{ dangerBorder: newReviewError }">
                         <md-item-template >
                           <span class="item-title font12">
@@ -1781,7 +1797,7 @@
                 </div>
                   
                   
-                <div layout="row" layout-align="center center" flex-gt-xs="40" ng-controller="coachingSearchController as ctrl" class="paddingLR10 min10vh width100" >
+                <div layout="row" layout-align="center center" flex-gt-xs="40" flex-xs="100" ng-controller="coachingSearchController as ctrl" class="paddingLR10 min10vh width100 autocompletedemoCustomTemplate" >
                     <md-autocomplete flex 
                     md-selected-item="ctrl.selectedItem"
                     md-selected-item-change= "ctrl.selectedItemChange(item)"
@@ -1793,7 +1809,7 @@
                     focus-me="newReviewCity && newReviewCity!=''"
                     md-delay="300"
                     md-menu-class="autocomplete"
-                    placeholder="Search for Coaching Institute"
+                    placeholder="Search (type) for Coaching Institute"
                     class="width100">
                         <md-item-template >
                           <div layout="row" layout-align="start center" class="item-title font12">
@@ -1914,7 +1930,7 @@
     
     <script src="ng-file-upload.min.js"></script>
     
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <script async src="https://www.youtube.com/iframe_api"></script>
     <script src="angular-youtube-embed.js"></script>
     
     <script src="ngtweet.min.js"></script>

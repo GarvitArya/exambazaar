@@ -1185,7 +1185,7 @@ router.get('/userShortlist/:userId', function(req, res) {
                         basicShortlisted.push(thisShortlist);
                         counter = counter + 1;
                         if(counter == nShortlisted){
-                            console.log(basicShortlisted);
+                            //console.log(basicShortlisted);
                             res.json(basicShortlisted);
                         }
                         } else {throw err;}

@@ -88,7 +88,8 @@
             <div flex="5" class="paddingR10 font10">{{$index+1}}</div>
             <div flex="10" class="paddingR10 font10">{{review.user.basic.name}}</div>
             <div layout="column" layout-align="start start" flex="10" class="paddingR10 font10">
-                <div>{{review.institute.name}}</div>
+                <div ng-click="openReview(review)">{{review.institute.name}}, {{review.institute.city}}</div>
+                
                 <div><img ng-src="{{review.institute.logo}}" id="logo"/></div>
             
             </div>

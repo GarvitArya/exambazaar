@@ -65,15 +65,16 @@ router.get('/couponsCount', function(req, res) {
     });
 });
 
-/*router.get('/databaseServices', function(req, res) {
+router.get('/databaseServices', function(req, res) {
+    console.log("Coupon database service starting");
     var coupons = coupon
-        .find({provider:'588b2321be75182698430a58', fixedExpiryDate:'2017-09-19T12:09:27.748Z'})
+        .find({name:"Exclusive ExamBazaar Discount Rs 500 off"})
         .exec(function (err, coupons) {
         if (!err){
             console.log("Number of coupons: " + coupons.length);
             coupons.forEach(function(thisCoupon, cindex){
-                thisCoupon.fixedExpiryDate = '2017-08-31T12:09:27.748Z';
-                
+                //thisCoupon.fixedExpiryDate = '2017-08-31T12:09:27.748Z';
+                thisCoupon.name = 'Exclusive ExamBazaar Discount Rs 250 + 250 off';
                 thisCoupon.save(function(err, thisCoupon) {
                     if (err) return console.error(err);
                     //res.json(thisCoupon._id);
@@ -86,7 +87,7 @@ router.get('/couponsCount', function(req, res) {
             res.json(coupons);
         } else {throw err;}
     });
-});*/
+});
 
 
 router.get('/issuedcouponsCount', function(req, res) {

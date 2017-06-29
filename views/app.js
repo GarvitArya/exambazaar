@@ -12,6 +12,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $facebookProvider.setAppId('1236747093103286');
         $facebookProvider.setPermissions("public_profile,email"); //, user_education_history, publish_actions
+        //$anchorScrollProvider.disableAutoScrolling();
     })
     .controller('streamController', streamController);
     function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope,  $location) {
@@ -6920,7 +6921,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                                 $state.go('partner-dashboard', {userId: sessionuser.userId});
                             }
                         }else{
-                            $state.reload();
+                            //$state.reload();
                         }
 
 
@@ -9657,10 +9658,26 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
     
     exambazaar.controller("allreviewsController", 
-        [ '$scope', '$http', '$rootScope','reviewService','allReviews', function($scope, $http, $rootScope, reviewService, allReviews){
+        [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'targetStudyProviderService', function($scope, $http, $rootScope, reviewService, allReviews, targetStudyProviderService){
             $scope.allReviews = allReviews.data;
             
             $rootScope.pageTitle = 'All Reviews';
+            
+            $scope.openReview = function(review){
+                var cityCoachingForm = {
+                    city: review.institute.city,
+                    coachingName: review.institute.name,
+                };
+                targetStudyProviderService.showGroupHelper(cityCoachingForm).success(function (data, status, headers) {
+                    var examStream = data;
+                    console.log(examStream);
+
+                    $state.go('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: $rootScope.newReviewCity, groupName: $rootScope.newReviewCoaching.name,'#': 'Reviews'});
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });    
+            };
             
             
     }]); 
@@ -10206,16 +10223,36 @@ function getLatLng(thisData) {
                 });
                 
             };
-            $scope.selectedUser = null;
+            $scope.selectedUser = [];
             $scope.setUser = function(subscriber){
-                if(!$scope.selectedUser){
+                if(!$scope.selectedUser || $scope.selectedUser.length == 0){
                     $scope.selectedUser = [];
                 }
-                var selectedUserIds = $scope.selectedUser.map(function(a) {return a._id;});
+                
+                var selectedUserIds = [];
+                if($scope.selectedUser && $scope.selectedUser.length > 0){
+                    selectedUserIds = $scope.selectedUser.map(function(a) {return a._id;});
+                }
+                
                 var sIndex = selectedUserIds.indexOf(subscriber._id);
                 if(sIndex == -1){
-                    $scope.selectedUser.push(subscriber);
+                    //console.log($scope.selectedUser);
+                    var subscriberUserIds = $scope.subscribersList.map(function(a) {return a._id;});
+                    var selectedIndex = subscriberUserIds.indexOf(subscriber._id);
+                    //console.log(selectedIndex);
+                    var totalInvite = 20;
+                    var totalSubscribers = $scope.subscribersList.length;
+                    totalInvite = Math.min(selectedIndex + totalInvite, totalSubscribers);
+                    //console.log(totalInvite);
+                    var i = 0;
+
+                    for(i=selectedIndex; i<totalInvite; i++){
+                       $scope.selectedUser.push($scope.subscribersList[i]); 
+                    }
+                    //console.log($scope.selectedUser);
+                    
                 }else{
+                    $scope.selectedUser.splice(sIndex,1);
                     console.log(subscriber._id + " already exists!");
                 }
             };

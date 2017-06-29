@@ -167,20 +167,17 @@ router.post('/groupResults', function(req, res) {
     var allGroupInstitutes = targetStudyProvider.find({ 'groupName': groupName },{_id:1},function (err, allGroupInstitutes) {
         if (!err){
             allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
-            console.log(allGroupInstitutes);
-            console.log(allGroupInstitutes.length);
             var basicResults = [];
     
-            var results = result
-                .find({institute: { $in : allGroupInstitutes }, active: true})
-                .deepPopulate('user')
-                .exec(function(err, results) {
+            var groupResults = result
+                .find({provider: { $in : allGroupInstitutes }, active: true})
+                .exec(function(err, groupResults) {
                 if (!err){
 
                     var counter = 0;
-                    var nLength = results.length;
-                    results.forEach(function(thisResult, index){
-                        thisResult.user.logins = [];
+                    var nLength = groupResults.length;
+                    console.log("No of results are: " + nLength);
+                    groupResults.forEach(function(thisResult, index){
                         counter = counter + 1;
                         basicResults.push(thisResult);
                         if(counter == nLength){

@@ -252,11 +252,11 @@
                     <div flex layout="column" layout-align="start center" class="editFont textBlack width100" ng-repeat="activeCoupon in activeCoupons" ng-if="activeCoupon.offer == activeOffer._id" id="upload2" ng-click="chooseCoupon(activeCoupon, activeOfferInstitute)">
                     <div layout="column" layout-align="center center" class="width100">
                         <div flex layout="column" layout-align="center center" class="width100">
-                            <div>
+                            <div class="text-center">
                                 {{activeCoupon.name }}
                             </div>
                             
-                            <div layout="row" layout-align="center center" class="width100 font8">
+                            <div layout="row" layout-align="center center" class="width100 font8 text-center">
                                 Valid for: {{activeCoupon.validfor}}
                             </div>
                         </div>
@@ -281,7 +281,7 @@
         
         <div layout="column" layout-align="center center" layout-wrap class="width100 marginB20" ng-if="currState == 'Refer'" id="partner">
             <div layout="column" layout-align="center center" class="width100 paddingB5 gainsboroBottomBorder" >   
-                <div layout="row" layout-align="start center" id="logoHolder" class="marginLR10">
+                <div layout="row" layout-align="start center" id="logoHolder" class="paddingT10 marginLR10">
                     <div>
                     <img ng-src="{{selectedOfferInstitute.image}}" id="logo"/>
                     </div>
@@ -289,7 +289,7 @@
                     {{selectedOfferInstitute.displayname}}
                     </div>
                 </div>
-                <div layout="row" layout-align="center center" class="width100 ">
+                <div layout="row" layout-align="center center" class="width100 paddingT10">
                     {{selectedCoupon.name}}
                 </div>
                 <div layout="row" layout-align="center center" class="width100 font8">
@@ -297,13 +297,19 @@
                 </div>
                 <div layout="row" layout-align="center center" class="secondFont textBlack width100 text-center paddingLR10">
                     <span>
-                    Spread the word about Exambazaar to atleast 5 of your friends <br/>& we will offer you an <span class="bold">extra discount of</span> 
+                    Spread the word about Exambazaar & {{selectedOfferInstitute.displayname}} to atleast 5 of your friends <br/>& we will offer you the <span class="bold">extra discount of</span> 
                     <span ng-if="selectedCoupon.discountType == 'Percentage Discount'" class="bold">
                       {{selectedCoupon.percentageSocialShareBenefit}}%
                     </span>
                     <span ng-if="selectedCoupon.discountType == 'Flat Discount'" class="bold">
                       {{selectedCoupon.flatSocialShareBenefit}} Rs
-                    </span>!
+                    </span>! Otherwise you get only 
+                    <span ng-if="selectedCoupon.discountType == 'Percentage Discount'" class="bold">
+                    {{selectedCoupon.percentageDiscount - selectedCoupon.percentageSocialShareBenefit}}%
+                    </span>
+                    <span ng-if="selectedCoupon.discountType == 'Flat Discount'" class="bold">
+                    {{selectedCoupon.flatDiscount - selectedCoupon.flatSocialShareBenefit}} Rs
+                    </span> off!
                     </span>
                 </div>
             </div>
@@ -386,15 +392,15 @@
         
         <div layout="column" layout-align="center center" layout-wrap class="width100 marginB20" ng-if="currState == 'Coupon'" id="partner">
             <div layout="column" layout-align="center center" class="width100 paddingB5 gainsboroBottomBorder" >   
-                <div layout="row" layout-align="start center" id="logoHolder" class="marginLR10">
+                <div layout="row" layout-align="start center" id="logoHolder" class="marginLR10 paddingT10">
                     <div>
                     <img ng-src="{{deliveredCoupon.provider.logo}}" id="logo"/>
                     </div>
                     <div class="marginL20 secondFont textBlack bold">
-                    {{deliveredCoupon.provider.displayname}}
+                    {{deliveredCoupon.provider.name}}
                     </div>
                 </div>
-                <div layout="row" layout-align="center center" class="width100 ">
+                <div layout="row" layout-align="center center" class="width100 paddingT10">
                     {{deliveredCoupon.name}}
                 </div>
                 <div layout="row" layout-align="center center" class="width100 font8">
@@ -412,13 +418,12 @@
                     <div layout="column" layout-align=" center center" class="padding20 ">
                         <div layout="column" layout-align=" center center"  class="coupon padding20 width100">
                         <div layout="column" layout-align=" center center" class="secondFont font20 textBlack bold marginB5">
-                            <div>Exclusive Promo Code</div>
+                            <div class="text-center">Exclusive Promo Code</div>
                             <div class="editFont font10">for {{user.basic.name}}</div>
                         </div>
                         <div class="secondFont font20 text-primary bold marginB5">
                         {{deliveredCoupon.delivered.usercode}}
                         </div>
-                        
                         <div class="editFont font8">
                             <a clipboard supported="supported" text="deliveredCoupon.delivered.usercode" on-copied="showCopiedDialog(deliveredCoupon.delivered.usercode)" on-error="fail(err)" id="copyLink" class="danger">Copy Me</a>
                         
@@ -429,7 +434,39 @@
                         </div>
                     </div>
                     <div layout="column" layout-align=" center center" class="paddingTB10 paddingLR20 ">
+                        
                         <div layout="column" layout-align=" center center" class="width100 gainsboroBorder padding20">
+                        <div class="secondFont textBlack bold marginB10 gainsboroBottomBorder width100">
+                            Your coupon
+                        </div>
+                        <div layout="row" layout-align=" start center" class="editFont width100">
+                            <span>
+                            With {{deliveredCoupon.delivered.usercode}}, you can avail&nbsp;
+                            </span>
+                            <span ng-if="deliveredCoupon.discountType == 'Percentage Discount'" class="bold">
+                                <span ng-if="deliveredCoupon.delivered.social">
+                                    {{deliveredCoupon.percentageDiscount}}% off
+                                </span>
+                                <span ng-if="!deliveredCoupon.delivered.social">
+                                    {{deliveredCoupon.percentageDiscount - deliveredCoupon.percentageSocialShareBenefit}}% off
+                                </span>
+                                
+                            </span>
+                            <span ng-if="deliveredCoupon.discountType == 'Flat Discount'" class="bold">
+                                <span ng-if="deliveredCoupon.delivered.social">
+                                    {{deliveredCoupon.flatDiscount}}Rs off
+                                </span>
+                                <span ng-if="!deliveredCoupon.delivered.social">
+                                    {{deliveredCoupon.flatDiscount - deliveredCoupon.flatSocialShareBenefit}}Rs off
+                                </span>
+                            </span>
+                            &nbsp;<span>
+                                on {{deliveredCoupon.validfor}} at {{deliveredCoupon.provider.name}}
+                            </span>
+                            
+                            
+                        </div>
+                            
                         <div class="secondFont textBlack bold marginB10 gainsboroBottomBorder width100">
                             How to avail this coupon?
                         </div>

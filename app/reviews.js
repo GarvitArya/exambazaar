@@ -55,7 +55,7 @@ router.get('/', function(req, res) {
                     if (!err){
                         thisReview.user = thisUser;
                         
-                        var thisProvider = targetStudyProvider.findOne({ '_id': instituteId },{name:1, logo:1},function (err, thisProvider) {
+                        var thisProvider = targetStudyProvider.findOne({ '_id': instituteId },{name:1, logo:1, city:1},function (err, thisProvider) {
                             if (!err){
                                 thisReview.institute = thisProvider;
                                 allReviews.push(thisReview);
