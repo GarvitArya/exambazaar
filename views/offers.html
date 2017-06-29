@@ -526,7 +526,7 @@
                     Status
                 </div>
                 <div flex="20">
-                    Student
+                    Student & Offer
                 </div>
             </div>    
             <div layout="column" layout-align="start start" ng-repeat="coupon in existingOffer.coupons" class="font10 width100" ng-if="coupon.name == couponName">
@@ -554,7 +554,28 @@
                     </div>
                     <div flex="20">
                         {{coupon.user.basic.name}}
-                        {{coupon.delivered.usercode}}
+                        ({{coupon.delivered.usercode}})
+                        <span ng-if="coupon.user">
+                        <span ng-if="coupon.discountType == 'Percentage Discount'">
+                            <span ng-if="coupon.delivered.social">
+                                {{coupon.percentageDiscount}}% off
+                            </span>
+                            <span ng-if="!coupon.delivered.social">
+                                {{coupon.percentageDiscount - coupon.percentageSocialShareBenefit}}% off
+                            </span>
+
+                        </span>
+                        <span ng-if="coupon.discountType == 'Flat Discount'">
+                            <span ng-if="coupon.delivered.social">
+                                {{coupon.flatDiscount}}&#8377; off
+                            </span>
+                            <span ng-if="!coupon.delivered.social">
+                                {{coupon.flatDiscount - coupon.flatSocialShareBenefit}}&#8377; off
+                            </span>
+                        </span>
+                        </span>
+                        
+                        
                     </div>
                 </div>
                 
