@@ -55,15 +55,7 @@
         .offerPopupFont{
             font-family: 'Unica One', sans-serif;
         }
-        .bottomOfferBar{
-            position:fixed; 
-            bottom:0%;
-            width:100%;
-            padding-left:20px;
-            padding-right:20px;
-            background:rgba(0,0,0,0.8);
-            color: black;
-        }
+        
         .navbar.transparent {
             border-width: 0px;
             -webkit-box-shadow: 0px 0px;
@@ -166,6 +158,9 @@
         .textWhiteSmoke{
             color: whitesmoke;
         }
+        .textYellow{
+            color: yellow;
+        }
         .textGainsboro{
             color: gainsboro;
         }
@@ -240,6 +235,9 @@
         .font20{
             font-size:20px;
         }
+        .font22{
+            font-size:22px;
+        }
         .font24{
             font-size:24px;
         }
@@ -299,6 +297,10 @@
         }
         .showBorder{
             border: black solid 3px;
+        }
+        .roundedBorder{
+            border: 0px;
+            border-radius: 5px;
         }
         #greyBorder{
             border: 1px solid #ccc;
@@ -381,6 +383,9 @@
         }
         #bottomBarOfferImage{
             max-height: 30px;
+        }
+        #bottomBarOfferImageSmall{
+            max-height: 20px;
         }
         #offerRow{
             color: white;
@@ -594,6 +599,28 @@
             color: white;
             box-shadow: 0 0 5px #20C39A;
         }
+        .bottomOfferBar{
+            position:fixed; 
+            bottom:0%;
+            width:100%;
+            padding-left:20px;
+            padding-right:20px;
+            background: #721212;
+            color: black;
+        }
+        
+        .md-button.md-review{
+            border: 2px solid black;
+            border-radius: 5px;
+            background: black;
+            color: white;
+        }
+        .md-button.md-review:hover, .md-button.md-review:focus, .md-button.md-review:active{
+            border: 2px solid #08415C;
+            background: #08415C;
+            color: white;
+            box-shadow: 0 0 5px #08415C;
+        }
         .md-button.md-signup{
             border: 2px solid black;
             background: white;
@@ -751,6 +778,10 @@
         .marginLR10{
             margin-left: 10px;
             margin-right: 10px;
+        }
+        .marginLR20{
+            margin-left: 20px;
+            margin-right: 20px;
         }
         .marginL20{
             margin-left: 20px;
@@ -1750,13 +1781,13 @@
                     </div>
                 </div>
               </div>
-              <!--<div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="" >
+              <div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="" >
                 <div hide-gt-xs class="offerPopupFont text-center textWhite font20 textShadow translucentBackground width100">
                     <div layout-wrap class="width100">
                         You’ll love our discounts on the most popular exam prep courses!
                     </div>
                 </div>
-              </div>-->
+              </div>
               
                 
               
@@ -1845,33 +1876,47 @@
 <div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
     <div layout="row"  layout-align="start center">
         <div hide-xs layout="row" layout-align="center center" flex>
-            <div layout="column" layout-align="center center" class="offerFont">
-                <div class="text-center">You’ll love our discounts on the most popular exam prep packages!</div>
-                <div class="text-center textGainsboro">Upto 80% discount on bestselling courses</div>
+            <div layout="column" layout-align="center center" >
+                <div layout="row" layout-align="center center" class="text-center thirdFont font14 spacedLetter1 textWhite">Review your coaching institute <span class="font24 marginLR20">|</span> Avail upto&nbsp;<span class="textWhite bold">50% discount</span>&nbsp;on the best exam resources
+                </div>
+
             </div>
-            <div layout="row" layout-align="start center" class="marginL40">
+            <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
                 <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10" ng-click="showUserReviewSearchDialog()">
                     <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                    <div class="textWhite font10 marginT5">{{offer.displayname}}</div>
+                    <div class="textBlack thirdFont narrowLine font8 marginT5">{{offer.displayname}} </div>
                 </div>
                 
             </div>
+            <div layout="column" layout-align="center center" >
+                <div layout="row" layout-align="center center" class="text-center thirdFont font14 spacedLetter1 textWhite"><span class="font24 marginLR20">|</span><span class="bold">SUCCEED</span>&nbsp;
+            
+                </div>
+            </div>
+
             <!--
             bottomBarOfferImage
             -->
         </div>
-        <div hide-gt-xs layout="row" layout-align="start center" flex>
-            <div layout="column" layout-align="center center" class="textWhite">
-                <div class="text-center">You’ll love our discounts on the most popular exam prep packages!</div>
-                <div class="text-center textGainsboro">Upto 80% off</div>
+        <div hide-gt-xs layout="column" layout-align="start center" flex>
+            <div layout="row" layout-align="center center" class="textWhite">
+                <div class="text-center">
+                Review your coaching institute | Avail upto&nbsp;<span class="textWhite bold">50% discount</span>
+                </div>
             </div>
+            <div flex layout="row" layout-align="end center" class="width100">
+            <div layout="row" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10" ng-click="showUserReviewSearchDialog()">
+                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+            </div>
+            <div flex layout="row" layout-align="end center" class="">
+                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
+                Review
+            </md-button>    
+            </div>
+            
         </div>
-        <div layout="row" layout-align="end center">
-            <md-button class="md-danger md-small font10 width8" ng-click="showUserReviewSearchDialog()">
-                <!--goToReview-->
-            Review Now
-            </md-button>
         </div>
+        
         
     </div>
 </div>        
