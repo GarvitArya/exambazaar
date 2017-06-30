@@ -6921,7 +6921,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                                 $state.go('partner-dashboard', {userId: sessionuser.userId});
                             }
                         }else{
-                            //$state.reload();
+                            $state.reload();
                         }
 
 
