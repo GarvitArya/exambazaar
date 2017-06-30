@@ -88,7 +88,7 @@
             <div flex="20" class="paddingR10 font10">{{offer.provider.name}}</div>
             <div flex="10" class="paddingR10 font10">
                 <span ng-if="offer.active">
-                Active
+                    <md-button class="md-danger md-small " ng-click="deactivateOffer(offer)" >Deactivate</md-button>
                 </span>
                 <span ng-if="!offer.active">
                     <md-button class="md-green md-small " ng-click="activateOffer(offer)" >Activate</md-button>

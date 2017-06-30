@@ -271,6 +271,24 @@ router.get('/activate/:offerId', function(req, res) {
     });
 });
 
+router.get('/deactivate/:offerId', function(req, res) {
+    var offerId = req.params.offerId;
+    var thisOffer = offer
+        .findOne({_id: offerId}, {active: 1})
+        .exec(function (err, thisOffer) {
+        if (!err){
+            
+            thisOffer.active = false;
+            
+            thisOffer.save(function(err, thisOffer) {
+                if (err) return console.error(err);
+                console.log(thisOffer);
+                res.json(thisOffer._id);
+            });
+        } else {throw err;}
+    });
+});
+
 router.post('/nameExists', function(req, res) {
     var nameForm = req.body;
     var name = nameForm.name;

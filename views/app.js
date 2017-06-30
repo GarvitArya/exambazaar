@@ -745,6 +745,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.activate = function(offerId) {
             return $http.get('/api/offers/activate/'+offerId, {offerId: offerId});
         };
+        this.deactivate = function(offerId) {
+            return $http.get('/api/offers/deactivate/'+offerId, {offerId: offerId});
+        };
         this.nameExists = function(name) {
             return $http.post('/api/offers/nameExists/', name);
         };
@@ -9693,7 +9696,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $scope.activateOffer = function(offer){
                  offerService.activate(offer._id).success(function (data, status, headers) {
-
                     alert('Done');
                     $state.reload();
                 })
@@ -9702,7 +9704,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });
                 
             };
-            
+            $scope.deactivateOffer = function(offer){
+                 offerService.deactivate(offer._id).success(function (data, status, headers) {
+                    alert('Done');
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });
+                
+            };
             
     }]);     
         
