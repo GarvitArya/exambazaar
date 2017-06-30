@@ -386,9 +386,11 @@
         }
         #bottomBarOfferImage{
             max-height: 30px;
+            max-width: 70px;
         }
         #bottomBarOfferImageSmall{
             max-height: 20px;
+            max-width: 70px;
         }
         #offerRow{
             color: white;
@@ -1914,15 +1916,16 @@
             </div>
             <div flex layout="row" layout-align="end center" class="width100">
             <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
-                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5" ng-click="showUserReviewSearchDialog()">
-                        <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                        <!--<div class="textBlack thirdFont narrowLine font8 marginT5">{{offer.displayname}} </div>-->
-                    </div>
-
+                <!--
+                <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5" ng-click="showUserReviewSearchDialog()">
+                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                    <div class="textBlack thirdFont narrowLine font8 marginT5">{{offer.displayname}} </div>
                 </div>
-            <div flex layout="row" layout-align="end center" class="">
+                -->
+            </div>
+            <div flex layout="row" layout-align="center center" class="">
                 <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
-                Go
+                Review
             </md-button>    
             </div>
             
