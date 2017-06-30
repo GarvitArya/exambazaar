@@ -55,6 +55,7 @@ router.get('/offersCount', function(req, res) {
 router.get('/', function(req, res) {
     var offers = offer
         .find({})
+        .deepPopulate('provider')
         .exec(function (err, offers) {
         if (!err){
             res.json(offers);
@@ -248,6 +249,24 @@ router.get('/providerOffers/:providerId', function(req, res) {
         .exec(function (err, offers) {
         if (!err){
             res.json(offers);
+        } else {throw err;}
+    });
+});
+
+router.get('/activate/:offerId', function(req, res) {
+    var offerId = req.params.offerId;
+    var thisOffer = offer
+        .findOne({_id: offerId}, {active: 1})
+        .exec(function (err, thisOffer) {
+        if (!err){
+            
+            thisOffer.active = true;
+            
+            thisOffer.save(function(err, thisOffer) {
+                if (err) return console.error(err);
+                console.log(thisOffer);
+                res.json(thisOffer._id);
+            });
         } else {throw err;}
     });
 });

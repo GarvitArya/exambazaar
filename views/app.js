@@ -742,6 +742,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getOffer = function(offerId) {
             return $http.get('/api/offers/edit/'+offerId, {offerId: offerId});
         };
+        this.activate = function(offerId) {
+            return $http.get('/api/offers/activate/'+offerId, {offerId: offerId});
+        };
         this.nameExists = function(name) {
             return $http.post('/api/offers/nameExists/', name);
         };
@@ -9682,6 +9685,27 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
     }]); 
     
+    exambazaar.controller("allOffersController", 
+        [ '$scope', '$http', '$state', '$rootScope','offerService','allOffers', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, offerService, allOffers, targetStudyProviderService){
+            $scope.allOffers = allOffers.data;
+            
+            $rootScope.pageTitle = 'All Offers';
+            
+            $scope.activateOffer = function(offer){
+                 offerService.activate(offer._id).success(function (data, status, headers) {
+
+                    alert('Done');
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });
+                
+            };
+            
+            
+    }]);     
+        
     exambazaar.controller("rankerswallController", 
         [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam','$location', 'Socialshare','$cookies', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam,$location, Socialshare, $cookies){
             
@@ -10319,12 +10343,17 @@ function getLatLng(thisData) {
         [ '$scope','$http','$state','$rootScope', function($scope, $http, $state, $rootScope){
             $rootScope.pageTitle = 'Why review at Exambazaar?';
             
+            
             $scope.questions = [
                 {
-                    name: '1',
-                    text: '1',
+                    text: "Are you studying for an exam right now?",
+                    options: [
+                        "Nah, my study days are past me",
+                        "Yes, I want to crack it!",
+                    ],
                 }
             ];
+            $scope.currentQuestion = $scope.questions[0];
             
     }]);    
     exambazaar.controller("addMediaTagController", 
@@ -11271,6 +11300,8 @@ function getLatLng(thisData) {
         };
     }]);
     
+        
+        
     exambazaar.controller("addOfferController", 
         [ '$scope',  'offersList','offerService','$http','$state', function($scope, offersList, offerService,$http,$state){
         $scope.offersList = offersList.data;
@@ -12267,6 +12298,30 @@ function getLatLng(thisData) {
                 
             }
         })
+        .state('allOffers', {
+            url: '/allOffers', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'allOffers.html',
+                    controller: 'allOffersController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                allOffers: ['offerService', '$stateParams',
+                    function(offerService,$stateParams){
+                    return offerService.getOffers();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
         .state('allreviews', {
             url: '/allreviews', //masterId?
             views: {
@@ -12291,6 +12346,7 @@ function getLatLng(thisData) {
                 
             }
         })
+        
         .state('rankerswall', {
             url: '/rankerswall/:examName/:year', //masterId?
             views: {
