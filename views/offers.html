@@ -553,6 +553,7 @@
                         </span>
                     </div>
                     <div flex="20">
+                        <div ng-if="coupon.user">
                         {{coupon.user.basic.name}}
                         ({{coupon.delivered.usercode}})
                         <span ng-if="coupon.user">
@@ -576,6 +577,7 @@
                         </span>
                         
                         
+                    </div>
                     </div>
                 </div>
                 

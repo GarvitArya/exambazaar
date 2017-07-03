@@ -381,7 +381,7 @@
                 <div layout="column" layout-align="center center" class="marginR10" ng-click="showSkipDialog()" ng-if="selectedCoupon.code && selectedCoupon.code !=''">
                 No thanks
                 </div>
-                <md-button class="width25 md-small md-green2 tolowercase" ng-click="issueCoupon()">
+                <md-button class="width25 md-small md-green2 tolowercase" ng-disabled="!userSocial" ng-click="issueCoupon(true)">
                     Submit
                 </md-button>
                 

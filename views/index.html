@@ -390,7 +390,7 @@
         }
         #bottomBarOfferImageSmall{
             max-height: 20px;
-            max-width: 70px;
+            max-width: 60px;
         }
         #offerRow{
             color: white;
@@ -411,6 +411,18 @@
         }
         #reviewHeaderRow2{
             min-height: 20vh;
+            background-image: url("images/partners/review-popup.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #whyReviewHeaderRow{
+            min-height: 20vh;
+            background-image: url("images/partners/review-popup.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #whyReviewHeaderRow2{
+            min-height: 10vh;
             background-image: url("images/partners/review-popup.jpg");
             background-size:     cover;
             background-position: center center;
@@ -1877,7 +1889,52 @@
     </div>    
 </div>        
         
-   
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="whyReviewDialog">
+      <md-dialog class="offer-dialog">
+          <div layout="column">
+              <div hide-xs layout="row" layout-align="center center" id="whyReviewHeaderRow" class="" >
+                <div layout="column" layout-align="center center" class=" text-center textWhite   translucentBackground width100">
+                    <div layout-wrap class="width75 offerPopupFont font36 textShadow">
+                        You’ll love our discounts on the best-selling exam prep material!
+                    </div>
+                    <div layout-wrap class="width75 editFont textWhite font14">
+                        Limited coupons only
+                    </div>
+                </div>
+              </div>
+              <div hide-gt-xs layout="row" layout-align="center center" id="whyReviewHeaderRow2" class="" >
+                <div hide-gt-xs class="offerPopupFont text-center textWhite font20 textShadow translucentBackground width100">
+                    <div layout-wrap class="width100">
+                        You’ll love our discounts on the most popular exam prep courses!
+                    </div>
+                </div>
+              </div>
+              
+                
+              
+              <div  layout="column" layout-align="center center" class="secondFont paddingLR20 width100">
+              <div layout="row" layout-xs="column" layout-align="center center" class="secondFont padding10 width100 text-center">
+                  Review your coaching institute and unlock 50% OFF on
+              </div>
+              <div layout="row" layout-align="start center" class="text-center">
+                <div ng-repeat="offer in offers" class="paddingLR10">
+                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                    <md-tooltip>{{offer.displayname}}</md-tooltip>
+                </div>
+                
+                </div>
+              </div>
+            
+
+
+        </div>
+      </md-dialog>
+    </div>    
+</div>        
+        
+        
 <div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
     <div layout="row"  layout-align="start center">
         <div hide-xs layout="row" layout-align="center center" flex>
@@ -1886,7 +1943,7 @@
                 </div>
                 
                 <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
-                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10" ng-click="showUserReviewSearchDialog()">
+                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5" ng-click="showUserReviewSearchDialog()">
                         <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
                         <!--<div class="textBlack thirdFont narrowLine font8 marginT5">{{offer.displayname}} </div>-->
                     </div>

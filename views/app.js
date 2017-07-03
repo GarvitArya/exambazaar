@@ -2579,7 +2579,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 flatSocialShareBenefit: 250,
                 steps: steps,
                 couponCodes: [],
-                couponNameError: ''
+                couponNameError: '',
             };
             $scope.offer.couponBuilder.push(newCouponTemplate);
         };
@@ -2759,7 +2759,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 console.log(codesArray.length + " " +  socialCodesArray.length);
                 $scope.uploadErrorMessages.push('Please add equal valid normal and social coupon codes before submitting');
             }
-            
+            $scope.uploadedCoupons = [];
             console.log();  
         };
         
@@ -2803,6 +2803,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }else if(offer.couponBuilder.length > 0){
                 
                 offer.couponBuilder.forEach(function(thisCouponBuilder, index){
+                    console.log(thisCouponBuilder.steps);
+                    thisCouponBuilder.steps.forEach(function(thisStep, sindex){
+                        console.log(thisStep.trim());
+                        if(thisStep.trim() == ''){
+                            thisCouponBuilder.steps.splice(sindex, 1);
+                        }
+                    });
                     if(thisCouponBuilder.couponCodes.length == 0){
                         if(!$scope.saveOfferError){
                             $scope.saveOfferError = [];
@@ -8459,7 +8466,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }).finally(function() {
                 $scope.userReviewMode = true;
             });
-        };    
+        };
+            
+        $scope.showWhyReviewSearchDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#whyReviewDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            }).finally(function() {
+                $scope.userReviewMode = true;
+            });
+        };
     }]);    
         
     exambazaar.controller("coachingGroupAutocompleteController", 

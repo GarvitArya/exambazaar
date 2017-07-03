@@ -1,5 +1,16 @@
 <style>
-    
+    .optionClass{
+        background: whiteSmoke;
+        color: black;
+        border: 2px solid black;
+        border-radius: 10px;
+    }
+    .optionClass:hover{
+        background: whiteSmoke;
+        color: black;
+        border: 2px solid black;
+        border-radius: 10px;
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -15,7 +26,7 @@
     </div>
     <div layout="row" layout-align="center center" class="width100">
         <div flex ng-repeat="question in currentQuestion.options">
-            <div layout="row" layout-align="center center" class="min30vh margin20 padding20 dangerBackground thirdFont textWhite ">
+            <div layout="row" layout-align="center center" class="min30vh margin20 padding20 optionClass thirdFont width50">
                 {{question}}
             </div>
         </div>
