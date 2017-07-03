@@ -2213,7 +2213,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }, true);
         $scope.reviews = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
         $scope.reviewsClasses = ["review1","review2","review3","review4","review5","review6","review7","review8","review9"];
-        $scope.minTextLength = 140;
+        $scope.minTextLength = 70;
         
         $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + $scope.minTextLength + " characters long. The best review will be featured on our main page :)";
         
@@ -8456,6 +8456,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             return showMe;
         };
+        $rootScope.$on("ShowReviewDialog", function(){
+           $scope.showUserReviewSearchDialog();
+        });
             
         $scope.showUserReviewSearchDialog = function(ev) {
             $mdDialog.show({
@@ -8580,7 +8583,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     query: query,
                     city: $rootScope.newReviewCity
                 };
-                console.log($rootScope.newReviewCity);
+                //console.log($rootScope.newReviewCity);
 
                 return targetStudyProviderService.searchCityReviewProviders(cityQueryForm).then(function(response){
                     //console.info(response.data);
@@ -8706,7 +8709,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     
     exambazaar.controller("availOfferController", 
-        [ '$scope', '$http','$state', '$rootScope','thisuser','targetStudyProviderService', 'UserService', 'couponService', '$location', 'thisReview', 'activeOfferInstitutes', 'activeCoupons', 'Socialshare', '$mdDialog', '$timeout', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, UserService, couponService, $location, thisReview, activeOfferInstitutes, activeCoupons, Socialshare, $mdDialog, $timeout){
+        [ '$scope', '$http','$state', '$rootScope','thisuser','targetStudyProviderService', 'UserService', 'couponService', '$location', 'thisReview', 'activeOfferInstitutes', 'activeCoupons', 'Socialshare', '$mdDialog', '$timeout', '$window', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, UserService, couponService, $location, thisReview, activeOfferInstitutes, activeCoupons, Socialshare, $mdDialog, $timeout, $window){
+            $window.scrollTo(0, 0);
             $scope.user = thisuser.data;
             $scope.activeOfferInstitutes = activeOfferInstitutes.data;
             $scope.activeCoupons = activeCoupons.data;
@@ -10371,19 +10375,114 @@ function getLatLng(thisData) {
     exambazaar.controller("whyReviewController", 
         [ '$scope','$http','$state','$rootScope', function($scope, $http, $state, $rootScope){
             $rootScope.pageTitle = 'Why review at Exambazaar?';
-            
+            $scope.currState = "1";
             
             $scope.questions = [
                 {
-                    text: "Are you studying for an exam right now?",
+                    state: "1",
+                    text: "Are you or will you be studying for exams?",
+                    subtext:"",
                     options: [
-                        "Nah, my study days are past me",
-                        "Yes, I want to crack it!",
+                        {
+                            title: "Yes",
+                            subtitle: "I am determined to crack it",
+                            stateModifier: "y",
+                        },
+                        {
+                            title: "No",
+                            subtitle: "Been there, done that. Now I play the advisory role",
+                            stateModifier: "n",
+                        }
                     ],
-                }
+                },
+                {
+                    state: "1y",
+                    text: "Determination is great. So is preparation!",
+                    subtext:"Let us help you improve. We are giving away free coupons for upto 50% discount on the most effective preparation resources",
+                    options: [
+                        {
+                            title: "Great",
+                            subtitle: "Tell me what to do",
+                            stateModifier: "y",
+                        },
+                        {
+                            title: "No",
+                            subtitle: "I'd rather leave it to chance",
+                            stateModifier: "n",
+                        }
+                    ],
+                },
+                {
+                    state: "1n",
+                    text: "Advisor huh? So are we!",
+                    subtext:"We love leveraging our experience to help our younger ones out! Spare a moment to join our effort?",
+                    options: [
+                        {
+                            title: "Yes ofcourse",
+                            subtitle: "Don't want my vast wisdom to go to waste",
+                            stateModifier: "y",
+                        },
+                        {
+                            title: "No",
+                            subtitle: "I don't have any people to help",
+                            stateModifier: "n",
+                        }
+                    ],
+                },
+                {
+                    state: "1yn",
+                    text: "Woah! You are the confident one!",
+                    subtext:"So many people would love to have that swag. Mind leaving a review to help others along in their studies too?",
+                    options: [
+                    ],
+                },
+                {
+                    state: "1nn",
+                    text: "No people? Well, the Exambazaar family is all yours!",
+                    subtext:"Now that you are a part of our family, please write a short, super-quick review for us?",
+                    options: [
+                    ],
+                },
             ];
-            $scope.currentQuestion = $scope.questions[0];
+            var questionStates = $scope.questions.map(function(a) {return a.state;});
+            $scope.reviewStates = ["1yn", "1nn"];
+            $scope.showReviewButton = false;
             
+            $scope.$watch('currState', function (newValue, oldValue, scope) {
+            if(newValue != null && newValue != ''){
+                var qIndex = questionStates.indexOf(newValue);
+                $scope.currentQuestion = $scope.questions[qIndex];
+                
+                if($scope.reviewStates.indexOf(newValue)!= -1){
+                    $scope.showReviewButton = true;
+                }else{
+                    $scope.showReviewButton = false;
+                }
+                
+                
+            }
+
+            }, true);
+            
+            var reviewLaunchStates = ["1yy", "1ny"];
+            
+            $scope.updateState = function(option){
+                var newState = $scope.currState + option.stateModifier
+                
+                var nIndex = reviewLaunchStates.indexOf(newState);
+                
+                if(nIndex == -1){
+                    $scope.currState += option.stateModifier;
+                    console.log($scope.currState);
+                }else{
+                    console.log("Launch Review Bar");
+                    $rootScope.$emit("ShowReviewDialog", {});
+                }
+            };
+            $scope.previousState = function(){
+                $scope.currState = $scope.currState.slice(0, $scope.currState.length-1);
+                console.log($scope.currState);
+            };
     }]);    
     exambazaar.controller("addMediaTagController", 
         [ '$scope',  'mediaTagList','mediaTypeList','MediaTagService','$http','$state', function($scope, mediaTagList,mediaTypeList, MediaTagService,$http,$state){
@@ -12706,7 +12805,7 @@ function getLatLng(thisData) {
             url: '/why',
             views: {
                 'header':{
-                    templateUrl: 'header.html',
+                    templateUrl: 'header2.html',
                     controller: 'headerController'
                 },
                 'body':{

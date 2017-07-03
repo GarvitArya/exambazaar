@@ -123,6 +123,9 @@
         .spacedLetter050{
             letter-spacing: 0.50px;
         }
+        .spacedLetter025{
+            letter-spacing: 0.25px;
+        }
         .mainFont{
             font-family: "Avenir";
         }
@@ -241,6 +244,9 @@
         .font24{
             font-size:24px;
         }
+        .font32{
+            font-size:32px;
+        }
         .font36{
             font-size:36px;
         }
@@ -358,6 +364,14 @@
             background-size:     cover;
             background-position: center center;
         }
+        #whyReviewPage{
+            height: 100vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/review/background.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
         .socialIcon{
             width: 32px;
             height: 32px;
@@ -410,6 +424,12 @@
             background-position: center center;
         }
         #reviewHeaderRow2{
+            min-height: 8vh;
+            background-image: url("images/partners/review-popup.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #reviewHeaderRow3{
             min-height: 20vh;
             background-image: url("images/partners/review-popup.jpg");
             background-size:     cover;
@@ -860,6 +880,10 @@
             margin-top: 20px;
             margin-bottom: 20px;
         }
+        .marginTB200{
+            margin-top: 200px;
+            margin-bottom: 200px;
+        }
         .paddingTB5{
             padding-top: 5px;
             padding-bottom: 5px;
@@ -876,6 +900,10 @@
         .paddingTB40{
             padding-top: 40px;
             padding-bottom: 40px;
+        }
+        .paddingTB80{
+            padding-top: 80px;
+            padding-bottom: 80px;
         }
         .paddingLR2{
             padding-left: 2px;
@@ -911,6 +939,9 @@
         }
         .paddingT100{
             padding-top: 50px;
+        }
+        .paddingT40{
+            padding-top: 40px;
         }
         .paddingT20{
             padding-top: 20px;
@@ -1023,6 +1054,9 @@
         }
         .width50{
             width: 50%;
+        }
+        .width65{
+            width: 65%;
         }
         .width75{
             width: 75%;
@@ -1266,10 +1300,10 @@
         }
         md-dialog.offer-dialog {
             z-index: 20000;
-            max-width: 80%;
+            max-width: 100%;
             width: 80%;
-            max-height: 80%;
-            top: 5vh;
+            max-height: 90%;
+            height: 80%;
             border-radius: 0;
         }
         
@@ -1706,88 +1740,13 @@
   </md-dialog>
 </div>    
 </div>    
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="userReviewDialog">
-      <md-dialog class="offer-dialog">
-          <div layout="row" id="offerRow" ng-controller="offerController">
-              <div layout="column" layout-align="center center" class=" width100 secondFont ">
-                  <!-- href="#userReview" du-smooth-scroll du-scrollspy offset="200"-->
-                <div layout="column" layout-align="center center" class="translucentBackground width100 padding10">
-
-                <div layout="column" layout-align="center center" class="secondFont marginTB10" style="display:inline-block" >
-                    <div layout="row" layout-align="center center" class="marginB10 offerFont spacedLetter1">
-                        <span hide-xs class="text-center font20">
-                        <!--
-                        Review your coaching institute at Exambazaar to unlock amazing discounts and offers from
-                        -->
-                            You’d love our discounts on the most popular exam prep courses!
-                        </span>
-                        <span hide-gt-xs class="font12 text-center">
-                            You’d love our discounts on the most popular exam prep courses!
-                        </span>
-                    </div>
-
-
-                    <div layout="row" layout-align="center center" class="translucentWhiteBackground textBlack spacedLetter1 paddingT10">
-                        <span hide-xs class="font14 text-center">
-                            Unlock discounts from 20% - 50%
-                        </span>
-                        <span hide-gt-xs class="font10 text-center">
-                            Unlock discounts from 20% - 50%
-                        </span>
-
-
-                    </div>
-                    <div layout="row" layout-align="center center" class="translucentWhiteBackground">
-
-                        <div hide-xs layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10 paddingTB10">
-                            <div>
-                                <img ng-src="{{offer.image}}" id="offerImage"/>
-                            </div>
-                            <div class="font12 bold textBlack paddingT5">
-                                {{offer.displayname}}
-                            </div>
-                        </div>
-                        <div hide-gt-xs layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5 paddingTB10">
-                            <div layout="row" layout-align="center center" class="marginT5">
-                                <img ng-src="{{offer.image}}" id="smallofferImage"/>
-                            </div>
-                            <div layout="row" layout-align="center center" class="font8 textBlack text-center narrowLine paddingT5" >
-                                {{offer.displayname}}
-                            </div>
-                        </div>
-                    </div>
-                    <div layout="row" layout-align="center center" class=" marginB10 secondFont dangerBackground" ng-click="goToReview()">
-                        <span hide-xs class="text-center">
-                            Review your Coaching Institute
-                        </span>
-                        <span hide-gt-xs class="font14 text-center">
-                            Review your Coaching Institute
-                        </span>
-
-                    </div>
-                </div>
-
-                <!--<div hide-gt-xs layout="row" layout-align="center center" class="paddingB10 secondFont ">
-                <md-button class="md-small md-green2  font12 tolowercase width50"  ng-click="">Review Now</md-button>
-                </div>-->
-
-                </div>
-
-                </div>
-
-
-
-        </div>
-      </md-dialog>
-    </div>    
-</div>
 
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="userReviewSearchDialog">
       <md-dialog class="offer-dialog">
-          <div layout="column" ng-controller="reviewRedirectController">
+          <md-content flex layout="column" ng-controller="reviewRedirectController">
+          
               <div hide-xs layout="row" layout-align="center center" id="reviewHeaderRow" class="" >
                 <div layout="column" layout-align="center center" class=" text-center textWhite   translucentBackground width100">
                     <div layout-wrap class="width75 offerPopupFont font36 textShadow">
@@ -1798,28 +1757,21 @@
                     </div>
                 </div>
               </div>
-              <div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="" >
-                <div hide-gt-xs class="offerPopupFont text-center textWhite font20 textShadow translucentBackground width100">
-                    <div layout-wrap class="width100">
-                        You’ll love our discounts on the most popular exam prep courses!
-                    </div>
-                </div>
+              <div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="">
               </div>
               
-                
-              
-              <div  layout="column" layout-align="center center" class="secondFont paddingLR20 width100">
-              <div layout="row" layout-xs="column" layout-align="center center" class="secondFont padding10 width100 text-center">
-                  Review your coaching institute and unlock 50% OFF on
+              <div  class="secondFont font16 padding10 width100 text-center">
+                  Review your coaching <i class="fa fa-arrow-right" aria-hidden="true"></i> Receive exclusive Exambazaar coupon <i class="fa fa-arrow-right" aria-hidden="true"></i> Get upto 50% OFF on courses from
               </div>
-              <div layout="row" layout-align="start center" class="text-center">
-                <div ng-repeat="offer in offers" class="paddingLR10">
+              <div layout-wrap layout="row" layout-align="center center" class="text-center width100">
+                <div flex-xs="30" ng-repeat="offer in offers" class="padding5">
                     <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                    <md-tooltip>{{offer.displayname}}</md-tooltip>
                 </div>
                 
-                </div>
-              <div  layout="row" layout-xs="column" layout-align="center center" class="secondFont paddingLR20 paddingTB10 width100" id="reviewSearchRow">
+              </div>
+              
+              
+              <div flex layout-fill layout="row" layout-xs="column" layout-align="center center" layout-align-xs="space-around center" class="secondFont paddingTB10 paddingLR20 width100" id="reviewSearchRow">
                  
               <div layout="row" layout-align="center center" flex-gt-xs="30" flex-xs="100" ng-controller="citySearchController as ctrl" class="paddingLR10 min10vh width100 autocompletedemoCustomTemplate">
                     <md-autocomplete flex 
@@ -1832,8 +1784,8 @@
                     md-delay="300"
                     md-min-length="0"
                     md-menu-class="autocomplete"
-                    placeholder="Choose from 90+ cities"
-                    class="width100" ng-class="{ dangerBorder: newReviewError }">
+                    placeholder="City"
+                    class="width100 font16" ng-class="{ dangerBorder: newReviewError }">
                         <md-item-template >
                           <span class="item-title font12">
                               <span class="font14 bold">{{item}}</span>
@@ -1857,7 +1809,7 @@
                     focus-me="newReviewCity && newReviewCity!=''"
                     md-delay="300"
                     md-menu-class="autocomplete"
-                    placeholder="Search (type) for Coaching Institute"
+                    placeholder="Coaching Institute"
                     class="width100">
                         <md-item-template >
                           <div layout="row" layout-align="start center" class="item-title font12">
@@ -1865,7 +1817,7 @@
                                   {{item.name}}
                               </div>
                               
-                              <div>
+                              <div hide-xs>
                                 <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo2" class="marginT10"/>
                               </div>
                               
@@ -1874,17 +1826,17 @@
 
                     </md-autocomplete>
                 </div>
-                <div layout="row" layout-align="center center" flex-gt-xs="20" class="paddingLR10 min10vh width100">
+                
+              </div>
+              
+              <div layout="row" layout-align="center center" class="paddingLR10 min10vh width100">
                     <md-button class="md-small md-green2 width100 tolowercase" ng-click="redirectToReview()">
                         Review
                     </md-button>
-                </div>
               </div>
-              </div>
-            
-
-
-        </div>
+          
+          
+        </md-content>  
       </md-dialog>
     </div>    
 </div>        
@@ -1916,7 +1868,7 @@
               
               <div  layout="column" layout-align="center center" class="secondFont paddingLR20 width100">
               <div layout="row" layout-xs="column" layout-align="center center" class="secondFont padding10 width100 text-center">
-                  Review your coaching institute and unlock 50% OFF on
+                  Review your coaching institute and unlock 80% OFF on
               </div>
               <div layout="row" layout-align="start center" class="text-center">
                 <div ng-repeat="offer in offers" class="paddingLR10">
@@ -1935,58 +1887,43 @@
 </div>        
         
         
-<div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
-    <div layout="row"  layout-align="start center">
+<div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak ng-click="showUserReviewSearchDialog()">
+    <div layout="row"  layout-align="start center" >
         <div hide-xs layout="row" layout-align="center center" flex>
             <div flex layout="row" layout-align="center center" >
                 <div layout="row" layout-align="center center" class="text-center thirdFont font14 spacedLetter1 textWhite">Review your coaching institute <span class="font24 marginLR20">|</span> Avail upto&nbsp;<span class="textWhite bold">50% discount</span>&nbsp;on the best exam resources
                 </div>
                 
                 <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
-                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5" ng-click="showUserReviewSearchDialog()">
+                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5">
                         <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                        <!--<div class="textBlack thirdFont narrowLine font8 marginT5">{{offer.displayname}} </div>-->
                     </div>
 
                 </div>
-                <!--<div layout="column" layout-align="center center" >
-                    <div layout="row" layout-align="center center" class="text-center thirdFont font14 spacedLetter1 textWhite"><span class="font24 marginLR20">|</span><span class="bold">SUCCEED</span>&nbsp;
-
-                    </div>-->
                 </div>
             </div>
             
             <div hide-xs layout="row" layout-align="end center" class="">
-                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
+                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1">
                 Review
-            </md-button>    
+                </md-button>    
             </div>
             <!--
             bottomBarOfferImage
             -->
         </div>
-        <div hide-gt-xs layout="column" layout-align="start center" flex>
-            <div layout="row" layout-align="center center" class="textWhite">
+        <div hide-gt-xs layout="row" layout-align="start center" flex>
+            <div layout="column" layout-align="center center" class="textWhite">
                 <div class="text-center">
-                Review your coaching institute | Avail upto&nbsp;<span class="textWhite bold">50% discount</span>
+                Review your coaching | Avail upto&nbsp;<span class="textWhite bold">50% off</span>
                 </div>
             </div>
-            <div flex layout="row" layout-align="end center" class="width100">
-            <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
-                <!--
-                <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5" ng-click="showUserReviewSearchDialog()">
-                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                    <div class="textBlack thirdFont narrowLine font8 marginT5">{{offer.displayname}} </div>
-                </div>
-                -->
-            </div>
-            <div flex layout="row" layout-align="center center" class="">
-                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
-                Review
-            </md-button>    
-            </div>
+            <div flex layout="row" layout-align="center center" class="width100">
+                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1">
+                Go
+            </md-button>
             
-        </div>
+            </div>
         </div>
         
         

@@ -1,36 +1,63 @@
 <style>
     .optionClass{
-        background: whiteSmoke;
+        background: rgba(255,255,255,0.8);
         color: black;
-        border: 2px solid black;
-        border-radius: 10px;
+        border-radius: 5px;
     }
     .optionClass:hover{
-        background: whiteSmoke;
-        color: black;
-        border: 2px solid black;
-        border-radius: 10px;
+        
+        box-shadow: 0 0 20px gray;
     }
+    .reviewClass{
+        background: rgba(255,255,255,0.8);
+        color: black;
+        border-radius: 5px;
+    }
+    .optionClass:hover{
+        
+        box-shadow: 0 0 20px gray;
+    }
+    
 </style>
 
-<div id="spacer1" class="hidden-xs whiteBackground">
-</div>
-<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
-</div>
-<div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
+
+<div layout="column" layout-align="center center" class="text-center" id="whyReviewPage">
     
-    
-<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="min80vh paddingTB10 height100 width100">
-    <div layout="row" layout-align="center center" class="marginT20 secondFont font20 textBlack bold paddingB10">
-        {{currentQuestion.text}}
-    </div>
-    <div layout="row" layout-align="center center" class="width100">
-        <div flex ng-repeat="question in currentQuestion.options">
-            <div layout="row" layout-align="center center" class="min30vh margin20 padding20 optionClass thirdFont width50">
-                {{question}}
+    <div layout-fill layout="row" layout-align="center center " class="paddingLR10" >
+        <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start center" class="width100 thirdFont spacedLetter025 paddingT40 ">
+            
+            <div layout="column" layout-align="center center" class="marginTB20 width100">
+                <div class="textShadow font32 textWhite narrowLine">
+                        {{currentQuestion.text}}
+                </div>
+                <div class="font16 textWhiteSmoke textShadow marginT10">
+                    {{currentQuestion.subtext}}
+                </div>
+            </div>
+            
+            <div layout-gt-xs="row" layout-xs="column" layout-align="center center" class="width100 ">
+                <div flex-gt-xs="50" ng-repeat="option in currentQuestion.options" class="padding10 width100">
+                    <div  layout="column" layout-align="center center" class="min25vh padding20 optionClass width100 " ng-click="updateState(option)">
+                        <div class="font20 bold">
+                            {{option.title}}
+                        </div>
+                        <div class="font16">
+                            {{option.subtitle}}
+                        </div>
+                    </div>
+                    
+                </div>
+                <div  layout="column" layout-align="center center" class="min25vh padding20 width100" ng-if="showReviewButton" ng-click="showUserReviewSearchDialog()" ng-controller="offerController">
+                    <md-button class="md-review md-small font14 width50 primaryFont spacedLetter1 padding10">
+                    Review
+                    </md-button>   
+                </div>
+            </div>
+            <div layout="row" layout-align="end center" class="font12 textWhite width100 paddingR20" ng-if="currState != '1'" ng-click="previousState()">
+                <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>&nbsp;Back
             </div>
         </div>
-        
     </div>
 </div>
-</div>
+    
+ 
