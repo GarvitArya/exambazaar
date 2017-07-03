@@ -60,7 +60,7 @@ router.get('/providercities/:query', function(req, res) {
     ],function(err, cityNames) {
     if (!err){
         cityNames = cityNames.map(function(a) {return a._id.city;});
-        console.log(cityNames);
+        //console.log(cityNames);
         /*var queryGroups = [];
         groupNames.forEach(function(thisGroup, index){
             var qGroup = {

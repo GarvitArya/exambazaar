@@ -1,21 +1,12 @@
 <style>
     .optionClass{
-        background: rgba(255,255,255,0.8);
+        background: rgba(255,255,255,0.9);
         color: black;
-        border-radius: 5px;
+        border: 1px solid black;
     }
     .optionClass:hover{
         
-        box-shadow: 0 0 20px gray;
-    }
-    .reviewClass{
-        background: rgba(255,255,255,0.8);
-        color: black;
-        border-radius: 5px;
-    }
-    .optionClass:hover{
-        
-        box-shadow: 0 0 20px gray;
+        box-shadow: 0 0 10px black;
     }
     
 </style>
@@ -48,7 +39,7 @@
                     
                 </div>
                 <div  layout="column" layout-align="center center" class="min25vh padding20 width100" ng-if="showReviewButton" ng-click="showUserReviewSearchDialog()" ng-controller="offerController">
-                    <md-button class="md-review md-small font14 width50 primaryFont spacedLetter1 padding10">
+                    <md-button class="md-danger md-small font14 width50 primaryFont spacedLetter1 padding10">
                     Review
                     </md-button>   
                 </div>

@@ -8552,8 +8552,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         if($cookies.getObject('ip')){
             $scope.userip = $cookies.getObject('ip');
         }
-        console.log($scope.userlocation);
-        console.log($scope.userip);
+        
             
         $scope.reviewCity = "";
         this.selectedItemChange = selectedItemChange;
@@ -10390,6 +10389,7 @@ function getLatLng(thisData) {
             $rootScope.pageTitle = 'Why review at Exambazaar?';
             $scope.currState = "1";
             
+            
             $scope.questions = [
                 {
                     state: "1",
@@ -10398,12 +10398,12 @@ function getLatLng(thisData) {
                     options: [
                         {
                             title: "Yes",
-                            subtitle: "I am determined to crack it",
+                            subtitle: "I am determined to crack it. It's my dream!",
                             stateModifier: "y",
                         },
                         {
                             title: "No",
-                            subtitle: "Been there, done that. Now I play the advisory role",
+                            subtitle: "Been there, done that. Now I love the advisory role.",
                             stateModifier: "n",
                         }
                     ],
@@ -10411,33 +10411,33 @@ function getLatLng(thisData) {
                 {
                     state: "1y",
                     text: "Determination is great. So is preparation!",
-                    subtext:"Let us help you improve. We are giving away free coupons for upto 50% discount on the most effective preparation resources",
+                    subtext:"Let us help you improve. We are giving away free coupons for upto 50% discount on the most effective preparation resources, who doesn't love free stuff?",
                     options: [
                         {
                             title: "Great",
-                            subtitle: "Tell me what to do",
+                            subtitle: "Tell me what to do!",
                             stateModifier: "y",
                         },
                         {
                             title: "No",
-                            subtitle: "I'd rather leave it to chance",
+                            subtitle: "I'd rather leave it to chance.",
                             stateModifier: "n",
                         }
                     ],
                 },
                 {
                     state: "1n",
-                    text: "Advisor huh? So are we!",
+                    text: "You're an Advisor! We are too!",
                     subtext:"We love leveraging our experience to help our younger ones out! Spare a moment to join our effort?",
                     options: [
                         {
                             title: "Yes ofcourse",
-                            subtitle: "Don't want my vast wisdom to go to waste",
+                            subtitle: "Don't want my vast wisdom to go to waste.",
                             stateModifier: "y",
                         },
                         {
                             title: "No",
-                            subtitle: "I don't have any people to help",
+                            subtitle: "I don't have any people to help :(",
                             stateModifier: "n",
                         }
                     ],
@@ -10451,12 +10451,13 @@ function getLatLng(thisData) {
                 },
                 {
                     state: "1nn",
-                    text: "No people? Well, the Exambazaar family is all yours!",
+                    text: "'No people' has changed today! The Exambazaar family is all yours!",
                     subtext:"Now that you are a part of our family, please write a short, super-quick review for us?",
                     options: [
                     ],
                 },
             ];
+
             var questionStates = $scope.questions.map(function(a) {return a.state;});
             $scope.reviewStates = ["1yn", "1nn"];
             $scope.showReviewButton = false;
@@ -10480,10 +10481,10 @@ function getLatLng(thisData) {
             var reviewLaunchStates = ["1yy", "1ny"];
             
             $scope.updateState = function(option){
-                var newState = $scope.currState + option.stateModifier
+                var newState = $scope.currState + option.stateModifier;
                 
                 var nIndex = reviewLaunchStates.indexOf(newState);
-                
+                console.log(nIndex);
                 if(nIndex == -1){
                     $scope.currState += option.stateModifier;
                     console.log($scope.currState);
