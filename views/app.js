@@ -8543,8 +8543,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("citySearchController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
-        $scope.reviewCity = "";    
+        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$cookies', function($scope, $http, $state, $rootScope, targetStudyProviderService, $cookies){
+        
+        
+        if($cookies.getObject('userlocation')){
+            $scope.userlocation = $cookies.getObject('userlocation');
+        }
+        if($cookies.getObject('ip')){
+            $scope.userip = $cookies.getObject('ip');
+        }
+        console.log($scope.userlocation);
+        console.log($scope.userip);
+            
+        $scope.reviewCity = "";
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
             $rootScope.newReviewCity = item;
@@ -9866,8 +9877,10 @@ function getLatLng(thisData) {
             }
         }
     });
-};    
-      
+};
+        
+        
+        
      exambazaar.controller("assignedToAddContactInfoController", 
         [ '$scope', 'thisuser' , 'thisuserAssignedToAddContactInfo',  '$http','$state','$rootScope', function($scope, thisuser, thisuserAssignedToAddContactInfo, $http, $state, $rootScope){
         $scope.user = thisuser.data;

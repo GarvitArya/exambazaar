@@ -44,7 +44,39 @@ router.get('/cities', function(req, res) {
 router.get('/providercities/:query', function(req, res) {
     var query = req.params.query.toLowerCase();
     console.log(query);
-    var cities = targetStudyProvider.distinct( ("city"),function(err, cities) {
+    
+    
+    
+    if(query == 'exambazaar'){
+        query = '';
+    }
+    //console.log('Query is: ' + query);
+    var cityNames = targetStudyProvider.aggregate(
+    [
+        {$match: {city:{'$regex' : query, '$options' : 'i'}, disabled: false} },
+        {"$group": { "_id": { city: "$city" }, count:{$sum:1} } },
+        {$sort:{"count":-1}}
+
+    ],function(err, cityNames) {
+    if (!err){
+        cityNames = cityNames.map(function(a) {return a._id.city;});
+        console.log(cityNames);
+        /*var queryGroups = [];
+        groupNames.forEach(function(thisGroup, index){
+            var qGroup = {
+                name: thisGroup._id.name,
+                centers: thisGroup.count,
+                logo: thisGroup.logo,
+            };
+            queryGroups.push(qGroup);
+        });*/
+        //console.log(queryGroups);
+        res.json(cityNames);
+    } else {throw err;}
+    });
+    
+    
+    /*var cities = targetStudyProvider.distinct( ("city"),function(err, cities) {
     if (!err){
         if(query == "exambazaar"){
             res.json(cities);
@@ -60,7 +92,7 @@ router.get('/providercities/:query', function(req, res) {
             res.json(queryCities);
         }
     } else {throw err;}
-    });
+    });*/
 });
 
 router.post('/bulkDisableProviders', function(req, res) {
