@@ -37,6 +37,10 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/breadcrumb.css">
     <link rel="stylesheet" href="css/ui-bootstrap-csp.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/medium-editor.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/themes/tim.min.css">
+    
+    
     
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Roboto:100,300,400|Roboto+Condensed|Unica+One|Seaweed+Script" rel="stylesheet">
@@ -366,6 +370,22 @@
         }
         #whyReviewPage{
             height: 100vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/review/background.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #whyReviewPage2{
+            height: 20vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/review/background.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #whyReviewPage3{
+            height: 10vh;
             margin: 0px;
             padding: 0px;
             background-image: url("images/review/background.jpg");
@@ -917,6 +937,10 @@
             padding-left: 10px;
             padding-right: 10px;
         }
+        .paddingLR15{
+            padding-left: 15px;
+            padding-right: 15px;
+        }
         .paddingLR20{
             padding-left: 20px;
             padding-right: 20px;
@@ -1060,6 +1084,9 @@
         }
         .width75{
             width: 75%;
+        }
+        .width60{
+            width: 60%;
         }
         .width80{
             width: 80%;
@@ -1479,7 +1506,15 @@
             -webkit-box-shadow: none;
             box-shadow: none;
         }
-        
+        .optionClass{
+            background: rgba(255,255,255,0.9);
+            color: black;
+            border: 1px solid black;
+        }
+        .optionClass:hover{
+
+            box-shadow: 0 0 10px black;
+        }
         
         
     </style>
@@ -1844,44 +1879,65 @@
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="whyReviewDialog">
-      <md-dialog class="offer-dialog">
-          <div layout="column">
-              <div hide-xs layout="row" layout-align="center center" id="whyReviewHeaderRow" class="" >
-                <div layout="column" layout-align="center center" class=" text-center textWhite   translucentBackground width100">
-                    <div layout-wrap class="width75 offerPopupFont font36 textShadow">
-                        You’ll love our discounts on the best-selling exam prep material!
-                    </div>
-                    <div layout-wrap class="width75 editFont textWhite font14">
-                        Limited coupons only
-                    </div>
-                </div>
+      <md-dialog class="offer-dialog" ng-controller="whyReviewController">
+          
+          <div layout="column" layout-align="center center" class="text-center height100" >
+              <div hide-xs layout="row" layout-align="center center" class="text-center width100" id="whyReviewPage2" >
               </div>
-              <div hide-gt-xs layout="row" layout-align="center center" id="whyReviewHeaderRow2" class="" >
-                <div hide-gt-xs class="offerPopupFont text-center textWhite font20 textShadow translucentBackground width100">
-                    <div layout-wrap class="width100">
-                        You’ll love our discounts on the most popular exam prep courses!
-                    </div>
-                </div>
+              <div hide-gt-xs layout="row" layout-align="center center" class="text-center width100" id="whyReviewPage3" >
               </div>
-              
-                
-              
-              <div  layout="column" layout-align="center center" class="secondFont paddingLR20 width100">
-              <div layout="row" layout-xs="column" layout-align="center center" class="secondFont padding10 width100 text-center">
-                  Review your coaching institute and unlock 80% OFF on
-              </div>
-              <div layout="row" layout-align="start center" class="text-center">
-                <div ng-repeat="offer in offers" class="paddingLR10">
-                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                    <md-tooltip>{{offer.displayname}}</md-tooltip>
+            <div hide-gt-xs layout="column" layout-align="center center" class="thirdFont marginT40 marginB10 paddingLR15 width100">
+                <div class="min5vh font24 textBlack narrowLine">
+                        {{currentQuestion.text}}
                 </div>
-                
+                <div class="editFont font12 marginT10">
+                    {{currentQuestion.subtext}}
                 </div>
-              </div>
-            
+            </div>
+            <div hide-xs layout="column" layout-align="center center" class="thirdFont marginT40 marginB10 paddingLR10 width80">
+                <div class="min5vh font32 textBlack narrowLine">
+                        {{currentQuestion.text}}
+                </div>
+                <div class="editFont font16 marginT10">
+                    {{currentQuestion.subtext}}
+                </div>
+            </div>
+            <div flex layout="row" layout-align="center center " class="paddingLR10 width100" >
+                <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="start center" class="width100 thirdFont spacedLetter025 ">
 
-
+                    <div flex layout-gt-xs="row" layout-xs="column" layout-align="center center" class="width100 ">
+                        <div flex-gt-xs="50" ng-repeat="option in currentQuestion.options" class="padding10 width100">
+                            <div hide-xs layout="column" layout-align="center center" class="min25vh padding20 optionClass width100 " ng-click="updateState(option)">
+                                <div class="font20 bold">
+                                    {{option.title}}
+                                </div>
+                                <div class="font16">
+                                    {{option.subtitle}}
+                                </div>
+                            </div>
+                            <div hide-gt-xs layout="column" layout-align="center center" class="min15vh padding10 optionClass width100 " ng-click="updateState(option)">
+                                <div class="font18 bold">
+                                    {{option.title}}
+                                </div>
+                                <div class="font14">
+                                    {{option.subtitle}}
+                                </div>
+                            </div>
+                        </div>
+                        <div  layout="column" layout-align="center center" class="min25vh padding10 width100" ng-if="showReviewButton" ng-click="showUserReviewSearchDialog()" ng-controller="offerController">
+                            <md-button class="md-danger md-small font14 width50 primaryFont spacedLetter1 padding10">
+                            Review
+                            </md-button>   
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div layout="row" layout-align="center center" class="font12 textBlack width100 paddingB10" ng-if="currState != '1'" ng-click="previousState()">
+                Back
+            </div>
         </div>
+          
       </md-dialog>
     </div>    
 </div>        
@@ -1936,6 +1992,7 @@
         
         
     <script src="angular.min.js"></script>
+    
     
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.min.js"></script>
     <script src="svg-assets-cache.js"></script>
@@ -1993,6 +2050,9 @@
     <script src="angular-socialshare.js"></script>
     <script src="angular-clipboard.js"></script>
     <script src="angular-bootstrap-affix.js"></script>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/js/medium-editor.min.js"></script>
+    <script src="angular-medium-editor.js"></script>
     <script type="text/javascript" src="app.js"></script>
 </body>
 </html>

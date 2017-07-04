@@ -1,5 +1,5 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'angularFileUpload', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix']);
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'angularFileUpload', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo'
     (function() {
     'use strict';
@@ -1152,8 +1152,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.number = 24;
         $scope.getNumber = function(num) {
             return new Array(num);   
-        }    
-            
+        }
+        
         $scope.categoryName = $stateParams.categoryName;
         $scope.category = {};
         $scope.subcategory = [];
@@ -1169,6 +1169,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $cookies.putObject('subcategory', subcategory);
             $state.go('city');
         };
+        
+            
+           
+        
             
     }]); 
     exambazaar.controller("cityController", 
@@ -8459,7 +8463,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $rootScope.$on("ShowReviewDialog", function(){
            $scope.showUserReviewSearchDialog();
         });
-            
+        $rootScope.$on("ShowWhyReviewDialog", function(){
+           $scope.showWhyReviewSearchDialog();
+        });    
         $scope.showUserReviewSearchDialog = function(ev) {
             $mdDialog.show({
               contentElement: '#userReviewSearchDialog',
@@ -9487,6 +9493,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     exambazaar.controller("socialLoginController", 
         [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService){
+            $scope.description = "";
+            
+            $scope.seeDescription = function(){
+                console.log($scope.description );
+            };
+            
+            
             
             
             $rootScope.pageTitle ='Search & Review Coaching Institutes';
@@ -10388,7 +10401,7 @@ function getLatLng(thisData) {
         [ '$scope','$http','$state','$rootScope', function($scope, $http, $state, $rootScope){
             $rootScope.pageTitle = 'Why review at Exambazaar?';
             $scope.currState = "1";
-            
+            $rootScope.$emit("ShowWhyReviewDialog", {}); 
             
             $scope.questions = [
                 {
@@ -10484,12 +10497,11 @@ function getLatLng(thisData) {
                 var newState = $scope.currState + option.stateModifier;
                 
                 var nIndex = reviewLaunchStates.indexOf(newState);
-                console.log(nIndex);
                 if(nIndex == -1){
                     $scope.currState += option.stateModifier;
-                    console.log($scope.currState);
+                    
                 }else{
-                    console.log("Launch Review Bar");
+                    //console.log("Launch Review Bar");
                     $rootScope.$emit("ShowReviewDialog", {});
                 }
             };
@@ -12823,7 +12835,7 @@ function getLatLng(thisData) {
                     controller: 'headerController'
                 },
                 'body':{
-                    templateUrl: 'whyReview.html',
+                    templateUrl: 'landing.html',
                     controller: 'whyReviewController'
                 },
                 'footer': {
