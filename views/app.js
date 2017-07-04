@@ -2042,6 +2042,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.user = $cookies.getObject('sessionuser');
         var viewForm = {
             institutes: instituteIds,
+            state: $state.current.name,
             //user: $scope.user.userId,
             claim: false
         };
@@ -3241,6 +3242,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.user = $cookies.getObject('sessionuser');
             var viewForm = {
                 institutes: [$scope.provider._id],
+                state: $state.current.name,
                 user: $scope.user.userId,
                 claim: true
             };
@@ -3303,6 +3305,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             //user is not allowed to access this page
             var viewForm = {
                 institutes: [$scope.provider._id],
+                state: $state.current.name,
                 claim: true
             };
             if($cookies.getObject('ip')){
@@ -9763,7 +9766,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);     
         
     exambazaar.controller("rankerswallController", 
-        [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam','$location', 'Socialshare','$cookies', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam,$location, Socialshare, $cookies){
+        [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam','$location', 'Socialshare','$cookies', 'viewService', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam,$location, Socialshare, $cookies, viewService){
             
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
@@ -9809,26 +9812,26 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 switch (event.type) {
                   case "mouseenter":
                         
-                        console.log("Hey Mouse Entered");
+                        //console.log("Hey Mouse Entered");
                         break;
                   case "mouseover":{
                         //$scope.flipRank(resultPair);
                         resultPair.coachingMode = true;
-                        console.log("Hey Mouse Over");
+                        //console.log("Hey Mouse Over");
                         break;
                   }
                   case "mouseout":{
                         resultPair.coachingMode = false;
-                        console.log("Hey Mouse Out");
+                        //console.log("Hey Mouse Out");
                         break;
                   }
 
                   case "mouseleave":
-                    console.log("Mouse Gone");
+                    //console.log("Mouse Gone");
                     break;
 
                   default:
-                    console.log(event.type);
+                    //console.log(event.type);
                     break;
                 };
             };
@@ -9854,6 +9857,25 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                    
                 }
                 
+            });
+            
+            var viewForm = {
+                state: $state.current.name,
+                claim: false
+            };
+            if($scope.user && $scope.user.userId){
+                viewForm.user = $scope.user.userId
+            }
+            //console.log(JSON.stringify(viewForm));
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                //console.info('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.info();
             });
             
             

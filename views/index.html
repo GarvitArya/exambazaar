@@ -1195,6 +1195,7 @@
             margin-top: 40px;
         }
         button:focus {outline:0;}
+        #iOSFix{flex: 1 0 auto !important;}
         div:focus {outline:0;}
         a:focus {outline:0;}
         #steps{
@@ -1784,7 +1785,7 @@
           <md-content flex layout="column" ng-controller="reviewRedirectController">
           
               <div hide-xs layout="row" layout-align="center center" id="reviewHeaderRow" class="" >
-                <div layout="column" layout-align="center center" class=" text-center textWhite   translucentBackground width100">
+                <div layout="column" layout-align="center center" class=" text-center textWhite   translucentBackground width100" id="iOSFix">
                     <div layout-wrap class="width75 offerPopupFont font36 textShadow">
                         You’ll love our discounts on the best-selling exam prep material!
                     </div>
@@ -1799,8 +1800,17 @@
               <div  class="secondFont font16 padding10 width100 text-center">
                   Review your coaching <i class="fa fa-arrow-right" aria-hidden="true"></i> Receive exclusive Exambazaar coupon <i class="fa fa-arrow-right" aria-hidden="true"></i> Get upto 50% OFF on courses from
               </div>
-              <div layout-wrap layout="row" layout-align="center center" class="text-center width100">
-                <div flex-xs="30" ng-repeat="offer in offers" class="padding5">
+              
+              <div hide-gt-xs layout="row" layout-align="center center" id="iOSFix" class="">
+                <div layout-wrap layout="row" layout-align="center center" class="text-center width100 " >
+                <div flex-xs="30" ng-repeat="offer in offers" class="padding5 ">
+                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                </div>
+                
+                </div>
+              </div>
+              <div hide-xs layout-wrap layout="row" layout-align="center center" class="text-center width100" >
+                <div flex-xs="33" ng-repeat="offer in offers" class="padding5">
                     <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
                 </div>
                 

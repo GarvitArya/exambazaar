@@ -279,19 +279,47 @@ router.post('/save', function(req, res) {
     var viewForm = req.body;
     var institutes = viewForm.institutes;
     var user = viewForm.user;
+    var state = viewForm.state;
     var ip = viewForm.ip;
     var claim = viewForm.claim;
+    //console.log(JSON.stringify(institutes));
     
-    //console.log(JSON.stringify(ip));
-    var nLength = institutes.length;
-    var counter = 0;
-    
-    institutes.forEach(function(thisInstitute, index){
+    if(institutes && institutes.length > 0){
+        var nLength = institutes.length;
+        var counter = 0;
+        institutes.forEach(function(thisInstitute, index){
+            var newview = new view({
+                institute: thisInstitute
+            });
+            if(user){
+                newview.user = user;
+            }
+            if(state){
+                newview.state = state;
+            }
+            if(ip){
+                newview.ip = ip;
+            }
+            if(claim){
+                newview.claim = claim;
+            }
+            newview.save(function(err, newview) {
+                if (err) return console.error(err);
+                counter = counter + 1;
+                if(counter == nLength){
+                    res.json('Done');
+                }
+            });
+
+        });
+    }else{
         var newview = new view({
-            institute: thisInstitute
         });
         if(user){
             newview.user = user;
+        }
+        if(state){
+            newview.state = state;
         }
         if(ip){
             newview.ip = ip;
@@ -302,14 +330,11 @@ router.post('/save', function(req, res) {
         
         newview.save(function(err, newview) {
             if (err) return console.error(err);
-            counter = counter + 1;
-            if(counter == nLength){
-                res.json('Done');
-            }
-            
+            console.log("New view used: " + newview._id);
+            res.json('Done');
         });
-        
-    });
+    }
+    
     
 });
 

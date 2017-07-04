@@ -3,7 +3,8 @@ var Schema = mongoose.Schema;
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var viewSchema = mongoose.Schema({
-    institute: { type: Schema.ObjectId, ref: 'targetStudyProvider', required: true },
+    institute: { type: Schema.ObjectId, ref: 'targetStudyProvider' },
+    state: { type: String },
     user: { type: Schema.ObjectId, ref: 'User' },
     _date: { type: Date, default: Date.now },
     ip: {
