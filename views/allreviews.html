@@ -81,7 +81,7 @@
             <div flex="10" class="paddingR10 font10">Coaching</div>
             <div flex="40" class="paddingR10 font10">Review</div>
             <div flex="10" class="paddingR10 font10">Date</div>
-            <div flex="5" class="paddingR10 font10">Active</div>
+            <div flex="10" class="paddingR10 font10">Active</div>
             <div flex="10" class="paddingR10 font10">Coupon</div>
         </div>
         <div layout="row" layout-align="start start" ng-repeat="review in allReviews | orderBy:'-_created'" class="width100 paddingTB5 gainsboroBottomBorder">
@@ -95,7 +95,14 @@
             </div>
             <div flex="40" class="paddingR10 font10">{{review.text}}</div>
             <div flex="10" class="paddingR10 font10">{{review._created | date}}</div>
-            <div flex="5" class="paddingR10 font10">{{review.active}}</div>
+            <div flex="10" class="paddingR10 font10">
+                <md-button class="md-danger md-small font10 tolowercase" ng-click="disablereview(review)" ng-if="review.active">
+                    Disable
+                </md-button>
+                <md-button class="md-green2 md-small font10 tolowercase" ng-click="enablereview(review)" ng-if="!review.active">
+                    Enable
+                </md-button>
+            </div>
             <div flex="10" class="paddingR10 font10">{{review.coupon}}</div>
         </div>
     </div>

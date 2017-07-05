@@ -516,6 +516,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getreview = function(reviewId) {
             return $http.get('/api/reviews/edit/'+reviewId, {reviewId: reviewId});
         };
+        this.disablereview = function(reviewId) {
+            return $http.get('/api/reviews/disable/'+reviewId, {reviewId: reviewId});
+        };
+        this.enablereview = function(reviewId) {
+            return $http.get('/api/reviews/enable/'+reviewId, {reviewId: reviewId});
+        };
         this.removereview = function(reviewId){
             $http.get('/api/reviews/remove/'+reviewId, {reviewId: reviewId});
         };
@@ -9712,7 +9718,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
     
     exambazaar.controller("allreviewsController", 
-        [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'targetStudyProviderService', function($scope, $http, $rootScope, reviewService, allReviews, targetStudyProviderService){
+        [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'targetStudyProviderService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, targetStudyProviderService, $state, $mdDialog){
             $scope.allReviews = allReviews.data;
             
             $rootScope.pageTitle = 'All Reviews';
@@ -9733,6 +9739,51 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });    
             };
             
+            $scope.disablereview = function(review){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to disabled review of ' + review.institute.name + ' by ' + review.user.basic.name + '?')
+                .textContent('You can enable it later!')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    reviewService.disablereview(review._id).success(function (data, status, headers) {
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error ' + data + ' ' + status);
+                    });
+                    
+                }, function() {
+                  //nothing
+                }); 
+            };
+            
+            $scope.enablereview = function(review){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to enable review of ' + review.institute.name + ' by ' + review.user.basic.name + '?')
+                .textContent('You can enable it later!')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    reviewService.enablereview(review._id).success(function (data, status, headers) {
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error ' + data + ' ' + status);
+                    });
+                    
+                }, function() {
+                  //nothing
+                }); 
+            };
             
     }]); 
     
@@ -10420,7 +10471,7 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("whyReviewController", 
-        [ '$scope','$http','$state','$rootScope', function($scope, $http, $state, $rootScope){
+        [ '$scope','$http','$state','$rootScope', 'viewService', function($scope, $http, $state, $rootScope, viewService){
             $rootScope.pageTitle = 'Why review at Exambazaar?';
             $scope.currState = "1";
             $rootScope.$emit("ShowWhyReviewDialog", {}); 
@@ -10531,6 +10582,26 @@ function getLatLng(thisData) {
                 $scope.currState = $scope.currState.slice(0, $scope.currState.length-1);
                 console.log($scope.currState);
             };
+            
+            
+            var viewForm = {
+                state: $state.current.name,
+                claim: false
+            };
+            if($scope.user && $scope.user.userId){
+                viewForm.user = $scope.user.userId
+            }
+            //console.log(JSON.stringify(viewForm));
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                //console.info('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.info();
+            });
     }]);    
     exambazaar.controller("addMediaTagController", 
         [ '$scope',  'mediaTagList','mediaTypeList','MediaTagService','$http','$state', function($scope, mediaTagList,mediaTypeList, MediaTagService,$http,$state){

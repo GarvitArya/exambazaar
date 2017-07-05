@@ -102,6 +102,42 @@ router.get('/edit/:reviewId', function(req, res) {
     });
 });
 
+router.get('/disable/:reviewId', function(req, res) {
+    var reviewId = req.params.reviewId;
+    var thisReview = review
+        .findOne({ '_id': reviewId })
+        //.deepPopulate('coupon')
+        .exec(function (err, thisReview) {
+            
+        if (!err){
+            thisReview.active = false;
+            thisReview.save(function(err, thisReview) {
+                if (err) return console.error(err);
+                res.json(thisReview._id);
+            });
+
+        } else {throw err;}
+    });
+});
+
+router.get('/enable/:reviewId', function(req, res) {
+    var reviewId = req.params.reviewId;
+    var thisReview = review
+        .findOne({ '_id': reviewId })
+        //.deepPopulate('coupon')
+        .exec(function (err, thisReview) {
+            
+        if (!err){
+            thisReview.active = true;
+            thisReview.save(function(err, thisReview) {
+                if (err) return console.error(err);
+                res.json(thisReview._id);
+            });
+
+        } else {throw err;}
+    });
+});
+
 //to get all reviews for a user
 router.get('/user/:userId', function(req, res) {
     
