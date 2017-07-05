@@ -10472,6 +10472,12 @@ function getLatLng(thisData) {
     
     exambazaar.controller("whyReviewController", 
         [ '$scope','$http','$state','$rootScope', 'viewService', '$cookies', function($scope, $http, $state, $rootScope, viewService, $cookies){
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+            }else{
+                
+            }
+            
             $rootScope.pageTitle = 'Why review at Exambazaar?';
             $scope.currState = "1";
             $rootScope.$emit("ShowWhyReviewDialog", {}); 
@@ -10588,6 +10594,7 @@ function getLatLng(thisData) {
                 state: $state.current.name,
                 claim: false
             };
+            console.log();
             if($scope.user && $scope.user.userId){
                 viewForm.user = $scope.user.userId
             }
