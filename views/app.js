@@ -10471,7 +10471,7 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("whyReviewController", 
-        [ '$scope','$http','$state','$rootScope', 'viewService', function($scope, $http, $state, $rootScope, viewService){
+        [ '$scope','$http','$state','$rootScope', 'viewService', '$cookies', function($scope, $http, $state, $rootScope, viewService, $cookies){
             $rootScope.pageTitle = 'Why review at Exambazaar?';
             $scope.currState = "1";
             $rootScope.$emit("ShowWhyReviewDialog", {}); 
