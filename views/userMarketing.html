@@ -1,0 +1,80 @@
+<style>
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    
+    .notselected{}
+    .selected{
+        background-color: #FF5A5F;
+        color: white;
+    }
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center center" class="whiteBackground">
+<div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="paddingTB20 width100" ng-if="user">
+    <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
+        <div layout="row" layout-align="center center" class="width100 font16">
+            <div ng-if="user.image">
+            <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
+            </div>
+            <div class="marginL10">
+                {{user.basic.name}}
+            </div>
+        </div>
+        <div layout="row" layout-align="center center" class="width100 font20">
+            <span ng-click="addAllUsers()">All users</span>&nbsp;
+            <span class="badge" id="badge">{{allUsers.length}}</span>
+        </div>
+    </div>
+    <div layout="row" layout-align="start center" layout-wrap class="width100">
+        <div flex="25" layout="column" layout-align="center center" ng-repeat="thisuser in allUsers | orderBy:'basic.name'" flex="100" class="width100 padding10 gainsboroBorder min10vh rounderBorder" ng-class="{selected: selectedBackground(thisuser)}" ng-click="addUser(thisuser)">
+            <div ng-if="thisuser.image">
+                <img ng-src="{{thisuser.image}}" id="userPicSmall" class="img-circle"/>
+            </div>
+            <div class="editFont font10 marginT10">
+                {{thisuser.basic.name}}
+            </div>
+            <div class="editFont font10">
+                {{thisuser.mobile}}
+            </div>
+            <div class="editFont font10">
+                {{thisuser.email}}
+            </div>
+        </div>
+        
+    </div>
+</div>
+</div>
+
+
+
+<div class="bottomOfferBar" ng-cloak>
+    <div layout="row" layout-align="start center" class="width100">
+        <div flex layout="row" layout-align="start center" class="textWhite">
+            <div layout="row" layout-align="start center" ng-if="selectedUsers.length > 0">
+                Sending marketing to {{selectedUsers.length}} users. 
+            </div>
+            <div layout="row" layout-align="start center" ng-repeat="selectedUser in selectedUsers" class="font8" ng-if="selectedUsers.length <11">
+                &nbsp;{{selectedUser.basic.name}}
+            </div>
+        </div>
+        <div layout="row" layout-align="center center" class="">
+            <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="sendMarketing()">
+            Send
+        </md-button>
+        </div>
+    </div>
+        
+        
+</div>

@@ -145,7 +145,7 @@ router.get('/', function(req, res) {
 router.get('/user/:userId', function(req, res) {
     var userId = req.params.userId;
     var views = view
-        .find({user: userId})
+        .find({user: userId, institute: {$exists: true}})
         .sort( { _date: -1 } )
         //.deepPopulate('institute institute.exams institute.exams.stream')
         .exec(function (err, views) {

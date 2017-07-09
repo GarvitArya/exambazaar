@@ -78,7 +78,9 @@
     </div>
     
     <div layout="column" class="">
-        <p ng-model="description" medium-editor bind-options="{'toolbar': {'buttons': ['bold', 'italic', 'underline', 'justifyCenter', 'quote', 'anchor', 'h1','h2', 'h3'] } }" data-placeholder="Enter a description" class="thirdFont"></p>
+        <p ng-model="description" medium-editor bind-options="{'toolbar': {'buttons': ['bold', 'italic', 'underline', 'justifyCenter', 'quote', 'anchor', 'h1','h2', 'h3'] } }" data-placeholder="Enter a description" class="thirdFont">
+            <medium-insert></medium-insert>
+        </p>
         <div>
             <md-button class="md-raised md-primary" ng-click="seeDescription()">
                  See

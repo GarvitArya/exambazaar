@@ -97,8 +97,27 @@ router.post('/sendReviewInvites', function(req, res) {
                 }
 
                 if(thisUser.mobile){
+                    var sentName = thisUser.name;
+                    if(sentName.length > 10){
+                        var pIndex = sentName.indexOf(' ');
+                        console.log(pIndex);
+                        if(pIndex != -1){
+                            sentName = sentName.substring(0, pIndex).trim();
+                        }else{
+                            sentName = sentName.substring(0, 9).trim();
+                        }
+                    }
+                    var partnerOffers = ["Toppr, Plancess, HandaKaFunda", "Testbook, Mockbank, Superprofs"];
+                    
+                    var randomNumber = Math.floor(Math.random() * (partnerOffers.length));
+                    
+                    if(randomNumber > partnerOffers.length - 1){
+                        randomNumber = 0;
+                    }
+                    
+                    
                     console.log("Sending Welcome SMS");
-                    var message = "Hi " + thisUser.name + "\nGet 50% off! Review your coaching institute and lock-in discounts on the best-selling exam prep material now. Limited coupons only.\nwww.exambazaar.com";
+                    var message = "Hi " + sentName + "\nReview your coaching institute to get discounts on courses of " + partnerOffers[randomNumber] + " and many others. Get upto 80% off!\nwww.exambazaar.com";
 
                     //console.log(message.length + " " + message);
                     var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
@@ -110,12 +129,15 @@ router.post('/sendReviewInvites', function(req, res) {
                             url: url,
                             json: true
                         }, function (error, response, body) {
-                            if (!error && response.statusCode === 200) {
+                            //console.log(response);
+                            console.log(body);
+                        
+                            if (!error && response.statusCode === 200 && body.status == 'success' && body.mobilenumbers != '') {
                                 
                                 smssSent += 1;
-                                console.log("SMS sent to: " + username + " at "+ thisUser.mobile);
+                                console.log("SMS sent to: " + sentName + " at "+ thisUser.mobile);
                                 var currTime = moment().toDate();
-                                existingSubscriber.smsSent.push(currTime);
+                                existingSubscriber.smsSent.push(body.senttime);
                                 existingSubscriber.save(function(err, existingSubscriber) {
                                     if (err) return console.error(err);
                                     console.log(existingSubscriber._id + " updated!");
@@ -123,6 +145,12 @@ router.post('/sendReviewInvites', function(req, res) {
                                 
                                 
                             }else{
+                                
+                                existingSubscriber.invalidMobile = true;
+                                existingSubscriber.save(function(err, existingSubscriber) {
+                                    if (err) return console.error(err);
+                                    console.log(existingSubscriber._id + " updated!");
+                                });
                                 console.log(error + " " + response);
                             }
                     });
@@ -167,16 +195,28 @@ router.post('/bulksave', function(req, res) {
     var thisSubscriberList = req.body;
     var nSubscribers = thisSubscriberList.length;
     var counter = 0;
-    
+    console.log("Adding subscribers: " + nSubscribers);
     thisSubscriberList.forEach(function(thisSubscriber, sIndex){
         var thisEmail = '';
         if(thisSubscriber.email){
             thisEmail = thisSubscriber.email;
         }
 
-        console.log("Subcriber is: " + JSON.stringify(thisSubscriber));
-
-        var existingSubscriber = subscriber.findOne({ 'email': thisEmail},function (err, existingSubscriber) {
+        //console.log("Subscriber is: " + JSON.stringify(thisSubscriber));
+        
+        var this_subscriber = new subscriber({});
+        for (var property in thisSubscriber) {
+            this_subscriber[property] = thisSubscriber[property];
+        }
+        this_subscriber.save(function(err, this_subscriber) {
+        if (err) return console.error(err);
+            console.log("Subscriber added with id: " + this_subscriber._id);
+            counter += 1;
+            if(counter == nSubscribers){
+                res.json('Done');
+            }
+        });
+        /*var existingSubscriber = subscriber.findOne({ 'email': thisEmail},function (err, existingSubscriber) {
             if (err) return handleError(err);
 
             if(existingSubscriber){
@@ -209,7 +249,7 @@ router.post('/bulksave', function(req, res) {
             }
             
             
-        });
+        });*/
         
         
     });

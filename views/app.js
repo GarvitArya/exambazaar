@@ -1,5 +1,5 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'angularFileUpload', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor']);
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'angularFileUpload', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'angular-medium-editor-insert-plugin']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo'
     (function() {
     'use strict';
@@ -247,6 +247,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.updatePassword = function(userPassword) {
             return $http.post('/api/users/updatePassword',userPassword);
+        };
+        this.userMarketing = function(userList) {
+            return $http.post('/api/users/userMarketing',userList);
         };
     }]);
         
@@ -8496,6 +8499,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.userReviewMode = true;
             });
         };
+            
+        $scope.showPartnerDialog = function(offer, ev) {
+            $rootScope.partnerOffer = offer;
+            
+            
+            $mdDialog.show({
+              contentElement: '#partnerDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            }).finally(function() {
+                
+            });
+        };
     }]);    
         
     exambazaar.controller("coachingGroupAutocompleteController", 
@@ -9505,11 +9522,32 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.description = "";
             
             $scope.seeDescription = function(){
+                
+                var remove = "<div class=";
+                var rIndex = $scope.description.indexOf(remove);
+                $scope.description = $scope.description.substring(0, rIndex);
                 console.log($scope.description );
             };
             
+            var editor = new MediumEditor('.editable');
+            $(function () {
+                $('.editable').mediumInsert({
+                    editor: editor
+                });
+            });
             
-            
+            /*$(function () {
+                $('.editable').mediumInsert({
+                    editor: editor,
+                    addons: {
+                        images: {
+                            fileUploadOptions: {
+                                url: 'upload.php'
+                            }
+                        }
+                    }
+                });
+            });*/
             
             $rootScope.pageTitle ='Search & Review Coaching Institutes';
             
@@ -10374,12 +10412,14 @@ function getLatLng(thisData) {
             
             $scope.addSubscribers = function(){
                 var toAddSubscribers = [];
+                console.log("New Subscribers are: " + $scope.newSubscribers.length);
+                
                 $scope.newSubscribers.forEach(function(thisSubscriber, index){
                     if(thisSubscriber && thisSubscriber.name && (thisSubscriber.email ||  thisSubscriber.mobile)){
                         toAddSubscribers.push(thisSubscriber);
                     }
                 });
-                
+                console.log("Adding subscribers: " + toAddSubscribers.length);
                 subscriberService.saveSubscribers(toAddSubscribers).success(function (data, status, headers) {
                
                     alert("Subscribers saved!");
@@ -10390,6 +10430,7 @@ function getLatLng(thisData) {
                 
             };
             $scope.selectedUser = [];
+            
             $scope.setUser = function(subscriber){
                 if(!$scope.selectedUser || $scope.selectedUser.length == 0){
                     $scope.selectedUser = [];
@@ -10406,7 +10447,7 @@ function getLatLng(thisData) {
                     var subscriberUserIds = $scope.subscribersList.map(function(a) {return a._id;});
                     var selectedIndex = subscriberUserIds.indexOf(subscriber._id);
                     //console.log(selectedIndex);
-                    var totalInvite = 20;
+                    var totalInvite = 1;
                     var totalSubscribers = $scope.subscribersList.length;
                     totalInvite = Math.min(selectedIndex + totalInvite, totalSubscribers);
                     //console.log(totalInvite);
@@ -12064,8 +12105,69 @@ function getLatLng(thisData) {
                 });  
             };
             
-        }]);  
+    }]);
     
+    
+    exambazaar.controller("userMarketingController", 
+        [ '$scope','$http','$state','UserService', 'thisuser', 'allUsers', '$rootScope', function($scope,$http, $state, UserService, thisuser, allUsers, $rootScope){
+            $scope.user = thisuser.data;
+            $scope.allTypeUsers = allUsers.data;
+            $scope.allUsers = [];
+            
+            $scope.allTypeUsers.forEach(function(thisUser, uIndex){
+                if(!thisUser.basic || !thisUser.basic.name){
+                    console.log(thisUser._id);
+                }
+                if(thisUser.userType == 'Student'){
+                    $scope.allUsers.push(thisUser);
+                }
+            });
+            
+            $scope.selectedUsers = [];
+            
+            $scope.addAllUsers = function(){
+                $scope.selectedUsers = $scope.allUsers;
+            };
+            $scope.addUser = function(newuser){
+                var userIds = $scope.selectedUsers.map(function(a) {return a._id;});
+                var uIndex = userIds.indexOf(newuser._id);
+                
+                if(uIndex == -1){
+                    $scope.selectedUsers.push(newuser);
+                }else{
+                    console.log('Already added!');
+                }
+                
+            };
+            
+            $scope.selectedBackground = function(thisuser){
+                var userIds = $scope.selectedUsers.map(function(a) {return a._id;});
+                var uIndex = userIds.indexOf(thisuser._id);
+                
+                if(uIndex == -1){
+                    return false;
+                }else{
+                    return true;
+                }
+            };
+            
+            $scope.sendMarketing = function(){
+                console.log("Sending marketing to " + $scope.selectedUsers.length + " users");
+                
+                UserService.userMarketing($scope.selectedUsers).success(function (data, status, headers) {
+                    
+                    console.info("Done");
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+                
+            };
+            
+            $rootScope.pageTitle = "User Marketing";
+    }]);    
+        
+        
     exambazaar.config(function($mdDateLocaleProvider) {
     $mdDateLocaleProvider.formatDate = function(date) {
        return moment(date).format('MMM DD YYYY');
@@ -13149,7 +13251,34 @@ function getLatLng(thisData) {
                 user: function() { return {}; }
             }
         })
-    
+        .state('userMarketing', {
+            url: '/user/:userId/userMarketing',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'userMarketing.html',
+                    controller: 'userMarketingController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                allUsers: ['UserService',
+                    function(UserService){
+                    return UserService.getUsers();
+                }],
+                user: function() { return {}; }
+            }
+        })
         .state('master', {
             url: '/master/:masterId/main',
             views: {
@@ -15055,6 +15184,8 @@ exambazaar.directive("limitTo", [function() {
         }
     }
 }]);
+
+
 
 exambazaar.directive("moveNextOnMaxlength", function() {
     return {

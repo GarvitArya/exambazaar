@@ -28,8 +28,8 @@
     <div id="spacer">
     </div>
     <div layout="row" layout-wrap>
-        <div ng-repeat="subscriber in subscribersList" class="paddingR5 font8 narrowLine badge unselectedTag" ng-class="{selectedTag: subscriber.emailSent.length > 0 || selectedBackground(subscriber)}" ng-click="setUser(subscriber)">
-            {{subscriber.name}}<i ng-if="subscriber.emailSent.length > 0" class="fa fa-check-circle" aria-hidden="true"></i>
+        <div ng-repeat="subscriber in subscribersList" class="paddingR5 font8 narrowLine badge unselectedTag" ng-class="{selectedTag: subscriber.emailSent.length > 0 || subscriber.smsSent.length > 0 || selectedBackground(subscriber)}" ng-click="setUser(subscriber)">
+            {{subscriber.name}}<i ng-if="subscriber.emailSent.length > 0 || subscriber.smsSent.length > 0" class="fa fa-check-circle" aria-hidden="true"></i>
         </div>
     </div>
     

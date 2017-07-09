@@ -658,8 +658,8 @@ router.post('/fbSave', function(req, res) {
 
 //to get all users
 router.get('/', function(req, res) {
-    user.find({}, function(err, docs) {
-    if (!err){ 
+    user.find({}, {userType: 1, basic: 1, mobile: 1, facebook: 1, email: 1, image: 1, fbemail: 1, fbimage: 1}, function(err, docs) {
+    if (!err){
         res.json(docs);
     } else {throw err;}
     });
@@ -1249,5 +1249,153 @@ router.post('/updatePassword', function(req, res) {
     }
     
 });
+
+
+router.post('/userMarketing', function(req, res) {
+    var allUsers = req.body;
+    
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+            var nLength = allUsers.length;
+            var emailsIndex = 0;
+            var smsIndex = 0;
+            var counter = 0;
+
+        allUsers.forEach(function(thisUser, index){
+        var userId = thisUser._id;
+        var existingUser = user.findOne({ '_id': userId},function (err, existingUser) {
+
+        if(existingUser){
+
+                if(existingUser.email){
+                var templateName = 'Review Promotional Email';
+                var fromEmail = {
+                    email: 'always@exambazaar.com',
+                    name: 'Always Exambazaar'
+                };
+                var to = existingUser.email;
+                var username = '';
+                if(existingUser.basic.name){
+                    username = existingUser.basic.name;
+                }
+
+                var apiKey = existingSendGridCredential.apiKey;
+                var sg = require("sendgrid")(apiKey);
+                var emailTemplate = existingSendGridCredential.emailTemplate;
+                var templateNames = emailTemplate.map(function(a) {return a.name;});
+                var tIndex = templateNames.indexOf(templateName);
+                //console.log(tIndex);
+                if(tIndex != -1){
+                    var templateId = emailTemplate[tIndex].templateKey;
+                    //console.log(templateId);
+                    var from_email = new helper.Email(fromEmail);
+
+                    var to_email = new helper.Email(to);
+                    var html = ' ';
+                    var subject = ' ';
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                    var emailrequest = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+                    sg.API(emailrequest, function(error, response) {
+                        if(error){
+                            console.log('Could not send email! ' + error);
+                        }else{
+                            emailsIndex += 1;
+                            console.log(emailsIndex + ". Email sent to: " + username + " at "+ to);
+                        }
+                    });
+                }else{
+                    console.log('Could not send email as there is no template with name: ' + templateName);
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }else{
+                //console.log('No user email');
+            }
+
+            if(existingUser.mobile){
+                var sentName = existingUser.basic.name;
+                //console.log(sentName);
+                if(sentName.length > 10){
+                    var pIndex = sentName.indexOf(' ');
+                    //console.log(pIndex);
+                    if(pIndex != -1){
+                        sentName = sentName.substring(0, pIndex).trim();
+                    }else{
+                        sentName = sentName.substring(0, 9).trim();
+                    }
+                }
+                var partnerOffers = ["Toppr, Plancess, HandaKaFunda", "Testbook, Mockbank, Superprofs"];
+
+                var randomNumber = Math.floor(Math.random() * (partnerOffers.length));
+
+                if(randomNumber > partnerOffers.length - 1){
+                    randomNumber = 0;
+                }
+
+
+                //console.log("Sending Welcome SMS");
+                var message = "Hi " + sentName + "\nReview your coaching institute to get discounts on courses of " + partnerOffers[randomNumber] + " and many others. Get upto 80% off!\nwww.exambazaar.com";
+
+                //console.log(message.length + " " + message);
+                var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
+                url += existingUser.mobile;
+                url += "&message=";
+                url += message;
+                url += "&sender=EXMBZR&type=3";
+                request({
+                        url: url,
+                        json: true
+                    }, function (error, response, body) {
+                        //console.log(response);
+                        //console.log(body);
+
+                        if (!error && response.statusCode === 200 && body.status == 'success' && body.mobilenumbers != '') {
+                            smsIndex += 1;
+                            console.log(smsIndex + ". SMS sent to: " + sentName + " at "+ existingUser.mobile);
+                        
+
+
+                        }else{
+                            console.log(error + " " + response);
+                        }
+                });
+
+
+
+            }else{
+                //console.log("No user mobile set");
+            }
+
+            counter += 1;
+            if(counter == nLength){
+                res.json(true);
+            }
+
+
+        }else{
+            counter += 1;
+            if(counter == nLength){
+                res.json(true);
+            }
+        } 
+
+
+        });
+
+
+    });
+    
+        }
+    });
+
+});
+
 
 module.exports = router;

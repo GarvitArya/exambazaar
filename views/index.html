@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="css/ui-bootstrap-csp.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/medium-editor.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/themes/tim.min.css">
-    
+    <link rel="stylesheet" href="medium-editor-insert-plugin.min.css">
     
     
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
@@ -118,6 +118,9 @@
         }
         .img-circle {
             border-radius: 50%;
+        }
+        .rounderBorder {
+            border-radius: 10px;
         }
         .spacedLetter2{
             letter-spacing: 2px;
@@ -1953,8 +1956,57 @@
     </div>    
 </div>        
         
-        
-<div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak ng-click="showUserReviewSearchDialog()">
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="partnerDialog">
+      <md-dialog class="offer-dialog">
+        <md-content flex layout="column" ng-controller="offerController">
+        <div class="width100" id="examinfo">
+
+        </div>
+        <div flex class="paddingTB20 paddingLR40" layout="column" layout-align="start center" layout-fill>
+            <div flex layout="row" id="min15vh" class="width100 greyBottomBorder paddingTB10">
+                <div flex ="25" layout="column" layout-align="start center" class="paddingT5">
+                    <img ng-src="{{partnerOffer.image}}" id="logo"/>
+                </div>
+                <div flex ="75" layout="column" class="">
+                    <div layout="column" layout-align="start start" class="editFont">
+                        <div class="fifthFont textBlack marginB5" id="lineHeight2">
+                        {{partnerOffer.displayname}}
+                        </div>
+
+                        <div id="lineHeight" class="">
+                            {{partnerOffer}}
+                        </div>
+                        <div id="lineHeight" class="marginT10">
+                            <span class="font12 textDarkGrey">
+                                {{activeExamEligibility.exam.briefDescription}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+
+
+
+            <div layout-wrap layout="row" layout-align="center center" class="text-center width100">
+                <div flex-xs="33" ng-repeat="offer in offers" class="padding5">
+                <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                </div>
+            </div>
+
+
+            <div layout="row" layout-align="center center" class="paddingLR10 min10vh width100">
+                <md-button class="md-small md-green2 width100 tolowercase" ng-click="redirectToReview()">
+                Review
+                </md-button>
+            </div>
+        </div>  
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>        
+<div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
     <div layout="row"  layout-align="start center" >
         <div hide-xs layout="row" layout-align="center center" flex>
             <div flex layout="row" layout-align="center center" >
@@ -1962,7 +2014,7 @@
                 </div>
                 
                 <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
-                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5">
+                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5" ng-click="showPartnerDialog(offer)">
                         <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
                     </div>
 
@@ -1971,7 +2023,7 @@
             </div>
             
             <div hide-xs layout="row" layout-align="end center" class="">
-                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1">
+                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
                 Review
                 </md-button>    
             </div>
@@ -1986,7 +2038,7 @@
                 </div>
             </div>
             <div flex layout="row" layout-align="center center" class="width100">
-                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1">
+                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
                 Go
             </md-button>
             
@@ -2013,6 +2065,11 @@
     
     <script src="//unpkg.com/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+       
+        
+        
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-cookies.js"></script>
     
@@ -2064,6 +2121,15 @@
         
     <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/js/medium-editor.min.js"></script>
     <script src="angular-medium-editor.js"></script>
+        
+    <script src="handlebars.runtime.min.js"></script>
+    <script src="jquery-sortable-min.js"></script>
+    <script src="jquery.ui.widget.js"></script>
+    <script src="jquery.iframe-transport.js"></script>
+    <script src="jquery.fileupload.js"></script>
+    <script src="medium-editor-insert-plugin.min.js"></script>
+    <script src="angular-medium-editor-insert-plugin.js"></script>     
+        
     <script type="text/javascript" src="app.js"></script>
 </body>
 </html>

@@ -9,6 +9,8 @@ var subscriberSchema = mongoose.Schema({
     user: { type: Schema.ObjectId, ref: 'user' },
     emailSent: [Date],
     smsSent: [Date],
+    _created: { type: Date, default: Date.now },
+    invalidMobile: { type: Boolean, default: false },
 });
 
 subscriberSchema.plugin(deepPopulate);

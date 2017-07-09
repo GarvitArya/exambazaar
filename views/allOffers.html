@@ -85,7 +85,12 @@
         <div layout="row" layout-align="start center" ng-repeat="offer in allOffers | orderBy:'-_created'" class="width100 paddingTB5 gainsboroBottomBorder">
             <div flex="5" class="paddingR10 font10">{{$index+1}}</div>
             <div flex="20" class="paddingR10 font10">{{offer.name}}</div>
-            <div flex="20" class="paddingR10 font10">{{offer.provider.name}}</div>
+            <div flex="20" class="paddingR10 font10">
+                <a ui-sref="claim({ coachingId:{{'offer.provider._id'}} })" target="_blank" id="link">
+                <strong>{{offer.provider.name}}</strong>
+                </a>
+            
+            </div>
             <div flex="10" class="paddingR10 font10">
                 <span ng-if="offer.active">
                     <md-button class="md-danger md-small " ng-click="deactivateOffer(offer)" >Deactivate</md-button>
