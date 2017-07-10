@@ -38,7 +38,7 @@
         </div>
     </div>
     <div layout="row" layout-align="start center" layout-wrap class="width100">
-        <div flex="25" layout="column" layout-align="center center" ng-repeat="thisuser in allUsers | orderBy:'basic.name'" flex="100" class="width100 padding10 gainsboroBorder min10vh rounderBorder" ng-class="{selected: selectedBackground(thisuser)}" ng-click="addUser(thisuser)">
+        <div flex="25" layout="column" layout-align="center center" ng-repeat="thisuser in allUsers | orderBy:'-_created'" flex="100" class="width100 padding10 gainsboroBorder min10vh rounderBorder" ng-class="{selected: selectedBackground(thisuser)}" ng-click="addUser(thisuser)">
             <div ng-if="thisuser.image">
                 <img ng-src="{{thisuser.image}}" id="userPicSmall" class="img-circle"/>
             </div>
