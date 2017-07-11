@@ -442,7 +442,7 @@
             border: 1px solid #FF5A5F;*/
         }
         #reviewHeaderRow{
-            min-height: 35vh;
+            min-height: 30vh;
             background-image: url("images/partners/review-popup.jpg");
             background-size:     cover;
             background-position: center center;
@@ -835,6 +835,10 @@
         }
         .marginR20{
             margin-right: 20px;
+        }
+        .marginLR5{
+            margin-left: 5px;
+            margin-right: 5px;
         }
         .marginLR10{
             margin-left: 10px;
@@ -1335,7 +1339,8 @@
             max-width: 100%;
             width: 80%;
             max-height: 90%;
-            height: 80%;
+            height: 85%;
+            top: 5vh;
             border-radius: 0;
         }
         
@@ -1784,7 +1789,7 @@
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="userReviewSearchDialog">
-      <md-dialog class="offer-dialog">
+      <md-dialog class="offer-dialog whiteBackground">
           <md-content flex layout="column" ng-controller="reviewRedirectController">
           
               <div hide-xs layout="row" layout-align="center center" id="reviewHeaderRow" class="" >
@@ -1799,22 +1804,29 @@
               </div>
               <div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="">
               </div>
-              
-              <div  class="secondFont font16 padding10 width100 text-center">
-                  Review your coaching <i class="fa fa-arrow-right" aria-hidden="true"></i> Receive exclusive Exambazaar coupon <i class="fa fa-arrow-right" aria-hidden="true"></i> Get upto 50% OFF on courses from
+              <div  class="secondFont font16 marginT10 width100 text-center">
+                  Review your coaching <i class="fa fa-arrow-right marginLR5" aria-hidden="true"></i> Receive exclusive Exambazaar coupon <i class="fa fa-arrow-right marginLR5" aria-hidden="true"></i> Get upto 50% OFF on courses from
               </div>
-              
+              <div hide-xs class="secondFont font10 width100 text-center marginB10" ng-if="offers.length>0">
+                  (hover to find out discounts for each provider)
+              </div>
+              <div hide-gt-xs class="secondFont font10 width100 text-center marginB10" ng-if="offers.length>0">
+                  (tap to find out discounts for each provider)
+              </div>
               <div hide-gt-xs layout="row" layout-align="center center" id="iOSFix" class="">
-                <div layout-wrap layout="row" layout-align="center center" class="text-center width100 " >
-                <div flex-xs="30" ng-repeat="offer in offers" class="padding5 ">
+                <div layout-wrap layout="row" layout-align="center center" class="text-center width100" >
+                <div flex-xs="30" ng-repeat="offer in offers" class="padding5">
                     <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                    
+                    
                 </div>
                 
                 </div>
               </div>
-              <div hide-xs layout-wrap layout="row" layout-align="center center" class="text-center width100" >
+              <div hide-xs layout-wrap layout="row" layout-align="center center" class="text-center width100 min10vh" >
                 <div flex-xs="33" ng-repeat="offer in offers" class="padding5">
                     <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                    <md-tooltip>{{offer.tooltip}}</md-tooltip>
                 </div>
                 
               </div>
@@ -1891,7 +1903,7 @@
 </div>        
         
 
-<div style="visibility: hidden">    
+<!--<div style="visibility: hidden">    
     <div class="md-dialog-container" id="whyReviewDialog">
       <md-dialog class="offer-dialog" ng-controller="whyReviewController">
           
@@ -1954,12 +1966,12 @@
           
       </md-dialog>
     </div>    
-</div>        
+</div>   -->     
         
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="partnerDialog">
       <md-dialog class="offer-dialog">
-        <md-content flex layout="column" ng-controller="offerController">
+        <md-content flex layout="column" ng-controller="offerController2">
         <div class="width100" id="examinfo">
 
         </div>

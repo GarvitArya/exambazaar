@@ -8395,32 +8395,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
     exambazaar.controller("offerController", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document, offerService){
-            /*$scope.offers = [
-                {
-                    image: "images/partners/careerpoint.png",
-                    displayname: "Career Point",
-                },
-                {
-                    image: "images/partners/toppr.png",
-                    displayname: "Toppr",
-                },
-                {
-                    image: "images/partners/bansal.jpg",
-                    displayname: "Bansal Classes",
-                },
-                {
-                    image: "images/partners/plancess.png",
-                    displayname: "Plancess",
-                },
-                {
-                    image: "images/partners/testbook.png",
-                    displayname: "Testbook",
-                },
-                {
-                    image: "images/partners/hkf.jpg",
-                    displayname: "Handa ka Funda",
-                },
-            ];*/
             $scope.offers = [];
             offerService.getActiveOffersBasic().success(function (data, status, headers) {
                 $scope.offersList = data;
@@ -8437,10 +8411,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
             }, true);
             
-            
-            
-        
-        //$scope.offers=[];
         $scope.instituteHolder = "your Coaching Institute"; 
         $scope.goToReview = function(){
             var statesToShow = ["landing","main","category","city","findCoaching"];
@@ -8463,7 +8433,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.showBottomOfferBar = function(){
             var showMe = false;
-            var statesToShow = ["landing","main","category","city","findCoaching","rankerswall"];
+            var statesToShow = ["landing","main","category","city","findCoaching","rankerswall","why"];
             var sIndex = statesToShow.indexOf($state.current.name);
             
             if(sIndex != -1){
@@ -8473,7 +8443,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             return showMe;
         };
         $rootScope.$on("ShowReviewDialog", function(){
-           $scope.showUserReviewSearchDialog();
+            $scope.showUserReviewSearchDialog();
         });
         $rootScope.$on("ShowWhyReviewDialog", function(){
            $scope.showWhyReviewSearchDialog();
@@ -8485,7 +8455,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
               targetEvent: ev,
               clickOutsideToClose: true
             }).finally(function() {
-                $scope.userReviewMode = true;
+                //$scope.userReviewMode = true;
             });
         };
             
@@ -8514,7 +8484,93 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });
         };
     }]);    
+    exambazaar.controller("offerController2", 
+        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document, offerService){
+            $scope.offers = [];
+            offerService.getActiveOffersBasic().success(function (data, status, headers) {
+                $scope.offersList = data;
+                //console.log($scope.offersList);
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });
+            
+            $scope.$watch('offersList', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue != ''){
+                    $scope.offers = newValue;
+                    //console.log(newValue);
+                }
+            }, true);
+            
+        $scope.instituteHolder = "your Coaching Institute"; 
+        $scope.goToReview = function(){
+            var statesToShow = ["landing","main","category","city","findCoaching"];
+            var sIndex = statesToShow.indexOf($state.current.name);
+            
+            if($state.current.name == 'showGroup'){
+                $mdDialog.hide();
+                var someElement = angular.element(document.getElementById('Reviews'));
+                $document.scrollToElement(someElement, -200, 1000);
+            }else if($state.current.name == 'review'){
+                var someElement = angular.element(document.getElementById('Reviews'));
+                $document.scrollToElement(someElement, 0, 1000);
+            }else if(sIndex != -1){
+                
+                $state.go('review');
+            }
+            
+            
+        };
         
+        $scope.showBottomOfferBar = function(){
+            var showMe = false;
+            var statesToShow = ["landing","main","category","city","findCoaching","rankerswall","why"];
+            var sIndex = statesToShow.indexOf($state.current.name);
+            
+            if(sIndex != -1){
+                showMe = true;
+            }
+            
+            return showMe;
+        };
+          
+        $scope.showUserReviewSearchDialog = function(ev) {
+            console.log('I am opened');
+            $mdDialog.show({
+              contentElement: '#userReviewSearchDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            }).finally(function() {
+                //$scope.userReviewMode = true;
+            });
+        };
+            
+        $scope.showWhyReviewSearchDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#whyReviewDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            }).finally(function() {
+                $scope.userReviewMode = true;
+            });
+        };
+            
+        $scope.showPartnerDialog = function(offer, ev) {
+            $rootScope.partnerOffer = offer;
+            
+            
+            $mdDialog.show({
+              contentElement: '#partnerDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            }).finally(function() {
+                
+            });
+        };
+    }]);      
     exambazaar.controller("coachingGroupAutocompleteController", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
             
@@ -10520,122 +10576,15 @@ function getLatLng(thisData) {
             }
             
             $rootScope.pageTitle = 'Why review at Exambazaar?';
-            $scope.currState = "1";
-            $rootScope.$emit("ShowWhyReviewDialog", {}); 
+            //alert('Starting');
+            $rootScope.$emit("ShowReviewDialog", {});
             
-            $scope.questions = [
-                {
-                    state: "1",
-                    text: "Are you or will you be studying for exams?",
-                    subtext:"",
-                    options: [
-                        {
-                            title: "Yes",
-                            subtitle: "I am determined to crack it. It's my dream!",
-                            stateModifier: "y",
-                        },
-                        {
-                            title: "No",
-                            subtitle: "Been there, done that. Now I love the advisory role.",
-                            stateModifier: "n",
-                        }
-                    ],
-                },
-                {
-                    state: "1y",
-                    text: "Determination is great. So is preparation!",
-                    subtext:"Let us help you improve. We are giving away free coupons for upto 50% discount on the most effective preparation resources, who doesn't love free stuff?",
-                    options: [
-                        {
-                            title: "Great",
-                            subtitle: "Tell me what to do!",
-                            stateModifier: "y",
-                        },
-                        {
-                            title: "No",
-                            subtitle: "I'd rather leave it to chance.",
-                            stateModifier: "n",
-                        }
-                    ],
-                },
-                {
-                    state: "1n",
-                    text: "You're an Advisor! We are too!",
-                    subtext:"We love leveraging our experience to help our younger ones out! Spare a moment to join our effort?",
-                    options: [
-                        {
-                            title: "Yes ofcourse",
-                            subtitle: "Don't want my vast wisdom to go to waste.",
-                            stateModifier: "y",
-                        },
-                        {
-                            title: "No",
-                            subtitle: "I don't have any people to help :(",
-                            stateModifier: "n",
-                        }
-                    ],
-                },
-                {
-                    state: "1yn",
-                    text: "Woah! You are the confident one!",
-                    subtext:"So many people would love to have that swag. Mind leaving a review to help others along in their studies too?",
-                    options: [
-                    ],
-                },
-                {
-                    state: "1nn",
-                    text: "'No people' has changed today! The Exambazaar family is all yours!",
-                    subtext:"Now that you are a part of our family, please write a short, super-quick review for us?",
-                    options: [
-                    ],
-                },
-            ];
-
-            var questionStates = $scope.questions.map(function(a) {return a.state;});
-            $scope.reviewStates = ["1yn", "1nn"];
-            $scope.showReviewButton = false;
-            
-            $scope.$watch('currState', function (newValue, oldValue, scope) {
-            if(newValue != null && newValue != ''){
-                var qIndex = questionStates.indexOf(newValue);
-                $scope.currentQuestion = $scope.questions[qIndex];
-                
-                if($scope.reviewStates.indexOf(newValue)!= -1){
-                    $scope.showReviewButton = true;
-                }else{
-                    $scope.showReviewButton = false;
-                }
-                
-                
-            }
-
-            }, true);
-            
-            var reviewLaunchStates = ["1yy", "1ny"];
-            
-            $scope.updateState = function(option){
-                var newState = $scope.currState + option.stateModifier;
-                
-                var nIndex = reviewLaunchStates.indexOf(newState);
-                if(nIndex == -1){
-                    $scope.currState += option.stateModifier;
-                    
-                }else{
-                    //console.log("Launch Review Bar");
-                    $rootScope.$emit("ShowReviewDialog", {});
-                }
-            };
-            $scope.previousState = function(){
-                $scope.currState = $scope.currState.slice(0, $scope.currState.length-1);
-                console.log($scope.currState);
-            };
             
             
             var viewForm = {
                 state: $state.current.name,
                 claim: false
             };
-            console.log();
             if($scope.user && $scope.user.userId){
                 viewForm.user = $scope.user.userId
             }

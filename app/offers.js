@@ -137,6 +137,7 @@ router.get('/activeOffersBasic', function(req, res) {
                         _id: thisProvider._id,
                         image: thisProvider.logo,
                         displayname: thisProvider.name,
+                        tooltip: thisOffer.tooltip,
                         //offers: [thisOffer],
                     };
                     providerOffers.push(newProviderOffer);
@@ -146,6 +147,7 @@ router.get('/activeOffersBasic', function(req, res) {
                 }
                 counter += 1;
                 if(counter == nLength){
+                    //console.log(providerOffers);
                     res.json(providerOffers);
                 }
             });

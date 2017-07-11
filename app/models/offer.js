@@ -5,6 +5,7 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var offerSchema = mongoose.Schema({
     provider: { type: Schema.ObjectId, ref: 'targetStudyProvider' },
     name: String,
+    tooltip: String,
     primaryContact: {
         name: String,       
         email: String,       
