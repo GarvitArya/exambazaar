@@ -60,6 +60,7 @@
                 
             </div>
             <div layout="column" layout-align="center center" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">
+                <!--multiple="multiple" -->
                 <div layout="column" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
                     <i class="fa fa-plus-circle font20" aria-hidden="true"></i>&nbsp;Add Image
                 </div>
@@ -81,6 +82,10 @@
     <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
         <textarea class="font9 width100" ng-model="blogpost.content" placeholder="HTML Content" rows="10"></textarea>
         
+    </div>
+    
+    <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
+        <div markdown-it="markdown"></div>
     </div>
 </div>
     

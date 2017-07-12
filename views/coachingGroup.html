@@ -1,3 +1,4 @@
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
 <style>
     #autocompleteLogo{
         max-height: 35px;
@@ -26,7 +27,10 @@
         background: #20C39A;
     }
     
-     
+     #hotTable{
+        overflow: hidden;
+        text-align: left;
+    }
     
 </style>
 
@@ -63,7 +67,11 @@
         </md-autocomplete>
     </div>
     <div layout="column" class="marginT40 textBlack" ng-if="coachingGroup.groupName">
-        <div layout="row" class="secondFont textBlack  marginB20" ><span class="bold">Coaching Group:</span>&nbsp; {{coachingGroup.groupName}}&nbsp;&nbsp;<span class="badge" id="badge">{{coachingGroupItems.length}}</span></div>
+        <div layout="row" class="secondFont textBlack  marginB20" ><span class="bold">Coaching Group:</span>&nbsp; {{coachingGroup.groupName}}&nbsp;&nbsp;<span class="badge" id="badge">{{coachingGroupItems.length}}</span>&nbsp;
+        <a ng-click="showSpreadsheetDialog()" ng-if="spreadsheetMode" class="danger">
+            Spreadsheet
+        </a>
+        </div>
         
         <div layout="row" class="editFont font11 bold greyBottomBorder textBlack">
             <div flex="5" class="padding1">S.No.</div>
@@ -121,4 +129,29 @@
     </div>
         
         
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="spreadsheetDialog">
+      <md-dialog class="offer-dialog whiteBackground">
+          
+          <div layout="column" layout-align="start center" class="padding20 width100">
+              <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="spreadSheetCoachings" height="400" id="hotTable" class="width90">
+                  <hot-column data="sno" title="'S. No.'"  width="40"></hot-column>
+                  <hot-column data="_id" title="'EB Id'"  width="150"></hot-column>
+                  <hot-column data="name" title="'Name'"  width="200"></hot-column>
+                  <hot-column data="address" title="'Address'"  width="200"></hot-column>
+                  <hot-column data="city" title="'City'"  width="80"></hot-column>
+                  <hot-column data="state" title="'State'"  width="80"></hot-column>
+                  <hot-column data="pincode" title="'Pincode'"  width="80"></hot-column>
+                  <hot-column data="logo" title="'Logo'"  width="80"></hot-column>
+                  <hot-column data="email" title="'Email'"  width="120"></hot-column>
+                  <hot-column data="phone" title="'Phone'"  width="120"></hot-column>
+                  <hot-column data="mobile" title="'Mobile'"  width="120"></hot-column>
+                  <hot-column data="website" title="'Website'"  width="120"></hot-column>
+              </hot-table>
+                      
+          </div>
+      </md-dialog>
+    </div>    
 </div>

@@ -1,5 +1,5 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor']);
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor','mdMarkdownIt']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin'
     (function() {
     'use strict';
@@ -13,6 +13,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $facebookProvider.setAppId('1236747093103286');
         $facebookProvider.setPermissions("public_profile,email"); //, user_education_history, publish_actions
         //$anchorScrollProvider.disableAutoScrolling();
+        
     })
     .controller('streamController', streamController);
     function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope,  $location) {
@@ -8584,25 +8585,27 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
-            console.info('Item changed to ' + JSON.stringify(item));
+            //console.info('Item changed to ' + JSON.stringify(item));
             $rootScope.coachingGroup = item;
             
             var items = $rootScope.coachingGroupItems;
-            console.log(items.length);
+            //console.log(items.length);
             var coachingGroupItems = [];
             items.forEach(function(thisItem, index){
                 if(thisItem.groupName == item.groupName){
                     coachingGroupItems.push(thisItem);
                 }else{
-                    console.log(thisItem);
+                    //console.log(thisItem);
                 }
                 
             });
             $rootScope.coachingGroupItems = coachingGroupItems;
-            console.log(coachingGroupItems.length);
+            $rootScope.$emit("setSpreadSheetCoachings", {});
+            //console.log(coachingGroupItems.length);
         };
         this.querySearch = function(query){
             if(query.length > 2){
+                $rootScope.coachingGroupItems = [];
                 return targetStudyProviderService.searchCoachingGroupProviders(query).then(function(response){
                     //console.info(response.data);
                     
@@ -9523,9 +9526,105 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);    */
     
     exambazaar.controller("coachingGroupController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', '$mdDialog','thisuser', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog,thisuser){
+            
+            $scope.user = thisuser.data;
+            console.log($scope.user);
+            $scope.spreadsheetMode = false;
+            
+            if($scope.user.userType =='Master'){
+                $scope.spreadsheetMode = true;
+            }
+            if($scope.user._id =='59154e2e838df93c1c27ab41'){
+                $scope.spreadsheetMode = true;
+            }
             
             $rootScope.title ='Sandbox';
+            $scope.showSpreadsheetDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#spreadsheetDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
+            $scope.spreadSheetCoachings = [];
+            
+            $rootScope.$on("setSpreadSheetCoachings", function(){
+                var searchedCoachingGroup = $rootScope.coachingGroupItems;
+                var newCenter = {
+                    sno: 'S. No',
+                    _id: 'EB Id',
+                    name: 'Name',
+                    address: 'Address',
+                    city: 'City',
+                    state: 'State',
+                    pincode: 'Pincode',
+                    logo: 'Logo',
+                    email: 'Email',
+                    phone: 'Phone',
+                    mobile: 'Mobile',
+                    website: 'Website',
+                };
+                $scope.spreadSheetCoachings.push(newCenter);
+                searchedCoachingGroup.forEach(function(thisCoaching, cindex){
+                    if(thisCoaching.email && thisCoaching.email.length > 0){
+                        var emailString = '';
+                        thisCoaching.email.forEach(function(thisEmail, eindex){
+                            emailString += thisEmail;
+                            if(eindex != thisCoaching.email.length-1){
+                                emailString +=", ";
+                            }
+                        });
+                    }
+                    if(thisCoaching.phone && thisCoaching.phone.length > 0){
+                        var phoneString = '';
+                        thisCoaching.phone.forEach(function(thisEmail, eindex){
+                            phoneString += thisEmail;
+                            if(eindex != thisCoaching.phone.length-1){
+                                phoneString +=", ";
+                            }
+                        });
+                    }
+                    if(thisCoaching.mobile && thisCoaching.mobile.length > 0){
+                        var mobileString = '';
+                        thisCoaching.mobile.forEach(function(thisEmail, eindex){
+                            mobileString += thisEmail;
+                            if(eindex != thisCoaching.mobile.length-1){
+                                mobileString +=", ";
+                            }
+                        });
+                    }
+                    if(thisCoaching.website && thisCoaching.website.length > 0){
+                        var websiteString = '';
+                        thisCoaching.website.forEach(function(thisEmail, eindex){
+                            websiteString += thisEmail;
+                            if(eindex != thisCoaching.website.length-1){
+                                websiteString +=", ";
+                            }
+                        });
+                    }
+                    var newCenter = {
+                        sno: cindex + 1,
+                        _id: thisCoaching._id,
+                        name: thisCoaching.name,
+                        address: thisCoaching.address,
+                        city: thisCoaching.city,
+                        state: thisCoaching.state,
+                        pincode: thisCoaching.pincode,
+                        logo: thisCoaching.logo,
+                        email: emailString,
+                        phone: phoneString,
+                        mobile: mobileString,
+                        website: websiteString,
+                    };
+                   
+                    
+                    $scope.spreadSheetCoachings.push(newCenter);
+
+                });
+            });
+            
     }]);
         
     exambazaar.controller("suggestCoachingController", 
@@ -9952,7 +10051,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         image: picLink,
                         userId: userId
                     }; UserService.addBlogGalleryPic(newPicForm).success(function (data, status, headers) {
-                        $state.reload();
+                        UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                            var userGallery = data.blogger.gallery;
+                            //console.log(userGallery);
+                            $scope.blogGallery = userGallery;
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                        //$state.reload();
                     })
                     .error(function (data, status, header, config) {
                         console.info("Error ");
@@ -9990,6 +10097,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var rIndex = $scope.blogpost.content.indexOf(remove);
                 $scope.blogpost.content = $scope.blogpost.content.substring(0, rIndex);*/
                 console.log(JSON.stringify($scope.blogpost.content));
+                md = new MarkdownIt();
+                var markdownText = md.parse($scope.blogpost.content);
+                console.log(JSON.stringify(markdownText));
             };
             
             /*$(function () {
@@ -12561,6 +12671,7 @@ function getLatLng(thisData) {
           };
         });
     });
+        
 
     var checkLoggedin = function($q, $timeout, $http, $location, $rootScope){
       // Initialize a new promise
@@ -13167,6 +13278,10 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
                 provider: function() { return {}; }
                 
             }
