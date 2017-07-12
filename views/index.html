@@ -39,11 +39,11 @@
     <link rel="stylesheet" href="css/ui-bootstrap-csp.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/medium-editor.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/themes/tim.min.css">
-    <link rel="stylesheet" href="medium-editor-insert-plugin.min.css">
-    
+    <!--<link rel="stylesheet" href="medium-editor-insert-plugin.min.css">-->
+    <link rel="stylesheet" href="medium-editor-tables.css" />
     
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
-    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Roboto:100,300,400|Roboto+Condensed|Unica+One|Seaweed+Script" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Roboto:100,300,400|Roboto+Condensed|Unica+One|Seaweed+Script|Lato|Varela+Round" rel="stylesheet">
     <!--Amatica+SC|Bubblegum+Sans|Chewy|Chicle|Concert+One|Passion+One|Pompiere|-->
     
     <style>
@@ -52,6 +52,11 @@
             font-family: 'Roboto', sans-serif;
             font-size: 16px;
             color: white;
+        }
+        .blogFont{
+            font-family: 'Varela Round', sans-serif;
+            font-size: 16px;
+            color: black;
         }
         .rankersWallFont{
             font-family: 'Seaweed Script', sans-serif;
@@ -275,6 +280,12 @@
         ::selection { background:#000; color:#fff; }
         #landingPage{
             min-height: 100vh;
+        }
+        #picHolder{
+            border: 1px solid gainsboro;
+            height: 100px;
+            width: 100px;
+            border-radius: 4px;
         }
         .min100vh{
             min-height: 100vh;
@@ -700,6 +711,12 @@
             background: black;
             color: white;
         }
+        #galleryImage {
+            height: 100px;
+        }
+        #copyLink{
+            cursor: pointer;
+        }
         #thumbnailImage {
             width:100%;
             position: relative;
@@ -1073,7 +1090,7 @@
             line-height: 100%;
         }
         .narrowLine2{
-            line-height: 140%;
+            line-height: 160%;
         }
         .width8{
             width: 100px;
@@ -2108,7 +2125,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.9/angular-sanitize.min.js"></script>
     
-    <script src="angular-file-upload.min.js"></script>
+    <!--<script src="angular-file-upload.min.js"></script>-->
     
     <script src="ngGeolocation.min.js"></script>
         
@@ -2139,14 +2156,15 @@
         
     <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/js/medium-editor.min.js"></script>
     <script src="angular-medium-editor.js"></script>
+    <script type="text/javascript" src="medium-editor-tables.js"></script>
         
-    <script src="handlebars.runtime.min.js"></script>
+    <!--<script src="handlebars.runtime.min.js"></script>
     <script src="jquery-sortable-min.js"></script>
     <script src="jquery.ui.widget.js"></script>
     <script src="jquery.iframe-transport.js"></script>
     <script src="jquery.fileupload.js"></script>
     <script src="medium-editor-insert-plugin.min.js"></script>
-    <script src="angular-medium-editor-insert-plugin.js"></script>     
+    <script src="angular-medium-editor-insert-plugin.js"></script> -->    
         
     <script type="text/javascript" src="app.js"></script>
 </body>

@@ -658,7 +658,7 @@ router.post('/fbSave', function(req, res) {
 
 //to get all users
 router.get('/', function(req, res) {
-    user.find({_created: {  $gte : "2017-07-09T00:00:00.000Z"}}, {userType: 1, basic: 1, mobile: 1, facebook: 1, email: 1, image: 1, fbemail: 1, fbimage: 1, _created: 1}, function(err, docs) {
+    user.find({_created: {  $gte : "2017-07-11T00:00:00.000Z"}}, {userType: 1, basic: 1, mobile: 1, facebook: 1, email: 1, image: 1, fbemail: 1, fbimage: 1, _created: 1}, function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}
@@ -709,6 +709,65 @@ router.post('/addPic', function(req, res) {
     });
 });
 
+router.post('/addBlogGalleryPic', function(req, res) {
+    var newPicForm = req.body;
+    var userId = newPicForm.userId;
+    var image = newPicForm.image;
+    
+    console.log("New Pic Form is: " + JSON.stringify(newPicForm));
+    
+    var existingUser = user.findOne({ '_id': userId },{blogger:1},function (err, existingUser) {
+        if(image){
+            
+            if(existingUser.blogger){
+                var newImage = {
+                    image: image,
+                }
+                existingUser.blogger.gallery.push(newImage);
+            }else{
+                existingUser.blogger = {
+                    gallery: [],
+                }
+                var newImage = {
+                    image: image,
+                }
+                existingUser.blogger.gallery.push(newImage);
+            }
+            existingUser.save(function(err, existingUser) {
+                if (err) return console.error(err);
+                res.json(existingUser._id);
+            });
+        }else{
+            res.json(false);
+        }
+    });
+});
+
+router.post('/removeBlogGalleryPic', function(req, res) {
+    var newPicForm = req.body;
+    var userId = newPicForm.userId;
+    var image = newPicForm.image;
+    
+    console.log("New Pic Form is: " + JSON.stringify(newPicForm));
+    
+    var existingUser = user.findOne({ '_id': userId },{blogger:1},function (err, existingUser) {
+        if(image && existingUser.blogger.gallery){
+            var thisGallery = existingUser.blogger.gallery;
+            var galleryImages = thisGallery.map(function(a) {return a.image;});
+            
+            var iIndex = galleryImages.indexOf(image);
+            console.log("Image index is: " + iIndex);
+            console.log("Image is: " + image);
+            existingUser.blogger.gallery.splice(iIndex, 1);
+            existingUser.save(function(err, existingUser) {
+                if (err) return console.error(err);
+                res.json(existingUser._id);
+            });
+        }else{
+            res.json(false);
+        }
+    });
+});
 
 router.post('/shortlistInstitute', function(req, res) {
     var shortListForm = req.body;
@@ -893,6 +952,21 @@ router.get('/edit/:userId', function(req, res) {
         if (!err){
             
             //console.log(thisuser);
+            res.json(thisuser);
+            //process.exit();
+        } else {throw err;}
+    });
+});
+
+router.get('/blogger/:userId', function(req, res) {
+    var userId = req.params.userId;
+    //var mobile = req.params.mobile;
+    //console.log("User fetched is " + userId);
+    user
+        .findOne({ '_id': userId },{blogger:1})
+        //.deepPopulate('partner')
+        .exec(function (err, thisuser) {
+        if (!err){
             res.json(thisuser);
             //process.exit();
         } else {throw err;}

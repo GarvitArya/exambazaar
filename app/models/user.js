@@ -61,6 +61,12 @@ var userSchema = mongoose.Schema({
     latlng: {
         lat: {type: String},
         lng: {type: String}
+    },
+    blogger:{
+        gallery: [{
+            image: String,
+            _created: { type: Date, default: Date.now },
+        }],
     }
 });
 userSchema.plugin(passportLocalMongoose);

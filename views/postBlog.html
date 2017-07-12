@@ -1,0 +1,111 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center center" class="whiteBackground">
+<div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="paddingTB20 width100" ng-if="user">
+    
+    
+    <div layout="column" layout-align="center center" class="blogFont width100 paddingTB10 paddingLR20 gainsboroBorder">
+        <!--<h1 ng-model="blogpost.title" medium-editor bind-options="{disableReturn: true, disableExtraSpaces: true, toolbar: false}" data-placeholder="Enter your blog title here" class="gainsboroBorder width100 min20vh marginB20"></h1>
+        <p ng-model="blogpost.content" medium-editor bind-options="{'toolbar': {'buttons': ['bold', 'italic', 'underline', 'justifyCenter', 'quote', 'anchor', 'h1','h2', 'h3'] } }" data-placeholder="Enter a description" class="gainsboroBorder  width100 min20vh">
+            <medium-insert></medium-insert>
+        </p>-->
+        <h1 ng-model="blogpost.title" medium-editor bind-options="titleBindOptions" data-placeholder="Enter your blog title here" class="gainsboroBorder width100 text-center paddingTB10"></h1>
+        <p ng-model="blogpost.content" medium-editor bind-options="mediumBindOptions" class="width100 min20vh marginTB20 gainsboroBorder">
+        </p>
+        <div>
+            <md-button class="md-raised md-primary" ng-click="seeDescription()">
+                 See
+            </md-button>
+        </div>
+        
+        
+        <div layout="row" layout-wrap layout-align="center center" class="width100 marginTB20 gainsboroBorder">
+            <div layout="column" layout-wrap layout-align="center center" ng-repeat="photo in blogGallery | orderBy:'-_created'" class="marginLR5 marginTB5">
+                <div>
+                    <img ng-src="{{photo.image}}" id="galleryImage"/>
+                </div>
+                <div layout="row" layout-wrap layout-align="center center" class="width100">
+                    <div flex layout="row" layout-align="start center">
+                        <a clipboard supported="supported" text="photo.image" on-copied="showCopiedDialog(photo.image)" on-error="fail(err)" id="copyLink" class="textPrimary font10">Use this image</a>
+                    </div>
+                    <div layout="row" layout-align="start center">
+                        <a ng-click="removePic(photo.image)" id="copyLink" class="textPrimary font10 danger pull-right marginL10">Remove</a>
+                    </div>
+                    
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">
+                <div layout="column" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
+                    <i class="fa fa-plus-circle font20" aria-hidden="true"></i>&nbsp;Add Image
+                </div>
+                <a class="textPrimary font10">Add Image</a>
+            </div>
+        </div>
+    </div>
+    <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
+        <div layout="row" layout-align="center center" class="width100 font16">
+            <div ng-if="user.image">
+            <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
+            </div>
+            <div class="marginL10">
+                {{user.basic.name}}
+            </div>
+        </div>
+    </div>
+</div>
+    
+<div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="paddingTB20 width100" ng-if="!user">
+    <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
+        <div layout="row" layout-align="center center" class="width100 font20 danger">
+            You need to be logged in to be able to post!
+        </div>
+    </div>
+    
+</div>
+</div>
+
+<div style="visibility: hidden">    
+<div class="md-dialog-container" id="copiedDialog">
+  <md-dialog>
+      <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+        <div layout="column" layout-align="center center" class="margin10 padding5">
+            <div layout="row" layout-align="center center" class="margin10 padding5">    
+                <span class="text-primary md-headline">
+                <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                Copied!
+                </span>
+            </div>
+            <div layout="row" layout-align="center center" class="editFont font10 danger margin10 padding5">
+                {{copiedText}}
+            </div>
+        </div>
+      </div>
+  </md-dialog>
+</div>   

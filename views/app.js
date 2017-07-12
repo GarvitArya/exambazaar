@@ -1,6 +1,6 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'angularFileUpload', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'angular-medium-editor-insert-plugin']);
-//,'ngHandsontable''ngHandsontable',,'ng','seo'
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor']);
+//,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin'
     (function() {
     'use strict';
     angular
@@ -187,6 +187,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             return $http.post('/api/users/fbSave', user);
         };
+        this.getBlogger = function(userId) {
+            return $http.get('/api/users/blogger/'+userId, {userId: userId});
+        };
         this.getUser = function(userId) {
             return $http.get('/api/users/edit/'+userId, {userId: userId});
         };
@@ -235,7 +238,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.addPic = function(newPicForm) {
             return $http.post('/api/users/addPic', newPicForm);
         };
-        
+        this.addBlogGalleryPic = function(newPicForm) {
+            return $http.post('/api/users/addBlogGalleryPic', newPicForm);
+        };
+        this.removeBlogGalleryPic = function(newPicForm) {
+            return $http.post('/api/users/removeBlogGalleryPic', newPicForm);
+        };
         this.getUsersCount = function() {
             return $http.get('/api/users/count');
         };
@@ -8433,7 +8441,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.showBottomOfferBar = function(){
             var showMe = false;
-            var statesToShow = ["landing","main","category","city","findCoaching","rankerswall","why"];
+            var statesToShow = ["landing","main","category","city","findCoaching","why"];
             var sIndex = statesToShow.indexOf($state.current.name);
             
             if(sIndex != -1){
@@ -9809,7 +9817,397 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
     }]);     
         
-        
+    exambazaar.controller("postBlogController", 
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog){
+            
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+                //console.log($scope.user);
+                
+                UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                    var userGallery = data.blogger.gallery;
+                    //console.log(userGallery);
+                    $scope.blogGallery = userGallery;
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+                
+            }else{
+                $scope.user = null;
+            }
+            $scope.mediumBindOptions = {
+                toolbar: {
+                    buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'indent', 'outdent', 'quote', 'anchor', 'h1','h2', 'h3', 'image', 'removeFormat', 'table', 'orderedlist', 'unorderedlist']
+                },
+                extensions: {
+                    table: new MediumEditorTable()
+                },
+                anchor: {
+                    placeholderText: 'Type a link',
+                    customClassOption: 'btn',
+                    customClassOptionText: 'Create Button'
+                },
+                keyboardCommands: {
+                    /* This example includes the default options for keyboardCommands,
+                       if nothing is passed this is what it used */
+                    commands: [
+                        {
+                            command: 'bold',
+                            key: 'B',
+                            meta: true,
+                            shift: false,
+                            alt: false
+                        },
+                        {
+                            command: 'italic',
+                            key: 'I',
+                            meta: true,
+                            shift: false,
+                            alt: false
+                        },
+                        {
+                            command: 'underline',
+                            key: 'U',
+                            meta: true,
+                            shift: false,
+                            alt: false
+                        }
+                    ],
+                }
+            };
+            $scope.titleBindOptions = {
+                toolbar: {
+                    buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'anchor', 'h1','h2', 'h3','removeFormat']
+                },
+                disableReturn: true,
+                disableExtraSpaces: true,
+              
+            };
+            
+            $scope.blogpost = {
+                title: '',
+                content: ''
+            };
+            
+            $scope.removePic = function(image){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to delete this image?')
+                .textContent('You will not be able to restore it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    var newPicForm ={
+                        image: image,
+                        userId: $scope.user._id
+                    }; UserService.removeBlogGalleryPic(newPicForm).success(function (data, status, headers) {
+                        //alert(data);
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                }, function() {
+                  //nothing
+                }); 
+            };
+            $scope.uploadPic = function (newPic) {
+                //var pic = $scope.newPic;
+                var pic = [newPic];
+                var nFiles = pic.length;
+
+                var counter = 0;
+                //console.log(JSON.stringify($scope.user));
+                var userId = $scope.user._id;
+                if (pic && pic.length) {
+
+                pic.forEach(function(thisFile, index){
+                var fileInfo = {
+                    filename: thisFile.name,
+                    contentType: thisFile.type
+                }; ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                var s3Request = {};
+                var allParams = data.params;
+                for (var key in allParams) {
+                  if (allParams.hasOwnProperty(key)) {
+                    s3Request[key] = allParams[key];
+                  }
+                }
+
+                s3Request.file = thisFile;
+                Upload.upload({
+                    url: data.endpoint_url,
+                    data: s3Request
+                }).then(function (resp) {
+                    console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                    var picLink = $(resp.data).find('Location').text();
+                    console.log(picLink);
+                    
+
+                    var newPicForm ={
+                        image: picLink,
+                        userId: userId
+                    }; UserService.addBlogGalleryPic(newPicForm).success(function (data, status, headers) {
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                    }, function (resp) {
+                        console.log('Error status: ' + resp.status);
+                    }, function (evt) {
+
+                    });
+
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error");
+                });   
+
+                });
+                }
+             };
+            
+             $scope.showCopiedDialog = function(text, ev) {
+                $scope.copiedText = text;
+                $mdDialog.show({
+                  contentElement: '#copiedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },500)
+            };
+            $scope.seeDescription = function(){
+                
+                /*var remove = "<div class=";
+                var rIndex = $scope.blogpost.content.indexOf(remove);
+                $scope.blogpost.content = $scope.blogpost.content.substring(0, rIndex);*/
+                console.log(JSON.stringify($scope.blogpost.content));
+            };
+            
+            /*$(function () {
+                $('.editable').mediumInsert({
+                    editor: editor,
+                    addons: {
+                        images: {
+                            fileUploadOptions: {
+                                url: 'upload.php'
+                            }
+                        }
+                    }
+                });
+            });*/
+            
+            $rootScope.pageTitle ='Search & Review Coaching Institutes';
+            
+            $scope.fbLoginStatus = {};
+            
+            $scope.loggedIn = false;
+            
+            $facebook.getLoginStatus().then(function(response) {
+                $scope.fbLoginStatus = response;
+            });
+            if($scope.user && $scope.user.userId){
+                $scope.loggedIn = true; 
+                refresh();
+            }else{
+                $scope.loggedIn = false;
+            }
+            
+            $scope.fblogin = function() {
+                //console.log('Loggin into fb');
+                $facebook.login().then(function(response) {
+                    $scope.fbLoginStatus = response;
+                    refresh();
+                });   
+            };
+            var currURL = $location.absUrl();
+            currURL = currURL.replace("localhost:8000", "exambazaar.com");
+            currURL = "www.exambazaar.com/review";
+            //console.log(currURL);
+            $scope.fbshare = function() {
+                $facebook.ui(
+                     {
+                      method: 'share',
+                      href: currURL,
+                      redirect_uri: 'https://www.exambazaar.com/', 
+                      hashtag: '#exambazaar',
+                      quote: 'Exambazaar: Find best coaching institutes in your city for more than 50 exams',
+                      display: 'iframe',
+                      mobile_iframe: true
+                    }, function(response){
+                        console.log("Response is: " + response);
+                        if(response){
+                            alert('Done');
+                        }else{
+                            alert('Error');
+                        }
+                    });
+            };
+            $scope.fbshare2 = function() {
+                $http.get('https://www.facebook.com/dialog/share?app_id=1236747093103286&display=popup&href=http%3A%2F%2Fwww.exambazaar.com/review%2F&redirect_uri=http%3A%2F%2Fwww.exambazaar.com/reviewed')
+                .success(function(data) {
+                    console.log(data)
+                })
+                .error(function(data) {
+                    alert(data);
+                    console.log('Error: ' + data);
+                });
+            };
+            $scope.fbfeed = function() {
+                $facebook.ui(
+                     {
+                      method: 'feed',
+                      link: 'https://www.exambazaar.com',
+                      //redirect_uri: 'https://www.exambazaar.com', 
+                      source: 'https://www.exambazaar.com/images/logo/eblogo.png',
+                      //display: 'iframe',
+                      //mobile_iframe: true
+                    }, function(response){
+                        alert(response);
+                        console.log("Response is: ");
+                        console.log(response);
+                        if(response){
+                            alert('Done');
+                        }else{
+                            alert('Error');
+                        }
+                    });
+            };
+            $scope.fbInvite = function(){
+                
+                
+                $facebook.ui({
+                    method: 'send',
+                    name: 'Review your coaching institute at Exambazaar.com',
+                    description: 'Be heard and help others by reviewing your coaching institute! As a goodie, unlock discounts from Exambazaar.com',
+                    display: 'popup',
+                    link: currURL
+                },function(response) {
+                    if (response) {
+                        alert('Successfully Invited');
+                    } else {
+                        alert('Failed To Invite');
+                    }
+                });
+            };
+            
+            function refresh() {
+                $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
+                    function(response) {
+                        //console.log($scope.user);
+                        
+                        if($scope.user && $scope.user.userId){
+                            //link the user's fb id to the current user
+                            $scope.user.fbuser = {
+                                name: response.name,
+                                gender: response.gender,
+                                image: response.picture.data.url,
+                                email: response.email,
+                                facebook: {
+                                    link: response.link,
+                                    id: response.id,
+                                }
+                            };
+                            
+                            
+                        }else{
+                            $scope.user = {};
+                            $scope.user.fbuser = {
+                                name: response.name,
+                                gender: response.gender,
+                                image: response.picture.data.url,
+                                email: response.email,
+                                facebook: {
+                                    link: response.link,
+                                    id: response.id,
+                                }
+                            };
+                            //add a new user with facebook id
+                        }
+                        
+                    },
+                    function(err) {
+                        $scope.welcomeMsg = "Please log in";
+                        $scope.isLoggedIn = false;
+                });
+                $facebook.api("/me/permissions").then(
+                    function(response) {
+                        //console.log(response);
+                        $scope.permissions = response;
+                    },
+                    function(err) {
+                    $scope.welcomeMsg = "Permissions Error";
+                });
+                
+            };
+
+            //console.info($scope.user);
+            
+            $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
+                //console.log(newValue);
+            if(newValue[0] == 'connected' && newValue[1]){
+                $scope.fbUser = true;
+                $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
+                if(!$scope.user.facebookId){
+                    UserService.fbSave($scope.user).success(function (data, status, headers) {
+                        
+                        var fulluser = data;
+                        console.log(fulluser);
+                        var sessionuser = {
+                            userId: fulluser._id,
+                            facebookId: fulluser.facebookId,
+                            userType: fulluser.userType,
+                            basic: fulluser.basic,
+                            image: fulluser.image,
+                            mobile: fulluser.mobile,
+                            email: fulluser.email,
+
+                        };
+                        $cookies.putObject('sessionuser', sessionuser);
+                        $scope.user = sessionuser;
+                        
+                        console.log(sessionuser.userType);
+                        
+                        if(sessionuser.userType =='Master'){  
+                            $state.go('master-dashboard', {masterId: sessionuser.userId});
+                        }
+                        if(sessionuser.userType =='Intern - Business Development'){
+                             $state.go('assigned', {userId: sessionuser.userId});
+                        }
+                        if(sessionuser.userType =='Student'){
+                            $state.reload();
+                        }
+                        if(sessionuser.userType =='Partner'){
+                            $state.go('partner-dashboard', {userId: sessionuser.userId});
+                        }
+                        
+                        
+                        //$state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                }
+                
+                
+                
+                
+            }
+
+            }, true);
+            
+            
+            
+            
+    }]);       
     
     exambazaar.controller("allreviewsController", 
         [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'targetStudyProviderService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, targetStudyProviderService, $state, $mdDialog){
@@ -11638,7 +12036,7 @@ function getLatLng(thisData) {
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
-        if($scope.user._id == '5922d8dbe20d000011b025e5'){
+        if($scope.user._id == '59154e2e838df93c1c27ab41'){
             $scope.showLevel = 10;
         }
         $scope.disableinstitutes =[];
@@ -11686,7 +12084,7 @@ function getLatLng(thisData) {
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
-        if($scope.user._id == '5922d8dbe20d000011b025e5'){
+        if($scope.user._id == '59154e2e838df93c1c27ab41'){
             $scope.showLevel = 10;
         }
             
@@ -12593,6 +12991,26 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'socialLogin.html',
                     controller: 'socialLoginController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('postBlog', {
+            url: '/postBlog', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'postBlog.html',
+                    controller: 'postBlogController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
