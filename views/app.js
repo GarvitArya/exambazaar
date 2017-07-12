@@ -9838,7 +9838,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
             $scope.mediumBindOptions = {
                 toolbar: {
-                    buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'indent', 'outdent', 'quote', 'anchor', 'h1','h2', 'h3', 'image', 'removeFormat', 'table', 'orderedlist', 'unorderedlist']
+                    buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'indent', 'outdent', 'quote', 'anchor', 'h1','h2', 'h3', 'image', 'removeFormat', 'table', 'orderedlist', 'unorderedlist','html']
                 },
                 extensions: {
                     table: new MediumEditorTable()
