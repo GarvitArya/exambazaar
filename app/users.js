@@ -656,6 +656,23 @@ router.post('/fbSave', function(req, res) {
     
 });
 
+router.post('/update', function(req, res) {
+    var thisUser = req.body;
+    var userId = thisUser._id;
+    
+    var existingUser = user.findOne({ '_id': userId },function (err, existingUser) {
+        if (err) return console.error(err);
+        for (var property in thisUser) {
+            existingUser[property] = thisUser[property];
+        }
+        existingUser.save(function(err, existingUser) {
+            if (err) return console.error(err);
+            res.json(existingUser._id);
+        });
+        
+    });
+});
+
 //to get all users
 router.get('/', function(req, res) {
     user.find({_created: {  $gte : "2017-07-11T00:00:00.000Z"}}, {userType: 1, basic: 1, mobile: 1, facebook: 1, email: 1, image: 1, fbemail: 1, fbimage: 1, _created: 1}, function(err, docs) {
@@ -663,6 +680,16 @@ router.get('/', function(req, res) {
         res.json(docs);
     } else {throw err;}
     });
+});
+
+router.get('/query/:query', function(req, res) {
+    var query = req.params.query;
+    console.log(query);
+    user.find({"basic.name":{'$regex' : query, '$options' : 'i'}}, {basic:1, blogger:1, image:1},function(err, docs) {
+    if (!err){
+        res.json(docs);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
 });
 
 router.get('/count', function(req, res) {
@@ -969,6 +996,34 @@ router.get('/blogger/:userId', function(req, res) {
         if (!err){
             res.json(thisuser);
             //process.exit();
+        } else {throw err;}
+    });
+});
+router.get('/activateBlogger/:userId', function(req, res) {
+    var userId = req.params.userId;
+    var thisUser = user
+        .findOne({ '_id': userId },{blogger:1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            thisUser.blogger.active = true;
+            thisUser.save(function(err, thisUser) {
+                if (err) return console.error(err);
+                res.json(thisUser._id);
+            });
+        } else {throw err;}
+    });
+});
+router.get('/deactivateBlogger/:userId', function(req, res) {
+    var userId = req.params.userId;
+    var thisUser = user
+        .findOne({ '_id': userId },{blogger:1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            thisUser.blogger.active = false;
+            thisUser.save(function(err, thisUser) {
+                if (err) return console.error(err);
+                res.json(thisUser._id);
+            });
         } else {throw err;}
     });
 });

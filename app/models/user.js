@@ -63,10 +63,12 @@ var userSchema = mongoose.Schema({
         lng: {type: String}
     },
     blogger:{
+        active: { type: Boolean, default: false },
         gallery: [{
             image: String,
             _created: { type: Date, default: Date.now },
         }],
+        profileCredential: String,
     }
 });
 userSchema.plugin(passportLocalMongoose);

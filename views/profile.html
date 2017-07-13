@@ -1,5 +1,23 @@
 <style>
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px transparent;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
     
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
     
     #profileSection{
         min-height: 20vh;
@@ -9,8 +27,8 @@
     <div id="spacer">
     </div>
     <div class="padded" ng-if="user">
-    <div flex layout="row" layout-xs="column" layout-align="start start" >
-        <div flex="50" layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder" id="profileSection">
+    <div flex layout="column" layout-xs="column" layout-align="start start" >
+        <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100" id="profileSection">
             <div layout="row" layout-align="start center" ng-if="user.basic" class="width100">
                 <div>
                     Welcome, {{user.basic.name}}
@@ -66,7 +84,30 @@
             
             
         </div>
-        
+        <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100 marginT20" id="profileSection" ng-if="user.blogger.active">
+            
+            <div layout="row" layout-align="start start" class="width100">
+                Credentials & Highlights
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginT20">
+                <div flex="25" layout="column" layout-align="start start">
+                    <div>
+                        Add profile credential
+                    </div>
+                    <div class="editFont font10 ">
+                        Credentials also appear on blogs you write
+                    </div>
+                </div>
+                <div flex>
+                    <input type="text" class="font12 width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
+                </div>
+            </div>
+            <div layout="row" layout-align="end center" class="width100">
+                <md-button class="md-raised md-primary" ng-click="saveBlogger()">
+                     Save
+                </md-button>
+            </div>
+        </div>
         
     </div>
     <!--<div>

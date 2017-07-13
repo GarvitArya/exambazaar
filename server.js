@@ -60,9 +60,6 @@ app.get('/*', function (req, res, next) {
   next();
 });
 
-
-
-
 app.get('*', function(req, res, next) {
     if (req.get('x-forwarded-proto') != "https") {
         res.set('x-forwarded-proto', 'https');
@@ -115,6 +112,7 @@ var results = require('./app/results.js',results);
 var offers = require('./app/offers.js',offers); 
 var coupons = require('./app/coupons.js',coupons); 
 var reviews = require('./app/reviews.js',reviews); 
+var blogposts = require('./app/blogposts.js',blogposts); 
 var groups = require('./app/groups.js',groups); 
 var logourls = require('./app/logourls.js',logourls); 
 var masters = require('./app/masters.js',masters); 
@@ -151,6 +149,7 @@ app.use('/api/results', results);
 app.use('/api/offers', offers);
 app.use('/api/coupons', coupons);
 app.use('/api/reviews', reviews);
+app.use('/api/blogposts', blogposts);
 app.use('/api/groups', groups);
 app.use('/api/logourls', logourls);
 //app.use('/api/admins', admins);
@@ -179,7 +178,7 @@ app.use('/api/awsCredentials', awsCredentials);
 app.use('/api/sendGridCredentials', sendGridCredentials);
 
 
-var allStates = ['/','/login','/signup','/review','/search','/allreviews','/allOffers','/rankerswall/:examName/:year','/socialLogin','/postBlog','/reviewcenter/:coachingId','/stream','/stream/:categoryName','/stream/:categoryName/:subCategoryName/','/stream/:categoryName/:subCategoryName/:cityName','/stream/:categoryName/:subCategoryName/:cityName/:coachingId','/group/:categoryName/:subCategoryName/:cityName/:groupName','/oldclaim/:coachingId','/claim/:coachingId','/verifyClaim/:coachingId','/user/:userId/sandbox','/user/:userId/coachingGroup','/user/:userId/suggestCoaching','/master/:masterId/sandbox2/:cityName','/user/:userId/eligibility','/privacy','/why','/about','/calendar','/:instituteId/bulkAddStudents','/:instituteId/bulkAddTeachers','/:instituteId/bulkAddBatches','/:instituteId/instituteCalendar','/:batchId/batchCalendar','/admin/:adminId/main','/user/:userId/sendEmail','/user/:userId/userMarketing','/master/:masterId/main','/coaching/database2/:city','/internship','/account','/edit/database1/:coachingId','/coaching/providersWithAreas','/coaching/database1/:city','/master/:masterId/analytics','/master/:masterId/institutes','/master/:masterId/dashboard','/master/:masterId/tofill','/partner/:userId/dashboard', '/partner/:userId/offers','/master/:masterId/manageBatchStudents','/master/:masterId/manageInstituteStudents','/master/:masterId/addGlobalSubject','/master/:masterId/invalidusers','/master/:masterId/addGlobalFeeItem','/master/:masterId/mergeUsers','/master/:masterId/invalidParents','/master/:masterId/invalidTeachers','/institute/:instituteId','/institute-batches/:instituteId','/institute-teachers/:instituteId','/institute-students/:instituteId','/student/:studentId/main','/student/:studentId/attendance','/student/:studentId/class','/user/:userId/shortlisted','/user/:userId/viewed','/user/:userId/reviewed','/user/:userId/:reviewId/availoffer','/thankyou','/user/:userId/filled','/user/:userId/assigned','/user/:userId/assignedToVerify','/user/:userId/assignedToAddContactInfo','/user/:userId/assignedToRate','/user/:userId/filledAll','/user/:userId/group','/user/:userId/profile','/user/:userId/checkLogo/:pageNumber/','/student/:studentId/subjects','/:instituteId/addTeacher','/:instituteId/addAdmin','/addStream','/addOffer','/addLocation','/addMediaTag','/addGroup','/addAwsCredential','/addSendGridCredential','/addSubscriber','/addExam','/addEligibility','/master/:masterId/addMaster','/master/:userId/addInstitute','/master/:userId/bulkDisable','/user/:userId/addIntern','/sitemap','/:instituteId/addStudent','/:instituteId/addTransportVehicle','/:instituteId/addBatch','/:instituteId/feeStructure','/verify/:userId/','/chooselogin/:userId/','/subject/:subjectId','/eval/:evalId','/exam/:examId','/batch/:batchId','/batch/:batchId/attendance'
+var allStates = ['/','/login','/signup','/review','/search','/allreviews','/allOffers','/rankerswall/:examName/:year','/socialLogin','/postBlog','/reviewcenter/:coachingId','/blogpost/:blogpostid','/stream','/stream/:categoryName','/stream/:categoryName/:subCategoryName/','/stream/:categoryName/:subCategoryName/:cityName','/stream/:categoryName/:subCategoryName/:cityName/:coachingId','/group/:categoryName/:subCategoryName/:cityName/:groupName','/oldclaim/:coachingId','/claim/:coachingId','/verifyClaim/:coachingId','/user/:userId/sandbox','/user/:userId/coachingGroup','/user/:userId/suggestCoaching','/master/:masterId/sandbox2/:cityName','/user/:userId/eligibility','/privacy','/why','/about','/calendar','/:instituteId/bulkAddStudents','/:instituteId/bulkAddTeachers','/:instituteId/bulkAddBatches','/:instituteId/instituteCalendar','/:batchId/batchCalendar','/admin/:adminId/main','/user/:userId/sendEmail','/user/:userId/userMarketing','/master/:masterId/main','/coaching/database2/:city','/internship','/account','/edit/database1/:coachingId','/coaching/providersWithAreas','/coaching/database1/:city','/master/:masterId/analytics','/master/:masterId/institutes','/master/:masterId/dashboard','/master/:masterId/tofill','/partner/:userId/dashboard', '/partner/:userId/offers','/master/:masterId/manageBatchStudents','/master/:masterId/manageInstituteStudents','/master/:masterId/addGlobalSubject','/master/:masterId/invalidusers','/master/:masterId/addGlobalFeeItem','/master/:masterId/mergeUsers','/master/:masterId/invalidParents','/master/:masterId/invalidTeachers','/institute/:instituteId','/institute-batches/:instituteId','/institute-teachers/:instituteId','/institute-students/:instituteId','/student/:studentId/main','/student/:studentId/attendance','/student/:studentId/class','/user/:userId/shortlisted','/user/:userId/viewed','/user/:userId/reviewed','/user/:userId/:reviewId/availoffer','/thankyou','/user/:userId/filled','/user/:userId/assigned','/user/:userId/assignedToVerify','/user/:userId/assignedToAddContactInfo','/user/:userId/assignedToRate','/user/:userId/filledAll','/user/:userId/group','/user/:userId/profile','/user/:userId/checkLogo/:pageNumber/','/student/:studentId/subjects','/:instituteId/addTeacher','/:instituteId/addAdmin','/addStream','/addOffer','/addLocation','/addMediaTag','/addGroup','/addAwsCredential','/addSendGridCredential','/addSubscriber','/addExam','/addEligibility','/master/:masterId/addMaster','/master/:masterId/addBlogger','/master/:userId/addInstitute','/master/:userId/bulkDisable','/user/:userId/addIntern','/sitemap','/:instituteId/addStudent','/:instituteId/addTransportVehicle','/:instituteId/addBatch','/:instituteId/feeStructure','/verify/:userId/','/chooselogin/:userId/','/subject/:subjectId','/eval/:evalId','/exam/:examId','/batch/:batchId','/batch/:batchId/attendance'
 ];
 
 

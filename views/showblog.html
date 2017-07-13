@@ -1,0 +1,81 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    img{
+        max-width: 100%;
+    }
+    .blogtitle{
+        color: #02B875;
+    }
+    .profileBox{
+        /*border: solid 0.5px #ccc;
+        border-radius: 20px;
+        background: white;*/
+    }
+    .blogHeader{
+    }
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center center" class="whiteBackground">
+<div layout="column" layout-align="center center" class="blogFont paddingTB20 width100">
+    
+    <div layout="column" layout-align="center center" class="width100 marginB40">
+        <div layout="column" layout-align="center center" class="blogHeader">
+            
+            <div layout="column" layout-align="center center" ng-bind-html="blogpost.title" class="h1 marginLR20 margintT20 blogtitle text-center width80">
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 paddingB20 gainsboroBottomBorder">
+                <div layout="row" layout-align="center center" class=" profileBox">
+                    <div ng-if="blogpost.user.image">
+                    <img ng-src="{{blogpost.user.image}}" id="userPic" class="img-circle"/>
+                    </div>
+                    <div layout="column" layout-align="start start" class="marginL10">
+                        <div class="font16">
+                            {{blogpost.user.basic.name}}
+                        </div>
+                        <div class="font10">
+                            {{blogpost.user.blogger.profileCredential}}
+                        </div>
+                        <div class="editFont font10">
+                            {{blogpost._created | date: "dd MMMM yyyy"}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+        
+        <div layout="row" layout-align="center center">
+            <div flex-xs="100" flex-gt-xs="80" ng-bind-html="blogpost.content" class="marginT20">
+
+            </div>
+        </div>
+        
+        
+    </div>
+    
+</div>
+    
+</div>
+ 

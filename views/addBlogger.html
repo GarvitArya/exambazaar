@@ -1,0 +1,80 @@
+<style>
+    
+    md-autocomplete{
+        background-color: #F5F5F5;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #profileSection{
+        min-height: 20vh;
+    }
+     
+    
+</style>
+
+<div layout="row" layout-align="center center" class="whiteBackground">
+<div layout="column" layout-align="center center" flex-xs="100" flex-gt-xs="80"  class="whiteBackground mainContent" >
+    <div id="spacer">
+    </div>
+    <div layout="column" ng-controller="userAutocompleteController as ctrl" class="width100">
+        <md-autocomplete flex 
+        md-selected-item="ctrl.selectedItem"
+        md-selected-item-change= "ctrl.selectedItemChange(item)"
+        md-search-text="ctrl.searchText"
+        md-items="item in ctrl.querySearch(ctrl.searchText)"
+        md-item-text="item.basic.name"
+        md-delay="300"
+        md-menu-class="autocomplete"
+        placeholder="Search for Users"
+        class="width100 ">
+            <md-item-template >
+              <span class="item-title font12">
+                  <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                  <img ng-if="item.image" ng-src="{{item.image}}" id="autocompleteLogo"/>
+                  {{item.basic.name}}
+              </span>
+            </md-item-template>
+          
+        </md-autocomplete>
+    </div>
+    <div layout="column" layout-xs="column" layout-align="start start" class="width100" >
+        <div flex="100" layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100" id="profileSection">
+            <div layout="row" layout-align="start center" ng-if="thisuser.basic" class="width100">
+                <div layout="column" layout-align="start center">
+                    <div layout="column" layout-align="center center" ng-if="thisuser.image">
+                        <img id="userPic" ng-src="{{thisuser.image}}" class="img-circle" />
+                    </div>
+                    <div>
+                        {{thisuser.basic.name}}
+                    </div>
+                </div>
+                <div layout="column" layout-align="start start" class="paddingL20 editFont">
+                    <div layout="column" layout-align="start start" ng-if="thisuser.blogger">
+                        <md-button class="md-green md-small width100 editFont" ng-click="activateBlogger(thisuser)" ng-if="!thisuser.blogger.active">
+                        Activate Blogging
+                        </md-button>
+                        <md-button class="md-danger md-small width100 editFont" ng-click="deactivateBlogger(thisuser)" ng-if="thisuser.blogger.active">
+                        Deactivate Blogging
+                        </md-button>
+                    </div>
+
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        
+    </div>
+    
+</div>
+</div>
