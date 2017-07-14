@@ -525,6 +525,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);    
         
     exambazaar.service('blogpostService', ['$http', function($http) {
+        this.slugExists = function(query) {
+            return $http.get('/api/blogposts/slugExists/'+query, {query: query});
+        };
        
         this.saveblogpost = function(blogpostForm) {
             return $http.post('/api/blogposts/save', blogpostForm);
@@ -543,6 +546,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.getblogpost = function(blogpostId) {
             return $http.get('/api/blogposts/edit/'+blogpostId, {blogpostId: blogpostId});
+        };
+        this.getblogpostFromSlug = function(blogpostSlug) {
+            return $http.get('/api/blogposts/getblogpostFromSlug/'+blogpostSlug, {blogpostSlug: blogpostSlug});
         };
         this.disableblogpost = function(blogpostId) {
             return $http.get('/api/blogposts/disable/'+blogpostId, {blogpostId: blogpostId});
@@ -10078,7 +10084,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
                 
                 blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
-                    var blogpostId = data;
+                    var blogpostId = data._id;
                     
                     var url = $state.href('editblog', {blogpostId: blogpostId});
                     window.open(url,'_blank');
@@ -10227,28 +10233,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });
             };
             $scope.previewBlogPost = function(blogpost){
-                var blogpostForm = {
-                    user: $scope.user._id,
-                    title: blogpost.title,
-                    content: blogpost.content,
-                };
-                for (var property in blogpost) {
-                    blogpostForm[property] = blogpost[property];
-                }
-                if(!blogpostForm.active){
-                    blogpostForm.active = false;
-                }
-                
-                blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
-                    var blogpostId = data;
-                    console.log(blogpostId);
-                    
-                    var url = $state.href('showblog', {blogpostId: blogpostId});
-                    window.open(url,'_blank');
-                })
-                .error(function (data, status, header, config) {
-                    console.info("Error ");
-                });
+                var blogpostSlug = blogpost.urlslug;
+                //console.log(blogpostSlug);
+
+                var url = $state.href('showblog', {blogpostSlug: blogpostSlug});
+                window.open(url,'_blank');
             };
             $scope.editBlogPost = function(blogpost){
                 var blogpostId = blogpost._id;
@@ -12720,7 +12709,23 @@ function getLatLng(thisData) {
             };
             
     }]);
-    
+    function extractContent(s) {
+      var span= document.createElement('span');
+      span.innerHTML= s;
+      return span.textContent || span.innerText;
+    };
+    function slugify(string) {
+      return string
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w\-]+/g, "")
+        .replace(/\-\-+/g, "-")
+        .replace(/^-+/, "")
+        .replace(/-+$/, "");
+    };
+        
     exambazaar.controller("editblogController", 
         [ '$scope','$http','$state','blogpostService', 'UserService', 'thisblog', '$rootScope','$mdDialog','$timeout', 'Upload', '$cookies', 'ImageService', function($scope,$http, $state, blogpostService, UserService, thisblog, $rootScope, $mdDialog,$timeout, Upload, $cookies, ImageService){
             $scope.blogpost = thisblog.data;
@@ -12744,7 +12749,62 @@ function getLatLng(thisData) {
             }else{
                 $scope.user = null;
             }
+            $scope.urlslug = '';
+            $scope.urlslugError = false;
+            $scope.urlslugSet = false;
+            $scope.$watch('blogpost.title', function (newValue, oldValue, scope) {
+                //console.log($scope.blogpost.urlslug);
+                if(newValue && newValue.length > 0){
+                    $scope.urlslug = slugify(newValue);
+                    
+                    if(!$scope.urlslugSet){
+                        $scope.blogpost.urlslug = $scope.urlslug;
+                    }
+                    
+                }
+
+            }, true);
             
+            $scope.$watch('blogpost.urlslug', function (newValue, oldValue, scope) {
+                //console.log(newValue);
+                if(newValue && newValue.length > 0){
+                    blogpostService.slugExists(newValue).success(function (data, status, headers) {
+                        if(data == false){
+                            $scope.urlslugError = false;
+                            $scope.blogpost.urlslug = $scope.urlslug;
+                            console.log('Title is fine');
+                        }else{
+                            //slug error
+                            var blogId = data;
+                            
+                            if(blogId != $scope.blogpost._id){
+                                $scope.urlslugError = true;
+                                $scope.newUrlslug = $scope.blogpost.urlslug;
+                                $scope.showUrlslugDialog();
+                                console.log('Title is not fine');
+                            }else{
+                                $scope.urlslugError = false;
+                                $scope.blogpost.urlslug = $scope.urlslug;
+                                console.log('Title is fine');
+                            }
+                            
+                        }
+                        
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                    
+                    
+                }
+
+            }, true);
+            $scope.urlslugDone = function(){
+                console.log($scope.newUrlslug);
+                $scope.blogpost.urlslug = $scope.newUrlslug;
+                console.log($scope.blogpost.urlslug);
+                $mdDialog.hide();    
+            };
             $scope.showBlogGalleryDialog = function(ev) {
             $mdDialog.show({
                   contentElement: '#blogGalleryDialog',
@@ -12797,12 +12857,12 @@ function getLatLng(thisData) {
                 }
             };
             $scope.titleBindOptions = {
-                toolbar: {
+                /*toolbar: {
                     buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'anchor', 'h1','h2', 'h3','removeFormat']
-                },
+                },*/
                 disableReturn: true,
                 disableExtraSpaces: true,
-              
+                toolbar: false
             };
             
             $scope.saveBlogPost = function(blogpost){
@@ -12822,8 +12882,8 @@ function getLatLng(thisData) {
             };
             
             $scope.previewblogpost = function(blogpost){
-                var blogpostId = blogpost._id;
-                var url = $state.href('showblog', {blogpostId: blogpostId});
+                var blogpostSlug = blogpost.urlslug;
+                var url = $state.href('showblog', {blogpostSlug: blogpostSlug});
                 window.open(url,'_blank');    
             };
             
@@ -12843,7 +12903,7 @@ function getLatLng(thisData) {
                     console.info("Error ");
                 });
             };
-            $scope.dontsaveChanges = function(){
+            $scope.dontsaveChanges = function(ev){
                 var confirm = $mdDialog.confirm()
                 .title('Would you like to cancel all changes made?')
                 .textContent('You will not be able to recover them after this!')
@@ -13094,10 +13154,19 @@ function getLatLng(thisData) {
                   clickOutsideToClose: true
                 });
             };
+            $scope.showUrlslugDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#urlslugDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: false,
+                  escapeToClose: false,
+                });
+            };
     }]);
     
     exambazaar.controller("showblogController", 
-        [ '$scope','$http','$state','blogpostService', 'thisblog', '$rootScope', function($scope,$http, $state, blogpostService, thisblog, $rootScope){
+        [ '$scope','$http','$state','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', function($scope,$http, $state, blogpostService, thisblog, $rootScope, Socialshare, $location){
             $scope.blogpost = thisblog.data;
             var defaultBlogCover = "images/background/examinfo.jpg";
             if($scope.blogpost.coverPhoto){
@@ -13105,7 +13174,30 @@ function getLatLng(thisData) {
             }else{
                 $scope.thisBlogCover = defaultBlogCover;
             }
-            
+            $scope.shareText = "Hi! Read \"" + $scope.blogpost.title + "\" at Exambazaar";
+            $scope.shareText2 = $scope.shareText;
+            $scope.currURL = $location.absUrl();
+            $scope.postFacebook = function(){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'feed',
+                    'socialshareUrl': $scope.currURL,
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
+                  }
+                });    
+            };
+            $scope.shareFacebook = function(){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'send',
+                    'socialshareUrl': $scope.currURL,
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
+                  }
+                });
+            };
+           
             console.log(JSON.stringify($scope.blogpost.user));
             $rootScope.pageTitle = $scope.blogpost.title + " | Exambazaar.com";
     }]);
@@ -13904,7 +13996,7 @@ function getLatLng(thisData) {
                 
             }
         })
-        .state('showblog', {
+        /*.state('showblog', {
             url: '/blogpost/:blogpostId', //masterId?
             views: {
                 'header':{
@@ -13923,6 +14015,30 @@ function getLatLng(thisData) {
                 thisblog: ['blogpostService', '$stateParams',
                     function(blogpostService,$stateParams){
                     return blogpostService.getblogpost($stateParams.blogpostId);
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })*/
+        .state('showblog', {
+            url: '/blogpost/:blogpostSlug', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'showblog.html',
+                    controller: 'showblogController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisblog: ['blogpostService', '$stateParams',
+                    function(blogpostService,$stateParams){
+                    return blogpostService.getblogpostFromSlug($stateParams.blogpostSlug);
                 }],
                 provider: function() { return {}; }
                 

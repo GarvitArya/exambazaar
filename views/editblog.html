@@ -60,11 +60,28 @@
     .howto{
         max-height: 200px;
     }
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
 </style>
 
-<div id="spacer1" class="hidden-xs whiteBackground">
-</div>
-<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+<div id="spacerXS" class="whiteBackground">
 </div>
 <div flex layout="row" layout-align="center center" class="whiteBackground">
 <div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40">
@@ -92,28 +109,28 @@
     </div>
     
     <div layout="column" layout-align="center center" class="width100 marginB40">
-        <div layout="row" layout-align="center center" class="width100 blogHeader gainsboroBottomBorder  marginB20" ng-style="{'background-image':'url({{thisBlogCover}})'}">
-            
-            <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite darkTranslucentBackground">
-                <h1 ng-model="blogpost.title" medium-editor bind-options="titleBindOptions" data-placeholder="Enter your blog title here" class="gainsboroBorder width100 text-center marginB20 textWhite editable"></h1>
-                
-                <div layout="row" layout-align="center center" class="font14 narrowLine">
-                    <div>
-                        {{blogpost._created | date: "dd MMMM yyyy" | uppercase}}
-                    </div>&nbsp;|&nbsp;
-                    <div class="">
-                        {{blogpost.readingTime.text}}
+        <div layout="row" layout-align="center center" class="width100 blogHeader  marginB20" ng-style="{'background-image':'url({{thisBlogCover}})'}">
+            <div layout="row" layout-align="center center" class="width100 darkTranslucentBackground">
+                <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite ">
+                    <h1 ng-model="blogpost.title" medium-editor bind-options="titleBindOptions" data-placeholder="Enter your blog title here" class="width100 text-center marginB20 textWhite editable"></h1>
+
+                    <div layout="row" layout-align="center center" class="font14 narrowLine">
+                        <div>
+                            {{blogpost._created | date: "dd MMMM yyyy" | uppercase}}
+                        </div>&nbsp;|&nbsp;
+                        <div class="">
+                            {{blogpost.readingTime.text | uppercase}}
+                        </div>
                     </div>
                 </div>
             </div>
-            
         
         </div>
         
-        <div layout="row" layout-align="center center">
-            <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start">
+        <div layout="row" layout-align="center center" class="">
+            <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start" class="padding10">
                 
-                <div layout="row" layout-align="start start " class="width100   ">
+                <div layout="row" layout-xs="column" layout-align="start start " class="width100   ">
                     <div flex layout="row" layout-align="start start" class=" profileBox">
                         <div ng-if="blogpost.user.image">
                         <img ng-src="{{blogpost.user.image}}" id="userPicBlog" class="img-circle"/>
@@ -128,6 +145,7 @@
                             
                         </div>
                     </div>
+                    
                 </div>
                 
                 <p ng-model="blogpost.content" medium-editor bind-options="mediumBindOptions" class="width100 min20vh marginT40 marginB20 blogContent editable">
@@ -148,12 +166,12 @@
     <div layout-fill  layout="column" layout-align="center center">
         <div layout="row" layout-align="end center" class="width100">
             
-            <md-button class="md-green2 md-small font10 tolowercase" ngf-select="uploadCover(coverPic)" ng-model="coverPic" ngf-accept="'image/*'" layout="row" layout-align="start center">
+            <md-button class="md-black md-small font10 tolowercase" ngf-select="uploadCover(coverPic)" ng-model="coverPic" ngf-accept="'image/*'" layout="row" layout-align="start center">
                 <i class="fa fa-plus-circle font20" aria-hidden="true"></i>&nbsp;&nbsp;Change Cover Photo
             </md-button>
         </div>
         <div layout="row" layout-align="end center" class="width100">
-            <md-button class="md-green2 md-small font10 tolowercase" ng-click="showBlogGalleryDialog()">
+            <md-button class="md-black md-small font10 tolowercase" ng-click="showBlogGalleryDialog()">
                 {{user.basic.name}}'s Blog Gallery
             </md-button>
         </div>
@@ -164,7 +182,7 @@
     <div layout="row" layout-align="start center">
         <div flex ="80">
             <span>
-            Do you want to save your changes to your blog? 
+            Do you want to save your changes to your blogpost? 
             </span>
         </div>
         <div layout="row" flex = "20">
@@ -300,6 +318,32 @@
                 <md-button class="md-danger md-small font10" ng-click="refreshPage()">
                     Refresh Now!
                 </md-button>
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container blogFont" id="urlslugDialog">
+      <md-dialog>
+          <div layout="column" layout-padding layout-align="center center" id="dialogHeaderWhite" class="margin20 padding10">
+              <div layout="column" layout-padding layout-align="center center" class="">
+                <div class="danger md-headline">
+                    <i class="fa fa-check-square" aria-hidden="true" ng-if="!urlslugError"></i>
+                    <i class="fa fa-times-circle font20" aria-hidden="true" ng-if="urlslugError"></i>
+                </div>
+                <div class="">
+                    Set the URL of your blog post to a unique value on Exambazaar blog 
+                </div>
+              </div>
+              <div class="width100">
+                <input type="text" class="font12 width100" ng-model="newUrlslug"  placeholder="set the url of your blog post" >
+              </div>
+              <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="urlslugDone()">
+                        I am done changing
+                    </md-button>
               </div>
           </div>
       </md-dialog>

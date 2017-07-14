@@ -97,6 +97,23 @@ router.get('/allblogs/:userId', function(req, res) {
     });
 
 });
+
+router.get('/slugExists/:query', function(req, res) {
+    var query = req.params.query;
+    //console.log(query);
+    blogpost.find({"urlslug":{'$regex' : query, '$options' : 'i'}}, {urlslug:1},function(err, docs) {
+    if (!err){
+        if(docs.length == 0){
+            res.json(false);
+        }else{
+            var blogId = docs[0]._id;
+            res.json(blogId);
+        }
+        
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
+
 //to get a particular blogpost with _id blogpostId
 router.get('/edit/:blogpostId', function(req, res) {
     var blogpostId = req.params.blogpostId;
@@ -106,6 +123,30 @@ router.get('/edit/:blogpostId', function(req, res) {
         //.deepPopulate('coupon')
         .exec(function (err, thisBlogpost) {
             
+        if (!err){
+            //console.log(thisBlogpost);
+            var userId = thisBlogpost.user;
+            var thisUser = user
+            .findOne({_id : userId},{basic:1, blogger:1, image:1})
+            //.deepPopulate('exams exams.stream')
+            .exec(function (err, thisUser) {
+            if (!err){
+                thisBlogpost.user = thisUser;
+                res.json(thisBlogpost);
+                } else {throw err;}
+            });
+        } else {throw err;}
+    });
+});
+
+router.get('/getblogpostFromSlug/:blogpostSlug', function(req, res) {
+    var blogpostSlug = req.params.blogpostSlug;
+    console.log(blogpostSlug);
+    var thisBlogpost = blogpost
+        .findOne({ 'urlslug': blogpostSlug })
+        //.deepPopulate('coupon')
+        .exec(function (err, thisBlogpost) {
+        console.log(thisBlogpost);    
         if (!err){
             //console.log(thisBlogpost);
             var userId = thisBlogpost.user;
@@ -267,11 +308,11 @@ router.post('/existingBlogpost', function(req, res) {
 });
 
 
+
 router.post('/save', function(req, res) {
     var blogpostForm = req.body;
     var blogpostId = blogpostForm._id;
     var user = blogpostForm.user;
-    
     
     if(blogpostId){
         var existingBlogpost = blogpost
@@ -289,7 +330,7 @@ router.post('/save', function(req, res) {
                     existingBlogpost.readingTime = stats;
                 existingBlogpost.save(function(err, existingBlogpost) {
                     if (err) return console.error(err);
-                    res.json(existingBlogpost._id);
+                    res.json(existingBlogpost);
                 });
 
             } else {throw err;}
@@ -308,7 +349,7 @@ router.post('/save', function(req, res) {
         //console.log(JSON.stringify(stats));
         newblogpost.save(function(err, newblogpost) {
             if (err) return console.error(err);
-            res.json(newblogpost._id);
+            res.json(newblogpost);
         });
     }
     

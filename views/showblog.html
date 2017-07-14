@@ -20,8 +20,8 @@
     }
     img{
         max-width: 100%;
-        margin: auto;
-        display: block;
+        /*margin: auto;
+        display: block;*/
     }
     .blogtitle{
         color: white;
@@ -42,20 +42,24 @@
     }
     h1,h2,h3{
         text-align: left;
+        line-height: 140%;
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+    a{
+        color: #20C39A;
     }
 </style>
 
-<div id="spacer1" class="hidden-xs whiteBackground">
-</div>
-<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+<div id="spacerXS" class="whiteBackground">
 </div>
 <div flex layout="row" layout-align="center center" class="whiteBackground">
 <div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40">
     
     <div layout="column" layout-align="center center" class="width100 marginB40">
-        <div layout="row" layout-align="center center" class="width100 blogHeader gainsboroBottomBorder  marginB20" ng-style="{'background-image':'url({{thisBlogCover}})'}">
-            
-            <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite darkTranslucentBackground">
+        <div layout="row" layout-align="center center" class="width100 blogHeader  marginB20" ng-style="{'background-image':'url({{thisBlogCover}})'}">
+            <div layout="row" layout-align="center center" class="width100 darkTranslucentBackground">
+            <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite padding10">
                 <div class="spacedLetter1 blogHeaderFont text-center wideLine bold blogHeaderFont marginB20 " ng-bind-html="blogpost.title" >
                 </div>
                 <div layout="row" layout-align="center center" class="font14 narrowLine">
@@ -63,19 +67,20 @@
                         {{blogpost._created | date: "dd MMMM yyyy" | uppercase}}
                     </div>&nbsp;|&nbsp;
                     <div class="">
-                        {{blogpost.readingTime.text}}
+                        {{blogpost.readingTime.text | uppercase}}
                     </div>
                 </div>
+            </div>
             </div>
             
         
         </div>
         
-        <div layout="row" layout-align="center center">
-            <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start">
+        <div layout="row" layout-align="center center" class="">
+            <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start" class="padding10">
                 
-                <div layout="row" layout-align="start start " class="width100   ">
-                    <div flex layout="row" layout-align="start start" class=" profileBox">
+                <div layout="row" layout-xs="column" layout-align="start start " class="width100   ">
+                    <div flex layout="row" layout-align="start center" class=" profileBox">
                         <div ng-if="blogpost.user.image">
                         <img ng-src="{{blogpost.user.image}}" id="userPicBlog" class="img-circle"/>
                         </div>
@@ -89,6 +94,57 @@
                             
                         </div>
                     </div>
+                    <!--<div layout="row" layout-align="end center">
+                        <div layout="row" layout-align="end center" class="marginLR5">
+                            <md-button class="loginBtn loginBtn--facebook tolowercase" ng-click="postFacebook()">
+                                Share
+                            </md-button>
+                        </div>
+                        <div layout="row" layout-align="end center" class="marginLR5 marginT5" hide-xs>
+                            <a href="#"
+                            socialshare 
+                            socialshare-provider="whatsapp"
+                            socialshare-text="{{shareText}}" 
+                            socialshare-url="https://www.exambazaar.com/review">
+                            <i class="fa fa-whatsapp text-primary font40 marginR10" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>-->
+                    <div layout="row" layout-align="end center" class="paddingTB5 font12">
+                    <div hide-gt-xs class="marginR10">
+                        <a href="#"
+                        socialshare 
+                        socialshare-provider="whatsapp"
+                        socialshare-text="{{shareText}}" 
+                        socialshare-url="{{currURL}}">
+                        <img src="icons/whatsapp.png" class="socialIcon"/>    
+                        </a>
+                    </div>
+                    <div hide-xs class="marginR10">
+                        <a ng-click="shareFacebook()">
+                            <img src="icons/facebook.png" class="socialIcon"/>
+                        </a>
+                    </div>
+                    <div hide-gt-xs class="marginR10">
+                        <a href="#"
+                        socialshare
+                        socialshare-provider="facebook-messenger"
+                        socialshare-url="{{currURL}}">
+                            <img src="icons/facebook.png" class="socialIcon"/>
+                        </a>
+                    </div>
+                    <div class="marginR10">
+                        <a href="#"
+                        socialshare
+                        socialshare-provider="twitter"
+                        socialshare-text="{{shareText2}}"
+                        socialshare-hashtags="{{hashtags}}"
+                        socialshare-url="{{currURL}}">
+                        <img src="icons/twitter.png" class="socialIcon"/>
+                        </a>
+                    </div>
+
+                </div>
                 </div>
                 
                 <div class="marginT40 blogContent" ng-bind-html="blogpost.content">
