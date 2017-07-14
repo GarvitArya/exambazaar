@@ -20,9 +20,11 @@
     }
     img{
         max-width: 100%;
+        margin: auto;
+        display: block;
     }
     .blogtitle{
-        color: #02B875;
+        color: white;
     }
     .profileBox{
         /*border: solid 0.5px #ccc;
@@ -30,6 +32,16 @@
         background: white;*/
     }
     .blogHeader{
+        min-height: 60vh;
+        /*background-image: url("images/background/blog-background2.jpg");*/
+        background-size:     cover;
+        background-position: center center;
+    }
+    .blogContent{
+        text-align: left;
+    }
+    h1,h2,h3{
+        text-align: left;
     }
 </style>
 
@@ -38,36 +50,50 @@
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 <div flex layout="row" layout-align="center center" class="whiteBackground">
-<div layout="column" layout-align="center center" class="blogFont paddingTB20 width100">
+<div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40">
     
     <div layout="column" layout-align="center center" class="width100 marginB40">
-        <div layout="column" layout-align="center center" class="blogHeader">
+        <div layout="row" layout-align="center center" class="width100 blogHeader gainsboroBottomBorder  marginB20" ng-style="{'background-image':'url({{thisBlogCover}})'}">
             
-            <div layout="column" layout-align="center center" ng-bind-html="blogpost.title" class="h1 marginLR20 margintT20 blogtitle text-center width80">
-            </div>
-            <div layout="column" layout-align="center center" class="width100 marginB20 paddingB20 gainsboroBottomBorder">
-                <div layout="row" layout-align="center center" class=" profileBox">
-                    <div ng-if="blogpost.user.image">
-                    <img ng-src="{{blogpost.user.image}}" id="userPic" class="img-circle"/>
-                    </div>
-                    <div layout="column" layout-align="start start" class="marginL10">
-                        <div class="font16">
-                            {{blogpost.user.basic.name}}
-                        </div>
-                        <div class="font10">
-                            {{blogpost.user.blogger.profileCredential}}
-                        </div>
-                        <div class="editFont font10">
-                            {{blogpost._created | date: "dd MMMM yyyy"}}
-                        </div>
+            <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite darkTranslucentBackground">
+                <div class="spacedLetter1 blogHeaderFont text-center wideLine bold blogHeaderFont marginB20 " ng-bind-html="blogpost.title" >
+                </div>
+                <div layout="row" layout-align="center center" class="font14 narrowLine">
+                    <div>
+                        {{blogpost._created | date: "dd MMMM yyyy" | uppercase}}
+                    </div>&nbsp;|&nbsp;
+                    <div class="">
+                        {{blogpost.readingTime.text}}
                     </div>
                 </div>
             </div>
+            
         
         </div>
         
         <div layout="row" layout-align="center center">
-            <div flex-xs="100" flex-gt-xs="80" ng-bind-html="blogpost.content" class="marginT20">
+            <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start">
+                
+                <div layout="row" layout-align="start start " class="width100   ">
+                    <div flex layout="row" layout-align="start start" class=" profileBox">
+                        <div ng-if="blogpost.user.image">
+                        <img ng-src="{{blogpost.user.image}}" id="userPicBlog" class="img-circle"/>
+                        </div>
+                        <div layout="column" layout-align="start start" class="marginL20">
+                            <div class="font18 narrowLine">
+                                {{blogpost.user.basic.name}}
+                            </div>
+                            <div class="textLightGrey font14 ">
+                                {{blogpost.user.blogger.profileCredential}}
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="marginT40 blogContent" ng-bind-html="blogpost.content">
+                
+                </div>
 
             </div>
         </div>

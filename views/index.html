@@ -43,7 +43,7 @@
     <link rel="stylesheet" href="medium-editor-tables.css" />
     
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
-    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Roboto:100,300,400|Roboto+Condensed|Unica+One|Seaweed+Script|Lato|Varela+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Roboto:100,300,400|Roboto+Condensed|Unica+One|Seaweed+Script|Lato|Montserrat" rel="stylesheet">
     <!--Amatica+SC|Bubblegum+Sans|Chewy|Chicle|Concert+One|Passion+One|Pompiere|-->
     
     <style>
@@ -53,9 +53,12 @@
             font-size: 16px;
             color: white;
         }
+        .blogHeaderFont{
+            font-family: 'Montserrat', sans-serif;
+        }
         .blogFont{
-            font-family: 'Varela Round', sans-serif;
-            font-size: 16px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 18px;
             color: black;
         }
         .rankersWallFont{
@@ -121,6 +124,9 @@
         #userPicSmall{
             max-height: 30px;
         }
+        #userPicBlog{
+            max-height: 50px;
+        }
         .img-circle {
             border-radius: 50%;
             
@@ -174,7 +180,7 @@
             font-size: 13px;
         }
         .textLightGrey{
-            color: #9DA3A4;
+            color: #999999;;
         }
         .textWhiteSmoke{
             color: whitesmoke;
@@ -595,6 +601,10 @@
         }
         .translucentBackground{
             background-color: rgba(0,0,0,0.4);
+        }
+        .darkTranslucentBackground{
+            background-color: rgba(0,0,0,0.7);
+            /*border-radius: 50px;*/
         }
         .dangerBackground{
             background-color: #C00000;
@@ -1097,6 +1107,9 @@
         .narrowLine2{
             line-height: 160%;
         }
+        .wideLine{
+            line-height: 140%;
+        }
         .width8{
             width: 100px;
         }
@@ -1218,6 +1231,18 @@
             background: #f7f7f7;
             color: black;
             border-top: 1px solid #ccc;
+        }
+        .rightMidButton{
+            position:fixed; 
+            top:40%;
+            right:0%;
+            width:15%;
+            height:20%;
+            /*padding-left:40px;
+            padding-right:40px;*/
+            background: #f7f7f7;
+            color: black;
+            border: 1px solid #ccc;
         }
         
         .bottomOfferLogo{

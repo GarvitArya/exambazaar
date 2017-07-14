@@ -796,6 +796,23 @@ router.post('/removeBlogGalleryPic', function(req, res) {
     });
 });
 
+router.post('/removeAllBlogGallery', function(req, res) {
+    var newPicForm = req.body;
+    var userId = newPicForm.userId;
+    
+    var existingUser = user.findOne({ '_id': userId },{blogger:1},function (err, existingUser) {
+        if(existingUser.blogger.gallery){
+            existingUser.blogger.gallery = [];
+            existingUser.save(function(err, existingUser) {
+                if (err) return console.error(err);
+                res.json(existingUser._id);
+            });
+        }else{
+            res.json(false);
+        }
+    });
+});
+
 router.post('/shortlistInstitute', function(req, res) {
     var shortListForm = req.body;
     var userId = shortListForm.userId;

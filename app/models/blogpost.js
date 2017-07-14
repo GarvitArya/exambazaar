@@ -4,6 +4,13 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var blogpostSchema = mongoose.Schema({
     user: { type: Schema.ObjectId, required: true, ref: 'User' },
+    readingTime:{
+        text: String,    
+        minutes: String,    
+        time: String,    
+        words: String,    
+    },
+    coverPhoto: String,
     relativeurl: String,
     title: String,
     subtitle:String,
@@ -12,7 +19,7 @@ var blogpostSchema = mongoose.Schema({
     keywords:[String],
     
     exams: [{ type: Schema.ObjectId, ref: 'exam' }],
-    active: { type: Boolean, default: true },
+    active: { type: Boolean, default: false },
     _created: { type: Date, default: Date.now },
 });
 blogpostSchema.plugin(deepPopulate);

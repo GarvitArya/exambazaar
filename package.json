@@ -91,6 +91,7 @@
     "phantomjs": "^2.1.7",
     "phantomjs-prebuilt": "^2.1.14",
     "prerender-node": "^2.7.1",
+    "reading-time": "^1.1.0",
     "req-flash": "0.0.3",
     "request": "^2.79.0",
     "requirejs": "^2.3.3",

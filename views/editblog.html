@@ -1,0 +1,307 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    img{
+        max-width: 100%;
+    }
+    .blogtitle{
+        color: white;
+    }
+    .profileBox{
+        /*border: solid 0.5px #ccc;
+        border-radius: 20px;
+        background: white;*/
+    }
+    .blogHeader{
+        min-height: 60vh;
+        /*background-image: url("images/background/blog-background2.jpg");*/
+        background-size:     cover;
+        background-position: center center;
+    }
+    .blogContent{
+        text-align: left;
+    }
+    h1,h2,h3{
+        text-align: left;
+    }
+    
+    .infoBar{
+        /*
+        position:fixed; 
+        bottom:0%;
+        */
+        width:100%;
+        padding-left:40px;
+        padding-right:40px;
+        background: #f7f7f7;
+        color: black;
+    }
+    .editable{
+        border: 1px dotted #20C39A;
+        padding: 10px;
+    }
+    .howto{
+        max-height: 200px;
+    }
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center center" class="whiteBackground">
+<div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40">
+    <div layout="row" layout-align="center center" class="infoBar font14" >
+        <div>
+            <span ng-if="blogpost.active">
+            Have big changes to make? Do you want to deactivate this blogpost while you edit? 
+            </span>
+            <span ng-if="!blogpost.active">
+            Your blogpost is not active on Exambazaar blog. Do you want to activate this blogpost? 
+            </span>
+        </div>
+        <div layout="row">
+        <md-button class="md-green2 md-small font10 width8" ng-click="enableblogpost(blogpost)" ng-if="!blogpost.active">
+            Activate
+        </md-button>
+        <md-button class="md-default md-cancel md-small font10 width8" ng-click="disableblogpost(blogpost)" ng-if="blogpost.active">
+            Deactivate
+        </md-button>
+        <md-button class="md-danger md-small font10 width8" ng-click="previewblogpost(blogpost)">
+            Preview
+        </md-button>
+        </div>
+
+    </div>
+    
+    <div layout="column" layout-align="center center" class="width100 marginB40">
+        <div layout="row" layout-align="center center" class="width100 blogHeader gainsboroBottomBorder  marginB20" ng-style="{'background-image':'url({{thisBlogCover}})'}">
+            
+            <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite darkTranslucentBackground">
+                <h1 ng-model="blogpost.title" medium-editor bind-options="titleBindOptions" data-placeholder="Enter your blog title here" class="gainsboroBorder width100 text-center marginB20 textWhite editable"></h1>
+                
+                <div layout="row" layout-align="center center" class="font14 narrowLine">
+                    <div>
+                        {{blogpost._created | date: "dd MMMM yyyy" | uppercase}}
+                    </div>&nbsp;|&nbsp;
+                    <div class="">
+                        {{blogpost.readingTime.text}}
+                    </div>
+                </div>
+            </div>
+            
+        
+        </div>
+        
+        <div layout="row" layout-align="center center">
+            <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start">
+                
+                <div layout="row" layout-align="start start " class="width100   ">
+                    <div flex layout="row" layout-align="start start" class=" profileBox">
+                        <div ng-if="blogpost.user.image">
+                        <img ng-src="{{blogpost.user.image}}" id="userPicBlog" class="img-circle"/>
+                        </div>
+                        <div layout="column" layout-align="start start" class="marginL20">
+                            <div class="font18 narrowLine">
+                                {{blogpost.user.basic.name}}
+                            </div>
+                            <div class="textLightGrey font14 ">
+                                {{blogpost.user.blogger.profileCredential}}
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <p ng-model="blogpost.content" medium-editor bind-options="mediumBindOptions" class="width100 min20vh marginT40 marginB20 blogContent editable">
+                    
+
+            </div>
+        </div>
+        
+        
+    </div>
+    
+</div>
+    
+</div>
+ 
+
+<div class="rightMidButton">
+    <div layout-fill  layout="column" layout-align="center center">
+        <div layout="row" layout-align="end center" class="width100">
+            
+            <md-button class="md-green2 md-small font10 tolowercase" ngf-select="uploadCover(coverPic)" ng-model="coverPic" ngf-accept="'image/*'" layout="row" layout-align="start center">
+                <i class="fa fa-plus-circle font20" aria-hidden="true"></i>&nbsp;&nbsp;Change Cover Photo
+            </md-button>
+        </div>
+        <div layout="row" layout-align="end center" class="width100">
+            <md-button class="md-green2 md-small font10 tolowercase" ng-click="showBlogGalleryDialog()">
+                {{user.basic.name}}'s Blog Gallery
+            </md-button>
+        </div>
+    </div>
+</div>
+
+<div class="bottomBar">
+    <div layout="row" layout-align="start center">
+        <div flex ="80">
+            <span>
+            Do you want to save your changes to your blog? 
+            </span>
+        </div>
+        <div layout="row" flex = "20">
+            <md-button class="md-green2 md-small font10 width8" ng-click="saveBlogPost(blogpost)">
+            Save
+            </md-button>
+            <md-button class="md-default md-cancel md-small font10 width8" ng-click="dontsaveChanges()">
+                Cancel
+            </md-button>
+        </div>
+        
+    </div>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="blogGalleryDialog">
+      <md-dialog class="offer-dialog whiteBackground">
+          <md-content flex layout="column">
+            
+              <div layout="row" layout-align="center center" class="blogFont width100 marginB20 paddingTB10 gainsboroBottomBorder ">
+                  {{user.basic.name}}'s Blog Gallery
+              </div>
+              <div layout="row" layout-wrap layout-align="center center" class="width100 marginTB20">
+                <div layout="column" layout-wrap layout-align="center center" ng-repeat="photo in blogGallery | orderBy:'-_created'" class="marginLR5 marginTB5">
+                    <div>
+                        <img ng-src="{{photo.image}}" id="galleryImage"/>
+                    </div>
+                    <div layout="row" layout-wrap layout-align="center center" class="width100">
+                        <div flex layout="row" layout-align="start center">
+                            <a clipboard supported="supported" text="photo.image" on-copied="showCopiedDialog(photo.image)" on-error="fail(err)" id="copyLink" class="textPrimary font10">Use this image</a>
+                        </div>
+                        <div layout="row" layout-align="start center">
+                            <a ng-click="removePic(photo.image)" id="copyLink" class="textPrimary font10 danger pull-right marginL10">Remove</a>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div layout="column" layout-align="center center" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">
+                    <!--multiple="multiple" -->
+                    <div layout="column" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
+                        <i class="fa fa-plus-circle font20" aria-hidden="true"></i>&nbsp;Add Image
+                    </div>
+                    <a class="textPrimary font10">Add Image</a>
+                </div>
+                <div layout="column" layout-align="center center" ng-click="removeAllBlogGallery()" class="danger">
+                    <!--multiple="multiple" -->
+                    <div layout="column" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
+                        <i class="fa fa-minus-circle font20" aria-hidden="true"></i>&nbsp;Remove All
+                    </div>
+                    <a class="textPrimary font10">Remove All</a>
+                </div>
+            </div>
+              
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
+
+<div style="visibility: hidden">    
+<div class="md-dialog-container" id="copiedDialog">
+  <md-dialog>
+      <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+        <div layout="column" layout-align="center center" class="margin10 padding5 blogFont">
+            <div layout="row" layout-align="center center" class="margin10">    
+                <span class="text-primary md-headline">
+                <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>&nbsp;&nbsp;
+                <span class="md-title">
+                Copied!
+                </span>
+            </div>
+            <div layout="column" layout-align="start start" class="width100 margin10 font12">
+                <div class="font14 marginB20">How to add the image to your blog post?</div>
+                <div class="">
+                    1. The link <span class="danger">{{copiedText}}</span> has been copied to your clipboard
+                </div>
+                <div class="">
+                    2. Paste it a new line within your blog and select the link.
+                </div>
+                <div class="">
+                    3. Click on the image button in the toolbar which appears after selecting text. Illustrated in the image below.
+                </div>
+                <div layout="row" layout-align="start start" class="marginT20 width100">
+                    <div class="marginLR10">
+                        <img src="images/blog/howto.png" class="howto"/>
+                    </div>
+                    <div class="marginLR10">
+                        <img src="images/blog/added.png" class="howto"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+  </md-dialog>
+</div>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="coverSavedDialog">
+      <md-dialog>
+          <div layout="column" layout-padding layout-align="center center" id="dialogHeaderWhite" class="margin20 padding10">
+              <div class="">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Cover has been uploaded.&nbsp;
+                </span>
+              </div>
+              <div class="">
+                <md-button class="md-danger md-small font10" ng-click="refreshPage()">
+                    Refresh Now!
+                </md-button>
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>

@@ -14,10 +14,11 @@ db.on('error', console.error);
 db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
+var readingTime = require('reading-time');
 
 router.get('/remove/:blogpostId', function(req, res) {
     var blogpostId = req.params.blogpostId;
-    console.log(blogpostId);
+    //console.log(blogpostId);
     blogpost.remove({_id: new mongodb.ObjectID(blogpostId)}, function(err, result) {
         if (err) {
             console.log(err);
@@ -35,57 +36,78 @@ router.get('/blogpostsCount', function(req, res) {
     });
 });
 
-router.get('/', function(req, res) {
-    var blogposts = blogpost
-        .find({})
-        .exec(function (err, blogposts) {
+router.get('/allblogs/:userId', function(req, res) {
+    var userId = req.params.userId;
+    
+    
+    var thisUser = user.findOne({ '_id': userId },{mobile:1, email:1, basic:1, image:1, userType:1},function (err, thisUser) {
         if (!err){
-            var allBlogposts = [];
-            var nBlogposts = blogposts.length;
-            var counter = 0;
+            var thisUserType = thisUser.userType;
             
-            blogposts.forEach(function(thisBlogpost, rindex){
-                var userId = thisBlogpost.user;
-                var instituteId = thisBlogpost.institute;
-                
-                var thisUser = user.findOne({ '_id': userId },{mobile:1, email:1, basic:1, image:1},function (err, thisUser) {
+            if(thisUserType =='Master'){
+                var blogposts = blogpost
+                .find({})
+                .exec(function (err, blogposts) {
                     if (!err){
-                        thisBlogpost.user = thisUser;
-                        
-                        var thisProvider = targetStudyProvider.findOne({ '_id': instituteId },{name:1, logo:1, city:1},function (err, thisProvider) {
-                            if (!err){
-                                thisBlogpost.institute = thisProvider;
-                                allBlogposts.push(thisBlogpost);
-                                counter += 1;
-                                if(counter == nBlogposts){
-                                    //console.log(allBlogposts);   
-                                    res.json(allBlogposts);   
+                        var allBlogposts = [];
+                        var nBlogposts = blogposts.length;
+                        var counter = 0;
+                        if(nBlogposts == 0){
+                            res.json([]);
+                        }
+                        blogposts.forEach(function(thisBlogpost, rindex){
+                            var thisBlogUser = thisBlogpost.user;
+                            var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1},function (err, thisBlogUserInfo) {
+                                if (!err){
+                                    thisBlogpost.user = thisBlogUserInfo;
+                                    counter += 1;
+                                    allBlogposts.push(thisBlogpost);
+                                    if(counter == nBlogposts){
+                                        res.json(allBlogposts);   
+                                    }
                                 }
-                                
-                            }else {throw err;}
+                            });
+                            
                         });
-                        
-                        
-                        
-                    }else {throw err;}
+                    } else {throw err;}
                 });
-                
-            });
-            
-            //res.json(blogposts);
-        } else {throw err;}
+            }else{
+                var blogposts = blogpost
+                .find({user: userId})
+                .exec(function (err, blogposts) {
+                    if (!err){
+                        var allBlogposts = [];
+                        var nBlogposts = blogposts.length;
+                        var counter = 0;
+                        if(nBlogposts == 0){
+                            res.json([]);
+                        }
+                        blogposts.forEach(function(thisBlogpost, rindex){
+                            thisBlogpost.user = thisUser;
+                            counter += 1;
+                            allBlogposts.push(thisBlogpost);
+                            if(counter == nBlogposts){   
+                                res.json(allBlogposts);   
+                            }
+                        });
+                    } else {throw err;}
+                });
+            }
+        }else {throw err;}
     });
+
 });
 //to get a particular blogpost with _id blogpostId
 router.get('/edit/:blogpostId', function(req, res) {
     var blogpostId = req.params.blogpostId;
+    //console.log(blogpostId);
     var thisBlogpost = blogpost
-        .findOne({ '_id': blogpostId, active: true })
+        .findOne({ '_id': blogpostId })
         //.deepPopulate('coupon')
         .exec(function (err, thisBlogpost) {
             
         if (!err){
-            console.log(thisBlogpost);
+            //console.log(thisBlogpost);
             var userId = thisBlogpost.user;
             var thisUser = user
             .findOne({_id : userId},{basic:1, blogger:1, image:1})
@@ -135,6 +157,8 @@ router.get('/enable/:blogpostId', function(req, res) {
         } else {throw err;}
     });
 });
+
+
 
 //to get all blogposts for a user
 router.get('/user/:userId', function(req, res) {
@@ -258,8 +282,11 @@ router.post('/save', function(req, res) {
                     if(property != 'user'){
                        existingBlogpost[property] = blogpostForm[property];
                     }
-                    
                 }
+                var stats = readingTime(existingBlogpost.content);
+                //console.log(JSON.stringify(stats));
+                if(stats)
+                    existingBlogpost.readingTime = stats;
                 existingBlogpost.save(function(err, existingBlogpost) {
                     if (err) return console.error(err);
                     res.json(existingBlogpost._id);
@@ -274,7 +301,11 @@ router.post('/save', function(req, res) {
         for (var property in blogpostForm) {
             newblogpost[property] = blogpostForm[property];
         }
-        console.log(newblogpost);
+        console.log(JSON.stringify(newblogpost));
+        var stats = readingTime(newblogpost.content);
+        if(stats)
+            newblogpost.readingTime = stats;
+        //console.log(JSON.stringify(stats));
         newblogpost.save(function(err, newblogpost) {
             if (err) return console.error(err);
             res.json(newblogpost._id);
@@ -283,6 +314,31 @@ router.post('/save', function(req, res) {
     
     
     
+});
+
+router.post('/changeCover', function(req, res) {
+    var coverPicForm = req.body;
+    var blogpostId = coverPicForm.blogId;
+    var image = coverPicForm.image;
+    if(blogpostId && image){
+        var existingBlogpost = blogpost
+        .findOne({_id: blogpostId})
+        .exec(function (err, existingBlogpost) {
+            if (!err){
+                existingBlogpost.coverPhoto = image;
+                
+                existingBlogpost.save(function(err, existingBlogpost) {
+                    if (err) return console.error(err);
+                    res.json(existingBlogpost);
+                });
+
+            } else {throw err;}
+        });
+        
+        
+    }else{
+        res.json(false);
+    }
 });
 
 module.exports = router;

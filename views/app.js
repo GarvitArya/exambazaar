@@ -257,6 +257,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.removeBlogGalleryPic = function(newPicForm) {
             return $http.post('/api/users/removeBlogGalleryPic', newPicForm);
         };
+        this.removeAllBlogGallery = function(newPicForm) {
+            return $http.post('/api/users/removeAllBlogGallery', newPicForm);
+        };
         this.getUsersCount = function() {
             return $http.get('/api/users/count');
         };
@@ -532,7 +535,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.groupBlogposts = function(groupBlogposts) {
             return $http.post('/api/blogposts/groupBlogposts', groupBlogposts);
         };
-        
+        this.changeCover = function(coverPicForm) {
+            return $http.post('/api/blogposts/changeCover', coverPicForm);
+        };
         this.blogpostsCount = function() {
             return $http.get('/api/blogposts/blogpostsCount');
         };
@@ -548,8 +553,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.removeblogpost = function(blogpostId){
             $http.get('/api/blogposts/remove/'+blogpostId, {blogpostId: blogpostId});
         };
-        this.getblogposts = function() {
-            return $http.get('/api/blogposts');
+        this.getblogposts = function(userId) {
+            return $http.get('/api/blogposts/allblogs/'+userId, {userId: userId});
         };
         this.getuserBlogposts = function(userId) {
             return $http.get('/api/blogposts/user/'+userId, {userId: userId});
@@ -9195,7 +9200,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', '$location', 'thisuserReviewed', 'activeOffers', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, $location, thisuserReviewed, activeOffers){
             $scope.user = thisuser.data;
             $scope.activeOffers = activeOffers.data;
-            console.log($scope.activeOffers);
+            //console.log($scope.activeOffers);
             $scope.userReviewed = thisuserReviewed.data;
             //console.log($scope.reviewed);
             $rootScope.pageTitle ='Reviews by ' + $scope.user.basic.name;
@@ -9982,18 +9987,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);     
         
     exambazaar.controller("postBlogController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', 'blogpostService','allBlogs', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, blogpostService, allBlogs){
-            
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', 'blogpostService','allBlogs', 'thisuser', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, blogpostService, allBlogs, thisuser){
+            $scope.user = thisuser.data;
             $scope.allBlogs = allBlogs.data;
+            //console.log($scope.allBlogs);
             $scope.setBlog = function(thisblog){
                 $scope.blogpost = thisblog;
             };
             
             if($cookies.getObject('sessionuser')){
-                $scope.user = $cookies.getObject('sessionuser');
-                //console.log($scope.user);
-                
-                UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                $scope.user = $cookies.getObject('sessionuser'); UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
                     var userGallery = data.blogger.gallery;
                     //console.log(userGallery);
                     $scope.blogGallery = userGallery;
@@ -10059,6 +10062,32 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 content: ''
             };
             
+            $scope.newBlogPost = function(){
+                var blogpost = {
+                    title: 'This is your new blogpost title. Click and Edit!',
+                    content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+                };
+                var blogpostForm = {
+                    user: $scope.user._id,
+                    title: blogpost.title,
+                    content: blogpost.content,
+                    active: false,
+                };
+                for (var property in blogpost) {
+                    blogpostForm[property] = blogpost[property];
+                }
+                
+                blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
+                    var blogpostId = data;
+                    
+                    var url = $state.href('editblog', {blogpostId: blogpostId});
+                    window.open(url,'_blank');
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            
             $scope.removePic = function(image){
                 
                 var confirm = $mdDialog.confirm()
@@ -10074,8 +10103,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         image: image,
                         userId: $scope.user._id
                     }; UserService.removeBlogGalleryPic(newPicForm).success(function (data, status, headers) {
-                        //alert(data);
-                        $state.reload();
+                        UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                            var userGallery = data.blogger.gallery;
+                            //console.log(userGallery);
+                            $scope.blogGallery = userGallery;
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
                     })
                     .error(function (data, status, header, config) {
                         console.info("Error ");
@@ -10175,14 +10210,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
             };
             
-            $scope.saveBlogPost = function(){
+            $scope.saveBlogPost = function(blogpost){
                 var blogpostForm = {
                     user: $scope.user._id,
-                    title: $scope.blogpost.title,
-                    content: $scope.blogpost.content,
+                    title: blogpost.title,
+                    content: blogpost.content,
                 };
-                if($scope.blogpost._id){
-                    blogpostForm._id = $scope.blogpost._id;
+                if(blogpost._id){
+                    blogpostForm._id = blogpost._id;
                 }
                 blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                     $scope.showSavedDialog();
@@ -10191,14 +10226,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.info("Error ");
                 });
             };
-            $scope.previewBlogPost = function(){
+            $scope.previewBlogPost = function(blogpost){
                 var blogpostForm = {
                     user: $scope.user._id,
-                    title: $scope.blogpost.title,
-                    content: $scope.blogpost.content,
+                    title: blogpost.title,
+                    content: blogpost.content,
                 };
-                for (var property in $scope.blogpost) {
-                    blogpostForm[property] = $scope.blogpost[property];
+                for (var property in blogpost) {
+                    blogpostForm[property] = blogpost[property];
                 }
                 if(!blogpostForm.active){
                     blogpostForm.active = false;
@@ -10210,12 +10245,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                     var url = $state.href('showblog', {blogpostId: blogpostId});
                     window.open(url,'_blank');
-                    
-                    //$scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error ");
                 });
+            };
+            $scope.editBlogPost = function(blogpost){
+                var blogpostId = blogpost._id;
+                var url = $state.href('editblog', {blogpostId: blogpostId});
+                window.open(url,'_blank');
             };
             $scope.showSavedDialog = function(ev) {
                 $mdDialog.show({
@@ -12683,10 +12721,391 @@ function getLatLng(thisData) {
             
     }]);
     
+    exambazaar.controller("editblogController", 
+        [ '$scope','$http','$state','blogpostService', 'UserService', 'thisblog', '$rootScope','$mdDialog','$timeout', 'Upload', '$cookies', 'ImageService', function($scope,$http, $state, blogpostService, UserService, thisblog, $rootScope, $mdDialog,$timeout, Upload, $cookies, ImageService){
+            $scope.blogpost = thisblog.data;
+            var defaultBlogCover = "images/background/examinfo.jpg";
+            if($scope.blogpost.coverPhoto){
+                $scope.thisBlogCover = $scope.blogpost.coverPhoto;
+            }else{
+                $scope.thisBlogCover = defaultBlogCover;
+            }
+            
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser'); UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                    var userGallery = data.blogger.gallery;
+                    //console.log(userGallery);
+                    $scope.blogGallery = userGallery;
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+                
+            }else{
+                $scope.user = null;
+            }
+            
+            $scope.showBlogGalleryDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#blogGalleryDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
+            
+            $scope.mediumBindOptions = {
+                toolbar: {
+                    buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'indent', 'outdent', 'quote', 'anchor', 'h1','h2', 'h3', 'image', 'removeFormat', 'table', 'orderedlist', 'unorderedlist','html']
+                },
+                extensions: {
+                    table: new MediumEditorTable()
+                },
+                anchor: {
+                    placeholderText: 'Type a link',
+                    customClassOption: 'btn',
+                    customClassOptionText: 'Create Button'
+                },
+                keyboardCommands: {
+                    /* This example includes the default options for keyboardCommands,
+                       if nothing is passed this is what it used */
+                    commands: [
+                        {
+                            command: 'bold',
+                            key: 'B',
+                            meta: true,
+                            shift: false,
+                            alt: false
+                        },
+                        {
+                            command: 'italic',
+                            key: 'I',
+                            meta: true,
+                            shift: false,
+                            alt: false
+                        },
+                        {
+                            command: 'underline',
+                            key: 'U',
+                            meta: true,
+                            shift: false,
+                            alt: false
+                        }
+                    ],
+                }
+            };
+            $scope.titleBindOptions = {
+                toolbar: {
+                    buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'anchor', 'h1','h2', 'h3','removeFormat']
+                },
+                disableReturn: true,
+                disableExtraSpaces: true,
+              
+            };
+            
+            $scope.saveBlogPost = function(blogpost){
+                
+                var blogpostForm = {
+                };
+                
+                for (var property in blogpost) {
+                    blogpostForm[property] = blogpost[property];
+                }
+                 blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
+                    $scope.showSavedDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            
+            $scope.previewblogpost = function(blogpost){
+                var blogpostId = blogpost._id;
+                var url = $state.href('showblog', {blogpostId: blogpostId});
+                window.open(url,'_blank');    
+            };
+            
+            $scope.enableblogpost = function(blogpost){
+                blogpostService.enableblogpost(blogpost._id).success(function (data, status, headers) {
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            $scope.disableblogpost = function(blogpost){
+                blogpostService.disableblogpost(blogpost._id).success(function (data, status, headers) {
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            $scope.dontsaveChanges = function(){
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to cancel all changes made?')
+                .textContent('You will not be able to recover them after this!')
+                .ariaLabel('Lucky day')
+                .targetEvent(ev)
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                  $state.reload();
+                }, function() {
+                  //nothing
+                });
+                
+                
+            };
+            
+           
+            $rootScope.pageTitle = $scope.blogpost.title + " | Exambazaar.com";
+            
+            
+            $scope.removePic = function(image){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to delete this image?')
+                .textContent('You will not be able to restore it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    var newPicForm ={
+                        image: image,
+                        userId: $scope.user._id
+                    }; UserService.removeBlogGalleryPic(newPicForm).success(function (data, status, headers) {
+                        UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                            var userGallery = data.blogger.gallery;
+                            //console.log(userGallery);
+                            $scope.blogGallery = userGallery;
+                            $scope.showBlogGalleryDialog();
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                }, function() {
+                  //nothing
+                }); 
+            };
+            $scope.removeAllBlogGallery = function(image){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to delete all images from your blog gallery?')
+                .textContent('You will not be able to restore it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    var newPicForm ={
+                        userId: $scope.user._id
+                    }; UserService.removeAllBlogGallery(newPicForm).success(function (data, status, headers) {
+                        UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                            var userGallery = data.blogger.gallery;
+                            $scope.blogGallery = userGallery;
+                            $scope.showBlogGalleryDialog();
+                            
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                        
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                }, function() {
+                  //nothing
+                }); 
+            };
+            $scope.uploadPic = function (newPic) {
+                //var pic = $scope.newPic;
+                var pic = [newPic];
+                var nFiles = pic.length;
+
+                var counter = 0;
+                //console.log(JSON.stringify($scope.user));
+                var userId = $scope.user._id;
+                if (pic && pic.length) {
+
+                pic.forEach(function(thisFile, index){
+                var fileInfo = {
+                    filename: thisFile.name,
+                    contentType: thisFile.type
+                }; ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                var s3Request = {};
+                var allParams = data.params;
+                for (var key in allParams) {
+                  if (allParams.hasOwnProperty(key)) {
+                    s3Request[key] = allParams[key];
+                  }
+                }
+
+                s3Request.file = thisFile;
+                Upload.upload({
+                    url: data.endpoint_url,
+                    data: s3Request
+                }).then(function (resp) {
+                    console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                    var picLink = $(resp.data).find('Location').text();
+                    console.log(picLink);
+                    
+
+                    var newPicForm ={
+                        image: picLink,
+                        userId: userId
+                    }; UserService.addBlogGalleryPic(newPicForm).success(function (data, status, headers) {
+                        UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                            var userGallery = data.blogger.gallery;
+                            //console.log(userGallery);
+                            $scope.blogGallery = userGallery;
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                        //$state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                    }, function (resp) {
+                        console.log('Error status: ' + resp.status);
+                    }, function (evt) {
+
+                    });
+
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error");
+                });   
+
+                });
+                }
+             };
+            
+            $scope.refreshPage = function(){
+                $state.reload();    
+            };
+            $scope.uploadCover = function (coverPic) {
+                var pic = [coverPic];
+                var nFiles = pic.length;
+
+                var counter = 0;
+                var blogId = $scope.blogpost._id;
+                if (pic && pic.length) {
+
+                pic.forEach(function(thisFile, index){
+                var fileInfo = {
+                    filename: thisFile.name,
+                    contentType: thisFile.type
+                }; ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                var s3Request = {};
+                var allParams = data.params;
+                for (var key in allParams) {
+                  if (allParams.hasOwnProperty(key)) {
+                    s3Request[key] = allParams[key];
+                  }
+                }
+
+                s3Request.file = thisFile;
+                Upload.upload({
+                    url: data.endpoint_url,
+                    data: s3Request
+                }).then(function (resp) {
+                    //console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                    var picLink = $(resp.data).find('Location').text();
+                    //console.log(picLink);
+                    
+                    var coverPicForm ={
+                        image: picLink,
+                        blogId: blogId
+                    };
+                     blogpostService.changeCover(coverPicForm).success(function (data, status, headers) {
+                        console.log('Done');
+                        if(data){
+                            $scope.blogpost = data;
+                            
+                            if($scope.blogpost.coverPhoto){
+                                $scope.thisBlogCover = $scope.blogpost.coverPhoto;
+                            }else{
+                                $scope.thisBlogCover = defaultBlogCover;
+                            }
+                            $scope.showCoverSavedDialog();
+                            
+                        }else{
+                            console.log('Something went wrong in uploading cover photo!');
+                        }
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                    }, function (resp) {
+                        console.log('Error status: ' + resp.status);
+                    }, function (evt) {
+
+                    });
+
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error");
+                });   
+
+                });
+                }
+             };
+            
+            
+             $scope.showCopiedDialog = function(text, ev) {
+                $scope.copiedText = text;
+                $mdDialog.show({
+                  contentElement: '#copiedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
+            $scope.showSavedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#savedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
+            $scope.showCoverSavedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#coverSavedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
+    }]);
     
     exambazaar.controller("showblogController", 
         [ '$scope','$http','$state','blogpostService', 'thisblog', '$rootScope', function($scope,$http, $state, blogpostService, thisblog, $rootScope){
             $scope.blogpost = thisblog.data;
+            var defaultBlogCover = "images/background/examinfo.jpg";
+            if($scope.blogpost.coverPhoto){
+                $scope.thisBlogCover = $scope.blogpost.coverPhoto;
+            }else{
+                $scope.thisBlogCover = defaultBlogCover;
+            }
+            
             console.log(JSON.stringify($scope.blogpost.user));
             $rootScope.pageTitle = $scope.blogpost.title + " | Exambazaar.com";
     }]);
@@ -13239,7 +13658,7 @@ function getLatLng(thisData) {
             }
         })
         .state('postBlog', {
-            url: '/postBlog', //masterId?
+            url: '/:userId/postBlog', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -13254,9 +13673,13 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                allBlogs: ['blogpostService',
-                    function(blogpostService) {   
-                    return blogpostService.getblogposts();
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                allBlogs: ['blogpostService', '$stateParams',
+                    function(blogpostService, $stateParams) {   
+                    return blogpostService.getblogposts($stateParams.userId);
                 }],
                 provider: function() { return {}; }
                 
@@ -13491,6 +13914,30 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'showblog.html',
                     controller: 'showblogController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisblog: ['blogpostService', '$stateParams',
+                    function(blogpostService,$stateParams){
+                    return blogpostService.getblogpost($stateParams.blogpostId);
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('editblog', {
+            url: '/editblog/:blogpostId', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'editblog.html',
+                    controller: 'editblogController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
