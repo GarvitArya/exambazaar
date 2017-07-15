@@ -282,6 +282,7 @@ router.post('/save', function(req, res) {
     var state = viewForm.state;
     var ip = viewForm.ip;
     var claim = viewForm.claim;
+    var url = viewForm.url;
     //console.log(JSON.stringify(institutes));
     
     if(institutes && institutes.length > 0){
@@ -302,6 +303,9 @@ router.post('/save', function(req, res) {
             }
             if(claim){
                 newview.claim = claim;
+            }
+            if(url){
+                newview.url = url;
             }
             newview.save(function(err, newview) {
                 if (err) return console.error(err);
@@ -327,7 +331,9 @@ router.post('/save', function(req, res) {
         if(claim){
             newview.claim = claim;
         }
-        
+        if(url){
+            newview.url = url;
+        }
         newview.save(function(err, newview) {
             if (err) return console.error(err);
             console.log("New view used: " + newview._id);

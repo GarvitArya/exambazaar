@@ -13320,7 +13320,8 @@ function getLatLng(thisData) {
             
             var viewForm = {
                 state: $state.current.name,
-                claim: false
+                claim: false,
+                url: $location.url()
             };
             if($scope.user && $scope.user.userId){
                 viewForm.user = $scope.user.userId
