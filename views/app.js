@@ -8690,6 +8690,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         function selectedItemChange(item) {
             var groupName = item.name;
             $rootScope.$emit("setBlogCoachingGroup", {groupName: groupName});
+            this.selectedItem = null;
             //console.log(groupName);
         };
         this.querySearch = function(query){

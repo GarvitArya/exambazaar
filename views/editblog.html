@@ -99,7 +99,7 @@
     }
     #existingCoachingTagHolder{
         padding:5px;
-        color: black;
+        color: #02B875;
         background: white;
         border: 1px solid #02B875;
     }
@@ -363,8 +363,18 @@
                 </div>
                 
             </div>
-            <div layout="column" layout-align="center center" class="width80 marginB20 marginLR20 font12">
-                <div layout="column" ng-controller="blogCoachingGroupAutocompleteController as ctrl" class="width100">
+            <div layout="row" layout-align="start center" layout-wrap class="width80 marginB20 marginLR20 font12">
+                <div layout="column" layout-align="center center" ng-repeat="coaching in blogpost.coachingGroups" class="margin10" >
+                    <div layout="row" layout-align="start center" id="existingCoachingTagHolder" class="bold">
+                        <i class="fa fa-check-square font20" aria-hidden="true"></i>&nbsp;&nbsp;{{coaching}}
+                    </div>
+                    <div layout="row" layout-align="start center">
+                        <a ng-click="removeBlogCoaching(coaching)" id="copyLink" class="textPrimary font10 danger">Remove</a>
+                    </div>
+                </div>
+            </div>
+            <div flex layout="column" layout-align="start start" class="width80 marginB20 marginLR20 font12">
+                <div  layout="column" ng-controller="blogCoachingGroupAutocompleteController as ctrl" class="width100">
                     <md-autocomplete flex 
                     md-selected-item="ctrl.selectedItem"
                     md-selected-item-change= "ctrl.selectedItemChange(item)"
@@ -386,16 +396,7 @@
                 </div>
 
             </div>
-            <div layout="row" layout-align="start center" layout-wrap class="width80 marginB20 marginLR20 font12">
-                <div layout="column" layout-align="center center" ng-repeat="coaching in blogpost.coachingGroups" class="margin5" >
-                    <div id="existingCoachingTagHolder">
-                        {{coaching}}
-                    </div>
-                    <div>
-                        <a ng-click="removeBlogCoaching(coaching)" id="copyLink" class="textPrimary font10 danger">Remove</a>
-                    </div>
-                </div>
-            </div>
+            
           
           
         </md-content>  
