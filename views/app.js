@@ -8889,7 +8889,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $rootScope.pageTitle = 'Thank you for reviewing your coaching institute!';
             $rootScope.pageURL = 'https://www.exambazaar.com';
-            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
+            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
     }]);
     
     
@@ -9198,7 +9198,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             /*var currURL = $location.absUrl();
             $rootScope.pageURL = currURL;*/
             $rootScope.pageTitle = 'Review your coaching institute to get rewarded!';
-            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
+            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
     }]);
     
     
@@ -9285,7 +9285,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             /*var currURL = $location.absUrl();
             $rootScope.pageURL = currURL;*/
-            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
+            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
     }]);
     exambazaar.controller("cityGroupExamQueryController", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
@@ -9423,7 +9423,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             var currURL = $location.absUrl();
             $rootScope.pageURL = currURL;
-            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
+            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
     }]);
         
     /*exambazaar.controller("reviewCenterController", 
@@ -9597,7 +9597,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         var currURL = $location.absUrl();
         $rootScope.pageURL = currURL;
-        $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
+        $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
         
     }]);    */
     
@@ -9850,7 +9850,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                       method: 'feed',
                       link: 'https://www.exambazaar.com',
                       //redirect_uri: 'https://www.exambazaar.com', 
-                      source: 'https://www.exambazaar.com/images/logo/eblogo.png',
+                      source: 'https://www.exambazaar.com/images/logo/cover.png',
                       //display: 'iframe',
                       //mobile_iframe: true
                     }, function(response){
@@ -10318,7 +10318,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                       method: 'feed',
                       link: 'https://www.exambazaar.com',
                       //redirect_uri: 'https://www.exambazaar.com', 
-                      source: 'https://www.exambazaar.com/images/logo/eblogo.png',
+                      source: 'https://www.exambazaar.com/images/logo/cover.png',
                       //display: 'iframe',
                       //mobile_iframe: true
                     }, function(response){
@@ -13200,6 +13200,7 @@ function getLatLng(thisData) {
            
             console.log(JSON.stringify($scope.blogpost.user));
             $rootScope.pageTitle = $scope.blogpost.title + " | Exambazaar.com";
+            $rootScope.pageImage = $scope.thisBlogCover;
     }]);
         
     exambazaar.controller("userMarketingController", 
@@ -16270,7 +16271,7 @@ exambazaar.run(function($rootScope,$mdDialog,  $location, $window) {
     
     var currURL = $location.absUrl();
     $rootScope.pageURL = currURL;
-    $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eblogo.png';
+    $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
     
     (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];

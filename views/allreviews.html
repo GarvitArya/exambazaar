@@ -86,7 +86,11 @@
         </div>
         <div layout="row" layout-align="start start" ng-repeat="review in allReviews | orderBy:'-_created'" class="width100 paddingTB5 gainsboroBottomBorder">
             <div flex="5" class="paddingR10 font10">{{$index+1}}</div>
-            <div flex="10" class="paddingR10 font10">{{review.user.basic.name}}</div>
+            <div layout="column" layout-align="start start" flex="10" class="paddingR10 font10">
+                <div>{{review.user.basic.name}}</div>
+                <div class="font8">{{review.user._id}}</div>
+            
+            </div>
             <div layout="column" layout-align="start start" flex="10" class="paddingR10 font10">
                 <div ng-click="openReview(review)">{{review.institute.name}}, {{review.institute.city}}</div>
                 
