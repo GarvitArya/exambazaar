@@ -19,6 +19,7 @@ var blogpostSchema = mongoose.Schema({
     keywords:[String],
     
     exams: [{ type: Schema.ObjectId, ref: 'exam' }],
+    coachingGroups: [String],
     active: { type: Boolean, default: false },
     _created: { type: Date, default: Date.now },
 });

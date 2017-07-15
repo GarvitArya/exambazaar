@@ -79,6 +79,30 @@
         border: solid 1px #707070;
         box-shadow: 0 0 5px 1px #969696;
     }
+    #examTagHolder{
+        padding:5px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    #examTagHolder:hover{
+        color: white;
+        
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #existingExamTagHolder{
+        padding:5px;
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #existingCoachingTagHolder{
+        padding:5px;
+        color: black;
+        background: white;
+        border: 1px solid #02B875;
+    }
 </style>
 
 <div id="spacerXS" class="whiteBackground">
@@ -175,6 +199,16 @@
                 {{user.basic.name}}'s Blog Gallery
             </md-button>
         </div>
+        <div layout="row" layout-align="end center" class="width100">
+            <md-button class="md-black md-small font10 tolowercase" ng-click="showBlogExamDialog()">
+                Mark Exams
+            </md-button>
+        </div>
+        <div layout="row" layout-align="end center" class="width100">
+            <md-button class="md-black md-small font10 tolowercase" ng-click="showBlogCoachingDialog()">
+                Mark Coaching
+            </md-button>
+        </div>
     </div>
 </div>
 
@@ -262,6 +296,112 @@
       </md-dialog>
     </div>    
 </div> 
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="examDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Mark Exams relevant to this blog post!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                        Marking Exams Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                <div layout="row" layout-align="start start"  class="width100 marginB10 bold">
+                    <div flex="15">
+                        Stream
+                    </div>
+                    <div flex="85">
+                        Select Exams
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
+                    <div flex="15">
+                        {{thisStream.displayname}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+                            <span class="badge" id="examTagHolder" ng-if="blogpost.exams.indexOf(thisExam._id) == -1" ng-click="addBlogExam(thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="blogpost.exams.indexOf(thisExam._id) != -1" ng-click="removeBlogExam(thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+              
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="coachingDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Mark Coachings relevant to this blog post!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                        Marking Coachings Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width80 marginB20 marginLR20 font12">
+                <div layout="column" ng-controller="blogCoachingGroupAutocompleteController as ctrl" class="width100">
+                    <md-autocomplete flex 
+                    md-selected-item="ctrl.selectedItem"
+                    md-selected-item-change= "ctrl.selectedItemChange(item)"
+                    md-search-text="ctrl.searchText"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-item-text="item.name"
+                    md-delay="300"
+                    md-menu-class="autocomplete"
+                    placeholder="Search Coaching Group"
+                    class="width100">
+                        <md-item-template >
+                          <div class="item-title font12 min10vh">
+                              <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                              <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
+                          </div>
+                        </md-item-template>
+
+                    </md-autocomplete>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="start center" layout-wrap class="width80 marginB20 marginLR20 font12">
+                <div layout="column" layout-align="center center" ng-repeat="coaching in blogpost.coachingGroups" class="margin5" >
+                    <div id="existingCoachingTagHolder">
+                        {{coaching}}
+                    </div>
+                    <div>
+                        <a ng-click="removeBlogCoaching(coaching)" id="copyLink" class="textPrimary font10 danger">Remove</a>
+                    </div>
+                </div>
+            </div>
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>
 
 <div style="visibility: hidden">    
 <div class="md-dialog-container" id="copiedDialog">

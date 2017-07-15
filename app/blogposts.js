@@ -149,16 +149,22 @@ router.get('/getblogpostFromSlug/:blogpostSlug', function(req, res) {
         console.log(thisBlogpost);    
         if (!err){
             //console.log(thisBlogpost);
-            var userId = thisBlogpost.user;
-            var thisUser = user
-            .findOne({_id : userId},{basic:1, blogger:1, image:1})
-            //.deepPopulate('exams exams.stream')
-            .exec(function (err, thisUser) {
-            if (!err){
-                thisBlogpost.user = thisUser;
-                res.json(thisBlogpost);
-                } else {throw err;}
-            });
+            
+            if(thisBlogpost){
+                var userId = thisBlogpost.user;
+                var thisUser = user
+                .findOne({_id : userId},{basic:1, blogger:1, image:1})
+                //.deepPopulate('exams exams.stream')
+                .exec(function (err, thisUser) {
+                if (!err){
+                    thisBlogpost.user = thisUser;
+                    res.json(thisBlogpost);
+                    } else {throw err;}
+                });
+            }else{
+                res.json(false);
+            }
+            
         } else {throw err;}
     });
 });
