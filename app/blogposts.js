@@ -16,6 +16,8 @@ mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 var readingTime = require('reading-time');
 
+const cheerio = require('cheerio');
+
 router.get('/remove/:blogpostId', function(req, res) {
     var blogpostId = req.params.blogpostId;
     //console.log(blogpostId);
@@ -38,7 +40,6 @@ router.get('/blogpostsCount', function(req, res) {
 
 router.get('/allblogs/:userId', function(req, res) {
     var userId = req.params.userId;
-    
     
     var thisUser = user.findOne({ '_id': userId },{mobile:1, email:1, basic:1, image:1, userType:1},function (err, thisUser) {
         if (!err){
@@ -98,6 +99,47 @@ router.get('/allblogs/:userId', function(req, res) {
 
 });
 
+router.get('/sanitizeblogposts', function(req, res) {
+    
+    var blogposts = blogpost
+    .find({})
+    .exec(function (err, blogposts) {
+        if (!err){
+            var allBlogposts = [];
+            var nBlogposts = blogposts.length;
+            var counter = 0;
+            if(nBlogposts == 0){
+                res.json([]);
+            }
+            blogposts.forEach(function(thisBlogpost, rindex){
+                var thisTitle = thisBlogpost.title;
+                var thisContent = thisBlogpost.content;
+                
+                const $ = cheerio.load(thisContent, {
+                    normalizeWhitespace: true,
+                    /*xmlMode: true*/
+                });
+                $('a').attr('target', '_blank').html();
+                console.log($.html());
+                
+                thisBlogpost.content = $.html();
+                
+                
+                thisBlogpost.save(function(err, thisBlogpost) {
+                    if (err) return console.error(err);
+                    counter += 1;
+                    if(counter == nBlogposts){
+                        res.json(allBlogposts);   
+                    }
+                });
+                
+                
+            });
+        } else {throw err;}
+    });
+});
+
+
 router.get('/slugExists/:query', function(req, res) {
     var query = req.params.query;
     //console.log(query);
@@ -120,7 +162,6 @@ router.get('/edit/:blogpostId', function(req, res) {
     //console.log(blogpostId);
     var thisBlogpost = blogpost
         .findOne({ '_id': blogpostId })
-        //.deepPopulate('coupon')
         .exec(function (err, thisBlogpost) {
             
         if (!err){
@@ -144,7 +185,7 @@ router.get('/getblogpostFromSlug/:blogpostSlug', function(req, res) {
     console.log(blogpostSlug);
     var thisBlogpost = blogpost
         .findOne({ 'urlslug': blogpostSlug })
-        //.deepPopulate('coupon')
+        .deepPopulate('blogTags')
         .exec(function (err, thisBlogpost) {
         console.log(thisBlogpost);    
         if (!err){

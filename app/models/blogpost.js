@@ -15,8 +15,7 @@ var blogpostSchema = mongoose.Schema({
     title: String,
     subtitle:String,
     content: String,
-    tags:[String],
-    keywords:[String],
+    blogTags:[{ type: Schema.ObjectId, ref: 'blogTag' }],
     
     exams: [{ type: Schema.ObjectId, ref: 'exam' }],
     coachingGroups: [String],

@@ -116,6 +116,7 @@ var offers = require('./app/offers.js',offers);
 var coupons = require('./app/coupons.js',coupons); 
 var reviews = require('./app/reviews.js',reviews); 
 var blogposts = require('./app/blogposts.js',blogposts); 
+var blogTags = require('./app/blogTags.js',blogTags); 
 var groups = require('./app/groups.js',groups); 
 var logourls = require('./app/logourls.js',logourls); 
 var masters = require('./app/masters.js',masters); 
@@ -153,6 +154,7 @@ app.use('/api/offers', offers);
 app.use('/api/coupons', coupons);
 app.use('/api/reviews', reviews);
 app.use('/api/blogposts', blogposts);
+app.use('/api/blogTags', blogTags);
 app.use('/api/groups', groups);
 app.use('/api/logourls', logourls);
 //app.use('/api/admins', admins);
@@ -236,11 +238,18 @@ app.get('/getStarted', function(req, res){
 });*/
 
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
+    //var err = new Error('Not Found');
     //console.log(req);
-    err.status = 404;
+    //err.status = 404;
+    //console.log('I am here');
     
-    next(err);
+    res.render(__dirname + '/views/error.html', { locals: { 
+      title : '404 - Not Found'
+     ,description: ''
+     ,author: 'Gaurav Parashar'
+    },status: 404 });
+    
+    //next(err);
 });
 
 //app.use(require('prerender-node').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm'));

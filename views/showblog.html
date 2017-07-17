@@ -46,8 +46,13 @@
         margin-top: 40px;
         margin-bottom: 20px;
     }
-    a{
+    a:link, a:visited, a:hover, a:active{
         color: #20C39A;
+    }
+    .blogSeparator{
+        border-bottom: 0.5px solid lightgray;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
     }
 </style>
 
@@ -79,7 +84,7 @@
         <div layout="row" layout-align="center center" class="">
             <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start" class="padding10">
                 
-                <div layout="row" layout-xs="column" layout-align="start start " class="width100   ">
+                <div layout="row" layout-xs="column" layout-align="start start " class="width100  blogSeparator ">
                     <div flex layout="row" layout-align="start center" class=" profileBox marginTB10">
                         <div ng-if="blogpost.user.image">
                         <img ng-src="{{blogpost.user.image}}" id="userPicBlog" class="img-circle"/>
@@ -147,10 +152,55 @@
                 </div>
                 </div>
                 
-                <div class="marginT40 blogContent" ng-bind-html="blogpost.content">
+                <div class="marginT40 blogContent blogSeparator" ng-bind-html="blogpost.content">
                 
                 </div>
+                <div layout="column" layout-align="start start" class="blogSeparator width100">
+                    <div layout="row" layout-align="end center" class="font12 marginTB10">
+                    <div hide-gt-xs class="marginR10">
+                        <a href="#"
+                        socialshare 
+                        socialshare-provider="whatsapp"
+                        socialshare-text="{{shareText}}" 
+                        socialshare-url="{{currURL}}">
+                        <img src="icons/whatsapp.png" class="socialIcon"/>    
+                        </a>
+                    </div>
+                    <div hide-xs class="marginR10">
+                        <a ng-click="shareFacebook()">
+                            <img src="icons/facebook.png" class="socialIcon"/>
+                        </a>
+                    </div>
+                    <div hide-gt-xs class="marginR10">
+                        <a href="#"
+                        socialshare
+                        socialshare-provider="facebook-messenger"
+                        socialshare-url="{{currURL}}">
+                            <img src="icons/facebook.png" class="socialIcon"/>
+                        </a>
+                    </div>
+                    <div class="marginR10">
+                        <a href="#"
+                        socialshare
+                        socialshare-provider="twitter"
+                        socialshare-text="{{shareText2}}"
+                        socialshare-hashtags="{{hashtags}}"
+                        socialshare-url="{{currURL}}">
+                        <img src="icons/twitter.png" class="socialIcon"/>
+                        </a>
+                    </div>
 
+                </div>
+                <div layout="row" layout-align="end center" class=" marginTB10 text-primary bold">
+                    <div class="marginR10">
+                        <i class="fa fa-tags" aria-hidden="true"></i>
+                    </div>
+                    <div layout="row" layout-align="center center" ng-repeat="blogTag in blogpost.blogTags" class="marginR5">
+                        {{blogTag.tag}}
+                        <span ng-if="!$last">, </span>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
         

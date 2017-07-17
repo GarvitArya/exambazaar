@@ -103,6 +103,18 @@
         background: white;
         border: 1px solid #02B875;
     }
+    #unmarkedTagHolder{
+        padding:5px;
+        color: #333333;
+        background: white;
+        border: 1px solid #333333;
+    }
+    #markedTagHolder{
+        padding:5px;
+        color: #02B875;
+        background: white;
+        border: 1px solid #02B875;
+    }
 </style>
 
 <div id="spacerXS" class="whiteBackground">
@@ -207,6 +219,11 @@
         <div layout="row" layout-align="end center" class="width100">
             <md-button class="md-black md-small font10 tolowercase" ng-click="showBlogCoachingDialog()">
                 Mark Coaching
+            </md-button>
+        </div>
+        <div layout="row" layout-align="end center" class="width100">
+            <md-button class="md-black md-small font10 tolowercase" ng-click="showBlogTagDialog()">
+                Add Tags
             </md-button>
         </div>
     </div>
@@ -403,6 +420,58 @@
       </md-dialog>
     </div>    
 </div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="tagDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Mark Tags relevant to this blog post!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                        Marking Tags Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="row" layout-align="start center" layout-wrap class="width80 marginB20 marginLR20 font12">
+                <div layout="column" layout-align="center center" ng-repeat="blogTag in allTags" class="margin10" >
+                    <div layout="column" layout-align="center center" ng-if="blogpost.blogTags.indexOf(blogTag._id) != -1">
+                        <div layout="row" layout-align="start center" id="markedTagHolder" ng-click="unsetBlogTag(blogTag)" class="bold">
+                            <i class="fa fa-check-square font20" aria-hidden="true"></i>&nbsp;&nbsp;{{blogTag.tag}}
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="center center" ng-if="blogpost.blogTags.indexOf(blogTag._id) == -1">
+                        <div layout="row" layout-align="start center" id="unmarkedTagHolder" class="bold" ng-click="setBlogTag(blogTag)" >
+                            <i class="fa fa-plus-circle font20" aria-hidden="true"></i>
+                            &nbsp;&nbsp;{{blogTag.tag}}
+                        </div>
+                    </div>
+                    
+                    
+                    <!--<div layout="row" layout-align="start center">
+                        <a ng-click="removeBlogTag(blogTag)" id="copyLink" class="textPrimary font10 danger">Remove</a>
+                    </div>-->
+                </div>
+            </div>
+            <div flex layout="row" layout-align="start center" class="width80 marginB20 marginLR20 font12">
+                <input type="text" class="font12 width25 marginR10" ng-model="newTagText"  placeholder="new tag" >
+                <md-button class="md-black md-small font10" ng-click="addGlobalBlogTag()">
+                    Add New Tag
+                </md-button>
+            </div>
+            
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>
+
 
 <div style="visibility: hidden">    
 <div class="md-dialog-container" id="copiedDialog">
