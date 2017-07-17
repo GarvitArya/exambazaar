@@ -1752,7 +1752,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 console.info('Shortlist Error' + status + " " + data);    
             }); 
             
-            if($scope.user.userType=='Master'){
+            if($scope.user.userType=='Master' || $scope.user.userType=='Intern - Business Development'){
                 $scope.ebuser = true;
             }
             
@@ -9651,9 +9651,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                   clickOutsideToClose: true
                 });
             };
-            $scope.spreadSheetCoachings = [];
+            
             
             $rootScope.$on("setSpreadSheetCoachings", function(){
+                $scope.spreadSheetCoachings = [];
                 var searchedCoachingGroup = $rootScope.coachingGroupItems;
                 var newCenter = {
                     sno: 'S. No',
