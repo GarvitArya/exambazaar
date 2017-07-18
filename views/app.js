@@ -13168,7 +13168,29 @@ function getLatLng(thisData) {
                         
                         
                     }else{
-                        $scope.showUrlslugDialog();
+                        if($scope.blogpost._id == data){
+                            //do nothing
+                            console.log(data);
+                            
+                            
+                            var blogpostForm = {
+                            };
+
+                            for (var property in blogpost) {
+                                blogpostForm[property] = blogpost[property];
+                            }
+                            console.log(blogpostForm);
+                            blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
+                                $scope.showSavedDialog();
+                            })
+                            .error(function (data, status, header, config) {
+                                console.info("Error ");
+                            });
+                        }else{
+                            $scope.showUrlslugDialog();
+                        }
+                        
+                        
 
                     }
 
