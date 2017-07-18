@@ -682,6 +682,27 @@ router.get('/', function(req, res) {
     });
 });
 
+router.get('/dailySummary', function(req, res) {
+    var userSummary = user.aggregate(
+    [
+        {$match: {}},
+        {$group: { _id : {
+            year:{$year:"$_created"},
+            month:{$month:"$_created"},
+            day:{$dayOfMonth:"$_created"}
+        },count:{$sum: 1 }},
+        }/*,
+        {$sort:{"_date":-1}}*/
+
+    ],function(err, userSummary) {
+    if (!err){
+        
+        console.log(userSummary);
+        res.json(userSummary);
+    } else {throw err;}
+    });
+});
+
 router.get('/query/:query', function(req, res) {
     var query = req.params.query;
     //console.log(query);

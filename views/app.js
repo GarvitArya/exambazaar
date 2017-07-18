@@ -1,5 +1,5 @@
 
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor','mdMarkdownIt']);
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin'
     (function() {
     'use strict';
@@ -177,6 +177,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.updateUser = function(user) {
             
             return $http.post('/api/users/update', user);
+        };
+        this.dailySummary = function() {
+            return $http.get('/api/users/dailySummary');
         };
         this.deliverVoucher = function(voucherForm) {
             
@@ -446,6 +449,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.masterViewSummary = function() {
             return $http.get('/api/views/masterViewSummary');
+        };
+        this.dailySummary = function() {
+            return $http.get('/api/views/dailySummary');
         };
         this.getview = function(viewId) {
             return $http.get('/api/views/edit/'+viewId, {viewId: viewId});
@@ -905,6 +911,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     exambazaar.service('targetStudyProviderService', ['$http', function($http) {
         this.getProviders = function(city) {
             return $http.get('/api/targetStudyProviders/city/'+city, {city: city});
+        };
+        this.dailySummary = function() {
+            return $http.get('/api/targetStudyProviders/dailySummary');
         };
         this.allResults = function(examId) {
             return $http.get('/api/targetStudyProviders/allResults/'+examId, {examId: examId});
@@ -10246,6 +10255,141 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             
             
+    }]);
+        
+    exambazaar.controller("chartingController", 
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'viewSummary', 'userSummary', 'providerSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, viewSummary, userSummary, providerSummary){
+            
+            $rootScope.pageTitle ='Charting Sandbox';
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+            }else{
+                $scope.user = null;
+            }
+            $scope.charts = [];
+            
+            var summaryData = viewSummary.data;
+            $scope.viewSummary = [];
+            summaryData.forEach(function(thisDay, vindex){
+                var newDayData = {
+                    date: new Date(thisDay._id.year, thisDay._id.month-1, thisDay._id.day),
+                    views: thisDay.count,
+                };
+                $scope.viewSummary.push(newDayData);
+            });
+            $scope.viewSummary.sort(function(a,b){
+              return new Date(a.date) - new Date(b.date);
+            });
+            var views = $scope.viewSummary.map(function(a) {return a.views;});
+            $scope.viewoptions = {
+                scales: {
+                  yAxes: [
+                    {
+                      id: 'y-axis-1',
+                      type: 'linear',
+                      display: true,
+                      position: 'right'
+                    },
+                  ]
+                },
+                title: {
+                    display: true,
+                    text: 'EB Views per day'
+                }
+            };
+            var newChart = {
+                labels: $scope.viewSummary.map(function(a) {return moment(a.date).format('DD MMM YY');}),
+                series: ['Views'],
+                data: [views],
+                datasetOverride: [{ yAxisID: 'y-axis-1' }],
+                options: $scope.viewoptions
+            };
+            $scope.charts.push(newChart);
+            
+            
+            
+            
+            
+            var summaryData = userSummary.data;
+            $scope.userSummary = [];
+            summaryData.forEach(function(thisDay, vindex){
+                var newDayData = {
+                    date: new Date(thisDay._id.year, thisDay._id.month-1, thisDay._id.day),
+                    users: thisDay.count,
+                };
+                $scope.userSummary.push(newDayData);
+            });
+            $scope.userSummary.sort(function(a,b){
+              return new Date(a.date) - new Date(b.date);
+            });
+            var users = $scope.userSummary.map(function(a) {return a.users;});
+            $scope.useroptions = {
+                scales: {
+                  yAxes: [
+                    {
+                      id: 'y-axis-1',
+                      type: 'linear',
+                      display: true,
+                      position: 'right'
+                    },
+                  ]
+                },
+                title: {
+                    display: true,
+                    text: 'EB Users per day'
+                }
+            };
+            newChart = {
+                labels: $scope.userSummary.map(function(a) {return moment(a.date).format('DD MMM YY');}),
+                series: ['Users'],
+                data: [users],
+                datasetOverride: [{ yAxisID: 'y-axis-1' }],
+                options: $scope.useroptions
+            };
+            $scope.charts.push(newChart);
+            
+            
+            
+            var summaryData = providerSummary.data;
+            $scope.providerSummary = [];
+            summaryData.forEach(function(thisDay, vindex){
+                var newDayData = {
+                    date: new Date(thisDay._id.year, thisDay._id.month-1, thisDay._id.day),
+                    providers: thisDay.count,
+                };
+                if(thisDay._id.month>2){
+                    $scope.providerSummary.push(newDayData);
+                }
+                
+            });
+            $scope.providerSummary.sort(function(a,b){
+              return new Date(a.date) - new Date(b.date);
+            });
+            var providers = $scope.providerSummary.map(function(a) {return a.providers;});
+            $scope.provideroptions = {
+                scales: {
+                  yAxes: [
+                    {
+                      id: 'y-axis-1',
+                      type: 'linear',
+                      display: true,
+                      position: 'right'
+                    },
+                  ]
+                },
+                title: {
+                    display: true,
+                    text: 'EB Providers added per day'
+                }
+            };
+            newChart = {
+                labels: $scope.providerSummary.map(function(a) {return moment(a.date).format('DD MMM YY');}),
+                series: ['Providers'],
+                data: [providers],
+                datasetOverride: [{ yAxisID: 'y-axis-1' }],
+                options: $scope.provideroptions
+            };
+            $scope.charts.push(newChart);
     }]);     
         
     exambazaar.controller("postBlogController", 
@@ -10326,14 +10470,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $scope.newBlogPost = function(){
                 var blogpost = {
-                    title: 'This is your new blogpost title. Click and Edit!',
+                    title: $scope.user.basic.name + ' - This is your new blogpost title. Click and Edit! ' + moment().format("DD MMM YY HH:mm"),
                     content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
                 };
+                
                 var blogpostForm = {
                     user: $scope.user._id,
                     title: blogpost.title,
                     content: blogpost.content,
                     active: false,
+                    urlslug: slugify(blogpost.title)
                 };
                 for (var property in blogpost) {
                     blogpostForm[property] = blogpost[property];
@@ -14236,6 +14382,38 @@ function getLatLng(thisData) {
                 
             }
         })
+        .state('charting', {
+            url: '/charting', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'charting.html',
+                    controller: 'chartingController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                viewSummary: ['viewService',
+                    function(viewService) {
+                    return viewService.dailySummary();
+                }],
+                userSummary: ['UserService',
+                    function(UserService) {
+                    return UserService.dailySummary();
+                }],
+                providerSummary: ['targetStudyProviderService',
+                    function(targetStudyProviderService) {
+                    return targetStudyProviderService.dailySummary();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
         .state('postBlog', {
             url: '/:userId/postBlog', //masterId?
             views: {
@@ -16865,17 +17043,7 @@ exambazaar.directive('focusMe', ['$timeout', '$parse', function ($timeout, $pars
     };
 }]);
 
-exambazaar.directive('markdown', function () {
-    var converter = new Showdown.converter();
-    return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-            var htmlText = converter.makeHtml(element.text());
-            element.html(htmlText);
-        }
-    };
 
-});
 
 exambazaar.directive('affixer', function ($window) {
     return {

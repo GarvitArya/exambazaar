@@ -28,7 +28,6 @@ router.get('/edit/:viewId', function(req, res) {
 });
 
 router.get('/masterViewSummary', function(req, res) {
-    
     view.count({}, function(err, totalViews) {
     if (!err){
         var start = new Date();
@@ -70,11 +69,29 @@ router.get('/masterViewSummary', function(req, res) {
                 
             } else {throw err;}
         });
-        
-        
     } else {throw err;}
     });
-    
+});
+
+router.get('/dailySummary', function(req, res) {
+    var viewSummary = view.aggregate(
+    [
+        {$match: {}},
+        {$group: { _id : {
+            year:{$year:"$_date"},
+            month:{$month:"$_date"},
+            day:{$dayOfMonth:"$_date"}
+        },count:{$sum: 1 }},
+        }/*,
+        {$sort:{"_date":-1}}*/
+
+    ],function(err, viewSummary) {
+    if (!err){
+        
+        console.log(viewSummary);
+        res.json(viewSummary);
+    } else {throw err;}
+    });
 });
 
 router.post('/markDone', function(req, res) {

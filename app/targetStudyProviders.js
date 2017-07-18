@@ -1026,6 +1026,27 @@ router.get('/coachingGroupQuery/:query', function(req, res) {
     }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
 });
 
+router.get('/dailySummary', function(req, res) {
+    var targetStudyProviderSummary = targetStudyProvider.aggregate(
+    [
+        {$match: {}},
+        {$group: { _id : {
+            year:{$year:"$_created"},
+            month:{$month:"$_created"},
+            day:{$dayOfMonth:"$_created"}
+        },count:{$sum: 1 }},
+        }/*,
+        {$sort:{"_date":-1}}*/
+
+    ],function(err, targetStudyProviderSummary) {
+    if (!err){
+        
+        console.log(targetStudyProviderSummary);
+        res.json(targetStudyProviderSummary);
+    } else {throw err;}
+    });
+});
+
 router.get('/blogCoachingGroupQuery/:query', function(req, res) {
     var query = req.params.query;
     
