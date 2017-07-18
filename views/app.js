@@ -13496,6 +13496,12 @@ function getLatLng(thisData) {
             }
             
             $scope.blogpost = thisblog.data;
+            console.log($scope.blogpost);
+            if(!$scope.blogpost){
+                window.location = "http://www.exambazaar.com/error";
+            }
+            
+            
             console.log($scope.blogpost.blogTags);
             var defaultBlogCover = "images/background/examinfo.jpg";
             if($scope.blogpost.coverPhoto){
@@ -14485,6 +14491,22 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'thankyou.html',
                     controller: 'thankyouController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
+        .state('error', {
+            url: '/error', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'error.html',
+                    controller: 'headerController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
