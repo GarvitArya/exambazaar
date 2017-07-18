@@ -927,6 +927,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.addExamsToAll = function(groupExamForm) {
             return $http.post('/api/targetStudyProviders/addExamsToAll',groupExamForm);
         };
+        this.removeExamsFromAll = function(groupExamForm) {
+            return $http.post('/api/targetStudyProviders/removeExamsFromAll',groupExamForm);
+        };
+        this.commonExamsInAll = function(groupExamForm) {
+            return $http.post('/api/targetStudyProviders/commonExamsInAll',groupExamForm);
+        };
         this.searchCityProviders = function(cityQueryForm) {
             return $http.post('/api/targetStudyProviders/cityQuery',cityQueryForm);
         };
@@ -9658,7 +9664,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);    */
     
     exambazaar.controller("coachingGroupController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', '$mdDialog','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog,thisuser, examList, streamList){
+        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $timeout,thisuser, examList, streamList){
             
             $scope.user = thisuser.data;
             $scope.allExams = examList.data;
@@ -9682,7 +9688,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                   clickOutsideToClose: true
                 });
             };
-            
+            $scope.showRemoveExamDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#removeExamDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
+            $scope.showCommonExamDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#commonExamDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
             $scope.markExamsDone = function(){
                 $mdDialog.hide();
             };
@@ -9696,6 +9717,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             
             $scope.addExamsArray = [];
+            $scope.removeExamsArray = [];
             $scope.addExam = function(thisArray, thisExam){
                 var thisExamId = thisExam._id;
                 var eIndex = thisArray.indexOf(thisExamId);
@@ -9716,9 +9738,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             
             $scope.addExamConfirm = function(){
-                var instituteLength = $scope.spreadSheetCoachings.length - 1;
+                var instituteLength = $scope.spreadSheetCoachings.length;
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    instituteLength = allInstitutes.length - 1;
+                }
+                
+                var groupName = '';
+                if($scope.spreadSheetCoachings.length > 1){
+                    groupName = $scope.spreadSheetCoachings[1].name;
+                }
                 var confirm = $mdDialog.confirm()
-                .title('Would you add these ' + $scope.addExamsArray.length + ' exams to these ' + instituteLength + ' coaching centers?')
+                .title('Would you add these ' + $scope.addExamsArray.length + ' exams to these ' + instituteLength + ' coaching centers of ' +  groupName + '?')
                 .textContent('You will not be able to revert it later')
                 .ariaLabel('Lucky day')
                 .targetEvent()
@@ -9734,7 +9765,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             $scope.addExamsToAll = function(){
                 var allInstitutes = $scope.spreadSheetCoachings;
-                allInstitutes.splice(0,1);
+                if(allInstitutes[0]._id == 'EB Id'){
+                    allInstitutes.splice(0,1);
+                }
+                
                 var instituteArray =  allInstitutes.map(function(a) {return a._id;});
                 var groupExamForm = {
                     instituteArray: instituteArray,
@@ -9743,6 +9777,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
                 targetStudyProviderService.addExamsToAll(groupExamForm).success(function (data, status, headers) {
                     console.log('Done');
+                    $scope.showSavedDialog();
                     //$scope.showSavedDialog();
                     
                 })
@@ -9750,6 +9785,89 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.info('Error ' + data + ' ' + status);
                 });       
             };
+            
+            $scope.removeExamConfirm = function(){
+                var instituteLength = $scope.spreadSheetCoachings.length;
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    instituteLength = allInstitutes.length - 1;
+                }
+                
+                var groupName = '';
+                if($scope.spreadSheetCoachings.length > 1){
+                    groupName = $scope.spreadSheetCoachings[1].name;
+                }
+                var confirm = $mdDialog.confirm()
+                .title('Would you remove these ' + $scope.removeExamsArray.length + ' exams from these ' + instituteLength + ' coaching centers of ' +  groupName + '?')
+                .textContent('You will not be able to revert it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.removeExamsFromAll();
+                }, function() {
+                  //nothing
+                    $scope.showRemoveExamDialog();
+                }); 
+            };
+            $scope.removeExamsFromAll = function(){
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    allInstitutes.splice(0,1);
+                }
+                
+                var instituteArray =  allInstitutes.map(function(a) {return a._id;});
+                var groupExamForm = {
+                    instituteArray: instituteArray,
+                    examArray: $scope.removeExamsArray
+                };
+                
+                targetStudyProviderService.removeExamsFromAll(groupExamForm).success(function (data, status, headers) {
+                    console.log('Done');
+                    $scope.showSavedDialog();
+                    //$scope.showSavedDialog();
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });       
+            };
+            
+            $scope.commonExamsInAll = function(){
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    allInstitutes.splice(0,1);
+                }
+                var allExamIds =  $scope.allExams.map(function(a) {return a._id;});
+                
+                var instituteArray =  allInstitutes.map(function(a) {return a._id;});
+                var groupExamForm = {
+                    instituteArray: instituteArray,
+                    examArray: allExamIds,
+                };
+                
+                targetStudyProviderService.commonExamsInAll(groupExamForm).success(function (data, status, headers) {
+                    var commonExams = data;
+                    $scope.commonExamIds = data;
+                    var allExamIds =  $scope.allExams.map(function(a) {return a._id;});
+                    $scope.commonExams = [];
+                    commonExams.forEach(function(thisExam, index){
+                        var eIndex = allExamIds.indexOf(thisExam);
+                        $scope.commonExams.push($scope.allExams[eIndex]);
+                    });
+                    $scope.showCommonExamDialog();
+                    console.log($scope.commonExams);
+                    //$scope.showSavedDialog();
+                    //$scope.showSavedDialog();
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });       
+            };
+            
             
             $rootScope.$on("setSpreadSheetCoachings", function(event, data){
                 $scope.spreadSheetCoachings = [];
@@ -9826,6 +9944,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                 });
             });
+            
+            $scope.showSavedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#savedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
             
     }]);
         

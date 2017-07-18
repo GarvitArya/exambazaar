@@ -90,9 +90,18 @@
             Spreadsheet
         </a>
         </div>
-        <div layout="row" class="width100 secondFont textBlack marginB20" ng-click="showExamDialog()">
-            Exam for this group
+        <div layout="row" class="width100 secondFont textBlack marginB20" ng-if="spreadsheetMode">
+            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showExamDialog()">
+                Add Exams to this Group
+            </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showRemoveExamDialog()">
+                Remove Exams from this Group
+            </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="commonExamsInAll()">
+                Common Exams in this Group
+            </md-button>
         </div>
+        
         <div layout="row" class="editFont font11 bold greyBottomBorder textBlack">
             <div flex="5" class="padding1">S.No.</div>
             <div flex="10" class="padding1">Institute Name</div>
@@ -219,10 +228,10 @@
                 </div>
 
             </div>
-            <div layout="column" layout-align="center center" class="width100">
-                <md-button class="md-black md-small font10 tolowercase width50" ng-click="addExamsToAll()">
-                    Add these Exams
-                </md-button>  
+            <div layout="row" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="addExamConfirm()">
+                    Add Exams to Group
+                </md-button>
             </div>  
           
           
@@ -230,3 +239,116 @@
       </md-dialog>
     </div>    
 </div> 
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="removeExamDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Mark all Exams you want to be removed from all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                        Marking Exams Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                <!--<div layout="row" layout-align="start start"  class="width100 marginB10 bold">
+                    <div flex="15">
+                        Stream
+                    </div>
+                    <div flex="85">
+                        Select Exams
+                    </div>
+                </div>-->
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
+                    <div flex="15">
+                        {{thisStream.displayname}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+                            <span class="badge" id="examTagHolder" ng-if="removeExamsArray.indexOf(thisExam._id) == -1" ng-click="addExam(removeExamsArray,thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="removeExamsArray.indexOf(thisExam._id) != -1" ng-click="removeExam(removeExamsArray,thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="column" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="removeExamConfirm()">
+                    Remove Exams from Group
+                </md-button>
+            </div>  
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="commonExamDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Common exams in all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                        Common Exams Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
+                    <div flex="15">
+                        {{thisStream.displayname}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+                            <span class="badge" id="examTagHolder" ng-if="commonExamIds.indexOf(thisExam._id) == -1">
+                                {{thisExam.displayname}}
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="commonExamIds.indexOf(thisExam._id) != -1">
+                                {{thisExam.displayname}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>

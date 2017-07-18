@@ -1154,19 +1154,110 @@ router.post('/showGroupHelper', function(req, res) {
     }).sort( { name: 1 } ).limit(20); //.limit(500) .sort( { rank: -1 } )
 });
 
-router.post('/addExamsToAll/', function(req, res) {
+
+router.post('/commonExamsInAll/', function(req, res) {
     var groupExamForm = req.body;
     var instituteArray = groupExamForm.instituteArray;
     var examArray = groupExamForm.examArray;
-    console.log(JSON.stringify(groupExamForm));
-    targetStudyProvider.find({_id:{$in: instituteArray}}, {exams:1},function(err, docs) {
+    console.log(JSON.stringify(examArray));
+    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {exams:1},function(err, allGroupProviders) {
     if (!err){
-        console.log(docs);
-        res.json(docs);
+        //console.log(allGroupProviders);
+        var examsObj = [];
+        examArray.forEach(function(toAddExam, eindex){
+            var newExamObj = {
+                exam: toAddExam,
+                common: true,
+            }
+            examsObj.push(newExamObj);
+        });    
+        allGroupProviders.forEach(function(thisGroup, index){
+            var thisExams = thisGroup.exams;
+            examsObj.forEach(function(commonExamObj, eindex){
+                var exIndex = thisExams.indexOf(commonExamObj.exam);
+                
+                if(exIndex == -1){
+                    commonExamObj.common = false;
+                }
+            });
+            
+            //console.log(JSON.stringify(examsObj));
+        });
+        var commonExams = [];
+        examsObj.forEach(function(commonExamObj, eindex){
+            if(commonExamObj.common == true){
+                commonExams.push(commonExamObj.exam);
+            }
+        });
+        //console.log(commonExams);
+        res.json(commonExams);
     } else {throw err;}
     }); //.limit(500) .sort( { rank: -1 } )
 });
 
+router.post('/addExamsToAll/', function(req, res) {
+    var groupExamForm = req.body;
+    var instituteArray = groupExamForm.instituteArray;
+    var examArray = groupExamForm.examArray;
+    //console.log(JSON.stringify(groupExamForm));
+    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {exams:1},function(err, allGroupProviders) {
+    if (!err){
+        //console.log(allGroupProviders);
+        
+        allGroupProviders.forEach(function(thisGroup, index){
+            var thisExams = thisGroup.exams;
+            examArray.forEach(function(toAddExam, eindex){
+                var exIndex = thisExams.indexOf(toAddExam);
+                
+                if(exIndex == -1){
+                    thisExams.push(toAddExam);
+                }
+            });
+            
+            thisGroup.exams = thisExams;
+            thisGroup.save(function(err, thisGroup) {
+                if (err) return console.error(err);
+                console.log(thisGroup._id + " saved!");
+            });
+            
+        });
+        
+        res.json(allGroupProviders);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
+
+router.post('/removeExamsFromAll/', function(req, res) {
+    var groupExamForm = req.body;
+    var instituteArray = groupExamForm.instituteArray;
+    var examArray = groupExamForm.examArray;
+    //console.log(JSON.stringify(groupExamForm));
+    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {exams:1},function(err, allGroupProviders) {
+    if (!err){
+        
+        allGroupProviders.forEach(function(thisGroup, index){
+            var thisExams = thisGroup.exams;
+            examArray.forEach(function(toRemoveExam, eindex){
+                var exIndex = thisExams.indexOf(toRemoveExam);
+                
+                if(exIndex != -1){
+                    console.log(exIndex + ' removed');
+                    thisExams.splice(exIndex, 1);
+                }
+            });
+            
+            thisGroup.exams = thisExams;
+            thisGroup.save(function(err, thisGroup) {
+                if (err) return console.error(err);
+                console.log(thisGroup._id + " saved!");
+            });
+            
+        });
+        
+        res.json(allGroupProviders);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
 
 router.post('/cityQuery', function(req, res) {
     var cityQueryForm = req.body;
