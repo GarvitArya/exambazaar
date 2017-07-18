@@ -3,8 +3,12 @@
 <!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
 <style>
-    .textWhiteSmoke{
-        color: whitesmoke;
+    @font-face{
+        font-family: "Avenir";
+        src: url('font/avenir/Avenir.ttf');
+    }
+    .mainFont{
+        font-family: "Avenir";
     }
 </style>
 <html class="no-js" lang="en"> <!--<![endif]-->
@@ -24,8 +28,7 @@
  	<!-- CSS
    ================================================== -->
    <link rel="stylesheet" href="error-css/base.css">  
-   <link rel="stylesheet" href="error-css/main.css">
-   <link rel="stylesheet" href="error-css/vendor.css">     
+   <link rel="stylesheet" href="error-css/main.css">    
 
    <!-- script
    ================================================== -->
@@ -45,7 +48,10 @@
    	<div class="row">
    		<div class="logo">
              <a href="https://exambazaar.com/" target="_blank">Exambazaar</a>
-          </div>   		
+        </div>
+        <!--<p class="mainFont">
+            <a href="https://exambazaar.com/" target="_blank">Exambazaar</a>
+        </p>-->
    	</div>   
 	
    </header> <!-- /header -->

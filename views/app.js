@@ -924,6 +924,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.searchBlogCoachingGroupProviders = function(query) {
             return $http.get('/api/targetStudyProviders/blogCoachingGroupQuery/'+query, {query: query});
         };
+        this.addExamsToAll = function(groupExamForm) {
+            return $http.post('/api/targetStudyProviders/addExamsToAll',groupExamForm);
+        };
         this.searchCityProviders = function(cityQueryForm) {
             return $http.post('/api/targetStudyProviders/cityQuery',cityQueryForm);
         };
@@ -8687,7 +8690,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
             });
             $rootScope.coachingGroupItems = coachingGroupItems;
-            $rootScope.$emit("setSpreadSheetCoachings", {});
+            $rootScope.$emit("setSpreadSheetCoachings", {coachingGroupItems: coachingGroupItems});
             //console.log(coachingGroupItems.length);
         };
         this.querySearch = function(query){
@@ -9655,11 +9658,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);    */
     
     exambazaar.controller("coachingGroupController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', '$mdDialog','thisuser', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog,thisuser){
+        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', '$mdDialog','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog,thisuser, examList, streamList){
             
             $scope.user = thisuser.data;
-            console.log($scope.user);
+            $scope.allExams = examList.data;
+            $scope.allStreams = streamList.data;
             $scope.spreadsheetMode = false;
+            
             
             if($scope.user.userType =='Master'){
                 $scope.spreadsheetMode = true;
@@ -9669,6 +9674,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
             
             $rootScope.title ='Sandbox';
+            $scope.showExamDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#examDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
+            
+            $scope.markExamsDone = function(){
+                $mdDialog.hide();
+            };
             $scope.showSpreadsheetDialog = function(ev) {
                 $mdDialog.show({
                   contentElement: '#spreadsheetDialog',
@@ -9678,10 +9695,65 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });
             };
             
+            $scope.addExamsArray = [];
+            $scope.addExam = function(thisArray, thisExam){
+                var thisExamId = thisExam._id;
+                var eIndex = thisArray.indexOf(thisExamId);
+                if(eIndex == -1){
+                    thisArray.push(thisExamId);
+                }else{
+                    //do nothing
+                }
+            };
+            $scope.removeExam = function(thisArray, thisExam){
+                var thisExamId = thisExam._id;
+                var eIndex = thisArray.indexOf(thisExamId);
+                if(eIndex == -1){
+                    //do nothing
+                }else{
+                    thisArray.splice(eIndex,1);
+                }
+            };
             
-            $rootScope.$on("setSpreadSheetCoachings", function(){
+            $scope.addExamConfirm = function(){
+                var instituteLength = $scope.spreadSheetCoachings.length - 1;
+                var confirm = $mdDialog.confirm()
+                .title('Would you add these ' + $scope.addExamsArray.length + ' exams to these ' + instituteLength + ' coaching centers?')
+                .textContent('You will not be able to revert it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.addExamsToAll();
+                }, function() {
+                  //nothing
+                    $scope.showExamDialog();
+                }); 
+            };
+            $scope.addExamsToAll = function(){
+                var allInstitutes = $scope.spreadSheetCoachings;
+                allInstitutes.splice(0,1);
+                var instituteArray =  allInstitutes.map(function(a) {return a._id;});
+                var groupExamForm = {
+                    instituteArray: instituteArray,
+                    examArray: $scope.addExamsArray
+                };
+                
+                targetStudyProviderService.addExamsToAll(groupExamForm).success(function (data, status, headers) {
+                    console.log('Done');
+                    //$scope.showSavedDialog();
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });       
+            };
+            
+            $rootScope.$on("setSpreadSheetCoachings", function(event, data){
                 $scope.spreadSheetCoachings = [];
-                var searchedCoachingGroup = $rootScope.coachingGroupItems;
+                var searchedCoachingGroup = data.coachingGroupItems;
                 var newCenter = {
                     sno: 'S. No',
                     _id: 'EB Id',
@@ -12820,7 +12892,7 @@ function getLatLng(thisData) {
             $scope.urlslug = '';
             $scope.urlslugError = false;
             $scope.urlslugSet = false;
-            $scope.$watch('blogpost.title', function (newValue, oldValue, scope) {
+            /*$scope.$watch('blogpost.title', function (newValue, oldValue, scope) {
                 //console.log($scope.blogpost.urlslug);
                 if(newValue && newValue.length > 0){
                     $scope.urlslug = slugify(newValue);
@@ -12866,7 +12938,7 @@ function getLatLng(thisData) {
                     
                 }
 
-            }, true);
+            }, true);*/
             
             $scope.addBlogExam = function(thisExam){
                 if(!$scope.blogpost.exams){
@@ -13076,18 +13148,36 @@ function getLatLng(thisData) {
             
             $scope.saveBlogPost = function(blogpost){
                 
-                var blogpostForm = {
-                };
                 
-                for (var property in blogpost) {
-                    blogpostForm[property] = blogpost[property];
-                }
-                 blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
-                    $scope.showSavedDialog();
+                $scope.blogpost.urlslug = slugify($scope.blogpost.title);
+                blogpostService.slugExists($scope.blogpost.urlslug).success(function (data, status, headers) {
+                    if(data == false){
+                        var blogpostForm = {
+                        };
+
+                        for (var property in blogpost) {
+                            blogpostForm[property] = blogpost[property];
+                        }
+                        console.log(blogpostForm);
+                        blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
+                            $scope.showSavedDialog();
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error ");
+                        });
+                        
+                        
+                    }else{
+                        $scope.showUrlslugDialog();
+
+                    }
+
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error ");
                 });
+                
+                
             };
             
             $scope.previewblogpost = function(blogpost){
@@ -14165,6 +14255,14 @@ function getLatLng(thisData) {
                 thisuser: ['UserService', '$stateParams',
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
                 }],
                 provider: function() { return {}; }
                 

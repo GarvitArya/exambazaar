@@ -1014,6 +1014,7 @@ router.get('/query/:query', function(req, res) {
     }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
 });
 
+
 router.get('/coachingGroupQuery/:query', function(req, res) {
     var query = req.params.query;
     
@@ -1152,6 +1153,20 @@ router.post('/showGroupHelper', function(req, res) {
     } else {throw err;}
     }).sort( { name: 1 } ).limit(20); //.limit(500) .sort( { rank: -1 } )
 });
+
+router.post('/addExamsToAll/', function(req, res) {
+    var groupExamForm = req.body;
+    var instituteArray = groupExamForm.instituteArray;
+    var examArray = groupExamForm.examArray;
+    console.log(JSON.stringify(groupExamForm));
+    targetStudyProvider.find({_id:{$in: instituteArray}}, {exams:1},function(err, docs) {
+    if (!err){
+        console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
+
 
 router.post('/cityQuery', function(req, res) {
     var cityQueryForm = req.body;

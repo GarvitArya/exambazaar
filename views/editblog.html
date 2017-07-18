@@ -544,14 +544,14 @@
                     <i class="fa fa-times-circle font20" aria-hidden="true" ng-if="urlslugError"></i>
                 </div>
                 <div class="">
-                    Set the URL of your blog post to a unique value on Exambazaar blog 
+                    Set the title of your blog post to a unique value on Exambazaar blog 
                 </div>
               </div>
               <div class="width100">
-                <input type="text" class="font12 width100" ng-model="newUrlslug"  placeholder="set the url of your blog post" >
+                <input type="text" class="font12 width100" ng-model="blogpost.title"  placeholder="set a different title of your blog post" >
               </div>
               <div>
-                    <md-button class="md-danger md-small font10 tolowercase" ng-click="urlslugDone()">
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="saveBlogPost(blogpost)">
                         I am done changing
                     </md-button>
               </div>

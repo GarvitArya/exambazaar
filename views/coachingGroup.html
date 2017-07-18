@@ -31,6 +31,24 @@
         overflow: hidden;
         text-align: left;
     }
+    #examTagHolder{
+        padding:5px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    #examTagHolder:hover{
+        color: white;
+        
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #existingExamTagHolder{
+        padding:5px;
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
     
 </style>
 
@@ -67,12 +85,14 @@
         </md-autocomplete>
     </div>
     <div layout="column" class="marginT40 textBlack" ng-if="coachingGroup.groupName">
-        <div layout="row" class="secondFont textBlack  marginB20" ><span class="bold">Coaching Group:</span>&nbsp; {{coachingGroup.groupName}}&nbsp;&nbsp;<span class="badge" id="badge">{{coachingGroupItems.length}}</span>&nbsp;
+        <div layout="row" class="secondFont textBlack  marginB10" ><span class="bold">Coaching Group:</span>&nbsp; {{coachingGroup.groupName}}&nbsp;&nbsp;<span class="badge" id="badge">{{coachingGroupItems.length}}</span>&nbsp;
         <a ng-click="showSpreadsheetDialog()" ng-if="spreadsheetMode" class="danger">
             Spreadsheet
         </a>
         </div>
-        
+        <div layout="row" class="width100 secondFont textBlack marginB20" ng-click="showExamDialog()">
+            Exam for this group
+        </div>
         <div layout="row" class="editFont font11 bold greyBottomBorder textBlack">
             <div flex="5" class="padding1">S.No.</div>
             <div flex="10" class="padding1">Institute Name</div>
@@ -155,3 +175,58 @@
       </md-dialog>
     </div>    
 </div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="examDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Mark all Exams you want to be added to all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                        Marking Exams Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                <!--<div layout="row" layout-align="start start"  class="width100 marginB10 bold">
+                    <div flex="15">
+                        Stream
+                    </div>
+                    <div flex="85">
+                        Select Exams
+                    </div>
+                </div>-->
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
+                    <div flex="15">
+                        {{thisStream.displayname}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+                            <span class="badge" id="examTagHolder" ng-if="addExamsArray.indexOf(thisExam._id) == -1" ng-click="addExam(addExamsArray,thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="addExamsArray.indexOf(thisExam._id) != -1" ng-click="removeExam(addExamsArray,thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="column" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="addExamsToAll()">
+                    Add these Exams
+                </md-button>  
+            </div>  
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
