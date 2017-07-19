@@ -10490,6 +10490,26 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var url = $state.href('showblog', {blogpostSlug: blog.urlslug});
                 window.open(url,'_blank');  
             };
+            
+            var viewForm = {
+                state: $state.current.name,
+                claim: false,
+                url: $location.url()
+            };
+            if($scope.user && $scope.user.userId){
+                viewForm.user = $scope.user.userId
+            }
+            //console.log(JSON.stringify(viewForm));
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                console.info('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.info();
+            });
     }]);   
     
     exambazaar.controller("postBlogController", 
