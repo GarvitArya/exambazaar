@@ -10496,7 +10496,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', 'blogpostService','userBlogs', 'thisuser', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, blogpostService, userBlogs, thisuser){
             $scope.user = thisuser.data;
             $scope.userBlogs = userBlogs.data;
-            //console.log($scope.userBlogs);
+            console.log($scope.userBlogs);
             $scope.setBlog = function(thisblog){
                 $scope.blogpost = thisblog;
             };

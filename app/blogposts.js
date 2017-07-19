@@ -79,26 +79,30 @@ router.get('/userblogs/:userId', function(req, res) {
                 .find({})
                 .exec(function (err, blogposts) {
                     if (!err){
-                        var allBlogposts = [];
-                        var nBlogposts = blogposts.length;
-                        var counter = 0;
-                        if(nBlogposts == 0){
-                            res.json([]);
-                        }
-                        blogposts.forEach(function(thisBlogpost, rindex){
-                            var thisBlogUser = thisBlogpost.user;
-                            var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1},function (err, thisBlogUserInfo) {
-                                if (!err){
-                                    thisBlogpost.user = thisBlogUserInfo;
-                                    counter += 1;
-                                    allBlogposts.push(thisBlogpost);
-                                    if(counter == nBlogposts){
-                                        res.json(allBlogposts);   
-                                    }
-                                }
-                            });
+                    //console.log(JSON.stringify(blogposts));
+                    var allBlogposts = [];
+                    var nBlogposts = blogposts.length;
+                    var counter = 0;
+                    if(nBlogposts == 0){
+                        res.json([]);
+                    }
+                    blogposts.forEach(function(thisBlogpost, rindex){
+                        
+                    var thisBlogUser = thisBlogpost.user;
+                    var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1},function (err, thisBlogUserInfo) {
+                        if (!err){
+                            thisBlogpost.user = thisBlogUserInfo;
+                            counter += 1;
                             
-                        });
+                            //console.log(thisBlogpost);
+                            allBlogposts.push(thisBlogpost);
+                            if(counter == nBlogposts){
+                                res.json(allBlogposts);   
+                            }
+                        }
+                    });
+
+                    });
                     } else {throw err;}
                 });
             }else{
