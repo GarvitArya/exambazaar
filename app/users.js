@@ -675,7 +675,7 @@ router.post('/update', function(req, res) {
 
 //to get all users
 router.get('/', function(req, res) {
-    user.find({_created: {  $gte : "2017-07-14T00:00:00.000Z", $lte : "2017-07-17T00:00:00.000Z"}}, {userType: 1, basic: 1, mobile: 1, facebook: 1, email: 1, image: 1, fbemail: 1, fbimage: 1, _created: 1}, function(err, docs) {
+    user.find({_created: {  $gte : "2017-07-17T00:00:00.000Z", $lte : "2017-07-20T00:00:00.000Z"}}, {userType: 1, basic: 1, mobile: 1, facebook: 1, email: 1, image: 1, fbemail: 1, fbimage: 1, _created: 1}, function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}
@@ -1422,7 +1422,7 @@ router.post('/userMarketing', function(req, res) {
     var allUsers = req.body;
     
     var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
-        if (err) return handleError(err);
+        if (err)  throw err;
         if(existingSendGridCredential){
             var nLength = allUsers.length;
             var emailsIndex = 0;

@@ -102,6 +102,25 @@ router.get('/edit/:reviewId', function(req, res) {
     });
 });
 
+router.get('/dailySummary', function(req, res) {
+    var reviewSummary = review.aggregate(
+    [
+        {$match: {}},
+        {$group: { _id : {
+            year:{$year:"$_created"},
+            month:{$month:"$_created"},
+            day:{$dayOfMonth:"$_created"}
+        },count:{$sum: 1 }},
+        }
+    ],function(err, reviewSummary) {
+    if (!err){
+        
+        console.log(reviewSummary);
+        res.json(reviewSummary);
+    } else {throw err;}
+    });
+});
+
 router.get('/disable/:reviewId', function(req, res) {
     var reviewId = req.params.reviewId;
     var thisReview = review

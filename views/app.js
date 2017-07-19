@@ -588,8 +588,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.removeblogpost = function(blogpostId){
             $http.get('/api/blogposts/remove/'+blogpostId, {blogpostId: blogpostId});
         };
-        this.getblogposts = function(userId) {
-            return $http.get('/api/blogposts/allblogs/'+userId, {userId: userId});
+        this.getUserBlogposts = function(userId) {
+            return $http.get('/api/blogposts/userblogs/'+userId, {userId: userId});
+        };
+        this.getblogs = function(userId) {
+            return $http.get('/api/blogposts/getblogs');
         };
         this.sanitizeblogposts = function() {
             return $http.get('/api/blogposts/sanitizeblogposts');
@@ -610,7 +613,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.groupReviews = function(groupReviews) {
             return $http.post('/api/reviews/groupReviews', groupReviews);
         };
-        
+        this.dailySummary = function() {
+            return $http.get('/api/reviews/dailySummary');
+        };
         this.reviewsCount = function() {
             return $http.get('/api/reviews/reviewsCount');
         };
@@ -10258,7 +10263,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("chartingController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'viewSummary', 'userSummary', 'providerSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, viewSummary, userSummary, providerSummary){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'viewSummary', 'userSummary', 'providerSummary', 'reviewSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, viewSummary, userSummary, providerSummary, reviewSummary){
             
             $rootScope.pageTitle ='Charting Sandbox';
             if($cookies.getObject('sessionuser')){
@@ -10390,13 +10395,108 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 options: $scope.provideroptions
             };
             $scope.charts.push(newChart);
+            
+            
+            var summaryData = reviewSummary.data;
+            $scope.reviewSummary = [];
+            summaryData.forEach(function(thisDay, vindex){
+                var newDayData = {
+                    date: new Date(thisDay._id.year, thisDay._id.month-1, thisDay._id.day),
+                    reviews: thisDay.count,
+                };
+                if(thisDay._id.month>2){
+                    $scope.reviewSummary.push(newDayData);
+                }
+                
+            });
+            $scope.reviewSummary.sort(function(a,b){
+              return new Date(a.date) - new Date(b.date);
+            });
+            var reviews = $scope.reviewSummary.map(function(a) {return a.reviews;});
+            $scope.reviewoptions = {
+                scales: {
+                  yAxes: [
+                    {
+                      id: 'y-axis-1',
+                      type: 'linear',
+                      display: true,
+                      position: 'right'
+                    },
+                  ]
+                },
+                title: {
+                    display: true,
+                    text: 'EB Reviews added per day'
+                }
+            };
+            newChart = {
+                labels: $scope.reviewSummary.map(function(a) {return moment(a.date).format('DD MMM YY');}),
+                series: ['Review'],
+                data: [reviews],
+                datasetOverride: [{ yAxisID: 'y-axis-1' }],
+                options: $scope.reviewoptions
+            };
+            $scope.charts.push(newChart);
     }]);     
-        
-    exambazaar.controller("postBlogController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', 'blogpostService','allBlogs', 'thisuser', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, blogpostService, allBlogs, thisuser){
-            $scope.user = thisuser.data;
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    }
+    exambazaar.controller("blogController", 
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', 'blogpostService','allBlogs', 'Socialshare', 'viewService', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, blogpostService, allBlogs, Socialshare, viewService){
             $scope.allBlogs = allBlogs.data;
-            //console.log($scope.allBlogs);
+            /*var defaultBlogCovers = [
+                "images/blog/blog-cover-1.jpg",
+                "images/blog/blog-cover-2.jpg",
+                "images/blog/blog-cover-3.jpg",
+                "images/blog/blog-cover-4.jpg",
+                "images/blog/blog-cover-5.jpg",
+            ];*/
+            var defaultBlogCovers = ["images/blog/blog-cover-7.jpg",];
+            var rIndex = getRandomInt(0, defaultBlogCovers.length);
+            var defaultBlogCover = defaultBlogCovers[rIndex];
+            $scope.thisBlogCover = defaultBlogCover;
+            
+            $scope.shareText = "Hi! Read the exam preparation blog at Exambazaar! ";
+            $scope.shareText2 = $scope.shareText;
+            $scope.currURL = $location.absUrl();
+            $scope.postFacebook = function(){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'feed',
+                    'socialshareUrl': $scope.currURL,
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
+                  }
+                });    
+            };
+            $scope.shareFacebook = function(){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'send',
+                    'socialshareUrl': $scope.currURL,
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
+                  }
+                });
+            };
+           
+            
+            $rootScope.pageTitle = "Blog - Exambazaar resources for all exams in India";
+            $rootScope.pageImage = $scope.thisBlogCover;
+            
+            $scope.goToBlog = function(blog){
+                var url = $state.href('showblog', {blogpostSlug: blog.urlslug});
+                window.open(url,'_blank');  
+            };
+    }]);   
+    
+    exambazaar.controller("postBlogController", 
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', 'blogpostService','userBlogs', 'thisuser', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, blogpostService, userBlogs, thisuser){
+            $scope.user = thisuser.data;
+            $scope.userBlogs = userBlogs.data;
+            //console.log($scope.userBlogs);
             $scope.setBlog = function(thisblog){
                 $scope.blogpost = thisblog;
             };
@@ -14410,6 +14510,10 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService) {
                     return targetStudyProviderService.dailySummary();
                 }],
+                reviewSummary: ['reviewService',
+                    function(reviewService) {
+                    return reviewService.dailySummary();
+                }],
                 provider: function() { return {}; }
                 
             }
@@ -14434,9 +14538,9 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
                 }],
-                allBlogs: ['blogpostService', '$stateParams',
+                userBlogs: ['blogpostService', '$stateParams',
                     function(blogpostService, $stateParams) {   
-                    return blogpostService.getblogposts($stateParams.userId);
+                    return blogpostService.getUserBlogposts($stateParams.userId);
                 }],
                 provider: function() { return {}; }
                 
@@ -14693,6 +14797,30 @@ function getLatLng(thisData) {
                 
             }
         })*/
+        .state('blog', {
+            url: '/blog', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'blog.html',
+                    controller: 'blogController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                allBlogs: ['blogpostService',
+                    function(blogpostService) {   
+                    return blogpostService.getblogs();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
         .state('showblog', {
             url: '/blogpost/:blogpostSlug', //masterId?
             views: {
