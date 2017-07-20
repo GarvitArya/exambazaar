@@ -115,6 +115,21 @@
         background: white;
         border: 1px solid #02B875;
     }
+    textarea{
+        width:100%;
+        padding: 5px 5px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 10px;
+    }
+    textarea:hover {
+        border: 1px solid #FF5A5F;
+    }
+    textarea:focus {
+        border: 1px solid #FF5A5F;
+    }
 </style>
 
 <div id="spacerXS" class="whiteBackground">
@@ -224,6 +239,11 @@
         <div layout="row" layout-align="end center" class="width100">
             <md-button class="md-black md-small font10 tolowercase" ng-click="showBlogTagDialog()">
                 Add Tags
+            </md-button>
+        </div>
+        <div layout="row" layout-align="end center" class="width100">
+            <md-button class="md-black md-small font10 tolowercase" ng-click="showHTMLDialog()">
+                Edit HTML
             </md-button>
         </div>
     </div>
@@ -463,6 +483,36 @@
                 <md-button class="md-black md-small font10" ng-click="addGlobalBlogTag()">
                     Add New Tag
                 </md-button>
+            </div>
+            
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="HTMLDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Edit HTML of this blog post!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markHTMLDone()">
+                        Editing HTML Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="row" layout-align="start center" layout-wrap class="width90 marginB20 marginLR20 font12">
+                 <!--ui-codemirror  ui-codemirror-opts="editorOptions" id="code"-->
+                <textarea ng-model="editHTML" rows="12" class="width100">
+                    
+                </textarea>
             </div>
             
           

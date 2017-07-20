@@ -1086,6 +1086,72 @@ router.get('/blogCoachingGroupQuery/:query', function(req, res) {
     }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )*/
 });
 
+router.get('/contacts', function(req, res) {
+    var allMobiles = targetStudyProvider.distinct( "mobile",function(err, allMobiles) {
+    if (!err){
+        console.log('There are: ' + allMobiles.length + ' unique mobiles!');
+        var allPhones = targetStudyProvider.distinct( "phone",function(err, allPhones) {
+        if (!err){ 
+            console.log('There are: ' + allPhones.length + ' unique phones!');
+            var allcontacts = allMobiles.concat(allPhones);
+            console.log('There are: ' + allcontacts.length + ' unique contacts!');
+            res.json(allcontacts);
+        } else {throw err;}
+        });
+    } else {throw err;}
+    });
+});
+
+router.get('/sanitizeMobiles', function(req, res) {
+    var allProviders = targetStudyProvider.find({mobile: {$exists: true}}, {mobile:1},function(err, allProviders) {
+    if (!err){
+        console.log('Starting sanitizing mobiles!');
+        var incorrectMobiles = [];
+        var elementMobiles = [];
+        allProviders.forEach(function(thisprovider, index){
+            var thisMobiles = thisprovider.mobile;
+            
+            thisMobiles.forEach(function(thismobile, mindex){
+                if(thismobile.length != 10){
+                    var elementMobile = {
+                        _id: thisprovider._id,
+                        mobile: thismobile
+                    };
+                    incorrectMobiles.push(elementMobile);
+                }
+                var charElem = '-';
+                if(thismobile.indexOf(charElem) != -1){
+                    
+                    var mobiles = thismobile.split(charElem);
+                    console.log(mobiles);
+                    
+                    
+                    
+                    var indices = [];
+                    for(var i=0; i<thismobile.length;i++) {
+                        if (thismobile[i] === charElem) indices.push(i);
+                    }
+                    if(indices.length > 0){
+                        var elementMobile = {
+                            _id: thisprovider._id,
+                            mobile: thismobile,
+                            elements: indices.length
+                        };
+                        elementMobiles.push(elementMobile);
+                    }
+                }
+                
+            });
+        });
+        
+        console.log('There are ' + elementMobiles.length + ' mobiles with elements');
+        var elementIds = elementMobiles.map(function(a) {return a._id;});
+        console.log(elementIds);
+        res.json(elementMobiles);
+    } else {throw err;}
+    }); //.limit(500)
+});
+
 router.get('/allResults/:examName', function(req, res) {
     var examName = req.params.examName;
     console.log("Exam name is: " + examName);
@@ -1393,7 +1459,7 @@ router.get('/changeProvidersStartingWith/:startsWith', function(req, res) {
     var startsWith = req.params.startsWith;
     console.log("Starts with is: "+startsWith);
     targetStudyProvider.find({"name" : {$regex : ".*"+startsWith+".*"}, type: 'Coaching'}, {name:1 , website:1},function(err, allProviders) {
-    if (!err){ 
+    if (!err){
         
         allProviders.forEach(function(thisprovider, index){
             var splitPoint = thisprovider.name.indexOf('-');

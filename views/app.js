@@ -917,6 +917,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getProviders = function(city) {
             return $http.get('/api/targetStudyProviders/city/'+city, {city: city});
         };
+        this.contacts = function() {
+            return $http.get('/api/targetStudyProviders/contacts');
+        };
+        this.sanitizeMobiles = function() {
+            return $http.get('/api/targetStudyProviders/sanitizeMobiles');
+        };
         this.dailySummary = function() {
             return $http.get('/api/targetStudyProviders/dailySummary');
         };
@@ -10261,6 +10267,23 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             
     }]);
+    
+    exambazaar.controller("contactsController", 
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'targetStudyProviderService', 'contactsSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, targetStudyProviderService, contactsSummary){
+            $scope.contacts = contactsSummary.data;
+            console.log($scope.contacts);
+            $scope.sanitizeMobiles = function(){
+                targetStudyProviderService.sanitizeMobiles().success(function (data, status, headers) {
+                    console.log('Mobiles sanitized');
+                    console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info();
+                });    
+            };
+            
+    }]);
         
     exambazaar.controller("chartingController", 
         [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'viewSummary', 'userSummary', 'providerSummary', 'reviewSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, viewSummary, userSummary, providerSummary, reviewSummary){
@@ -13265,6 +13288,8 @@ function getLatLng(thisData) {
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
             
+            
+            
             var defaultBlogCover = "images/background/examinfo.jpg";
             if($scope.blogpost.coverPhoto){
                 $scope.thisBlogCover = $scope.blogpost.coverPhoto;
@@ -13492,7 +13517,23 @@ function getLatLng(thisData) {
                     //$scope.userReviewMode = true;
                 });
             };
-            
+            $scope.showHTMLDialog = function(ev) {
+                
+            $scope.editHTML = $scope.blogpost.content;    
+            $mdDialog.show({
+                  contentElement: '#HTMLDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: false,
+                  escapeToClose: false,
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
+            $scope.markHTMLDone = function(){
+                $scope.blogpost.content = $scope.editHTML;
+                $mdDialog.hide();
+            };
             $scope.mediumBindOptions = {
                 toolbar: {
                     buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'indent', 'outdent', 'quote', 'anchor', 'h1','h2', 'h3', 'image', 'removeFormat', 'table', 'orderedlist', 'unorderedlist','html']
@@ -14502,6 +14543,30 @@ function getLatLng(thisData) {
                 
             }
         })
+        .state('contacts', {
+            url: '/contacts', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'contacts.html',
+                    controller: 'contactsController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                contactsSummary: ['targetStudyProviderService',
+                    function(targetStudyProviderService) {
+                    return targetStudyProviderService.contacts();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
         .state('charting', {
             url: '/charting', //masterId?
             views: {
@@ -14538,6 +14603,7 @@ function getLatLng(thisData) {
                 
             }
         })
+    
         .state('postBlog', {
             url: '/:userId/postBlog', //masterId?
             views: {

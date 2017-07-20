@@ -54,6 +54,12 @@
         padding-bottom: 20px;
         margin-bottom: 20px;
     }
+    #blogcontent{
+        display: table;
+    }
+    td,th {
+        text-align: center;
+    }
 </style>
 
 <div id="spacerXS" class="whiteBackground">
@@ -152,8 +158,7 @@
                 </div>
                 </div>
                 
-                <div class="marginT40 blogContent blogSeparator" ng-bind-html="blogpost.content">
-                
+                <div class="marginT40 blogContent blogSeparator" ng-bind-html="blogpost.content" id="blogcontent">
                 </div>
                 <div layout="column" layout-align="start start" class="blogSeparator width100">
                     <div layout="row" layout-align="end center" class="font12 marginTB10">
