@@ -89,9 +89,9 @@
         </div>
         
         <div layout="row" layout-align="center center" class="">
-            <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start" class="padding10" id="iOSFix">
+            <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start" class="margin10 min10vh" >
                 
-                <div layout="row" layout-xs="column" layout-align="start start " class="width100  blogSeparator ">
+                <div layout="row" layout-xs="column" layout-align="start start " class="width100  blogSeparator " id="iOSFix">
                     <div flex layout="row" layout-align="start center" class=" profileBox marginTB10">
                         <div ng-if="blogpost.user.image">
                         <img ng-src="{{blogpost.user.image}}" id="userPicBlog" class="img-circle"/>
@@ -223,13 +223,13 @@
 
                 </div>
                 <div layout="row" layout-align="end center" class=" marginTB10 text-primary bold">
-                    <span class="marginR10">
-                        <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;&nbsp;
-                    </span>
-                    <span ng-repeat="blogTag in blogpost.blogTags">
+                    <div class="marginR10">
+                        <i class="fa fa-tags" aria-hidden="true"></i>
+                    </div>
+                    <div layout="row" layout-align="center center" layout-wrap ng-repeat="blogTag in blogpost.blogTags" class="marginR5" id="iOSFix">
                         {{blogTag.tag}}
-                        <span ng-if="!$last">,</span>&nbsp;
-                    </span>
+                        <span ng-if="!$last">, </span>
+                    </div>
                 </div>
                 </div>
             </div>
