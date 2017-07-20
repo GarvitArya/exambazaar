@@ -14009,7 +14009,7 @@ function getLatLng(thisData) {
                     blogpost: $scope.blogpost._id
                 };
                 upvoteService.blogpostUserUpvote(userUpvoteForm).success(function (data, status, headers) {
-                    console.log(data);
+                    //console.log(data);
                     $scope.userUpvote = data;
                 })
                 .error(function (data, status, header, config) {

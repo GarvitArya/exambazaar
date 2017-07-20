@@ -221,14 +221,14 @@
                     </div>
 
                 </div>
-                <div layout="row" layout-align="end center" class=" marginTB10 text-primary bold">
-                    <div class="marginR10">
+                <div layout="row" layout-align="start center" layout-wrap  class="width100 marginTB10 text-primary bold">
+                    <span class="">
                         <i class="fa fa-tags" aria-hidden="true"></i>
-                    </div>
-                    <div layout="row" layout-align="center center" layout-wrap ng-repeat="blogTag in blogpost.blogTags" class="marginR5" id="iOSFix">
+                    </span>&nbsp;&nbsp;
+                    <span  ng-repeat="blogTag in blogpost.blogTags">
                         {{blogTag.tag}}
-                        <span ng-if="!$last">, </span>
-                    </div>
+                        <span ng-if="!$last">, </span>&nbsp;
+                    </span>
                 </div>
                 </div>
             </div>
