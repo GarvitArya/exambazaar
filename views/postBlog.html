@@ -75,6 +75,9 @@
             <div layout="row" layout-align="start center" flex="5" >
                 Active
             </div>
+            <div layout="row" layout-align="start center" flex="5">
+                Clone
+            </div>
         </div>
         <div layout="row" layout-align="start center" ng-repeat="thisblog in userBlogs" class="width100 greyDashedBottomBorder paddingTB5">
             <div layout="row" layout-align="start center" flex="5">
@@ -101,7 +104,10 @@
             </div>
             <div layout="row" layout-align="start center" flex="5" >
                 {{thisblog.active}}
-            </div> 
+            </div>
+            <div layout="row" layout-align="start center" flex="5">
+                <i class="fa fa-clone" aria-hidden="true" ng-click="cloneConfirm(thisblog)"></i>
+            </div>
         </div>
         
     </div>

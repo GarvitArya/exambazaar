@@ -10536,8 +10536,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);   
     
     exambazaar.controller("postBlogController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', 'blogpostService','userBlogs', 'thisuser', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, blogpostService, userBlogs, thisuser){
+        [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', 'blogpostService','userBlogs', 'thisuser', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, blogpostService, userBlogs, thisuser){
             $scope.user = thisuser.data;
+            
+            
             $scope.userBlogs = userBlogs.data;
             console.log($scope.userBlogs);
             $scope.setBlog = function(thisblog){
@@ -10627,12 +10629,68 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 for (var property in blogpost) {
                     blogpostForm[property] = blogpost[property];
                 }
+                blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
+                    var blogpostId = data._id;
+                    blogpostService.getUserBlogposts($stateParams.userId).success(function (data, status, headers) {
+                        $scope.userBlogs = data;
+                    
+                        var url = $state.href('editblog', {blogpostId: blogpostId});
+                        window.open(url,'_blank');
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            
+            $scope.cloneConfirm = function(thisblog){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to create a clone of post titled "' + thisblog.title + '"?')
+                .textContent('It was originally authored by ' + thisblog.user.basic.name +"!" )
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.cloneBlogPost(thisblog);
+                }, function() {
+                  //nothing
+                }); 
+            };
+            
+            $scope.cloneBlogPost = function(toCloneBlog){
+                var blogpost = {
+                    title: toCloneBlog.title + ' - Clone ' + moment().format("DD MMM YY HH:mm"),
+                    content: toCloneBlog.content
+                };
+                
+                var blogpostForm = {
+                    user: $scope.user._id,
+                    title: blogpost.title,
+                    content: blogpost.content,
+                    active: false,
+                    urlslug: slugify(blogpost.title)
+                };
+                for (var property in blogpost) {
+                    blogpostForm[property] = blogpost[property];
+                }
                 
                 blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                     var blogpostId = data._id;
+                    blogpostService.getUserBlogposts($stateParams.userId).success(function (data, status, headers) {
+                        $scope.userBlogs = data;
                     
-                    var url = $state.href('editblog', {blogpostId: blogpostId});
-                    window.open(url,'_blank');
+                        var url = $state.href('editblog', {blogpostId: blogpostId});
+                        window.open(url,'_blank');
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error ");
