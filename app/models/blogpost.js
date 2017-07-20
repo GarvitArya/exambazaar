@@ -4,6 +4,7 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var blogpostSchema = mongoose.Schema({
     user: { type: Schema.ObjectId, required: true, ref: 'User' },
+    upvotes: [{ type: Schema.ObjectId, ref: 'upvote' }],
     readingTime:{
         text: String,    
         minutes: String,    
@@ -21,6 +22,7 @@ var blogpostSchema = mongoose.Schema({
     coachingGroups: [String],
     active: { type: Boolean, default: false },
     _created: { type: Date, default: Date.now },
+    
 });
 blogpostSchema.plugin(deepPopulate);
 module.exports = mongoose.model('blogpost', blogpostSchema);

@@ -51,8 +51,8 @@
     }
     .blogSeparator{
         border-bottom: 0.5px solid lightgray;
-        padding-bottom: 20px;
-        margin-bottom: 20px;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
     }
     #blogcontent{
         display: table;
@@ -68,7 +68,7 @@
 <div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40">
     
     <div layout="column" layout-align="center center" class="width100 marginB40">
-        <div layout="row" layout-align="center center" class="width100 blogHeader  marginB20" ng-style="{'background-image':'url({{thisBlogCover}})'}">
+        <div layout="row" layout-align="center center" class="width100 blogHeader  marginB10" ng-style="{'background-image':'url({{thisBlogCover}})'}">
             <div layout="row" layout-align="center center" class="width100 darkTranslucentBackground">
             <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite padding10">
                 <div class="spacedLetter1 blogHeaderFont text-center wideLine bold blogHeaderFont marginB20 " ng-bind-html="blogpost.title" >
@@ -80,6 +80,7 @@
                     <div class="">
                         {{blogpost.readingTime.text | uppercase}}
                     </div>
+                    
                 </div>
             </div>
             </div>
@@ -88,7 +89,7 @@
         </div>
         
         <div layout="row" layout-align="center center" class="">
-            <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start" class="padding10">
+            <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start start" class="padding10" id="iOSFix">
                 
                 <div layout="row" layout-xs="column" layout-align="start start " class="width100  blogSeparator ">
                     <div flex layout="row" layout-align="start center" class=" profileBox marginTB10">
@@ -158,7 +159,32 @@
                 </div>
                 </div>
                 
-                <div class="marginT40 blogContent blogSeparator" ng-bind-html="blogpost.content" id="blogcontent">
+                <div layout="row" layout-align="start start" class="width100">
+                    <div class="">
+                        <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote()" ng-if="!userUpvote">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div ng-if="!user">
+                                &nbsp;|&nbsp;{{upvoteCount}}
+                                </div>
+                            </div>
+                        </md-button>
+                        <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote()" ng-if="userUpvote">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{upvoteCount}}
+                                </div>
+                            </div>
+                        </md-button>
+                    </div>
+                </div>
+                
+                <div class="marginT20 blogContent blogSeparator" ng-bind-html="blogpost.content" id="blogcontent">
                 </div>
                 <div layout="column" layout-align="start start" class="blogSeparator width100">
                     <div layout="row" layout-align="end center" class="font12 marginTB10">
@@ -197,13 +223,13 @@
 
                 </div>
                 <div layout="row" layout-align="end center" class=" marginTB10 text-primary bold">
-                    <div class="marginR10">
-                        <i class="fa fa-tags" aria-hidden="true"></i>
-                    </div>
-                    <div layout="row" layout-align="center center" ng-repeat="blogTag in blogpost.blogTags" class="marginR5">
+                    <span class="marginR10">
+                        <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;&nbsp;
+                    </span>
+                    <span ng-repeat="blogTag in blogpost.blogTags">
                         {{blogTag.tag}}
-                        <span ng-if="!$last">, </span>
-                    </div>
+                        <span ng-if="!$last">,</span>&nbsp;
+                    </span>
                 </div>
                 </div>
             </div>
@@ -215,4 +241,16 @@
 </div>
     
 </div>
- 
+
+
+<div class="leftTopButton">
+    <div layout-fill  layout="column" layout-align="start center" class="">
+        <div layout="row" layout-align="start center" class="width100">
+            
+            <md-button class="md-black md-small font14 tolowercase" layout="row" layout-align="start center" ui-sref="blog">
+                Back to Blog
+            </md-button>
+        </div>
+        
+    </div>
+</div>

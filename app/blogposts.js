@@ -220,7 +220,7 @@ router.get('/getblogpostFromSlug/:blogpostSlug', function(req, res) {
         .findOne({ 'urlslug': blogpostSlug })
         .deepPopulate('blogTags')
         .exec(function (err, thisBlogpost) {
-        console.log(thisBlogpost);    
+        //console.log(thisBlogpost);    
         if (!err){
             //console.log(thisBlogpost);
             

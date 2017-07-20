@@ -557,7 +557,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.slugExists = function(query) {
             return $http.get('/api/blogposts/slugExists/'+query, {query: query});
         };
-       
+        
         this.saveblogpost = function(blogpostForm) {
             return $http.post('/api/blogposts/save', blogpostForm);
         };
@@ -576,6 +576,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getblogpost = function(blogpostId) {
             return $http.get('/api/blogposts/edit/'+blogpostId, {blogpostId: blogpostId});
         };
+        
         this.getblogpostFromSlug = function(blogpostSlug) {
             return $http.get('/api/blogposts/getblogpostFromSlug/'+blogpostSlug, {blogpostSlug: blogpostSlug});
         };
@@ -639,7 +640,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
     }]);
         
-    
+    exambazaar.service('upvoteService', ['$http', function($http) {
+       
+        this.saveupvote = function(upvoteForm) {
+            return $http.post('/api/upvotes/save', upvoteForm);
+        };
+        this.removeupvote = function(upvoteId) {
+            return $http.get('/api/upvotes/removeupvote/'+upvoteId, {upvoteId: upvoteId});
+        };
+        this.blogpostUpvoteCount = function(blogpostSlug) {
+            return $http.get('/api/upvotes/blogpostUpvoteCount/'+blogpostSlug, {blogpostSlug: blogpostSlug});
+        };
+        this.blogpostUserUpvote = function(userUpvoteForm) {
+            return $http.post('/api/upvotes/blogpostUserUpvote', userUpvoteForm);
+        };
+        
+    }]);
         
     exambazaar.service('rateInstituteService', ['$http', function($http) {
        
@@ -13982,22 +13998,34 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("showblogController", 
-        [ '$scope','$http','$state','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', 'viewService','$cookies', function($scope,$http, $state, blogpostService, thisblog, $rootScope, Socialshare, $location, viewService,$cookies){
-            
+        [ '$scope','$http','$state', '$stateParams','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', 'viewService','$cookies', 'upvoteService', 'upvoteCount', function($scope,$http, $state, $stateParams, blogpostService, thisblog, $rootScope, Socialshare, $location, viewService,$cookies, upvoteService, upvoteCount){
+            $scope.blogpost = thisblog.data;
+            $scope.upvoteCount = upvoteCount.data;
+            $scope.userUpvote = false;
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
+                var userUpvoteForm = {
+                    user: $scope.user._id,
+                    blogpost: $scope.blogpost._id
+                };
+                upvoteService.blogpostUserUpvote(userUpvoteForm).success(function (data, status, headers) {
+                    console.log(data);
+                    $scope.userUpvote = data;
+                })
+                .error(function (data, status, header, config) {
+                    console.info();
+                });
+                
             }else{
                 
             }
             
-            $scope.blogpost = thisblog.data;
-            console.log($scope.blogpost);
             if(!$scope.blogpost){
                 window.location = "http://www.exambazaar.com/error";
             }
             
             
-            console.log($scope.blogpost.blogTags);
+            //console.log($scope.blogpost.blogTags);
             var defaultBlogCover = "images/background/examinfo.jpg";
             if($scope.blogpost.coverPhoto){
                 $scope.thisBlogCover = $scope.blogpost.coverPhoto;
@@ -14028,6 +14056,56 @@ function getLatLng(thisData) {
                 });
             };
            
+            $scope.saveupvote = function(){
+                console.log($scope.blogpost._id);
+                var upvoteForm = {
+                    blogpost: $scope.blogpost._id,
+                };
+                if($scope.user && $scope.user._id){
+                    upvoteForm.user = $scope.user._id;
+                }
+                 upvoteService.saveupvote(upvoteForm).success(function (savedata, status, headers) {
+                    
+                     upvoteService.blogpostUpvoteCount($stateParams.blogpostSlug).success(function (data, status, headers) {
+                         $scope.userUpvote = savedata._id;
+                         $scope.upvoteCount = data;
+                        /*upvoteService.blogpostUserUpvote(userUpvoteForm).success(function (data, status, headers) {
+                            $scope.userUpvote = data;
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info();
+                        });*/
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info();
+                    });
+                })
+                .error(function (data, status, header, config) {
+                    console.info();
+                });
+            };
+            
+            $scope.removeupvote = function(){
+                //console.log($scope.userUpvote);
+                upvoteService.removeupvote($scope.userUpvote).success(function (data, status, headers) {
+                    //console.log(data);
+                    upvoteService.blogpostUpvoteCount($stateParams.blogpostSlug).success(function (data, status, headers) {
+                        $scope.upvoteCount = data;
+                        upvoteService.blogpostUserUpvote(userUpvoteForm).success(function (data, status, headers) {
+                            $scope.userUpvote = data;
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info();
+                        });
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info();
+                    });
+                })
+                .error(function (data, status, header, config) {
+                    console.info();
+                });
+            };
             
             $rootScope.pageTitle = $scope.blogpost.title + " | Exambazaar.com";
             $rootScope.pageImage = $scope.thisBlogCover;
@@ -14047,11 +14125,15 @@ function getLatLng(thisData) {
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                console.info('View Marked');
+                //console.info('View Marked');
             })
             .error(function (data, status, header, config) {
                 console.info();
             });
+            
+            $scope.backToBlog = function(){
+                $state.go('blog');    
+            };
     }]);
         
     exambazaar.controller("userMarketingController", 
@@ -14984,6 +15066,10 @@ function getLatLng(thisData) {
                 thisblog: ['blogpostService', '$stateParams',
                     function(blogpostService,$stateParams){
                     return blogpostService.getblogpostFromSlug($stateParams.blogpostSlug);
+                }],
+                upvoteCount: ['upvoteService','$stateParams',
+                    function(upvoteService,$stateParams) {
+                    return upvoteService.blogpostUpvoteCount($stateParams.blogpostSlug);
                 }],
                 provider: function() { return {}; }
                 
