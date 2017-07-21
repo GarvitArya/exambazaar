@@ -694,9 +694,23 @@ router.get('/dailySummary', function(req, res) {
             month:{$month:"$_created"},
             day:{$dayOfMonth:"$_created"}
         },count:{$sum: 1 }},
-        }/*,
-        {$sort:{"_date":-1}}*/
+        }
+    ],function(err, userSummary) {
+    if (!err){
+        res.json(userSummary);
+    } else {throw err;}
+    });
+});
 
+router.get('/hourlyHeatmap', function(req, res) {
+    
+    var userSummary = user.aggregate(
+    [
+        {$match: {}},
+        {$group: { _id : {
+            hour:{$hour:"$_created"},
+        },count:{$sum: 1 }},
+        }
     ],function(err, userSummary) {
     if (!err){
         res.json(userSummary);

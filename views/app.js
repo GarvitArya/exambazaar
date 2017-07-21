@@ -181,6 +181,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.dailySummary = function() {
             return $http.get('/api/users/dailySummary');
         };
+        this.hourlyHeatmap = function() {
+            return $http.get('/api/users/hourlyHeatmap');
+        };
         this.deliverVoucher = function(voucherForm) {
             
             return $http.post('/api/users/deliverVoucher', voucherForm);
@@ -452,6 +455,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.dailySummary = function() {
             return $http.get('/api/views/dailySummary');
+        };
+        this.hourlyHeatmap = function() {
+            return $http.get('/api/views/hourlyHeatmap');
         };
         this.getview = function(viewId) {
             return $http.get('/api/views/edit/'+viewId, {viewId: viewId});
@@ -10304,7 +10310,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("chartingController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'viewSummary', 'userSummary', 'providerSummary', 'reviewSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, viewSummary, userSummary, providerSummary, reviewSummary){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'viewSummary', 'viewHourlyHeatmap', 'userSummary', 'userHourlyHeatmap', 'providerSummary', 'reviewSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, viewSummary, viewHourlyHeatmap, userSummary, userHourlyHeatmap, providerSummary, reviewSummary){
             
             $rootScope.pageTitle ='Charting Sandbox';
             if($cookies.getObject('sessionuser')){
@@ -10478,6 +10484,87 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 options: $scope.reviewoptions
             };
             $scope.charts.push(newChart);
+            
+            
+            
+            
+            var summaryData = viewHourlyHeatmap.data;
+            $scope.viewHourlyHeatmapSummary = [];
+            summaryData.forEach(function(thisHour, vindex){
+                var newHourData = {
+                    hour: (thisHour._id.hour + 5) % 24,
+                    views: thisHour.count,
+                };
+                $scope.viewHourlyHeatmapSummary.push(newHourData);
+            });
+            $scope.viewHourlyHeatmapSummary.sort(function(a,b){
+              return new Date(a.hour) - new Date(b.hour);
+            });
+            var views = $scope.viewHourlyHeatmapSummary.map(function(a) {return a.views;});
+            $scope.viewoptions = {
+                scales: {
+                  yAxes: [
+                    {
+                      id: 'y-axis-1',
+                      type: 'linear',
+                      display: true,
+                      position: 'right'
+                    },
+                  ]
+                },
+                title: {
+                    display: true,
+                    text: 'EB Views based on time of day'
+                }
+            };
+            newChart = {
+                labels: $scope.viewHourlyHeatmapSummary.map(function(a) {return a.hour;}),
+                series: ['Views'],
+                data: [views],
+                datasetOverride: [{ yAxisID: 'y-axis-1' }],
+                options: $scope.viewoptions
+            };
+            $scope.charts.push(newChart);
+            
+            
+            var summaryData = userHourlyHeatmap.data;
+            $scope.userHourlyHeatmapSummary = [];
+            summaryData.forEach(function(thisHour, vindex){
+                var newHourData = {
+                    hour: (thisHour._id.hour + 5) % 24,
+                    users: thisHour.count,
+                };
+                $scope.userHourlyHeatmapSummary.push(newHourData);
+            });
+            $scope.userHourlyHeatmapSummary.sort(function(a,b){
+              return new Date(a.hour) - new Date(b.hour);
+            });
+            var users = $scope.userHourlyHeatmapSummary.map(function(a) {return a.users;});
+            $scope.useroptions = {
+                scales: {
+                  yAxes: [
+                    {
+                      id: 'y-axis-1',
+                      type: 'linear',
+                      display: true,
+                      position: 'right'
+                    },
+                  ]
+                },
+                title: {
+                    display: true,
+                    text: 'New Users added based on time of day'
+                }
+            };
+            newChart = {
+                labels: $scope.userHourlyHeatmapSummary.map(function(a) {return a.hour;}),
+                series: ['Users'],
+                data: [users],
+                datasetOverride: [{ yAxisID: 'y-axis-1' }],
+                options: $scope.useroptions
+            };
+            $scope.charts.push(newChart);
+            
     }]);     
     function getRandomInt(min, max) {
       min = Math.ceil(min);
@@ -14870,9 +14957,17 @@ function getLatLng(thisData) {
                     function(viewService) {
                     return viewService.dailySummary();
                 }],
+                viewHourlyHeatmap: ['viewService',
+                    function(viewService) {
+                    return viewService.hourlyHeatmap();
+                }],
                 userSummary: ['UserService',
                     function(UserService) {
                     return UserService.dailySummary();
+                }],
+                userHourlyHeatmap: ['UserService',
+                    function(UserService) {
+                    return UserService.hourlyHeatmap();
                 }],
                 providerSummary: ['targetStudyProviderService',
                     function(targetStudyProviderService) {

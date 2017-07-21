@@ -44,14 +44,18 @@
         </div>
     </div>
     <div layout="column" layout-align="center start" layout-wrap class="blogFont font12 width100 paddingTB20 paddingLR20 gainsboroBorder">
-        <div layout="row" layout-align="start center" class="font20 bold marginB20">
+        <div layout="row" layout-align="start center" class="width100 font20 bold marginB20">
             <div ng-if="user.userType == 'Master'">
                 All Blogs
             </div>
             <div ng-if="user.userType != 'Master'">
                 {{user.basic.name}}'s Blog Posts
             </div>
-            
+            <div flex layout="row" layout-align="end center">
+                <md-button class="md-black md-small font10 tolowercase" href="https://exambazaar.com/blogpost/blog-formatting-basics" target="_blank">
+                    Blog Basics
+                </md-button>
+            </div>
         </div>
         <div layout="row" layout-align="start center" class="width100 marginB10 bold gainsboroBottomBorder paddingTB5">
             <div layout="row" layout-align="start center" flex="5">

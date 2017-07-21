@@ -92,6 +92,22 @@ router.get('/dailySummary', function(req, res) {
     });
 });
 
+router.get('/hourlyHeatmap', function(req, res) {
+    
+    var viewSummary = view.aggregate(
+    [
+        {$match: {}},
+        {$group: { _id : {
+            hour:{$hour:"$_date"},
+        },count:{$sum: 1 }},
+        }
+    ],function(err, viewSummary) {
+    if (!err){
+        res.json(viewSummary);
+    } else {throw err;}
+    });
+});
+
 router.post('/markDone', function(req, res) {
     var viewForm = req.body;
     var institute = viewForm.institute;
