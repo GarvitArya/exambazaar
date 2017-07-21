@@ -114,8 +114,6 @@ router.get('/dailySummary', function(req, res) {
         }
     ],function(err, reviewSummary) {
     if (!err){
-        
-        console.log(reviewSummary);
         res.json(reviewSummary);
     } else {throw err;}
     });

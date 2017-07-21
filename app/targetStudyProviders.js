@@ -1040,8 +1040,6 @@ router.get('/dailySummary', function(req, res) {
 
     ],function(err, targetStudyProviderSummary) {
     if (!err){
-        
-        console.log(targetStudyProviderSummary);
         res.json(targetStudyProviderSummary);
     } else {throw err;}
     });

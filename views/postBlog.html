@@ -43,8 +43,8 @@
             
         </div>
     </div>
-    <div layout="column" layout-align="center start" layout-wrap class="blogFont font14 width100 paddingTB20 paddingLR20 gainsboroBorder">
-        <div layout="row" layout-align="start center" class="font20 bold marginB40">
+    <div layout="column" layout-align="center start" layout-wrap class="blogFont font12 width100 paddingTB20 paddingLR20 gainsboroBorder">
+        <div layout="row" layout-align="start center" class="font20 bold marginB20">
             <div ng-if="user.userType == 'Master'">
                 All Blogs
             </div>
@@ -57,20 +57,17 @@
             <div layout="row" layout-align="start center" flex="5">
                 S. No.
             </div>
-            <div layout="row" layout-align="start center" flex="30">
+            <div layout="row" layout-align="start center" flex="30" class="paddingLR10">
                 Blog Title
             </div>
             <div layout="row" layout-align="start center" flex="15">
                 Author
             </div>
-            <div layout="row" layout-align="start center" flex="15">
+            <div layout="row" layout-align="start center" flex="10">
                 Created on
             </div>
             <div layout="row" layout-align="start center" flex="10" >
-                Edit
-            </div> 
-            <div layout="row" layout-align="start center" flex="10" >
-                Preview
+                Edit/Preview
             </div>
             <div layout="row" layout-align="start center" flex="5" >
                 Active
@@ -78,28 +75,28 @@
             <div layout="row" layout-align="start center" flex="5">
                 Clone
             </div>
+            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+                Upvotes
+            </div>
         </div>
-        <div layout="row" layout-align="start center" ng-repeat="thisblog in userBlogs" class="width100 greyDashedBottomBorder paddingTB5">
+        <div layout="row" layout-align="start center" ng-repeat="thisblog in userBlogs | orderBy: '-upvotes'" class="width100 greyDashedBottomBorder paddingTB5">
             <div layout="row" layout-align="start center" flex="5">
                 {{$index + 1}}.
             </div>
-            <div layout="row" layout-align="start center" flex="30">
-                {{thisblog.title}}
+            <div layout="row" layout-align="start center" flex="30" class=" paddingLR10">
+                <a class="text-primary" ng-click="previewBlogPost(thisblog)" id="copyLink">
+                    {{thisblog.title}}
+                </a>
             </div>
             <div layout="row" layout-align="start center" flex="15">
                 {{thisblog.user.basic.name}}
             </div>
-            <div layout="row" layout-align="start center" flex="15">
-                {{thisblog._created | date: "dd MMMM yyyy" }}
+            <div layout="row" layout-align="start center" flex="10">
+                {{thisblog._created | date: "dd MMMM" }}
             </div>
-            <div layout="row" layout-align="start center" flex="10" >
+            <div layout="column" layout-align="center start" flex="10">
                 <a class="danger" ng-click="editBlogPost(thisblog)" id="copyLink">
                     Edit
-                </a>
-            </div> 
-            <div layout="row" layout-align="start center" flex="10" >
-                <a class="text-primary" ng-click="previewBlogPost(thisblog)" id="copyLink">
-                    Preview
                 </a>
             </div>
             <div layout="row" layout-align="start center" flex="5" >
@@ -108,11 +105,15 @@
             <div layout="row" layout-align="start center" flex="5">
                 <i class="fa fa-clone" aria-hidden="true" ng-click="cloneConfirm(thisblog)"></i>
             </div>
+            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+                {{thisblog.upvotes}}&nbsp;&nbsp;
+                <i class="fa fa-arrow-circle-up" aria-hidden="true" ng-click="randomUpvotes(thisblog)" ng-if="user.basic.name =='Gaurav Parashar'"></i>
+            </div>
         </div>
         
     </div>
     <div layout="row" layout-align="start center" class="width100 marginB10 paddingB10">
-        <div layout="row" layout-align="end center" flex class="font12">
+        <div layout="row" layout-align="end center" flex class="font14 marginR10">
             Inspire others by writing amazing blog posts for the Exambazaar community
         </div>
         <div layout="row" layout-align="start center">

@@ -66,6 +66,11 @@
         width: 40%;
         height:12%;
     }
+    #blogHeaderInfo{ 
+        position: absolute; 
+        bottom: 10%; 
+        left: 0%;
+    }
     blockquote{
         margin-top: 0px;
         margin-bottom: 0px;
@@ -78,28 +83,55 @@
 <div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40">
     
     <div layout="column" layout-align="center center" class="width100 marginB40">
-        <div layout="row" layout-align="center center" class="width100 blogHeader" ng-style="{'background-image':'url({{thisBlogCover}})'}">
+        <div layout="column" layout-align="center center" class="width100 blogHeader" ng-style="{'background-image':'url({{thisBlogCover}})'}">
             <div hide-gt-xs layout="column" layout-align="center center" id="blogHeaderBack">
                 <md-button class="md-black md-small font14 tolowercase" layout="row" layout-align="start center" ui-sref="blog">
                     Back to Blog
                 </md-button>
             </div>
             <div layout="row" layout-align="center center" class="width100 darkTranslucentBackground">
-            <div flex-xs="90" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite padding10">
-                <div class="spacedLetter1 blogHeaderFont text-center wideLine bold marginB20" ng-bind-html="blogpost.title" >
-                </div>
-                <div layout="row" layout-align="center center" class="font14 narrowLine">
-                    <div>
-                        {{blogpost._created | date: "dd MMMM yyyy" | uppercase}}
-                    </div>&nbsp;|&nbsp;
-                    <div class="">
-                        {{blogpost.readingTime.text | uppercase}}
+                <div flex-xs="90" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite padding10">
+                    <div class="spacedLetter1 blogHeaderFont text-center wideLine bold marginB20" ng-bind-html="blogpost.title" >
                     </div>
-                    
+                    <div layout="row" layout-align="center center" class="font14 narrowLine">
+                        <div>
+                            {{blogpost._created | date: "dd MMMM yyyy" | uppercase}}
+                        </div>&nbsp;|&nbsp;
+                        <div class="">
+                            {{blogpost.readingTime.text | uppercase}}
+                        </div>
+
+                    </div>
                 </div>
             </div>
-            </div>
+            <div layout="row" layout-align="center center" class="width100 marginT20">
             
+                <div layout="row" layout-align="center center" class="width100">
+                    <div class="">
+                        <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                </div>
+                            </div>
+                        </md-button>
+                        <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                </div>
+                            </div>
+                        </md-button>
+                    </div>
+                </div>
+            
+            </div>
         
         </div>
         
@@ -158,30 +190,7 @@
                     </div>
                 </div>
                 
-                <div layout="row" layout-align="start start" class="width100">
-                    <div class="">
-                        <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote()" ng-if="!userUpvote">
-                            <div layout="row" layout-align="start center">
-                                <div>
-                                Upvote
-                                </div>
-                                <div ng-if="!user">
-                                &nbsp;|&nbsp;{{upvoteCount}}
-                                </div>
-                            </div>
-                        </md-button>
-                        <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote()" ng-if="userUpvote">
-                            <div layout="row" layout-align="start center">
-                                <div>
-                                Upvote
-                                </div>
-                                <div>
-                                &nbsp;|&nbsp;{{upvoteCount}}
-                                </div>
-                            </div>
-                        </md-button>
-                    </div>
-                </div>
+                
                 
                 <div class="marginT20 blogContent blogSeparator" ng-bind-html="blogpost.content" >
                 </div>

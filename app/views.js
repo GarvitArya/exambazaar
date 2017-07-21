@@ -87,8 +87,6 @@ router.get('/dailySummary', function(req, res) {
 
     ],function(err, viewSummary) {
     if (!err){
-        
-        console.log(viewSummary);
         res.json(viewSummary);
     } else {throw err;}
     });

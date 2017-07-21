@@ -79,7 +79,7 @@
     }
     #blogPostRead{ 
         position: absolute; 
-        top: 90%; 
+        bottom: 5%; 
         left: 0%; 
         width: 100%;
         height:10%;
@@ -123,18 +123,44 @@
     <div layout="row" layout-align="center center" class="width100 font14">
         <div flex-xs="100" flex-gt-xs="80" layout="row" layout-align="start start" class="" layout-wrap>
         
-        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20" ng-repeat="blog in allBlogs | orderBy: '-_created'">
-            <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" ng-click="goToBlog(blog)">
-                <div layout="column" layout-align="center center" class="blogpostImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blog.coverPhoto}})'}">
-                    <div layout="row" layout-align="start center" id="blogPostRead" class="width100 paddingL20 paddingB20">
-                        {{blog.readingTime.text}}
+        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20" ng-repeat="blogpost in allBlogs | orderBy: '-_created'">
+            <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
+            <div layout="column" layout-align="center center" class="blogpostImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+            <div layout="row" layout-align="start center" id="blogPostRead" class="width100 paddingLR20 paddingB20">
+                <div flex layout="row" layout-align="start center">
+                    {{blogpost.readingTime.text}}
+                </div>
+                <div flex layout="row" layout-align="end center" class="width100">
+                    <div class="">
+                        <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                </div>
+                            </div>
+                        </md-button>
+                        <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                </div>
+                            </div>
+                        </md-button>
                     </div>
                 </div>
+            </div>
+            </div>
                 
                 <div layout="column" layout-align="start center" class="min20vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
                     <div layout="row" layout-align="start start" class="width100 marginB10">
-                        <div flex layout="column" layout-align="start start" flex class="font22 bold wideLine2">
-                            {{blog.title}}
+                        <div flex layout="column" layout-align="start start" flex class="font22 bold wideLine2" ng-click="goToBlog(blogpost)">
+                            {{blogpost.title}}
                         </div>
                         
                         
@@ -177,11 +203,11 @@
                     <div flex layout="row" layout-align="start center" class="width100 font14 textLightGrey">
                         <div flex layout="column" layout-align="start start" class="">
                             <div class="narrowLine">
-                                By {{blog.user.basic.name}}
+                                By {{blogpost.user.basic.name}}
                             </div>
                         </div>
                         <div layout="column" layout-align="center start" class="">
-                            {{blog._created | date: "MMMM dd"}}
+                            {{blogpost._created | date: "MMMM dd"}}
                         </div>
                     </div>
                     

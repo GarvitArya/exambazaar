@@ -675,7 +675,10 @@ router.post('/update', function(req, res) {
 
 //to get all users
 router.get('/', function(req, res) {
-    user.find({_created: {  $gte : "2017-07-18T00:00:00.000Z", $lte : "2017-07-21T00:00:00.000Z"}}, {userType: 1, basic: 1, mobile: 1, facebook: 1, email: 1, image: 1, fbemail: 1, fbimage: 1, _created: 1}, function(err, docs) {
+    var start = moment().subtract(2, 'day').startOf('day');
+    var end = moment().endOf('day');
+    
+    user.find({_created: {  $gte : start, $lte : end}}, {userType: 1, basic: 1, mobile: 1, facebook: 1, email: 1, image: 1, fbemail: 1, fbimage: 1, _created: 1}, function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}
@@ -696,8 +699,6 @@ router.get('/dailySummary', function(req, res) {
 
     ],function(err, userSummary) {
     if (!err){
-        
-        console.log(userSummary);
         res.json(userSummary);
     } else {throw err;}
     });

@@ -153,7 +153,7 @@ router.get('/sanitizeblogposts', function(req, res) {
                     /*xmlMode: true*/
                 });
                 $('a').attr('target', '_blank').html();
-                console.log($.html());
+                //console.log($.html());
                 
                 thisBlogpost.content = $.html();
                 
@@ -215,7 +215,6 @@ router.get('/edit/:blogpostId', function(req, res) {
 
 router.get('/getblogpostFromSlug/:blogpostSlug', function(req, res) {
     var blogpostSlug = req.params.blogpostSlug;
-    console.log(blogpostSlug);
     var thisBlogpost = blogpost
         .findOne({ 'urlslug': blogpostSlug })
         .deepPopulate('blogTags')
@@ -422,7 +421,7 @@ router.post('/save', function(req, res) {
         for (var property in blogpostForm) {
             newblogpost[property] = blogpostForm[property];
         }
-        console.log(JSON.stringify(newblogpost));
+        //console.log(JSON.stringify(newblogpost));
         var stats = readingTime(newblogpost.content);
         if(stats)
             newblogpost.readingTime = stats;

@@ -645,16 +645,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.saveupvote = function(upvoteForm) {
             return $http.post('/api/upvotes/save', upvoteForm);
         };
-        this.removeupvote = function(upvoteId) {
-            return $http.get('/api/upvotes/removeupvote/'+upvoteId, {upvoteId: upvoteId});
+        this.removeupvote = function(removeupvoteForm) {
+            return $http.post('/api/upvotes/removeupvote/', removeupvoteForm);
         };
         this.blogpostUpvoteCount = function(blogpostSlug) {
             return $http.get('/api/upvotes/blogpostUpvoteCount/'+blogpostSlug, {blogpostSlug: blogpostSlug});
         };
-        this.blogpostUserUpvote = function(userUpvoteForm) {
-            return $http.post('/api/upvotes/blogpostUserUpvote', userUpvoteForm);
+        this.allBlogsUpvotesCount = function() {
+            return $http.get('/api/upvotes/allBlogsUpvotesCount');
         };
-        
+        this.blogpostUserUpvotes = function(userId) {
+            return $http.get('/api/upvotes/blogpostUserUpvotes/'+userId, {userId: userId});
+        };
+        this.randomUpvotes = function(randomUpvoteForm) {
+            return $http.post('/api/upvotes/randomUpvotes', randomUpvoteForm);
+        };
     }]);
         
     exambazaar.service('rateInstituteService', ['$http', function($http) {
@@ -6943,13 +6948,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
 
         $scope.fblogin = function() {
-            //alert('FB login');
-            console.log('FB Login Initiated');
+            
            
             $facebook.login().then(function(response) {
                 $scope.fbLoginStatus = response;
                 console.log("Login Status is: " + $scope.fbLoginStatus);
-                console.log($scope.fbLoginStatus);
                 refresh();
             });
             /*$facebook.getLoginStatus().then(function(response) {
@@ -7053,12 +7056,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     };
                     if(!$scope.sessionuser.facebookId){
                     //add a new user with facebook id
-                    console.log("Calls being made to add user");
+                    //console.log("Calls being made to add user");
                     $scope.sessionuser.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
                     UserService.fbSave($scope.sessionuser).success(function (data, status, headers) {
                         $mdDialog.hide();
                         var fulluser = data;
-                        console.log(fulluser);
                         var sessionuser = {
                             _id: fulluser._id,
                             userId: fulluser._id,
@@ -10483,15 +10485,94 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
       return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
     exambazaar.controller("blogController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', 'blogpostService','allBlogs', 'Socialshare', 'viewService', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, blogpostService, allBlogs, Socialshare, viewService){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', 'blogpostService','allBlogs', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, blogpostService, allBlogs, Socialshare, viewService, upvoteService, allBlogsUpvotesCount){
             $scope.allBlogs = allBlogs.data;
-            /*var defaultBlogCovers = [
-                "images/blog/blog-cover-1.jpg",
-                "images/blog/blog-cover-2.jpg",
-                "images/blog/blog-cover-3.jpg",
-                "images/blog/blog-cover-4.jpg",
-                "images/blog/blog-cover-5.jpg",
-            ];*/
+            
+            var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
+            var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
+            $scope.allBlogs.forEach(function(thisBlog, index){
+                var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+                
+                if(bIndex == -1){
+                    thisBlog.upvotes = 0;
+                }else{
+                    thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+                }
+            });
+            
+            $scope.addedUpvoteIds = [];
+            $scope.userUpvotes = [];
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+                upvoteService.blogpostUserUpvotes($scope.user._id).success(function (data, status, headers) {
+                    $scope.userUpvotes = data;
+                })
+                .error(function (data, status, header, config) {
+                    console.info();
+                });
+                
+            }else{
+                
+            }
+            
+            $scope.upvoteExists = function(blogpost){
+                var uIndex = $scope.userUpvotes.indexOf(blogpost._id);
+                if(uIndex == -1){
+                    return false;
+                }else{
+                    return true;
+                }
+            };
+            
+            $scope.saveupvote = function(blogpost){
+                var upvoteForm = {
+                    blogpost: blogpost._id,
+                };
+                if($scope.user && $scope.user._id){
+                    upvoteForm.user = $scope.user._id;
+                }
+                upvoteService.saveupvote(upvoteForm).success(function (savedata, status, headers) {    
+                    upvoteService.blogpostUpvoteCount(blogpost.urlslug).success(function (data, status, headers) {
+                         $scope.userUpvotes.push(blogpost._id);
+                         blogpost.upvotes = data;
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info();
+                    });
+                })
+                .error(function (data, status, header, config) {
+                    console.info();
+                });
+            };
+            
+            $scope.removeupvote = function(blogpost){
+                if($scope.user && $scope.user._id){
+                    var removeupvoteForm = {
+                        blogpost: blogpost._id,
+                        user: $scope.user._id,
+                    };
+                     upvoteService.removeupvote(removeupvoteForm).success(function (data, status, headers) {
+                        upvoteService.blogpostUpvoteCount(blogpost.urlslug).success(function (sdata, status, headers) {    
+                         upvoteService.blogpostUserUpvotes($scope.user._id).success(function (data, status, headers) {
+                                $scope.userUpvotes = data;
+                                blogpost.upvotes = sdata;
+                            })
+                            .error(function (data, status, header, config) {
+                                console.info();
+                            });
+
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info();
+                        });
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info();
+                    });   
+                }
+            };
+            
             var defaultBlogCovers = ["images/blog/blog-cover-7.jpg",];
             var rIndex = getRandomInt(0, defaultBlogCovers.length);
             var defaultBlogCover = defaultBlogCovers[rIndex];
@@ -10544,7 +10625,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                console.info('View Marked');
+                //console.info('View Marked');
             })
             .error(function (data, status, header, config) {
                 console.info();
@@ -10552,18 +10633,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);   
     
     exambazaar.controller("postBlogController", 
-        [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', 'blogpostService','userBlogs', 'thisuser', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, blogpostService, userBlogs, thisuser){
+        [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', 'blogpostService','userBlogs', 'thisuser', 'upvoteService', 'allBlogsUpvotesCount', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, blogpostService, userBlogs, thisuser, upvoteService, allBlogsUpvotesCount){
             $scope.user = thisuser.data;
-            
+            $scope.masterUser = false;
             
             $scope.userBlogs = userBlogs.data;
-            console.log($scope.userBlogs);
+            var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
+            
+            var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
+            $scope.userBlogs.forEach(function(thisBlog, index){
+                var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+                
+                if(bIndex == -1){
+                    thisBlog.upvotes = 0;
+                }else{
+                    thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+                }
+            });
+            //console.log($scope.userBlogs);
+            
             $scope.setBlog = function(thisblog){
                 $scope.blogpost = thisblog;
             };
             
             if($cookies.getObject('sessionuser')){
-                $scope.user = $cookies.getObject('sessionuser'); UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                $scope.user = $cookies.getObject('sessionuser');
+                if($scope.user.userType == 'Master'){
+                    $scope.masterUser = true;
+                }
+                UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
                     var userGallery = data.blogger.gallery;
                     //console.log(userGallery);
                     $scope.blogGallery = userGallery;
@@ -10713,6 +10811,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });
             };
             
+            $scope.randomUpvotes = function(blogpost){
+                var randomUpvoteForm = {
+                    blogpost: blogpost._id,
+                };
+                upvoteService.randomUpvotes(randomUpvoteForm).success(function (data, status, headers) {
+                    console.log(data);
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info();
+                });
+            };
             $scope.sanitizeblogposts = function(){
                 blogpostService.sanitizeblogposts().success(function (data, status, headers) {
                     console.log(data);
@@ -11713,6 +11823,19 @@ function getLatLng(thisData) {
     }]);    
         
     
+        
+        exambazaar.controller("userInfoController", 
+        [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'UserService', '$mdDialog', '$timeout', function($scope, thisuser,$http,$state,$rootScope, $cookies, UserService, $mdDialog, $timeout){
+            $scope.user = thisuser.data;
+            if($cookies.getObject('sessionuser')){
+                var sessionuser = $cookies.getObject( 'sessionuser');
+            }else{
+                $scope.showLoginForm();
+            }
+        
+            
+            
+    }]);  
     exambazaar.controller("addSubscriberController", 
         [ '$scope',  'subscribersList','subscriberService','$http','$state', function($scope, subscribersList, subscriberService,$http,$state){
         
@@ -14000,17 +14123,14 @@ function getLatLng(thisData) {
     exambazaar.controller("showblogController", 
         [ '$scope','$http','$state', '$stateParams','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', 'viewService','$cookies', 'upvoteService', 'upvoteCount', function($scope,$http, $state, $stateParams, blogpostService, thisblog, $rootScope, Socialshare, $location, viewService,$cookies, upvoteService, upvoteCount){
             $scope.blogpost = thisblog.data;
-            $scope.upvoteCount = upvoteCount.data;
-            $scope.userUpvote = false;
+            $scope.blogpost.upvotes = upvoteCount.data;
+            
+            $scope.addedUpvoteIds = [];
+            $scope.userUpvotes = [];
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
-                var userUpvoteForm = {
-                    user: $scope.user._id,
-                    blogpost: $scope.blogpost._id
-                };
-                upvoteService.blogpostUserUpvote(userUpvoteForm).success(function (data, status, headers) {
-                    //console.log(data);
-                    $scope.userUpvote = data;
+                upvoteService.blogpostUserUpvotes($scope.user._id).success(function (data, status, headers) {
+                    $scope.userUpvotes = data;
                 })
                 .error(function (data, status, header, config) {
                     console.info();
@@ -14056,25 +14176,27 @@ function getLatLng(thisData) {
                 });
             };
            
-            $scope.saveupvote = function(){
-                console.log($scope.blogpost._id);
+            $scope.upvoteExists = function(blogpost){
+                var uIndex = $scope.userUpvotes.indexOf(blogpost._id);
+                if(uIndex == -1){
+                    return false;
+                }else{
+                    return true;
+                }
+            };
+            
+            $scope.saveupvote = function(blogpost){
                 var upvoteForm = {
-                    blogpost: $scope.blogpost._id,
+                    blogpost: blogpost._id,
                 };
                 if($scope.user && $scope.user._id){
                     upvoteForm.user = $scope.user._id;
                 }
-                 upvoteService.saveupvote(upvoteForm).success(function (savedata, status, headers) {
-                    
-                     upvoteService.blogpostUpvoteCount($stateParams.blogpostSlug).success(function (data, status, headers) {
-                         $scope.userUpvote = savedata._id;
-                         $scope.upvoteCount = data;
-                        /*upvoteService.blogpostUserUpvote(userUpvoteForm).success(function (data, status, headers) {
-                            $scope.userUpvote = data;
-                        })
-                        .error(function (data, status, header, config) {
-                            console.info();
-                        });*/
+                upvoteService.saveupvote(upvoteForm).success(function (savedata, status, headers) {    
+                    upvoteService.blogpostUpvoteCount(blogpost.urlslug).success(function (data, status, headers) {
+                         $scope.userUpvotes.push(blogpost._id);
+                         blogpost.upvotes = data;
+
                     })
                     .error(function (data, status, header, config) {
                         console.info();
@@ -14085,14 +14207,22 @@ function getLatLng(thisData) {
                 });
             };
             
-            $scope.removeupvote = function(){
-                //console.log($scope.userUpvote);
-                upvoteService.removeupvote($scope.userUpvote).success(function (data, status, headers) {
-                    //console.log(data);
-                    upvoteService.blogpostUpvoteCount($stateParams.blogpostSlug).success(function (data, status, headers) {
-                        $scope.upvoteCount = data;
-                        upvoteService.blogpostUserUpvote(userUpvoteForm).success(function (data, status, headers) {
-                            $scope.userUpvote = data;
+            $scope.removeupvote = function(blogpost){
+                if($scope.user && $scope.user._id){
+                    var removeupvoteForm = {
+                        blogpost: blogpost._id,
+                        user: $scope.user._id,
+                    };
+                     upvoteService.removeupvote(removeupvoteForm).success(function (data, status, headers) {
+                        upvoteService.blogpostUpvoteCount(blogpost.urlslug).success(function (sdata, status, headers) {    
+                         upvoteService.blogpostUserUpvotes($scope.user._id).success(function (data, status, headers) {
+                                $scope.userUpvotes = data;
+                                blogpost.upvotes = sdata;
+                            })
+                            .error(function (data, status, header, config) {
+                                console.info();
+                            });
+
                         })
                         .error(function (data, status, header, config) {
                             console.info();
@@ -14100,11 +14230,8 @@ function getLatLng(thisData) {
                     })
                     .error(function (data, status, header, config) {
                         console.info();
-                    });
-                })
-                .error(function (data, status, header, config) {
-                    console.info();
-                });
+                    });   
+                }
             };
             
             $rootScope.pageTitle = $scope.blogpost.title + " | Exambazaar.com";
@@ -14768,6 +14895,11 @@ function getLatLng(thisData) {
                     function(blogpostService, $stateParams) {   
                     return blogpostService.getUserBlogposts($stateParams.userId);
                 }],
+                allBlogsUpvotesCount: ['upvoteService',
+                    function(upvoteService) {
+                    return upvoteService.allBlogsUpvotesCount();
+                }],
+                
                 provider: function() { return {}; }
                 
             }
@@ -14999,30 +15131,6 @@ function getLatLng(thisData) {
                 
             }
         })
-        /*.state('showblog', {
-            url: '/blogpost/:blogpostId', //masterId?
-            views: {
-                'header':{
-                    templateUrl: 'header.html',
-                    controller: 'headerController'
-                },
-                'body':{
-                    templateUrl: 'showblog.html',
-                    controller: 'showblogController',
-                },
-                'footer': {
-                    templateUrl: 'footer.html'
-                }
-            },
-            resolve: {
-                thisblog: ['blogpostService', '$stateParams',
-                    function(blogpostService,$stateParams){
-                    return blogpostService.getblogpost($stateParams.blogpostId);
-                }],
-                provider: function() { return {}; }
-                
-            }
-        })*/
         .state('blog', {
             url: '/blog', //masterId?
             views: {
@@ -15042,6 +15150,10 @@ function getLatLng(thisData) {
                 allBlogs: ['blogpostService',
                     function(blogpostService) {   
                     return blogpostService.getblogs();
+                }],
+                allBlogsUpvotesCount: ['upvoteService',
+                    function(upvoteService) {
+                    return upvoteService.allBlogsUpvotesCount();
                 }],
                 provider: function() { return {}; }
                 
@@ -16515,6 +16627,29 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'profile.html',
                     controller: 'profileController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                user: function() { return {}; }
+            }
+        })
+        .state('userInfo', {
+            url: '/userInfo/:userId',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    controller: 'headerController'
+                },
+                'body':{
+                    templateUrl: 'userInfo.html',
+                    controller: 'userInfoController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
