@@ -6917,7 +6917,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         .error(function (data, status, header, config) {
                             console.log('Error ' + JSON.stringify(data));
                         });*/
-                            console.info(JSON.stringify(sessionuser));
+                            //console.info(JSON.stringify(sessionuser));
                         }
                         if($state.current.name == 'landing'){
                             if(sessionuser.userType =='Master'){
@@ -7046,6 +7046,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             email: fulluser.email,
 
                         };
+                        //console.log('I am here');
                         $cookies.putObject('sessionuser', sessionuser);
                         $scope.sessionuser = sessionuser;
                         $mdDialog.hide();
@@ -7082,6 +7083,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }
 
                 }else{
+                    
                     $scope.sessionuser = {};
                     $scope.sessionuser.fbuser = {
                         name: response.name,
@@ -7111,8 +7113,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             email: fulluser.email,
 
                         };
+                        
                         $cookies.putObject('sessionuser', sessionuser);
                         $scope.sessionuser = sessionuser;
+                        
                         $mdDialog.hide();
                         
                         if($state.current.name == 'landing'){

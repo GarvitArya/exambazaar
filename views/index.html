@@ -2232,7 +2232,7 @@
 </div>
         
         
-<div class="sideBarButton paddingTB5" ng-controller="headerController" ng-cloak>
+<div class="sideBarButton paddingTB5">
     <div layout="row"  layout-align="start center" >
         <div sidebarjs-toggle id="sideBarIcon" class="paddingL5">
             <i class="fa fa-angle-double-right font40" aria-hidden="true"></i>
@@ -2294,7 +2294,6 @@
                 <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-green2 width50" ng-click = "showLoginForm()">Log in</md-button>
                 <a id="sideBarLink" ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
             </div>
-            
 
 
 
