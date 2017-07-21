@@ -158,13 +158,13 @@
                         <a href="#"
                         socialshare 
                         socialshare-provider="whatsapp"
-                        socialshare-text="{{shareText}}" 
-                        socialshare-url="{{currURL}}">
+                        socialshare-text="{{shareBlogText(blogpost)}}" 
+                        socialshare-url="{{shareURL(blogpost)}}">
                         <img src="icons/whatsapp.png" class="socialIcon"/>    
                         </a>
                     </div>
                     <div hide-xs class="marginR10">
-                        <a ng-click="shareFacebook()">
+                        <a ng-click="postFacebook(blogpost)">
                             <img src="icons/facebook.png" class="socialIcon"/>
                         </a>
                     </div>
@@ -172,7 +172,7 @@
                         <a href="#"
                         socialshare
                         socialshare-provider="facebook-messenger"
-                        socialshare-url="{{currURL}}">
+                        socialshare-url="{{shareURL(blogpost)}}">
                             <img src="icons/facebook.png" class="socialIcon"/>
                         </a>
                     </div>
@@ -180,9 +180,9 @@
                         <a href="#"
                         socialshare
                         socialshare-provider="twitter"
-                        socialshare-text="{{shareText2}}"
+                        socialshare-text="{{shareBlogText(blogpost)}}"
                         socialshare-hashtags="{{hashtags}}"
-                        socialshare-url="{{currURL}}">
+                        socialshare-url="{{shareURL(blogpost)}}">
                         <img src="icons/twitter.png" class="socialIcon"/>
                         </a>
                     </div>
@@ -200,8 +200,8 @@
                         <a href="#"
                         socialshare 
                         socialshare-provider="whatsapp"
-                        socialshare-text="{{shareText}}" 
-                        socialshare-url="{{currURL}}">
+                        socialshare-text="{{shareBlogText(blogpost)}}" 
+                        socialshare-url="{{shareURL(blogpost)}}">
                         <img src="icons/whatsapp.png" class="socialIcon"/>    
                         </a>
                     </div>
@@ -214,7 +214,7 @@
                         <a href="#"
                         socialshare
                         socialshare-provider="facebook-messenger"
-                        socialshare-url="{{currURL}}">
+                        socialshare-url="{{shareURL(blogpost)}}">
                             <img src="icons/facebook.png" class="socialIcon"/>
                         </a>
                     </div>
@@ -222,9 +222,9 @@
                         <a href="#"
                         socialshare
                         socialshare-provider="twitter"
-                        socialshare-text="{{shareText2}}"
+                        socialshare-text="{{shareBlogText(blogpost)}}"
                         socialshare-hashtags="{{hashtags}}"
-                        socialshare-url="{{currURL}}">
+                        socialshare-url="{{shareURL(blogpost)}}">
                         <img src="icons/twitter.png" class="socialIcon"/>
                         </a>
                     </div>

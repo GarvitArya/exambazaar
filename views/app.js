@@ -10581,12 +10581,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.shareText = "Hi! Read the exam preparation blog at Exambazaar! ";
             $scope.shareText2 = $scope.shareText;
             $scope.currURL = $location.absUrl();
-            $scope.postFacebook = function(){
+            $scope.prefix = "https://exambazaar.com/blogpost/";
+            $scope.shareURL = function(blogpost){
+                return ($scope.prefix + blogpost.urlslug);
+            };
+            $scope.shareBlogText = function(blogpost){
+                return ('"' + blogpost.title + '"' + " | Read all about exam preparation ");
+            };
+            $scope.postFacebook = function(blogpost){
                 Socialshare.share({
                   'provider': 'facebook',
                   'attrs': {
                     'socialshareType': 'feed',
-                    'socialshareUrl': $scope.currURL,
+                    'socialshareUrl': $scope.shareURL(blogpost),
                     'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
                   }
                 });    
@@ -14152,15 +14159,24 @@ function getLatLng(thisData) {
             }else{
                 $scope.thisBlogCover = defaultBlogCover;
             }
-            $scope.shareText = "Hi! Read \"" + $scope.blogpost.title + "\" at Exambazaar! ";
+            
+            
+            $scope.shareText = "Hi! Read the exam preparation blog at Exambazaar! ";
             $scope.shareText2 = $scope.shareText;
             $scope.currURL = $location.absUrl();
-            $scope.postFacebook = function(){
+            $scope.prefix = "https://exambazaar.com/blogpost/";
+            $scope.shareURL = function(blogpost){
+                return ($scope.prefix + blogpost.urlslug);
+            };
+            $scope.shareBlogText = function(blogpost){
+                return ('"' + blogpost.title + '"' + " | Read all about exam preparation ");
+            };
+            $scope.postFacebook = function(blogpost){
                 Socialshare.share({
                   'provider': 'facebook',
                   'attrs': {
                     'socialshareType': 'feed',
-                    'socialshareUrl': $scope.currURL,
+                    'socialshareUrl': $scope.shareURL(blogpost),
                     'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
                   }
                 });    
