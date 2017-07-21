@@ -1,5 +1,32 @@
+function AppCtrl(SidebarJS) {
+  this.toggleSidebarJS = toggleSidebarJS;
+  this.sidebarIsVisible = isVisibleSidebarJS;
+  this.onSidebarOpen = onSidebarOpen;
+  this.onSidebarClose = onSidebarClose;
+  this.changePosition = changePosition;
 
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js']);
+  function toggleSidebarJS(sidebarName) {
+    SidebarJS.toggle(sidebarName);
+  }
+
+  function isVisibleSidebarJS(sidebarName) {
+    return SidebarJS.isVisible(sidebarName);
+  }
+
+  function onSidebarOpen() {
+    console.log('is open!');
+  }
+
+  function onSidebarClose() {
+    console.log('is close!');
+  }
+
+  function changePosition(newPosition) {
+    SidebarJS.setPosition(newPosition);
+  }
+}
+
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js', 'ngSidebarJS']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin'
     (function() {
     'use strict';
@@ -6653,7 +6680,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','$geolocation', '$facebook', '$mdDialog', 'EmailService', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,$geolocation, $facebook, $mdDialog, EmailService){
+        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,$geolocation, $facebook, $mdDialog, EmailService, SidebarJS){
             
             
         $scope.sendWelcomeEmail = function(){
@@ -6686,8 +6713,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.coachingGroupName = $stateParams.groupName;
             $rootScope.coachingGroupCity = $stateParams.cityName;
         }
+        $scope.closeSideBar = function(){
+            
+            SidebarJS.toggle();
+        };
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
+            
+            SidebarJS.close();
             if($state.current.name == 'showGroup' || $state.current.name == 'claim' || $state.current.name == 'rankerswall'){
                 $mdDialog.show({
                   contentElement: '#loginDialog',

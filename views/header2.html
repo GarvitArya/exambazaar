@@ -5,6 +5,7 @@
     #logo:hover{
         color:#20C39A;
     }
+    
     a, a:hover, a:active, a:visited, a:focus, a:visited, a:visited:hover, a:link, a:link:hover{
         color: white;
         text-decoration:none;
@@ -12,10 +13,12 @@
     .navbar-default .navbar-nav > li > a, .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
         color: white;
     }
+    
 </style>
 
 <nav class="navbar transparent navbar-default navbar-fixed-top nav-justified thirdFont font12" role="navigation" id="mainNav">
-    <div layout="row" layout-align="start center" class="paddingR20" >
+    <div layout="row" layout-align="center center" class="paddingR20" >
+        
         <div layout="row" layout-align="start center" flex>
             <a class="navbar-brand" href="/">
                 <span class="" id="logo">
@@ -77,3 +80,65 @@
         </div>
     </div>
 </nav>
+
+
+<!--<div class="paddingL10">
+    <div sidebarjs-toggle id="copyLink"><i class="fa fa-bars font20 textWhite" aria-hidden="true"></i></div>
+    <sidebarjs class="sideBar font16">
+        <div layout="column" layout-align="center center" class="width100">
+            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder marginB10">
+                <a class="navbar-brand" href="/">
+                    <span class="" id="sidebarLogo">
+                        EXAMBAZAAR
+                    </span>
+                </a>
+            </div>
+            <div layout="column" layout-align="center center" class="width100">
+
+            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder padding10">
+                <div layout="column" layout-align="center center" class="marginT5">
+                    <div layout="column" layout-align="center center" class="width100">
+                        Ranker's Wall
+                    </div>
+                    <div layout="row" layout-align="center center" class="font12 danger width100">
+                        <div class="marginLR5">
+                            <a ui-sref="rankerswall({ examName:'NEET UG', year:'2017'} )">NEET 2017</a>
+                        </div>
+                        <div class="marginLR5">
+                            <a ui-sref="rankerswall({ examName:'JEE Advanced', year:'2017'} )">JEE 2017</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="marginTB5">
+                    <a ui-sref="blog">Blog</a>
+                </div>
+            </div>
+
+            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder padding10" ng-if="sessionuser && sessionuser.basic">
+                <div class="marginT5">
+                    Welcome {{sessionuser.basic.name}}!
+                </div>
+                <div class="marginTB10">
+                    <span ng-if="sessionuser.image">
+                        <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle"/>
+                    </span>
+                    <a ui-sref="profile({ userId:{{'sessionuser.userId'}} })" class="marginR10">Profile</a>
+                </div>
+                <div class="marginT5">
+                    <a ui-sref="reviewed({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Reviews</a>
+                </div>
+                <div class="marginTB5">
+                    <a ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Shortlisted Institutes</a>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="start center" class="padding10">
+                <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-green2" ng-click = "showLoginForm()">Log in</md-button>
+                <a ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
+            </div>
+            </div>
+
+        </div>
+
+    </sidebarjs>
+</div>-->

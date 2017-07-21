@@ -47,6 +47,41 @@
     <!--Amatica+SC|Bubblegum+Sans|Chewy|Chicle|Concert+One|Passion+One|Pompiere|-->
     
     <style>
+        [sidebarjs-container] {
+            width: 60%;
+        }
+        #sidebarLogo{
+            color:black;
+        }
+        #sidebarLogo:hover{
+            color:#20C39A;
+        }
+        .sideBar{
+            color: #333;
+        }
+        #sideBarIcon{
+            cursor: pointer;
+            color: #ccc;
+        }
+        #sideBarIcon:hover, #sideBarLink:focus{
+            color: #20C39A;
+        }
+        #sideBarIcon2{ 
+            position: absolute; 
+            bottom: 0%; 
+            right: 0;
+            cursor: pointer;
+            color: #ccc;
+        }
+        #sideBarIcon2:hover, #sideBarIcon2:focus{
+            color: #20C39A;
+        }
+        #sideBarLink{
+            color: #333;
+        }
+        #sideBarLink:hover, #sideBarLink:focus{
+            color: #20C39A;
+        }
         .flex { flex : 1 1 0%; }
         .offerFont{
             font-family: 'Roboto', sans-serif;
@@ -705,7 +740,16 @@
             background: #721212;
             color: black;
         }
-        
+        .sideBarButton{
+            position:fixed; 
+            left:0%;
+            top:45%;
+            width:10%;
+            height:10%;
+            background: transparent;
+            color: black;
+            z-index: 20000;
+        }
         .md-button.md-review{
             border: 2px solid black;
             border-radius: 5px;
@@ -1654,7 +1698,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.27.4/codemirror.css">
     
-    
+    <link rel="stylesheet" href="angular-sidebarjs.min.css">
     
     
     <!--
@@ -2185,7 +2229,84 @@
         </div>
         
         
+</div>
+        
+        
+<div class="sideBarButton paddingTB5" ng-controller="headerController" ng-cloak>
+    <div layout="row"  layout-align="start center" >
+        <div sidebarjs-toggle id="sideBarIcon" class="paddingL5">
+            <i class="fa fa-angle-double-right font40" aria-hidden="true"></i>
+            <!--<i class="fa fa-bars font20 textWhite" aria-hidden="true"></i>-->
+        </div>
     </div>
+    <sidebarjs class="sideBar font16">
+        <div sidebarjs-toggle id="sideBarIcon2" class="paddingR5">
+            <i class="fa fa-angle-double-left font40" aria-hidden="true"></i>
+        </div>
+        <div layout="column" layout-align="start center" layout-fill class="width100">
+            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder marginB10">
+                <a class="navbar-brand" href="/">
+                    <span class="" id="sidebarLogo">
+                        EXAMBAZAAR
+                    </span>
+                </a>
+            </div>
+            <div layout="column" layout-align="center center" class="width100">
+
+            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder padding10">
+                <div layout="column" layout-align="center center" class="marginT5">
+                    <div layout="column" layout-align="center center" class="width100">
+                        Ranker's Wall
+                    </div>
+                    <div layout="row" layout-align="center center" class="font12 danger width100">
+                        <div class="marginLR5">
+                            <a id="sideBarLink" ui-sref="rankerswall({ examName:'NEET UG', year:'2017'} )">NEET 2017</a>
+                        </div>
+                        <div class="marginLR5">
+                            <a id="sideBarLink" ui-sref="rankerswall({ examName:'JEE Advanced', year:'2017'} )">JEE 2017</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="marginTB5">
+                    <a id="sideBarLink" ui-sref="blog">Blog</a>
+                </div>
+            </div>
+
+            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder padding10" ng-if="sessionuser && sessionuser.basic">
+                <div class="marginT5">
+                    Welcome {{sessionuser.basic.name}}!
+                </div>
+                <div class="marginTB10">
+                    <span ng-if="sessionuser.image">
+                        <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle"/>
+                    </span>
+                    <!--<a id="sideBarLink" ui-sref="profile({ userId:{{'sessionuser.userId'}} })" class="marginR10">Profile</a>-->
+                </div>
+                <div class="marginT5">
+                    <a id="sideBarLink" ui-sref="reviewed({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Reviews</a>
+                </div>
+                <div class="marginTB5">
+                    <a id="sideBarLink" ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Shortlisted Institutes</a>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="center center" class="padding10 width100 marginT20">
+                <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-green2 width50" ng-click = "showLoginForm()">Log in</md-button>
+                <a id="sideBarLink" ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
+            </div>
+            
+
+
+
+
+            </div>
+            <!--<div flex layout="row" layout-align="center end" class="padding10">
+                <a id="sideBarLink" sidebarjs-toggle><i class="fa fa-times-circle" aria-hidden="true"></i>&nbsp;&nbsp;Close</a>
+            </div>-->
+        </div>
+
+    </sidebarjs>
+</div>        
 </div>        
         
 
@@ -2278,7 +2399,7 @@
     
     <script src="Chart.min.js"></script>
     <script src="angular-chart.min.js"></script>
-        
+     <script src="angular-sidebarjs.min.js"></script>
         
     <script type="text/javascript" src="app.js"></script>
 </body>

@@ -27,6 +27,7 @@
     "angular-sanitize": "^1.5.9",
     "angular-scroll": "^1.0.0",
     "angular-seo": "0.0.1",
+    "angular-sidebarjs": "^2.2.0",
     "angular-socialshare": "^2.3.8",
     "angular-ui-bootstrap": "^2.5.0",
     "angular-ui-router": "^1.0.3",
