@@ -6720,10 +6720,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.coachingGroupName = $stateParams.groupName;
             $rootScope.coachingGroupCity = $stateParams.cityName;
         }
-        $scope.closeSideBar = function(){
-            
-            SidebarJS.toggle();
-        };
+        
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
             
@@ -10829,7 +10826,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
             };
             
-            var defaultBlogCovers = ["images/blog/blog-cover-7.jpg",];
+            var defaultBlogCovers = ["images/blog/blog-cover-7.jpg","images/blog/background.jpg"];
             var rIndex = getRandomInt(0, defaultBlogCovers.length);
             var defaultBlogCover = defaultBlogCovers[rIndex];
             $scope.thisBlogCover = defaultBlogCover;
@@ -14476,7 +14473,7 @@ function getLatLng(thisData) {
             $scope.rankerWalls = [
                 {
                     title: 'NEET 2017 Rankers Wall',
-                    subtitle: 'Check out the standouts, the makers of history... the 🏆 NEET 2017 #top100 Rankers! And their successful coaching institutes',
+                    subtitle: 'Check out the standouts, the makers of history. NEET 2017 Top 100 Rankers and their Coachings!',
                     coverPhoto: 'https://exambazaar.s3.amazonaws.com/58230ffc8814bc38104336952fcefd1f.PNG',
                     readingTime: {
                         text: '3 min read'
@@ -14485,7 +14482,7 @@ function getLatLng(thisData) {
                 },
                 {
                     title: 'JEE Advanced 2017 Rankers Wall',
-                    subtitle: 'Check out the inspirational list of Top 100 (JEE 2017)! #jee2017 #iit',
+                    subtitle: 'Check out the standouts, the makers of history. JEE Advance 2017 Top 100 Rankers and their Coachings!',
                     coverPhoto: 'https://exambazaar.s3.amazonaws.com/506113959c79568cc8329504a61111a6.PNG',
                     readingTime: {
                         text: '2 min read'
@@ -17811,7 +17808,7 @@ function getLatLng(thisData) {
         
     })();
 
-exambazaar.run(function($rootScope,$mdDialog,  $location, $window) {
+exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions) {
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
     $rootScope.imageUrl = '';
@@ -17825,7 +17822,11 @@ exambazaar.run(function($rootScope,$mdDialog,  $location, $window) {
       $http.post('/logout');
     };*/
     $rootScope.$on('$stateChangeSuccess', function() {
-       document.body.scrollTop = document.documentElement.scrollTop = 0;
+        
+    });
+    $transitions.onSuccess({}, function() {
+        console.log("statechange success");
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
         $mdDialog.hide();
     });
     
