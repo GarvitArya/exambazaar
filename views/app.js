@@ -609,6 +609,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getblogpost = function(blogpostId) {
             return $http.get('/api/blogposts/edit/'+blogpostId, {blogpostId: blogpostId});
         };
+        this.removeblogpost = function(blogpostId) {
+            return $http.get('/api/blogposts/remove/'+blogpostId, {blogpostId: blogpostId});
+        };
         
         this.getblogpostFromSlug = function(blogpostSlug) {
             return $http.get('/api/blogposts/getblogpostFromSlug/'+blogpostSlug, {blogpostSlug: blogpostSlug});
@@ -10936,6 +10939,32 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     .error(function (data, status, header, config) {
                         console.info("Error ");
                     });
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            
+            $scope.removeConfirm = function(thisblog){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to delete post titled "' + thisblog.title + '"?')
+                .textContent('It was authored by ' + thisblog.user.basic.name +"!" )
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.removeBlogPost(thisblog);
+                }, function() {
+                  //nothing
+                }); 
+            };
+            
+            $scope.removeBlogPost = function(toRemoveBlog){
+                 blogpostService.removeblogpost(toRemoveBlog._id).success(function (data, status, headers) {
+                    console.log('Blogpost Removed');
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error ");

@@ -195,6 +195,7 @@ router.get('/edit/:blogpostId', function(req, res) {
     //console.log(blogpostId);
     var thisBlogpost = blogpost
         .findOne({ '_id': blogpostId })
+        .deepPopulate('blogTags')
         .exec(function (err, thisBlogpost) {
             
         if (!err){
@@ -211,6 +212,22 @@ router.get('/edit/:blogpostId', function(req, res) {
             });
         } else {throw err;}
     });
+});
+
+router.get('/remove/:blogpostId', function(req, res) {
+    var blogpostId = req.params.blogpostId;
+    if(blogpostId){
+        blogpost.remove({blogpost: blogpostId}, function(err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(result._id + ' removed!');
+                res.json(true);
+            }                              
+        });
+    }else{
+        res.json(false);
+    }
 });
 
 router.get('/getblogpostFromSlug/:blogpostSlug', function(req, res) {

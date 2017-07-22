@@ -79,8 +79,11 @@
             <div layout="row" layout-align="start center" flex="5">
                 Clone
             </div>
-            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+            <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
                 Upvotes
+            </div>
+            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+                Remove
             </div>
         </div>
         <div layout="row" layout-align="start center" ng-repeat="thisblog in userBlogs | orderBy: '-upvotes'" class="width100 greyDashedBottomBorder paddingTB5">
@@ -109,9 +112,12 @@
             <div layout="row" layout-align="start center" flex="5">
                 <i class="fa fa-clone" aria-hidden="true" ng-click="cloneConfirm(thisblog)"></i>
             </div>
-            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+            <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
                 {{thisblog.upvotes}}&nbsp;&nbsp;
                 <i class="fa fa-arrow-circle-up" aria-hidden="true" ng-click="randomUpvotes(thisblog)" ng-if="user.basic.name =='Gaurav Parashar'"></i>
+            </div>
+            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+                <i class="fa fa-times-circle danger" aria-hidden="true" ng-click="removeConfirm(thisblog)"></i>
             </div>
         </div>
         
