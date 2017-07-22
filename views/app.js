@@ -609,9 +609,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getblogpost = function(blogpostId) {
             return $http.get('/api/blogposts/edit/'+blogpostId, {blogpostId: blogpostId});
         };
-        this.removeblogpost = function(blogpostId) {
-            return $http.get('/api/blogposts/remove/'+blogpostId, {blogpostId: blogpostId});
-        };
+        
         
         this.getblogpostFromSlug = function(blogpostSlug) {
             return $http.get('/api/blogposts/getblogpostFromSlug/'+blogpostSlug, {blogpostSlug: blogpostSlug});
@@ -623,7 +621,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             return $http.get('/api/blogposts/enable/'+blogpostId, {blogpostId: blogpostId});
         };
         this.removeblogpost = function(blogpostId){
-            $http.get('/api/blogposts/remove/'+blogpostId, {blogpostId: blogpostId});
+            return $http.get('/api/blogposts/remove/'+blogpostId, {blogpostId: blogpostId});
         };
         this.getUserBlogposts = function(userId) {
             return $http.get('/api/blogposts/userblogs/'+userId, {userId: userId});
@@ -1003,6 +1001,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.addExamsToAll = function(groupExamForm) {
             return $http.post('/api/targetStudyProviders/addExamsToAll',groupExamForm);
+        };
+        this.renameAllCoaching = function(groupNameForm) {
+            return $http.post('/api/targetStudyProviders/renameAllCoaching',groupNameForm);
+        };
+        this.renameAllGroupName = function(groupNameForm) {
+            return $http.post('/api/targetStudyProviders/renameAllGroupName',groupNameForm);
         };
         this.removeExamsFromAll = function(groupExamForm) {
             return $http.post('/api/targetStudyProviders/removeExamsFromAll',groupExamForm);
@@ -9763,7 +9767,27 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.spreadsheetMode = true;
             }
             
-            $rootScope.title ='Sandbox';
+            $rootScope.title ='Coaching Group Editing';
+            
+            
+            $scope.showRenameCoachingDialog = function(ev) {
+                $scope.newName = $scope.spreadSheetCoachings[1].name;
+                $scope.newGroupName = $scope.spreadSheetCoachings[1].groupName;
+                $mdDialog.show({
+                  contentElement: '#renameCoachingDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
+            $scope.showRenameGroupDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#renameGroupDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
             $scope.showExamDialog = function(ev) {
                 $mdDialog.show({
                   contentElement: '#examDialog',
@@ -9819,6 +9843,109 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }else{
                     thisArray.splice(eIndex,1);
                 }
+            };
+            
+            $scope.renameCoachingConfirm = function(){
+                var instituteLength = $scope.spreadSheetCoachings.length;
+                
+                console.log($scope.newName);
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    instituteLength = allInstitutes.length - 1;
+                }
+                
+                var groupName = '';
+                if($scope.spreadSheetCoachings.length > 1){
+                    groupName = $scope.spreadSheetCoachings[1].name;
+                }
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to rename these ' + instituteLength + ' coaching centers of ' +  groupName + '?')
+                .textContent('You will not be able to revert it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.renameAllCoaching();
+                }, function() {
+                  //nothing
+                    $scope.showExamDialog();
+                }); 
+            };
+            
+            $scope.renameGroupNameConfirm = function(){
+                var instituteLength = $scope.spreadSheetCoachings.length;
+                
+                console.log($scope.newGroupName);
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    instituteLength = allInstitutes.length - 1;
+                }
+                
+                var groupName = '';
+                if($scope.spreadSheetCoachings.length > 1){
+                    groupName = $scope.spreadSheetCoachings[1].groupName;
+                }
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to rename Group Name of these ' + instituteLength + ' coaching centers of ' +  groupName + '?')
+                .textContent('You will not be able to revert it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.renameAllGroupName();
+                }, function() {
+                  //nothing
+                    $scope.showExamDialog();
+                }); 
+            };
+            $scope.renameAllCoaching = function(){
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    allInstitutes.splice(0,1);
+                }
+                
+                var instituteArray =  allInstitutes.map(function(a) {return a._id;});
+                var groupNameForm = {
+                    instituteArray: instituteArray,
+                    name: $scope.newName
+                };
+                
+                targetStudyProviderService.renameAllCoaching(groupNameForm).success(function (data, status, headers) {
+                    console.log('Done');
+                    $scope.showSavedDialog();
+                    //$scope.showSavedDialog();
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });       
+            };
+            
+            $scope.renameAllGroupName = function(){
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    allInstitutes.splice(0,1);
+                }
+                
+                var instituteArray =  allInstitutes.map(function(a) {return a._id;});
+                var groupNameForm = {
+                    instituteArray: instituteArray,
+                    groupName: $scope.newGroupName
+                };
+                
+                targetStudyProviderService.renameAllGroupName(groupNameForm).success(function (data, status, headers) {
+                    console.log('Done');
+                    $scope.showSavedDialog();
+                    //$scope.showSavedDialog();
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });       
             };
             
             $scope.addExamConfirm = function(){
@@ -9960,6 +10087,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     sno: 'S. No',
                     _id: 'EB Id',
                     name: 'Name',
+                    groupName: 'Group Name',
                     address: 'Address',
                     city: 'City',
                     state: 'State',
@@ -10012,6 +10140,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         sno: cindex + 1,
                         _id: thisCoaching._id,
                         name: thisCoaching.name,
+                        groupName: thisCoaching.groupName,
                         address: thisCoaching.address,
                         city: thisCoaching.city,
                         state: thisCoaching.state,
@@ -10772,8 +10901,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.masterUser = false;
             
             $scope.userBlogs = userBlogs.data;
-            var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
             
+            var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
             var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
             $scope.userBlogs.forEach(function(thisBlog, index){
                 var bIndex = blogUpvotesId.indexOf(thisBlog._id);
@@ -10784,7 +10913,26 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
                 }
             });
-            //console.log($scope.userBlogs);
+            
+            
+            $scope.refreshVoteCount = function(){
+                upvoteService.allBlogsUpvotesCount().success(function (data, status, headers) {
+                    var allBlogsUpvotesCount = data;
+                    var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
+                    $scope.userBlogs.forEach(function(thisBlog, index){
+                        var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+
+                        if(bIndex == -1){
+                            thisBlog.upvotes = 0;
+                        }else{
+                            thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+                        }
+                    });
+                })
+                .error(function (data, status, header, config) {
+                    console.info();
+                });    
+            };
             
             $scope.setBlog = function(thisblog){
                 $scope.blogpost = thisblog;
@@ -10881,7 +11029,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     var blogpostId = data._id;
                     blogpostService.getUserBlogposts($stateParams.userId).success(function (data, status, headers) {
                         $scope.userBlogs = data;
-                    
+                        $scope.refreshVoteCount();
                         var url = $state.href('editblog', {blogpostId: blogpostId});
                         window.open(url,'_blank');
                     })
@@ -10932,7 +11080,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     var blogpostId = data._id;
                     blogpostService.getUserBlogposts($stateParams.userId).success(function (data, status, headers) {
                         $scope.userBlogs = data;
-                    
+                        $scope.refreshVoteCount();
                         var url = $state.href('editblog', {blogpostId: blogpostId});
                         window.open(url,'_blank');
                     })
@@ -10964,7 +11112,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $scope.removeBlogPost = function(toRemoveBlog){
                  blogpostService.removeblogpost(toRemoveBlog._id).success(function (data, status, headers) {
-                    console.log('Blogpost Removed');
+                    blogpostService.getUserBlogposts($stateParams.userId).success(function (data, status, headers) {
+                        $scope.userBlogs = data;
+                        $scope.refreshVoteCount();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error ");
@@ -11154,8 +11308,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $mdDialog.cancel();
                 },1000)
             };
+            $scope.showRemovedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#removeDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
             
-            $rootScope.pageTitle ='Search & Review Coaching Institutes';
+            $rootScope.pageTitle ='Write Blog Post at Exambazaar';
             
             $scope.fbLoginStatus = {};
             
@@ -14304,6 +14469,31 @@ function getLatLng(thisData) {
                 window.location = "http://www.exambazaar.com/error";
             }
             
+            $scope.goToRankerWall = function(rankerWall){
+                window.open(rankerWall.link,'_blank');    
+            };
+            
+            $scope.rankerWalls = [
+                {
+                    title: 'NEET 2017 Rankers Wall',
+                    subtitle: 'Check out the standouts, the makers of history... the 🏆 NEET 2017 #top100 Rankers! And their successful coaching institutes',
+                    coverPhoto: 'https://exambazaar.s3.amazonaws.com/58230ffc8814bc38104336952fcefd1f.PNG',
+                    readingTime: {
+                        text: '3 min read'
+                    },
+                    link: 'https://exambazaar.com/rankerswall/NEET%20UG/2017',
+                },
+                {
+                    title: 'JEE Advanced 2017 Rankers Wall',
+                    subtitle: 'Check out the inspirational list of Top 100 (JEE 2017)! #jee2017 #iit',
+                    coverPhoto: 'https://exambazaar.s3.amazonaws.com/506113959c79568cc8329504a61111a6.PNG',
+                    readingTime: {
+                        text: '2 min read'
+                    },
+                    link: 'https://exambazaar.com/rankerswall/NEET%20UG/2017',
+                },
+                
+            ];
             
             //console.log($scope.blogpost.blogTags);
             var defaultBlogCover = "images/background/examinfo.jpg";

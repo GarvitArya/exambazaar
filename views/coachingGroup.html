@@ -49,7 +49,25 @@
         background: #FF5A5F;
         border: 1px solid #fff;
     }
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
     
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
 </style>
 
 
@@ -91,6 +109,12 @@
         </a>
         </div>
         <div layout="row" class="width100 secondFont textBlack marginB20" ng-if="spreadsheetMode">
+            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showRenameCoachingDialog()">
+                Rename Coaching Name
+            </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showRenameGroupDialog()">
+                Rename Group Name
+            </md-button>
             <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showExamDialog()">
                 Add Exams to this Group
             </md-button>
@@ -185,7 +209,71 @@
     </div>    
 </div>
 
-
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="renameCoachingDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Rename Coaching Centre Name & Group Name of all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                        Rename Coaching Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginLR20 marginT20 blogFont">
+                Rename Coaching Name
+            </div>
+            <div layout="row" layout-align="center center" class="width100 marginLR20">
+                <div flex="40" layout="row" layout-align="start start" class="">
+                    <div>
+                        {{spreadSheetCoachings[1].name}}
+                    
+                    </div>
+                </div>
+                <div flex="40" layout="row" layout-align="start start" >
+                    <div class="width80">
+                        <input type="text" class="width100" ng-model="newName"  placeholder="{{spreadSheetCoachings[1].name}}">
+                    </div>
+                </div>
+                <div flex="20" layout="row" layout-align="start start" >
+                    <md-button class="md-black md-small font10 tolowercase" ng-click="renameCoachingConfirm()">
+                    Rename Coaching
+                </md-button>
+                </div>
+            </div> 
+          
+            
+            <div layout="row" layout-align="start center" class="width100 marginLR20 marginT40 blogFont">
+                Rename Coaching Group Name
+            </div>
+            <div layout="row" layout-align="center center" class="width100 marginLR20">
+                <div flex="40" layout="row" layout-align="start start" class="">
+                    <div>
+                        {{spreadSheetCoachings[1].groupName}}
+                    
+                    </div>
+                </div>
+                <div flex="40" layout="row" layout-align="start start" >
+                    <div class="width80">
+                        <input type="text" class="width100" ng-model="newGroupName"  placeholder="{{spreadSheetCoachings[1].name}}">
+                    </div>
+                </div>
+                <div flex="20" layout="row" layout-align="start start" >
+                    <md-button class="md-black md-small font10 tolowercase" ng-click="renameGroupNameConfirm()">
+                    Rename Group Name
+                </md-button>
+                </div>
+            </div>   
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="examDialog">
       <md-dialog class="edit-dialog whiteBackground">

@@ -231,6 +231,42 @@
                     </span>
                 </div>
                 </div>
+                
+                <div layout="row" layout-align="start center" class="width100 marginT20 font22 bold padding10">
+                    Recommended Reading
+                </div>
+                <div layout="row" layout-align="start start" layout-wrap class="blogSeparator width100">
+                    
+                <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20" ng-repeat="rankerWall in rankerWalls">
+                    <div layout="column" layout-align="center start" class="width100 boxShadow" id="rankerWall" ng-click="goToRankerWall(rankerWall)">
+                        <div layout="column" layout-align="center center" class="blogpostImage width100 rounderBorderTop" ng-style="{'background-image':'url({{rankerWall.coverPhoto}})'}">
+                        <div layout="row" layout-align="end center" id="blogPostRead" class="width100 paddingLR20 paddingB20">
+                            <div layout="row" layout-align="end center" class="padding5 darkTranslucentBackground">
+                                {{rankerWall.readingTime.text}}
+                            </div>
+                        </div>
+                        </div>
+                        <div layout="column" layout-align="start center" class="min20vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
+                            <div flex layout="column" layout-align="center center" flex class="bold wideLine2">
+                                <div class="paddingTB5 text-center">
+                                    {{rankerWall.title}}
+                                </div>
+                                <div flex class="blogFont textLightGrey font12 marginT5 text-center">
+                                    {{rankerWall.subtitle}}
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </div>     
+                </div>
+                
+                
+                
+                
+                
+                
+                
+                
             </div>
         </div>
         

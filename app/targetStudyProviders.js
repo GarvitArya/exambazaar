@@ -1023,7 +1023,8 @@ router.get('/coachingGroupQuery/:query', function(req, res) {
         console.log(query + " " + docs.length);
         res.json(docs);
     } else {throw err;}
-    }).sort( { city: 1 } ); //.limit(500) .sort( { rank: -1 } )
+    }).sort( { name: 1 } ); 
+    //.limit(500) .sort( { rank: -1 } )
 });
 
 router.get('/dailySummary', function(req, res) {
@@ -1300,6 +1301,52 @@ router.post('/addExamsToAll/', function(req, res) {
             });
             
             thisGroup.exams = thisExams;
+            thisGroup.save(function(err, thisGroup) {
+                if (err) return console.error(err);
+                console.log(thisGroup._id + " saved!");
+            });
+            
+        });
+        
+        res.json(allGroupProviders);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
+
+router.post('/renameAllCoaching/', function(req, res) {
+    var groupNameForm = req.body;
+    var instituteArray = groupNameForm.instituteArray;
+    var newName = groupNameForm.name;
+    //console.log(JSON.stringify(groupNameForm));
+    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {name:1},function(err, allGroupProviders) {
+    if (!err){
+        //console.log(allGroupProviders);
+        
+        allGroupProviders.forEach(function(thisGroup, index){
+            
+            thisGroup.name = newName;
+            thisGroup.save(function(err, thisGroup) {
+                if (err) return console.error(err);
+                console.log(thisGroup._id + " saved!");
+            });
+            
+        });
+        
+        res.json(allGroupProviders);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
+
+router.post('/renameAllGroupName/', function(req, res) {
+    var groupNameForm = req.body;
+    var instituteArray = groupNameForm.instituteArray;
+    var newGroupName = groupNameForm.groupName;
+    //console.log(JSON.stringify(groupNameForm));
+    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {groupName:1},function(err, allGroupProviders) {
+    if (!err){
+        allGroupProviders.forEach(function(thisGroup, index){
+            
+            thisGroup.groupName = newGroupName;
             thisGroup.save(function(err, thisGroup) {
                 if (err) return console.error(err);
                 console.log(thisGroup._id + " saved!");

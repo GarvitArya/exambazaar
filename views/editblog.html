@@ -136,8 +136,8 @@
 </div>
 <div flex layout="row" layout-align="center center" class="whiteBackground">
 <div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40">
-    <div layout="row" layout-align="center center" class="infoBar font14" >
-        <div>
+    <div layout="row" layout-align="center center" class="infoBar marginTB5" >
+        <div class="font14">
             <span ng-if="blogpost.active">
             Have big changes to make? Do you want to deactivate this blogpost while you edit? 
             </span>
@@ -146,13 +146,13 @@
             </span>
         </div>
         <div layout="row">
-        <md-button class="md-green2 md-small  " ng-click="enableblogpost(blogpost)" ng-if="!blogpost.active">
+        <md-button class="md-green2 md-small tolowercase" ng-click="enableblogpost(blogpost)" ng-if="!blogpost.active && user.userType == 'Master'">
             Activate
         </md-button>
-        <md-button class="md-default md-cancel md-small  " ng-click="disableblogpost(blogpost)" ng-if="blogpost.active">
+        <md-button class="md-default md-cancel md-small tolowercase" ng-click="disableblogpost(blogpost)" ng-if="blogpost.active">
             Deactivate
         </md-button>
-        <md-button class="md-danger md-small  " ng-click="previewblogpost(blogpost)">
+        <md-button class="md-danger md-small tolowercase" ng-click="previewblogpost(blogpost)">
             Preview
         </md-button>
         </div>
@@ -332,6 +332,24 @@
                 </span>
                 <span class="md-title">
                     Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="removeDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Blog Saved!
                 </span>
                 
               </div>
