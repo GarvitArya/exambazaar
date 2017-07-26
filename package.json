@@ -101,6 +101,7 @@
     "sendgrid": "^5.1.0",
     "serve-favicon": "^2.3.2",
     "sitemap-generator": "^6.0.0",
+    "tesseract.js": "^1.0.10",
     "unirest": "^0.5.1",
     "xoauth2": "^1.2.0"
   }

@@ -14629,7 +14629,7 @@ function getLatLng(thisData) {
                 if(!thisUser.basic || !thisUser.basic.name){
                     console.log(thisUser._id);
                 }
-                if(thisUser.userType == 'Student'){
+                if(thisUser.userType == 'Master'){
                     $scope.allUsers.push(thisUser);
                 }
             });

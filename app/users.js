@@ -675,7 +675,7 @@ router.post('/update', function(req, res) {
 
 //to get all users
 router.get('/', function(req, res) {
-    var start = moment().subtract(2, 'day').startOf('day');
+    var start = moment().subtract(2, 'year').startOf('day');
     var end = moment().endOf('day');
     
     user.find({_created: {  $gte : start, $lte : end}}, {userType: 1, basic: 1, mobile: 1, facebook: 1, email: 1, image: 1, fbemail: 1, fbimage: 1, _created: 1}, function(err, docs) {

@@ -36,6 +36,22 @@ app.use(favicon('./public/images/logo/favicon.ico'));
 
 var configDB = require('./config/mydatabase.js');
 
+
+
+/*var Tesseract = require('tesseract.js')
+var filename = 'pic.png'
+
+Tesseract.recognize(filename)
+    .progress(function  (p) { console.log('progress', p)  })
+    .catch(err => console.error(err))
+    .then(function (result) {
+    console.log(result.text);
+    process.exit(0);
+});*/
+
+
+
+
 //mongoose.connect(configDB.url);
 mongoose.connect(configDB.url,  { server: { socketOptions: { connectTimeoutMS: 10000 }}}, function(err) {
     if(err){
