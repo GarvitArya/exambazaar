@@ -6956,7 +6956,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             sessionuser.partner = user.partner;
                         }
                         $cookies.putObject('sessionuser', sessionuser);
-                        
+                        $scope.sessionuser = sessionuser;
                         loginReroute();
                         
                     }else{
