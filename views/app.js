@@ -14457,6 +14457,30 @@ function getLatLng(thisData) {
                   escapeToClose: false,
                 });
             };
+            
+            $scope.replaceHTML = function(){
+                
+                var nOccurences = ($scope.editHTML.match(new RegExp($scope.toreplaceText , "g")) || []).length;
+                
+                //console.log(nOccurences);
+                
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to replace the following ' + nOccurences + ' occurences ?')
+                .textContent('Replace ' + $scope.toreplaceText + ' with: ' + $scope.replacingText)
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.blogpost.content = $scope.editHTML.replace(new RegExp($scope.toreplaceText, 'g'), $scope.replacingText);
+                    console.log($scope.editHTML);
+                    
+                    $scope.showHTMLDialog();
+                }, function() {
+                  //nothing
+                });
+            };
     }]);
     
     exambazaar.controller("showblogController", 

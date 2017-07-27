@@ -580,11 +580,25 @@
                 </div>
                 
             </div>
-            <div layout="row" layout-align="start center" layout-wrap class="width90 marginB20 marginLR20 font12">
-                 <!--ui-codemirror  ui-codemirror-opts="editorOptions" id="code"-->
-                <textarea ng-model="editHTML" rows="12" class="width100">
-                    
-                </textarea>
+            <div layout="column" layout-align="start center"  class="width90 marginB20 marginLR20 font12">
+                <div layout="row" layout-align="start center"  class="width100 font12">
+                    <textarea ng-model="editHTML" rows="12" class="width100">
+
+                    </textarea>
+                </div>
+                <div layout="row" layout-align="start center"  class="marginT20 width100 font12">
+                    <div layout="row" layout-align="start center"  aria-describedby=""flex="40">
+                        <input type="text" class="font12 width100" ng-model="toreplaceText"  placeholder="What do you want to replace?" >
+                    </div>
+                    <div layout="row" layout-align="start center"  flex="40">
+                        <input type="text" class="font12 width100" ng-model="replacingText"  placeholder="What do you want to replace it with?">
+                    </div>
+                    <div layout="row" layout-align="start center"  flex="20">
+                        <md-button class="md-black md-small  tolowercase" ng-click="replaceHTML()">
+                            Replace
+                        </md-button>
+                    </div>
+                </div>
             </div>
             
           
