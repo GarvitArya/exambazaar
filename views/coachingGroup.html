@@ -110,11 +110,11 @@
         </div>
         <div layout="row" class="width100 secondFont textBlack marginB20" ng-if="spreadsheetMode">
             <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showRenameCoachingDialog()">
-                Rename Coaching Name
+                Rename Coaching/Group
             </md-button>
-            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showRenameGroupDialog()">
+            <!--<md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showRenameGroupDialog()">
                 Rename Group Name
-            </md-button>
+            </md-button>-->
             <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showExamDialog()">
                 Add Exams to this Group
             </md-button>
@@ -123,6 +123,9 @@
             </md-button>
             <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="commonExamsInAll()">
                 Common Exams in this Group
+            </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showLogoDialog()">
+                Set Logo for Group
             </md-button>
         </div>
         
@@ -328,6 +331,50 @@
     </div>    
 </div> 
 
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="logoDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Set Logo for all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                        Setting Logo Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                
+                <div layout="row" layout-align="center center" class="width100 marginLR20">
+                    <div flex="40" layout="row" layout-align="start start" class="">
+                        <div>
+                            Logo
+
+                        </div>
+                    </div>
+                    <div flex="60" layout="row" layout-align="start start" >
+                        <div class="width80">
+                            <input type="text" class="width100" ng-model="newLogo"  placeholder="{{spreadSheetCoachings[1].logo}}">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="setLogoConfirm()">
+                    Set Logo for Group
+                </md-button>
+            </div>  
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="removeExamDialog">

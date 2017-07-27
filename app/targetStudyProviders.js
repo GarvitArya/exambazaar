@@ -1313,6 +1313,29 @@ router.post('/addExamsToAll/', function(req, res) {
     }); //.limit(500) .sort( { rank: -1 } )
 });
 
+router.post('/setLogoForAll/', function(req, res) {
+    var groupLogoForm = req.body;
+    var instituteArray = groupLogoForm.instituteArray;
+    var logo = groupLogoForm.logo;
+    //console.log(JSON.stringify(groupLogoForm));
+    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {logo:1},function(err, allGroupProviders) {
+    if (!err){
+        //console.log(allGroupProviders);
+        
+        allGroupProviders.forEach(function(thisGroup, index){
+            thisGroup.logo = logo;
+            thisGroup.save(function(err, thisGroup) {
+                if (err) return console.error(err);
+                console.log(thisGroup._id + " saved!");
+            });
+            
+        });
+        
+        res.json(allGroupProviders);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
+
 router.post('/renameAllCoaching/', function(req, res) {
     var groupNameForm = req.body;
     var instituteArray = groupNameForm.instituteArray;

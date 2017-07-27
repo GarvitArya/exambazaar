@@ -561,7 +561,37 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getuserResults = function(userId) {
             return $http.get('/api/results/user/'+userId, {userId: userId});
         };
-    }]);    
+    }]);
+        
+    exambazaar.service('commentService', ['$http', function($http) {
+        this.savecomment = function(commentForm) {
+            return $http.post('/api/comments/save', commentForm);
+        };
+        this.commentsCount = function() {
+            return $http.get('/api/comments/commentsCount');
+        };
+        this.getcomment = function(commentId) {
+            return $http.get('/api/comments/edit/'+commentId, {commentId: commentId});
+        };
+        this.removecomment = function(commentId){
+            $http.get('/api/comments/remove/'+commentId, {commentId: commentId});
+        };
+        this.disablecomment = function(commentId) {
+            return $http.get('/api/comments/disable/'+commentId, {commentId: commentId});
+        };
+        this.enablecomment = function(commentId) {
+            return $http.get('/api/comments/enable/'+commentId, {commentId: commentId});
+        };
+        this.getcomments = function() {
+            return $http.get('/api/comments/');
+        };
+        this.blogpostComments = function(blogpostId) {
+            return $http.get('/api/comments/blogpostComments/'+blogpostId, {blogpostId: blogpostId});
+        };
+        this.userBlogpostcomment = function(commentForm) {
+            return $http.post('/api/comments/userBlogpostcomment', commentForm);
+        };
+    }]);
         
     exambazaar.service('blogTagService', ['$http', function($http) {
         this.saveblogTag = function(blogTagForm) {
@@ -1002,6 +1032,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.addExamsToAll = function(groupExamForm) {
             return $http.post('/api/targetStudyProviders/addExamsToAll',groupExamForm);
         };
+        this.setLogoForAll = function(groupLogoForm) {
+            return $http.post('/api/targetStudyProviders/setLogoForAll',groupLogoForm);
+        };
+        
         this.renameAllCoaching = function(groupNameForm) {
             return $http.post('/api/targetStudyProviders/renameAllCoaching',groupNameForm);
         };
@@ -6813,9 +6847,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
                         $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
                         
-                        
-                        
                         $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+                        console.log($scope.userPosition);
                     }
                  });
             }
@@ -6851,7 +6884,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
            $scope.showLoginForm();
         });
 
-        
+        $rootScope.$on("CallBlogLogin", function(){
+           $scope.showLoginForm();
+        });
             
         if($cookies.getObject('sessionuser')){
             $scope.sessionuser = $cookies.getObject('sessionuser');
@@ -6880,7 +6915,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     var ip = $cookies.getObject('ip');
                     loginForm.ip = ip;
                 }
-                console.info(JSON.stringify(loginForm));
+                
                 UserService.markLogin(loginForm).success(function (data, status, headers) {
                     console.info('Login marked');
                 })
@@ -6912,43 +6947,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             sessionuser.partner = user.partner;
                         }
                         $cookies.putObject('sessionuser', sessionuser);
-                        if(sessionuser.userType =='Partner'){
                         
-                        /*UserService.getPartner(fulluser._id).success(function (data, status, headers) {
-                            $scope.partnerList = data;
-                            console.info('Partners Loaded');
-                        })
-                        .error(function (data, status, header, config) {
-                            console.log('Error ' + JSON.stringify(data));
-                        });*/
-                            //console.info(JSON.stringify(sessionuser));
-                        }
-                        if($state.current.name == 'landing'){
-                            if(sessionuser.userType =='Master'){
-                                
-                                $state.go('master-dashboard', {masterId: sessionuser.masterId});
-                                
-                                
-                            }
-                            if(sessionuser.userType =='Intern - Business Development'){
-                                 $state.go('assigned', {userId: sessionuser.userId});
-                            }
-                            if(sessionuser.userType =='Student'){
-                                $state.reload();
-                            }
-                            if(sessionuser.userType =='Partner'){
-                                $state.go('partner-dashboard', {userId: sessionuser.userId});
-                            }
-                        }else{
-                            if(sessionuser.userType =='Partner'){
-                                $state.go('partner-dashboard', {userId: sessionuser.userId});
-                            }else{
-                                //alert('Hi');
-                                window.location.reload(true);
-                            }
-                            
-                        }
-                        
+                        loginReroute();
                         
                     }else{
                         
@@ -6995,23 +6995,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
            
             $facebook.login().then(function(response) {
                 $scope.fbLoginStatus = response;
-                console.log("Login Status is: " + $scope.fbLoginStatus);
+                //console.log("Login Status is: " + JSON.stringify($scope.fbLoginStatus));
                 refresh();
             });
-            /*$facebook.getLoginStatus().then(function(response) {
-                $scope.fbLoginStatus = response;
-                console.log("Login Status is: " + $scope.fbLoginStatus);
-                
-                if($scope.sessionuser && $scope.sessionuser.userId){
-                    $scope.loggedIn = true; 
-                    refresh();
-                }else{
-                    $scope.loggedIn = false;
-                }
-
-                //console.log('Loggin into fb');
-                
-            });*/
             
         };
             
@@ -7033,7 +7019,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     };
 
                     if(!$scope.sessionuser.facebookId){
-                    console.log("Calls being made to add user");
+                    //console.log("Calls being made to add user");
                     $scope.sessionuser.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
                     UserService.fbSave($scope.sessionuser).success(function (data, status, headers) {
                         $mdDialog.hide();
@@ -7053,33 +7039,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         //console.log('I am here');
                         $cookies.putObject('sessionuser', sessionuser);
                         $scope.sessionuser = sessionuser;
-                        $mdDialog.hide();
-                        console.log(sessionuser.userType);
                         
-                        
-                        
-                        if($state.current.name == 'landing'){
-                            if(sessionuser.userType =='Master'){
-                                
-                                $state.go('master-dashboard', {masterId: sessionuser.userId});
-                                
-                                
-                            }
-                            if(sessionuser.userType =='Intern - Business Development'){
-                                 $state.go('assigned', {userId: sessionuser.userId});
-                            }
-                            if(sessionuser.userType =='Student'){
-                                $state.reload();
-                            }
-                            if(sessionuser.userType =='Partner'){
-                                $state.go('partner-dashboard', {userId: sessionuser.userId});
-                            }
-                        }else{
-                            window.location.reload(true);
-                        }
-
-
-                        //$state.reload();
+                        loginReroute();
                     })
                     .error(function (data, status, header, config) {
                         console.info("Error ");
@@ -7087,7 +7048,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }
 
                 }else{
-                    
                     $scope.sessionuser = {};
                     $scope.sessionuser.fbuser = {
                         name: response.name,
@@ -7121,30 +7081,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $cookies.putObject('sessionuser', sessionuser);
                         $scope.sessionuser = sessionuser;
                         
-                        $mdDialog.hide();
+                        loginReroute();
                         
-                        if($state.current.name == 'landing'){
-                            if(sessionuser.userType =='Master'){
-                                
-                                $state.go('master-dashboard', {masterId: sessionuser.userId});
-                                
-                                
-                            }
-                            if(sessionuser.userType =='Intern - Business Development'){
-                                 $state.go('assigned', {userId: sessionuser.userId});
-                            }
-                            if(sessionuser.userType =='Student'){
-                                $state.reload();
-                            }
-                            if(sessionuser.userType =='Partner'){
-                                $state.go('partner-dashboard', {userId: sessionuser.userId});
-                            }
-                        }else{
-                            $state.reload();
-                        }
-
-
-                        //$state.reload();
                     })
                     .error(function (data, status, header, config) {
                         console.info("Error ");
@@ -7166,18 +7104,32 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.welcomeMsg = "Permissions Error";
             });
                 
-            };
-
-            /*$scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
+        };
             
-            if(newValue[0] == 'connected' && newValue[1]){
-                $scope.fbUser = true;
-                
-                if(!$scope.user.facebookId){
-                    
-                }  
+        function loginReroute(){
+            $mdDialog.hide();
+            $rootScope.$emit("userset", {});
+            console.log('Rerouting to state');
+            if($state.current.name == 'landing'){
+                if($scope.sessionuser.userType =='Master'){
+
+                    //$state.go('master-dashboard', {masterId: $scope.sessionuser.userId});
+                    $state.go('charting');
+                }
+                if($scope.sessionuser.userType =='Intern - Business Development'){
+                     $state.go('assigned', {userId: $scope.sessionuser.userId});
+                }
+                if($scope.sessionuser.userType =='Student'){
+                    console.log('student logged in');
+                    //$state.reload();
+                }
+                if($scope.sessionuser.userType =='Partner'){
+                    $state.go('partner-dashboard', {userId: $scope.sessionuser.userId});
+                }
+            }else{
+                //$state.reload();
             }
-            }, true);  */  
+        };
             
         $scope.signup = {
             name: '',
@@ -9809,6 +9761,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                   clickOutsideToClose: true
                 });
             };
+            $scope.showLogoDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#logoDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
             $scope.markExamsDone = function(){
                 $mdDialog.hide();
             };
@@ -9971,6 +9931,34 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.showExamDialog();
                 }); 
             };
+            
+            $scope.setLogoConfirm = function(){
+                var instituteLength = $scope.spreadSheetCoachings.length;
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    instituteLength = allInstitutes.length - 1;
+                }
+                
+                var groupName = '';
+                if($scope.spreadSheetCoachings.length > 1){
+                    groupName = $scope.spreadSheetCoachings[1].name;
+                }
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to set logo for these ' + instituteLength + ' coaching centers of ' +  groupName + '?')
+                .textContent('You will not be able to revert it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.setLogoForAll();
+                }, function() {
+                  //nothing
+                    $scope.showLogoDialog();
+                }); 
+            };
+            
             $scope.addExamsToAll = function(){
                 var allInstitutes = $scope.spreadSheetCoachings;
                 if(allInstitutes[0]._id == 'EB Id'){
@@ -9984,6 +9972,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 };
                 
                 targetStudyProviderService.addExamsToAll(groupExamForm).success(function (data, status, headers) {
+                    console.log('Done');
+                    $scope.showSavedDialog();
+                    //$scope.showSavedDialog();
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });       
+            };
+            
+            $scope.setLogoForAll = function(){
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    allInstitutes.splice(0,1);
+                }
+                
+                var instituteArray =  allInstitutes.map(function(a) {return a._id;});
+                var groupLogoForm = {
+                    instituteArray: instituteArray,
+                    logo: $scope.newLogo
+                };
+                
+                targetStudyProviderService.setLogoForAll(groupLogoForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -12190,6 +12201,10 @@ function getLatLng(thisData) {
                 });
                 
             };
+            
+            $scope.subscribersList.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );  
+            
+            
             $scope.selectedUser = [];
             
             $scope.setUser = function(subscriber){
@@ -12208,7 +12223,7 @@ function getLatLng(thisData) {
                     var subscriberUserIds = $scope.subscribersList.map(function(a) {return a._id;});
                     var selectedIndex = subscriberUserIds.indexOf(subscriber._id);
                     //console.log(selectedIndex);
-                    var totalInvite = 1;
+                    var totalInvite = 200;
                     var totalSubscribers = $scope.subscribersList.length;
                     totalInvite = Math.min(selectedIndex + totalInvite, totalSubscribers);
                     //console.log(totalInvite);
@@ -12865,7 +12880,7 @@ function getLatLng(thisData) {
             $scope.elgVerified = true;    
             $scope.validEligibilities = [];    
             $scope.uniqueValidEligibilities = [];
-            var checkExamIds = ['58cedb079eef5e0011c17e91'];
+            var checkExamIds = ['58ad20045401f52440af6f24'];
             $scope.eligibilityList.forEach(function(thisEligibility, index){
                 
             var checkCategory = thisEligibility.category.applicable;
@@ -13069,6 +13084,8 @@ function getLatLng(thisData) {
             var examName = thisEligibility.exam.displayname;
             thisEligibility.examName = examName;
         });
+            
+        $scope.newEligibility.sort(function(a,b) {return (a.examName > b.examName) ? 1 : ((b.examName > a.examName) ? -1 : 0);} );    
             
         $scope.exams.forEach(function(thisExam, eIndex){
             $scope.examNames += thisExam.displayname+',';
@@ -14443,12 +14460,21 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("showblogController", 
-        [ '$scope','$http','$state', '$stateParams','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', 'viewService','$cookies', 'upvoteService', 'upvoteCount', function($scope,$http, $state, $stateParams, blogpostService, thisblog, $rootScope, Socialshare, $location, viewService,$cookies, upvoteService, upvoteCount){
+        [ '$scope','$http','$state', '$stateParams','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', 'viewService','$cookies', 'upvoteService', 'upvoteCount', 'commentService', 'thisblogComments', function($scope,$http, $state, $stateParams, blogpostService, thisblog, $rootScope, Socialshare, $location, viewService,$cookies, upvoteService, upvoteCount, commentService, thisblogComments){
             $scope.blogpost = thisblog.data;
+            $scope.blogComments = thisblogComments.data;
             $scope.blogpost.upvotes = upvoteCount.data;
+            
             
             $scope.addedUpvoteIds = [];
             $scope.userUpvotes = [];
+            
+            $scope.newComment = {
+                blogpost: $scope.blogpost._id,
+                comment: '',
+            };
+            $scope.commentPlaceholder = 'Type in your comment here';
+            
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
                 upvoteService.blogpostUserUpvotes($scope.user._id).success(function (data, status, headers) {
@@ -14457,10 +14483,40 @@ function getLatLng(thisData) {
                 .error(function (data, status, header, config) {
                     console.info();
                 });
+                if($scope.user){
+                    $scope.newComment.user = $scope.user
+                }
+                
+               var commentForm = {
+                   user: $scope.user._id,
+                   blogpost: $scope.blogpost._id,
+               };
+                commentService.userBlogpostcomment(commentForm).success(function (data, status, headers) {
+                    $scope.thisUserComment = data;
+                    if(!$scope.thisUserComment){
+                        $scope.thisUserComment = $scope.newComment;
+                    }
+                    //console.log($scope.thisUserComment);
+                })
+                .error(function (data, status, header, config) {
+                    console.info();
+                });
+                
                 
             }else{
-                
+                if(!$scope.thisUserComment){
+                    $scope.thisUserComment = $scope.newComment;
+                }
+                $scope.thisUserComment.user = {
+                    basic: {
+                        name: 'New User'
+                    },
+                    image: 'images/user.png',
+                }
             }
+            
+            
+            
             
             if(!$scope.blogpost){
                 window.location = "http://www.exambazaar.com/error";
@@ -14617,6 +14673,70 @@ function getLatLng(thisData) {
             $scope.backToBlog = function(){
                 $state.go('blog');    
             };
+            
+            $rootScope.$on("userset", function(){
+                if($cookies.getObject('sessionuser')){
+                    $scope.user = $cookies.getObject('sessionuser');
+                    upvoteService.blogpostUserUpvotes($scope.user._id).success(function (data, status, headers) {
+                        $scope.userUpvotes = data;
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info();
+                    });
+                    if($scope.user){
+                        $scope.newComment.user = $scope.user
+                    }
+
+                   var commentForm = {
+                       user: $scope.user._id,
+                       blogpost: $scope.blogpost._id,
+                   };
+                    commentService.userBlogpostcomment(commentForm).success(function (data, status, headers) {
+                        $scope.thisUserComment = data;
+                        if(!$scope.thisUserComment){
+                            $scope.thisUserComment = $scope.newComment;
+                        }
+                        //console.log($scope.thisUserComment);
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info();
+                    });
+                    
+                    console.log($scope.user);
+                    $scope.submitComment();
+                }
+                
+            });
+            $scope.submitComment = function(){
+                
+                var commentForm = $scope.thisUserComment;
+                commentForm.user = null;
+                if($scope.user && $scope.user._id){
+                    commentForm.user = $scope.user._id;
+                }
+                if(!commentForm.user){
+                    console.log('User not set');
+                    $rootScope.$emit("CallBlogLogin", {});
+                    
+                    
+                }else{
+                    commentService.savecomment(commentForm).success(function (savedata, status, headers) { 
+                        $scope.thisUserComment = savedata;
+                        console.log($scope.thisUserComment);
+                    
+                        commentService.blogpostComments($stateParams.blogpostSlug).success(function (data, status, headers) {
+                            $scope.blogComments = data;
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info('Error');
+                        });
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error');
+                    });
+                }
+            };
+            
     }]);
         
     exambazaar.controller("userMarketingController", 
@@ -14629,7 +14749,7 @@ function getLatLng(thisData) {
                 if(!thisUser.basic || !thisUser.basic.name){
                     console.log(thisUser._id);
                 }
-                if(thisUser.userType == 'Master'){
+                if(thisUser.userType == 'Student'){
                     $scope.allUsers.push(thisUser);
                 }
             });
@@ -14756,7 +14876,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header2.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'landing.html',
@@ -14778,7 +14898,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'login.html',
@@ -14794,7 +14914,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header2.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'stream.html',
@@ -14817,7 +14937,7 @@ function getLatLng(thisData) {
                 views: {
                     'header':{
                         templateUrl: 'header.html',
-                        controller: 'headerController'
+                        
                     },
                     'body':{
                         templateUrl: 'signup.html',
@@ -14833,7 +14953,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header2.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'category.html',
@@ -14856,7 +14976,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header2.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'city.html',
@@ -14885,7 +15005,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header1.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'coaching.html',
@@ -14928,7 +15048,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header1.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'showCoaching.html',
@@ -14960,7 +15080,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header1.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'showGroup.html',
@@ -15016,7 +15136,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header1.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'oldclaim.html',
@@ -15040,7 +15160,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header1.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'claim.html',
@@ -15089,7 +15209,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header1.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'offers.html',
@@ -15126,7 +15246,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header1.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'verifyClaim.html',
@@ -15151,7 +15271,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'socialLogin.html',
@@ -15171,7 +15291,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'contacts.html',
@@ -15195,7 +15315,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'charting.html',
@@ -15240,7 +15360,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'postBlog.html',
@@ -15273,7 +15393,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'allOffers.html',
@@ -15297,7 +15417,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'allreviews.html',
@@ -15322,7 +15442,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'rankerswall.html',
@@ -15350,7 +15470,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'search.html',
@@ -15374,7 +15494,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'suggestCoaching.html',
@@ -15403,7 +15523,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'coachingGroup.html',
@@ -15435,7 +15555,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'review.html',
@@ -15467,7 +15587,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'reviewed.html',
@@ -15500,7 +15620,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'blog.html',
@@ -15528,7 +15648,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'showblog.html',
@@ -15543,6 +15663,10 @@ function getLatLng(thisData) {
                     function(blogpostService,$stateParams){
                     return blogpostService.getblogpostFromSlug($stateParams.blogpostSlug);
                 }],
+                thisblogComments: ['commentService', '$stateParams',
+                    function(commentService,$stateParams){
+                    return commentService.blogpostComments($stateParams.blogpostSlug);
+                }],
                 upvoteCount: ['upvoteService','$stateParams',
                     function(upvoteService,$stateParams) {
                     return upvoteService.blogpostUpvoteCount($stateParams.blogpostSlug);
@@ -15556,7 +15680,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'editblog.html',
@@ -15592,7 +15716,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'availOffer.html',
@@ -15628,7 +15752,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'thankyou.html',
@@ -15644,11 +15768,10 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'error.html',
-                    controller: 'headerController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -15660,7 +15783,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'reviewCenter.html',
@@ -15688,7 +15811,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'sandbox2.html',
@@ -15720,7 +15843,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'eligibility.html',
@@ -15752,11 +15875,11 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'privacyPolicy.html',
-                    controller: 'headerController'
+                    
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -15768,7 +15891,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header2.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'landing.html',
@@ -15784,11 +15907,11 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'aboutus.html',
-                    controller: 'headerController'
+                    
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -15800,7 +15923,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'calendar.html',
@@ -15816,7 +15939,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'bulkaddStudents.html',
@@ -15840,7 +15963,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'bulkAddTeachers.html',
@@ -15864,7 +15987,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'bulkAddBatches.html',
@@ -15889,7 +16012,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'instituteCalendar.html',
@@ -15913,7 +16036,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'batchCalendar.html',
@@ -15938,7 +16061,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'admin.html',
@@ -15962,7 +16085,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'sendEmail.html',
@@ -15990,7 +16113,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'userMarketing.html',
@@ -16018,7 +16141,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'master.html',
@@ -16042,7 +16165,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'getCoaching.html',
@@ -16071,7 +16194,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'internship.html',
@@ -16087,7 +16210,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'account.html',
@@ -16103,7 +16226,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'editTargetStudyCoaching.html',
@@ -16131,7 +16254,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'providersWithAreas.html',
@@ -16156,7 +16279,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'getTargetStudyCoaching.html',
@@ -16200,7 +16323,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'analytics.html',
@@ -16224,7 +16347,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'institutes.html',
@@ -16248,7 +16371,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'master-dashboard.html',
@@ -16330,7 +16453,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'master-tofill.html',
@@ -16360,7 +16483,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header1.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'partner-dashboard.html',
@@ -16385,7 +16508,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'manageBatchStudents.html',
@@ -16401,7 +16524,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'manageInstituteStudents.html',
@@ -16417,7 +16540,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addGlobalSubject.html',
@@ -16440,7 +16563,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'invalidusers.html',
@@ -16463,7 +16586,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addGlobalFeeItem.html',
@@ -16486,7 +16609,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'mergeUsers.html',
@@ -16505,7 +16628,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'invalidParents.html',
@@ -16524,7 +16647,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'invalidTeachers.html',
@@ -16543,7 +16666,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'institute.html',
@@ -16568,7 +16691,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'institute-batches.html',
@@ -16593,7 +16716,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'institute-teachers.html',
@@ -16618,7 +16741,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'institute-students.html',
@@ -16651,7 +16774,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'student.html',
@@ -16683,7 +16806,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'student-attendance.html',
@@ -16710,7 +16833,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'student-class.html',
@@ -16733,7 +16856,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'shortlisted.html',
@@ -16761,7 +16884,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'viewed.html',
@@ -16790,7 +16913,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'filled.html',
@@ -16818,7 +16941,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'assigned.html',
@@ -16847,7 +16970,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'assignedToVerify.html',
@@ -16876,7 +16999,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'assignedToRate.html',
@@ -16905,7 +17028,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'assignedToAddContactInfo.html',
@@ -16934,7 +17057,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'filled.html',
@@ -16963,7 +17086,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'group.html',
@@ -16986,7 +17109,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'profile.html',
@@ -17009,7 +17132,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'userInfo.html',
@@ -17032,7 +17155,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'checkLogo.html',
@@ -17060,7 +17183,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'student-subjects.html',
@@ -17085,7 +17208,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addTeacher.html',
@@ -17113,7 +17236,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addAdmin.html',
@@ -17136,7 +17259,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addStream.html',
@@ -17159,7 +17282,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addOffer.html',
@@ -17182,7 +17305,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addLocation.html',
@@ -17209,7 +17332,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addMediaTag.html',
@@ -17236,7 +17359,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addGroup.html',
@@ -17259,7 +17382,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addSendGrid.html',
@@ -17282,7 +17405,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addAwsCredential.html',
@@ -17305,7 +17428,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addSubscriber.html',
@@ -17328,7 +17451,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addExam.html',
@@ -17355,7 +17478,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addEligibility.html',
@@ -17386,7 +17509,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addMaster.html',
@@ -17404,7 +17527,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addBlogger.html',
@@ -17422,7 +17545,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addInstitute.html',
@@ -17454,7 +17577,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'bulkDisable.html',
@@ -17478,7 +17601,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addIntern.html',
@@ -17496,7 +17619,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'generateSitemap.html',
@@ -17514,7 +17637,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addStudent.html',
@@ -17538,7 +17661,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addTransportVehicle.html',
@@ -17561,7 +17684,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'addBatch.html',
@@ -17589,7 +17712,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'feeStructure.html',
@@ -17620,7 +17743,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'verify.html',
@@ -17663,7 +17786,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'subject.html',
@@ -17687,7 +17810,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'eval.html',
@@ -17710,7 +17833,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'exam.html',
@@ -17740,7 +17863,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'batch.html',
@@ -17769,7 +17892,7 @@ function getLatLng(thisData) {
             views: {
                 'header':{
                     templateUrl: 'header.html',
-                    controller: 'headerController'
+                    
                 },
                 'body':{
                     templateUrl: 'batch-attendance.html',

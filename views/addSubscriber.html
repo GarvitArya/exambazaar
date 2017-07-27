@@ -23,12 +23,15 @@
         color: #20C39A;
         text-decoration: none;
     }
+    .sendingTag{
+        background: green;
+    }
 </style>
 <div class="container">
     <div id="spacer">
     </div>
     <div layout="row" layout-wrap>
-        <div ng-repeat="subscriber in subscribersList" class="paddingR5 font8 narrowLine badge unselectedTag" ng-class="{selectedTag: subscriber.emailSent.length > 0 || subscriber.smsSent.length > 0 || selectedBackground(subscriber)}" ng-click="setUser(subscriber)">
+        <div ng-repeat="subscriber in subscribersList " class="paddingR5 font8 narrowLine badge unselectedTag" ng-class="{selectedTag: subscriber.emailSent.length > 0 || subscriber.smsSent.length > 0, sendingTag: selectedBackground(subscriber)}" ng-click="setUser(subscriber)">
             {{subscriber.name}}<i ng-if="subscriber.emailSent.length > 0 || subscriber.smsSent.length > 0" class="fa fa-check-circle" aria-hidden="true"></i>
         </div>
     </div>
@@ -83,9 +86,11 @@
     <div>
         {{selectedUser}}    
     </div>
-    <md-button class="md-small md-danger" ng-click="sendReviewInvite()">Invite {{selectedUser.name}}</md-button>
-    </div>
     
+    </div>
+    <div class="rightMidButton">
+        <md-button class="md-small md-danger" ng-click="sendReviewInvite()">Invite {{selectedUser.length}} Subscribers</md-button>
+    </div>
 </div>
 <div>
 </div>

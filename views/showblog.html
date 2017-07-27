@@ -66,6 +66,26 @@
         margin-top: 0px;
         margin-bottom: 0px;
     }
+    
+    textarea{
+        width:100%;
+        padding-top: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 10px;
+        color: #333333;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 10px;
+    }
+    textarea:hover {
+        border: 1px solid #20C39A;
+    }
+    textarea:focus {
+        border: 1px solid #20C39A;
+    }
 </style>
 
 <div id="spacerXS" class="whiteBackground">
@@ -260,8 +280,73 @@
                 </div>     
                 </div>
                 
-                
-                
+                <div layout="column" layout-align="start start" class="width100">
+                    <div layout="row" layout-align="start center" class="width100 marginT20 font22 bold padding10">
+                        Comments <span ng-if="blogComments.length> 0">&nbsp;&nbsp;[{{blogComments.length}}]</span>
+                    </div>
+                    <div layout="column" layout-align="start start" class="width100 blogSeparator" ng-repeat="comment in blogComments">
+                        <div layout="column" layout-align="start start">
+                            <div layout="row" layout-align="start center">
+                                <div ng-if="comment.user.image">
+                                <img ng-src="{{comment.user.image}}" id="userPicSmall" class="img-circle"/>
+                                </div>
+                                <div class="font16 marginL10">
+                                    {{comment.user.basic.name}}
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="font14 marginT10 marginL40">
+                                {{comment.comment}}
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        <div layout="column" layout-align="start start" class="marginL40 marginT20 width100" ng-if="comment.user._id == user._id">
+                            <div layout="row" layout-align="start center" class="font14 danger">
+                                Edit your comment
+                            </div>
+                            <div layout="row" layout-align="start end" class=" width100">
+                                <div flex="80">
+                                    <textarea class="font12 width100" ng-model="thisUserComment.comment" placeholder="{{commentPlaceholder}}" rows="3" id="userText"></textarea>
+                                </div>
+                                <div flex="20" layout="row" layout-align="start end">
+                                    <md-button class="md-black md-small tolowercase" ng-click="submitComment()">
+                                        <span ng-if="!thisUserComment._id">Submit</span>
+                                        <span ng-if="thisUserComment._id">Update</span>
+                                    </md-button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        
+                    </div>
+                    
+                    <div layout="column" layout-align="start start" class="blogSeparator width100 marginT20" ng-if="!thisUserComment._id">
+                        <div layout="row" layout-align="start center">
+                            <div ng-if="thisUserComment.user.image">
+                            <img ng-src="{{thisUserComment.user.image}}" id="userPicSmall" class="img-circle"/>
+                            </div>
+                            <div class="font16 marginL10">
+                                {{thisUserComment.user.basic.name}}
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start end" class="marginL40 width100">
+                            <div flex="80">
+                                <textarea class="font12 width100" ng-model="thisUserComment.comment" placeholder="{{commentPlaceholder}}" rows="3" id="userText"></textarea>
+                            </div>
+                            <div flex="20" layout="row" layout-align="start end">
+                                <md-button class="md-black md-small tolowercase" ng-click="submitComment()">
+                                    <span ng-if="!thisUserComment._id">Submit</span>
+                                    <span ng-if="thisUserComment._id">Update</span>
+                                </md-button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    
+                </div>
                 
                 
                 
