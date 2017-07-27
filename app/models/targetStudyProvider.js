@@ -25,6 +25,12 @@ var targetStudyProviderSchema = mongoose.Schema({
         lat: String,
         lng: String
     },
+    
+    loc: {
+        type: { type: String },
+        coordinates: []
+    },
+    //should be longitude, then latitude
     latlngna: Boolean,
     area: String,
     location: { type: Schema.ObjectId, ref: 'location' },
@@ -179,8 +185,10 @@ var targetStudyProviderSchema = mongoose.Schema({
     
 });
 
+targetStudyProviderSchema.index({ loc: '2dsphere'});
 
 targetStudyProviderSchema.plugin(deepPopulate);
 var targetStudyProvider = mongoose.model('targetStudyProvider', targetStudyProviderSchema);
+
 
 module.exports = targetStudyProvider;

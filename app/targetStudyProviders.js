@@ -908,6 +908,92 @@ router.post('/bulkSaveLatLng', function(req, res) {
     
 });
 
+
+
+router.post('/aroundme', function(req, res) {
+    var kmsToRadian = function(kms){
+        var earthRadiusInKms = 6371;
+        return kms / earthRadiusInKms;
+    };
+    
+    var queryForm = req.body;
+    
+    var thisLng = Number(queryForm.latlng.lng);
+    var thisLat = Number(queryForm.latlng.lat);
+    var kms = Number(queryForm.distanceinKm);
+    
+    var coordinates = [thisLng, thisLat];
+    
+    var query = {
+        "loc" : {
+            $geoWithin : {
+                $centerSphere : [coordinates, kmsToRadian(kms)]
+            }
+        }
+    };
+    
+    /*var query = {
+        "loc" :
+           { $near :
+              {
+                $geometry : {
+                   type : "Point" ,
+                   coordinates : coordinates },
+                $maxDistance : 1
+              }
+           }  
+    };*/
+    
+    var allProviders = targetStudyProvider.find( query, {name:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1},function(err, allProviders) {
+    if (!err){
+        var nLength = allProviders.length;
+        var counter = 0;
+        console.log(nLength);
+        console.log(JSON.stringify(allProviders));
+        res.json(allProviders);
+        
+    } else {throw err;}
+    });
+    
+    
+});
+
+
+router.post('/setLocOfAll', function(req, res) {
+    console.log('service starting');
+    var allProviders = targetStudyProvider.find( { latlng: {$exists: true}, loc: {$exists: false}, type: 'Coaching'}, {latlng:1, loc: 1},function(err, allProviders) {
+    if (!err){
+        var nLength = allProviders.length;
+        var counter = 0;
+        console.log(nLength);
+        allProviders.forEach(function(thisprovider, index){
+            var thisLatLng = thisprovider.latlng;
+            var thisLng = Number(thisLatLng.lng);
+            var thisLat = Number(thisLatLng.lat);
+            
+            thisprovider.loc = {
+                type : 'Point',
+                coordinates : [thisLng, thisLat]
+            };
+            thisprovider.save(function(err, thisprovider) {
+                if (err) return console.error(err);
+                console.log("Loc saved for " + thisprovider._id);
+                counter += 1;
+                if(counter == nLength){
+                    res.json('Done');    
+                }
+            });
+        });
+        
+        if(nLength == 0){
+            res.json('Done');    
+        }
+        
+    } else {throw err;}
+    });//.limit(1000);
+    
+});
+
 router.post('/bulkCheckLogos', function(req, res) {
     var checkLogoForm = req.body;
     console.log(checkLogoForm);

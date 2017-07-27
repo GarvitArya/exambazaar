@@ -1060,8 +1060,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.cityGroupExamQueryForm = function(cityGroupExamQueryForm) {
             return $http.post('/api/targetStudyProviders/cityGroupExamQuery',cityGroupExamQueryForm);
         };
+        this.aroundme = function(queryForm) {
+            return $http.post('/api/targetStudyProviders/aroundme',queryForm);
+        };
         this.bulkSaveLatLng = function(LatLngForm) {
             return $http.post('/api/targetStudyProviders/bulkSaveLatLng',LatLngForm);
+        };
+        this.setLocOfAll = function() {
+            return $http.post('/api/targetStudyProviders/setLocofAll');
         };
         this.checkLogo = function(pageNumber) {
             return $http.get('/api/targetStudyProviders/checkLogo/'+pageNumber, {pageNumber: pageNumber});
@@ -1497,6 +1503,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 console.log($scope.userlatlng);
                 
                 $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+                $cookies.putObject('userlocation', $scope.userlocation);
+                $cookies.putObject('userPosition', $scope.userPosition);
             }
             
         }else{
@@ -6848,7 +6856,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
                         
                         $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
-                        console.log($scope.userPosition);
+                        $cookies.putObject('userPosition', $scope.userPosition);
+                        
                     }
                  });
             }
@@ -10485,7 +10494,72 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             
     }]);
-        
+      
+    exambazaar.controller("aroundmeController", 
+        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap){
+            
+            $rootScope.pageTitle ='Coaching Centers around you!';
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+            }else{
+                $scope.user = null;
+            }
+            if($cookies.getObject('userPosition')){
+                $scope.userPosition = $cookies.getObject('userPosition');
+                var res = $scope.userPosition.split(",");
+                res.forEach(function(thisVal, vindex){
+                    thisVal = thisVal.trim();
+                });
+                $scope.currLocation = [res[0], res[1]];
+                //$scope.currLocation = [28.544976, 77.192628];
+                
+                
+            }
+            
+            $scope.setLocofAll = function(){
+                targetStudyProviderService.setLocOfAll().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });   
+            };
+            
+            
+            $scope.showProvider = function(event, provider){
+                $scope.activeProvider = provider;
+                if(!provider.logo || provider.logo == ''){
+                    $scope.activeProvider.logo = '';
+                }
+                
+            };
+            $scope.searchDistance = 5;
+            $scope.aroundme = function(){
+                
+                var queryForm = {
+                    latlng: {
+                        lat: $scope.currLocation[0],
+                        lng: $scope.currLocation[1],
+                    },
+                    distanceinKm: $scope.searchDistance,
+                };
+                
+                
+                targetStudyProviderService.aroundme(queryForm).success(function (data, status, headers) {
+                    $scope.providers = data;
+                
+                    $scope.providers.forEach(function(thisProvider, index){
+                        thisProvider.mapLatLng = [thisProvider.loc.coordinates[1], thisProvider.loc.coordinates[0]]
+                    });
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });
+            };
+            
+    }]); 
+    
     exambazaar.controller("chartingController", 
         [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'viewSummary', 'viewHourlyHeatmap', 'userSummary', 'userHourlyHeatmap', 'providerSummary', 'reviewSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, viewSummary, viewHourlyHeatmap, userSummary, userHourlyHeatmap, providerSummary, reviewSummary){
             
@@ -15378,7 +15452,22 @@ function getLatLng(thisData) {
                 
             }
         })
-    
+        .state('aroundme', {
+            url: '/aroundme', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'aroundme.html',
+                    controller: 'aroundmeController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
         .state('postBlog', {
             url: '/:userId/postBlog', //masterId?
             views: {
