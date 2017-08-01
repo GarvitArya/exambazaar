@@ -10496,7 +10496,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
       
     exambazaar.controller("aroundmeController", 
-        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap){
+        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList){
+            $scope.allExams = examList.data;
+            $scope.allStreams = streamList.data;
+            
             
             $rootScope.pageTitle ='Coaching Centers around you!';
             if($cookies.getObject('sessionuser')){
@@ -10533,8 +10536,43 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
                 
             };
-            $scope.searchDistance = 5;
+            
+            
+            $scope.onDragEnd = function (marker, $event) {
+                var lat = marker.latLng.lat();
+                var lng = marker.latLng.lng();
+                $scope.currLocation = [lat, lng];
+                //console.log($scope.currLocation);
+                /*var geocoder = new $event.google.maps.Geocoder();
+                geocoder.geocode({
+                    'latLng': new $event.google.maps.LatLng(lat, lng)
+                }, function (results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            // @url: https://developers.google.com/maps/documentation/javascript/geocoding#ReverseGeocoding
+                            // We return the second result, which is less specific than the first
+                            //  (in this case, a neighborhood name)
+                            var formatted_address = results[0].formatted_address;
+                            $timeout(function () {
+                                $scope.address = formatted_address;
+                            }, 300);
+                        } else {
+                            alert('No results found');
+                        }
+                    } else {
+                        alert('Geocoder failed due to: ' + status);
+                    }
+                });*/
+            };
+            $scope.getCurrentlocation = function(e) {
+                $scope.currLocation = [e.latLng.lat(), e.latLng.lng()];
+                
+            };
+            
+            $scope.searchDistance = 10;
+            $scope.searchExams = [];
             $scope.aroundme = function(){
+                console.log($scope.searchExams);
                 
                 var queryForm = {
                     latlng: {
@@ -10542,6 +10580,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         lng: $scope.currLocation[1],
                     },
                     distanceinKm: $scope.searchDistance,
+                    examArray: $scope.searchExams,
                 };
                 
                 
@@ -10556,6 +10595,46 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 .error(function (data, status, header, config) {
                     console.info('Error ' + data + ' ' + status);
                 });
+            };
+            
+            $scope.showExamDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#examDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
+            
+            $scope.closeDialog = function(){
+                $mdDialog.hide();
+            };
+            
+            $scope.addExam = function(thisExam){
+                if(!$scope.searchExams){
+                    $scope.searchExams = [];
+                }
+                var eIndex = $scope.searchExams.indexOf(thisExam._id);
+                if(eIndex == -1){
+                    $scope.searchExams.push(thisExam._id);
+                }else{
+                    //exam already exists
+                }
+            };
+            
+            $scope.removeExam = function(thisExam){
+                if(!$scope.searchExams){
+                    //do nothing
+                }else{
+                    var eIndex = $scope.searchExams.indexOf(thisExam._id);
+                    if(eIndex == -1){
+                        //do nothing
+                    }else{
+                         $scope.searchExams.splice(eIndex, 1);
+                    }
+                }
             };
             
     }]); 
@@ -15466,7 +15545,20 @@ function getLatLng(thisData) {
                 'footer': {
                     templateUrl: 'footer.html'
                 }
+            },
+            resolve: {
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }]
+                
             }
+        
+            
         })
         .state('postBlog', {
             url: '/:userId/postBlog', //masterId?

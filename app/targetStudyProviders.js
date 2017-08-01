@@ -921,6 +921,7 @@ router.post('/aroundme', function(req, res) {
     var thisLng = Number(queryForm.latlng.lng);
     var thisLat = Number(queryForm.latlng.lat);
     var kms = Number(queryForm.distanceinKm);
+    var examArray = queryForm.examArray;
     
     var coordinates = [thisLng, thisLat];
     
@@ -944,13 +945,31 @@ router.post('/aroundme', function(req, res) {
            }  
     };*/
     
-    var allProviders = targetStudyProvider.find( query, {name:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1},function(err, allProviders) {
+    var allProviders = targetStudyProvider.find( query, {name:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1},function(err, allProviders) {
     if (!err){
+        
+       
+        var sLength = examArray.length;
         var nLength = allProviders.length;
-        var counter = 0;
-        console.log(nLength);
-        console.log(JSON.stringify(allProviders));
-        res.json(allProviders);
+        if(sLength > 0){
+            var filteredProviders = [];
+            allProviders.forEach(function(thisprovider, index){
+                var thisExams = thisprovider.exams;
+                var shouldInclude = containsAny(examArray, thisExams);
+                //console.log(shouldInclude);
+                if(shouldInclude){
+                    filteredProviders.push(thisprovider);
+                }
+            });
+            
+            var nLength2 = filteredProviders.length; 
+            console.log(nLength + " -> " + nLength2);
+            res.json(filteredProviders);
+        }else{
+            console.log(nLength);
+            res.json(allProviders);
+        }
+        
         
     } else {throw err;}
     });
@@ -958,6 +977,11 @@ router.post('/aroundme', function(req, res) {
     
 });
 
+function containsAny(source,target)
+{
+    var result = source.filter(function(item){ return target.indexOf(item) > -1});   
+    return (result.length > 0);  
+}    
 
 router.post('/setLocOfAll', function(req, res) {
     console.log('service starting');
