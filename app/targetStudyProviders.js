@@ -930,7 +930,8 @@ router.post('/aroundme', function(req, res) {
             $geoWithin : {
                 $centerSphere : [coordinates, kmsToRadian(kms)]
             }
-        }
+        },
+        disabled: false
     };
     
     /*var query = {
@@ -1446,6 +1447,38 @@ router.post('/setLogoForAll/', function(req, res) {
     }); //.limit(500) .sort( { rank: -1 } )
 });
 
+router.post('/setEmailForAll/', function(req, res) {
+    var groupExamForm = req.body;
+    var instituteArray = groupExamForm.instituteArray;
+    var emailArray = groupExamForm.emailArray;
+    //console.log(JSON.stringify(groupExamForm));
+    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {email:1},function(err, allGroupProviders) {
+    if (!err){
+        //console.log(allGroupProviders);
+        
+        allGroupProviders.forEach(function(thisGroup, index){
+            
+            var thisProviderEmail = thisGroup.email;
+            emailArray.forEach(function(thisEmail, eindex){
+                var thisEmailIndex = thisProviderEmail.indexOf(thisEmail);
+                if(thisEmailIndex == -1){
+                    thisProviderEmail.push(thisEmail);
+                }
+            });
+            
+            //thisGroup.logo = logo;
+            thisGroup.save(function(err, thisGroup) {
+                if (err) return console.error(err);
+                console.log(thisGroup._id + " saved!");
+            });
+            
+        });
+        
+        res.json(allGroupProviders);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
+
 router.post('/renameAllCoaching/', function(req, res) {
     var groupNameForm = req.body;
     var instituteArray = groupNameForm.instituteArray;
@@ -1855,24 +1888,20 @@ router.post('/savecoaching', function(req, res) {
                 console.log('--------- '+ userId);
             }
             //console.log("Coaching is: " + JSON.stringify(oldProvider));
+            
+            if(thisProvider.latlng){
+                var thisLatLng = thisProvider.latlng;
+                var thisLng = Number(thisLatLng.lng);
+                var thisLat = Number(thisLatLng.lat);
 
+                oldProvider.loc = {
+                    type : 'Point',
+                    coordinates : [thisLng, thisLat]
+                };
+            }
             //save the changes
             oldProvider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
-                /*var cisavedForm = req.body;
-                var institute = cisavedForm.institute;
-                var user = cisavedForm.user;
-
-                var newcisaved = new cisaved({
-                    institute: institute,
-                    user: user
-                });
-                newcisaved.save(function(err, newcisaved) {
-                    if (err) return console.error(err);
-                    //console.log("MediaTag saved with id: " + this_mediaTag._id);
-                    res.json(newcisaved._id);
-                });*/
-                //console.log(thisprovider._id + " saved!");
                 res.json(thisprovider._id);
             });
             
@@ -1884,6 +1913,17 @@ router.post('/savecoaching', function(req, res) {
                 oldProvider[property] = thisProvider[property];
             }
             //console.log("Coaching is: " + JSON.stringify(oldProvider));
+            if(thisProvider.latlng){
+                var thisLatLng = thisProvider.latlng;
+                var thisLng = Number(thisLatLng.lng);
+                var thisLat = Number(thisLatLng.lat);
+
+                oldProvider.loc = {
+                    type : 'Point',
+                    coordinates : [thisLng, thisLat]
+                };
+            }
+            
             if(userId){
                 var newSave = {
                     user: userId
@@ -1892,6 +1932,8 @@ router.post('/savecoaching', function(req, res) {
                 console.log('--------- '+ userId);
             }
             //save the changes
+            
+            
             oldProvider.save(function(err, thisprovider) {
                 if (err) return console.error(err);
                 console.log(thisprovider._id + " saved!");
@@ -2966,4 +3008,46 @@ function titleCase(str) {
       return str.join(' ');
   }
 }
+
+
+router.get('/emailService', function(req, res) {
+    console.log("Email Service Starting now");
+    res.json('Done');
+    /*, $where:'this.email.length>0'*/
+    var allProviders = targetStudyProvider.find({email: {$exists: true}}, {groupName:1, email:1, logo:1, city:1},function(err, allProviders) {
+        if (!err){
+            var emailLength = 0;
+            var nProviders = allProviders.length;
+            var counter = 0;
+            console.log("There are " + nProviders + " providers!");
+            
+            allProviders.forEach(function(thisprovider, index){
+                emailLength += thisprovider.email.length;
+                counter += 1;
+                
+                var nemail = thisprovider.email.length;
+                var rCounter = 0;
+                
+                if( Object.prototype.toString.call( thisprovider.email ) === '[object Array]' ) {
+                    //console.log('Email is an array: ' + thisprovider.email);
+                }else{
+                    console.log('Email not an array: ' + thisprovider.email);
+                }
+                thisprovider.email.forEach(function(thisemail, rindex){
+                    
+                    
+                    
+                    rCounter += 1;
+                    if(rCounter && counter == nProviders){
+                        console.log("Total Emails are: " + emailLength);
+                    }
+                    
+                });
+                
+                
+            });
+            
+        }
+    });
+});
 module.exports = router;

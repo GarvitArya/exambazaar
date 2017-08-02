@@ -1035,6 +1035,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.setLogoForAll = function(groupLogoForm) {
             return $http.post('/api/targetStudyProviders/setLogoForAll',groupLogoForm);
         };
+        this.setEmailForAll = function(groupExamForm) {
+            return $http.post('/api/targetStudyProviders/setEmailForAll',groupExamForm);
+        };
+        
         
         this.renameAllCoaching = function(groupNameForm) {
             return $http.post('/api/targetStudyProviders/renameAllCoaching',groupNameForm);
@@ -1196,6 +1200,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.databaseService = function() {
             return $http.get('/api/targetStudyProviders/databaseService');
+        };
+        this.emailService = function() {
+            return $http.get('/api/targetStudyProviders/emailService');
         };
         this.sandbox2Service = function(city) {
             return $http.get('/api/targetStudyProviders/sandbox2Service/'+city, {city: city});
@@ -3295,7 +3302,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 callback: function(results, status) {
                     
                     if (status == 'OK') {
-                        console.log(results[0].geometry.location.lat());
+                        console.log(results[0].geometry.location.lat() + ", " + results[0].geometry.location.lng());
                         $scope.provider.latlng = {
                             lat: results[0].geometry.location.lat(),
                             lng: results[0].geometry.location.lng()
@@ -7449,7 +7456,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
     
     exambazaar.controller("internshipController", 
-        [ '$scope','$rootScope', 'FileUploader','MasterService',function($scope,$rootScope,FileUploader,MasterService){
+        [ '$scope','$rootScope', 'MasterService',function($scope,$rootScope,MasterService){
             $scope.submitted = 0;
             $rootScope.pageTitle = 'Internships at Exam Bazaar'; 
             
@@ -8099,8 +8106,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
     });
     exambazaar.controller("editTargetStudyCoachingController", 
-    [ '$scope','FileUploader', 'targetStudyProviderService','LocationService','thisTargetStudyProvider','$state','$stateParams', '$cookies','ImageService','Upload','imageMediaTagList', function($scope,FileUploader, targetStudyProviderService,LocationService,thisTargetStudyProvider,$state,$stateParams, $cookies,ImageService,Upload,imageMediaTagList){
-        console.info(imageMediaTagList.data);
+    [ '$scope', 'targetStudyProviderService','LocationService','thisTargetStudyProvider','$state','$stateParams', '$cookies','ImageService','Upload','imageMediaTagList', function($scope, targetStudyProviderService,LocationService,thisTargetStudyProvider,$state,$stateParams, $cookies,ImageService,Upload,imageMediaTagList){
         $scope.provider = thisTargetStudyProvider.data;
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
@@ -8135,7 +8141,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             var url = $scope.provider.website[0] || [];
             if(url && url.length > 0){
             url = url.replace('www.','');
-            url = url.replace('https://','');
+            url = url.replace('http://','');
             url = url.replace('https://','');
             var rightChar = url.substring(url.length-1, url.length);
             }
@@ -9778,7 +9784,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                   clickOutsideToClose: true
                 });
             };
-            $scope.markExamsDone = function(){
+            $scope.showEmailDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#emailDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
+            $scope.closeDialog = function(){
                 $mdDialog.hide();
             };
             $scope.showSpreadsheetDialog = function(ev) {
@@ -9968,6 +9982,33 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }); 
             };
             
+            $scope.setEmailConfirm = function(){
+                var instituteLength = $scope.spreadSheetCoachings.length;
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    instituteLength = allInstitutes.length - 1;
+                }
+                
+                var groupName = '';
+                if($scope.spreadSheetCoachings.length > 1){
+                    groupName = $scope.spreadSheetCoachings[1].name;
+                }
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to add email for these ' + instituteLength + ' coaching centers of ' +  groupName + '?')
+                .textContent('You will not be able to revert it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.setEmailForAll();
+                }, function() {
+                  //nothing
+                    $scope.showLogoDialog();
+                }); 
+            };
+            
             $scope.addExamsToAll = function(){
                 var allInstitutes = $scope.spreadSheetCoachings;
                 if(allInstitutes[0]._id == 'EB Id'){
@@ -10012,6 +10053,36 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 .error(function (data, status, header, config) {
                     console.info('Error ' + data + ' ' + status);
                 });       
+            };
+            $scope.newEmail = '';
+            $scope.setEmailForAll = function(){
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    allInstitutes.splice(0,1);
+                }
+                var emailArray = $scope.newEmail.toLowerCase().split(',');
+                
+                emailArray.forEach(function(thisEmail, index){
+                    thisEmail = thisEmail.trim();
+                });
+                
+                if(emailArray.length > 0){
+                    var instituteArray =  allInstitutes.map(function(a) {return a._id;});
+                    var groupEmailForm = {
+                        instituteArray: instituteArray,
+                        emailArray: emailArray
+                    };
+
+                    targetStudyProviderService.setEmailForAll(groupEmailForm).success(function (data, status, headers) {
+                        $scope.showSavedDialog();
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error ' + data + ' ' + status);
+                    });  
+                   
+                }
+                     
             };
             
             $scope.removeExamConfirm = function(){
@@ -10590,7 +10661,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.providers.forEach(function(thisProvider, index){
                         thisProvider.mapLatLng = [thisProvider.loc.coordinates[1], thisProvider.loc.coordinates[0]]
                     });
-                    console.log(data);
+                    var latLngs = $scope.providers.map(function(a) {return a.mapLatLng;});
+                    zoomToIncludeMarkers(latLngs);
+                    //console.log(data);
                 })
                 .error(function (data, status, header, config) {
                     console.info('Error ' + data + ' ' + status);
@@ -10635,6 +10708,24 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                          $scope.searchExams.splice(eIndex, 1);
                     }
                 }
+            };
+            
+            function zoomToIncludeMarkers(markers) {
+                markers.push($scope.currLocation);
+                var bounds = new google.maps.LatLngBounds();
+                markers.forEach(function(thisMarker, mindex){
+                    var latlng = new google.maps.LatLng(thisMarker[0], thisMarker[1]);
+                    bounds.extend(latlng);
+                    
+                });
+                
+                
+                NgMap.getMap().then(function(map) {
+                    //vm.map = map;
+                    map.setCenter(bounds.getCenter());
+                    map.fitBounds(bounds);
+                    //map.setZoom(4);
+                });
             };
             
     }]); 
@@ -13740,6 +13831,17 @@ function getLatLng(thisData) {
         
     exambazaar.controller("sendEmailController", 
         [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService){
+            
+            $scope.emailService = function(){
+                targetStudyProviderService.emailService().success(function (data, status, headers) {
+                    //$scope.distinctStates = data;
+                    console.info("Done");
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            
             $scope.fetchEmails = function(){
                 tofillciService.sendEmails().success(function (data, status, headers) {
                     var response = data;

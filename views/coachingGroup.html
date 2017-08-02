@@ -109,23 +109,26 @@
         </a>
         </div>
         <div layout="row" class="width100 secondFont textBlack marginB20" ng-if="spreadsheetMode">
-            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showRenameCoachingDialog()">
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showRenameCoachingDialog()">
                 Rename Coaching/Group
             </md-button>
-            <!--<md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showRenameGroupDialog()">
+            <!--<md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showRenameGroupDialog()">
                 Rename Group Name
             </md-button>-->
-            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showExamDialog()">
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showExamDialog()">
                 Add Exams to this Group
             </md-button>
-            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showRemoveExamDialog()">
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showRemoveExamDialog()">
                 Remove Exams from this Group
             </md-button>
-            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="commonExamsInAll()">
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="commonExamsInAll()">
                 Common Exams in this Group
             </md-button>
-            <md-button class="md-black md-small font10 tolowercase marginR20" ng-click="showLogoDialog()">
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showLogoDialog()">
                 Set Logo for Group
+            </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showEmailDialog()">
+                Add Email to Group
             </md-button>
         </div>
         
@@ -222,7 +225,7 @@
                     Rename Coaching Centre Name & Group Name of all {{spreadSheetCoachings.length -1}} group institutes!
                 </div>
                 <div>
-                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
                         Rename Coaching Done
                     </md-button>
                 </div>
@@ -287,7 +290,7 @@
                     Mark all Exams you want to be added to all {{spreadSheetCoachings.length -1}} group institutes!
                 </div>
                 <div>
-                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
                         Marking Exams Done
                     </md-button>
                 </div>
@@ -341,7 +344,7 @@
                     Set Logo for all {{spreadSheetCoachings.length -1}} group institutes!
                 </div>
                 <div>
-                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
                         Setting Logo Done
                     </md-button>
                 </div>
@@ -377,6 +380,50 @@
 </div> 
 
 <div style="visibility: hidden">    
+    <div class="md-dialog-container" id="emailDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Add Email to all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
+                        Setting Email Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                
+                <div layout="row" layout-align="center center" class="width100 marginLR20">
+                    <div flex="40" layout="row" layout-align="start start" class="">
+                        <div>
+                            Email
+                        </div>
+                    </div>
+                    <div flex="60" layout="row" layout-align="start start" >
+                        <div class="width80">
+                            <input type="text" class="width100" ng-model="newEmail"  placeholder="email@example.com">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="setEmailConfirm()">
+                    Set Email for Group
+                </md-button>
+            </div>  
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
+
+<div style="visibility: hidden">    
     <div class="md-dialog-container" id="removeExamDialog">
       <md-dialog class="edit-dialog whiteBackground">
           <md-content flex layout="column" class="width100 paddingLR20">
@@ -386,7 +433,7 @@
                     Mark all Exams you want to be removed from all {{spreadSheetCoachings.length -1}} group institutes!
                 </div>
                 <div>
-                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
                         Marking Exams Done
                     </md-button>
                 </div>
@@ -440,7 +487,7 @@
                     Common exams in all {{spreadSheetCoachings.length -1}} group institutes!
                 </div>
                 <div>
-                    <md-button class="md-danger md-small font10 tolowercase" ng-click="markExamsDone()">
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
                         Common Exams Done
                     </md-button>
                 </div>
