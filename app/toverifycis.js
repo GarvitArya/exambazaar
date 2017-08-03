@@ -268,10 +268,10 @@ router.post('/save', function(req, res) {
     var verifyCity = toverifyciForm.verifyCity;
     var user = toverifyciForm.user;
     var _deadline = toverifyciForm._deadline;
-    console.info(JSON.stringify(toverifyciForm));
+    //console.info(JSON.stringify(toverifyciForm));
     //, ebVerify: {$exists: false}
     var cityProviders = targetStudyProvider
-        .find({'city': verifyCity, disabled: {$ne: true}, verfiyAssigned: {$ne: true} },{name:1, address:1})
+        .find({'city': verifyCity, disabled: {$ne: true}, verfiyAssigned: {$ne: true}, website: {$exists: true}, $where:"this.website.length>0 && this.website[0]!=''" },{name:1, address:1, website: 1})
         .limit(instituteVerifyCount)
         .exec(function (err, cityProviders) {
         if (!err){
@@ -279,6 +279,7 @@ router.post('/save', function(req, res) {
             var counter = 0;
             console.log(nLength);
             cityProviders.forEach(function(thisProvider, index){
+                //console.log(thisProvider._id + " " + JSON.stringify(thisProvider.website));
                 counter += 1;
                 var newtoverifyci = new toverifyci({
                     institute: thisProvider,

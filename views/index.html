@@ -413,6 +413,15 @@
             width: 100px;
             border-radius: 4px;
         }
+        .max50vh{
+            height: 50vh;
+            max-height: 50vh;
+        }
+        .exact100h{
+            height: 100%;
+            min-height: 100%;
+            max-height: 100%;
+        }
         .min100vh{
             min-height: 100vh;
         }
@@ -819,6 +828,16 @@
         .sideBarButton{
             position:fixed; 
             left:0%;
+            top:45%;
+            width:10%;
+            height:10%;
+            background: transparent;
+            color: black;
+            z-index: 20000;
+        }
+        .rightSideBarButton{
+            position:fixed; 
+            right:0%;
             top:45%;
             width:10%;
             height:10%;
@@ -2329,9 +2348,9 @@
                     </span>
                 </a>
             </div>
-            <div layout="column" layout-align="center center" class="width100">
+            <div flex layout="column" layout-align="center center" class="width100">
 
-            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder padding10">
+            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder paddingLR10">
                 <div layout="column" layout-align="center center" class="marginT5">
                     <div layout="column" layout-align="center center" class="width100">
                         Ranker's Wall
@@ -2350,7 +2369,7 @@
                 </div>
             </div>
 
-            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder padding10" ng-if="sessionuser && sessionuser.basic">
+            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder paddingLR10" ng-if="sessionuser && sessionuser.basic">
                 <div class="marginT5">
                     Welcome {{sessionuser.basic.name}}!
                 </div>
@@ -2360,7 +2379,7 @@
                     </span>
                     <!--<a id="sideBarLink" ui-sref="profile({ userId:{{'sessionuser.userId'}} })" class="marginR10">Profile</a>-->
                 </div>
-                <div class="marginT5">
+                <div class="">
                     <a id="sideBarLink" ui-sref="reviewed({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Reviews</a>
                 </div>
                 <div class="marginTB5">
@@ -2368,11 +2387,16 @@
                 </div>
 
             </div>
-            <div layout="row" layout-align="center center" class="padding10 width100 marginT20">
+            <div layout="row" layout-align="center center" class="paddingLR10 width100">
                 <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-green2 width50" ng-click = "showLoginForm()">Log in</md-button>
                 <a id="sideBarLink" ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
             </div>
-
+            <div flex layout="row" layout-align="center center" class="width100 marginT10">
+                <twitter-timeline class="exact100h">
+                    <a class="twitter-timeline" data-height="100%" data-chrome="nofooter" href="https://twitter.com/exambazaar"> Tweets by @exambazaar</a>
+                </twitter-timeline>
+                
+            </div>
 
 
 
@@ -2383,7 +2407,35 @@
         </div>
 
     </sidebarjs>
-</div>        
+</div>  
+<!--<div class="rightSideBarButton paddingTB5">
+    <div layout="row"  layout-align="end center" class="">
+        <div sidebarjs-toggle id="sideBarIcon" class="">
+            <i class="fa fa-angle-double-left font40 paddingL20 paddingTB20" aria-hidden="true"></i>
+        </div>
+    </div>
+    <sidebarjs class="sideBar font16">
+        <div sidebarjs-toggle id="sideBarIcon2" class="paddingR5">
+            <i class="fa fa-angle-double-left font40" aria-hidden="true"></i>
+        </div>
+        <div layout="column" layout-align="start center" layout-fill class="width100">
+            <div layout="column" layout-align="center center" class="width100">
+                
+
+            </div>
+        </div>
+
+    </sidebarjs>
+</div>  -->      
+        
+        
+        
+        
+        
+        
+        
+        
+        
 </div>        
         
 

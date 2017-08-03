@@ -1500,6 +1500,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
                         $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
                         $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+                        console.log($scope.userPosition);
                         
                     }
                  });
@@ -1512,6 +1513,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
                 $cookies.putObject('userlocation', $scope.userlocation);
                 $cookies.putObject('userPosition', $scope.userPosition);
+                console.log($scope.userPosition);
             }
             
         }else{
@@ -10567,11 +10569,54 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
       
     exambazaar.controller("aroundmeController", 
-        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList){
+        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation){
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
             
+            if ("geolocation" in navigator) {
+                console.log("geolocation is available");
+               
+                function geo_success(position) {
+                  console.log(position.coords.latitude, position.coords.longitude);
+                }
+
+                function geo_error() {
+                  alert("Sorry, no position available.");
+                }
+
+                var geo_options = {
+                  enableHighAccuracy: true, 
+                  maximumAge        : 30000, 
+                  timeout           : 27000
+                };
+
+                var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+                
+              /* geolocation is available */
+            } else {
+                console.log("geolocation IS NOT available");
+              /* geolocation IS NOT available */
+            }
             
+            
+            /*if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+             console.log("Geolocation is not supported by this browser.");
+            }
+            var latLng = {};
+
+            function showPosition(position) {
+                latLng = {
+                'lat': position.coords.latitude,
+                'lng': position.coords.longitude
+                };
+                $scope.location_address = latLng;
+            };
+            function showError(error) {
+                console.log(error);
+            };
+            */
             $rootScope.pageTitle ='Coaching Centers around you!';
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
@@ -10580,6 +10625,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
             if($cookies.getObject('userPosition')){
                 $scope.userPosition = $cookies.getObject('userPosition');
+                
                 var res = $scope.userPosition.split(",");
                 res.forEach(function(thisVal, vindex){
                     thisVal = thisVal.trim();
