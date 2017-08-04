@@ -37,7 +37,7 @@ var userSchema = mongoose.Schema({
         _date: { type: Date, default: Date.now }
     }],
     email : { type: String},
-    image : { type: String},
+    image : { type: String},//, default:'https://exambazaar.com/images/user.png'
     fbemail : { type: String},
     fbimage : { type: String},
     verified : { type: Boolean, default: false},

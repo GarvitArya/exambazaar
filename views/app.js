@@ -1988,6 +1988,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         if(!$scope.user || !$scope.user.userId){
             $scope.showLoginForm();
+            //console.log('It has been shown');
         }
         
         $scope.overviewIcons = [
@@ -6750,34 +6751,87 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,$geolocation, $facebook, $mdDialog, EmailService, SidebarJS){
-            
-            
-        $scope.sendWelcomeEmail = function(){
-            if(!$scope.user){
-                $scope.user = $cookies.getObject('sessionuser');
-            }
-            console.log($scope.user);
-            if($scope.user && $scope.user.email){
-                $scope.email = {
-                    to: $scope.user.email,
-                    templateName: 'Welcome Email',
-                    username: $scope.user.basic.name
-                };
-                EmailService.welcomeEmail($scope.email).success(function (data, status, headers) {
-                    var response = data;
-                    console.info(JSON.stringify(response));
-
-                })
-                .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
-                });  
+            $rootScope.searchMode = false;
+            $rootScope.searchPlaceholder = "Start typing to search...";
+            $rootScope.stateName = $state.current.name;
+            //ABCD
+            var headerGreenStates = ["findCoaching", "showCoaching", "showGroup"];
+            var headerTransparentStates = ["landing", "main", "category", "city"];
+            $scope.headerLogoCSS = function(){
+                var stateName = $state.current.name;
+                var headerLogoCSS = "headerLogo";
+                var sIndex = -1;
                 
-            }else{
-                console.log('Either no user or no email for the user');
-            }
-        }; 
+                sIndex = headerGreenStates.indexOf(stateName);
+                if(sIndex != -1){
+                    headerLogoCSS = "headerLogoGreen";
+                }
+                
+                sIndex = headerTransparentStates.indexOf(stateName);
+                if(sIndex != -1){
+                    headerLogoCSS = "headerLogoTransparent";
+                }
+                return headerLogoCSS;
+            };
+            
+            $scope.headerBackgroundCSS = function(){
+                var stateName = $state.current.name;
+                var headerBackgroundCSS = "headerWhite";
+                var sIndex = -1;
+                
+                sIndex = headerGreenStates.indexOf(stateName);
+                if(sIndex != -1){
+                    headerBackgroundCSS = "headerGreen";
+                }
+                
+                sIndex = headerTransparentStates.indexOf(stateName);
+                if(sIndex != -1){
+                    headerBackgroundCSS = "headerTransparent";
+                }
+                return headerBackgroundCSS;
+            };
+            $scope.headerShowOptions = function(){
+                var stateName = $state.current.name;
+                var showVal = true;
+                var sIndex = -1;
+                
+                sIndex = headerTransparentStates.indexOf(stateName);
+                if(sIndex != -1){
+                    showVal = false;
+                }
+                return showVal;
+            };
+            $rootScope.showMobileSearch = false;
+            $scope.flipMobileSearch = function(){
+                $rootScope.showMobileSearch = !$rootScope.showMobileSearch;
+            };
+            
+            $scope.sendWelcomeEmail = function(){
+                if(!$scope.user){
+                    $scope.user = $cookies.getObject('sessionuser');
+                }
+                console.log($scope.user);
+                if($scope.user && $scope.user.email){
+                    $scope.email = {
+                        to: $scope.user.email,
+                        templateName: 'Welcome Email',
+                        username: $scope.user.basic.name
+                    };
+                    EmailService.welcomeEmail($scope.email).success(function (data, status, headers) {
+                        var response = data;
+                        console.info(JSON.stringify(response));
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error ' + data + ' ' + status);
+                    });  
+
+                }else{
+                    console.log('Either no user or no email for the user');
+                }
+            }; 
         
-        $rootScope.stateName = $state.current.name;
+        
         if($rootScope.stateName == 'showGroup'){
             $rootScope.coachingGroupName = $stateParams.groupName;
             $rootScope.coachingGroupCity = $stateParams.cityName;
@@ -6788,6 +6842,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             SidebarJS.close();
             if($state.current.name == 'showGroup' || $state.current.name == 'claim' || $state.current.name == 'rankerswall'){
+                //console.log('I am here');
                 $mdDialog.show({
                   contentElement: '#loginDialog',
                   parent: angular.element(document.body),
@@ -7106,7 +7161,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             email: fulluser.email,
 
                         };
-                        
                         $cookies.putObject('sessionuser', sessionuser);
                         $scope.sessionuser = sessionuser;
                         
@@ -8828,11 +8882,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     exambazaar.controller("autocompleteController", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
             
+            $scope.searchFocusIn = function(){
+                console.log('Focus In');
+                $rootScope.searchMode = true;
+                $rootScope.searchPlaceholder = "Search Exambazaar for over 26,000 coaching institutes for 50+ Exams in 90+ cities";
+            };
+            $scope.searchFocusOut = function(){
+                console.log('Focus Out');
+                $rootScope.searchMode = false;
+                $rootScope.searchPlaceholder = "Start typing to search...";
+                $rootScope.showMobileSearch = !$rootScope.showMobileSearch;
+            };
+            $scope.goToCoaching = function(provider){
+                var coachingForm = {
+                    _id: provider._id 
+            };
+            targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+                    var examStream = data;
+                    var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
+                    window.open(url,'_blank');
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });
+        };    
+            
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
             console.info('Item changed to ' + JSON.stringify(item));
-            $state.go('claim', {coachingId: item._id});
-            
+            $scope.goToCoaching(item);
         };
         this.querySearch = function(query){
             if(query.length > 2){
@@ -10580,7 +10658,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
       
     exambazaar.controller("aroundmeController", 
-        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification){
+        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', 'viewService', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification, viewService){
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
             
@@ -10611,6 +10689,27 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }else{
                 $scope.user = null;
             }
+            
+            var viewForm = {
+                state: $state.current.name,
+                claim: false,
+                url: $location.url()
+            };
+            if($scope.user && $scope.user.userId){
+                viewForm.user = $scope.user.userId
+            }
+            //console.log(JSON.stringify(viewForm));
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                //console.info('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.info();
+            });
+            
             /*if($cookies.getObject('userPosition')){
                 $scope.userPosition = $cookies.getObject('userPosition');
                 
@@ -15251,7 +15350,7 @@ function getLatLng(thisData) {
             url: '/',
             views: {
                 'header':{
-                    templateUrl: 'header2.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -15289,7 +15388,7 @@ function getLatLng(thisData) {
             url: '/stream',
             views: {
                 'header':{
-                    templateUrl: 'header2.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -15328,7 +15427,7 @@ function getLatLng(thisData) {
             url: '/stream/:categoryName',
             views: {
                 'header':{
-                    templateUrl: 'header2.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -15351,7 +15450,7 @@ function getLatLng(thisData) {
             url: '/stream/:categoryName/:subCategoryName/',
             views: {
                 'header':{
-                    templateUrl: 'header2.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -15380,7 +15479,7 @@ function getLatLng(thisData) {
             url: '/stream/:categoryName/:subCategoryName/:cityName', //masterId?
             views: {
                 'header':{
-                    templateUrl: 'header1.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -15423,7 +15522,7 @@ function getLatLng(thisData) {
             url: '/stream/:categoryName/:subCategoryName/:cityName/:coachingId', //masterId?
             views: {
                 'header':{
-                    templateUrl: 'header1.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -15455,7 +15554,7 @@ function getLatLng(thisData) {
             url: '/group/:categoryName/:subCategoryName/:cityName/:groupName', //masterId?
             views: {
                 'header':{
-                    templateUrl: 'header1.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -15511,7 +15610,7 @@ function getLatLng(thisData) {
             url: '/oldclaim/:coachingId', //masterId?
             views: {
                 'header':{
-                    templateUrl: 'header1.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -15535,7 +15634,7 @@ function getLatLng(thisData) {
             url: '/claim/:coachingId', //masterId?
             views: {
                 'header':{
-                    templateUrl: 'header1.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -15584,7 +15683,7 @@ function getLatLng(thisData) {
             url: '/partner/:coachingId/offers', //masterId?
             views: {
                 'header':{
-                    templateUrl: 'header1.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -15621,7 +15720,7 @@ function getLatLng(thisData) {
             url: '/verifyClaim/:coachingId', //masterId?
             views: {
                 'header':{
-                    templateUrl: 'header1.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -16294,7 +16393,7 @@ function getLatLng(thisData) {
             url: '/why',
             views: {
                 'header':{
-                    templateUrl: 'header2.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -16886,7 +16985,7 @@ function getLatLng(thisData) {
             url: '/partner/:userId/dashboard',
             views: {
                 'header':{
-                    templateUrl: 'header1.html',
+                    templateUrl: 'header.html',
                     
                 },
                 'body':{
@@ -18354,7 +18453,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions) 
     $transitions.onSuccess({}, function() {
         console.log("statechange success");
         document.body.scrollTop = document.documentElement.scrollTop = 0;
-        $mdDialog.hide();
+        //$mdDialog.hide();
     });
     
     var currURL = $location.absUrl();

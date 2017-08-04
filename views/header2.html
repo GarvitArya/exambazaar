@@ -16,7 +16,7 @@
     
 </style>
 
-<nav class="navbar transparent navbar-default navbar-fixed-top nav-justified thirdFont font12" role="navigation" id="mainNav">
+<nav class="navbar transparent navbar-default navbar-fixed-top nav-justified thirdFont font14 spacedLetter1" role="navigation" id="mainNav">
     <div layout="row" layout-align="center center" class="paddingR20" >
         
         <div layout="row" layout-align="start center" flex>
@@ -70,13 +70,16 @@
                 <li ng-if="sessionuser.userType=='Master'">
                     <a ui-sref="filledAll({ userId:{{'sessionuser.userId'}} })">Filled Institutes</a>
                 </li>
+                <li>
+                    <a ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
+                </li>
               </ul>
         </li>
         </ul>
         </div>
         <div layout="row" layout-align="start center" class="">
             <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-green2" ng-click = "showLoginForm()">Log in</md-button>
-            <a ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
+            
         </div>
     </div>
 </nav>

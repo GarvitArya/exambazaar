@@ -171,7 +171,89 @@
         .offerPopupFont{
             font-family: 'Unica One', sans-serif;
         }
+        .navbar-default .navbar-nav > li.dropdown:hover > a, 
+        .navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+        .navbar-default .navbar-nav > li.dropdown:hover > a:focus {
+            background-color: whitesmoke;
+            color: rgb(85, 85, 85);
+        }
+        li.dropdown:hover > .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu li{
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .dropdown-menu li a{
+            border-bottom: 0.1px solid whitesmoke;
+            padding-left: 2px;
+            padding-right: 30px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            min-width: 150px;
+        }
+        .dropdown-menu li a:hover{
+            border-bottom: 2px solid #20C39A;
+        }
+        .dropdown-menu > li > a:hover {
+            background-color: white;
+            background-image: none;
+        }
+        .dropdown-menu{
+            -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+            -moz-box-shadow: 0 5px 15px rgba(0,0,0,0);
+            -o-box-shadow: 0 5px 15px rgba(0,0,0,0);
+            box-shadow: 0 5px 15px rgba(0,0,0,0);
+            border: 0.2px solid gainsboro;
+            padding-bottom: 20px;
+        }
         
+        /*
+        .dropdown-menu:before {
+          position: absolute;
+          top: -7px;
+          left: 50%;
+          display: inline-block;
+          border-right: 7px solid transparent;
+          border-bottom: 7px solid #ccc;
+          border-left: 7px solid transparent;
+          border-bottom-color: rgba(0, 0, 0, 0.2);
+          content: '';
+        }
+
+        .dropdown-menu:after {
+          position: absolute;
+          top: -6px;
+          left: 50%;
+          display: inline-block;
+          border-right: 6px solid transparent;
+          border-bottom: 6px solid #ffffff;
+          border-left: 6px solid transparent;
+          content: '';
+        }
+        
+        .navbar .navbar-right > li > .dropdown-menu:before,
+        .navbar .nav > li > .dropdown-menu.navbar-right:before {
+            right: 12px; left: auto;
+        }
+
+        .navbar .navbar-right > li > .dropdown-menu:after,
+        .navbar .nav > li > .dropdown-menu.navbar-right:after {
+            right: 13px; left: auto;
+        }*/
+        .dropdown-menu li{
+            font-size:13px;
+            /*text-transform: uppercase;*/
+        }
+        #profileMenu{
+            padding: 0px;
+        }
+        
+        .subheader{
+           font-size:12px;
+            color: #999999;
+            letter-spacing: 0.5px;
+        }
         .navbar.transparent {
             border-width: 0px;
             -webkit-box-shadow: 0px 0px;
@@ -222,7 +304,7 @@
             white-space: nowrap;
         }
         #userPic{
-            max-height: 65px;
+            max-height: 40px;
         }
         #userPicSmall{
             max-height: 30px;
@@ -277,6 +359,9 @@
             font-family: 'Fira Sans', sans-serif;
             font-weight: 300;
             font-size: 13px;
+        }
+        .sixthFont{
+            font-family: 'Lato', sans-serif;
         }
         .editFont{
             font-family: 'Fira Sans', sans-serif;
@@ -1212,6 +1297,12 @@
             margin-bottom: 5px;
             padding-right: 5px;
         }
+        .padding0{
+            padding: 0px;
+        }
+        .margin0{
+            margin: 0px;
+        }
         .padding5{
             padding: 5px;
         }
@@ -1618,14 +1709,19 @@
             top: 5vh;
             border-radius: 0;
         }
-        md-autocomplete{
-            background-color: white;
+        #custom input[name="headerSearch"]  {
+            background: url(images/icons/Hsearch.png);
+            background-repeat: no-repeat;
+            background-position: 9px 9px;
+            padding: 0px 40px;
             
+        }
+        md-autocomplete{
+            background-color: transparent;  
         }
         .md-autocomplete-suggestions-container{  
             background: white;
             z-index:100000 !important; /* any number of choice > 1050*/
-            
         }
         .md-virtual-repeat-container.md-autocomplete-suggestions-container{
             box-shadow: none;
@@ -2341,22 +2437,28 @@
         
         
 <div class="sideBarButton paddingTB5">
-    <div layout="row"  layout-align="start center" class="">
-        <div sidebarjs-toggle id="sideBarIcon" class="">
-            <i class="fa fa-angle-double-right font40 paddingR20 paddingTB20" aria-hidden="true"></i>
-        </div>
+    <div hide-xs layout="row"  layout-align="start center" sidebarjs-toggle id="sideBarIcon">
+        <i class="fa fa-angle-double-right font40 paddingR20 paddingTB20" aria-hidden="true"></i>
     </div>
     <sidebarjs class="sideBar font16">
         <div sidebarjs-toggle id="sideBarIcon2" class="paddingR5">
             <i class="fa fa-angle-double-left font40" aria-hidden="true"></i>
         </div>
+        
         <div layout="column" layout-align="start center" layout-fill class="width100">
-            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder marginB10">
-                <a class="navbar-brand" href="/">
-                    <span class="" id="sidebarLogo">
-                        EXAMBAZAAR
-                    </span>
-                </a>
+            <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder marginB10">
+                <div layout="row" layout-align="center center" flex>
+                    <a class="navbar-brand" href="/">
+                        <span class="" id="sidebarLogo">
+                            EXAMBAZAAR
+                        </span>
+                    </a>
+                </div>
+                <div sidebarjs-toggle layout="row" layout-align="center center" class="padding5 marginR10">
+                    <i class="fa fa-times-circle-o font24" aria-hidden="true"></i>
+                </div>
+                
+                
             </div>
             <div flex layout="column" layout-align="center center" class="width100">
 
