@@ -26,13 +26,13 @@ function AppCtrl(SidebarJS) {
   }
 }
 
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js', 'ngSidebarJS']);
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js', 'ngSidebarJS', 'ui-notification']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin'
     (function() {
     'use strict';
     angular
     .module('exambazaar')
-    .config(function($mdThemingProvider, $facebookProvider) {
+    .config(function($mdThemingProvider, $facebookProvider, NotificationProvider) {
         $mdThemingProvider
             .theme("default")
             .primaryPalette("teal");
@@ -40,7 +40,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $facebookProvider.setAppId('1236747093103286');
         $facebookProvider.setPermissions("public_profile,email"); //, user_education_history, publish_actions
         //$anchorScrollProvider.disableAutoScrolling();
-        
+        NotificationProvider.setOptions({
+            delay: 10000,
+            startTop: 20,
+            startRight: 10,
+            verticalSpacing: 20,
+            horizontalSpacing: 20,
+            positionX: 'right',
+            positionY: 'bottom'
+        });
     })
     .controller('streamController', streamController);
     function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope,  $location) {
@@ -1057,6 +1065,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.showGroupHelper = function(cityCoachingForm) {
             return $http.post('/api/targetStudyProviders/showGroupHelper',cityCoachingForm);
+        };
+        this.showGroupHelperById = function(coachingId) {
+            return $http.post('/api/targetStudyProviders/showGroupHelperById',coachingId);
         };
         this.searchCityReviewProviders = function(cityQueryForm) {
             return $http.post('/api/targetStudyProviders/cityReviewQuery',cityQueryForm);
@@ -10569,7 +10580,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
       
     exambazaar.controller("aroundmeController", 
-        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation){
+        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification){
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
             
@@ -10628,8 +10639,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
                 
             });
+            $scope.goToCoaching = function(provider){
+                var coachingForm = {
+                    _id: provider._id 
+                };
+                targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+                        var examStream = data;
+                        
+                        var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
+                        window.open(url,'_blank');
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error ' + data + ' ' + status);
+                    });
+            };
             
-            
+            function latlngfromIP(){
+                if($cookies.getObject('ip')){
+                    var thisIP = $cookies.getObject('ip');
+                    console.log("Using IP to geolocate user");
+                    console.log(thisIP);
+                    $scope.currLocation = [thisIP.lat, thisIP.long];
+                    Notification.warning("Exambazaar couldn't locate you with accuracy");
+                }    
+            };
             if (navigator.geolocation) {
                   var timeoutVal = 10 * 1000 * 1000;
                   navigator.geolocation.getCurrentPosition(
@@ -10640,11 +10673,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
                 else {
                   alert("Geolocation is not supported by your browser");
+                    //use ip info
                 }
 
                 function displayPosition(position) {
                     $scope.currLocation = [position.coords.latitude, position.coords.longitude];
-                  console.log("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
+                  //console.log("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
                 }
                 function displayError(error) {
                   var errors = { 
@@ -10653,6 +10687,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     3: 'Request timeout'
                   };
                   console.log("Error: " + errors[error.code]);
+                    //use ip info
+                    latlngfromIP();
                 }
             
             $scope.showProvider = function(event, provider){
@@ -10697,7 +10733,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
             };
             
-            $scope.searchDistance = 10;
+            $scope.searchDistance = 5;
             $scope.searchExams = [];
             $scope.aroundme = function(){
                 console.log($scope.searchExams);
@@ -10720,6 +10756,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     });
                     var latLngs = $scope.providers.map(function(a) {return a.mapLatLng;});
                     zoomToIncludeMarkers(latLngs);
+                    Notification.success({message: "We found " + $scope.providers.length + " coaching institutes around you!", delay: 20000});
+                    Notification.primary({message: "Click on any to explore more!", delay: 20000});
+                    
+                    Notification.error({message: 'Error notification 1s', delay: 1000});
                     //console.log(data);
                 })
                 .error(function (data, status, header, config) {

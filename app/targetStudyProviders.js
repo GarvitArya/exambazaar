@@ -931,7 +931,9 @@ router.post('/aroundme', function(req, res) {
                 $centerSphere : [coordinates, kmsToRadian(kms)]
             }
         },
-        disabled: false
+        disabled: false,
+        exams: {$exists: true}, 
+        $where:'this.exams.length>0'
     };
     
     /*var query = {
@@ -1349,6 +1351,35 @@ router.post('/showGroupHelper', function(req, res) {
         });
     } else {throw err;}
     }).sort( { name: 1 } ).limit(20); //.limit(500) .sort( { rank: -1 } )
+});
+
+router.post('/showGroupHelperById', function(req, res) {
+    var coachingForm = req.body;
+    var coachingId = coachingForm._id;
+    
+    var cityProvider = targetStudyProvider.findOne({_id: coachingId}, {exams:1, city:1, groupName: 1},function(err, cityProvider) {
+    if (!err){
+        var thisExam = cityProvider.exams[0];
+        
+        var thisExam =exam
+            .findOne({_id: thisExam})
+            .deepPopulate('stream')
+            .exec(function (err, thisExam) {
+            if (!err){
+                var examName = thisExam.name;
+                var streamName = thisExam.stream.name;
+                
+                var examStream = {
+                    exam: examName,
+                    stream: streamName,
+                    city: cityProvider.city,
+                    groupName: cityProvider.groupName,
+                };
+                res.json(examStream);
+            } else {throw err;}
+        });
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
 });
 
 

@@ -628,7 +628,7 @@
     <div layout="row" id="heroHeader">
         <div hide-xs flex="15" layout="column" layout-align="end end" class="paddingB10">
             <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
-                <img  ng-src="{{provider.logo}}" class="pageLogo" alt="{{provider.name}} Logo"/>
+                <img  ng-if="provider.logo" ng-src="{{provider.logo}}" class="pageLogo" alt="{{provider.name}} Logo" />
                 
                 <span class="textDarkGrey" ng-show="provider.logo == '' || !provider.logo" ng-click="">
                     

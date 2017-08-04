@@ -94,7 +94,8 @@
                     <div layout="column" layout-align="center center">
                         <div>{{activeProvider.name}}</div>
                         <div>
-                            <a ui-sref="claim({ coachingId:{{'activeProvider._id'}} })" target="_blank" id="link">Open Me</a>
+                            <!-- ui-sref="claim({ coachingId:{{'activeProvider._id'}} })" target="_blank"-->
+                            <a ng-click="goToCoaching(activeProvider)" id="link">Open Me</a>
                         </div>
                       
                     </div>
