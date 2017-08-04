@@ -10626,30 +10626,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 console.log('map', map);
                 $scope.map = map;
                 
-                if ("geolocation" in navigator) {
-                    console.log("geolocation is available");
-
-                    function geo_success(position) {
-                      console.log(position.coords.latitude, position.coords.longitude);
-                    }
-
-                    function geo_error() {
-                      console.log("Sorry, no position available.");
-                    }
-
-                    var geo_options = {
-                      enableHighAccuracy: true, 
-                      maximumAge        : 30000, 
-                      timeout           : 27000
-                    };
-
-                    var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
-
-                  /* geolocation is available */
-                } else {
-                    console.log("geolocation IS NOT available");
-                  /* geolocation IS NOT available */
-                }
+                
             });
             
             
