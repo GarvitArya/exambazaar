@@ -305,7 +305,7 @@
         </ul>
         </div>
         <div layout="row" layout-align="start center" class="">
-            <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-green2" ng-click = "showLoginForm()">Log in</md-button>
+            <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large" ng-click = "showLoginForm()" ng-class="headerButtonCSS()">Log in</md-button>
             
             
         </div>

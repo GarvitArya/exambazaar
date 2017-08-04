@@ -6790,6 +6790,24 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
                 return headerBackgroundCSS;
             };
+            
+            $scope.headerButtonCSS = function(){
+                var stateName = $state.current.name;
+                var headerButtonCSS = "md-green2";
+                var sIndex = -1;
+                
+                sIndex = headerGreenStates.indexOf(stateName);
+                if(sIndex != -1){
+                    headerButtonCSS = "md-black";
+                }
+                
+                sIndex = headerTransparentStates.indexOf(stateName);
+                if(sIndex != -1){
+                    headerButtonCSS = "md-black";
+                }
+                return headerButtonCSS;
+            };
+            
             $scope.headerShowOptions = function(){
                 var stateName = $state.current.name;
                 var showVal = true;
@@ -8899,8 +8917,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
                     var examStream = data;
-                    var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
-                    window.open(url,'_blank');
+                    $state.go('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
+                    
+                    
                 })
                 .error(function (data, status, header, config) {
                     console.info('Error ' + data + ' ' + status);
