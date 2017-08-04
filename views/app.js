@@ -58,7 +58,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         $scope.streams = streamList.data;
         /*$rootScope.pageTitle = "Exambazaar: Select the stream you want to study";
-        $rootScope.pageTitle = "Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching institutes in your city. Our easy-to-use website shows you all the coaching institutes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching institutes to succeed";*/
+        $rootScope.pageTitle = "Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching classes in your city. Our easy-to-use website shows you all the coaching classes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching classes to succeed";*/
         $rootScope.pageTitle = 'Exambazaar: Select your Exam Stream';
         
         
@@ -1394,8 +1394,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         
         $rootScope.pageTitle = "Choose exam within " + $scope.category.displayname + " Stream";
-        $rootScope.pageDescription = "Study for " + examNames + " at the best coaching institutes across 90 cities of India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
-        var streamKeywords = "Exambazaar " + $scope.category.displayname + " Coaching, "+ "Best " + $scope.category.displayname + " Coaching Institutes, " + "Top " + $scope.category.displayname + " Coaching Centre, " + $scope.category.displayname + " Coaching in India, ";
+        $rootScope.pageDescription = "Study for " + examNames + " at the best coaching classes across 90 cities of India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Classes in India";
+        var streamKeywords = "Exambazaar " + $scope.category.displayname + " Coaching, "+ "Best " + $scope.category.displayname + " Coaching Classes, " + "Top " + $scope.category.displayname + " Coaching Centre, " + $scope.category.displayname + " Coaching in India, ";
         $rootScope.pageKeywords = "Exambazaar, " + streamKeywords + examNamesCoaching;
             
     }]); 
@@ -1412,9 +1412,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.subcategory = [];
             
         
-        $rootScope.pageTitle = 'Exambazaar: Find best coaching institutes in your city for more than 50 exams';
-        $rootScope.pageDescription = "Search and apply to the best coaching institutes and get the education that you deserve. Browse through courses, photos, videos and results for 26000+ institutes in 90+ cities";
-        $rootScope.pageKeywords = "Exambazaar, Best Coaching Institutes, Top Coaching Centre, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
+        $rootScope.pageTitle = 'Exambazaar: Find best coaching classes in your city for more than 50 exams';
+        $rootScope.pageDescription = "Search and apply to the best coaching classes and get the education that you deserve. Browse through courses, photos, videos and results for 26000+ institutes in 90+ cities";
+        $rootScope.pageKeywords = "Exambazaar, Best Coaching Classes, Top Coaching Centre, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
         
         
             
@@ -1477,9 +1477,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
           
         
         $rootScope.pageTitle = $scope.subcategory.displayname + ": Select city to study";
-        $rootScope.pageDescription = "Search for " + $scope.subcategory.displayname + " coaching institutes in " + cityNames + " and 90 other cities in India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
+        $rootScope.pageDescription = "Search for " + $scope.subcategory.displayname + " coaching classes in " + cityNames + " and 90 other cities in India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Classes in India";
         
-        var examKeywords = "Exambazaar " + $scope.subcategory.displayname + " Coaching, "+ "Best " + $scope.subcategory.displayname + " Coaching Institutes, " + "Top " + $scope.subcategory.displayname + " Coaching Centre, " + $scope.subcategory.displayname + " Coaching in India, ";
+        var examKeywords = "Exambazaar " + $scope.subcategory.displayname + " Coaching, "+ "Best " + $scope.subcategory.displayname + " Coaching Classes, " + "Top " + $scope.subcategory.displayname + " Coaching Centre, " + $scope.subcategory.displayname + " Coaching in India, ";
         $rootScope.pageKeywords = "Exambazaar, " + examKeywords + cityNamesCoaching;
             
     }]);    
@@ -1700,10 +1700,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         
         $rootScope.pageTitle = $scope.subcategory.displayname + " Coaching in " + $scope.city;
-        $rootScope.pageDescription = "Select from top " + $scope.uniqueInstitutes.length + " " +   $scope.subcategory.displayname + " Coaching Institutes in " + $scope.city + ". Choose from "+ coachingGroupNames + " and " + " many more!" + " | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Institutes in India";
+        $rootScope.pageDescription = "Select from top " + $scope.uniqueInstitutes.length + " " +   $scope.subcategory.displayname + " Coaching Classes in " + $scope.city + ". Choose from "+ coachingGroupNames + " and " + " many more!" + " | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Classes in India";
         
-        var coachingKeywords = "Best " + $scope.subcategory.displayname + " Coaching Institutes in " + $scope.city + ", " + "Top " + $scope.uniqueInstitutes.length + " " + $scope.subcategory.displayname + " Coaching Centres in " +$scope.city + ", ";
+        var coachingKeywords = "Best " + $scope.subcategory.displayname + " Coaching Classes in " + $scope.city + ", " + "Top " + $scope.uniqueInstitutes.length + " " + $scope.subcategory.displayname + " Coaching Centres in " +$scope.city + ", ";
         $rootScope.pageKeywords = coachingKeywords + coachingGroupNamesCity;
+        
     }]); 
     
     
@@ -8903,7 +8904,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.searchFocusIn = function(){
                 console.log('Focus In');
                 $rootScope.searchMode = true;
-                $rootScope.searchPlaceholder = "Search Exambazaar for over 26,000 coaching institutes for 50+ Exams in 90+ cities";
+                $rootScope.searchPlaceholder = "Search Exambazaar for over 26,000 coaching classes for 50+ Exams in 90+ cities";
             };
             $scope.searchFocusOut = function(){
                 console.log('Focus Out');
@@ -10419,7 +10420,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $mdDialog.cancel();
                 },1000)
             };
-            $rootScope.pageTitle ='Search & Review Coaching Institutes';
+            $rootScope.pageTitle ='Search & Review Coaching Classes';
             
     }]); 
     
@@ -10455,7 +10456,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });
             });*/
             
-            $rootScope.pageTitle ='Search & Review Coaching Institutes';
+            $rootScope.pageTitle ='Search & Review Coaching Classes';
             
             $scope.fbLoginStatus = {};
             $scope.user = $cookies.getObject( 'sessionuser');
@@ -10489,7 +10490,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                       href: currURL,
                       redirect_uri: 'https://www.exambazaar.com/', 
                       hashtag: '#exambazaar',
-                      quote: 'Exambazaar: Find best coaching institutes in your city for more than 50 exams',
+                      quote: 'Exambazaar: Find best coaching classes in your city for more than 50 exams',
                       display: 'iframe',
                       mobile_iframe: true
                     }, function(response){
@@ -10874,7 +10875,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     });
                     var latLngs = $scope.providers.map(function(a) {return a.mapLatLng;});
                     zoomToIncludeMarkers(latLngs);
-                    Notification.success({message: "We found " + $scope.providers.length + " coaching institutes around you!", delay: 20000});
+                    Notification.success({message: "We found " + $scope.providers.length + " coaching classes around you!", delay: 20000});
                     Notification.primary({message: "Click on any to explore more!", delay: 20000});
                     
                     Notification.error({message: 'Error notification 1s', delay: 1000});
@@ -11821,7 +11822,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                       href: currURL,
                       redirect_uri: 'https://www.exambazaar.com/', 
                       hashtag: '#exambazaar',
-                      quote: 'Exambazaar: Find best coaching institutes in your city for more than 50 exams',
+                      quote: 'Exambazaar: Find best coaching classes in your city for more than 50 exams',
                       display: 'iframe',
                       mobile_iframe: true
                     }, function(response){
@@ -12216,7 +12217,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$facebook', '$location', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $facebook, $location){
             
             
-            $rootScope.pageTitle ='Search & Review Coaching Institutes';
+            $rootScope.pageTitle ='Search & Review Coaching Classes';
             
             
     }]); 
@@ -15301,7 +15302,7 @@ function getLatLng(thisData) {
         
     exambazaar.factory('metaService', function () {
         var title = 'Exambazaar: Select the stream you want to study',
-        description = 'Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching institutes in your city. Our easy-to-use website shows you all the coaching institutes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching institutes to succeed',
+        description = 'Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching classes in your city. Our easy-to-use website shows you all the coaching classes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching classes to succeed',
         service = {
             title: getTitle,
             setTitle: setTitle,
@@ -15373,7 +15374,7 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'landing.html',
+                    templateUrl: 'p0.html',
                     controller: 'landingController'
                 },
                 'footer': {
@@ -15382,8 +15383,8 @@ function getLatLng(thisData) {
             },
             resolve: {
                  data: function($rootScope) {
-                    $rootScope.pageTitle = 'Exambazaar: Find best coaching institutes in your city for 50+ Indian exams';
-                    $rootScope.pageDescription = "Exambazaar:find best coaching institutes in your city. Browse courses, photos, vidoes and results for over 50 entrance exams in India";
+                    $rootScope.pageTitle = 'Exambazaar: Find best coaching classes in your city for 50+ Indian exams';
+                    $rootScope.pageDescription = "Exambazaar:find best coaching classes in your city. Browse courses, photos, vidoes and results for over 50 entrance exams in India";
                  }
             }
         })
@@ -15411,7 +15412,7 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'stream.html',
+                    templateUrl: 'p1.html',
                     controller: 'streamController'
                 },
                 'footer': {
@@ -15450,7 +15451,7 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'category.html',
+                    templateUrl: 'p2.html',
                     controller: 'categoryController'
                 },
                 'footer': {
@@ -15473,7 +15474,7 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'city.html',
+                    templateUrl: 'p3.html',
                     controller: 'cityController'
                 },
                 'footer': {
@@ -15502,7 +15503,7 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'coaching.html',
+                    templateUrl: 'p4.html',
                     controller: 'coachingController',
                 },
                 'footer': {
@@ -15577,7 +15578,7 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'showGroup.html',
+                    templateUrl: 'p5.html',
                     controller: 'showGroupController',
                 },
                 'footer': {
@@ -16416,7 +16417,7 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'landing.html',
+                    templateUrl: 'p0.html',
                     controller: 'whyReviewController'
                 },
                 'footer': {
@@ -18473,6 +18474,12 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions) 
         console.log("statechange success");
         document.body.scrollTop = document.documentElement.scrollTop = 0;
         //$mdDialog.hide();
+        console.log("SEO Title: " + $rootScope.pageTitle);
+        console.log("SEO Description: " + $rootScope.pageDescription);
+        console.log("SEO Keywords: " +  $rootScope.pageKeywords);
+        console.log("FB Page URL: " +  $rootScope.pageURL);
+        console.log("FB Page Image: " +  $rootScope.pageImage);
+        
     });
     
     var currURL = $location.absUrl();
