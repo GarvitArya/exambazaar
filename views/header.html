@@ -197,10 +197,10 @@
             </li> 
             </ul>
         </div>
-        <div  layout="row" layout-align="end center" flex class="paddingLR10" >
-            <ul hide-xs flex class="nav navbar-nav" ng-controller="autocompleteController as ctrl" ng-if="headerShowOptions()">
-                <!--ng-if="sessionuser.userType=='Intern - Business Development' || sessionuser.userType=='Master'"-->
-                <md-autocomplete id="custom" md-input-name="headerSearch" flex 
+        <div  layout="row" layout-align="end center" flex class="paddingL10 paddingR40" >
+            <ul hide-xs flex class="nav navbar-nav navbar-right" ng-controller="autocompleteController as ctrl" ng-if="headerShowOptions()" >
+                <div flex layout="row" layout-align="end center">
+                    <md-autocomplete id="custom" md-input-name="headerSearch" 
                     md-selected-item="ctrl.selectedItem"
                     md-selected-item-change= "ctrl.selectedItemChange(item)"
                     md-search-text="ctrl.searchText"
@@ -209,7 +209,7 @@
                     md-delay="300"
                     md-menu-class="autocomplete"
                     placeholder="{{searchPlaceholder}}"
-                    class="width100"
+                    class="widthHeaderSearch" ng-class="{ width100: searchMode }"
                     ng-focus="searchFocusIn()"
                     ng-blur="searchFocusOut()">
                         <md-item-template>
@@ -228,6 +228,8 @@
                         </md-item-template>
 
                 </md-autocomplete>
+                
+                </div>
                 
             </ul>    
             <ul hide-gt-xs flex class="nav navbar-nav" ng-controller="autocompleteController as ctrl">
@@ -264,6 +266,7 @@
                 </md-autocomplete>
                 
             </ul>
+            
         </div>    
             
         </div>

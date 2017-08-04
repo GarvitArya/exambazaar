@@ -6753,7 +6753,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,$geolocation, $facebook, $mdDialog, EmailService, SidebarJS){
             $rootScope.searchMode = false;
-            $rootScope.searchPlaceholder = "Start typing to search...";
+            $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
             //ABCD
             var headerGreenStates = ["findCoaching", "showCoaching", "showGroup"];
@@ -6794,17 +6794,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $scope.headerButtonCSS = function(){
                 var stateName = $state.current.name;
-                var headerButtonCSS = "md-green2";
+                var headerButtonCSS = "md-green2 tolowercase";
                 var sIndex = -1;
                 
                 sIndex = headerGreenStates.indexOf(stateName);
                 if(sIndex != -1){
-                    headerButtonCSS = "md-black";
+                    headerButtonCSS = "md-black tolowercase";
                 }
                 
                 sIndex = headerTransparentStates.indexOf(stateName);
                 if(sIndex != -1){
-                    headerButtonCSS = "md-black";
+                    headerButtonCSS = "md-green2 tolowercase";
                 }
                 return headerButtonCSS;
             };
@@ -8909,7 +8909,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.searchFocusOut = function(){
                 console.log('Focus Out');
                 $rootScope.searchMode = false;
-                $rootScope.searchPlaceholder = "Start typing to search...";
+                $rootScope.searchPlaceholder = "Search";
                 $rootScope.showMobileSearch = !$rootScope.showMobileSearch;
             };
             $scope.goToCoaching = function(provider){
