@@ -10645,16 +10645,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });   
             };
             
+            NgMap.getMap().then(function(map) {
+                console.log('map', map);
+                $scope.map = map;
+            });
             
             $scope.showProvider = function(event, provider){
                 $scope.activeProvider = provider;
                 if(!provider.logo || provider.logo == ''){
                     $scope.activeProvider.logo = '';
                 }
-                
+                $scope.map.showInfoWindow('foo-iw', $scope.activeProvider._id);
             };
             
-            
+            $scope.hideDetail = function() {
+                $scope.map.hideInfoWindow('foo-iw');
+            };
             $scope.onDragEnd = function (marker, $event) {
                 var lat = marker.latLng.lat();
                 var lng = marker.latLng.lng();

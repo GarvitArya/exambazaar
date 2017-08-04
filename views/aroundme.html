@@ -69,50 +69,80 @@
         background: #FF5A5F;
         border: 1px solid #fff;
     }
+    
+    
+    
 </style>
 
 
 <div layout="column" class="whiteBackground mainContent" layout-fill>
-    <div id="spacer">
-    </div>
-    <div  layout-wrap layout="row" class="padded2">
-        <div layout="row" class="width100">
-                
-            <div layout="row" layout-align="start center" flex="50">
-                <div>
-                    <md-slider flex min="0" max="40" ng-model="searchDistance" aria-label="distance">
-                    </md-slider>
-                </div>
-                <div>
-                    search within {{searchDistance}} kms
-                </div>
-                <div>
-                    <md-button class="md-black md-small " ng-click="showExamDialog()">
-                        Exam Filter
-                    </md-button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    <div  layout-wrap layout="row" class="padded2">
-        <div flex="70" flex-xs="100" layout="column" class="">
-            <ng-map center="{{currLocation}}" scrollwheel="true" zoom="13" id="map" class="min80vh">
+    <!--<div id="spacer">
+    </div>-->
+    
+    <div  layout-wrap layout="row" class="">
+        <div flex="100" flex-xs="100" layout="column" class="">
+            <ng-map center="{{currLocation}}" scrollwheel="true" zoom="13" id="map" class="min100vh">
                 <marker position="{{currLocation}}"
                   title="City" draggable="true" on-dragend="onDragEnd(this)" icon="{path:'CIRCLE', scale: 10}"></marker>
 
-                <marker position="{{provider.mapLatLng}}"
+                <marker id='{{provider._id}}' position="{{provider.mapLatLng}}"
                 title="{{provider.name}}"
                 ng-repeat="provider in providers | filter:filterText as filtered track by $index" on-click="showProvider(event, provider)">
 
                 </marker>
+                <info-window id="foo-iw">
+                    <div layout="column" layout-align="center center">
+                        <div>{{activeProvider.name}}</div>
+                        <div>
+                            <a ui-sref="claim({ coachingId:{{'activeProvider._id'}} })" target="_blank" id="link">Open Me</a>
+                        </div>
+                      
+                    </div>
+                </info-window>
+                
             </ng-map>
         </div>
         
+        <!--<div layout="column" layout-align="center start" class="leftMidButton showBorder paddingL20">
+            <div layout="row"  ng-if="activeProvider" class="width100 whiteBackground showBorder">
+                
+                <div flex="70" layout="column" layout-align="start start">
+                    <div flex layout="column" layout-align="start start" class="editFont width100 font10" >
+                        <span class="editFont">
+                            <a ui-sref="claim({ coachingId:{{'activeProvider._id'}} })" target="_blank" id="link">
+                            <strong>{{activeProvider.name}}</strong>
+                            </a>
+                        </span>
+                        <span>{{activeProvider.address}}</span>
+                        <span>Verfiy State: {{activeProvider.ebVerifyState}}</span>
+                        <span>
+                        <span ng-repeat="phone in activeProvider.phone" >
+                            {{phone}}&nbsp;
+                        </span>
+                        </span>
+                        <span>
+                        <span ng-repeat="mobile in activeProvider.mobile" >
+                            {{mobile}}&nbsp;
+                        </span>
+                        </span>
+                        <span>
+                        <span class="marginR5" ng-repeat="website in activeProvider.website" >
+                            <a ng-href="{{website}}" target="_blank"  id="link">
+                            {{website}}
+                            </a>
+                        </span>
+                        </span>
+                    </div>
+                </div>
+                <div flex="30" layout="column" layout-align="start start">
+                    <img ng-if="activeProvider.logo && activeProvider.logo!=''" ng-src="{{activeProvider.logo}}" id="logo"/>
+                </div>
+            
+            </div>
+        </div>
+        -->
         
-        
-        
-        <div flex="30" flex-xs="100" layout="column" layout-align="start start" class="padded2 marginT20" ng-if="providers.length > 0">
+        <!--<div flex="30" flex-xs="100" layout="column" layout-align="start start" class="padded2 marginT20" ng-if="providers.length > 0">
             
             <div layout="row" class="font12" >
                 We found {{providers.length}} providers within {{searchDistance}} kms around you
@@ -153,7 +183,7 @@
             
             </div>
             
-        </div>
+        </div>-->
         
     </div>
     
