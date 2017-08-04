@@ -10623,7 +10623,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             
             NgMap.getMap().then(function(map) {
-                console.log('map', map);
+                //console.log('map', map);
                 $scope.map = map;
                 
                 
@@ -10639,11 +10639,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                   );
                 }
                 else {
-                  alert("Geolocation is not supported by this browser");
+                  alert("Geolocation is not supported by your browser");
                 }
 
                 function displayPosition(position) {
-                  alert("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
+                    $scope.currLocation = [position.coords.latitude, position.coords.longitude];
+                  console.log("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
                 }
                 function displayError(error) {
                   var errors = { 
@@ -10651,7 +10652,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     2: 'Position unavailable',
                     3: 'Request timeout'
                   };
-                  alert("Error: " + errors[error.code]);
+                  console.log("Error: " + errors[error.code]);
                 }
             
             $scope.showProvider = function(event, provider){
