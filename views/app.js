@@ -10573,30 +10573,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
             
-            if ("geolocation" in navigator) {
-                console.log("geolocation is available");
-               
-                function geo_success(position) {
-                  console.log(position.coords.latitude, position.coords.longitude);
-                }
-
-                function geo_error() {
-                  alert("Sorry, no position available.");
-                }
-
-                var geo_options = {
-                  enableHighAccuracy: true, 
-                  maximumAge        : 30000, 
-                  timeout           : 27000
-                };
-
-                var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
-                
-              /* geolocation is available */
-            } else {
-                console.log("geolocation IS NOT available");
-              /* geolocation IS NOT available */
-            }
+            
             
             
             /*if (navigator.geolocation) {
@@ -10623,7 +10600,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }else{
                 $scope.user = null;
             }
-            if($cookies.getObject('userPosition')){
+            /*if($cookies.getObject('userPosition')){
                 $scope.userPosition = $cookies.getObject('userPosition');
                 
                 var res = $scope.userPosition.split(",");
@@ -10634,7 +10611,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 //$scope.currLocation = [28.544976, 77.192628];
                 
                 
-            }
+            }*/
             
             $scope.setLocofAll = function(){
                 targetStudyProviderService.setLocOfAll().success(function (data, status, headers) {
@@ -10648,7 +10625,57 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             NgMap.getMap().then(function(map) {
                 console.log('map', map);
                 $scope.map = map;
+                
+                if ("geolocation" in navigator) {
+                    console.log("geolocation is available");
+
+                    function geo_success(position) {
+                      console.log(position.coords.latitude, position.coords.longitude);
+                    }
+
+                    function geo_error() {
+                      console.log("Sorry, no position available.");
+                    }
+
+                    var geo_options = {
+                      enableHighAccuracy: true, 
+                      maximumAge        : 30000, 
+                      timeout           : 27000
+                    };
+
+                    var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+
+                  /* geolocation is available */
+                } else {
+                    console.log("geolocation IS NOT available");
+                  /* geolocation IS NOT available */
+                }
             });
+            
+            
+            if (navigator.geolocation) {
+                  var timeoutVal = 10 * 1000 * 1000;
+                  navigator.geolocation.getCurrentPosition(
+                    displayPosition, 
+                    displayError,
+                    { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
+                  );
+                }
+                else {
+                  alert("Geolocation is not supported by this browser");
+                }
+
+                function displayPosition(position) {
+                  alert("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
+                }
+                function displayError(error) {
+                  var errors = { 
+                    1: 'Permission denied',
+                    2: 'Position unavailable',
+                    3: 'Request timeout'
+                  };
+                  alert("Error: " + errors[error.code]);
+                }
             
             $scope.showProvider = function(event, provider){
                 $scope.activeProvider = provider;
