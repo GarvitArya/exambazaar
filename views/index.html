@@ -510,6 +510,9 @@
         .min100vh{
             min-height: 100vh;
         }
+        .min90vh{
+            min-height: 90vh;
+        }
         .min80vh{
             min-height: 80vh;
         }
@@ -724,7 +727,7 @@
         }
         #fullPageBackground{
             /*background-image: url("images/background/patterns/project_papper.png");*/
-            background-color: whitesmoke;
+            background-color: white;
             /*
             background-image: url("images/background/patterns/project_papper.png");
            
@@ -1901,7 +1904,9 @@
           background-color: #5B7BD5;
           background-image: linear-gradient(#5B7BD5, #4864B1);
         }
-        
+        .footer{
+            border-top: 0.4px solid gainsboro;
+        }
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
@@ -1942,7 +1947,7 @@
     
     <div  layout="column" ng-controller="headerController" ng-cloak>
         <div ui-view="header"></div>
-        <div ui-view="body" id="fullPageBackground"></div>
+        <div ui-view="body" class="min90vh" ></div>
         <div ui-view="footer"></div>
         
         

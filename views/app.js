@@ -10755,8 +10755,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             NgMap.getMap().then(function(map) {
                 //console.log('map', map);
                 $scope.map = map;
-                
-                
             });
             $scope.goToCoaching = function(provider){
                 var coachingForm = {
@@ -10797,6 +10795,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                 function displayPosition(position) {
                     $scope.currLocation = [position.coords.latitude, position.coords.longitude];
+                    Notification.success("Great, we have located you!");
                   //console.log("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
                 }
                 function displayError(error) {
