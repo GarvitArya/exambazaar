@@ -1119,7 +1119,7 @@ router.post('/addPhoto', function(req, res) {
 router.get('/query/:query', function(req, res) {
     var query = req.params.query;
     console.log(query);
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1},function(err, docs) {
+    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false, type: 'Coaching', exams: {$exists: true}, $where:'this.exams.length>0'}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -1357,7 +1357,7 @@ router.post('/showGroupHelperById', function(req, res) {
     var coachingForm = req.body;
     var coachingId = coachingForm._id;
     
-    var cityProvider = targetStudyProvider.findOne({_id: coachingId}, {exams:1, city:1, groupName: 1},function(err, cityProvider) {
+    var cityProvider = targetStudyProvider.findOne({_id: coachingId, exams: {$exists: true}, $where:'this.exams.length>0'}, {exams:1, city:1, groupName: 1},function(err, cityProvider) {
     if (!err){
         var thisExam = cityProvider.exams[0];
         

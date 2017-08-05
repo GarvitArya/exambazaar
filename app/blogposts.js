@@ -67,6 +67,36 @@ router.get('/getblogs', function(req, res) {
     });
 });
 
+router.get('/headerBlogs', function(req, res) {
+    
+    var blogposts = blogpost.find({active: true},{title:1, user:1,urlslug:1, readingTime:1, _created:1},function(err, blogposts) {
+    if (!err){
+        var allBlogposts = [];
+        var nBlogposts = blogposts.length;
+        var counter = 0;
+        if(nBlogposts == 0){
+            res.json([]);
+        }
+        blogposts.forEach(function(thisBlogpost, rindex){
+            var thisBlogUser = thisBlogpost.user;
+            var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1, image:1, blogger:1},function (err, thisBlogUserInfo) {
+                if (!err){
+                    thisBlogpost.user = thisBlogUserInfo;
+                    counter += 1;
+                    allBlogposts.push(thisBlogpost);
+                    if(counter == nBlogposts){
+                        res.json(allBlogposts);   
+                    }
+                }
+            });
+
+        });
+        
+    } else {throw err;}
+    }).limit(4);
+    
+});
+
 router.get('/userblogs/:userId', function(req, res) {
     var userId = req.params.userId;
     

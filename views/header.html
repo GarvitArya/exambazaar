@@ -43,14 +43,14 @@
         color: black;
     }
     .headerGreen.navbar-default .navbar-nav > li > a, .headerGreen.navbar-default .navbar-nav > li > a:hover, .headerGreen.navbar-default .navbar-nav > li > a:focus {
-        color: #696969;
+        color: black;
     }
     .headerTransparent.navbar-default .navbar-nav > li > a, .headerTransparent.navbar-default .navbar-nav > li > a:hover, .headerTransparent.navbar-default .navbar-nav > li > a:focus {
         color: white;
     }
 </style>
 
-<nav class="navbar navbar-default navbar-fixed-top nav-justified thirdFont font14" role="navigation" id="mainNav" ng-class="headerBackgroundCSS()">
+<nav class="navbar navbar-default navbar-fixed-top nav-justified secondFont font14 spacedLetter09" role="navigation" id="mainNav" ng-class="headerBackgroundCSS()">
     <div layout="row" layout-align="start center" class="" >
         <div hide-gt-xs ng-if="!showMobileSearch" layout="row" layout-align="start center" class="paddingL20" sidebarjs-toggle>
             <i class="fa fa-bars font32" aria-hidden="true" ng-class="headerLogoCSS()"></i>
@@ -68,7 +68,57 @@
             </span>
         </a>
         <ul hide-xs class="nav navbar-nav" ng-if="!searchMode">
-            <li><a ui-sref="blog">Blog</a></li>
+            <!--<li><a ui-sref="blog">Blog</a></li>-->
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog</a>
+              <ul class="dropdown-menu" >
+              <li ui-sref="blog">
+                    <a>
+                    <div flex layout="row" layout-align="start center">
+                        <div layout="row" layout-align="start center" class="paddingR10">
+                            <img src="icons/eb.png" id="userPic" class="img-circle"/>
+                        </div>
+                        <div flex layout="column" layout-align="start start">
+                            <div class="bold">Take me to Exambazaar Blog</div>
+                            <div layout="row" layout-align="start center" class="subheader">
+                                Resources, tips & material to help you ace your exam preparation
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                </li>
+              <li ui-sref="blog">
+                <a>
+                <div flex layout="row" layout-align="start center" class="paddingT20">
+                    Recommended Reading
+                </div>
+                </a>
+                </li> 
+              <li ng-repeat="blog in blogs" ui-sref="showblog({ blogpostSlug:{{'blog.urlslug'}} })" ng-if="blogs && blogs.length > 0">
+                    <a>
+                    <div flex layout="row" layout-align="start center">
+                        <div layout="row" layout-align="start center" class="paddingR10">
+                            <img ng-src="{{blog.user.image}}" id="userPic" class="img-circle"/>
+                        </div>
+                        <div flex layout="column" layout-align="start start">
+                            <div>{{blog.title}}</div>
+                            <div layout="row" layout-align="start center" class="subheader">
+                                
+                                <div layout="row" layout-align="start center" class="paddingR10">
+                                    {{blog.user.basic.name}}
+                                </div>
+                                <div layout="row" layout-align="start center" class="paddingR10">
+                                    {{blog.readingTime.text}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    </a>
+                </li>
+                
+              </ul>
+            </li>
             <li class="dropdown">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Top Rankers<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
@@ -271,7 +321,7 @@
             
         </div>
         <div layout="row" layout-align="start center" ng-if="sessionuser.userId" >
-        <ul class="nav navbar-nav marginLR10">
+        <ul class="nav navbar-nav marginL10 marginR40">
             
         <li class="dropdown" ng-if="sessionuser.userType != 'Partner'">
             <a href="" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle" id="profileMenu">

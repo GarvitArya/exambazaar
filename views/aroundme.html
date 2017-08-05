@@ -201,7 +201,7 @@
     <!--<md-button class="md-black md-small " ng-click="setLocofAll()">
         Transform Lat Lng
     </md-button>-->
-    <md-button class="md-black md-small " ng-click="aroundme()">
+    <md-button class="md-black md-small " ng-click="showExamDialog()"> <!--aroundme-->
         Around me
     </md-button>
 </div>
@@ -212,13 +212,21 @@
           <md-content flex layout="column" class="width100 paddingLR20">
             
             <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
-                <div layout="row" layout-align="center center" flex>
-                    Mark exams you want to search for!
+                <div layout="row" layout-align="start center" >
+                    Tell us the exam you are searching for!
                 </div>
-                <div>
-                    <md-button class="md-danger md-small  tolowercase" ng-click="closeDialog()">
-                        Done
-                    </md-button>
+                <div flex layout="row" layout-align="end center">
+                    <div class="bold paddingR10">
+                        Search within:
+                    </div>
+                    <div ng-repeat="distance in searchDistances" class="paddingLR5">
+                        {{distance}} kms
+                    </div>
+                    <div>
+                        <md-button class="md-danger md-small  tolowercase" ng-click="aroundme()">
+                            Go
+                        </md-button>
+                    </div>
                 </div>
                 
             </div>

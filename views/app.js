@@ -667,6 +667,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getblogs = function(userId) {
             return $http.get('/api/blogposts/getblogs');
         };
+        this.headerBlogs = function() {
+            return $http.get('/api/blogposts/headerBlogs');
+        };
         this.sanitizeblogposts = function() {
             return $http.get('/api/blogposts/sanitizeblogposts');
         };
@@ -6751,10 +6754,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService,NotificationService,ipService,$geolocation, $facebook, $mdDialog, EmailService, SidebarJS){
+        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS){
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
+            
+            
+            
             //ABCD
             var headerGreenStates = ["findCoaching", "showCoaching", "showGroup"];
             var headerTransparentStates = ["landing", "main", "category", "city"];
@@ -6850,6 +6856,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
             }; 
         
+            var newThreshold = "7"; //all blogs less than 1 week are marked as new
+            blogpostService.headerBlogs().success(function (data, status, headers) {
+                $scope.blogs = data;
+                $scope.blogs.forEach(function(thisBlog, index){
+                    thisBlog.fromNow = moment(thisBlog._created).fromNow();
+                });
+                console.log($scope.blogs);
+            })
+            .error(function (data, status, header, config) {
+                console.info('Error ' + data + ' ' + status);
+            });  
         
         if($rootScope.stateName == 'showGroup'){
             $rootScope.coachingGroupName = $stateParams.groupName;
@@ -10852,8 +10869,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             
             $scope.searchDistance = 5;
+            $scope.searchDistances = [1, 5, 10, 20, 50];
             $scope.searchExams = [];
             $scope.aroundme = function(){
+                $mdDialog.hide();
                 console.log($scope.searchExams);
                 
                 var queryForm = {
@@ -10874,7 +10893,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     });
                     var latLngs = $scope.providers.map(function(a) {return a.mapLatLng;});
                     zoomToIncludeMarkers(latLngs);
-                    Notification.success({message: "We found " + $scope.providers.length + " coaching classes around you!", delay: 20000});
+                    Notification.success({message: "We found " + $scope.providers.length + " coaching classes within " + $scope.searchDistance + " around you!", delay: 20000});
                     Notification.primary({message: "Click on any to explore more!", delay: 20000});
                     
                     Notification.error({message: 'Error notification 1s', delay: 1000});
@@ -18475,6 +18494,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions) 
         //$mdDialog.hide();
         console.log("SEO Title: " + $rootScope.pageTitle);
         console.log("SEO Description: " + $rootScope.pageDescription);
+        $rootScope.searchMode = false;
         console.log("SEO Keywords: " +  $rootScope.pageKeywords);
         console.log("FB Page URL: " +  $rootScope.pageURL);
         console.log("FB Page Image: " +  $rootScope.pageImage);
