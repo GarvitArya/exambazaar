@@ -76,8 +76,8 @@
 
 
 <div layout="row" class="whiteBackground mainContent" layout-fill>
-    <div flex="100" flex-xs="100" layout="column" class="">
-        <ng-map center="{{currLocation}}" scrollwheel="false" zoom="13" id="map" class="min100vh">
+    <div layout="column" class="width100">
+        <ng-map center="{{currLocation}}" scrollwheel="true" zoom="13" id="map" class="min100vh">
             <marker position="{{currLocation}}"
               title="City" draggable="true" on-dragend="onDragEnd(this)" icon="{path:'CIRCLE', scale: 10}"></marker>
 
