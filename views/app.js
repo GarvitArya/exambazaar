@@ -6862,7 +6862,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.blogs.forEach(function(thisBlog, index){
                     thisBlog.fromNow = moment(thisBlog._created).fromNow();
                 });
-                console.log($scope.blogs);
             })
             .error(function (data, status, header, config) {
                 console.info('Error ' + data + ' ' + status);
@@ -10699,27 +10698,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
             
-            
-            
-            
-            /*if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
-            } else {
-             console.log("Geolocation is not supported by this browser.");
-            }
-            var latLng = {};
-
-            function showPosition(position) {
-                latLng = {
-                'lat': position.coords.latitude,
-                'lng': position.coords.longitude
-                };
-                $scope.location_address = latLng;
-            };
-            function showError(error) {
-                console.log(error);
-            };
-            */
             $rootScope.pageTitle ='Coaching Centers around you!';
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
@@ -10746,19 +10724,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             .error(function (data, status, header, config) {
                 console.info();
             });
-            
-            /*if($cookies.getObject('userPosition')){
-                $scope.userPosition = $cookies.getObject('userPosition');
-                
-                var res = $scope.userPosition.split(",");
-                res.forEach(function(thisVal, vindex){
-                    thisVal = thisVal.trim();
-                });
-                $scope.currLocation = [res[0], res[1]];
-                //$scope.currLocation = [28.544976, 77.192628];
-                
-                
-            }*/
             
             $scope.setLocofAll = function(){
                 targetStudyProviderService.setLocOfAll().success(function (data, status, headers) {
@@ -10787,7 +10752,58 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         console.info('Error ' + data + ' ' + status);
                     });
             };
-            
+            function reverseGeocodeUser(lat, lng){
+                var geocoder = new google.maps.Geocoder();
+                var latlng = new google.maps.LatLng(lat, lng);
+                geocoder.geocode({ 'latLng': latlng }, function (results, status){
+                    if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+                        var gResults = results[1].address_components;
+                        var userAddress = {
+                            sublocality_level_2: null,    
+                            sublocality: null,    
+                            city: null,    
+                            state: null,    
+                            country: null,    
+                        };
+                        
+                        //console.log(gResults);    
+                        gResults.forEach(function(thisComp, cindex){
+                        var cTypes = thisComp.types;
+                         
+                        if(cTypes.indexOf("sublocality_level_2") != -1){
+                            userAddress.sublocality_level_2 = thisComp.long_name;
+                        } 
+                        if(cTypes.indexOf("sublocality_level_1") != -1){
+                            userAddress.sublocality = thisComp.long_name;
+                        }    
+                        if(cTypes.indexOf("administrative_area_level_2") != -1){
+                            userAddress.city = thisComp.long_name;
+                        }
+                        if(cTypes.indexOf("administrative_area_level_1") != -1){
+                            userAddress.state = thisComp.long_name;
+                        }
+                        if(cTypes.indexOf("country") != -1){
+                            userAddress.country = thisComp.long_name;
+                        }
+                        });
+                           
+                        console.log(userAddress);
+                        if(userAddress.sublocality && userAddress.city){
+                           Notification.success("Great, we have located you at " + userAddress.sublocality + ", " + userAddress.city);
+                           
+                        }
+                        
+                            
+                        //console.log(results[1].formatted_address);
+                        } else {
+                            console.log('Location not found');
+                        }
+                    } else {
+                        console.log('Geocoder failed due to: ' + status);
+                    }
+                });
+            };
             function latlngfromIP(){
                 if($cookies.getObject('ip')){
                     var thisIP = $cookies.getObject('ip');
@@ -10797,6 +10813,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     Notification.warning("Exambazaar couldn't locate you with accuracy");
                 }    
             };
+            
+            $scope.$watch('currLocation', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue != ''){
+                    reverseGeocodeUser(newValue[0], newValue[1]);
+                }
+            }, true);
             if (navigator.geolocation) {
                   var timeoutVal = 10 * 1000 * 1000;
                   navigator.geolocation.getCurrentPosition(
@@ -10812,8 +10834,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                 function displayPosition(position) {
                     $scope.currLocation = [position.coords.latitude, position.coords.longitude];
-                    Notification.success("Great, we have located you!");
-                  //console.log("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
+                    
                 }
                 function displayError(error) {
                   var errors = { 
@@ -10867,13 +10888,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.currLocation = [e.latLng.lat(), e.latLng.lng()];
                 
             };
-            
+            $scope.setSearchDistance = function(distance){
+                $scope.searchDistance = distance;
+            };
             $scope.searchDistance = 5;
             $scope.searchDistances = [1, 5, 10, 20, 50];
             $scope.searchExams = [];
             $scope.aroundme = function(){
                 $mdDialog.hide();
-                console.log($scope.searchExams);
+                Notification.clearAll()
+                //console.log($scope.searchExams);
                 
                 var queryForm = {
                     latlng: {
@@ -10887,16 +10911,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
                 targetStudyProviderService.aroundme(queryForm).success(function (data, status, headers) {
                     $scope.providers = data;
-                
-                    $scope.providers.forEach(function(thisProvider, index){
-                        thisProvider.mapLatLng = [thisProvider.loc.coordinates[1], thisProvider.loc.coordinates[0]]
-                    });
-                    var latLngs = $scope.providers.map(function(a) {return a.mapLatLng;});
-                    zoomToIncludeMarkers(latLngs);
-                    Notification.success({message: "We found " + $scope.providers.length + " coaching classes within " + $scope.searchDistance + " around you!", delay: 20000});
-                    Notification.primary({message: "Click on any to explore more!", delay: 20000});
                     
-                    Notification.error({message: 'Error notification 1s', delay: 1000});
+                    if($scope.providers.length > 0){
+                        $scope.providers.forEach(function(thisProvider, index){
+                            thisProvider.mapLatLng = [thisProvider.loc.coordinates[1], thisProvider.loc.coordinates[0]]
+                        });
+                        var latLngs = $scope.providers.map(function(a) {return a.mapLatLng;});
+                        zoomToIncludeMarkers(latLngs);
+                        Notification.success({message: "We found " + $scope.providers.length + " coaching classes within " + $scope.searchDistance + " kms of your location!", delay: 20000});
+                        
+                    }else{
+                        Notification.error({message: 'Sorry we found no coaching classes around you!', delay: 20000});
+                    }
+                    
+                    
+                    //Notification.error({message: 'Error notification 1s', delay: 1000});
                     //console.log(data);
                 })
                 .error(function (data, status, header, config) {

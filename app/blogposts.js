@@ -93,7 +93,7 @@ router.get('/headerBlogs', function(req, res) {
         });
         
     } else {throw err;}
-    }).limit(4);
+    }).sort( [['_id', -1]] ).limit(4);
     
 });
 
