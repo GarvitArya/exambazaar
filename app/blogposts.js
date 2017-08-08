@@ -229,17 +229,20 @@ router.get('/edit/:blogpostId', function(req, res) {
         .exec(function (err, thisBlogpost) {
             
         if (!err){
-            //console.log(thisBlogpost);
-            var userId = thisBlogpost.user;
-            var thisUser = user
-            .findOne({_id : userId},{basic:1, blogger:1, image:1})
-            //.deepPopulate('exams exams.stream')
-            .exec(function (err, thisUser) {
-            if (!err){
-                thisBlogpost.user = thisUser;
-                res.json(thisBlogpost);
-                } else {throw err;}
-            });
+            if(thisBlogpost){
+                var userId = thisBlogpost.user;
+                var thisUser = user
+                .findOne({_id : userId},{basic:1, blogger:1, image:1})
+                //.deepPopulate('exams exams.stream')
+                .exec(function (err, thisUser) {
+                if (!err){
+                    thisBlogpost.user = thisUser;
+                    res.json(thisBlogpost);
+                    } else {throw err;}
+                });
+            }else{
+                res.json(null);
+            }
         } else {throw err;}
     });
 });
@@ -437,17 +440,23 @@ router.post('/existingBlogpost', function(req, res) {
 
 router.post('/save', function(req, res) {
     var blogpostForm = req.body;
-    var blogpostId = blogpostForm._id;
+    //console.log(blogpostForm);
+    var blogpostId = blogpostForm._id.toString();
     var user = blogpostForm.user;
+    if(blogpostForm.user._id){
+        user = blogpostForm.user._id.toString();
+    }
     
+    console.log(blogpostId + ' ' +user);
     if(blogpostId){
         var existingBlogpost = blogpost
-        .findOne({user: user, _id: blogpostId})
+        .findOne({_id: blogpostId})
         .exec(function (err, existingBlogpost) {
             if (!err){
+                console.log(existingBlogpost);
                 for (var property in blogpostForm) {
-                    if(property != 'user'){
-                       existingBlogpost[property] = blogpostForm[property];
+                    if(property != '_id' && property != 'upvotes'){
+                        existingBlogpost[property] = blogpostForm[property];
                     }
                 }
                 var stats = readingTime(existingBlogpost.content);

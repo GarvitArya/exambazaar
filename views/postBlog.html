@@ -83,6 +83,9 @@
                 Upvotes
             </div>
             <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+                Save
+            </div>
+            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
                 Remove
             </div>
         </div>
@@ -95,8 +98,18 @@
                     {{thisblog.title}}
                 </a>
             </div>
-            <div layout="row" layout-align="start center" flex="15">
+            <div layout="row" layout-align="start center" flex="15" ng-if="!masterUser">
                 {{thisblog.user.basic.name}}
+            </div>
+            <div layout="row" layout-align="start center" flex="15" ng-if="masterUser">
+                
+                <md-input-container class="width75 text-primary">
+                  <md-select ng-model="thisblog.user._id"  placeholder="Select Blogger">
+                    <md-option ng-value="blogger._id" ng-repeat="blogger in allBloggers | orderBy: 'basic.name'" class="text-primary">
+                      {{blogger.basic.name}}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
             </div>
             <div layout="row" layout-align="start center" flex="10">
                 {{thisblog._created | date: "dd MMMM" }}
@@ -117,8 +130,13 @@
                 <i class="fa fa-arrow-circle-up" aria-hidden="true" ng-click="randomUpvotes(thisblog)" ng-if="user.basic.name =='Gaurav Parashar'"></i>
             </div>
             <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+                <i class="fa fa-floppy-o" aria-hidden="true" ng-click="updateConfirm(thisblog)"></i>
+            </div>
+            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
                 <i class="fa fa-times-circle danger" aria-hidden="true" ng-click="removeConfirm(thisblog)"></i>
             </div>
+            
+            
         </div>
         
     </div>

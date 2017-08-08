@@ -265,6 +265,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getUsers = function() {
             return $http.get('/api/users');
         };
+        this.allBloggers = function() {
+            return $http.get('/api/users/allBloggers');
+        };
         this.getInterns = function() {
             return $http.get('/api/users/interns');
         };
@@ -315,6 +318,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.userMarketing = function(userList) {
             return $http.post('/api/users/userMarketing',userList);
+        };
+        this.userSurvey = function(userList) {
+            return $http.post('/api/users/userSurvey',userList);
         };
     }]);
         
@@ -11411,8 +11417,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);   
     
     exambazaar.controller("postBlogController", 
-        [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', 'blogpostService','userBlogs', 'thisuser', 'upvoteService', 'allBlogsUpvotesCount', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, blogpostService, userBlogs, thisuser, upvoteService, allBlogsUpvotesCount){
+        [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService','userBlogs', 'thisuser', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, userBlogs, thisuser, upvoteService, allBlogsUpvotesCount, allBloggers){
             $scope.user = thisuser.data;
+            $scope.allBloggers = allBloggers.data;
+            console.log($scope.allBloggers);
             $scope.masterUser = false;
             
             $scope.userBlogs = userBlogs.data;
@@ -11623,6 +11631,33 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }, function() {
                   //nothing
                 }); 
+            };
+            
+            $scope.updateConfirm = function(thisblog){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to update changes to post titled "' + thisblog.title + '"?')
+                .textContent('It was authored by ' + thisblog.user.basic.name +"!" )
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.updateBlogPost(thisblog);
+                }, function() {
+                  //nothing
+                }); 
+            };
+            
+            $scope.updateBlogPost = function(thisblog){
+                console.log(thisblog);
+                blogpostService.saveblogpost(thisblog).success(function (data, status, headers) {
+                    $scope.showSavedDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });    
             };
             
             $scope.removeBlogPost = function(toRemoveBlog){
@@ -12038,6 +12073,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             
     }]);       
+    
+    exambazaar.controller("rentvsbuyController", 
+        [ '$scope', '$http', '$rootScope','$state', '$mdDialog', function($scope, $http, $rootScope, $state, $mdDialog){
+            
+            $rootScope.pageTitle = 'Rent vs Buy';
+            
+            
+    }]); 
     
     exambazaar.controller("allreviewsController", 
         [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'targetStudyProviderService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, targetStudyProviderService, $state, $mdDialog){
@@ -15280,6 +15323,65 @@ function getLatLng(thisData) {
             };
             
     }]);
+    exambazaar.controller("userSurveyController", 
+        [ '$scope','$http','$state','UserService', 'thisuser', 'allUsers', '$rootScope', function($scope,$http, $state, UserService, thisuser, allUsers, $rootScope){
+            $scope.user = thisuser.data;
+            $scope.allTypeUsers = allUsers.data;
+            $scope.allUsers = [];
+            
+            $scope.allTypeUsers.forEach(function(thisUser, uIndex){
+                if(!thisUser.basic || !thisUser.basic.name){
+                    //console.log(thisUser._id);
+                }
+                $scope.allUsers.push(thisUser);
+                /*if(thisUser.userType == 'Master'){
+                    $scope.allUsers.push(thisUser);
+                }*/
+            });
+            
+            $scope.selectedUsers = [];
+            
+            $scope.addAllUsers = function(){
+                $scope.selectedUsers = $scope.allUsers;
+            };
+            $scope.addUser = function(newuser){
+                var userIds = $scope.selectedUsers.map(function(a) {return a._id;});
+                var uIndex = userIds.indexOf(newuser._id);
+                
+                if(uIndex == -1){
+                    $scope.selectedUsers.push(newuser);
+                }else{
+                    console.log('Already added!');
+                }
+                
+            };
+            
+            $scope.selectedBackground = function(thisuser){
+                var userIds = $scope.selectedUsers.map(function(a) {return a._id;});
+                var uIndex = userIds.indexOf(thisuser._id);
+                
+                if(uIndex == -1){
+                    return false;
+                }else{
+                    return true;
+                }
+            };
+            
+            $scope.sendSurvey = function(){
+                console.log("Sending survey to " + $scope.selectedUsers.length + " users");
+                
+                UserService.userSurvey($scope.selectedUsers).success(function (data, status, headers) {
+                    
+                    console.info("Done");
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+                
+            };
+            
+            $rootScope.pageTitle = "User Survey";
+    }]); 
         
     exambazaar.controller("userMarketingController", 
         [ '$scope','$http','$state','UserService', 'thisuser', 'allUsers', '$rootScope', function($scope,$http, $state, UserService, thisuser, allUsers, $rootScope){
@@ -15945,6 +16047,10 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
                 }],
+                allBloggers: ['UserService',
+                    function(UserService){
+                    return UserService.allBloggers();
+                }],
                 userBlogs: ['blogpostService', '$stateParams',
                     function(blogpostService, $stateParams) {   
                     return blogpostService.getUserBlogposts($stateParams.userId);
@@ -16006,7 +16112,22 @@ function getLatLng(thisData) {
                 
             }
         })
-        
+        .state('rentvsbuy', {
+            url: '/rentvsbuy', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'rentvsbuy.html',
+                    controller: 'rentvsbuyController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
         .state('rankerswall', {
             url: '/rankerswall/:examName/:year', //masterId?
             views: {
@@ -16688,6 +16809,34 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'userMarketing.html',
                     controller: 'userMarketingController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                allUsers: ['UserService',
+                    function(UserService){
+                    return UserService.getUsers();
+                }],
+                user: function() { return {}; }
+            }
+        })
+        .state('userSurvey', {
+            url: '/user/:userId/userSurvey',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'userSurvey.html',
+                    controller: 'userSurveyController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'

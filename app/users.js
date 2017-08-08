@@ -685,6 +685,17 @@ router.get('/', function(req, res) {
     });
 });
 
+router.get('/allBloggers', function(req, res) {
+    
+    
+    user.find({blogger: {$exists: true}, $where:'this.blogger.active==true'}, {basic: 1}, function(err, docs) {
+    if (!err){
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    });
+});
+
 router.get('/dailySummary', function(req, res) {
     var userSummary = user.aggregate(
     [
@@ -1576,6 +1587,77 @@ router.post('/userMarketing', function(req, res) {
     
         }
     });
+
+});
+
+
+router.post('/userSurvey', function(req, res) {
+    var allUsers = req.body;
+    var nLength = allUsers.length;
+    var counter = 0;
+    var smsIndex = 0;
+    
+    allUsers.forEach(function(thisUser, index){
+        var userId = thisUser._id;
+        var existingUser = user.findOne({ '_id': userId},function (err, existingUser) {
+
+        if(existingUser){
+
+            if(existingUser.mobile){
+                var sentName = existingUser.basic.name;
+
+                //console.log("Sending Welcome SMS");
+                var message = "Hi " + sentName + "\nThese are the 5 questions we ask ourselves everyday at Exambazaar to make it a better experience for you. Help us improve\nhttp://tinyurl.com/exambazaar";
+
+                //console.log(message.length + " " + message);
+                var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
+                url += existingUser.mobile;
+                url += "&message=";
+                url += message;
+                url += "&sender=EXMBZR&type=3";
+                request({
+                        url: url,
+                        json: true
+                    }, function (error, response, body) {
+                        //console.log(response);
+                        //console.log(body);
+
+                        if (!error && response.statusCode === 200 && body.status == 'success' && body.mobilenumbers != '') {
+                            smsIndex += 1;
+                            console.log(smsIndex + ". SMS sent to: " + sentName + " at "+ existingUser.mobile);
+                        
+
+
+                        }else{
+                            console.log(error + " " + response);
+                        }
+                });
+
+
+
+            }else{
+                //console.log("No user mobile set");
+            }
+
+            counter += 1;
+            if(counter == nLength){
+                res.json(true);
+            }
+
+
+        }else{
+            counter += 1;
+            if(counter == nLength){
+                res.json(true);
+            }
+        } 
+
+
+        });
+
+
+    });
+    
 
 });
 
