@@ -24,7 +24,6 @@ module.exports = function(app, passport) {
       passport.authenticate('facebook', { scope : 'email' });
     });
    
-    
     // handle the callback after facebook has authenticated the user
     
     app.get('/auth/facebook/callback', function(req, res) {
@@ -35,6 +34,30 @@ module.exports = function(app, passport) {
             failureRedirect : '/'
         }*/
     });
+    
+    
+    app.get('/auth/google', function(req, res) {
+        console.log(req);
+      passport.authenticate('google', { scope : ['profile', 'email'] });
+    });
+    
+    /*app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));*/
+
+    
+    app.get('/auth/google/callback', function(req, res) {
+        console.log(req);
+        passport.authenticate('google');
+        /*, {
+            successRedirect : '/profile',
+            failureRedirect : '/'
+        }*/
+    });
+    /*// the callback after google has authenticated the user
+    app.get('/auth/google/callback',
+        passport.authenticate('google', {
+                successRedirect : '/',
+                failureRedirect : '/'
+    }));*/
     
     // route to log in
     app.post('/login', passport.authenticate('local-login'), function(req, res) {

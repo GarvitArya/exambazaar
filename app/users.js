@@ -422,7 +422,7 @@ router.post('/save', function(req, res) {
         mobileNumber = thisUser.mobile;
     }
     if(thisUser.contact && thisUser.contact.email){
-        mobileNumber = thisUser.contact.email;
+        userEmail = thisUser.contact.email;
     }
     if(thisUser && thisUser.email){
         userEmail = thisUser.email;

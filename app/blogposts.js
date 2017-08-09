@@ -441,7 +441,11 @@ router.post('/existingBlogpost', function(req, res) {
 router.post('/save', function(req, res) {
     var blogpostForm = req.body;
     //console.log(blogpostForm);
-    var blogpostId = blogpostForm._id.toString();
+    var blogpostId = null;
+    if(blogpostForm._id){
+        blogpostId = blogpostForm._id.toString();
+    }
+        
     var user = blogpostForm.user;
     if(blogpostForm.user._id){
         user = blogpostForm.user._id.toString();
