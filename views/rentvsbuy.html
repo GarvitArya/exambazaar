@@ -60,7 +60,124 @@
         border: 1px solid gainsboro;
         font-size:12px;
     }
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
     
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    
+    
+    
+    .sk-folding-cube {
+        position:fixed; 
+            top:45%;
+            left:45%;
+            width:10%;
+            height:10%;
+            /*padding-left:40px;
+            padding-right:40px;*/
+            background: transparent;
+            color: #20C39A;
+        
+      margin: 20px auto;
+      width: 40px;
+      height: 40px;
+      -webkit-transform: rotateZ(45deg);
+              transform: rotateZ(45deg);
+    }
+
+    .sk-folding-cube .sk-cube {
+      float: left;
+      width: 50%;
+      height: 50%;
+      position: relative;
+      -webkit-transform: scale(1.1);
+          -ms-transform: scale(1.1);
+              transform: scale(1.1); 
+    }
+    .sk-folding-cube .sk-cube:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #333;
+      -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
+              animation: sk-foldCubeAngle 2.4s infinite linear both;
+      -webkit-transform-origin: 100% 100%;
+          -ms-transform-origin: 100% 100%;
+              transform-origin: 100% 100%;
+    }
+    .sk-folding-cube .sk-cube2 {
+      -webkit-transform: scale(1.1) rotateZ(90deg);
+              transform: scale(1.1) rotateZ(90deg);
+    }
+    .sk-folding-cube .sk-cube3 {
+      -webkit-transform: scale(1.1) rotateZ(180deg);
+              transform: scale(1.1) rotateZ(180deg);
+    }
+    .sk-folding-cube .sk-cube4 {
+      -webkit-transform: scale(1.1) rotateZ(270deg);
+              transform: scale(1.1) rotateZ(270deg);
+    }
+    .sk-folding-cube .sk-cube2:before {
+      -webkit-animation-delay: 0.3s;
+              animation-delay: 0.3s;
+    }
+    .sk-folding-cube .sk-cube3:before {
+      -webkit-animation-delay: 0.6s;
+              animation-delay: 0.6s; 
+    }
+    .sk-folding-cube .sk-cube4:before {
+      -webkit-animation-delay: 0.9s;
+              animation-delay: 0.9s;
+    }
+    @-webkit-keyframes sk-foldCubeAngle {
+      0%, 10% {
+        -webkit-transform: perspective(140px) rotateX(-180deg);
+                transform: perspective(140px) rotateX(-180deg);
+        opacity: 0; 
+      } 25%, 75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+                transform: perspective(140px) rotateX(0deg);
+        opacity: 1; 
+      } 90%, 100% {
+        -webkit-transform: perspective(140px) rotateY(180deg);
+                transform: perspective(140px) rotateY(180deg);
+        opacity: 0; 
+      } 
+    }
+
+    @keyframes sk-foldCubeAngle {
+      0%, 10% {
+        -webkit-transform: perspective(140px) rotateX(-180deg);
+                transform: perspective(140px) rotateX(-180deg);
+        opacity: 0; 
+      } 25%, 75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+                transform: perspective(140px) rotateX(0deg);
+        opacity: 1; 
+      } 90%, 100% {
+        -webkit-transform: perspective(140px) rotateY(180deg);
+                transform: perspective(140px) rotateY(180deg);
+        opacity: 0; 
+      }
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -70,46 +187,443 @@
 <div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
     
     
-<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 height100 width100">
-    <div layout="row" layout-align="center center" class="marginT20 secondFont font20 textBlack bold paddingB10">
-        All Reviews&nbsp;<span class="badge" id="badge">{{allReviews.length}}</span>
-    </div>
-    <div layout="column" layout-align="start start" class="marginT20">
-        <div layout="row" layout-align="start start" class="width100 bold">
-            <div flex="5" class="paddingR10 font10">S. No.</div>
-            <div flex="10" class="paddingR10 font10">Reviewer</div>
-            <div flex="10" class="paddingR10 font10">Coaching</div>
-            <div flex="40" class="paddingR10 font10">Review</div>
-            <div flex="10" class="paddingR10 font10">Date</div>
-            <div flex="10" class="paddingR10 font10">Active</div>
-            <div flex="10" class="paddingR10 font10">Coupon</div>
-        </div>
-        <div layout="row" layout-align="start start" ng-repeat="review in allReviews | orderBy:'-_created'" class="width100 paddingTB5 gainsboroBottomBorder">
-            <div flex="5" class="paddingR10 font10">{{$index+1}}</div>
-            <div layout="column" layout-align="start start" flex="10" class="paddingR10 font10">
-                <div>{{review.user.basic.name}}</div>
-                <div class="font8">{{review.user._id}}</div>
-            
-            </div>
-            <div layout="column" layout-align="start start" flex="10" class="paddingR10 font10">
-                <div ng-click="openReview(review)">{{review.institute.name}}, {{review.institute.city}}</div>
-                
-                <div><img ng-src="{{review.institute.logo}}" id="logo"/></div>
-            
-            </div>
-            <div flex="40" class="paddingR10 font10">{{review.text}}</div>
-            <div flex="10" class="paddingR10 font10">{{review._created | date}}</div>
-            <div flex="10" class="paddingR10 font10">
-                <md-button class="md-danger md-small font10 tolowercase" ng-click="disablereview(review)" ng-if="review.active">
-                    Disable
-                </md-button>
-                <md-button class="md-green2 md-small font10 tolowercase" ng-click="enablereview(review)" ng-if="!review.active">
-                    Enable
-                </md-button>
-            </div>
-            <div flex="10" class="paddingR10 font10">{{review.coupon}}</div>
-        </div>
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="paddingTB10 height100 width100">
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font20 bold paddingLR10 danger width100">
+        Flat Details
     </div>
     
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font12 textBlack bold paddingB10 width100">
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Flat Area (sqft)
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="area"  placeholder="Flat Area in sq ft.">
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Price (sqft)
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="pricepersqft"  placeholder="Price per sq ft.">
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Registration %
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="registrationpercentage"  placeholder="Registration Percentage">
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Broker Commission %
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="brokercommission"  placeholder="Broker Commission">
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Service Charge (sqft)
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="servicechargepersqft"  placeholder="Service charge per sq ft.">
+            </div>
+        </div>
+        <div flex="10" layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Equity %
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="equityPercentage"  placeholder="% Equity">
+            </div>
+        </div>
+        <div flex="10" layout="column" layout-align="start end" class="paddingR20">
+            <div layout="column" layout-align="start end"  class="width100">
+                Debt %
+            </div>
+            <div layout="column" layout-align="start end"  class="width100 paddingT10 paddingL5 bold">
+                {{100-equityPercentage}} %
+            </div>
+        </div>
+    </div>
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font12 textBlack bold paddingB10 width100">
+        
+        <div flex="10" layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Loan Tenure
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="loanTenure"  placeholder="Loan Tenure">
+            </div>
+        </div>
+        <div flex="10" layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Fixed Tenure
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="fixedTenure"  placeholder="Fixed Tenure">
+            </div>
+        </div>
+        <div flex="10" layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Fixed Debt %
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="fixedDebtPercentage"  placeholder="Fixed Percentage">
+            </div>
+        </div>
+        <div flex="25" layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Floating Spread% (+IBOR)
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="floatingDebtSpreadPercentage"  placeholder="Floating Percentage spread">
+            </div>
+        </div>
+        <!--<div flex="20" layout="column" layout-align="center center" class="paddingLR10">
+            <div layout="column" layout-align="center center" class="width100">
+                Loan Start Date
+            </div>
+            <div layout="column" layout-align="center center" class="width100">
+                <md-datepicker ng-model="ciRateDeadline" md-placeholder="Set Deadline"></md-datepicker>
+            </div>
+        </div>-->
+        <div flex="10" layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Set IBOR
+            </div>
+            <div class="width100">
+                <md-button class="md-black md-small secondFont tolowercase margin0 padding0 font10" ng-click="setIBOR()">
+                    Curve
+                </md-button>
+            </div>
+        </div>
+    </div>
+    <!--<div layout="row" layout-align="start start" class="marginT10 secondFont font14 textBlack bold paddingB10 width100">
+        <div flex="20" layout="column" layout-align="start start" class="paddingLR10">
+            <div layout="column" layout-align="start start" class="width100">
+                Interest Frequency
+            </div>
+            <div layout="column" layout-align="start start" class="width100">
+                <md-select ng-model="interestFrequency"  placeholder="Interest Frequency" class="width100">
+
+                    <md-option ng-value="frequency" ng-repeat="frequency in frequencyOptions" class="text-primary">
+                      {{frequency}}
+                    </md-option>
+                </md-select>
+                
+            </div>
+        </div>
+        <div flex="20" layout="column" layout-align="start start" class="paddingLR10">
+            <div layout="column" layout-align="start start" class="width100">
+                Payment Frequency
+            </div>
+            <div layout="column" layout-align="start start" class="width100">
+                <md-select ng-model="paymentFrequency"  placeholder="Payment Frequency" class="width100">
+
+                    <md-option ng-value="frequency" ng-repeat="frequency in frequencyOptions" class="text-primary">
+                      {{frequency}}
+                    </md-option>
+                </md-select>
+                
+            </div>
+        </div>
+    </div>-->
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font20 bold paddingLR10 danger width100">
+        Summary
+    </div>
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font12 textBlack bold paddingTB10 width100">
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Basic Flat Price
+            </div>
+            <div class="width100">
+                {{basicFlatPrice | currency:"AED ":0}}
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Registration
+            </div>
+            <div class="width100">
+                {{registrationFee | currency:"AED ":0}}
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Brokerage
+            </div>
+            <div class="width100">
+                {{brokerageFee | currency:"AED ":0}}
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Full Flat Price
+            </div>
+            <div class="width100">
+                {{fullFlatPrice | currency:"AED ":0}}
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Annual Service Charge
+            </div>
+            <div class="width100">
+                {{annualServiceCharge | currency:"AED ":0}}
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Equity Value
+            </div>
+            <div class="width100">
+                {{equityValue | currency:"AED ":0}}
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Debt Value
+            </div>
+            <div class="width100">
+                {{debtValue | currency:"AED ":0}}
+            </div>
+        </div>
+    </div>
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font20 bold paddingLR10 danger width100">
+        EMI Summary for {{loanTenure}} years
+    </div>
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font12 textBlack bold width100">
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                EMI
+            </div>
+            <div class="width100">
+                {{initiatedEMI | currency:"AED ":0}} per month
+            </div>
+            <div class="width100">
+                ({{initiatedEMI*aedinr | currency:"INR ":0}})
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Transaction (Reg + Brokerage) 
+            </div>
+            <div class="width100">
+                {{registrationFee + brokerageFee | currency:"AED ":0}}
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Upfront (Equity + Transaction) 
+            </div>
+            <div class="width100">
+                {{equityValue + registrationFee + brokerageFee | currency:"AED ":0}}
+            </div>
+            <div class="width100">
+                ({{(equityValue + registrationFee + brokerageFee)*aedinr | currency:"INR ":0}})
+            </div>
+        </div>
+    </div>
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font12 textBlack bold width100">
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Total Interest Paid (undiscounted)
+            </div>
+            <div class="width100">
+                {{totalInterestPaid | currency:"AED ":0}}
+            </div>
+            
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Total Principal Paid (undiscounted)
+            </div>
+            <div class="width100">
+                {{totalPrincipalPaid | currency:"AED ":0}}
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Total Service Charge Paid (undiscounted)
+            </div>
+            <div class="width100">
+                {{totalServiceChargePaid | currency:"AED ":0}}
+            </div>
+        </div>
+    </div>
+    <!--<div layout="row" layout-align="start start" class="marginT10 secondFont font20 textBlack bold paddingB10 width100">
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Initiate EMI (AED)
+            </div>
+            <div class="width100">
+                
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            
+        </div>
+        
+    </div>-->
+    
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font20 bold paddingLR10 danger width100">
+        EMI Details
+    </div>
+    <div layout="column" layout-align="start start" class="marginT10 secondFont font10 textBlack bold paddingLR10 paddingB10 width100">
+        <!--<div layout="row" layout-align="start start" class="marginT10 secondFont font14  textBlack width100">
+            <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
+                Outstanding Principal on {{outstandingPrincipal._date | amDateFormat:'DD MMM YYYY'}}
+            </div>
+            <div class="width100">
+                {{outstandingPrincipal.amount | currency:"AED ":0}}
+            </div>
+        </div>
+        </div>-->
+        
+        <div layout="row" layout-align="start start" class="marginT10 secondFont font12  textBlack width100">
+            <div flex="5">Month</div>
+            <div flex="10">Date</div>
+            <div flex="10">Principal Due</div>
+            <div flex="5">Rate</div>
+            <div flex="10">Interest Due</div>
+            <div flex="10">EMI</div>
+            <div flex="10">Principal Repaid</div>
+            <div flex="10">Service Charges</div>
+        </div>
+        <div layout="row" layout-align="start start" class=" secondFont font12  textBlack width100" ng-repeat="loanDate in loanDates track by $index" ng-class="{ greyDashedTopBorder: $index % 12 == 0 }">
+            <div flex="5">{{$index}}</div>
+            <div flex="10">{{loanDate | amDateFormat:'DD MMM YYYY'}}</div>
+            <div flex="10">{{principals[$index].amount | currency:"AED ":0}}</div>
+            <div flex="5">{{interestRates[$index].rate | number:2}}%</div>
+            <div flex="10">{{interests[$index].amount | currency:"AED ":0}}</div>
+            <div flex="10">{{payments[$index].amount | currency:"AED ":0}}</div>
+            <div flex="10">{{principalsRepaid[$index].amount | currency:"AED ":0}}</div>
+            <div flex="10">
+                <span ng-if="$index % 12 == 0">
+                    {{annualservices[$index].amount | currency:"AED ":0}}
+                </span>
+                
+            </div>
+        </div>
+        <div>
+        </div>
+    </div>
 </div>
+
+</div>
+<!--<div class="sk-folding-cube" ng-if="busy">
+    <div class="sk-cube1 sk-cube"></div>
+    <div class="sk-cube2 sk-cube"></div>
+    <div class="sk-cube4 sk-cube"></div>
+    <div class="sk-cube3 sk-cube"></div>
+    <div class="whiteBackground">Loading..</div>
+</div>-->
+
+
+<div class="bottomBar">
+    <div layout="row" layout-align="start center">
+        <div layout="row" layout-align="start center" flex ="40">
+            <div class="marginR10">
+            EMI Calculations 
+            </div>
+            <div>
+                <input type="text" class="width100" ng-model="initiatedEMI"  placeholder="Initiated EMI value">
+            </div>
+        </div>
+        <div layout="row" layout-align="end center" flex = "60">
+            <md-button class="md-black md-small secondFont tolowercase font10" ng-click="seeChart()">
+                Chart
+            </md-button>
+            <md-button class="md-danger md-small secondFont tolowercase font10" ng-click="initiate(initiatedEMI)">
+                Refresh
+            </md-button>
+            <md-button class="md-green2 md-small secondFont tolowercase font10" ng-click="calculateEMI()">
+                Calculate EMI
+            </md-button>
+        </div>
+        
+    </div>
+</div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="chartDialog">
+      <md-dialog class="edit-dialog whiteBackground padding20">
+          <md-content flex layout="column" class="width100">
+            <div layout="column" layout-align="center center" class="width90 marginB20 marginLR20 font12">
+                <div class="width100 padding20" ng-repeat="chart in charts">
+                    <canvas id="line" class="chart chart-line" chart-data="chart.data"
+                    chart-labels="chart.labels" chart-series="chart.series" chart-options="chart.options"
+                    chart-dataset-override="chart.datasetOverride">
+                    </canvas>
+                </div>
+
+            </div>
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container whiteBackground" id="IBORDialog">
+      <md-dialog class="edit-dialog whiteBackground padding20">
+          <md-content flex layout="column" class="whiteBackground width100">
+            <div flex layout="column" layout-align="center center" class="width90 marginB20 marginLR20 font12 paddingLR40">
+                <div layout="row" layout-align="center center" class="width100 font20 bold marginB10">
+                    <div>
+                        Set IBOR for Ranges
+                    </div>
+                    <div class="marginL20">
+                        <md-button class="md-danger md-small secondFont tolowercase font10" ng-click="saveIBORChanges()">
+                            Save Changes
+                        </md-button>
+                    </div>
+                </div>
+                
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex layout="column" layout-align="start start" class="paddingLR20">
+                        <div layout="row" layout-align="start center" ng-repeat="IBORRange in IBORRanges" ng-if="$index >= 0 && $index <= 8" class="width100 bold font14">
+                            <div layout="row" layout-align="start center" flex="50">
+                                {{IBORRange.startString}} - {{IBORRange.endString}}
+                            </div>
+                            <div layout="row" layout-align="start center" flex="50">
+                                <input type="text" class="width100" ng-model="IBORRange.IBOR"  placeholder="IBOR for Range">
+                            </div>
+                        </div>
+                    
+                    </div>
+                    <div flex layout="column" layout-align="start start" class="paddingLR20">
+                        <div layout="row" layout-align="start center" ng-repeat="IBORRange in IBORRanges" ng-if="$index >= 9 && $index <= 16" class="width100 bold font14 marginT5">
+                            <div layout="row" layout-align="start center" flex="50">
+                                {{IBORRange.startString}} - {{IBORRange.endString}}
+                            </div>
+                            <div layout="row" layout-align="start center" flex="50">
+                                <input type="text" class="width100" ng-model="IBORRange.IBOR"  placeholder="IBOR for Range">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div flex layout="column" layout-align="start start" class="paddingLR20">
+                        <div layout="row" layout-align="start center" ng-repeat="IBORRange in IBORRanges" ng-if="$index >= 18" class="width100 bold font14 marginT5">
+                            <div layout="row" layout-align="start center" flex="50">
+                                {{IBORRange.startString}} - {{IBORRange.endString}}
+                            </div>
+                            <div layout="row" layout-align="start center" flex="50">
+                                <input type="text" class="width100" ng-model="IBORRange.IBOR"  placeholder="IBOR for Range">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+            </div>
+        </md-content>  
+      </md-dialog>
+    </div>    
 </div>

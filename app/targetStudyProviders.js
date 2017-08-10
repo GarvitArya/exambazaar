@@ -1212,6 +1212,36 @@ router.get('/contacts', function(req, res) {
         });
     } else {throw err;}
     });
+    
+    var allEmails = targetStudyProvider.distinct( "email",function(err, allEmails) {
+    if (!err){ 
+        console.log('There are: ' + allEmails.length + ' unique emails!');
+    } else {throw err;}
+    });
+    
+    allProviders = targetStudyProvider.find({email: {$exists: true}, $where:"this.email.length>0 && this.email[0] !=''"},{email:1},function(err, allProviders) {
+    if (!err){
+        var counter = 0; 
+        var nEmails = 0; 
+        var nLength = allProviders.length;
+        console.log('Looking at ' + nLength + ' coachings!');
+        allProviders.forEach(function(thisprovider, index){
+            var thisEmail = thisprovider.email;
+            counter += 1;
+            nEmails += thisEmail.length;
+            if(index % 1000 == 0){
+                console.log('Looking at coaching no: ' + index);
+            }
+            if(counter == nLength){
+                console.log(nLength + ' coachings have emails');
+                console.log(nEmails + ' total emails exist');
+            }
+        });
+        
+        
+    } else {throw err;}
+    });
+    
 });
 
 router.get('/sanitizeMobiles', function(req, res) {

@@ -99,6 +99,7 @@
                         <div>
                             <!-- ui-sref="claim({ coachingId:{{'activeProvider._id'}} })" target="_blank"-->
                             <a ng-click="goToCoaching(activeProvider)" id="link">Explore</a>
+                            <a ng-href="{{activeProvider.website[0]}}" id="link" target="_blank">{{activeProvider.website[0]}}</a>
                         </div>
 
                     </div>

@@ -101,6 +101,148 @@ router.get('/count', function(req, res) {
     });
 });
 
+function onlyUnique(value, index, self) { 
+    return self.indexOf(value) === index;
+}
+
+router.post('/extractEmails/', function(req, res) {
+    var images = ['.jpg','.png','.jpeg','.gif'];
+    var validExtensions = ['.com', '.in', '.biz'];
+    var providerIds = req.body;
+    var counter = 0;
+    var listingNo = 0;
+    var nTotalUpdates = 0;
+    var nWebsites = 0;
+    var nWorkingWebsites = 0;
+    var allEmails = [];
+    var validEmail = true;
+    //_id:{$in: providerIds}
+    //{website: {$exists: true}, $where:"this.website.length>0 && this.website[0] !=''"}
+    var allGroupProviders = targetStudyProvider.find({website: {$exists: true}, $where:"this.website.length>0 && this.website[0] !=''"}, {website:1, email: 1},function(err, allGroupProviders) {
+    if (!err){
+        var nProviders = allGroupProviders.length;
+        console.log('Fetching emails for: ' + nProviders + ' coachings');
+        
+        allGroupProviders.forEach(function(thisGroup, index){
+            if(index % 100 == 0){
+                console.log('Extracting for institute: ' + index);
+            }
+            var thisWebsites = thisGroup.website;
+            var thisGroupEmail = thisGroup.email;
+            if(Array.isArray(thisGroupEmail)){
+                
+            }else{
+                console.log('Converting Email from string to array: ' + thisGroup._id);
+                var res = thisGroupEmail.split(",");
+                if(res && res.length > 0){
+                    thisGroupEmail = res;
+                }else{
+                    thisGroupEmail = [thisGroupEmail];
+                }
+            }
+            var nWebsites = thisWebsites.length;
+            var counter2 = 0;
+            
+            thisWebsites.forEach(function(newWebsite, windex){
+                var url = newWebsite;
+                if(newWebsite){
+                    nWebsites += 1;
+                    var Request = unirest.get(url);
+                    Request.headers({
+                      'Accept': 'application/json',
+                      'Accept-Language': 'en-us',
+                      'User-Agent': 'Unirest Node.js'
+                    });
+
+                    Request.timeout(1000000).end(function (response) {
+                        if (response.error) {
+                            //console.log('GET error', response.error);
+                            listingNo = listingNo + 1;
+                            console.log(JSON.stringify(listingNo + '. ' + thisGroup._id));
+                        }else{
+                            nWorkingWebsites += 1;
+                            var sourceCode = response.body;
+                            if(sourceCode){
+                                var allEmails = sourceCode.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+                            var thisEmails = [];
+                            
+                            if(!allEmails){
+                                allEmails = [];
+                            }
+                            
+                            allEmails.forEach(function(newEmail, eindex){
+                                validEmail = false;
+                                validExtensions.forEach(function(validExtension, vindex){
+                                    if(newEmail.indexOf(validExtension) != -1){
+                                        validEmail = true;
+                                    }
+                                });
+                                images.forEach(function(imgExtension, iindex){
+                                    if(newEmail.indexOf(imgExtension) != -1){
+                                        validEmail = false;
+                                    }
+                                });
+                                //validEmail = true;
+                                if(validEmail){
+                                    thisEmails.push(newEmail);
+                                }
+                            });
+
+                            if(thisEmails.length > 0){
+                                listingNo = listingNo + 1;
+                                thisEmails = thisEmails.filter(onlyUnique);
+                                allEmails.push(thisEmails);
+                                var nEmailUpdates = 0;
+                                console.log(JSON.stringify(listingNo + '. ' + thisGroup._id + '  ' + thisEmails));
+                                
+                                
+                                thisEmails.forEach(function(newEmail, eindex){
+                                    if(thisGroupEmail.indexOf(newEmail) == -1){
+                                        thisGroupEmail.push(newEmail);
+                                        nEmailUpdates += 1;
+                                        nTotalUpdates += 1;
+                                    }
+                                });
+                                
+                                if(nEmailUpdates > 0){
+                                   thisGroup.save(function(err, thisGroup) {
+                                        if (err) return console.error(err);
+                                        console.log(thisGroup._id + " saved!");
+                                        console.log("Total emails added are: " + nTotalUpdates);
+                                    });
+                                }
+                                
+                                
+                            }
+                            }    
+                        
+
+
+                      }  
+                    });
+                }
+                counter2 += 1;
+                if(counter2 == nWebsites){
+                    allEmails = allEmails.filter(onlyUnique);
+                    console.log(JSON.stringify(allEmails));
+                    console.log('Out of ' + nProviders + ' providers, ' + nWebsites + ' websites could load and ' + nWorkingWebsites + ' were working. We found ' + allEmails.length + ' emails!');
+                }
+                
+            });
+            
+            counter += 1;
+            
+            
+        });
+        
+        
+        res.json('Done');
+    } else {throw err;}
+    }).limit(1000).skip(7000);
+    
+    
+});
+
 
 router.post('/urls/', function(req, res) {
     //var urls = req.params.urls;
