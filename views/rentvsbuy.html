@@ -294,6 +294,14 @@
         </div>-->
         <div flex="10" layout="column" layout-align="start start" class="paddingLR10">
             <div class="width100">
+                Avg IBOR %
+            </div>
+            <div class="width100">
+                <input type="text" class="width100" ng-model="avgIBOR"  placeholder="Avg IBOR">
+            </div>
+        </div>
+        <div flex="10" layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
                 Set IBOR
             </div>
             <div class="width100">
@@ -432,6 +440,19 @@
     <div layout="row" layout-align="start start" class="marginT10 secondFont font12 textBlack bold width100">
         <div flex layout="column" layout-align="start start" class="paddingLR10">
             <div class="width100">
+                Annual EMI + Service (undiscounted)
+            </div>
+            <div class="width100">
+                {{initiatedEMI*12 + annualServiceCharge | currency:"AED ":0}}
+            </div>
+            <div class="width100">
+                ({{(initiatedEMI*12 + annualServiceCharge)*aedinr | currency:"INR ":0}})
+            </div>
+        </div>
+    </div>
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font12 textBlack bold width100">
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
                 Total Interest Paid (undiscounted)
             </div>
             <div class="width100">
@@ -486,7 +507,7 @@
         </div>
         </div>-->
         
-        <div layout="row" layout-align="start start" class="marginT10 secondFont font12  textBlack width100">
+        <div layout="row" layout-align="start start" class="marginTB10 secondFont font12  textBlack width100">
             <div flex="5">Month</div>
             <div flex="10">Date</div>
             <div flex="10">Principal Due</div>
@@ -495,8 +516,9 @@
             <div flex="10">EMI</div>
             <div flex="10">Principal Repaid</div>
             <div flex="10">Service Charges</div>
+            <div flex="10">Prepayment Fine</div>
         </div>
-        <div layout="row" layout-align="start start" class=" secondFont font12  textBlack width100" ng-repeat="loanDate in loanDates track by $index" ng-class="{ greyDashedTopBorder: $index % 12 == 0 }">
+        <div layout="row" layout-align="start start" class=" secondFont font12  textBlack width100" ng-repeat="loanDate in loanDates track by $index" ng-if="principals[$index].amount > 0" ng-class="{ greyDashedTopBorder: $index % 12 == 1 }">
             <div flex="5">{{$index}}</div>
             <div flex="10">{{loanDate | amDateFormat:'DD MMM YYYY'}}</div>
             <div flex="10">{{principals[$index].amount | currency:"AED ":0}}</div>
@@ -508,7 +530,11 @@
                 <span ng-if="$index % 12 == 0">
                     {{annualservices[$index].amount | currency:"AED ":0}}
                 </span>
-                
+            </div>
+            <div flex="10">
+                <span ng-if="prepaymentFines[$index]">
+                    {{prepaymentFines[$index].amount | currency:"AED ":0}}
+                </span>
             </div>
         </div>
         <div>
@@ -537,6 +563,12 @@
             </div>
         </div>
         <div layout="row" layout-align="end center" flex = "60">
+            <md-button class="md-green2 md-small secondFont tolowercase font10" ng-click="fastPay()" ng-if="!fastPayMode">
+                Fast Pay
+            </md-button>
+            <md-button class="md-green2 md-small secondFont tolowercase font10" ng-click="undofastPay()" ng-if="fastPayMode">
+                Undo Fast Pay
+            </md-button>
             <md-button class="md-black md-small secondFont tolowercase font10" ng-click="seeChart()">
                 Chart
             </md-button>

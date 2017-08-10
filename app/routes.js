@@ -27,7 +27,7 @@ module.exports = function(app, passport) {
     // handle the callback after facebook has authenticated the user
     
     app.get('/auth/facebook/callback', function(req, res) {
-        console.log(req);
+        //console.log(req);
         passport.authenticate('facebook');
         /*, {
             successRedirect : '/profile',
@@ -37,7 +37,7 @@ module.exports = function(app, passport) {
     
     
     app.get('/auth/google', function(req, res) {
-        console.log(req);
+        console.log(res);
       passport.authenticate('google', { scope : ['profile', 'email'] });
     });
     

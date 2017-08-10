@@ -12094,6 +12094,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.loanTenure = 25;
             $scope.fixedTenure = 2;
             $scope.fixedDebtPercentage = 3.5;
+            $scope.maxFine = 10000;
             $scope.floatingDebtSpreadPercentage = 2.5;
             $scope.IBORRates = [];
             
@@ -12103,8 +12104,21 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.startOfLoan = moment().startOf('day');
             
             $scope.initiatedEMI = 11000;
+            $scope.avgIBOR = 3;
             $scope.IBORtouched = false;
+            $scope.fastPayMode = false;
+            $scope.fastPayPercent = 0;
             
+            $scope.fastPay = function(){
+                $scope.fastPayMode = true;
+                $scope.fastPayPercent = 20;
+                $scope.initiate($scope.initiatedEMI);
+            };
+            $scope.undofastPay = function(){
+                $scope.fastPayMode = false;
+                $scope.fastPayPercent = 0;
+                $scope.initiate($scope.initiatedEMI);
+            };
             $scope.initiateIBOR = function(){
                 
                 if(!$scope.IBORtouched){
@@ -12112,7 +12126,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                    $scope.loanDates.forEach(function(thisDate, dindex){
                     var newIBORRate = {
                             _date: thisDate,
-                            IBOR: 2,
+                            IBOR: $scope.avgIBOR,
                         };
                     $scope.IBORRates.push(newIBORRate);   
                     });
@@ -12193,6 +12207,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.fixedTenure = Number($scope.fixedTenure);
                 $scope.fixedDebtPercentage = Number($scope.fixedDebtPercentage);
                 $scope.floatingDebtSpreadPercentage = Number($scope.floatingDebtSpreadPercentage);
+                $scope.avgIBOR = Number($scope.avgIBOR);
                 
             };
             
@@ -12202,6 +12217,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 //$scope.busy = true;
                 $scope.loanDates = [];
                 $scope.payments = [];
+                $scope.prepaymentFines = [];
                 $scope.principals = [];
                 $scope.principalsRepaid = [];
                 $scope.interests = [];
@@ -12241,6 +12257,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             _date: thisDate,
                             amount: emi,
                         };
+                    }
+                    
+                    
+                    if($scope.fastPayMode){
+                        newPayment.amount = (1 + $scope.fastPayPercent/100)*newPayment.amount;
+                        
+                        var outPayment = (newPayment.amount-emi);
+                        var outPaymentPercent = (newPayment.amount-emi)*100/emi;
+                        if(outPaymentPercent > 20){
+                            var fineA = outPayment*1/100;
+                            var fine = Math.min(fineA,$scope.maxFine);
+                           var newPrepaymentFine = {
+                                _date: thisDate,
+                                amount: fine,
+                           }
+                           $scope.prepaymentFines.push(newPrepaymentFine);
+                       }else{
+                           var newPrepaymentFine = {
+                                _date: thisDate,
+                                amount: 0,
+                           }
+                           $scope.prepaymentFines.push(newPrepaymentFine);
+                       }
                     }
                     
                     $scope.payments.push(newPayment);
