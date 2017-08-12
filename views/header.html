@@ -328,7 +328,8 @@
             
         <li class="dropdown" ng-if="sessionuser.userType != 'Partner'">
             <a href="" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle" id="profileMenu">
-                <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle" ng-if="sessionuser.image"/>
+                <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle" ng-if="sessionuser.image && sessionuser.image != ''"/>
+                <div ng-if="!sessionuser.image || sessionuser.image == ''"><i class="fa fa-user-circle-o font40" aria-hidden="true"></i></div>
                 <!--<span class="caret"></span>-->
             </a>
             <ul class="dropdown-menu dropdown-menu-right"  >
