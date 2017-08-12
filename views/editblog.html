@@ -104,13 +104,13 @@
         border: 1px solid #02B875;
     }
     #unmarkedTagHolder{
-        padding:5px;
+        padding:2px;
         color: #333333;
         background: white;
         border: 1px solid #333333;
     }
     #markedTagHolder{
-        padding:5px;
+        padding:2px;
         color: #02B875;
         background: white;
         border: 1px solid #02B875;
@@ -372,16 +372,22 @@
                     <div>
                         <img ng-src="{{photo.image}}" id="galleryImage"/>
                     </div>
-                    <div layout="row" layout-wrap layout-align="center center" class="width100">
-                        <div flex layout="row" layout-align="start center">
-                            <a clipboard supported="supported" text="photo.image" on-copied="showCopiedDialog(photo.image)" on-error="fail(err)" id="copyLink" class="textPrimary font10">Use this image</a>
+                    <div layout="row" layout-wrap layout-align="center center" class="font10 width100">
+                        <div layout="row" layout-align="start center">
+                            <a clipboard supported="supported" text="photo.image" on-copied="showCopiedDialog(photo.image)" on-error="fail(err)" id="copyLink" class="textPrimary"><i class="fa fa-file-image-o" aria-hidden="true"></i> Use</a>
+                            <md-tooltip>Use this image in the blog</md-tooltip>
+                        </div>
+                        <div flex layout="row" layout-align="center center">
+                            <a ng-click="setInfographic(photo.image)"><i class="fa fa-info-circle" aria-hidden="true"></i> Info</a>
+                            <md-tooltip>Set this image as the blog's infographic</md-tooltip>
                         </div>
                         <div layout="row" layout-align="start center">
-                            <a ng-click="removePic(photo.image)" id="copyLink" class="textPrimary font10 danger pull-right marginL10">Remove</a>
+                            <a ng-click="removePic(photo.image)" id="copyLink" class="textPrimary danger pull-right marginL10"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                            <md-tooltip>Remove this image</md-tooltip>
                         </div>
 
                     </div>
-
+                    
                 </div>
                 <div layout="column" layout-align="center center" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">
                     <!--multiple="multiple" -->
@@ -530,16 +536,16 @@
                 </div>
                 
             </div>
-            <div layout="row" layout-align="start center" layout-wrap class="width80 marginB20 marginLR20 font12">
-                <div layout="column" layout-align="center center" ng-repeat="blogTag in allTags" class="margin10" >
+            <div layout="row" layout-align="start center" layout-wrap class="marginB20 marginLR20 font12">
+                <div layout="column" layout-align="center center" ng-repeat="blogTag in allTags" class="font10 margin2" >
                     <div layout="column" layout-align="center center" ng-if="blogpost.blogTags.indexOf(blogTag._id) != -1">
                         <div layout="row" layout-align="start center" id="markedTagHolder" ng-click="unsetBlogTag(blogTag)" class="bold">
-                            <i class="fa fa-check-square font20" aria-hidden="true"></i>&nbsp;&nbsp;{{blogTag.tag}}
+                            <i class="fa fa-check-square" aria-hidden="true"></i>&nbsp;&nbsp;{{blogTag.tag}}
                         </div>
                     </div>
                     <div layout="column" layout-align="center center" ng-if="blogpost.blogTags.indexOf(blogTag._id) == -1">
                         <div layout="row" layout-align="start center" id="unmarkedTagHolder" class="bold" ng-click="setBlogTag(blogTag)" >
-                            <i class="fa fa-plus-circle font20" aria-hidden="true"></i>
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
                             &nbsp;&nbsp;{{blogTag.tag}}
                         </div>
                     </div>
@@ -550,7 +556,7 @@
                     </div>-->
                 </div>
             </div>
-            <div flex layout="row" layout-align="start center" class="width80 marginB20 marginLR20 font12">
+            <div flex layout="row" layout-align="start center" class="marginB20 marginLR20 font12">
                 <input type="text" class="font12 width25 marginR10" ng-model="newTagText"  placeholder="new tag" >
                 <md-button class="md-black md-small " ng-click="addGlobalBlogTag()">
                     Add New Tag

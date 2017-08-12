@@ -206,7 +206,10 @@
                 <div class="marginT20 blogContent blogSeparator" ng-bind-html="blogpost.content" >
                 </div>
                 <div layout="column" layout-align="start start" class="blogSeparator width100">
-                    <div layout="row" layout-align="end center" class="font12 marginTB10">
+                <div layout="row" layout-align="start center" class="width100 font16 bold padding10">
+                    Share this blog
+                </div>
+                <div layout="row" layout-align="end center" class="font12 marginLR10">
                     <div hide-gt-xs class="marginR10">
                         <a href="#"
                         socialshare 
@@ -241,7 +244,10 @@
                     </div>
 
                 </div>
-                <div layout="row" layout-align="start center" layout-wrap  class="width100 marginTB10 text-primary bold">
+                <div layout="row" layout-align="start center" class="width100 font16 bold padding10">
+                    Tags    
+                </div>
+                <div layout="row" layout-align="start center" layout-wrap  class="width100 marginLR10 text-primary bold">
                     <span class="">
                         <i class="fa fa-tags" aria-hidden="true"></i>
                     </span>&nbsp;&nbsp;
@@ -251,7 +257,12 @@
                     </span>
                 </div>
                 </div>
-                
+                <div layout="column" layout-align="start start" class="blogSeparator width100" ng-if="blogpost.infographic">
+                    <div layout="row" layout-align="start center" class="width100 font22 bold padding10">
+                        Related Infographic    
+                    </div>
+                    <img ng-src="{{blogpost.infographic}}" class="padding10 width100"/>
+                </div>
                 <div layout="row" layout-align="start center" class="width100 marginT20 font22 bold padding10">
                     Recommended Reading
                 </div>

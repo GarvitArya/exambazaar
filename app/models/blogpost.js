@@ -12,6 +12,7 @@ var blogpostSchema = mongoose.Schema({
         words: String,    
     },
     coverPhoto: String,
+    infographic: String,
     urlslug: { type: String, unique: true },
     title: String,
     subtitle:String,

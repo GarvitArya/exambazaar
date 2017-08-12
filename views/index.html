@@ -516,6 +516,9 @@
             height: 50vh;
             max-height: 50vh;
         }
+        #fullHeightPage{
+            min-height: 90vh;
+        }
         .exact100h{
             height: 100%;
             min-height: 100%;
@@ -573,6 +576,9 @@
         .greyBorder{
             border: 1px solid #ccc;
         }
+        .lightBorder{
+            border: 0.5px solid gainsboro;
+        }
         .gainsboroBorder{
             border: 1px solid gainsboro;
         }
@@ -599,10 +605,16 @@
             border-top: 1px solid #ccc;
         }
         .greyDashedBottomBorder{
-            border-bottom: 1px dashed #0074D9;
+            border-bottom: 1px dashed #D2D4C8;
+        }
+        .headingBottomBorder{
+            border-bottom: 5px solid #D2D4C8;
+        }
+        .subhheadingBottomBorder{
+            border-bottom: 2px solid #D2D4C8;
         }
         .greyDashedTopBorder{
-            border-top: 1px dashed #0074D9;
+            border-top: 1px dashed #D2D4C8;
         }
         .inputBoxBorder{
             border: 2px inset lightgray;
@@ -1127,6 +1139,9 @@
         }
         .fullHeight{
             height:100%;
+        }
+        .margin2{
+            margin: 2px;
         }
         .margin5{
             margin: 5px;
@@ -1935,7 +1950,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     
     <link rel="stylesheet" href="angular-sidebarjs.min.css">
-    
+    <link rel="stylesheet" href="material-datetimepicker.min.css" type="text/css"/>
     
     <!--
     <link rel="stylesheet" href="hover-min.css">
@@ -2683,8 +2698,9 @@
     
     <script src="Chart.min.js"></script>
     <script src="angular-chart.min.js"></script>
-     <script src="angular-sidebarjs.min.js"></script>
-    <script src="angular-ui-notification.min.js"></script>    
+    <script src="angular-sidebarjs.min.js"></script>
+    <script src="angular-ui-notification.min.js"></script>s
+    <script type="text/javascript" src="angular-material-datetimepicker.js"></script>
     <script type="text/javascript" src="app.js"></script>
 </body>
 </html>
