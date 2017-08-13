@@ -1072,7 +1072,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.setEmailForAll = function(groupExamForm) {
             return $http.post('/api/targetStudyProviders/setEmailForAll',groupExamForm);
         };
-        
+        this.setWebsiteForAll = function(groupWebsiteForm) {
+            return $http.post('/api/targetStudyProviders/setWebsiteForAll',groupWebsiteForm);
+        };
         
         this.renameAllCoaching = function(groupNameForm) {
             return $http.post('/api/targetStudyProviders/renameAllCoaching',groupNameForm);
@@ -9947,6 +9949,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                   clickOutsideToClose: true
                 });
             };
+            $scope.showWebsiteDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#websiteDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
             $scope.closeDialog = function(){
                 $mdDialog.hide();
             };
@@ -10163,6 +10173,32 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.showLogoDialog();
                 }); 
             };
+            $scope.setWebsiteConfirm = function(){
+                var instituteLength = $scope.spreadSheetCoachings.length;
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    instituteLength = allInstitutes.length - 1;
+                }
+                
+                var groupName = '';
+                if($scope.spreadSheetCoachings.length > 1){
+                    groupName = $scope.spreadSheetCoachings[1].name;
+                }
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to add website for these ' + instituteLength + ' coaching centers of ' +  groupName + '?')
+                .textContent('You will not be able to revert it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.setWebsiteForAll();
+                }, function() {
+                  //nothing
+                    $scope.showLogoDialog();
+                }); 
+            };
             
             $scope.addExamsToAll = function(){
                 var allInstitutes = $scope.spreadSheetCoachings;
@@ -10229,6 +10265,37 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     };
 
                     targetStudyProviderService.setEmailForAll(groupEmailForm).success(function (data, status, headers) {
+                        $scope.showSavedDialog();
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info('Error ' + data + ' ' + status);
+                    });  
+                   
+                }
+                     
+            };
+            
+            $scope.newWebsite = '';
+            $scope.setWebsiteForAll = function(){
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    allInstitutes.splice(0,1);
+                }
+                var websiteArray = $scope.newWebsite.toLowerCase().split(',');
+                
+                websiteArray.forEach(function(thisWebsite, index){
+                    thisWebsite = thisWebsite.trim();
+                });
+                
+                if(websiteArray.length > 0){
+                    var instituteArray =  allInstitutes.map(function(a) {return a._id;});
+                    var groupWebsiteForm = {
+                        instituteArray: instituteArray,
+                        websiteArray: websiteArray
+                    };
+
+                    targetStudyProviderService.setWebsiteForAll(groupWebsiteForm).success(function (data, status, headers) {
                         $scope.showSavedDialog();
 
                     })
@@ -10863,7 +10930,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 function displayPosition(position) {
                     $scope.currLocation = [position.coords.latitude, position.coords.longitude];
                     //$scope.currLocation = [12.971572, 79.158781];
-                    $scope.currLocation = [13.029595, 77.569381];
+                    //$scope.currLocation = [13.029595, 77.569381];
                 }
                 function displayError(error) {
                   var errors = { 

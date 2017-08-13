@@ -1508,6 +1508,58 @@ router.post('/setLogoForAll/', function(req, res) {
     }); //.limit(500) .sort( { rank: -1 } )
 });
 
+router.post('/setWebsiteForAll/', function(req, res) {
+    var groupWebsiteForm = req.body;
+    var instituteArray = groupWebsiteForm.instituteArray;
+    var websiteArray = groupWebsiteForm.websiteArray;
+    //console.log(JSON.stringify(groupWebsiteForm));
+    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {website:1},function(err, allGroupProviders) {
+    if (!err){
+        //console.log(allGroupProviders);
+        
+        allGroupProviders.forEach(function(thisGroup, index){
+            
+            var thisProviderWebsite = thisGroup.website;
+            if(!thisProviderWebsite){
+                thisProviderWebsite = [];
+            }else{
+                if(thisProviderWebsite.length > 0 && thisProviderWebsite[0] == ''){
+                    thisProviderWebsite.splice(0,1);
+                }
+            }
+            console.log(thisProviderWebsite);
+            if(Array.isArray(thisProviderWebsite)){
+                
+            }else{
+                console.log('Converting Website from string to array: ' + thisGroup._id);
+                var res = thisProviderWebsite.split(",");
+                if(res && res.length > 0){
+                    thisProviderWebsite = res;
+                }else{
+                    thisProviderWebsite = [thisProviderWebsite];
+                }
+            }
+            
+            websiteArray.forEach(function(thisWebsite, eindex){
+                var thisWebsiteIndex = thisProviderWebsite.indexOf(thisWebsite);
+                if(thisWebsiteIndex == -1){
+                    thisProviderWebsite.push(thisWebsite);
+                }
+            });
+            
+            //thisGroup.logo = logo;
+            thisGroup.save(function(err, thisGroup) {
+                if (err) return console.error(err);
+                console.log(thisGroup._id + " saved!");
+            });
+            
+        });
+        
+        res.json(allGroupProviders);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
+
 router.post('/setEmailForAll/', function(req, res) {
     var groupExamForm = req.body;
     var instituteArray = groupExamForm.instituteArray;

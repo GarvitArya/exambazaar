@@ -130,6 +130,9 @@
             <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showEmailDialog()">
                 Add Email to Group
             </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showWebsiteDialog()">
+                Add Website to All
+            </md-button>
         </div>
         
         <div layout="row" class="editFont font11 bold greyBottomBorder textBlack">
@@ -414,6 +417,50 @@
             <div layout="row" layout-align="center center" class="width100">
                 <md-button class="md-black md-small font10 tolowercase width50" ng-click="setEmailConfirm()">
                     Set Email for Group
+                </md-button>
+            </div>  
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="websiteDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Add Website to all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
+                        Setting Website Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                
+                <div layout="row" layout-align="center center" class="width100 marginLR20">
+                    <div flex="40" layout="row" layout-align="start start" class="">
+                        <div>
+                            Website
+                        </div>
+                    </div>
+                    <div flex="60" layout="row" layout-align="start start" >
+                        <div class="width80">
+                            <input type="text" class="width100" ng-model="newWebsite"  placeholder="www.example.com">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="setWebsiteConfirm()">
+                    Set Website for Group
                 </md-button>
             </div>  
           
