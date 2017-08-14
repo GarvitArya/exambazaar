@@ -24,7 +24,11 @@
     }
     #pageLogoHolder{
         border: 1px solid rgba(0,0,0,0.8);
+<<<<<<< HEAD
         height: 90px;
+=======
+        min-height: 90px;
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
         width: 90px;
         border-radius: 4px;
     }
@@ -64,6 +68,31 @@
     textarea:focus {
         border: 1px solid #FF5A5F;
     }
+<<<<<<< HEAD
+=======
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 4px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    #addText{
+        color: #FF5A5F;
+    }
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
 </style>
 <div id="spacer1" class="hidden-xs whiteBackground">
 </div>
@@ -506,6 +535,34 @@
                     <div flex layout="column" layout-align="start start" class="font14 padding5 whiteBackground">
                         <div layout="row" layout-align="start start"  class="width100 marginB10">
                             <div flex="25">
+<<<<<<< HEAD
+=======
+                                Year
+                            </div>
+                            <div flex class="paddingLR10">
+                                <md-select ng-model="newExamCycle.year" placeholder="Select the year of exam cycle" class="margin0">
+                                    <md-option ng-repeat="year in cycleYears" ng-value="year">
+                                    {{year}}
+                                    </md-option>
+                                </md-select>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start"  class="width100 marginB10">
+                            <div flex="25">
+                                Cycle #
+                            </div>
+                            <div flex class="paddingLR10">
+                                <md-select ng-model="newExamCycle.cycleNumber" placeholder="Select the number of exam cycle" class="margin0">
+                                    <md-option ng-repeat="cycleNumber in cycleNumbers" ng-value="cycleNumber">
+                                    {{cycleNumber}}
+                                    </md-option>
+                                </md-select>
+                            </div>
+                        </div>
+                        
+                        <div layout="row" layout-align="start start"  class="width100 marginB10">
+                            <div flex="25">
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                                 Name
                             </div>
                             <div flex class="paddingLR10">
@@ -527,11 +584,16 @@
                             <div layout="row" layout-align="start start"  flex class="paddingLR10">
                                 <div>
                                     <md-switch ng-model="newExamCycle.active" aria-label="Active?" class="margin0">
+<<<<<<< HEAD
                                         Active?
+=======
+                                        Is this the active cycle?
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                                     </md-switch>
                                 </div>
                             </div>
                         </div>
+<<<<<<< HEAD
 
                         <div layout="row" layout-align="start start"  class="width100 marginB10" ng-if="newExamCycle.brochure.length > 0">
                             <div flex="25">
@@ -569,6 +631,49 @@
                                     </div>
                                 </div>
 
+=======
+                        <div layout="row" layout-align="start start"  class="width100 marginB10">
+                            <div flex="25">
+                                Exam Mode
+                            </div>
+                            <div layout="row" layout-align="start start"  flex class="paddingLR10">
+                                <div>
+                                    <md-switch ng-model="newExamCycle.examMode" aria-label="Active?" class="margin0">
+                                        Online only?
+                                    </md-switch>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start"  class="width100 marginB10">
+                            <div flex="25">
+                                Acceptance Ratio
+                            </div>
+                            <div layout="row" layout-align="start start"  flex class="paddingLR10">
+                                <div flex layout="column" layout-align="center center" class="paddingLR10">
+                                    <div>
+                                        Students appearing
+                                    </div>
+                                    <div>
+                                        <input type="text" class="width100" ng-model="newExamCycle.studentsAppearing"  placeholder="Number of students appearing">
+                                    </div>
+                                </div>
+                                <div flex layout="column" layout-align="center center" class="paddingLR10">
+                                    <div>
+                                        Number of seats
+                                    </div>
+                                    <div>
+                                        <input type="text" class="width100" ng-model="newExamCycle.studentSeats"  placeholder="Number of seats">
+                                    </div>
+                                </div>
+                                <div flex layout="column" layout-align="center center" class="paddingLR10">
+                                    <div>
+                                        Acceptance Ratio
+                                    </div>
+                                    <div ng-if="newExamCycle.studentSeats/newExamCycle.studentsAppearing">
+                                        {{newExamCycle.studentSeats*100/newExamCycle.studentsAppearing | number: 2}}%&nbsp;&nbsp;<i class="fa fa-check text-primary font16" aria-hidden="true"></i> 
+                                    </div>
+                                </div>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                             </div>
                         </div>
                     </div>
@@ -584,6 +689,23 @@
                         <a ng-if="newExamCycle.brochure.length > 0" target="_blank" class="bold">
                             <i class="fa fa-check text-primary font16" aria-hidden="true"></i> Uploaded
                         </a>
+<<<<<<< HEAD
+=======
+                        <div layout="column" layout-align="center center">
+                            <div layout="row" layout-align="start center" ng-repeat="brochure in newExamCycle.brochure" class="marginB5">
+                                <div flex>
+                                    <a href="{{brochure.url}}" target="_blank">
+                                        Brochure {{$index+1}}
+                                    </a>
+                                </div>
+                                <div flex>
+                                    <div class="badge" id="removebadge" ng-click="removeBrochure(brochure)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Remove
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                     </div>
 
                     <div flex="15" layout="column" layout-align="start center" class="marginR10 padding5 whiteBackground" id="pageLogoHolder">
@@ -598,6 +720,24 @@
                         <a ng-if="newExamCycle.syllabus.length > 0" target="_blank" class="bold">
                             <i class="fa fa-check text-primary font16" aria-hidden="true"></i> Uploaded
                         </a>
+<<<<<<< HEAD
+=======
+                        <div layout="column" layout-align="center center">
+                            <div layout="row" layout-align="start center" ng-repeat="syllabus in newExamCycle.syllabus" class="marginB5">
+                                <div flex>
+                                    <a href="{{syllabus.url}}" target="_blank">
+                                        Syllabus {{$index+1}}
+                                    </a>
+                                </div>
+
+                                <div flex>
+                                    <div class="badge" id="removebadge" ng-click="removeSyllabus(syllabus)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Remove
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                     </div>
 
 
@@ -675,7 +815,14 @@
                     
                     <div layout="row" layout-align="start start"  class="lightBorder marginTB10 width100 padding10 font14" layout-wrap ng-if="newExamCycle.steps.registration">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
+<<<<<<< HEAD
                         Registration Deadlines
+=======
+                        <div class="marginB10">Registration Deadlines</div>
+                        <div><a id="addText" class="secondFont font10" ng-click="registrationText()">
+                        Add Registration Details
+                        </a></div>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                     </div>
                     <div flex="25" layout="column" layout-align="center start" class="padding5">
                         <div layout="row" layout-align="start center" class="marginB10">
@@ -732,7 +879,14 @@
                         
                     <div layout="row" layout-align="start start"  class="lightBorder marginTB10 width100 padding10 font14" layout-wrap ng-if="newExamCycle.steps.admitCard">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
+<<<<<<< HEAD
                         Admit Card Dates
+=======
+                        <div class="marginB10">Admit Card Dates</div>
+                        <div><a id="addText" class="secondFont font10" ng-click="admitCardText()">
+                        Add Admit Card Details
+                        </a></div>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                     </div>
                     <div flex="25" layout="column" layout-align="center start" class="padding5">
                         <div layout="row" layout-align="start center" class="marginB10">
@@ -771,7 +925,14 @@
                     </div>    
                     <div layout="row" layout-align="start start"  class="lightBorder marginTB10 width100 padding10 font14" layout-wrap ng-if="newExamCycle.steps.examDate">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
+<<<<<<< HEAD
                         Written Exam Dates
+=======
+                        <div class="marginB10">Written Exam Dates</div>
+                        <div><a id="addText" class="secondFont font10" ng-click="examDateText()">
+                        Add Written Exam Details
+                        </a></div>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                     </div>
                     <div flex="25" layout="column" layout-align="center start" class="padding5">
                         <div layout="row" layout-align="start center" class="marginB10">
@@ -812,7 +973,15 @@
                     
                     <div layout="row" layout-align="start start"  class="lightBorder marginTB10 width100 padding10 font14" layout-wrap ng-if="newExamCycle.steps.writtenResultDate">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
+<<<<<<< HEAD
                         Written Exam Result Dates
+=======
+                        <div class="marginB10">Written Exam Result Dates</div>
+                        <div><a id="addText" class="secondFont font10" ng-click="writtenResultDateText()">
+                        Add Written Exam Result Details
+                        </a></div>
+                        
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                     </div>
                     <div flex="25" layout="column" layout-align="center start" class="padding5">
                         <div layout="row" layout-align="start center" class="marginB10">
@@ -853,7 +1022,15 @@
                         
                     <div layout="row" layout-align="start start"  class="lightBorder marginTB10 width100 padding10 font14" layout-wrap ng-if="newExamCycle.steps.counselling">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
+<<<<<<< HEAD
                         Counselling Dates
+=======
+                        
+                        <div class="marginB10">Counselling Dates</div>
+                        <div><a id="addText" class="secondFont font10" ng-click="counsellingText()">
+                        Add Counselling Details
+                        </a></div>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                     </div>
                     <div flex="25" layout="column" layout-align="center start" class="padding5">
                         <div layout="row" layout-align="start center" class="marginB10">
@@ -894,7 +1071,15 @@
                     
                     <div layout="row" layout-align="start start"  class="lightBorder marginTB10 width100 padding10 font14" layout-wrap ng-if="newExamCycle.steps.interview">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
+<<<<<<< HEAD
                         Interview Dates
+=======
+                        
+                        <div class="marginB10">Interview Dates</div>
+                        <div><a id="addText" class="secondFont font10" ng-click="interviewText()">
+                        Add Interview Details
+                        </a></div>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                     </div>
                     <div flex="25" layout="column" layout-align="center start" class="padding5">
                         <div layout="row" layout-align="start center" class="marginB10">
@@ -934,7 +1119,15 @@
                     
                     <div layout="row" layout-align="start start"  class="lightBorder marginTB10 width100 padding10 font14" layout-wrap ng-if="newExamCycle.steps.finalResultDate">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
+<<<<<<< HEAD
                         Final Result Dates
+=======
+                        
+                        <div class="marginB10">Final Result Dates</div>
+                        <div><a id="addText" class="secondFont font10" ng-click="finalResultDateText()">
+                        Add Final Result Details
+                        </a></div>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                     </div>
                     <div flex="25" layout="column" layout-align="center start" class="padding5">
                         <div layout="row" layout-align="start center" class="marginB10">
@@ -1077,6 +1270,7 @@
 
 
 <div style="visibility: hidden">    
+<<<<<<< HEAD
     <div class="md-dialog-container whiteBackground" id="sectionTextDialog">
       <md-dialog class="edit-dialog whiteBackground padding20">
           <md-content flex layout="column" class="whiteBackground width100">
@@ -1086,6 +1280,53 @@
                 </div>
             </div>
         </md-content>  
+=======
+    <div class="md-dialog-container whiteBackground" id="registrationText">
+      <md-dialog class="text-dialog padding20">
+          <textarea class="font12 width100 paddingLR10" ng-model="newExamCycle.examdates.registration.text" placeholder="Write a brief about the registration step & process. Maybe the official paragraph elaborating on the steps and additional information will suffice" rows="6"></textarea>
+      </md-dialog>
+    </div>    
+</div>
+<div style="visibility: hidden">    
+    <div class="md-dialog-container whiteBackground" id="admitCardText">
+      <md-dialog class="text-dialog padding20">
+          <textarea class="font12 width100 paddingLR10" ng-model="newExamCycle.examdates.admitCard.text" placeholder="Write a brief about the admit card step & process. Maybe the official paragraph elaborating on the steps and additional information will suffice" rows="6"></textarea>
+      </md-dialog>
+    </div>    
+</div>
+<div style="visibility: hidden">    
+    <div class="md-dialog-container whiteBackground" id="examDateText">
+      <md-dialog class="text-dialog padding20">
+          <textarea class="font12 width100 paddingLR10" ng-model="newExamCycle.examdates.examDate.text" placeholder="Write a brief about the written exam date step & process. Maybe the official paragraph elaborating on the steps and additional information will suffice" rows="6"></textarea>
+      </md-dialog>
+    </div>    
+</div>
+<div style="visibility: hidden">    
+    <div class="md-dialog-container whiteBackground" id="writtenResultDateText">
+      <md-dialog class="text-dialog padding20">
+          <textarea class="font12 width100 paddingLR10" ng-model="newExamCycle.examdates.writtenResultDate.text" placeholder="Write a brief about the written exam result date step & process. Maybe the official paragraph elaborating on the steps and additional information will suffice" rows="6"></textarea>
+      </md-dialog>
+    </div>    
+</div>
+<div style="visibility: hidden">    
+    <div class="md-dialog-container whiteBackground" id="counsellingText">
+      <md-dialog class="text-dialog padding20">
+          <textarea class="font12 width100 paddingLR10" ng-model="newExamCycle.examdates.counselling.text" placeholder="Write a brief about the Counselling step & process. Maybe the official paragraph elaborating on the steps and additional information will suffice" rows="6"></textarea>
+      </md-dialog>
+    </div>    
+</div>
+<div style="visibility: hidden">    
+    <div class="md-dialog-container whiteBackground" id="interviewText">
+      <md-dialog class="text-dialog padding20">
+          <textarea class="font12 width100 paddingLR10" ng-model="newExamCycle.examdates.interview.text" placeholder="Write a brief about the Interview step & process. Maybe the official paragraph elaborating on the steps and additional information will suffice" rows="6"></textarea>
+      </md-dialog>
+    </div>    
+</div>
+<div style="visibility: hidden">    
+    <div class="md-dialog-container whiteBackground" id="finalResultDateText">
+      <md-dialog class="text-dialog padding20">
+          <textarea class="font12 width100 paddingLR10" ng-model="newExamCycle.examdates.finalResultDate.text" placeholder="Write a brief about the final result date step & process. Maybe the official paragraph elaborating on the steps and additional information will suffice" rows="6"></textarea>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
       </md-dialog>
     </div>    
 </div>

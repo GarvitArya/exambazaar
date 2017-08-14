@@ -4084,6 +4084,34 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
         };
         
+<<<<<<< HEAD
+=======
+        $scope.removeAllExams = function(){
+            alert('I am here');
+            if($scope.editable){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Do you want to remove all exams for this coaching?')
+                .textContent('Be very careful. You will not be able to revert this!')
+                .ariaLabel('Lucky day')
+                .targetEvent(ev)
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.provider.exams = [];
+                    $scope.saveProvider();
+                }, function() {
+                  //nothing
+                }); 
+                
+                
+            }else{
+                alert('Cannot Edit without logging in or verifying identity');
+                $scope.showClaimDialog();
+            }
+        };
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
         $scope.deleteFaculty = function(faculty){
             faculty.active = false;
             $scope.provider.faculty.forEach( function(thisFaculty, index){
@@ -6788,7 +6816,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
+<<<<<<< HEAD
             
+=======
+            $rootScope.loginState = $rootScope.stateName;
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
             
             
             //ABCD
@@ -14326,9 +14358,39 @@ function getLatLng(thisData) {
             "Quarter-Yearly",
             "Monthly",
             "Through the year",
+<<<<<<< HEAD
 
         ];
             
+=======
+        ];
+        $scope.cycleYears = ["2016","2017","2018","2019","2020"];
+        
+        $scope.cycleNumbers = ["1","2","3","4","5","6","7","8","9","10","11","12"];
+            
+        $scope.$watch('exam.frequency', function (newValue, oldValue, scope) {
+            if(newValue != null && newValue != ''){
+                if(newValue == 'Yearly'){
+                    $scope.cycleNumbers = ["1"];
+                }
+                if(newValue == 'Half-Yearly'){
+                    $scope.cycleNumbers = ["1","2"];
+                }
+                if(newValue == 'Quarter-Yearly'){
+                    $scope.cycleNumbers = ["1","2","3","4"];
+                }
+                if(newValue == 'Monthly'){
+                    $scope.cycleNumbers = ["1","2","3","4","5","6","7","8","9","10","11","12"];
+                }
+                if(newValue == 'Through the year'){
+                    $scope.cycleNumbers = ["N/A"];
+                    
+                }
+                
+            }
+
+            }, true);    
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
         $scope.addNewExam = function(){
             $scope.showAllExams = false;
             $scope.exam = {
@@ -14476,11 +14538,22 @@ function getLatLng(thisData) {
         $scope.addNewExamCycle = function(){
             
             $scope.newExamCycle = {
+<<<<<<< HEAD
+=======
+                year: '2018',
+                cycleNumber: '1',
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                 name: '',
                 description: '',
                 brochure: [],
                 syllabus: [],
                 active: false,
+<<<<<<< HEAD
+=======
+                examMode: false,
+                studentsAppearing: '',
+                studentSeats: '',
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                 steps: {
                     registration: false,
                     admitCard: false,
@@ -14682,6 +14755,66 @@ function getLatLng(thisData) {
                 $scope.newExamCycle.brochure.splice(bIndex,1);
             }
         };
+<<<<<<< HEAD
+=======
+        
+        $scope.registrationText = function(ev) {
+            $mdDialog.show({
+              contentElement: '#registrationText',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.admitCardText = function(ev) {
+            $mdDialog.show({
+              contentElement: '#admitCardText',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.examDateText = function(ev) {
+            $mdDialog.show({
+              contentElement: '#examDateText',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.writtenResultDateText = function(ev) {
+            $mdDialog.show({
+              contentElement: '#writtenResultDateText',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.counsellingText = function(ev) {
+            $mdDialog.show({
+              contentElement: '#counsellingText',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.interviewText = function(ev) {
+            $mdDialog.show({
+              contentElement: '#interviewText',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.finalResultDateText = function(ev) {
+            $mdDialog.show({
+              contentElement: '#finalResultDateText',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
             
         $scope.removeSyllabus = function(syllabus){
             var syllabusIds = $scope.newExamCycle.syllabus.map(function(a) {return a.url;});

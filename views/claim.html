@@ -1281,7 +1281,11 @@
                     Stream
                 </div>
                 <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+<<<<<<< HEAD
                     Mark the Exams taught by you 
+=======
+                    Mark the Exams taught by you <div class="badge marginL10" ng-click="removeAllExams()" ng-if="masteruser">Remove all</div>
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                 </div>
             </div>    
             <div layout="row" layout-align="center center" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="marginTB5">
@@ -1291,7 +1295,11 @@
                     </span>
                 </div>
                 <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+<<<<<<< HEAD
                     <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+=======
+                    <span ng-repeat="thisExam in allExams | orderBy:'-rank'" ng-if="thisExam.stream._id == thisStream._id">
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                         <span class="badge" id="examTagHolder" ng-if="providerExamIds.indexOf(thisExam._id) == -1" ng-click="addExam(thisExam)">
                             {{thisExam.displayname}}
                         </span>
@@ -2743,7 +2751,11 @@
                     </span>
                 </div>
                 <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+<<<<<<< HEAD
                     <span class="font10" ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+=======
+                    <span class="font10" ng-repeat="thisExam in allExams  | orderBy:'-rank'" ng-if="thisExam.stream._id == thisStream._id">
+>>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                         <span class="badge" id="examTagHolder" ng-if="facultyExamIds.indexOf(thisExam._id) == -1" ng-click="addFacultyExam(thisExam)">
                             {{thisExam.displayname}}
                         </span>

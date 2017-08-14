@@ -1,0 +1,138 @@
+<style>
+    
+    #categories{
+        margin-top: 30px;
+    }
+    #category{
+        text-align: center;
+        min-height: 10vh;
+        padding: 0px;
+        border: white;
+        
+    }
+    #categoryFont{
+        color: white;
+        min-width: 175px;
+        border-style: solid;
+        border-radius: 10px;
+        border-width: 1px;
+        background-color: rgba(0,0,0,0.5);
+        margin-top: 7px;
+        margin-bottom: 7px;
+        
+        
+        margin-right: 0px;
+        padding: 5px;
+        letter-spacing: 2px;
+        box-shadow: 1px 1px 1px #6A6968;
+        font-family: "Avenir";
+        
+    }
+    #categoryFont:hover{
+        background-color: #20C39A;
+        font-weight: 900;
+    }
+    a{
+        color: white;
+        text-decoration: none;
+        
+    }
+    a:hover{
+        color: white;
+    }
+    #categoryLink a:hover{
+      padding: 0px;
+      color: white;
+      text-decoration: none;
+        
+    }
+    #pageHeader{
+        color: rgba(0,0,0,0.8);
+        letter-spacing: 4px;
+        font-family: "Avenir";
+        
+    }
+    #pageHeaderFont{
+        letter-spacing: 1px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+        /*border-bottom: solid 3px;
+        border-color: #20C39A;*/
+        color: white;
+        text-shadow: 0 0 10px #383838;
+    }
+    .letterspacing2{
+        letter-spacing: 2px;
+    }
+    #subheading{
+        letter-spacing: 4px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+        color: white;
+        text-shadow: 0 0 10px #383838;
+    }
+    a:hover{
+        text-decoration: none;
+    }
+    #leftSection{
+        min-height: 80vh;
+        /*border-right: solid 3px;
+        border-color: #20C39A;*/
+    }
+    #rightSection{
+        min-height: 90vh;
+        padding-top:20px;
+    }
+    #landingPage{
+        padding-top: 25px;
+        min-height: 90vh;
+    }
+    
+    .landingButton{
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+        border-radius: 10px;
+    }
+    #rightLogo{
+        max-height: 50px;
+        max-width: 100px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+    #logoContainer{
+        min-height: 12vh;
+        margin-bottom: 5px;
+    }
+    
+</style>
+
+<div layout="column" layout-align="center center" id="fullPage" class="width100 paddingLR20">
+    
+    <div layout="column" layout-align="center center" class="width100 marginTB20">
+        <div layout="row" layout-xs="column" hide-xs class="md-display-2" id="pageHeaderFont">
+            SEARCH&nbsp;&nbsp;&#8226;&nbsp;&nbsp;COMPARE&nbsp;&nbsp;&#8226;&nbsp;&nbsp;APPLY
+        </div>
+        <div layout="row" layout-xs="column" hide-gt-xs class="font20" id="pageHeaderFont">
+            SEARCH&nbsp;&nbsp;&#8226;&nbsp;&nbsp;COMPARE&nbsp;&nbsp;&#8226;&nbsp;&nbsp;APPLY
+        </div>
+    </div>
+    <div layout="column" layout-align="center center" class="width100 marginTB20" id="subheading">
+        <div layout="column" layout-align="center center" class="width100 font20" hide-xs>
+            <div layout="column" layout-align="center center" class="bold width100">
+                26,000+ COACHING INSTITUTES | 90+ CITIES
+            </div>
+            <div layout="column" layout-align="center center" class="font16 letterspacing2">Explore photos, videos, discounts, reviews and more.</div>
+        </div>
+        <div layout="column" layout-align="center center" class="width100 font18" hide-gt-xs>
+            <div layout="column" layout-align="center center" class="bold width100">
+                26,000+ COACHING INSTITUTES | 90+ CITIES
+            </div>
+            <div layout="column" layout-align="center center" class="font16 letterspacing2">Explore photos, videos, discounts, reviews and more.</div>
+        </div>
+    </div>
+    
+</div>
+
