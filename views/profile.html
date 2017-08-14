@@ -36,9 +36,9 @@
                 <div layout="column" layout-align="start start" class="paddingL20 editFont">
                     <div layout="column" layout-align="center center" ng-if="user.image">
                         <img id="userPic" ng-src="{{user.image}}" class="img-circle" />
-                        <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">Change</span>
+                        <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.8, centerCrop: true}">Change</span>
                     </div>
-                    <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">
+                    <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.7, centerCrop: true}">
                         <div layout="row" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
                             <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Image
                         </div>
