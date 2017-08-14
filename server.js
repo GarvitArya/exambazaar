@@ -65,7 +65,7 @@ app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.pr
 
 app.use(compression());
 app.get('/*', function (req, res, next) {
-    /*req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0 || req.url.indexOf('.js') != -1 || */
+    
     if (req.url.indexOf('.css') != -1 || req.url.indexOf('.ttf') != -1 || req.url.indexOf('.jpg') != -1 || req.url.indexOf('.png') != -1) {
         //console.log('Request is: ' + req.url);
         res.setHeader("Cache-Control", "public, max-age=2592000");
