@@ -65,28 +65,14 @@ app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.pr
 
 app.use(compression());
 app.get('/*', function (req, res, next) {
-
-  if (req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0) {
-    if(req.url.indexOf("/css/") === 0){
-        console.log("URL is: " + req.url);
-    }
-    res.setHeader("Cache-Control", "public, max-age=2592000");
-    res.setHeader("Expires", new Date(Date.now() + 2592000000).toUTCString());
-  }
-  next();
-
-    /*req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0 || req.url.indexOf('.js') != -1 || */
-
-    if (req.url.indexOf('.css') != -1 || req.url.indexOf('.ttf') != -1 || req.url.indexOf('.jpg') != -1 || req.url.indexOf('.png') != -1) {
+    /*req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0 || req.url.indexOf('.js') != -1 ||*/
+    if ( req.url.indexOf('.css') != -1 || req.url.indexOf('.ttf') != -1 || req.url.indexOf('.jpg') != -1 || req.url.indexOf('.png') != -1) {
         //console.log('Request is: ' + req.url);
         res.setHeader("Cache-Control", "public, max-age=2592000");
         res.setHeader("Expires", new Date(Date.now() + 2592000000).toUTCString());
     }
         next();
-
 });
-
-
 
 
 
@@ -98,6 +84,8 @@ app.get('*', function(req, res, next) {
         next();     
     }
 });
+
+
 
 app.get('/auth/facebook',
   passport.authenticate('facebook'));

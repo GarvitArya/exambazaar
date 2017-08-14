@@ -4109,7 +4109,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.showClaimDialog();
             }
         };
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
         $scope.deleteFaculty = function(faculty){
             faculty.active = false;
             $scope.provider.faculty.forEach( function(thisFaculty, index){
@@ -6814,11 +6813,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
-<<<<<<< HEAD
-            
-=======
             $rootScope.loginState = $rootScope.stateName;
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
             
             
             //ABCD
@@ -14356,11 +14351,6 @@ function getLatLng(thisData) {
             "Quarter-Yearly",
             "Monthly",
             "Through the year",
-<<<<<<< HEAD
-
-        ];
-            
-=======
         ];
         $scope.cycleYears = ["2016","2017","2018","2019","2020"];
         
@@ -14388,7 +14378,6 @@ function getLatLng(thisData) {
             }
 
             }, true);    
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
         $scope.addNewExam = function(){
             $scope.showAllExams = false;
             $scope.exam = {
@@ -14536,22 +14525,16 @@ function getLatLng(thisData) {
         $scope.addNewExamCycle = function(){
             
             $scope.newExamCycle = {
-<<<<<<< HEAD
-=======
                 year: '2018',
                 cycleNumber: '1',
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                 name: '',
                 description: '',
                 brochure: [],
                 syllabus: [],
                 active: false,
-<<<<<<< HEAD
-=======
                 examMode: false,
                 studentsAppearing: '',
                 studentSeats: '',
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
                 steps: {
                     registration: false,
                     admitCard: false,
@@ -14753,8 +14736,6 @@ function getLatLng(thisData) {
                 $scope.newExamCycle.brochure.splice(bIndex,1);
             }
         };
-<<<<<<< HEAD
-=======
         
         $scope.registrationText = function(ev) {
             $mdDialog.show({
@@ -14812,7 +14793,6 @@ function getLatLng(thisData) {
               clickOutsideToClose: true
             });
         };
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
             
         $scope.removeSyllabus = function(syllabus){
             var syllabusIds = $scope.newExamCycle.syllabus.map(function(a) {return a.url;});
