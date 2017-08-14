@@ -74,27 +74,22 @@ app.get('/*', function (req, res, next) {
     res.setHeader("Expires", new Date(Date.now() + 2592000000).toUTCString());
   }
   next();
-=======
+
     /*req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0 || req.url.indexOf('.js') != -1 || */
-=======
-    
->>>>>>> f40eb6a0c6a88ecb65d2e2cdb3dc06429a0814f1
+
     if (req.url.indexOf('.css') != -1 || req.url.indexOf('.ttf') != -1 || req.url.indexOf('.jpg') != -1 || req.url.indexOf('.png') != -1) {
         //console.log('Request is: ' + req.url);
         res.setHeader("Cache-Control", "public, max-age=2592000");
         res.setHeader("Expires", new Date(Date.now() + 2592000000).toUTCString());
     }
         next();
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
+
 });
 
 
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
 app.get('*', function(req, res, next) {
     if (req.get('x-forwarded-proto') != "https") {
         res.set('x-forwarded-proto', 'https');
@@ -104,11 +99,6 @@ app.get('*', function(req, res, next) {
     }
 });
 
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
 app.get('/auth/facebook',
   passport.authenticate('facebook'));
 
