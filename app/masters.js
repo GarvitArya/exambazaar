@@ -238,11 +238,7 @@ router.post('/extractEmails/', function(req, res) {
         
         res.json('Done');
     } else {throw err;}
-<<<<<<< HEAD
     }).limit(1000).skip(7000);
-=======
-    }).limit(1000).skip(1000);
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
     
     
 });

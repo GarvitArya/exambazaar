@@ -4084,8 +4084,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
         };
         
-<<<<<<< HEAD
-=======
         $scope.removeAllExams = function(){
             alert('I am here');
             if($scope.editable){

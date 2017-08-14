@@ -31,17 +31,14 @@ var examSchema = mongoose.Schema({
     
     
     cycle: [{
-<<<<<<< HEAD
         name: {type: String, required: true},
         description: {type: String},
-=======
         year: {type: String, required: true},
         cycleNumber: {type: String, required: true},
         name: {type: String, required: true},
         description: {type: String},
         studentsAppearing: {type: String},
         studentSeats: {type: String},
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
         brochure: [{
             name: {type: String},
             description: {type: String},
@@ -161,11 +158,9 @@ var examSchema = mongoose.Schema({
             },
         },
         active: {type: Boolean, default:'false'},
-<<<<<<< HEAD
-=======
+
         examMode: {type: Boolean, default:'false'}, //true means online only, false means other than online also.
         
->>>>>>> 62e10f13550660191de5d2dd7b71a921392b031c
     }],
 });
 examSchema.plugin(deepPopulate);
