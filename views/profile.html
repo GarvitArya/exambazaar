@@ -1,0 +1,147 @@
+<style>
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px transparent;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    
+    #profileSection{
+        min-height: 20vh;
+    }
+</style>
+<div class="whiteBackground mainContent" >
+    <div id="spacer">
+    </div>
+    <div class="padded" ng-if="user">
+    <div flex layout="column" layout-xs="column" layout-align="start start" >
+        <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100" id="profileSection">
+            <div layout="row" layout-align="start center" ng-if="user.basic" class="width100">
+                <div>
+                    Welcome, {{user.basic.name}}
+                </div>
+                <div layout="column" layout-align="start start" class="paddingL20 editFont">
+                    <div layout="column" layout-align="center center" ng-if="user.image">
+                        <img id="userPic" ng-src="{{user.image}}" class="img-circle" />
+                        <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">Change</span>
+                    </div>
+                    <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">
+                        <div layout="row" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Image
+                        </div>
+
+                    </div>
+
+                </div>
+                
+            </div>
+            <!--<span>User Type: {{user.userType}}</span>-->
+            <!--<span ng-if="user.basic">Last Login: {{user.logins[user.logins.length-1] | date: 'dd-MMM-yyyy HH:mm'}}</span>-->
+            <span ng-if="!user.facebookId" class="editFont marginB20">
+                You can link Facebook to your existing account to enable seamless logging in.
+            </span>
+            
+            <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase" ng-show="!user.facebookId">
+                <span class="font14" hide-xs>
+                    Link with Facebook
+                </span>
+                <span class="font12" hide-gt-xs>
+                    Link with Facebook
+                </span>
+            </md-button>
+            
+            
+            <div layout="column" ng-if="user.facebookId" class="marginT10">
+                <div>
+                    Facebook Linked <i class="fa fa-facebook-official" aria-hidden="true"></i>
+                </div>
+                <div>
+                <span>
+                <i class="fa fa-check font20 text-primary bold" aria-hidden="true"></i>
+                </span>
+                <span class="editFont marginB20">
+                    You are already linked to your Facebook account (id: {{user.facebookId}}). Enjoy seamless logging in with Facebook to your Exambazaar account.
+                </span>
+                </div>
+                
+            </div>
+            <span ng-if="!user.basic">
+            Name: 
+            </span>
+            
+            
+        </div>
+        <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100 marginT20" id="profileSection" ng-if="user.blogger.active">
+            
+            <div layout="row" layout-align="start start" class="width100">
+                Credentials & Highlights
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginT20">
+                <div flex="25" layout="column" layout-align="start start">
+                    <div>
+                        Add profile credential
+                    </div>
+                    <div class="editFont font10 ">
+                        Credentials also appear on blogs you write
+                    </div>
+                </div>
+                <div flex>
+                    <input type="text" class="font12 width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
+                </div>
+            </div>
+            <div layout="row" layout-align="end center" class="width100">
+                <md-button class="md-raised md-primary" ng-click="saveBlogger()">
+                     Save
+                </md-button>
+            </div>
+        </div>
+        
+    </div>
+    <!--<div>
+        <div flex layout="column" layout-align="start start" class="">
+            <span>Tell us where you live</span>
+            <div ng-if="userlatlng" class="width50">
+                <ng-map center="{{userlatlng}}"  zoom="14">
+
+                    <marker position="{{userPosition}}"
+                      title="ABC"
+                      animation="Animation.DROP"
+                      centered="true"></marker>
+                  </ng-map>
+            </div>
+            <span>{{userPosition}}</span>
+        </div>
+    </div>-->
+    </div>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>

@@ -1,0 +1,182 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    img{
+        max-width: 100%;
+        /*margin: auto;
+        display: block;*/
+    }
+    .blogtitle{
+        color: white;
+    }
+    .profileBox{
+        /*border: solid 0.5px #ccc;
+        border-radius: 20px;
+        background: white;*/
+    }
+    .blogHeader{
+        min-height: 60vh;
+        width:100%;
+        position: relative;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+    .blogContent{
+        text-align: left;
+    }
+    h1,h2,h3{
+        text-align: left;
+        line-height: 140%;
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+    a:link, a:visited, a:hover, a:active{
+        color: #20C39A;
+    }
+    
+</style>
+
+<div id="spacerXS" class="whiteBackground">
+</div>
+<div flex layout="row" layout-align="center center" class="whiteBackground">
+<div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40">
+    <div layout="row" layout-align="center center" class="width100 blogHeader  marginB20" ng-style="{'background-image':'url({{thisBlogCover}})'}">
+        <div layout="row" layout-align="center center" class="width100">
+        <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 marginT20 padding20 textWhite padding10  text-center">
+            <div layout="column" layout-align="center center" id="blogPostHeader">
+                <div class="bold font48 textShadow5 spacedLetter2 marginB10">
+                    Exambazaar Blog
+                </div>
+                <div class="font16 paddingLR20">
+                    Resources, tips & material to help you ace your exam preparation
+                </div>
+            </div>
+            
+        </div>
+        </div>
+    </div>
+    <div layout="row" layout-align="center center" class="width100 marginT40">
+        <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="start start" class="font22 bold padding10">
+        Recommended Posts
+        </div>
+    </div>
+    <div layout="row" layout-align="center center" class="width100 font14">
+        <div flex-xs="100" flex-gt-xs="80" layout="row" layout-align="start start" class="" layout-wrap>
+        
+        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20" ng-repeat="blogpost in allBlogs | orderBy: '-_created'">
+            <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
+            <div layout="column" layout-align="center center" class="blogpostImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+            <div layout="row" layout-align="start center" id="blogPostRead" class="width100 paddingLR20 paddingB20">
+                <div flex layout="row" layout-align="start center">
+                    {{blogpost.readingTime.text}}
+                </div>
+                <div flex layout="row" layout-align="end center" class="width100">
+                    <div class="">
+                        <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                </div>
+                            </div>
+                        </md-button>
+                        <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                </div>
+                            </div>
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+            </div>
+                
+                <div layout="column" layout-align="start center" class="min20vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
+                    <div layout="row" layout-align="start start" class="width100 marginB10">
+                        <div flex layout="column" layout-align="start start" flex class="font22 bold wideLine2" ng-click="goToBlog(blogpost)">
+                            {{blogpost.title}}
+                        </div>
+                        
+                        
+                        <div layout="row" layout-align="end start" class="font12 paddingT5">
+                            <div hide-gt-xs class="marginL10 ">
+                                <a href="#"
+                                socialshare 
+                                socialshare-provider="whatsapp"
+                                socialshare-text="{{shareBlogText(blogpost)}}" 
+                                socialshare-url="{{shareURL(blogpost)}}">
+                                <img src="icons/whatsapp.png" class="socialIconBlog"/>    
+                                </a>
+                            </div>
+                            <div hide-xs class="marginL10 ">
+                                <a ng-click="postFacebook(blogpost)">
+                                    <img src="icons/facebook.png" class="socialIconBlog"/>
+                                </a>
+                            </div>
+                            <div hide-gt-xs class="marginL10 ">
+                                <a href="#"
+                                socialshare
+                                socialshare-provider="facebook-messenger"
+                                socialshare-url="shareURL(blogpost)">
+                                    <img src="icons/facebook.png" class="socialIconBlog"/>
+                                </a>
+                            </div>
+                            <div class="marginL10 ">
+                                <a href="#"
+                                socialshare
+                                socialshare-provider="twitter"
+                                socialshare-text="{{shareBlogText(blogpost)}}"
+                                socialshare-hashtags="{{hashtags}}"
+                                socialshare-url="{{shareURL(blogpost)}}">
+                                <img src="icons/twitter.png" class="socialIconBlog"/>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100 font14 textLightGrey">
+                        <div flex layout="column" layout-align="start start" class="">
+                            <div class="narrowLine">
+                                By {{blogpost.user.basic.name}}
+                            </div>
+                        </div>
+                        <div layout="column" layout-align="center start" class="">
+                            {{blogpost._created | date: "MMMM dd"}}
+                        </div>
+                    </div>
+                    
+                </div>    
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    
+</div>
+    
+</div>
+ 

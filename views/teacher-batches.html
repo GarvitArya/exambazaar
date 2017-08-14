@@ -1,0 +1,113 @@
+
+<div class="container">
+    <!--<h4 class="md-headline text">
+        Welcome {{teacher.basic.firstName}} {{teacher._id}}
+    </h4>-->
+    <div class="row">
+    <div ng-repeat="batch in teacher.batches" class="panel panel-default col-md-12" >
+        <div class="panel-heading">
+            <h6 class="md-subhead text">
+            <a ui-sref="batch({ batchId:{{'batch._id'}} })" class="text">
+            {{batch.name}}
+            </a>
+            <span class="pull-right">
+                <small>
+                    Class Teacher:
+                    {{teacher.basic.salutation}}
+                    {{teacher.basic.firstName}}
+                    {{teacher.basic.middleName}}
+                    {{teacher.basic.lastName}}
+                | {{batch.students.length}} students
+                </small>
+            </span>
+            </h6>
+
+
+        </div>
+        <div class="panel-body">
+            <!--<small>
+                <span ng-repeat="student in batch.students" flex-gt-sm class="text">
+                    {{student.basic.firstName}}
+                    {{student.basic.middleName}}
+                    {{student.basic.lastName}}
+                </span>
+            </small>-->
+            <div class="row">
+                <small>
+                <strong class="text-primary">Students: </strong> 
+                <span ng-repeat="student in batch.students | orderBy:'basic.firstName'" flex-gt-sm class="text">
+                    <md-tooltip md-direction="left">
+                        {{student.basic.firstName}}
+                        {{student.basic.middleName}}
+                        {{student.basic.lastName}}
+                    </md-tooltip>
+                    {{student.basic.firstName}} | 
+                </span>
+            </small>
+            </div>
+            <div class="row">
+                <md-button class="md-raised md-primary" ui-sref="batch-attendance({ batchId:{{'batch._id'}} })">Mark Attendance</md-button>
+            </div>
+
+
+        </div>
+    </div>
+    </div>
+    
+    <div class="row">
+    <div class="col-md-6" ng-repeat="subject in teacher.subjects">
+    <div   class="panel panel-default" >
+            <div class="panel-heading">
+                <h6 class="md-subhead text">
+                <!--<a ui-sref="batch({ batchId:{{'subject._batch._id'}} })" class="text">
+                
+                </a>-->
+                <a ui-sref="subject({ subjectId:{{'subject._id'}} })" class="text">
+                Subject: {{subject._batch.name}} {{subject._globalSubject.name}}
+                </a>
+                <span class="pull-right">
+                    <small>
+                    {{subject._batch.students.length}} students
+                    </small>
+                </span>
+                </h6>
+            </div>
+            <div class="panel-body">
+                <small>
+                <strong class="text-primary">Students: </strong> 
+                    <span ng-repeat="student in subject._batch.students | orderBy:'basic.firstName'" flex-gt-sm class="text">
+                        <md-tooltip md-direction="left">
+                            {{student.basic.firstName}}
+                            {{student.basic.middleName}}
+                            {{student.basic.lastName}}
+                        </md-tooltip>
+                        {{student.basic.firstName}} | 
+                    </span>
+                </small>
+                
+            <!--
+            <md-grid-list
+                md-cols-xs="1" md-cols-sm="4" md-cols-md="6" md-cols-gt-md="12"
+                md-row-height-gt-md="1:1" md-row-height="2:2">
+                <md-grid-tile ng-repeat="batchstudent in subject._batch.students" md-colspan="1" >
+                <span class="thumbnail">
+                <small> 
+                <img  ng-src="{{batchstudent.imageUrl}}" height = "65" alt="{{batchstudent.basic.firstName | limitTo: 1}} {{batchstudent.basic.lastName | limitTo: 1}}">
+                <md-tooltip >
+                    {{batchstudent.basic.firstName}}
+                    {{batchstudent.basic.middleName}}
+                    {{batchstudent.basic.lastName}}
+                </md-tooltip>
+                </small>
+                </span>
+            </md-grid-tile>
+            </md-grid-list> 
+            -->    
+                
+            </div>
+    </div>
+    </div>
+    </div>
+    
+    
+</div>

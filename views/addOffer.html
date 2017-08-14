@@ -1,0 +1,74 @@
+<style>
+    .md-block{
+        padding: 10px;
+        border: 1px solid #ccc; 
+    }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+</style>
+<div class="container">
+    <div id="spacer1">
+    </div>
+    <div layout="row" layout-margin layout-padding>
+        <span class="md-subhead" ng-repeat="existingOffer in offers">
+            <a ng-click="setOffer(existingOffer)">{{existingOffer.displayname}}</a>, 
+        </span>
+    </div>
+    
+    <md-divider></md-divider>
+    
+    <div layout="column" layout-margin layout-padding>
+    <h4 class="text-primary md-title">Add Offer</h4>
+    <div class="col-md-12" id="addMasterForm">
+        <md-content flex layout-padding>
+        <form name="offerForm" >
+        <div layout="column" >
+            <div layout="column">
+                <div layout="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Provider Name</label>
+                        <input required ng-model="offer.provider.name">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Provider Website</label>
+                        <input required ng-model="offer.provider.website">
+                    </md-input-container>
+
+                </div>
+                <div layout="row">
+                    <textarea class="width100" ng-model="offer.provider.description" placeholder="Add description of the provider" rows="3"></textarea>
+                </div>
+                
+                <md-switch ng-model="offer.active" aria-label="Active?">
+                  Active?
+                </md-switch>
+            </div>   
+
+            <md-button class="md-raised md-primary" ng-click="addOffer()" ng-disabled="offerForm.$invalid">Add Offer</md-button>
+
+        </div>
+        </form>
+        </md-content>
+        </div>
+    </div>
+</div>
+<div>
+    {{ServerResponse}}
+</div>

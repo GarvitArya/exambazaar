@@ -1,0 +1,102 @@
+<div class="container">
+    <md-content flex layout-padding>
+    
+    <md-tabs md-dynamic-height md-border-bottom>
+          <md-tab label="batches">
+            
+          </md-tab>
+          <md-tab label="teachers">
+            
+          </md-tab>
+        
+        <md-tab label="students">
+            
+          </md-tab>
+        <md-tab label="Fees">
+            <md-content class="md-padding">
+            <div layout="row">
+            <div flex>
+            
+            <md-button class="md-raised md-primary" ui-sref="feeStructure({ instituteId:{{'institute._id'}} })">Fee Structure</md-button>
+            </div>
+            </div>
+            </md-content>
+          </md-tab>    
+          
+          <md-tab label="Calendar">
+            <md-content class="md-padding">
+            <div layout="row">
+            <div flex>
+            
+            <md-button class="md-raised md-primary" ui-sref="instituteCalendar({ instituteId:{{'institute._id'}} })">Institute Calendar</md-button>
+            </div>
+            </div>
+            </md-content>
+          </md-tab>  
+        
+          <md-tab label="transport">
+            <md-content class="md-padding">
+            <div layout="row">
+            <div flex>
+                <table ng-table="showtransportVehicles"   class="table">
+                    <tr ng-repeat="transportVehicle in institute.transportVehicles">
+                         <td title="'Type'">{{transportVehicle.type}}</td>
+                        <td title="'Registration'">{{transportVehicle.registration}}</td>
+                        <td title="'Driver Name'">{{transportVehicle.driver.name}}</td>
+                        <td title="'Driver Photo'">
+                            <img ng-src="{{transportVehicle.driver.imageUrl}}" height = "50">
+                        </td>
+                        <td title="'Driver Mobile'">{{transportVehicle.driver.mobile}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div flex>
+            <md-button class="md-raised md-primary" ui-sref="addTransportVehicle({ instituteId:{{'institute._id'}} })">Add Transport Vehicle</md-button>
+            </div>
+            </div>
+            </md-content>
+          </md-tab>
+            
+          
+            
+        <md-tab label="admins">
+            <md-content class="md-padding">
+                <div layout="row">
+                <div flex>
+                <table ng-table="showadmins"   class="table">
+                    <tr ng-repeat="admin in institute.admins | orderBy:'basic.firstName'">
+                         
+                    <td title="'Admin'">
+                        <a ui-sref="admin({ adminId:{{'admin._id'}} })">
+                            {{admin.basic.firstName}} {{admin.basic.lastName}}
+                        </a></td>
+                    <td title="'Photo'">
+                    <img ng-src="{{admin.account.imageUrl}}" height = "50"></td>
+                    <td title="'Mobile'">
+                       {{admin.contact.mobile}}</td>
+                    </tr>
+                </table>
+                </div>
+                <div flex>
+                <md-button class="md-raised md-primary" ui-sref="addAdmin({ instituteId:{{'institute._id'}} })">Add Admin</md-button>
+                </div>
+                </div>
+            </md-content>
+          </md-tab> 
+    </md-tabs>  
+    </md-content>
+    
+</div>
+<!--
+<div class="container">
+        <cl-image public-id="gp" format="jpg">
+            <cl-transformation height="80" width="80" crop="thumb" gravity="face" radius="max" border="1px_solid_rgb:00390b60" />
+        </cl-image>
+    <form>    
+    <div class="form_controls">
+        <input type="file" ng-model="student.profilePic" id="myFile" name="myFile"/>
+        <button ng-click="setProfilePic()">Upload</button> 
+    </div>
+    </form>
+</div>
+-->

@@ -1,0 +1,411 @@
+<style>
+    .top-buffer { margin-top:20px; }
+    
+    .input-group .icon-addon .form-control {
+    border-radius: 0;
+    }
+
+    .icon-addon {
+        position: relative;
+        color: #555;
+        display: block;
+    }
+
+    .icon-addon:after,
+    .icon-addon:before {
+        display: table;
+        content: " ";
+    }
+
+    .icon-addon:after {
+        clear: both;
+    }
+
+    .icon-addon.addon-md .glyphicon,
+    .icon-addon .glyphicon, 
+    .icon-addon.addon-md .fa,
+    .icon-addon .fa {
+        position: absolute;
+        z-index: 2;
+        left: 10px;
+        font-size: 14px;
+        width: 20px;
+        margin-left: -2.5px;
+        text-align: center;
+        padding: 10px 0;
+        top: 1px
+    }
+
+    .icon-addon.addon-lg .form-control {
+        line-height: 1.33;
+        height: 46px;
+        font-size: 18px;
+        padding: 10px 16px 10px 40px;
+    }
+
+    .icon-addon.addon-sm .form-control {
+        height: 30px;
+        padding: 5px 10px 5px 28px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .icon-addon.addon-lg .fa,
+    .icon-addon.addon-lg .glyphicon {
+        font-size: 18px;
+        margin-left: 0;
+        left: 11px;
+        top: 4px;
+    }
+
+    .icon-addon.addon-md .form-control,
+    .icon-addon .form-control {
+        padding-left: 30px;
+        float: left;
+        font-weight: normal;
+    }
+
+    .icon-addon.addon-sm .fa,
+    .icon-addon.addon-sm .glyphicon {
+        margin-left: 0;
+        font-size: 12px;
+        left: 5px;
+        top: -1px
+    }
+
+    .icon-addon .form-control:focus + .glyphicon,
+    .icon-addon:hover .glyphicon,
+    .icon-addon .form-control:focus + .fa,
+    .icon-addon:hover .fa {
+        color: #2580db;
+    }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    #logoContainer{
+        max-height: 200px;
+    }
+    #pageHeaderFont{
+        border-bottom: solid 3px;
+        border-color: #20C39A;
+        letter-spacing: 4px;
+    }
+    #otherCategoryLink{
+        color: #20C39A;
+        
+    }
+    #Input{
+        background-color : #f7f7f7;
+        border: 1px solid #ccc;
+    }
+    #cell{
+        padding: 5px;
+        
+        
+    }
+    .cidone{
+        background-color: #001f3f;
+        color: white;
+    }
+    .emailSent{
+        
+    }
+</style>
+<div class="container" ng-if="showLevel==0">
+    <div id="spacer">
+    </div>
+    <div class="row top-buffer">
+        <h1>
+        You do not have access to view this information. Login above to try again.
+        </h1>
+    </div>
+
+</div>
+<div class="whiteBackground mainContent" ng-if="showLevel>0">
+    <div id="spacer" class="whiteBackground">
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font11 whiteBackground" ng-if="showLevel>5">
+        <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2" ng-repeat="state in states">
+            <div>{{state}}</div>
+            <span ng-repeat="cityState in cityStates | orderBy: 'city'" ng-if="cityState.state == state">
+                <a ui-sref="targetStudyProviders({ city:{{'cityState.city'}} })">{{cityState.city}} | </a>
+            </span>
+            
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font10 whiteBackground paddingTB10" ng-if="showLevel>5">
+        <!---->
+        <md-button class="md-cancel md-small font10" ng-click="removeDuplicates()">Remove Duplicates</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="cleanTargetstudyurls()">Clean Websites</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="logoService()">Clean Logos</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="databaseService()">Database Service</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="UniqueLogoService()">Unique Logo</md-button>
+        <md-button class="md-small md-cancel md-small font10" ng-click="allDistinct()">Distinct Providers</md-button>
+        <!--<md-button class="md-cancel md-small font10" ng-click="getCityCount()">City Count</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="rank0()">Set Rank 0</md-button>-->
+        <md-button class="md-cancel md-small font10" ng-click="getAllCourses()">All Courses</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="getWebsites()">Coaching Websites</md-button>
+        <br/>
+        <span class="editFont">
+            Total: {{providersList.length}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            Filled: {{filledCounter}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            No Email: {{noEmailCounter}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            No Map: {{noMapCounter}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            Emails Sent: {{emailSentCount}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            Verification Done: {{verifiedCounter}}
+        </span>&nbsp;&nbsp;
+        <span class="editFont">
+            Does not Exist: {{doesnotexistCounter}}
+        </span>
+        <span class="editFont">
+            No Response: {{noresponseCounter}}
+        </span>
+    </div>
+    <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font10 whiteBackground paddingTB10" ng-if="showLevel>5">
+    {{institutesFilled}}
+    </div>-->
+    <!--<div class="row top-buffer">
+        <md-button class="md-cancel md-small font10" ng-click="geturl()">Coaching Adda URLs</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="geturl2()">Target Study URLs</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="getclusterUrls()">Target Study Cluster URLs</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="getTargetStudyUrlsList()">Get Target Study List</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="getTargetStudyurl()">Fill Target Study</md-button>
+        <md-button class="md-cancel md-small font10" ng-click="removeDuplicates()">Remove Duplicates</md-button>
+        {{count}} {{currUrl}}
+    </div>
+    <div class="row top-buffer">
+        <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange}"
+           row-headers="false"
+           min-spare-rows="1"
+           datarows="urls"
+           >
+            <hot-column data="url" title="'Urls'" size="100"></hot-column>
+        </hot-table>
+    </div>-->
+    
+    <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12 whiteBackground paddingTB10">
+        <form name="searchForm">
+        <div layout="row" layout-align="start center">
+            <div flex="50" layout="row" layout-align="start center" class="icon-addon addon-md">
+                <input type="search" placeholder="Search by name, courses" class="form-control font12" id="Input" ng-model="searchText" required>
+                <label for="searchText" class="glyphicon glyphicon-search" rel="tooltip" title="searchText"></label>
+            </div>
+            <div layout="row" layout-align="start center" flex="50" class="" >
+                <div layout="row" layout-align="start center" flex="50">
+                    <md-button class="md-cancel md-small" ng-click="setFilter(searchText)" class="height100 width100" type="submit" ng-disabled="searchForm.$invalid">Search</md-button>
+                    <div class="text-primary" ng-if="searchText"><a ng-click="clearFilter()">Clear</a></div>
+                </div>
+                <div flex="50" layout="row" layout-align="start center">
+                    <small class="text-muted">  displaying {{filtered.length}} providers in <span class="text-primary">{{city}}</span></small>
+                </div>
+
+            </div>
+        </div>
+        </form>
+    </div>
+    
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 whiteBackground paddingTB10" ng-show="!showlogos && !allDistinctBool">
+        <div layout="row" layout-align="start center" class="greyDashedBottomBorder greyDashedTopBorder font10 bold">
+            <div id="cell" flex="5">S. No.</div>
+            <div id="cell" flex="15" class="font12">Institute</div>
+            <div id="cell" flex="15">Address</div>
+            <div id="cell" flex="5">Location</div>
+            <div id="cell" flex="15">Exams</div>
+            <!--<div id="cell" flex="15">Phone</div> -->   
+            <div id="cell" flex="15">Email(s)</div>    
+            <div id="cell" flex="15">EB Note</div>
+            <div id="cell" flex="5">Url</div>
+            <div id="cell" flex="10">EB Rank</div>
+        </div>
+        
+        <div layout="row" layout-align="start center" ng-repeat="provider in providersList | orderBy:['-website','-email','name'] | filter:filterText as filtered track by $index" class="greyDashedBottomBorder font10" ng-class="{ cidone: provider.cifilled }">
+            <div id="cell" flex="5">
+                {{$index+1}}
+                <span>{{provider.ebVerifyState}}</span>
+                
+            </div>
+            <div layout="column" id="cell" flex="15" class="font12">
+                <a ui-sref="claim({ coachingId:{{'provider._id'}} })" target="_blank">
+                <strong>{{provider.name}}</strong>
+                </a>
+                <span>
+                <a ng-click="showDisableConfirm(provider)" target="_blank" class="danger font8" ng-if=" showLevel>5 || user.userId == '58c8e895bbaebf3560545f19'">
+                Disable
+                </a>&nbsp;&nbsp;
+                <a ui-sref="reviewCenter({ coachingId:{{'provider._id'}} })" target="_blank" class="text-primary font8" ng-if=" showLevel>5">
+                Review
+                </a>
+                </span>
+                
+            </div>
+            <div id="cell" flex="15">
+                {{provider.address}}
+            </div>
+            <div id="cell" flex="5">
+                <!--<span ng-if="!provider.location" ng-click="showLocationDialog($event,provider)" id="otherCategoryLink"><small>Set</small></span>-->
+                <span ng-if="!provider.latlng" ng-click="" id="otherCategoryLink"><small>Fix</small></span>
+            <br/>
+            <span ng-show="!provider.email" ng-click="addEmail(provider)" id="otherCategoryLink"><small>Add Email</small></span>    
+            </div>
+            <div id="cell" flex="15">
+                <span ng-repeat="exam in provider.exams">
+                    <a ng-click="setFilter(exam.displayname)">
+                        {{exam.displayname}}
+                    </a>
+                     | 
+                </span>
+            </div>
+            <!--<div id="cell" flex="15">
+                <span ng-repeat="phone in provider.phone track by $index">
+                    {{phone}}
+                    <span ng-if="!$last">, </span>
+                </span>
+            </div> -->   
+            <div id="cell" flex="15">
+                <span ng-repeat="thisemail in provider.email track by $index">
+                    {{thisemail}}
+                    <span ng-if="!$last">, </span>
+                </span>
+                <span class="text-primary" ng-if="provider.emailSent">
+                    <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                </span>
+            </div> 
+            <!--<div id="cell" flex="15">
+                <span ng-repeat="mobile in provider.mobile track by $index">
+                    {{mobile}}
+                    <span ng-if="!$last">, </span>
+                </span>
+            </div>-->
+            <div id="cell" flex="15">
+                <span ng-repeat="note in provider.ebNote track by $index">
+                    {{note.note}} by {{note.user.basic.name}}
+                    <span ng-if="!$last">, </span>
+                </span>
+            </div>
+            <div id="cell" flex="5">
+                <a ng-href="{{provider.website[0]}}" target="_blank" ng-if="provider.website.length > 0 && provider.website[0] !=''">
+                    Url
+                </a>&nbsp;
+                <a ng-href="{{provider.targetStudyWebsite}}" target="_blank" ng-if="provider.targetStudyWebsite && showLevel>5">
+                    TS Url
+                </a>
+                
+            </div>
+            <div id="cell" flex="10">
+                <div class="btn-group" role="group" aria-label="...">
+                  <button type="button" class="btn btn-sm" ng-click="uprank(provider)">+</button>
+                    
+                  <button type="button" class="btn btn-sm" ng-click="downrank(provider)">-</button>
+                </div>
+                
+            </div>
+            
+        
+        </div>
+    
+        
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div ng-repeat="logo in uniquelogos" ng-if="$index>=0 && $index<1000">
+            <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                <img ng-src="{{logo}}" />
+            </div>
+
+        </div>
+        
+    </div>
+    <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12 top-buffer" ng-if="allCourses" >
+        <div ng-repeat="course in courses">
+            {{course}}
+        </div>
+    </div>
+    
+    
+    <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12 top-buffer" ng-show="allDistinctBool">
+        <div ng-repeat="name in allProviderNames | orderBy:'count'">
+            <div class=" col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                {{$index+1}}
+            </div>
+            <div class=" col-lg-9 col-md-9 col-sm-9 col-xs-9">  
+                {{name.name}}
+            </div>
+            <!---->
+            
+        </div>
+    </div>
+    
+    
+    <div style="visibility: hidden">    
+        <div class="md-dialog-container" id="myDialog">
+          <md-dialog layout-padding>
+            <p class="text-center md-title" id="pageHeaderFont">
+              <span>SELECT LOCATION FOR {{currProvider.name | uppercase}}</span>
+              <span class="pull-right" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+            </p>
+            <p class="text-center"><small>
+                Provider: {{currProvider.name}}<br/> 
+                Address: {{currProvider.address}}
+            </small></p>  
+            <p class="text-center">
+                
+                <span  ng-repeat="thisLocation in locations | orderBy:'area'">
+                  <span class="text md-subhead">
+                    <a ng-click="saveLocation(thisLocation)" id="otherCategoryLink">{{thisLocation.area| uppercase}}
+                    </a>
+                    <span ng-if="!$last">&nbsp;&#8226;&nbsp;</span>
+                  </span>
+
+                </span>
+            </p>
+          </md-dialog>
+        </div>    
+        </div>
+</div>
+{{distinctStates.length}}
+<div layout="row" ng-repeat="distinctState in distinctStates">
+    {{distinctState}}
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>

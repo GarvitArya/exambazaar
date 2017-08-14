@@ -1,0 +1,713 @@
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
+<style>
+    .whiteBackground{
+        background: white;
+    }
+    .bottomBorder{
+        border-bottom: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    .badge{
+        font-family: 'Fira Sans', sans-serif;
+        color: #333333;
+        font-size: 11px;
+        
+    }
+    .suggested{
+        
+    }
+    #deleteBadge{
+        background: white;
+        border: 1px solid #333333;
+    }
+    #examBadge{
+        color: white;
+        font-size: 16px;
+    }
+    .topBorder{
+        border-top: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    .rightBorder{
+        border-right: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    .leftBorder{
+        border-left: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    .editing{
+        border-left: 4px solid #20C39A;
+    }
+    
+    .saveCancel{
+        position:fixed; 
+        bottom:0%;
+        width:100%;
+        padding-left:40px;
+        padding-right:40px;
+        background: #f7f7f7;
+        color: black;
+        border-top: 1px solid #ccc;
+    }
+    .componentRow{
+        min-height: 20vh;
+    }
+    .lastRow{
+        margin-bottom: 100px;
+    }
+    .componentRowElement{
+        padding-top: 20px;
+        padding-bottom: 20px;
+        min-height: 20vh;
+    }
+    .componentRowElement2{
+        padding-top: 20px;
+        padding-bottom: 20px;
+        min-height: 10vh;
+    }
+    #showYearResult{
+        overflow-y: scroll;
+        text-align: left;
+        height: 300px;
+        /*background: #f7f7f7;*/
+    }
+    #showResultRow{
+        min-height: 40px;
+    }
+    #hotTable{
+        overflow: hidden;
+        text-align: left;
+    }
+    #tableHolder{
+        
+    }
+    .component{
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 20px;
+        padding-right: 20px;
+        z-index: 100;
+        /*letter-spacing: 2px;*/
+    }
+    .component:hover{
+        background: #FF5A5F;
+        color: white;
+    }
+    .mainContent{
+        min-height: 200vh;
+    }
+    #heroHeader{
+        margin-top: 0px;
+        background-color: rgba(32,195,154,0.8);
+        color: white;
+        min-height: 25vh;
+        padding-top: 10px;
+    }
+    #heroHeaderContent{
+        
+    }
+    #coachingHeader{
+        letter-spacing: 2px;
+    }
+    #coachingHeader a{
+        color: #20C39A;
+    }
+    
+    .actionButton{
+        background-color: #FF5A5F;
+        color:white;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+    .actionButton:hover{
+        background-color: white;
+        color: #FF5A5F;
+        font-weight: bold;
+    }
+    .tolowercase {
+        text-transform: none;
+    }
+    #locationHolder{
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    .affixBar{
+        min-height: 5vh;
+        background: #f7f7f7;
+        z-index: 1;
+    }
+    .coachingNavBar{
+        padding-left: 40px;
+    }
+    a{
+        color: #333333;
+        text-decoration: none;
+    }
+    a.link{
+        color: #333333;
+    }
+    a.visted{
+        color: #333333;
+    }
+    a:hover{
+        text-decoration: none;
+    }
+    a:link:hover{
+        text-decoration: none;
+    }
+    a.active {
+        background: #FF5A5F;
+        color: #fff;
+        text-decoration: none;
+    }
+    .affix-top {
+        top: 100px;
+    }
+
+    .affix-bottom {
+        bottom: 0px;
+    }
+    
+    #overviewIcon{
+        max-height: 40px;
+        padding-bottom: 7px;
+     }
+    #iconText{
+        color:rgba(0,0,0,0.4);
+        padding-top: 2px;
+        border-top: solid;
+        border-width: 1px;
+        border-color: lightgray;
+        border-spacing: 10px;
+    }
+    #iconTextContainer{
+        margin-top:1px;
+        
+    }
+    
+    #iconData{
+        color:#333333;
+        padding-top: 10px;
+    }
+    #linkFont{
+        color:#333333;
+    }
+    #breadcrumb{
+        margin-top: 5vh;
+    }
+    #paneLeft{
+        
+    }
+    #paneMiddle{
+    }
+    #spacerXS{
+        min-height: 13vh;
+    }
+    #displayFacultyOuterBox{
+        max-width: 100%;
+        
+    }
+    #displayFacultyInnerBox{
+        margin: 5px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 5px;
+        padding-right: 5px;
+        max-width: 100%;
+    }
+    .fillParent{
+        height: 100%;
+        width: 100%;
+    }
+    .dialogText{
+        color: white;
+    }
+    #firstContainerImage{
+        max-height: 100%;
+        object-fit: contain;
+        z-index: 99;
+    }
+    
+    #imageContainer{
+        padding: 5px;
+    }
+    #suggestedPics{
+        background: rgba(0,0,0,0.8);
+    }
+    #prevButton{
+        color: #ccc;
+        margin-right: 10px;
+        padding:10px;
+        font-size: 40px;
+        outline-style: none;
+    }
+    #prevButton:hover{
+        color: #20C39A;
+    }
+    #nextButton{
+        color: #ccc;
+        margin-left: 10px;
+        padding:10px;
+        font-size: 40px;
+        outline-style: none;
+    }
+    #nextButton:hover{
+        color: #20C39A;
+    }
+    #closeButton{
+        color: #ccc;
+        font-size: 15px;
+        outline-style: none;
+    }
+    #closeButton:hover{
+        color: #20C39A;
+    }
+    .thumb{
+        max-height: 100px;
+        max-width: 100px;
+    }
+    #progressBar{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        max-width: 100px;
+    }
+    #upload{
+        /*min-width: 400px;
+        min-height: 100px;*/
+        margin-top: 10px;
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #upload:hover {
+        background: #ccc;
+        color: white;
+        border: 1px solid #FF5A5F;
+    }
+    #upload2{
+        background: white;
+        color: black;
+        border: 1px solid #000;
+        padding: 5px;
+    }
+    #upload2:hover {
+        background: #FF5A5F;
+        color: white;
+        border: 1px solid #FF5A5F;
+    }
+    #upload3{
+        background-color: #F5F5F5;
+        color: #333333;
+        border: 7px solid #fff;
+        padding: 5px;
+        margin: 10px;
+    }
+    #upload3:hover {
+        background: #FF5A5F;
+        color: white;
+    }
+    #displayBox{
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    #addBox{
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    #elementBox{
+        padding: 10px;
+    }
+    #editSection{
+        /*border: 3px solid #FF5A5F;*/
+        
+    }
+    .formElement{
+        padding-right: 5px;
+        
+    }
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    textarea{
+        width:100%;
+        padding: 5px 5px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 10px;
+    }
+    textarea:hover {
+        border: 1px solid #FF5A5F;
+    }
+    textarea:focus {
+        border: 1px solid #FF5A5F;
+    }
+    .paddingLeft{
+        padding-left: 20px;
+    }
+    #deleteButton{
+        background: #FF5A5F;
+        color:white;
+    }
+    #restoreButton{
+        background: #20C39A;
+    }
+    #addedButton{
+        background: #FBBC05;
+    }
+    #saveButton{
+        background: #20C39A;
+    }
+    #tagHolder{
+        background: white;
+        border: 1px solid #000;
+    }
+    #existingTagHolder{
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #tagHolder:hover{
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    
+    #dialogHeaderPic{
+        max-height: 120px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    
+    #examTagHolder{
+        padding:5px;
+        font-size: 16px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    #examTagHolder:hover{
+        color: white;
+        
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #existingExamTagHolder{
+        padding:5px;
+        font-size: 16px;
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    
+    
+    #courseLeftContainer{
+        min-height: 200px;
+        /*background: #20C39A;
+        color: white;*/
+        position: relative;
+        display: inline-block;
+    }
+    #courseRightContainer{
+        min-height: 200px;
+        border-left: 1px solid #ccc;
+    }
+    .inner {
+        white-space: nowrap;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+    }
+
+    .rotate {
+        -moz-transform: translateX(-50%) translateY(-50%) rotate(270deg);
+        -webkit-transform: translateX(-50%) translateY(-50%) rotate(270deg);
+        transform:  translateX(-50%) translateY(-50%) rotate(270deg);
+    }
+    
+    #addCourse{
+        background: #ccc;
+        border: 1px solid #FF5A5F;
+    }
+    
+    #leftBadge{
+        background:#20C39A;
+    }
+    #resultExamDialog{
+        
+    }
+    #claimLogo{
+        max-height: 50px;
+        margin-bottom: 20px;
+    }
+    .pageLogo{
+        max-height: 50px;
+    }
+    #pageLogoHolder{
+        border: 1px solid rgba(0,0,0,0.8);
+        height: 90px;
+        width: 90px;
+        border-radius: 4px;
+    }
+    
+    
+    #editPic{
+        max-width: 40px;
+        max-height: 40px;
+    }
+    #editPicHolder{
+        width: 40px;
+        height: 40px;
+    }
+    #claimButton{
+        min-height: 100px;
+        min-width: 150px;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+    #claimButton:hover{
+        background: #FF5A5F;
+    }
+    #claimMobileLink{
+        color: #ccc;
+        text-decoration: underline;
+        
+    }
+    #claimMobile{
+        padding: 5px;
+        background: white;
+        color: black;
+    }
+    #claimExistingMobile{
+        padding: 5px;
+        background: #FF5A5F;
+        color: white;
+    }
+    #newMobile{
+        color: black;
+    }
+    #successOTP{
+        background: green;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #reviewCell{
+        margin: 1px;
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+    }
+    
+    #reviewCellEmpty{
+        margin: 1px;
+        margin-left: 10px;
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+    }
+    .noreview{background-color: #CBCBCB;}
+    .review1{background-color:#CD1C26;}
+    .review2{background-color:#DE1D0F;}
+    .review3{background-color:#FF7800;}
+    .review4{background-color:#FFBA00;}
+    .review5{background-color:#CDD614;}
+    .review6{background-color:#9ACD32;}
+    .review7{background-color:#5BA829;}
+    .review8{background-color:#3F7E00;}
+    .review9{background-color:#305D02;}
+    .hover{background-color: red;}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    #userText{
+        min-height: 20vh;
+    }
+    textarea{
+        width:100%;
+        padding: 5px 5px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 10px;
+        color: #333333;
+    }
+    textarea:hover {
+    }
+    textarea:focus {
+    }
+    
+    
+</style>
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<!-- Claim the page section -->
+<div layout="column" layout-xs="column" class="whiteBackground mainContent" ng-cloak>
+    <div layout="row">
+        <div class="container">
+            <div class="row">
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
+            <!--<small>
+            <span><a ui-sref="main">EXAMBAZAAR</a></span>
+            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
+            <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
+            <span> > <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{city | uppercase}}</a></span>
+            <span> > {{provider.name | uppercase}}</span>
+            </small>-->
+            </div>
+            </div>
+        </div>
+    </div>
+    <div layout="column" layout-align="center center" id="heroHeader">
+        <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder" ng-if="provider.logo">
+            <img  ng-src="{{provider.logo}}" class="pageLogo"/>
+        </div>
+        <div flex layout="column" layout-align="center center" class="paddingTB10">
+            <span class="hidden-xs text md-headline mainFont" id="coachingHeader">
+                {{provider.name | uppercase}}
+            </span>
+            <span class="hidden-sm hidden-md hidden-lg text md-subhead" id="coachingHeader">
+                {{provider.name | uppercase}}
+            </span>
+            <span>
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span ng-if="provider.location">
+                {{provider.location.area}}, {{provider.city}}
+                </span>
+                <span ng-if="!provider.location">
+                {{provider.address}},&nbsp;{{provider.city}},&nbsp;{{provider.state}}
+                </span>
+            </span>
+        </div>
+    </div>
+    
+    
+    <div layout="row" layout-xs="column" class="componentRow secondFont">
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1  bottomBorder textLightGrey" id="paneLeft" >
+            <div class="componentRowElement height100" layout="column" layout-align="start start" >
+                Reviews
+            </div>
+        </div>
+        <div class="col-xs-12 hidden-sm hidden-md hidden-lg bottomBorder textLightGrey" id="paneLeft">
+            Reviews
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement editFont" id="paneMiddle">
+            <div layout="row" ng-repeat="reviewParam in reviewParams" class="marginB5">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 textBlack  text-left">
+                    {{reviewParam.displayname}}
+                </div>
+                <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
+                <div layout="row" layout-align="start center" >
+                    <div ng-repeat="review in reviews" layout-align="center" id="reviewCell" ng-click="setReview(reviewParam.name, review)" ng-mouseenter="logMouseEvent(reviewParam,  $index)"  ng-mouseleave="logMouseEvent(reviewParam,  $index)" class="noreview" ng-class="getBackgroundColour(reviewParam,  $index)">
+                    </div>
+                    <div layout="row" layout-align="center center"  class="secondFont bold">
+                    <div layout="row" layout-align="center center" id="reviewCellEmpty">
+                    <span ng-if="userReview[reviewParam.name]" class="textBlack">
+                        {{userReview[reviewParam.name] | number:1}}
+                    </span>
+                    </div>
+                </div>
+                </div>
+                </div>
+                
+                </div>
+            </div>
+            <div layout="row" class="marginT10 marginB5">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <textarea class="font12 width100" ng-model="userReview.text" placeholder="{{placeholder}}" rows="6" id="userText"></textarea>
+                    <div class="font10 text-right" ng-if="userReview.text.length > 10 && userReview.text.length < minTextLength">{{userReview.text.length}}/{{minTextLength}} chars</div>
+                </div>
+                </div>
+            </div>
+            <div layout="row" layout-align="center center" class="marginTB20">
+                <md-button class="md-raised md-primary  font12"  id="doneButton" ng-disabled="invalidSubmit()" ng-click="submitReview()">Submit</md-button>
+            </div>
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        </div>
+    </div>
+    
+    
+    
+ </div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedReviewDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Review Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>

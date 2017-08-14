@@ -1,0 +1,145 @@
+<div class="container">
+    <h6 class="md-subhead text-primary">{{subject._batch.name}} {{subject._globalSubject.name}}</h6>
+    <h6 class="md-subhead text">Subject Teacher: 
+        {{subject._teacher.basic.firstName}}
+        {{subject._teacher.basic.middleName}}
+        {{subject._teacher.basic.lastName}}
+    
+    <span class="md-subhead text" ng-show="subject._secondTeacher"> &  
+        {{subject._secondTeacher.basic.firstName}}
+        {{subject._secondTeacher.basic.middleName}}
+        {{subject._secondTeacher.basic.lastName}}
+    </span>
+    </h6>
+    <md-content flex layout-padding>
+        <md-tabs md-dynamic-height md-border-bottom>
+          <!--<md-tab label="students">
+              <div ng-repeat="student in subject._batch.students" flex-gt-sm class="md-primary">
+                <small>
+                {{student.basic.firstName}} {{student.basic.lastName}}
+                </small>
+            </div>
+            </md-tab>
+            <md-tab label="timetable">
+              <div ng-repeat="student in subject._batch.students" flex-gt-sm class="md-primary">
+                <small>
+                {{student.basic.firstName}} {{student.basic.lastName}}
+                </small>
+            </div>
+            </md-tab>-->
+            <md-tab label="Exam Schedule">
+            <div class="col-md-8">
+                <table ng-table="showexams" class="table">
+                    <tr ng-repeat="exam in subject._exams | orderBy:'info.date'">
+                        <td title="'Exam'">
+                            <a ui-sref="exam({ examId:{{'exam._id'}} })">
+                                {{exam.info.name}}
+                            </a>
+                        </td>
+                        <td title="'Date'">
+                           {{exam.info.date | date}}
+                        </td>
+                        <td title="'Type'">
+                           {{exam.info.type}}
+                        </td>
+                        <td title="'Max Marks'">
+                           {{exam.info.maxMarks}}
+                        </td>
+                        <td title="'% Weightage'">
+                            {{exam.info.weightage}}
+                        </td>
+                        <td title="'Evaluation'">
+                            <a ui-sref="exam({ examId:{{'exam._id'}} })" ng-show="exam.showLinkToEvaluate">
+                                Evaluate
+                            </a>
+                        </td> 
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <md-subheader class="md-primary">
+                    Add more Exams
+                </md-subheader>
+            <form name="examForm">
+            <small>
+            <div layout="column">
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Exam Name</label>
+                <input required ng-model="addExam.info.name">
+            </md-input-container>
+            
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Exam Type</label>
+                <input required ng-model="addExam.info.type">
+            </md-input-container>
+            <div layout="row">
+            <md-datepicker required ng-model="addExam.info.date" md-placeholder="Date of Exam"></md-datepicker>
+            </div>
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Max Marks</label>
+                <input required ng-model="addExam.info.maxMarks">
+            </md-input-container>
+            <md-input-container class="md-block" flex-gt-sm>
+            <label>Weightage</label>
+            <input required ng-model="addExam.info.weightage">
+            </md-input-container>
+            </div>
+            <md-button class="md-raised md-primary" ng-click="insertExam()" ng-disabled="examForm.$invalid">Add Exam</md-button>
+            </small>
+            </form>
+            </div>
+            </md-tab>
+            
+            <!--<md-tab label="evaluation">
+                <div class="container">
+                <form name="evalForm" >
+                
+                <div class="row">
+                    <md-input-container class="md-block" flex-gt-sm>  
+                        <md-select required ng-model="subject.evalExam" placeholder="Select Exam">
+                            <md-option ng-repeat="exam in subject._exams" ng-value="exam" >{{exam.info.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div class="row">
+                Exam Date: {{subject.evalExam.info.date | date}}<br/>
+                Type: {{subject.evalExam.info.type}} <br/>
+                Maximum Marks: {{subject.evalExam.info.maxMarks}} <br/>
+                Weightage: {{subject.evalExam.info.weightage}} <br/>
+                </div>
+                <div class="row">
+                
+                    
+                <table ng-table="showevaluation"   class="table" show-filter="true">
+                <tr ng-repeat="studentEval in studentEvals">
+                    <td title="'Student'">
+                        {{studentEval._student.basic.firstName}}
+                        {{studentEval._student.basic.middleName}}
+                        {{studentEval._student.basic.lastName}}
+                    </td>
+                    <td title="'Absent'">
+                        <md-checkbox ng-model="studentEval.absent" aria-label="Absent">
+                            Absent?
+                        </md-checkbox>
+                    </td>
+                    <td title="'Score'">
+                        <input name="studentEval.score" ng-model="studentEval.score" ng-disabled='studentEval.absent' size='5'>
+                        <span ng-show="subject.evalExam">
+                        / {{subject.evalExam.info.maxMarks}}
+                        </span>
+                    </td>
+                    
+                </tr>
+                </table>
+                    
+                <md-button class="md-raised md-primary" ng-click="saveExamEvaluations()" ng-disabled="evalForm.$invalid">Save Evaluation</md-button>
+                
+                    
+                </div>
+            </form>
+            </div>
+            </md-tab>-->
+        </md-tabs>
+    </md-content>
+</div>

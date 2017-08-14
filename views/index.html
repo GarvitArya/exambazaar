@@ -1,0 +1,2736 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exambazaar" ng-cloak="" ng-controller="seocontroller">
+<head>
+    <meta charset="utf-8">
+    <base href="/" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="fragment" content="!">
+    
+
+    
+    <title ng-bind="pageTitle"></title>
+    <meta name="description" content="{{pageDescription}}" />
+    <meta name="keywords" content="{{pageKeywords}}">
+    <!--Exambazaar, Coaching Institute Results, Coaching Institute Fees, Coaching Institute Faculty, Coaching Institute Photos, Coaching Institute Videos-->
+    <meta name="author" content="Gaurav Parashar" />
+    <meta property="fb:app_id" content="1236747093103286" />
+    <meta property="og:url" content="{{pageURL}}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{pageTitle}}" />
+    <meta property="og:description" content="{{pageDescription}}" />
+    <meta property="og:image" content="{{pageImage}}" />
+    
+    
+    
+    
+    
+    <!--<title ng-bind="pageTitle"></title>
+    <meta name="description" content="Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching institutes in your city. Our easy-to-use website shows you all the coaching institutes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching institutes to succeed" />-->
+    
+    <meta name="google-site-verification" content="RdnJwXl2LG_A6UgOCrtR7Jv8KV5gOmnslKdO9dbpdGk" />
+    <meta name="msvalidate.01" content="DBC3BD884FD14A25F2B7F6B33CAD7C0B" />
+    
+    <link rel="stylesheet" href="css/angular-material.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css">
+    <link rel='stylesheet' href="css/loading-bar.min.css" type='text/css' media='all' />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/breadcrumb.css">
+    <link rel="stylesheet" href="css/ui-bootstrap-csp.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/medium-editor.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/themes/tim.min.css">
+    <!--<link rel="stylesheet" href="medium-editor-insert-plugin.min.css">-->
+    <link rel="stylesheet" href="medium-editor-tables.css" />
+    <link rel="stylesheet" href="angular-ui-notification.min.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400|Roboto:100,300,400|Roboto+Condensed|Unica+One|Seaweed+Script|Lato|Montserrat" rel="stylesheet">
+    <!--Amatica+SC|Bubblegum+Sans|Chewy|Chicle|Concert+One|Passion+One|Pompiere|-->
+    
+    <style>
+        [sidebarjs-container] {
+            width: 60%;
+        }
+        #sidebarLogo{
+            color:black;
+        }
+        #sidebarLogo:hover{
+            color:#20C39A;
+        }
+        
+        #headerLogo{
+            color:white;
+        }
+        #headerLogo:hover{
+            color:#20C39A;
+        }
+        .sideBar{
+            color: #333;
+        }
+        #sideBarIcon{
+            cursor: pointer;
+            color: #ccc;
+            padding: 5px;
+        }
+        #sideBarIcon:hover, #sideBarLink:focus{
+            color: #20C39A;
+        }
+        #sideBarIcon2{
+            padding: 5px;
+            position: absolute; 
+            bottom: 0%; 
+            right: 0;
+            cursor: pointer;
+            color: #ccc;
+        }
+        #sideBarIcon2:hover, #sideBarIcon2:focus{
+            color: #20C39A;
+        }
+        #sideBarLink{
+            color: #333;
+        }
+        #sideBarLink:hover, #sideBarLink:focus{
+            color: #20C39A;
+        }
+        /*.blogSeparator{
+            border-bottom: 0.5px solid lightgray;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }*/
+        .blogSeparator{
+            border-bottom: 0.5px solid lightgray;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        #blogpost{
+            background: white;
+        }
+        #blogpost:hover{
+            background: whiteSmoke;
+        }
+        .blogpostImage{
+            min-height: 40vh;
+            width:100%;
+            position: relative;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+        .blogpostBorder2{
+            border-top: none;
+            border-right: 0.5px solid #CFCFCD;
+            border-bottom: 0.5px solid #CFCFCD;
+            border-left: 0.5px solid #CFCFCD;
+        }
+        #blogPostRead{ 
+            position: absolute; 
+            bottom: 5%; 
+            left: 0%; 
+            width: 100%;
+            height:10%;
+            color: white;
+            text-shadow: 0 0 5px black;
+        }
+        #blogPostHeader{ 
+            position: absolute; 
+            top: 60%; 
+            left: 0%; 
+            width: 100%;
+            height:20%;
+            color: white;
+        }
+        
+        #blogHeaderBasics{ 
+            position: absolute; 
+            top: 20%; 
+            left: 0%;
+        }
+        #blogHeaderBack{ 
+            position: absolute; 
+            top: 10%; 
+            left: 0%; 
+            width: 40%;
+            height:12%;
+        }
+        #blogHeaderBack2{ 
+            position: absolute; 
+            top: 20%; 
+            right: 0%; 
+        }
+        .flex { flex : 1 1 0%; }
+        .offerFont{
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            color: white;
+        }
+        .blogHeaderFont{
+            font-family: 'Montserrat', sans-serif;
+        }
+        .blogFont{
+            font-family: 'Open Sans', sans-serif;
+            font-size: 18px;
+            color: black;
+        }
+        .rankersWallFont{
+            font-family: 'Seaweed Script', sans-serif;
+            
+        }
+        .offerPopupFont{
+            font-family: 'Unica One', sans-serif;
+        }
+        .navbar-default .navbar-nav > li.dropdown:hover > a, 
+        .navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+        .navbar-default .navbar-nav > li.dropdown:hover > a:focus {
+            background-color: whitesmoke;
+            color: rgb(85, 85, 85);
+        }
+        
+        #avatar-circle{
+          width: 40px;
+          height: 40px;
+          background-color: black;
+          text-align: center;
+          border-radius: 50%;
+          -webkit-border-radius: 50%;
+          -moz-border-radius: 50%;
+        }
+        #avatar-circle:hover{
+          width: 40px;
+          height: 40px;
+          background-color: black;
+          text-align: center;
+          border-radius: 50%;
+          -webkit-border-radius: 50%;
+          -moz-border-radius: 50%;
+        }
+        li.dropdown:hover > .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu li{
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .dropdown-menu li a{
+            border-bottom: 0.1px solid whitesmoke;
+            padding-left: 2px;
+            padding-right: 30px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            min-width: 150px;
+        }
+        .dropdown-menu li a:hover{
+            border-bottom: 1px solid #20C39A;
+        }
+        .dropdown-menu > li > a:hover {
+            background-color: white;
+            background-image: none;
+        }
+        .dropdown-menu{
+            -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+            -moz-box-shadow: 0 5px 15px rgba(0,0,0,0);
+            -o-box-shadow: 0 5px 15px rgba(0,0,0,0);
+            box-shadow: 0 5px 15px rgba(0,0,0,0);
+            border: 0.2px solid lightgray;
+            padding-bottom: 20px;
+        }
+        
+        /*
+        .dropdown-menu:before {
+          position: absolute;
+          top: -7px;
+          left: 50%;
+          display: inline-block;
+          border-right: 7px solid transparent;
+          border-bottom: 7px solid #ccc;
+          border-left: 7px solid transparent;
+          border-bottom-color: rgba(0, 0, 0, 0.2);
+          content: '';
+        }
+
+        .dropdown-menu:after {
+          position: absolute;
+          top: -6px;
+          left: 50%;
+          display: inline-block;
+          border-right: 6px solid transparent;
+          border-bottom: 6px solid #ffffff;
+          border-left: 6px solid transparent;
+          content: '';
+        }
+        
+        .navbar .navbar-right > li > .dropdown-menu:before,
+        .navbar .nav > li > .dropdown-menu.navbar-right:before {
+            right: 12px; left: auto;
+        }
+
+        .navbar .navbar-right > li > .dropdown-menu:after,
+        .navbar .nav > li > .dropdown-menu.navbar-right:after {
+            right: 13px; left: auto;
+        }*/
+        .dropdown-menu li{
+            font-size:13px;
+            /*text-transform: uppercase;*/
+        }
+        #profileMenu{
+            padding: 0px;
+        }
+        
+        .subheader{
+           font-size:12px;
+            color: #999999;
+            letter-spacing: 0.5px;
+        }
+        .navbar.transparent {
+            border-width: 0px;
+            -webkit-box-shadow: 0px 0px;
+            box-shadow: 0px 0px;
+            background-color: rgba(0,0,0,0.0);
+            background-image: -webkit-gradient(linear, 50.00% 0.00%, 50.00% 100.00%, color-stop( 0% , rgba(0,0,0,0.00)),color-stop( 100% , rgba(0,0,0,0.00)));
+            background-image: -webkit-linear-gradient(270deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+            background-image: linear-gradient(180deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+        }
+        .navbar-brand{
+            font-family: "Avenir";
+            letter-spacing: 2px;
+            font-weight: 900;
+        }
+        .footer-brand{
+            font-family: "Avenir";
+            letter-spacing: 2px;
+            font-weight: 900;
+        }
+        
+        h1{
+            margin: 0px;
+            padding: 0px;
+        }
+        h2{
+            margin: 0px;
+            padding: 0px;
+        }
+        @font-face{
+            font-family: "Cabin-Regular";
+            src: url('font/cabin/Cabin-Regular.otf');
+        }
+        @font-face{
+            font-family: "Avenir";
+            src: url('font/avenir/Avenir.ttf');
+        }
+        .vertical-text {
+            transform: rotate(270deg);
+            transform-origin: left top 0;
+        }
+        
+        .tab-caption {
+        position: absolute;
+        /* width: 100%; */ /* (remove this) width before rotation! */
+            top: 50%;
+            height: 2px;  /* actual text will overlap! */
+            margin-top: -1px;  /* subtract half the height */
+            line-height: 0px;  /* centre the text on the base line */
+            text-align: center;
+            left: 50%; /* added */
+            transform: translateX(-50%) rotate(90deg); /* added translateX */
+            white-space: nowrap;
+        }
+        #userPic{
+            max-height: 40px;
+        }
+        
+        #userPicSmall{
+            max-height: 30px;
+        }
+        #userPicBlog{
+            max-height: 50px;
+        }
+        .img-circle {
+            border-radius: 50%;
+            
+            /*background: #ccc;
+            padding: 5px;
+            border: solid 0.5px black;*/
+            
+        }
+        .rounderBorder {
+            border-radius: 10px;
+        }
+        
+        .spacedLetter2{
+            letter-spacing: 2px;
+        }
+        .spacedLetter1{
+            letter-spacing: 1px;
+        }
+        .spacedLetter050{
+            letter-spacing: 0.50px;
+        }
+        .spacedLetter025{
+            letter-spacing: 0.25px;
+        }
+        .spacedLetter09{
+            letter-spacing: 0.8px;
+        }
+        .mainFont{
+            font-family: "Avenir";
+        }
+        .basicFont{
+            font-family: "Open Sans", sans-serif;
+        }
+        .secondFont{
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+        }
+        
+        .fifthFont{
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+        }
+        .thirdFont{
+            font-family: 'Fira Sans', sans-serif;
+            font-size: 16px;
+        }
+        .fourthFont{
+            font-family: 'Fira Sans', sans-serif;
+            font-weight: 300;
+            font-size: 13px;
+        }
+        .sixthFont{
+            font-family: 'Lato', sans-serif;
+        }
+        .editFont{
+            font-family: 'Fira Sans', sans-serif;
+            color: #999999;
+            font-size: 13px;
+        }
+        .textLightGrey{
+            color: #999999;;
+        }
+        .textWhiteSmoke{
+            color: whitesmoke;
+        }
+        .textYellow{
+            color: yellow;
+        }
+        .textGainsboro{
+            color: gainsboro;
+        }
+        .textDarkGrey{
+            /*color: rgba(0,0,0,0.6);*/
+            color: #333333;
+        }
+        
+        .textBlack{
+            color: black;
+        }
+        .text-white{
+            color: white;
+        }
+        .text-salmon{
+            color: #FF5A5F;
+        }
+        .transaprentBackground{
+            background-color: rgba(0,0,0,0.5);
+        };
+        .lightGreyBackground{
+            background: #F5F5F5;
+        }
+        .darkGreyBackground{
+            background: #404040;
+            
+        }
+        .unselectedTag{
+            padding: 5px;
+            color: #333333;
+            background: white;
+        }
+        .unselectedTagLeft:hover{
+            color: white;
+            background: #FF5A5F;
+        }
+        .selectedTag{
+            padding: 5px;
+            color: white;
+            background: #FF5A5F;
+        }
+        .font6{
+            font-size:6px;
+        }
+        .font7{
+            font-size:7px;
+        }
+        .font8{
+            font-size:8px;
+        }
+        .font9{
+            font-size:9px;
+        }
+        .font10{
+            font-size:10px;
+        }
+        .font11{
+            font-size:11px;
+        }
+        .font12{
+            font-size:12px;
+        }
+        .font14{
+            font-size:14px;
+        }
+        .font16{
+            font-size:16px;
+        }
+        .font18{
+            font-size:18px;
+        }
+        .font20{
+            font-size:20px;
+        }
+        .font22{
+            font-size:22px;
+        }
+        .font24{
+            font-size:24px;
+        }
+        .font32{
+            font-size:32px;
+        }
+        .font36{
+            font-size:36px;
+        }
+        .font40{
+            font-size:40px;
+        }
+        .font48{
+            font-size:48px;
+        }
+        .font60{
+            font-size:60px;
+        }
+        .font100{
+            font-size:100px;
+            font-weight: 100;
+        }
+        .text-primary{
+            color: #20C39A;
+        }
+        .greenTick{
+            color: #1C9963;
+            font-size: 20px;
+        }
+        .dangerCross{
+            color: #C00000;
+            font-size: 20px;
+        }
+        ::-moz-selection{ background: #000; color:#fff;}
+        ::selection { background:#000; color:#fff; }
+        #landingPage{
+            min-height: 100vh;
+        }
+        #picHolder{
+            border: 1px solid gainsboro;
+            height: 100px;
+            width: 100px;
+            border-radius: 4px;
+        }
+        .max50vh{
+            height: 50vh;
+            max-height: 50vh;
+        }
+        #fullHeightPage{
+            min-height: 90vh;
+        }
+        .exact100h{
+            height: 100%;
+            min-height: 100%;
+            max-height: 100%;
+        }
+        .min100vh{
+            min-height: 100vh;
+        }
+        .min90vh{
+            min-height: 90vh;
+        }
+        .min80vh{
+            min-height: 80vh;
+        }
+        .min50vh{
+            min-height: 50vh;
+        }
+        .min40vh{
+            min-height: 40vh;
+        }
+        .min30vh{
+            min-height: 30vh;
+        }
+        .min25vh{
+            min-height: 25vh;
+        }
+        .min20vh{
+            min-height: 20vh;
+        }
+        .min15vh{
+            min-height: 15vh;
+        }
+        .min10vh{
+            min-height: 10vh;
+        }
+        .pending{
+            background: #DDDDDD;
+        }
+        .pending2{
+            color: #FF4136;
+        }
+        .boxShadow{
+            box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
+        }
+        .showBorder{
+            border: black solid 3px;
+        }
+        .roundedBorder{
+            border: 0px;
+            border-radius: 5px;
+        }
+        #greyBorder{
+            border: 1px solid #ccc;
+        }
+        .greyBorder{
+            border: 1px solid #ccc;
+        }
+        .lightBorder{
+            border: 0.5px solid gainsboro;
+        }
+        .gainsboroBorder{
+            border: 1px solid gainsboro;
+        }
+        .whiteSmokeBorder{
+            border: 1px solid whitesmoke;
+        }
+        .firstBorder{
+            border: 1px solid #2F4F4F;
+        }
+        .lightGreyBorder{
+            border: 1px solid #CFCFCD;
+        }
+        .greyBottomBorder{
+            border-bottom: 1px solid #ccc;
+        }
+        .gainsboroBottomBorder{
+            border-bottom: 1px solid gainsboro;
+        }
+        .gainsboroTBBorder{
+            border-top: 1px solid gainsboro;
+            border-bottom: 1px solid gainsboro;
+        }
+        .greyTopBorder{
+            border-top: 1px solid #ccc;
+        }
+        .greyDashedBottomBorder{
+            border-bottom: 1px dashed #D2D4C8;
+        }
+        .headingBottomBorder{
+            border-bottom: 5px solid #D2D4C8;
+        }
+        .subhheadingBottomBorder{
+            border-bottom: 2px solid #D2D4C8;
+        }
+        .greyDashedTopBorder{
+            border-top: 1px dashed #D2D4C8;
+        }
+        .inputBoxBorder{
+            border: 2px inset lightgray;
+            border-radius: 4px;
+        }
+        #logo{
+            max-height: 50px;
+            max-width: 100px;
+        }
+        #fullPage{
+            min-height: 100vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/background/background-min.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #whyReviewPage{
+            height: 100vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/review/background.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #whyReviewPage2{
+            height: 20vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/review/background.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #whyReviewPage3{
+            height: 10vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/review/background.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        .footer{
+            background: #333333;
+        }
+        .footerIcon{
+            width: 24px;
+            height: 24px;
+        }
+        .socialIcon{
+            width: 32px;
+            height: 32px;
+        }
+        .socialIconBlog{
+            width: 24px;
+            height: 24px;
+        }
+        #rankersWallPage{
+            /*min-height: 90vh;*/
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/rankerswall/image16.jpg");
+            background-size: contain;
+            background-position: center center;
+        }
+        #offerinfo{
+            height: 15vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/partners/partner-header.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #offerImage{
+            max-height: 40px;
+        }
+        #smallofferImage{
+            max-height: 25px;
+        }
+        #bottomBarOfferImage{
+            max-height: 30px;
+            max-width: 70px;
+        }
+        #bottomBarOfferImageSmall{
+            max-height: 20px;
+            max-width: 60px;
+        }
+        #offerRow{
+            color: white;
+            background-image: url("images/partners/partner-header.jpg");
+                background-size:     cover;
+                background-position: center center;
+        }
+        #offerRow:hover {
+            /*background: #FF5A5F;
+            color: white;
+            border: 1px solid #FF5A5F;*/
+        }
+        #reviewHeaderRow{
+            min-height: 25vh;
+            background-image: url("images/partners/review-popup.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #reviewHeaderRow2{
+            min-height: 8vh;
+            background-image: url("images/partners/review-popup.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #reviewHeaderRow3{
+            min-height: 20vh;
+            background-image: url("images/partners/review-popup.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #whyReviewHeaderRow{
+            min-height: 20vh;
+            background-image: url("images/partners/review-popup.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #whyReviewHeaderRow2{
+            min-height: 10vh;
+            background-image: url("images/partners/review-popup.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #reviewSearchRow{
+            min-height: 10vh;
+            background: white;
+        }
+        #reviewSearchRow:hover {
+        }
+        
+        
+        #examinfo{
+            height: 15vh;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/background/examinfo.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #fullPageBackground{
+            /*background-image: url("images/background/patterns/project_papper.png");*/
+            background-color: white;
+            /*
+            background-image: url("images/background/patterns/project_papper.png");
+           
+            background-size:     cover;
+            background-position: center center;*/
+            
+            
+            /*background-image: url("images/background/food.png");*/
+            
+        }
+        #headerInput{
+            background-color : white;
+            font-size:12px;
+            font-family: "Open Sans";
+        }
+        #loginInput{
+            border: 0;
+            outline: 0;
+            background: transparent;
+            padding: 10px;
+            text-align: left;
+            font-family: "Open Sans";
+            color: black;
+            border: 1px solid gainsboro;
+            font-size:12px;
+        }
+        
+        .black-chrome-gradient {background: -webkit-linear-gradient(90deg, #1C1C1C 10%, #494949 90%); background: -moz-linear-gradient(90deg, #1C1C1C 10%, #494949 90%); background: linear-gradient(90deg, #1C1C1C 10%, #494949 90%);}
+        .trust-blue-gradient {background: -webkit-linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* FF3.6+ */ background: linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* W3C */ }
+        .classy-subtle-dark-gray-gradient { background: -webkit-linear-gradient(90deg,#383836 10%,#4a4a4a 90%); background: linear-gradient(90deg,#383836 10%,#4a4a4a 90%); }
+        .blend-gradient {
+            background: -webkit-linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
+            background: linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
+        }
+        #fullPageGradient{ 
+            background: -webkit-linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
+            background: linear-gradient(90deg, rgb(4, 51, 93), rgb(25, 50, 75));
+        }
+        
+        
+        #fullPageGradient1{
+          background: -webkit-radial-gradient(rgb(122, 234, 206), rgb(62, 215, 177));
+          background: radial-gradient(rgb(122, 234, 206), rgb(62, 215, 177));
+        }
+        
+        #fullPageGradient3{background: -webkit-linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* FF3.6+ */ background: linear-gradient(90deg, #38aecc 10%, #347fb9 90%); /* W3C */ }
+        #fullPageGradient4{ background: -webkit-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* FF3.6+ */ background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* W3C */ }
+        
+        .table thead th {
+            text-align: left;/*change that parameter to left/right*/
+        }
+        /*a.active {
+          background: #99ccff;
+          color: #111;
+        }*/
+        [ng-click],
+        [data-ng-click],
+        [x-ng-click],[ui-sref],[ngf-select] {
+            cursor: pointer;
+        }
+        #greyBackground{
+            background: -webkit-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* FF3.6+ */ background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* W3C */
+            min-height: 100vh;
+        }
+        
+        .subtle-gray-gradient { background: -webkit-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* FF3.6+ */ background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%); /* W3C */ }
+        #badgeLink{
+            color: black;
+        }
+        #dangerLink{
+            color: #C00000;
+        }
+        .textCCC{
+            color: #ccc;
+        }
+        .text-justify{
+            text-align: justify;
+        }
+        .textWhite{
+            color: white;
+        }
+        .whiteBackground{
+            background-color: white;
+        }
+        .translucentWhiteBackground{
+            background-color: rgba(255,255,255,0.5);
+        }
+        .translucentBackground{
+            background-color: rgba(0,0,0,0.4);
+        }
+        .darkTranslucentBackground{
+            background-color: rgba(0,0,0,0.7);
+            /*
+            border-radius: 50px;*/
+        }
+        .dangerBackground{
+            background-color: #C00000;
+        }
+        .dangerBorder{
+            border: solid 2px #C00000;
+        }
+        .primaryBackground{
+            background-color: #20C39A;
+        }
+        .blackBackground{
+            background-color: black;
+        }
+        .md-button.md-small {
+            min-width: 1%;
+        }
+        .md-button.md-start{
+            margin: 0px;
+            padding: 10px;
+            padding-left: 40px;
+            padding-right: 40px;
+            border: 2px solid white;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            border-radius: 30px;
+            
+        }
+        .md-button.md-start:hover{
+            color: white;
+            box-shadow: 0 0 5px #20C39A;
+        }
+        .md-button.md-green:hover{
+            border: 2px solid #FF5A5F;
+            background: #FF5A5F;
+            color: white;
+        }
+        .md-button.md-green{
+            margin: 0px;
+            padding: 0px;
+            border: 2px solid #20C39A;
+            background: #20C39A;
+            color: white;
+        }
+        .md-button.md-green:hover{
+            border: 2px solid #FF5A5F;
+            background: #FF5A5F;
+            color: white;
+        }
+        .md-button.md-green2{
+            border: 2px solid #20C39A;
+            background: #20C39A;
+            color: white;
+        }
+        .md-button.md-green2:hover, .md-button.md-green2:focus, .md-button.md-green2:active{
+            border: 2px solid #20C39A;
+            background: #20C39A;
+            color: white;
+            box-shadow: 0 0 5px #20C39A;
+        }
+        .md-button.md-danger{
+            border: 2px solid #C00000;
+            background: #C00000;
+            color: white;
+        }
+        .md-button.md-danger:hover, .md-button.md-danger:focus, .md-button.md-danger:active{
+            border: 2px solid #C00000;
+            background: #C00000;
+            color: white;
+            box-shadow: 0 0 5px #C00000;
+        }
+        .md-button.md-black{
+            border: 2px solid black;
+            background: black;
+            color: white;
+            letter-spacing: 1px;
+        }
+        .md-button.md-black:hover, .md-button.md-black:focus, .md-button.md-black:active{
+            border: 2px solid black;
+            background: black;
+            color: white;
+            box-shadow: 0 0 5px black;
+        }
+        .bottomOfferBar{
+            position:fixed; 
+            bottom:0%;
+            width:100%;
+            padding-left:20px;
+            padding-right:20px;
+            background: #721212;
+            color: black;
+        }
+        .sideBarButton{
+            position:fixed; 
+            left:0%;
+            top:45%;
+            
+            height:10%;
+            background: transparent;
+            color: black;
+            z-index: 20000;
+        }
+        .rightSideBarButton{
+            position:fixed; 
+            right:0%;
+            top:45%;
+            width:10%;
+            height:10%;
+            background: transparent;
+            color: black;
+            z-index: 20000;
+        }
+        .md-button.md-review{
+            border: 2px solid black;
+            border-radius: 5px;
+            background: black;
+            color: white;
+        }
+        .md-button.md-review:hover, .md-button.md-review:focus, .md-button.md-review:active{
+            border: 2px solid #08415C;
+            background: #08415C;
+            color: white;
+            box-shadow: 0 0 5px #08415C;
+        }
+        .md-button.md-signup{
+            border: 2px solid black;
+            background: white;
+            color: gray;
+        }
+        .md-button.md-signup:hover{
+            border: 2px solid black;
+            background: white;
+            color: gray;
+            box-shadow: 0 0 5px gray;
+        }
+        .md-button.md-upvote{
+            font-weight: bold;
+            padding: 0px 20px 0px 20px;
+            margin: 0px;
+            border: 1.5px solid white;
+            background: transparent;
+            color: white;
+        }
+        .md-button.md-upvote:hover{
+            border: 1.5px solid gainsboro;
+            background: gainsboro;
+            color: black;
+        }
+        .md-button.md-existingupvote{
+            font-weight: bold;
+            padding: 0px 20px 0px 20px;
+            margin: 0px;
+            border: 1.5px solid gainsboro;
+            background: gainsboro;
+            color: black;
+        }
+        .md-button.md-existingupvote:hover{
+            /*border: 0.5px solid white;
+            background: transparent;
+            color: white;*/
+            border: 1.5px solid gainsboro;
+            background: gainsboro;
+            color: black;
+        }
+        .md-button.md-cancel{
+            border: 1px solid black;
+        }
+        .md-button.md-cancel:hover{
+            background: black;
+            color: white;
+        }
+        #galleryImage {
+            height: 100px;
+        }
+        #copyLink{
+            cursor: pointer;
+        }
+        a{
+            cursor: pointer;
+        }
+        #thumbnailImage {
+            width:100%;
+            position: relative;
+            padding-top:100%;
+            border-radius: 4px;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            border: 0px;
+        }
+        #thumbnailText{ 
+           position: absolute; 
+           top: 0%; 
+           left: 0; 
+            width: 100%;
+            height:100%;
+            background: rgba(0,0,0,0.5);
+        }
+        
+        #AddButton{ 
+           position: absolute; 
+           top: 0%; 
+           left: 6%; 
+            width: 92%;
+            height:100%;
+            
+            /*
+            border: 1px solid #000;
+            border-radius: 0px
+            rgba(32, 195, 154,0.1);
+            */
+            
+            background-color: #F5F5F5;
+            color: #333333;
+        }
+        #AddButton:hover{ 
+            background-color: #FF5A5F;
+            color: white;
+        }
+        .textShadow{
+            text-shadow: 0 0 10px black;
+        }
+        .textShadow5{
+            text-shadow: 0 0 20px black;
+        }
+        #thumbnailLogo{ 
+            position: absolute; 
+            top: 0%; 
+            left: 0; 
+            width: 100%;
+            height:100%;
+        }
+        #thumbnailResultText{ 
+            position: absolute; 
+            top: 80%; 
+            left: 0; 
+            width: 100%;
+            height:20%;
+            text-shadow: 0 0 5px black;
+            background: rgba(0,0,0,0.7);
+        }
+        #thumbnailResultTextTop{ 
+            position: absolute; 
+            top: 0%; 
+            left: 0; 
+            width: 100%;
+            height:20%;
+            text-shadow: 0 0 5px black;
+            background: rgba(0,0,0,0.5);
+        }
+        #dialogHeader{
+            background: white;
+            color: rgba(0,0,0,0.6);
+            font-weight: bold;
+        }
+        #dialogHeaderWhite{
+            background: white;
+            color: black;
+            font-weight: bold;
+        }
+        .opaqueImage{
+            opacity: 0.5;
+            filter: alpha(opacity=50);
+        }
+        .opaqueImage:hover{
+            opacity: 1.0;
+            filter: alpha(opacity=100);
+        }
+        #spacer{
+            min-height: 15vh;
+        }
+        #spacer1{
+            min-height: 10vh;
+        }
+        #spacer2{
+            min-height: 5vh;
+        }
+        #spacerXS{
+            min-height: 7vh;
+        }
+        #imageContainer{
+            padding: 5px;
+        }
+        .fullHeight{
+            height:100%;
+        }
+        .margin2{
+            margin: 2px;
+        }
+        .margin5{
+            margin: 5px;
+        }
+        .margin10{
+            margin: 10px;
+        }
+        .margin20{
+            margin: 20px;
+        }
+        .marginB2{
+            margin-bottom: 2px;
+        }
+        .marginB5{
+            margin-bottom: 5px;
+        }
+        .marginB10{
+            margin-bottom: 10px;
+        }
+        .marginR5{
+            margin-right: 5px;
+        }
+        .marginR10{
+            margin-right: 10px;
+        }
+        .marginL10{
+            margin-left: 10px;
+        }
+        .marginL5{
+            margin-left: 5px;
+        }
+        .marginR20{
+            margin-right: 20px;
+        }
+        .marginR30{
+            margin-right: 30px;
+        }
+        .marginR40{
+            margin-right: 40px;
+        }
+        .marginLR5{
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+        .marginLR10{
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+        .marginLR20{
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        .marginLR40{
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+        .marginL20{
+            margin-left: 20px;
+        }
+        .marginL40{
+            margin-left: 40px;
+        }
+        .marginLR60{
+            margin-left: 60px;
+            margin-right: 60px;
+        }
+        .marginB20{
+            margin-bottom: 20px;
+        }
+        .marginB30{
+            margin-bottom: 30px;
+        }
+        .marginB40{
+            margin-bottom: 40px;
+        }
+        .marginB80{
+            margin-bottom: 80px;
+        }
+        .paddingB80{
+            padding-bottom: 80px;
+        }
+        
+        .marginT5{
+            margin-top: 5px;
+        }
+        .marginT10{
+            margin-top: 10px;
+        }
+        .marginT20{
+            margin-top: 20px;
+        }
+        .marginT30{
+            margin-top: 30px;
+        }
+        .marginT40{
+            margin-top: 40px;
+        }
+        .tolowercase {
+            text-transform: none;
+        }
+        
+        .toUppercase {
+            text-transform: uppercase;
+        }
+        
+        .marginTB5{
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        .marginTB10{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .marginTB20{
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .marginTB200{
+            margin-top: 200px;
+            margin-bottom: 200px;
+        }
+        .paddingTB5{
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .paddingTB10{
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .paddingTB20{
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        
+        .paddingTB40{
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+        .paddingTB80{
+            padding-top: 80px;
+            padding-bottom: 80px;
+        }
+        .paddingLR2{
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+        .paddingLR5{
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        .paddingLR10{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .paddingLR15{
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        .paddingLR20{
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .paddingL20R40{
+            padding-left: 20px;
+            padding-right: 40px;
+        }
+        .paddingLR30{
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+        .paddingLR40{
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+        .paddingLR80{
+            padding-left: 80px;
+            padding-right: 80px;
+        }
+        .paddingT100{
+            padding-top: 50px;
+        }
+        .paddingT40{
+            padding-top: 40px;
+        }
+        .paddingT20{
+            padding-top: 20px;
+        }
+        .paddingT10{
+            padding-top: 10px;
+        }
+        .paddingT5{
+            padding-top: 5px;
+        }
+        .paddingT30{
+            padding-top: 30px;
+        }
+        .marginTBR5{
+            margin-top: 5px;
+            margin-bottom: 5px;
+            padding-right: 5px;
+        }
+        .padding0{
+            padding: 0px;
+        }
+        .margin0{
+            margin: 0px;
+        }
+        .padding5{
+            padding: 5px;
+        }
+        .padding10{
+            padding: 10px;
+        }
+        .padding2{
+            padding: 2px;
+        }
+        .paddingLRB10{
+            padding-bottom: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .padding20{
+            padding: 20px;
+        }
+        .padding30{
+            padding: 30px;
+        }
+        .padding40{
+            padding: 40px;
+        }
+        .paddingB5{
+            padding-bottom: 10px;
+        }
+        .paddingB10{
+            padding-bottom: 10px;
+        }
+        .paddingB20{
+            padding-bottom: 20px;
+        }
+        .paddingB30{
+            padding-bottom: 30px;
+        }
+        .paddingB40{
+            padding-bottom: 40px;
+        }
+        .paddingB80{
+            padding-bottom: 80px;
+        }
+        .paddingL20{
+            padding-left: 20px;
+        }
+        .paddingL60{
+            padding-left: 60px;
+        }
+        .paddingL10{
+            padding-left: 10px;
+        }
+        .paddingL5{
+            padding-left: 5px;
+        }
+        .paddingR5{
+            padding-right: 5px;
+        }
+        .paddingR10{
+            padding-right: 10px;
+        }
+        .paddingR20{
+            padding-right: 20px;
+        }
+        .paddingR40{
+            padding-right: 40px;
+        }
+        .paddingLeft10{
+            padding-left: 10px;
+        }
+        .paddingRight10{
+            padding-right: 10px;
+        }
+        .paddingLeft5{
+            padding-left: 5px;
+        }
+        .paddingRight5{
+            padding-right: 5px;
+        }
+        .narrowLine{
+            line-height: 100%;
+        }
+        .narrowLine2{
+            line-height: 160%;
+        }
+        .wideLine{
+            line-height: 140%;
+        }
+        .wideLine2{
+            line-height: 120%;
+        }
+        .width8{
+            width: 100px;
+        }
+        .width25{
+            width: 25%;
+        }
+        .width40{
+            width: 40%;
+        }
+        .minwidth25{
+            width: 25%;
+        }
+        .width50{
+            width: 50%;
+        }
+        .width65{
+            width: 65%;
+        }
+        .width75{
+            width: 75%;
+        }
+        .width60{
+            width: 60%;
+        }
+        .width80{
+            width: 80%;
+        }
+        .width90{
+            width: 90%;
+        }
+        .widthHeaderSearch{
+            width: 200px;
+        }
+        .width100{
+            width: 100%;
+        }
+        
+         .height30{
+            height: 30%;
+        }
+        .height80{
+            height: 80%;
+        }
+        .height100{
+            height: 100%;
+        }
+        .height100px{
+            height: 100px;
+        }
+        .bold{
+            font-weight: bold;
+        }
+        .italic{
+            font-style: italic;
+        }
+        .inactiveBreadCrumb{
+            color: whitesmoke;
+        }
+        .pastBreadCrumb{
+            color: #20C39A;
+        }
+        .activeSection{
+            border-bottom: solid 1px;
+            border-color: whitesmoke;
+        }
+        
+        #breadcrumb{
+            letter-spacing: 2px;
+            font-weight: bold;
+            color: #20C39A;
+        }
+        #breadcrumb a{
+            text-decoration: underline;
+            font-weight: bold;
+            color: #20C39A;
+            text-decoration: none;
+        }
+        #breadcrumb a:hover{
+            
+            border-bottom: solid 1px;
+            border-color: #20C39A;
+        }
+        #breadcrumbContainer{
+/*            min-height: 10vh;
+            border-bottom: solid 1px #B8BAC8;*/
+            background-color: rgba(0,0,0,0.8);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        #landingContainer{
+            background: rgba(255, 255, 255, 0.9);
+            min-height: 60vh;
+            border-radius: 10px;
+        }
+        #categoryFont{
+            min-height: 7vh;
+            color: white;
+            min-width: 175px;
+            border-style: solid;
+            border-radius: 10px;
+            border-width: 1px;
+            background-color: rgba(0,0,0,0.7);
+            margin-top: 7px;
+            margin-bottom: 7px;
+            margin-right: 0px;
+            padding: 5px;
+            letter-spacing: 2px;
+            box-shadow: 1px 1px 1px #6A6968;
+            font-family: "Avenir";
+        }
+        #categoryFont:hover{
+            background-color: #20C39A;
+            font-weight: 900;
+        }
+        .bottomBar{
+            position:fixed; 
+            bottom:0%;
+            width:100%;
+            padding-left:40px;
+            padding-right:40px;
+            background: #f7f7f7;
+            color: black;
+            border-top: 1px solid #ccc;
+        }
+        .rightMidButton{
+            position:fixed; 
+            top:25%;
+            right:0%;
+            width:15%;
+            height:50%;
+            /*padding-left:40px;
+            padding-right:40px;*/
+            background: transparent;
+            color: black;
+        }
+        .leftMidButton{
+            position:fixed; 
+            top:25%;
+            left:0%;
+            height:50%;
+            /*padding-left:40px;
+            padding-right:40px;*/
+            background: transparent;
+            color: black;
+        }
+        .leftTopButton{
+            position:fixed; 
+            top:12%;
+            left:0%;
+            
+            background: transparent;
+            color: black;
+        }
+        .leftBottomButton{
+            position:fixed; 
+            bottom:0%;
+            left:0%;
+            width:10%;
+            height:10%;
+            background: transparent;
+            color: black;
+        }
+        .bottomOfferLogo{
+            
+        }
+        #categories{
+            margin-top: 40px;
+        }
+        button:focus {outline:0;}
+        #iOSFix{flex: 1 0 auto !important;}
+        div:focus {outline:0;}
+        a:focus {outline:0;}
+        #steps{
+            min-height: 10vh;
+            padding-bottom: 20px;
+        }
+        #mainContent{
+            min-height: 55vh;
+        }
+        .mainContent2{
+            height: 55vh;
+        }
+        .padded{
+            padding-left: 60px;
+            padding-right: 60px;
+            padding-bottom: 20px;
+        }
+        .padded2{
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+        }
+        #step{
+            width: 50px;
+            height: 6px;
+            background-color: silver;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+        #stepActive{
+            width: 50px;
+            height: 6px;
+            background-color: #20C39A;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+        .top-buffer { 
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        .top-buffer50{ 
+            margin-top:50px;
+        }
+        .top-buffer5{ 
+            margin-top:5px;
+        }
+        .top-buffer10{ 
+            margin-top:10px;
+        }
+        .bottom-buffer10{ 
+            margin-bottom:10px;
+        }
+        .width50{
+            width:50%;
+        }
+        em {position: absolute; bottom: 0;}
+        
+        a{
+            color: white;
+            text-decoration: none;
+        }
+        
+        a, a:hover, a:active, a:visited, a:focus, a:visited:hover, a:link:hover{
+            color: white;
+            text-decoration:none;
+        }
+        #linkFont{
+            color:#333333;
+        }
+        #footerLink{
+            color: lightgray;
+        }
+        #fullPageContent{
+            min-height: 100vh;
+        }
+        md-dialog{
+            z-index: 20000;
+        }
+        md-dialog.login-dialog {
+            z-index: 20000;
+            min-width: 300px;
+            max-width: 100%;
+            width: 30%;
+            /*height: 70%;*/
+            max-height: 80%;
+            border-radius: 10px;
+            background:white;
+        }
+        md-dialog.fullscreen-dialog {
+            z-index: 20000;
+            max-width: 90%;
+            width: 90%;
+            height: 85%;
+            min-height: 85%;
+            top: 5vh;
+            border-radius: 0;
+            color:white;
+            background:rgba(0,0,0,1);
+        }
+        md-dialog.fullscreen-dialog2 {
+            z-index: 20000;
+            max-width: 90%;
+            width: 90%;
+            min-height: 85%;
+            top: 5vh;
+            border-radius: 0;
+        }
+        md-dialog.halfscreen-dialog2{
+            z-index: 20000;
+            max-width: 80%;
+            width: 60%;
+            min-height: 50%;
+            max-height: 80%;
+            top: 5vh;
+            border-radius: 0;
+        }
+        md-dialog.halfscreen-dialog {
+            z-index: 20000;
+            max-width: 70%;
+            width: 70%;
+            height: 60%;
+            top: 5vh;
+            border-radius: 0;
+        }
+        md-dialog.offer-dialog {
+            z-index: 20000;
+            max-width: 100%;
+            width: 80%;
+            max-height: 90%;
+            height: 75%;
+            top: 5vh;
+            border-radius: 0;
+        }
+        md-dialog.edit-dialog {
+            z-index: 20000;
+            max-width: 100%;
+            width: 90%;
+            max-height: 85%;
+            height: 90%;
+            top: 5vh;
+            border-radius: 0;
+        }
+        md-dialog.text-dialog {
+            z-index: 20000;
+            max-width: 100%;
+            width: 60%;
+            max-height: 85%;
+            height: 30%;
+            top: 5vh;
+            border: none;
+            border-radius: 0;
+        }
+        #custom input[name="headerSearch"]  {
+            background: url(images/icons/Hsearch.png);
+            background-repeat: no-repeat;
+            background-position: 9px 9px;
+            padding: 0px 40px;
+            
+        }
+        md-autocomplete{
+            background-color: transparent;  
+        }
+        .md-autocomplete-suggestions-container{  
+            background: white;
+            z-index:100000 !important; /* any number of choice > 1050*/
+        }
+        .md-virtual-repeat-container.md-autocomplete-suggestions-container{
+            box-shadow: none;
+        }
+        
+        #autocompleteLogo{
+            max-height: 35px;
+            max-width: 70px;
+            margin-left: 10px;
+        }
+        #autocompleteLogo2{
+            max-height: 35px;
+            max-width: 70px;
+        }
+        #searchLogo{
+            max-height: 50px;
+            max-width: 80px;
+        }
+        .autocomplete li {
+            border-bottom: 1px solid #ccc;
+            height: auto;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            white-space: normal; 
+        }
+        .autocomplete .item-title,  .autocomplete .item-metadata {
+            padding-top: 10px;
+            display: block;
+            line-height: 1; 
+        }
+        .autocompletedemoCustomTemplate md-autocomplete-wrap:after {
+          font-family: "Material Icons";
+          content: "\E5C5";
+          line-height: 1;
+          font-size: 24px;
+          font-weight: normal;
+          padding: 8px 10px 10px 8px;
+        }
+
+        .autocompletedemoCustomTemplate md-autocomplete-wrap:before {
+          font-family: "Material Icons";
+          content: "\E8B6";
+          line-height: 1;
+          padding: 8px 0px 0px 8px;
+          font-weight: normal;
+          font-size: 24px;
+        }
+        .danger{
+            color: #FF5A5F;
+        }
+        .dangerBG{
+            background-color: #FF5A5F;
+        }
+        .fillImage{
+            max-width: 100%;
+            max-height: 80%;
+        }
+        .fill {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden
+        }
+        .fill img {
+            flex-shrink: 0;
+            max-width: 100%;
+            max-height: 50%
+        }
+        .thumbnail {
+          position: relative;
+          width: 150px;
+          height: 150px;
+          overflow: hidden;
+        }
+        .thumbnail img {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          height: 100%;
+          width: auto;
+          -webkit-transform: translate(-50%,-50%);
+              -ms-transform: translate(-50%,-50%);
+                  transform: translate(-50%,-50%);
+        }
+        .thumbnail img.portrait {
+          width: 100%;
+          height: auto;
+        }
+        
+        
+        
+        /* Shared */
+        .loginBtn {
+          box-sizing: border-box;
+          position: relative;
+          /* width: 13em;  - apply for fixed size */
+          margin: 0.2em;
+          padding: 0 15px 0 46px;
+          border: none;
+          text-align: left;
+          line-height: 34px;
+          white-space: nowrap;
+          border-radius: 0.2em;
+          font-size: 16px;
+          color: #FFF;
+        }
+        .loginBtn:before {
+          content: "";
+          box-sizing: border-box;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 34px;
+          height: 100%;
+        }
+        .loginBtn:focus {
+          outline: none;
+        }
+        .loginBtn:active {
+          box-shadow: inset 0 0 0 32px rgba(0,0,0,0.1);
+        }
+        span, textarea, input, button { outline: none; }
+        span:focus,
+        input:focus,
+        select:focus,
+        textarea:focus,
+        button:focus {
+            outline: none;
+        }
+        
+
+
+        .loginBtn--google {
+          background: #DD4B39;
+        }
+        .loginBtn--google:before {
+          border-right: #BB3F30 1px solid;
+          background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png') 6px 6px no-repeat;
+        }
+        .loginBtn--google:hover,
+        .loginBtn--google:focus {
+          background: #E74B37;
+        }
+        .md-dialog-container { height: 100vh !important; top: 0 !important; position: fixed !important; }
+        
+        
+        .navbar.navbar-default .navbar-collapse {
+            border: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+        .optionClass{
+            background: rgba(255,255,255,0.9);
+            color: black;
+            border: 1px solid black;
+        }
+        .optionClass:hover{
+
+            box-shadow: 0 0 10px black;
+        }
+        .md-button{
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .loginBtn--facebook {
+            padding-left: 50px;
+            background-color: #4C69BA;
+            background-image: linear-gradient(#4C69BA, #3B55A0);
+            text-shadow: 0 -1px 0 #354C8C;
+        }
+        .loginBtn--facebook:before {
+          border-right: #364e92 1px solid;
+          background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_facebook.png') 6px 6px no-repeat;
+        }
+        .loginBtn--facebook:hover,
+        .loginBtn--facebook:focus {
+          background-color: #5B7BD5;
+          background-image: linear-gradient(#5B7BD5, #4864B1);
+        }
+        
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    
+    <link rel="stylesheet" href="angular-sidebarjs.min.css">
+    <link rel="stylesheet" href="material-datetimepicker.min.css" type="text/css"/>
+    
+    <!--
+    <link rel="stylesheet" href="hover-min.css">
+    <script>
+    (function(){
+            var t,i,e,n=window,o=document,a=arguments,s="script",r=["config","track","identify","visit","push","call","trackForm","trackClick"],c=function(){var t,i=this;for(i._e=[],t=0;r.length>t;t++)(function(t){i[t]=function(){return i._e.push([t].concat(Array.prototype.slice.call(arguments,0))),i}})(r[t])};for(n._w=n._w||{},t=0;a.length>t;t++)n._w[a[t]]=n[a[t]]=n[a[t]]||new c;i=o.createElement(s),i.async=1,i.src="//static.woopra.com/js/w.js",e=o.getElementsByTagName(s)[0],e.parentNode.insertBefore(i,e)
+    })("woopra");
+
+    woopra.config({
+        domain: 'exambazaar.com'
+    });
+    woopra.track();
+    </script>
+    -->
+    
+    <!-- Start of Google Analytics Code -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-91393221-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <!-- End of Google Analytics Code -->
+    
+    </head>
+    
+    <body twitter-widget-initialize ng-cloak>
+    
+    <div  layout="column" ng-controller="headerController" ng-cloak>
+        <div ui-view="header"></div>
+        <div ui-view="body" class="min90vh" ></div>
+        <div ui-view="footer"></div>
+        
+        
+            
+<div style="visibility: hidden">    
+<div class="md-dialog-container" id="loginDialog" >
+  <md-dialog class="login-dialog"> 
+     <!--<div layout="row" layout-align="center center" ng-if="stateName == 'showGroup'" class="paddingLR30 paddingTB10 font10 gainsboroBottomBorder">
+            Looking for {{coachingGroupName}} in {{coachingGroupCity}}?
+     </div>-->
+     <div layout="column"  flex-gt-sm="100" class="padding30" >
+        
+        <div layout="row" layout-align="center center" class="mainFont textBlack paddingB10 gainsboroBottomBorder">
+            <span ng-if="!signupMode">
+            <span ng-if="!resetMode">
+                <span class="md-title" hide-xs>
+                    Log into Exambazaar
+                </span>
+                <span class="font16" hide-gt-xs>
+                    Log into Exambazaar
+                </span>
+            </span>
+            <span ng-if="resetMode">
+                <span class="md-title" hide-xs>
+                    Reset Password
+                </span>
+                <span class="font16" hide-gt-xs>
+                    Reset Password
+                </span>
+            </span>
+                
+            </span>
+            <span ng-if="signupMode">
+            <span class="md-title" hide-xs>
+                Create an account
+            </span>
+            <span class="font16" hide-gt-xs>
+                Create an account
+            </span>
+            </span>
+        </div>
+        <div layout="column" layout-align="center center" class="marginT20 marginB10" >
+            <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase">
+                <span class="font14" hide-xs>
+                    <span ng-if="!signupMode">Log in </span>
+                    <span ng-if="signupMode">Sign up </span>
+                    with Facebook
+                </span>
+                <span class="font12" hide-gt-xs>
+                    Log in with Facebook
+                </span>
+            </md-button>
+            <!--<md-button href="/auth/google" class="width100 tolowercase">
+                <span class="font14" hide-xs>
+                    <span ng-if="!signupMode">Log in </span>
+                    <span ng-if="signupMode">Sign up </span>
+                    with Google
+                </span>
+                <span class="font12" hide-gt-xs>
+                    Log in with Google
+                </span>
+            </md-button>-->
+        </div>
+
+        <div style="width: 100%; height: 16px; border-bottom: 1px solid #ccc; text-align: center" class="secondFont">
+          <span hide-xs style="font-size: 15px; background-color: #FFF; color: #ccc;padding: 0 10px;">
+            or
+          </span>
+        </div>
+
+
+        <div class="marginT20  " ng-if="!signupMode">
+        <form  ng-submit="login()" name="loginForm" ng-if="!resetMode">
+        <div layout="column" class="">
+            <div class="paddingTB5 ">
+            <input type="text" placeholder="Mobile" class="width100" ng-model="userlogin.mobile"  ng-minlength="10" ng-maxlength="10" only-digits id="loginInput">
+            </div>
+            <div class="paddingB5">
+            <input type="password" placeholder="Password" class="width100" ng-model="userlogin.password" id="loginInput">
+            </div>
+            <div class="text-center" ng-if="loginErrorMessage">
+                <span class="danger font10" >{{loginErrorMessage}}</span>
+            </div>
+            <div class="text-right">
+                <span class="danger font10" ng-click="resetToggle()">Forgot Password?</span>
+            </div>
+            
+        </div>
+            
+        
+        <div layout="row" class="marginT20">
+        <div flex class="paddingR5">
+            <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="loginForm.$invalid">
+                Log in
+            </md-button>
+        </div>
+        <div flex class="paddingL5">
+            <md-button ng-click="signupToggle()" class="md-small md-cancel width100 tolowercase" >
+                Sign up
+            </md-button>
+        </div>
+        </div>
+        </form>
+        <form  ng-submit="reset()" name="resetForm" ng-if="resetMode">
+        <div layout="column" class="">
+            <div layout="row" layout-align="start center" class="paddingTB5 ">
+            <div layout="column" flex>
+                <input type="text" placeholder="Enter your login Mobile" class="width100" ng-model="reset.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput" required>
+            </div>
+            <div layout="row" layout-align="end center" flex-gt-xs="50" flex-xs="40" ng-if="showResetVerifyOTP">
+                <md-button class="md-green2 md-small font10 width80" ng-click="resetPhone()" ng-if="!ResetOTPsent">Verify by OTP</md-button>
+                
+                <input ng-if="ResetOTPsent && !ResetOTPVerified" type="text" placeholder="4 digit OTP" class="width80" ng-model="reset.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits id="loginInput" required >
+                
+                
+                <div ng-if="ResetOTPsent && ResetOTPVerified" class="text-primary font20 bold">
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                </div>
+            </div>
+            </div>
+            <span ng-if="userResetExistMessage" class="danger font8 text-right">{{userResetExistMessage}}</span>
+            <span ng-if="ResetOTPmessage" class="danger font8 text-right">{{ResetOTPmessage}}</span>
+            <span ng-if="ResetOTPsent && !ResetOTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="resetPhone()" id="dangerLink">Resend it</a></span>
+            
+            <div class="paddingB5">
+            <input type="password" placeholder="Enter your new Password" class="width100" ng-model="reset.password" id="loginInput" ng-if="ResetOTPVerified">
+            </div>
+            <!--<div class="paddingB5">
+            <input type="password" placeholder="Verify your new Password" class="width100" ng-model="reset.verifypassword" id="loginInput" ng-if="ResetOTPVerified">
+            </div>-->
+            <div ng-messages="resetForm.reset.password.$error" class="danger font8 text-right" ng-if="ResetOTPVerified">
+                Password should be at least 6 characters long
+            </div>
+        </div>
+            
+        
+        <div layout="row" class="marginT20" ng-if="!resetMode">
+        <div flex class="paddingR5">
+            <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="loginForm.$invalid">
+                Log in
+            </md-button>
+        </div>
+        <div flex class="paddingL5">
+            <md-button ng-click="signupToggle()" class="md-small md-cancel width100 tolowercase" >
+                Sign up
+            </md-button>
+        </div>
+        </div>
+        <div layout="row" class="marginT20" ng-if="resetMode">
+        <div flex class="paddingR5">
+            <md-button ng-click="resetPassword()" class="md-small md-green2 width100 tolowercase" ng-disabled="checkResetForm()">
+                Reset Password
+            </md-button>
+        </div>
+        <div flex class="paddingL5">
+            <md-button type="submit" class="md-small md-cancel width100 tolowercase" ng-click="resetToggle()">
+                Back to Log in
+            </md-button>
+        </div>
+        </div>
+        </form>
+        </div>
+        
+        <div class="marginT20  " ng-if="signupMode">
+        <form  ng-submit="signupUser()" name="signupForm">
+        <div layout="column" class="">
+            <div class="paddingTB5 ">
+            <input type="text" placeholder="Name" class="width100" ng-model="signup.name" id="loginInput" required>
+            </div>
+            <div class="paddingTB5 ">
+            <input type="email" placeholder="Email" class="width100" ng-model="signup.email" id="loginInput" required>
+            </div>
+            <div layout="row"  class="paddingTB5 ">
+            <div layout="column" flex>
+                <input type="text" placeholder="Mobile" class="width100" ng-model="signup.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput" required>
+                
+            </div>
+            <div layout="row" layout-align="end center" flex-gt-xs="50" flex-xs="40" ng-if="showVerifyOTP">
+                <md-button class="md-green2 md-small font10 width80" ng-click="verifyPhone()" ng-if="!OTPsent">Verify by OTP</md-button>
+                
+                <input ng-if="OTPsent && !OTPVerified" type="text" placeholder="4 digit OTP" class="width80" ng-model="signup.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits id="loginInput" required >
+                
+                
+                <div ng-if="OTPsent && OTPVerified" class="text-primary font20 bold">
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                </div>
+            </div>
+            </div>
+            <span ng-if="userExistMessage" class="danger font8 text-right">{{userExistMessage}}</span>
+            <span ng-if="OTPmessage" class="danger font8 text-right">{{OTPmessage}}</span>
+            <span ng-if="OTPsent && !OTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="verifyPhone()" id="dangerLink">Resend it</a></span>
+            
+            <div class="paddingTB5">
+            <input type="password" placeholder="Password" class="width100" ng-model="signup.password" id="loginInput" ng-minlength="6" required>
+            <div ng-messages="signupForm.signup.password.$error" class="danger font8 text-right">
+                Password should be at least 6 characters long
+            </div>
+            </div>
+            <!--<div class="paddingB5">
+            <input type="password" placeholder="Password" class="width100" ng-model="signup.verifypassword" id="loginInput">
+            </div>-->
+        </div>
+            
+        
+        <div layout="row" class="marginT20">
+        <div flex class="paddingR5">
+            <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="checkSignupForm()" >
+                Sign up
+            </md-button>
+        </div>
+        <div flex class="paddingL5">
+            <md-button class="md-small md-cancel  width100 tolowercase" ng-click="signupToggle()">
+                Log in
+            </md-button>
+            
+        </div>
+        </div>
+        </form>
+        </div> 
+         
+        
+        </div>
+        
+        
+      
+  </md-dialog>
+</div>    
+</div>    
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="userReviewSearchDialog">
+      <md-dialog class="offer-dialog whiteBackground">
+          <md-content flex layout="column" ng-controller="reviewRedirectController">
+          
+              <div hide-xs layout="row" layout-align="center center" id="reviewHeaderRow" class="" >
+                <div layout="column" layout-align="center center" class=" text-center textWhite   translucentBackground width100" id="iOSFix">
+                    <div layout-wrap class="width75 offerPopupFont font32 textShadow narrowLine2">
+                        We want to help!
+                    </div>
+                    <div layout-wrap class="width75 offerPopupFont font24 textShadow narrowLine2">
+                        You’ll love our discounts on the best-selling exam prep material*
+                    </div>
+                    <div layout-wrap class="width75 editFont textWhite font12">
+                        *Limited coupons only
+                    </div>
+                </div>
+              </div>
+              <div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="">
+              </div>
+              <div  class="secondFont font16 marginT10 width100 text-center">
+                  Review your coaching <i class="fa fa-arrow-right marginLR5" aria-hidden="true"></i> Receive exclusive Exambazaar coupon <i class="fa fa-arrow-right marginLR5" aria-hidden="true"></i> Get upto 50% OFF on courses from
+              </div>
+              <div hide-xs class="secondFont font10 width100 text-center marginB10" ng-if="offers.length>0">
+                  (hover to find out discounts for each provider)
+              </div>
+              <div hide-gt-xs class="secondFont font10 width100 text-center marginB10" ng-if="offers.length>0">
+                  (tap to find out discounts for each provider)
+              </div>
+              <div hide-gt-xs layout="row" layout-align="center center" id="iOSFix" class="">
+                <div layout-wrap layout="row" layout-align="center center" class="text-center width100" >
+                <div flex-xs="30" ng-repeat="offer in offers" class="padding5">
+                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                    
+                    
+                </div>
+                
+                </div>
+              </div>
+              <div hide-xs layout-wrap layout="row" layout-align="center center" class="text-center width100 min10vh" >
+                <div flex-xs="33" ng-repeat="offer in offers" class="padding5  marginLR10">
+                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                    <md-tooltip>{{offer.tooltip}}</md-tooltip>
+                </div>
+                
+              </div>
+              
+              
+              <div flex layout-fill layout="row" layout-xs="column" layout-align="center center" layout-align-xs="space-around center" class="secondFont paddingTB10 paddingLR20 width100" id="reviewSearchRow">
+                 
+              <div layout="row" layout-align="center center" flex-gt-xs="30" flex-xs="100" ng-controller="citySearchController as ctrl" class="paddingLR10 min10vh width100 autocompletedemoCustomTemplate">
+                    <md-autocomplete flex 
+                    md-selected-item="ctrl.selectedItem"
+                    md-selected-item-change= "ctrl.selectedItemChange(item)"
+                    md-search-text="ctrl.searchText"
+                    md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-item-text="item"
+                    md-delay="300"
+                    md-min-length="0"
+                    md-menu-class="autocomplete"
+                    placeholder="City"
+                    class="width100 font16" ng-class="{ dangerBorder: newReviewError }">
+                        <md-item-template >
+                          <span class="item-title font12">
+                              <span class="font14 bold">{{item}}</span>
+                          </span>
+                          
+                        </md-item-template>
+
+                    </md-autocomplete>
+                </div>
+                  
+                  
+                <div layout="row" layout-align="center center" flex-gt-xs="40" flex-xs="100" ng-controller="coachingSearchController as ctrl" class="paddingLR10 min10vh width100 autocompletedemoCustomTemplate" >
+                    <md-autocomplete flex 
+                    md-selected-item="ctrl.selectedItem"
+                    md-selected-item-change= "ctrl.selectedItemChange(item)"
+                    md-search-text="ctrl.searchText"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-no-cache ="true"
+                    md-item-text="item.name"
+                    md-min-length="0"
+                    focus-me="newReviewCity && newReviewCity!=''"
+                    md-delay="300"
+                    md-menu-class="autocomplete"
+                    placeholder="Coaching Institute"
+                    class="width100">
+                        <md-item-template >
+                          <div layout="row" layout-align="start center" class="item-title font12">
+                              <div class="secondFont font14 textBlack">
+                                  {{item.name}}
+                              </div>
+                              
+                              <div hide-xs>
+                                <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo2" class="marginT10"/>
+                              </div>
+                              
+                          </div>
+                        </md-item-template>
+
+                    </md-autocomplete>
+                </div>
+                
+              </div>
+              
+              <div layout="row" layout-align="center center" class="paddingLR10 min10vh width100">
+                    <md-button class="md-small md-green2 width100 tolowercase" ng-click="redirectToReview()">
+                        Review
+                    </md-button>
+              </div>
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>        
+        
+
+<!--<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="whyReviewDialog">
+      <md-dialog class="offer-dialog" ng-controller="whyReviewController">
+          
+          <div layout="column" layout-align="center center" class="text-center height100" >
+              <div hide-xs layout="row" layout-align="center center" class="text-center width100" id="whyReviewPage2" >
+              </div>
+              <div hide-gt-xs layout="row" layout-align="center center" class="text-center width100" id="whyReviewPage3" >
+              </div>
+            <div hide-gt-xs layout="column" layout-align="center center" class="thirdFont marginT40 marginB10 paddingLR15 width100">
+                <div class="min5vh font24 textBlack narrowLine">
+                        {{currentQuestion.text}}
+                </div>
+                <div class="editFont font12 marginT10">
+                    {{currentQuestion.subtext}}
+                </div>
+            </div>
+            <div hide-xs layout="column" layout-align="center center" class="thirdFont marginT40 marginB10 paddingLR10 width80">
+                <div class="min5vh font32 textBlack narrowLine">
+                        {{currentQuestion.text}}
+                </div>
+                <div class="editFont font16 marginT10">
+                    {{currentQuestion.subtext}}
+                </div>
+            </div>
+            <div flex layout="row" layout-align="center center " class="paddingLR10 width100" >
+                <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="start center" class="width100 thirdFont spacedLetter025 ">
+
+                    <div flex layout-gt-xs="row" layout-xs="column" layout-align="center center" class="width100 ">
+                        <div flex-gt-xs="50" ng-repeat="option in currentQuestion.options" class="padding10 width100">
+                            <div hide-xs layout="column" layout-align="center center" class="min25vh padding20 optionClass width100 " ng-click="updateState(option)">
+                                <div class="font20 bold">
+                                    {{option.title}}
+                                </div>
+                                <div class="editFont font16">
+                                    {{option.subtitle}}
+                                </div>
+                            </div>
+                            <div hide-gt-xs layout="column" layout-align="center center" class="min15vh padding10 optionClass width100 " ng-click="updateState(option)">
+                                <div class="font18 bold">
+                                    {{option.title}}
+                                </div>
+                                <div class="editFont font14">
+                                    {{option.subtitle}}
+                                </div>
+                            </div>
+                        </div>
+                        <div  layout="column" layout-align="center center" class="min25vh padding10 width100" ng-if="showReviewButton" ng-click="showUserReviewSearchDialog()" ng-controller="offerController">
+                            <md-button class="md-danger md-small font14 width50 primaryFont spacedLetter1 padding10">
+                            Review
+                            </md-button>   
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div layout="row" layout-align="center center" class="font12 textBlack width100 paddingB10" ng-if="currState != '1'" ng-click="previousState()">
+                Back
+            </div>
+        </div>
+          
+      </md-dialog>
+    </div>    
+</div>   -->     
+        
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="partnerDialog">
+      <md-dialog class="offer-dialog">
+        <md-content flex layout="column" ng-controller="offerController2">
+        <div class="width100" id="examinfo">
+
+        </div>
+        <div flex class="paddingTB20 paddingLR40" layout="column" layout-align="start center" layout-fill>
+            <div flex layout="row" id="min15vh" class="width100 greyBottomBorder paddingTB10">
+                <div flex ="25" layout="column" layout-align="start center" class="paddingT5">
+                    <img ng-src="{{partnerOffer.image}}" id="logo"/>
+                </div>
+                <div flex ="75" layout="column" class="">
+                    <div layout="column" layout-align="start start" class="editFont">
+                        <div class="fifthFont textBlack marginB5" id="lineHeight2">
+                        {{partnerOffer.displayname}}
+                        </div>
+
+                        <div id="lineHeight" class="">
+                            {{partnerOffer}}
+                        </div>
+                        <div id="lineHeight" class="marginT10">
+                            <span class="font12 textDarkGrey">
+                                {{activeExamEligibility.exam.briefDescription}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+
+
+
+            <div layout-wrap layout="row" layout-align="center center" class="text-center width100">
+                <div flex-xs="33" ng-repeat="offer in offers" class="padding5">
+                <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                </div>
+            </div>
+
+
+            <div layout="row" layout-align="center center" class="paddingLR10 min10vh width100">
+                <md-button class="md-small md-green2 width100 tolowercase" ng-click="redirectToReview()">
+                Review
+                </md-button>
+            </div>
+        </div>  
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>        
+<div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController" ng-cloak>
+    <div layout="row"  layout-align="start center" >
+        <div hide-xs layout="row" layout-align="center center" flex>
+            <div flex layout="row" layout-align="center center" >
+                <div hide-sm class="text-center thirdFont font14 spacedLetter1 textWhite">Review your coaching institute <span class="font24 marginLR20">|</span> Avail upto&nbsp;<span class="textWhite bold">50% discount</span>&nbsp;on the best exam resources
+                </div>
+                
+                <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
+                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5" ng-click="showUserReviewSearchDialog()">
+                        <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                    </div>
+                    <!--showPartnerDialog(offer)-->
+                </div>
+                </div>
+            </div>
+            
+            <div hide-xs layout="row" layout-align="end center" class="">
+                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
+                Review
+                </md-button>    
+            </div>
+            <!--
+            bottomBarOfferImage
+            -->
+        </div>
+        <div hide-gt-xs layout="row" layout-align="start center" flex>
+            <div layout="column" layout-align="center center" class="textWhite">
+                <div class="text-center">
+                Review your coaching | Avail upto&nbsp;<span class="textWhite bold">50% off</span>
+                </div>
+            </div>
+            <div flex layout="row" layout-align="center center" class="width100">
+                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
+                Go
+            </md-button>
+            
+            </div>
+        </div>
+        
+        
+</div>
+        
+        
+<div class="sideBarButton paddingTB5">
+    <div hide-xs layout="row"  layout-align="start center" sidebarjs-toggle id="sideBarIcon">
+        <i class="fa fa-angle-double-right font40 paddingR10 paddingTB20" aria-hidden="true"></i>
+    </div>
+    <sidebarjs class="sideBar font16">
+        <div sidebarjs-toggle id="sideBarIcon2" class="paddingR5">
+            <i class="fa fa-angle-double-left font40" aria-hidden="true"></i>
+        </div>
+        
+        <div layout="column" layout-align="start center" layout-fill class="width100">
+            <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder marginB10">
+                <div layout="row" layout-align="center center" flex>
+                    <a class="navbar-brand" href="/">
+                        <span class="" id="sidebarLogo">
+                            EXAMBAZAAR
+                        </span>
+                    </a>
+                </div>
+                <div sidebarjs-toggle layout="row" layout-align="center center" class="padding5 marginR10">
+                    <i class="fa fa-times-circle-o font24" aria-hidden="true"></i>
+                </div>
+                
+                
+            </div>
+            <div flex layout="column" layout-align="center center" class="width100">
+
+            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder paddingLR10">
+                <div layout="column" layout-align="center center" class="marginT5">
+                    <div layout="column" layout-align="center center" class="width100">
+                        Top Rankers
+                    </div>
+                    <div layout="row" layout-align="center center" class="font12 danger width100">
+                        <div class="marginLR5">
+                            <a id="sideBarLink" ui-sref="rankerswall({ examName:'NEET UG', year:'2017'} )">NEET 2017</a>
+                        </div>
+                        <div class="marginLR5">
+                            <a id="sideBarLink" ui-sref="rankerswall({ examName:'JEE Advanced', year:'2017'} )">JEE 2017</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="marginTB5">
+                    <a id="sideBarLink" ui-sref="blog">Blog</a>
+                </div>
+            </div>
+
+            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder paddingLR10" ng-if="sessionuser && sessionuser.basic">
+                <div class="marginT5">
+                    Welcome {{sessionuser.basic.name}}!
+                </div>
+                <div class="marginTB10">
+                    <span ng-if="sessionuser.image">
+                        <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle"/>
+                    </span>
+                    <!--<a id="sideBarLink" ui-sref="profile({ userId:{{'sessionuser.userId'}} })" class="marginR10">Profile</a>-->
+                </div>
+                <div class="">
+                    <a id="sideBarLink" ui-sref="reviewed({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Reviews</a>
+                </div>
+                <div class="marginTB5">
+                    <a id="sideBarLink" ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Shortlisted Institutes</a>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="center center" class="paddingLR10 width100">
+                <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-green2 width50" ng-click = "showLoginForm()">Log in</md-button>
+                <a id="sideBarLink" ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
+            </div>
+            <div flex layout="row" layout-align="center center" class="width100 marginT10">
+                <twitter-timeline class="exact100h">
+                    <a class="twitter-timeline" data-height="100%" data-chrome="nofooter" href="https://twitter.com/exambazaar"> Tweets by @exambazaar</a>
+                </twitter-timeline>
+                
+            </div>
+
+
+
+            </div>
+            <!--<div flex layout="row" layout-align="center end" class="padding10">
+                <a id="sideBarLink" sidebarjs-toggle><i class="fa fa-times-circle" aria-hidden="true"></i>&nbsp;&nbsp;Close</a>
+            </div>-->
+        </div>
+
+    </sidebarjs>
+</div>  
+<!--<div class="rightSideBarButton paddingTB5">
+    <div layout="row"  layout-align="end center" class="">
+        <div sidebarjs-toggle id="sideBarIcon" class="">
+            <i class="fa fa-angle-double-left font40 paddingL20 paddingTB20" aria-hidden="true"></i>
+        </div>
+    </div>
+    <sidebarjs class="sideBar font16">
+        <div sidebarjs-toggle id="sideBarIcon2" class="paddingR5">
+            <i class="fa fa-angle-double-left font40" aria-hidden="true"></i>
+        </div>
+        <div layout="column" layout-align="start center" layout-fill class="width100">
+            <div layout="column" layout-align="center center" class="width100">
+                
+
+            </div>
+        </div>
+
+    </sidebarjs>
+</div>  -->      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+</div>        
+        
+
+
+        
+        
+        
+    <script src="angular.min.js"></script>
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.min.js"></script>
+    <script src="svg-assets-cache.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-aria.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-messages.min.js"></script>
+    <script src="angular-material.min.js"></script>
+    
+    <script src="//unpkg.com/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+       
+        
+        
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-cookies.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.0/angular-moment.min.js"></script>
+    
+    <script type="text/javascript" src="moment-timezone-with-data-2010-2020.js"></script>
+    <script src="moment-timezone-utils.js"></script>
+    
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4&libraries=geometry,drawing"></script>
+    
+    <script type="text/javascript" src="https://rawgit.com/allenhwkim/angularjs-google-maps/master/build/scripts/ng-map.min.js"></script>
+    
+        
+    <script src="angular-scroll.js"></script>
+    <script type='text/javascript' src="loading-bar.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.9/angular-sanitize.min.js"></script>
+    
+    <!--<script src="angular-file-upload.min.js"></script>-->
+    
+    <script src="ngGeolocation.min.js"></script>
+        
+    
+        
+    <!---start of comment below in production -->
+    <script src="handsontable.min.js"></script>
+    <script src="ngHandsontable.min.js"></script>
+    <!---end of comment below in production -->
+    
+    <!-- for no html5 browsers support -->
+    <script src="ng-file-upload-shim.min.js"></script>
+    
+    <script src="ng-file-upload.min.js"></script>
+    
+    <script async src="https://www.youtube.com/iframe_api"></script>
+    <script src="angular-youtube-embed.js"></script>
+    
+    <script src="ngtweet.min.js"></script>
+    <script async src="gmaps.min.js"></script>
+    <script src="ngFacebook.js"></script>
+    <script src="angular-google-gapi.min.js"></script>
+    <script src="ui-bootstrap.min.js"></script>
+    <script src="ui-bootstrap-tpls.min.js"></script>
+    <script src="angular-socialshare.js"></script>
+    <script src="angular-clipboard.js"></script>
+    <script src="angular-bootstrap-affix.js"></script>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/js/medium-editor.min.js"></script>
+    <script src="angular-medium-editor.js"></script>
+    <script type="text/javascript" src="medium-editor-tables.js"></script>
+    <!--
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.3.1/markdown-it.js"></script>
+    
+    <script type="text/javascript" src="ng-markdownit.js"></script>
+    
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/to-markdown/3.1.0/to-markdown.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>-->
+    <!--<script src="handlebars.runtime.min.js"></script>
+    <script src="jquery-sortable-min.js"></script>
+    <script src="jquery.ui.widget.js"></script>
+    <script src="jquery.iframe-transport.js"></script>
+    <script src="jquery.fileupload.js"></script>
+    <script src="medium-editor-insert-plugin.min.js"></script>
+    <script src="angular-medium-editor-insert-plugin.js"></script> -->    
+    
+    <script src="Chart.min.js"></script>
+    <script src="angular-chart.min.js"></script>
+    <script src="angular-sidebarjs.min.js"></script>
+    <script src="angular-ui-notification.min.js"></script>s
+    <script type="text/javascript" src="angular-material-datetimepicker.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+</body>
+</html>

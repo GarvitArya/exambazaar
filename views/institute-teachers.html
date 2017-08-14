@@ -1,0 +1,154 @@
+<style>
+    .center-block {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.input-group .icon-addon .form-control {
+    border-radius: 0;
+}
+
+.icon-addon {
+    position: relative;
+    color: #555;
+    display: block;
+}
+
+.icon-addon:after,
+.icon-addon:before {
+    display: table;
+    content: " ";
+}
+
+.icon-addon:after {
+    clear: both;
+}
+
+.icon-addon.addon-md .glyphicon,
+.icon-addon .glyphicon, 
+.icon-addon.addon-md .fa,
+.icon-addon .fa {
+    position: absolute;
+    z-index: 2;
+    left: 10px;
+    font-size: 14px;
+    width: 20px;
+    margin-left: -2.5px;
+    text-align: center;
+    padding: 10px 0;
+    top: 1px
+}
+
+.icon-addon.addon-lg .form-control {
+    line-height: 1.33;
+    height: 46px;
+    font-size: 18px;
+    padding: 10px 16px 10px 40px;
+}
+
+.icon-addon.addon-sm .form-control {
+    height: 30px;
+    padding: 5px 10px 5px 28px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.icon-addon.addon-lg .fa,
+.icon-addon.addon-lg .glyphicon {
+    font-size: 18px;
+    margin-left: 0;
+    left: 11px;
+    top: 4px;
+}
+
+.icon-addon.addon-md .form-control,
+.icon-addon .form-control {
+    padding-left: 30px;
+    float: left;
+    font-weight: normal;
+}
+
+.icon-addon.addon-sm .fa,
+.icon-addon.addon-sm .glyphicon {
+    margin-left: 0;
+    font-size: 12px;
+    left: 5px;
+    top: -1px
+}
+
+.icon-addon .form-control:focus + .glyphicon,
+.icon-addon:hover .glyphicon,
+.icon-addon .form-control:focus + .fa,
+.icon-addon:hover .fa {
+    color: #2580db;
+}
+    
+</style>
+
+<md-content class="md-padding">
+    <div class="container">
+    <div class="row">
+        <!--<md-button class="md-raised md-primary" ui-sref="addTeacher({ instituteId:{{'institute._id'}} })">Add Teacher</md-button>-->
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-10 icon-addon addon-md">
+                    <input type="search" placeholder="Search Teachers, Subjects, Mobile Numbers" class="form-control" id="searchText" ng-model="searchText">
+                    <label for="searchText" class="glyphicon glyphicon-search" rel="tooltip" title="searchText"></label>
+                </div>
+                <div class="hidden-xs col-md-2 ">
+                    <md-button class=" md-raised md-primary pull-right" ui-sref="bulkAddTeachers({ instituteId:{{'institute._id'}} })">Bulk Add Teachers</md-button>
+                </div>
+            </div>
+            <div layout="row">
+                <span>
+                <small class="text-muted">displaying {{filtered.length}} teachers</small>
+                </span>
+            </div>
+        </div>
+    </div>    
+    <div class="row">
+    <table class="table table-striped table-hover">
+        <tr>
+            <td><strong>Staff</strong></td>
+            <td class="hidden-xs"><strong>Photo</strong></td>
+            <td><strong>Mobile</strong></td>
+            <td class="hidden-xs"><strong>Subjects</strong></td>
+        </tr>
+        <tr ng-repeat="teacher in institute.teachers | orderBy:'basic.firstName' | filter:filterText as filtered">
+
+        <td>
+            <a ui-sref="teacher({ teacherId:{{'teacher._id'}} })">
+                {{teacher.basic.salutation}} 
+                {{teacher.basic.firstName}} 
+                {{teacher.basic.middleName}} 
+                {{teacher.basic.lastName}}
+                <!--{{teacher._id}}-->
+            </a></td>
+        <td class="hidden-xs">
+            <span>
+                <img ng-src="{{teacher.imageUrl}}" height = "50">
+                <md-tooltip md-direction="left">
+                    {{teacher.basic.firstName}}
+                    {{teacher.basic.middleName}}
+                    {{teacher.basic.lastName}}
+                </md-tooltip>
+            </span>
+        </td>
+        <td>
+           {{teacher.contact.mobile}}</td>
+        <td class="hidden-xs">
+            <span ng-repeat="tSubject in teacher.subjects | orderBy: '_batch.grade'">
+                <a ui-sref="subject({ subjectId:{{'tSubject._id'}} })">
+                {{tSubject._batch.name}}
+                {{tSubject._globalSubject.name}}
+                </a> | 
+            </span>
+
+        </td> 
+        </tr>
+    </table>
+    </div>
+    
+    </div>
+</md-content>

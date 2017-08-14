@@ -1,0 +1,159 @@
+
+<div class="container">
+    <md-content flex layout-padding>        
+        <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="admins">
+            <md-content class="md-padding">
+                <div layout="row">
+                <div flex>
+                <table ng-table="showadmins"   class="table">
+                    <tr ng-repeat="admin in institute.admins | orderBy:'basic.firstName'">
+                         
+                    <td title="'Admin'">
+                        <a ui-sref="admin({ adminId:{{'admin._id'}} })">
+                            {{admin.basic.firstName}} {{admin.basic.lastName}}
+                        </a></td>
+                    <td title="'Photo'">
+                    <img ng-src="{{admin.account.imageUrl}}" height = "50"></td>
+                    <td title="'Mobile'">
+                       {{admin.contact.mobile}}</td>
+                    </tr>
+                </table>
+                </div>
+                <div flex>
+                <md-button class="md-raised md-primary" ui-sref="addAdmin({ instituteId:{{'institute._id'}} })">Add Admin</md-button>
+                </div>
+                </div>
+            </md-content>
+          </md-tab>  
+        <md-tab label="teachers">
+            <md-content class="md-padding">
+                <div layout="row">
+                <div flex>
+                <table ng-table="showteachers"   class="table">
+                    <tr ng-repeat="teacher in institute.teachers | orderBy:'basic.firstName'">
+                         
+                    <td title="'Staff'">
+                        <a ui-sref="teacher({ teacherId:{{'teacher._id'}} })">
+                            {{teacher.basic.firstName}} {{teacher.basic.lastName}}
+                        </a></td>
+                    <td title="'Photo'">
+                    <img ng-src="{{teacher.account.imageUrl}}" height = "50"></td>
+                    <td title="'Mobile'">
+                       {{teacher.contact.mobile}}</td>
+                    <td title="'Subject'">
+                        {{teacher.subjects.name}}</td> 
+                    </tr>
+                </table>
+                </div>
+                <div flex>
+                <md-button class="md-raised md-primary" ui-sref="addTeacher({ instituteId:{{'institute._id'}} })">Add Teacher</md-button>
+                </div>
+                </div>
+            </md-content>
+          </md-tab>
+          <md-tab label="batches">
+            <md-content class="md-padding">
+            <div layout="row">
+            <div flex>
+                <table ng-table="showbatches"   class="table">
+                    <tr ng-repeat="batch in institute.batches | orderBy:'name'" groupBy="batch.grade">
+                         
+                        <td title="'Batch Name'">
+                            <a ui-sref="batch({ batchId:{{'batch._id'}} })">
+                                {{batch.name}}
+                            </a></td>
+                        <td title="'Grade'">
+                            {{batch.grade}}
+                        </td>
+                        <td title="'Section'">
+                            {{batch.section}}
+                        </td>
+                        <td title="'Class Teacher'">
+                            {{batch.batchTeacher.basic.firstName}} {{batch.batchTeacher.basic.lastName}}</td>
+                        <td title="'Photo'">
+                            <img ng-src="{{batch.batchTeacher.account.imageUrl}}" height = "50">
+                        </td>
+                        <td title="'Subjects'">
+                            <span ng-repeat="subject in batch.subjects | orderBy:'name'">
+                            {{subject.name}}, 
+                            </span>
+                        </td>
+                        <td title="'Class Size'">
+                        <span class="badge">{{batch.students.length}}</span></td>
+                        
+                        
+                    </tr>
+                </table>
+                
+            </div>
+            <div flex>
+            <md-button class="md-raised md-primary" ui-sref="addBatch({ instituteId:{{'institute._id'}} })">Add Batch</md-button>
+            </div>
+            </div>
+            </md-content>
+          </md-tab>
+          
+          <md-tab label="transport">
+            <md-content class="md-padding">
+            <div layout="row">
+            <div flex>
+                <table ng-table="showtransportVehicles"   class="table">
+                    <tr ng-repeat="transportVehicle in institute.transportVehicles">
+                         <td title="'Type'">{{transportVehicle.type}}</td>
+                        <td title="'Registration'">{{transportVehicle.registration}}</td>
+                        <td title="'Owner Name'">{{transportVehicle.owner.name}}</td>
+                        <td title="'Owner Photo'">
+                            <img ng-src="{{transportVehicle.owner.imageUrl}}" height = "50">
+                        </td>
+                        <td title="'Owner Mobile'">{{transportVehicle.owner.mobile}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div flex>
+            <md-button class="md-raised md-primary" ui-sref="addTransportVehicle({ instituteId:{{'institute._id'}} })">Add Transport Vehicle</md-button>
+            </div>
+            </div>
+            </md-content>
+          </md-tab>
+            
+          <md-tab label="students">
+            <md-content class="md-padding">
+            <div layout="row">
+            <div flex>
+                <table ng-table="showstudents"   class="table">
+                    <tr ng-repeat="student in institute.students | orderBy:'batch.name'">
+                         <td title="'Batch'">{{student.batch.name}}</td>
+                        <td title="'Student'">
+                            <a ui-sref="student({ studentId:{{'student._id'}} })">
+                                {{student.basic.firstName}} {{student.basic.lastName}}
+                            </a></td>
+                        <td title="'Photo'">
+                            <img ng-src="{{student.account.imageUrl}}" height = "50">
+                        </td>
+                        <td title="'Mobile'">{{student.contact.mobile}}</td>
+                        
+                        <td title="'Parent'">
+                            {{student.parents[0].basic.firstName}} 
+                            {{student.parents[0].basic.lastName}}
+                        </td>
+                        <td title="'Parent Mobile'">
+                            {{student.parents[0].contact.mobile}}
+                        </td>
+                        
+                    </tr>
+                </table>
+            </div>
+            <div flex>
+            <md-button class="md-raised md-primary" ui-sref="addStudent({ instituteId:{{'institute._id'}} })">Add Student</md-button>
+            </div>
+            </div>
+            </md-content>
+          </md-tab>
+            
+        </md-tabs>
+        
+        
+    </md-content>
+    
+</div>

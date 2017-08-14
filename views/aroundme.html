@@ -1,0 +1,195 @@
+<style>
+    #autocompleteLogo{
+        max-height: 35px;
+        max-width: 70px;
+    }
+    .autocomplete li {
+        border-bottom: 1px solid #ccc;
+        height: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        white-space: normal; 
+    }
+    .autocomplete .item-title,  .autocomplete .item-metadata {
+          display: block;
+          line-height: 2; 
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #mapHolder{
+        min-height: 80vh;
+    }
+    #map{
+        height:100%;
+    } 
+    #logo{
+        max-width: 100px;
+    }
+    .activeCity{
+        font-size: 16px;
+        font-weight: bold;
+        color: #20C39A;
+    }
+    md-slider .md-track-ticks canvas {
+      height: 10px;
+    }
+    md-slider .md-track canvas {
+      height: 5px;
+    }
+    md-slider[md-discrete] .md-sign,
+    md-slider[md-discrete] .md-sign:after {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 0, 0) scale(1);
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    #examTagHolder{
+        padding:5px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    #examTagHolder:hover{
+        color: white;
+        
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #existingExamTagHolder{
+        padding:5px;
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    
+    
+    
+</style>
+
+
+<div layout="row" class="whiteBackground mainContent" layout-fill>
+    <div layout="column" class="width100">
+        <ng-map center="{{currLocation}}" scrollwheel="true" zoom="13" id="map" class="min100vh">
+            <marker position="{{currLocation}}"
+              title="City" draggable="true" on-dragend="onDragEnd(this)" icon="{path:'CIRCLE', scale: 10}"></marker>
+
+            <marker id='{{provider._id}}' position="{{provider.mapLatLng}}"
+            title="{{provider.name}}"
+            ng-repeat="provider in providers | filter:filterText as filtered track by $index" on-click="showProvider(event, provider)">
+
+            </marker>
+            <info-window id="foo-iw">
+                <div layout="row" layout-align="start center" class="padding5">
+                    <div layout="column" layout-align="center center" class="marginR10" >
+                        <img ng-src="{{activeProvider.logo}}" id="searchLogo"/>
+                        
+                    </div>
+                    <div layout="column" layout-align="center center" class="padding5">
+                        <div class="marginB10 thirdFont bold">  
+                            {{activeProvider.name}}
+                        </div>
+                        <div>
+                            <!-- ui-sref="claim({ coachingId:{{'activeProvider._id'}} })" target="_blank"-->
+                            <a ng-click="goToCoaching(activeProvider)" id="link">Explore</a>
+                            <a ng-href="{{activeProvider.website[0]}}" id="link" target="_blank">{{activeProvider.website[0]}}</a>
+                        </div>
+
+                    </div>
+                </div>
+            </info-window>
+
+        </ng-map>
+    </div>
+    
+</div>
+
+
+
+
+<div layout="column" layout-align="center end" class="rightMidButton">
+    <!--<md-button class="md-black md-small " ng-click="setLocofAll()">
+        Transform Lat Lng
+    </md-button>-->
+    <md-button class="md-black md-small tolowercase" ng-click="showExamDialog()"> <!--aroundme-->
+        <div layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center" class="marginR10">
+                <i class="fa fa-search font18" aria-hidden="true"></i>
+            </div>
+            <div layout="row" layout-align="start center">
+                Around me
+            </div>
+        </div>
+    </md-button>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="examDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="start center" class="paddingL10">
+                    Tell us the exam you are preparing for!
+                </div>
+                <div flex layout="row" layout-align="end center">
+                    <div class="bold paddingR10">
+                        Search within:
+                    </div>
+                    <div ng-repeat="distance in searchDistances" class="paddingLR5">
+                        <span class="badge" id="examTagHolder" ng-if="searchDistance != distance" ng-click="setSearchDistance(distance)">
+                            {{distance}} km
+                        </span>
+                        <span class="badge" id="existingExamTagHolder" ng-if="searchDistance == distance" ng-click="setSearchDistance(distance)">
+                            {{distance}} km
+                        </span>
+                        
+                    </div>
+                    <div>
+                        <md-button class="md-black md-small  tolowercase" ng-click="aroundme()">
+                            Go
+                        </md-button>
+                    </div>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                <div layout="row" layout-align="start start"  class="width100 marginB10 bold">
+                    <div flex="15">
+                        Stream
+                    </div>
+                    <div flex="85">
+                        Select Exams
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
+                    <div flex="15">
+                        {{thisStream.displayname}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+                            <span class="badge" id="examTagHolder" ng-if="searchExams.indexOf(thisExam._id) == -1" ng-click="addExam(thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="searchExams.indexOf(thisExam._id) != -1" ng-click="removeExam(thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+              
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 

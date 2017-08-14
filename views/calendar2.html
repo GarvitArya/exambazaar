@@ -1,0 +1,32 @@
+<div class="container">
+    <md-content flex layout-padding>
+    <div class="col-md-8">
+        
+        {{msg}}
+        <div  class="panel panel-default" >
+            <div class="panel-heading">
+                <h6 class="md-subhead text-primary">Add Event</h6>
+            </div>
+            <div class="panel-body">
+            <div class="row">
+                <p>
+                    Event Date
+                    <md-datepicker required ng-model="calendar" md-placeholder="Date"></md-datepicker>
+                </p>
+            </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            {{calendar}}
+        <md-calendar ng-model="calendar"></md-calendar>
+        </div>
+    </div>
+        
+    
+    
+        
+    </md-content>
+</div>

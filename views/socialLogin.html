@@ -1,0 +1,93 @@
+<style>
+    #autocompleteLogo{
+        max-height: 35px;
+        max-width: 70px;
+    }
+    .autocomplete li {
+        border-bottom: 1px solid #ccc;
+        height: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        white-space: normal; 
+    }
+    .autocomplete .item-title,  .autocomplete .item-metadata {
+          display: block;
+          line-height: 2; 
+    }
+    md-autocomplete{
+        background-color: #F5F5F5;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #profilePic{
+        max-width: 100px;
+    }
+     
+    
+</style>
+
+
+<div class="whiteBackground mainContent padded2" >
+    <div id="spacer">
+    </div>
+    <div layout="column">
+        <div>
+            <!--<button type="button" ng-click="fblogin()" ng-show="fbLoginStatus.status !='connected' && !loggedIn" class="btn btn-default navbar-btn">
+                Login
+            </button>-->
+            <button type="button" ng-click="fblogin()" ng-show="!user.facebookId" class="btn btn-default navbar-btn">
+                Link FB
+            </button>
+        </div>
+        
+    </div>
+    
+    <br/>
+    <img ng-src="{{user.image}}" id="profilePic"/>
+    
+    <button type="button" ng-click="fbshare2()" ng-show="user.facebookId" class="btn btn-default navbar-btn">
+        Share
+    </button>
+    <button type="button" ng-click="fbfeed()" ng-show="user.facebookId" class="btn btn-default navbar-btn">
+        Feed
+    </button>
+    <button type="button" ng-click="fbInvite()" ng-show="user.facebookId" class="btn btn-default navbar-btn">
+        Invite
+    </button>
+    <br/>
+    
+    <div layout="column" class="greyBorder">
+        <div>
+            Fb App Status
+        </div>
+        <div>
+            {{fbLoginStatus.status}}
+        </div>
+        <!--<div>
+            {{fbLoginStatus.authResponse.accessToken}}
+        </div>-->
+    </div>
+    
+    <div layout="column" class="">
+        <p ng-model="description" medium-editor bind-options="{'toolbar': {'buttons': ['bold', 'italic', 'underline', 'justifyCenter', 'quote', 'anchor', 'h1','h2', 'h3'] } }" data-placeholder="Enter a description" class="thirdFont">
+            <medium-insert></medium-insert>
+        </p>
+        <div>
+            <md-button class="md-raised md-primary" ng-click="seeDescription()">
+                 See
+            </md-button>
+        </div>
+    </div>
+    
+    
+    
+</div>

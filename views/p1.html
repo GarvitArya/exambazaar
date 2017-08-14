@@ -1,0 +1,114 @@
+<style>
+    a:hover{
+        text-decoration: none;
+        color: white;
+    }
+    #categoryLink:link, #categoryLink:hover, #categoryLink:visited{
+      padding: 0px;
+      color: white;
+      text-decoration: none;
+    }
+    #pageHeader{
+        color: rgba(0,0,0,0.8);
+        letter-spacing: 4px;
+        font-family: "Avenir";
+    }
+    #pageHeaderFont{
+        border-bottom: solid 3px;
+        border-color: #20C39A;
+        letter-spacing: 4px;
+    }
+    #streamPage{
+        min-height: 100vh;
+    }
+    #streamPageContent{
+        min-height: 60vh;
+    }
+    #streamBox{
+        max-width: 220px;
+    }
+    
+    #categoryPage{
+        min-height: 100vh;
+    }
+    #categoryPageContent{
+        min-height: 75vh;
+    }
+     #otherCitiesFont{
+        color: rgba(0,0,0,0.8);
+        font-family: "Avenir";
+        letter-spacing: 4px;
+    }
+    #otherCitiesContainer{
+        padding-top: 40px;
+    }
+    #fixedbutton {
+        position: fixed;
+        bottom: 0px;
+        left:50%;
+        margin-left: -100px;
+    }
+    #otherCitiesButton{
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+    }
+    #otherCategoryLink{
+        color: #20C39A;
+        
+    }
+    #cityPageContent{
+        min-height: 75vh;
+    }
+</style>
+
+<div class="container-fluid" id="fullPage">
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="streamPage">
+        <div id="spacer" class="">
+        </div>
+        
+        <div id="streamPageContent" layout="column" layout-align="start center">
+        <div flex id="landingContainer" layout="column" class="width80"> 
+        <div id="breadcrumbContainer" hide-xs class="">
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 text-center editFont " id="breadcrumb">
+            <span class="inactiveBreadCrumb activeSection">STREAM</span>
+            <span class="inactiveBreadCrumb"> > EXAM</span>
+            <span class="inactiveBreadCrumb"> > CITY</span>
+            </div>
+        </div>
+            <!--<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1">
+            
+            <div layout="row" layout-align="center center" class="width100">
+                <ul class="breadcrumb">
+                    <li class="active"><a href="javascript:void(0);">Stream</a></li>
+                    <li class="completed"><a href="javascript:void(0);">Exam</a></li>
+                    <li><a href="javascript:void(0);">City</a></li>
+                </ul>
+            </div>
+        </div>-->
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center marginT20" id="pageHeader">
+            <span class="text md-title" id="pageHeaderFont"><strong>SELECT YOUR EXAM STREAM</strong></span>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1 marginT40" id="categories">
+
+        <div ng-repeat="category in streams" ng-if="category.name!='other'">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3" >
+            <!--hvr-bob-->
+            <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="category({ categoryName:{{'category.name'}} })">
+                <a ui-sref="category({ categoryName:{{'category.name'}} })" id="categoryLink">{{category.displayname | uppercase}}</a>
+            </div>
+        </div>
+        </div>
+        </div>
+        <div flex layout="row" layout-align="center end" id="steps" class="width100">
+            <div id="stepActive">
+            </div>
+            <div id="step">
+            </div>
+            <div id="step">
+            </div>
+        </div>
+            
+        </div>  
+        </div>
+    </div>
+</div>

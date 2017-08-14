@@ -1,0 +1,75 @@
+
+<md-content class="md-padding">
+    <div class="container">
+    <!--<pre>{{institute | json}}</pre>-->
+    <div class="row">
+        <!--<md-button class="md-raised md-primary" ui-sref="addBatch({ instituteId:{{'institute._id'}} })">Add Batch</md-button>-->
+        <md-button class="md-raised md-primary" ui-sref="bulkAddBatches({ instituteId:{{'institute._id'}} })">Add Batches</md-button>
+        <md-button class="md-raised md-primary" ui-sref="editBatchesTeachers({ instituteId:{{'institute._id'}} })">Set Class Teachers</md-button>
+        <md-button class="md-raised md-primary" ui-sref="editSubjectTeachers({ instituteId:{{'institute._id'}} })">Set Subject Teachers</md-button>
+    </div>
+        
+    <div class="row">
+        <table class="table table-striped table-hover">
+            <tr>
+                
+                <td><strong>Class</strong></td>
+                <td><strong>Class Teacher</strong></td>
+                <td><strong>Subjects</strong></td>
+                <td><strong>Students</strong></td>
+                
+            </tr>
+            <tr ng-repeat="batch in institute.batches | orderBy:['grade','section']" groupBy="batch.grade">
+
+            <td title="'Batch Name'">
+                <a ui-sref="batch({ batchId:{{'batch._id'}} })">
+                    {{batch.name}}
+                </a></td>
+            <!--<td title="'Grade'">
+                {{batch.grade}}
+            </td>
+            <td title="'Section'">
+                {{batch.section}}
+            </td>-->
+            <td title="'Class Teacher'">
+
+                <a ui-sref="teacher({ teacherId:{{'batch.batchTeacher._id'}} })">
+
+                    {{batch.batchTeacher.basic.firstName}}
+                    {{batch.batchTeacher.basic.middleName}}
+                    {{batch.batchTeacher.basic.lastName}}
+                </a>
+            </td>
+            <!--<td title="'Photo'">
+                <img ng-src="{{batch.batchTeacher.account.imageUrl}}" height = "50">
+            </td>-->
+            <td title="'Subjects'">
+            <div ng-repeat="subject in batch.subjects | orderBy:'name'">
+            <span class="text-primary">
+                <a ui-sref="subject({ subjectId:{{'subject._id'}} })">
+                {{subject._globalSubject.name}}: 
+                </a>
+            </span>
+               <span>
+                   {{subject._teacher.basic.firstName}}
+                   {{subject._teacher.basic.middleName}}
+                   {{subject._teacher.basic.lastName}} 
+                </span>
+                <span ng-show="subject._secondTeacher">
+                    &  
+                    {{subject._secondTeacher.basic.firstName}}
+                    {{subject._secondTeacher.basic.middleName}}
+                    {{subject._secondTeacher.basic.lastName}} 
+                </span>
+            </div>
+            </td>
+            <td title="'Class Size'">
+            <span class="badge">{{batch.students.length}}</span></td>
+
+
+            </tr>
+        </table>
+    </div>
+    
+    </div>
+</md-content>

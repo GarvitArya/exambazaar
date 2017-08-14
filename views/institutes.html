@@ -1,0 +1,52 @@
+<style>
+.md-button {
+    min-width: 1%;
+}
+</style>
+<div class="container">
+    <div class="row">
+        <h6 class="text-primary">All Institutes <span class="badge">{{institutesList.length}}</span></h6>
+        
+        
+        <div class="col-md-4" ng-repeat="institute in institutesList | orderBy:'basic.name'">
+        <div  class="panel panel-default">
+            <div class="panel-heading">
+                {{institute.basic.name}}
+                
+                <span class="badge">{{institute.students.length}}+{{institute.teachers.length}}+{{institute.admins.length}}
+                </span>
+                <a class="pull-right" ui-sref="institute({ instituteId:{{'institute._id'}} })" >View</a>
+                <!--<br/>
+                {{institute._id}}-->
+            </div>
+            <div class="panel-body">
+                
+                <div class="panel panel-default">
+                    <!--<div class="panel-heading">
+                        Quick Links
+                    </div>-->
+                  <div class="panel-body">
+                    <div layout="row">
+                    <span class="text">Jump to: </span>
+                    <a ui-sref="institute-batches({ instituteId:{{'institute._id'}} })">Batches</a> | 
+                    <a ui-sref="institute-teachers({ instituteId:{{'institute._id'}} })">Teachers</a> | 
+                    <a ui-sref="institute-students({ instituteId:{{'institute._id'}} })">Students</a>
+                </div>
+                  </div>
+                </div>
+                
+                
+                
+                <!--<md-button class="md-raised md-primary" ui-sref="institute-teachers({ instituteId:{{'institute._id'}} })">Teachers</md-button>
+                <md-button class="md-raised md-primary" ui-sref="institute-students({ instituteId:{{'institute._id'}} })">Students</md-button>-->
+                <br/>
+                <!--<small>{{institute.basic.about}}</small>
+-->
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,151 @@
+<style>
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    
+     
+    
+</style>
+
+
+<div class="whiteBackground mainContent padded" >
+    <div id="spacer">
+    </div>
+    
+    <div layout="column" ng-if="showSuggestions" class="padding20 whiteSmokeBorder">
+        <md-button class="md-raised md-warn marginB20" ng-click="flipMode()">
+            I want to suggest!
+        </md-button>
+        <div layout="row" class="bold greyDashedBottomBorder">
+            <div flex="5">S. No.</div>
+            <div flex>Coaching Name</div>
+            <div flex>Suggested By</div>
+            <div flex>Website</div>
+            <div flex>No of Centers</div>
+            <div flex>New to EB?</div>
+        </div>
+        <div layout="row" ng-repeat="suggestion in suggestions" class="greyBottomBorder">
+            <div flex="5">{{$index+1}}</div>
+            <div flex>{{suggestion.coachingName}}</div>
+            <div flex>{{suggestion.user.name}}</div>
+            <div flex>
+                <a ng-href="{{suggestion.website}}" target="_blank" ng-if="suggestion.website  && suggestion.website !=''" id="link">
+                    Url
+                </a>
+            </div>
+            <div flex>{{suggestion.nCenters}}</div>
+            <div flex>{{suggestion.newCoachingGroup}}</div>
+        </div>
+        
+        
+    </div>
+    <div layout="column" ng-if="!showSuggestions" class="padding20">
+        <md-button class="md-raised md-warn" ng-click="flipMode()">
+            Back to List
+        </md-button>
+        
+        <div layout="row" ng-if="!showSuggestions" class="">
+        <div layout="column" flex class="padding20  whiteSmokeBorder marginR10">
+            
+            <form name="suggestionForm" >
+                <div layout="column" >
+                    <div layout="column">
+
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Coaching Group</label>
+                            <input required ng-model="suggestion.coachingName">
+                        </md-input-container>
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Website</label>
+                            <input required ng-model="suggestion.website">
+                        </md-input-container>
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Estimated No of Centers</label>
+                            <input required ng-model="suggestion.nCenters">
+                        </md-input-container>
+                        <md-switch ng-model="suggestion.newCoachingGroup" aria-label="New to EB?">
+                          Coacing Group is New to EB?
+                        </md-switch>
+                    </div>   
+
+                    <md-button class="md-raised md-primary" ng-click="saveSuggestion()" ng-disabled="suggestionForm.$invalid">
+                        Suggest 
+                        <span ng-if="suggestion.coachingName">
+                            Adding {{suggestion.coachingName}} to EB
+                        </span>
+                    </md-button>
+
+                </div>
+            </form>
+            
+            
+            
+            
+        </div>
+        <div layout="column"  flex class="padding20 whiteSmokeBorder">
+            <div layout="column" class="editFont marginB20 textBlack">
+                You can do a quick search of the institute you are suggesting. If the coaching group already exists but we need to add a significant number of centers. Mark New to EB as false.
+            </div>
+            <div layout="column" ng-controller="coachingGroupAutocompleteController as ctrl">
+                <md-autocomplete flex 
+                md-selected-item="ctrl.selectedItem"
+                md-selected-item-change= "ctrl.selectedItemChange(item)"
+                md-search-text="ctrl.searchText"
+                md-items="item in ctrl.querySearch(ctrl.searchText)"
+                md-item-text="item.name"
+                md-delay="300"
+                md-menu-class="autocomplete"
+                placeholder="Search for Coaching Institutes"
+                class="width100 ">
+                    <md-item-template >
+                      <span class="item-title font12">
+                          <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                          <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
+                      </span>
+                      <span class="item-metadata">
+                        <span class="item-metastat font10">
+                          {{item.city}}:
+                        </span>&nbsp;
+                        <span class="item-metastat font10">
+                          {{item.address}}
+                        </span>
+                      </span>
+                    </md-item-template>
+
+                </md-autocomplete>
+            </div>
+
+        </div>
+        
+        
+    </div>
+    </div>    
+    
+        
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>

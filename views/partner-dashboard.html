@@ -1,0 +1,401 @@
+<style>
+    #instituteInput{
+        background-color : #f7f7f7;
+        font-weight: 100;
+        font-size: 12px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+    }
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    #badge{
+        background: #20C39A;
+    }
+    .mylisting{
+        min-height: 40vh;
+    }
+    .listingHeader{
+        background-color: #f7f7f7;
+        color: black;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+    .listingContent{
+        padding-left: 10px;
+        width: 100%;
+    }
+    #listingLeft{
+        padding: 10px;
+    }
+    #listingRight{
+        padding: 10px;
+    }
+    #listingLogo{
+        max-height: 100px;
+        max-width: 200px;
+    }
+    .saveCancel{
+        position:fixed; 
+        bottom:0%;
+        width:100%;
+        padding-left:40px;
+        padding-right:40px;
+        background: #f7f7f7;
+        color: black;
+        border-top: 1px solid #ccc;
+    }
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        padding: 10px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    
+    input[type="email"]
+    {
+        font-size: 13px;
+        color: #333333;
+        padding: 10px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="email"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="email"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    paddedLR{
+        padding-left: 20px;
+        padding-right: 20px;
+        
+    }
+    #upload2{
+        background: white;
+        color: black;
+        border: 1px solid #000;
+        padding: 5px;
+    }
+    #upload2:hover {
+        background: #FF5A5F;
+        color: white;
+        border: 1px solid #FF5A5F;
+    }
+    #plusButton{
+        background: #f7f7f7;
+        color: black;
+    }
+    #plusButton:hover {
+        background: #FF5A5F;
+        color: white;
+    }
+</style>
+<div class="whiteBackground mainContent padded" >
+    <div id="spacer">
+    </div>
+    
+    
+    <div layout="column" layout-align="start center" class="thirdFont textDarkGrey greyBorder marginB20">
+            <div class="secondFont listingHeader bold">
+                Management<!--&nbsp;<span class="badge">{{management.length}}</span>-->
+            </div>
+            <div layout="row" class="listingContent">
+                
+                
+                
+                <div layout="column" layout-align="start center" flex="25" id="listingLeft">
+                    <span class="md-display-4">
+                    <i class="fa fa-cog" aria-hidden="true"></i>
+                    </span>
+                    
+                </div>
+                <div layout="column" layout-align="start start" flex="75" id="listingRight" class="paddedLR">
+                
+                <!-- Primary Contact -->
+                <div layout="column" class="width100">    
+                    <div layout="row" class="width100 bold">
+                        <div flex="60" layout="row" >
+                        <div flex="30">
+                            Primary Contact
+                        </div>
+                         <div flex="15" layout="row" layout-align="start center" ng-click="showOthers()" ng-if="!showOtherManagement && !editManagement">
+                            <span class="text-salmon">View All</span>  
+                        </div>
+                        <div flex="15" layout="row" layout-align="start center" ng-click="unShowOthers()" ng-if="showOtherManagement && !editManagement">
+                            <span class="text-salmon">Hide All</span>  
+                        </div> 
+                        </div> 
+                    </div>
+                    <div layout="row" class="width100">
+                    <div flex="60" layout="column" >
+                    <div flex layout="row" layout-align="start center" class="width100">
+                        <div flex="30">Name:</div>
+                        <div flex="70" ng-if="addPrimaryManagement">
+                        <input type="text" ng-model="primaryManagement.name"  placeholder="Name" class="width75">
+                        </div>
+                        <div flex="70" ng-if="!addPrimaryManagement">
+                        {{primaryManagement.name}}
+                        </div>
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100">
+                        <div flex="30">Mobile:</div>
+                        <div flex="70" ng-if="addPrimaryManagement">
+                        <input type="text" placeholder="10 Digit Mobile" class="width75" ng-model="primaryManagement.mobile" size="15" ng-minlength="10" ng-maxlength="10" only-digits limit-to="10" class="">
+                        </div>
+                        <div flex="70" ng-if="!addPrimaryManagement">
+                        {{primaryManagement.mobile}}
+                        </div>
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100">
+                        <div flex="30">Email:</div>
+                        <div flex="70" ng-if="addPrimaryManagement">
+                        <input type="email" ng-model="primaryManagement.email"  placeholder="Email" class="width75">
+                        </div>
+                        <div flex="70" ng-if="!addPrimaryManagement">
+                        {{primaryManagement.email}}
+                        </div>
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100">
+                        <div flex="30">Designation:</div>
+                        <div flex="70" ng-if="addPrimaryManagement">
+                        <input type="text" ng-model="primaryManagement.role"  placeholder="Designation" class="width75">
+                        </div>
+                        <div flex="70" ng-if="!addPrimaryManagement">
+                        {{primaryManagement.role}}
+                        </div>
+                    </div>
+                    </div>
+                    <div flex="40" layout="column" layout-align="end center">
+                        <div class="width100 fourthFont" layout="row">
+                            Primary Contact is contacted for everything related to the listing and is mandatory to Edit the listing. Add more Contacts to delegate responsibilities.
+                        </div>
+                        <div class="width100" ng-if="addPrimaryManagement" layout="row">
+                            <md-button class="md-green md-small width50" ng-click="savePrimaryManagement()">Save</md-button>
+                        </div>
+                        
+                        
+                    </div>
+                    </div>
+                    
+                    
+                    
+                </div>   
+                    
+                <div layout="column" class="width100" ng-if="showOtherManagement">
+                    <div layout="row" class="marginT30 width100 bold">
+                        Other Contacts
+                    </div>
+                    <div layout="row" class="width100 marginB30" ng-repeat="thisManagement in management">
+                    <div flex="60" layout="column" >
+                    <div flex layout="row" layout-align="start center" class="width100 ">
+                        <div flex="30">Name:</div>
+                        <div flex="70" ng-if="thisManagement.editable">
+                        <input type="text" ng-model="thisManagement.name"  placeholder="Name"  class="width75">
+                        </div>
+                        <div flex="70" ng-if="!thisManagement.editable">
+                        {{thisManagement.name}}
+                        </div>
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100 ">
+                        <div flex="30">Mobile:</div>
+                        <div flex="70" ng-if="thisManagement.editable">
+                        <input type="text" placeholder="10 Digit Mobile" class="width75" ng-model="thisManagement.mobile" size="15" ng-minlength="10" ng-maxlength="10" only-digits limit-to="10" >
+                        
+                        </div>
+                        <div flex="70" ng-if="!thisManagement.editable">
+                        {{thisManagement.mobile}}
+                        </div>
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100 ">
+                        <div flex="30">Email:</div>
+                        <div flex="70" ng-if="thisManagement.editable">
+                        <input type="email" ng-model="thisManagement.email"  placeholder="Email" class="width75">
+                        </div>
+                        <div flex="70" ng-if="!thisManagement.editable">
+                        {{thisManagement.email}}
+                        </div>
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100 ">
+                        <div flex="30">Designation:</div>
+                        <div flex="70" ng-if="thisManagement.editable">
+                        <input type="text" ng-model="thisManagement.role"  placeholder="Designation" class="width75">
+                        </div>
+                        <div flex="70" ng-if="!thisManagement.editable">
+                        {{thisManagement.role}}
+                        </div>
+                    </div>
+                    </div>
+                    <div flex="40" layout="column" layout-align="end center">
+                        <div class="width100" ng-if="thisManagement.editable" layout="row">
+                        <md-button class="md-cancel md-small width50" ng-click="saveManagement(thisManagement)">Save</md-button>
+                        <md-button class="md-cancel md-small width50" ng-click="removeManagement(thisManagement, $index)">Remove</md-button>
+                        </div>
+                        <!--<div class="width100" ng-if="!thisManagement.editable">
+                        <md-button class="md-cancel md-small width50" ng-click="editManagement(thisManagement)">Edit</md-button>
+                        </div>-->
+                    </div>
+                    </div>
+                </div>  
+                
+                <div flex layout="row" class="width100 marginT10"  >
+                    <div flex="20" layout="row" layout-align="center center" id="upload2" ng-click="editPrimaryManagement()" class="secondFont textLightGrey width100 marginT20" ng-if="!editManagement">
+                    <span>
+                        <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
+                    </span>
+                </div>
+                </div>
+                <div layout="row" layout-align="center center" id="plusButton" ng-click="addNewManagement()" class="secondFont textLightGrey width100" ng-if="editManagement">
+                    <span class="font20">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </span>
+                </div>
+                 
+                <!--<div layout="row" class="marginT10">
+                    <md-button class="md-cancel width100" ng-click="addNewManagement()">Add Management</md-button>
+                    
+                </div>-->
+                </div>
+            </div>
+        
+    </div>
+    
+    <div layout="column" class="mylisting thirdFont textDarkGrey greyBorder width100">
+            <div class="listingHeader marginB20 bold">
+                My Listing
+            </div>
+            <div flex layout="row" class="listingContent">
+                <div layout="column" layout-align="start center" flex="25" id="listingLeft">
+                    <img ng-src="{{listing.logo}}" id="listingLogo"/>
+                
+                </div>
+                <div flex="75" id="listingRight">
+                    <div class="secondFont textDarkGrey bold">
+                        {{listing.name}}
+                    </div>
+                    <div ng-if="listing.location" class="thirdFont textLightGrey">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;{{listing.location.area}}, {{listing.city}}
+                    </div>
+                    <div class="fourthFont textDarkGrey">
+                        {{listing.address}}
+                        <span ng-if="listing.city">, {{listing.city}}</span>
+                        <span ng-if="listing.pincode"> - {{listing.pincode}}</span>
+                        <span ng-if="listing.state">, {{listing.state}}</span>
+                    </div>
+                    
+                    <div layout="row" class="marginT10 width100">
+                        
+                    <div flex="20" layout="row" layout-align="center center" id="upload2" ng-click="edit()" class="secondFont textLightGrey width100">
+                        <span>
+                            <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit Listing
+                        </span>
+                    </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        
+        
+    </div>
+    
+</div>
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="errorDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="danger md-headline">
+                  <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Name & mobile are mandatory for any new management!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="mobileExistDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="danger md-headline">
+                  <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Mobile {{existingManagement.mobile}} already linked to {{existingManagement.name}}. Please add a different mobile.
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div class="saveCancel">
+    <div layout="row" ng-show="editManagement1" layout-align="start center">
+        <div flex ="80">
+            <span>
+            Do you want to save your changes to {{provider.name}}? 
+            </span>
+        </div>
+        <div layout="row" flex = "20">
+            <md-button class="md-green md-small font10 width8" ng-click="saveProvider()">
+            Save
+            </md-button>
+            <!--<md-button class="md-default md-cancel md-small  minwidth10" ng-click="dontsaveChanges()">
+                Don't Save
+            </md-button>-->
+            <md-button class="md-default md-cancel md-small font10 width8" ng-click="dontsaveChanges()">
+                Cancel
+            </md-button>
+        </div>
+        
+    </div>
+</div>
+
+

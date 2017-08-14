@@ -1,0 +1,96 @@
+<style>
+    #filled{
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    #badge{
+        background: #20C39A;
+    }
+    .unselectedName{
+        color: rgba(0,0,0,0.6);
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    .selectedName{
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+</style>
+
+<div class="whiteBackground mainContent" id="filled">
+    <div id="spacer">
+    </div>
+    <div layout="column" layout-align="start start" ng-if="authorized">
+        <div layout="row" layout-align="center center" class="font20 text-primary bold width100">
+            Institutes Assigned to Add Contact Info -  {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{assignedCount}}</span>
+        </div>
+        <div flex layout="row" layout-align="start center" class="width100 greyBottomBorder marginT20 font10 bold">
+            <div flex="5">
+                S. No.
+            </div>
+            <div flex="20">
+                Institute
+            </div>
+            <div flex="10">
+                Created
+            </div>
+            <div flex="10">
+                Deadline
+            </div>
+            <div flex="10">
+                Finished?
+            </div>
+            <div flex="10">
+                Finished on
+            </div>
+            <div flex="35">
+                EB Notes
+            </div>
+        </div>
+        <div flex layout="row" layout-align="start center" ng-repeat="task in assigned | orderBy:['-active','_deadline','_created'] | filter:filterText as filtered" class="width100 greyDashedBottomBorder font10" ng-class="{ pending: task.active }">
+            <div flex="5">
+                {{$index+1}}
+            </div>
+            <div flex="20" class="font12">
+                <a ui-sref="claim({ coachingId:{{'task.institute._id'}} })" target="_blank" id="link">
+                <strong>{{task.institute.name}}</strong>
+                </a>
+            </div>
+            <div flex="10" class="font10">
+                {{task._created | date: "dd-MMM-yy HH:mm"}}
+            </div>
+            <div flex="10" class="font10">
+                {{task._deadline | date: "dd-MMM-yy HH:mm"}}
+            </div>
+            <div flex="10" ng-class="{ pending2: task.active }">
+                {{!task.active}}
+            </div>
+            <div flex="10" class="font10">
+                {{task._finished | date: "dd-MMM-yy HH:mm"}}
+            </div>
+            <div flex="35">
+                <span ng-repeat="note in task.institute.ebNote track by $index">
+                    {{$index + 1}}. {{note.note}} by {{note.user.basic.name}}
+                    <br/>
+                </span>
+            </div>
+            
+        </div>
+        
+        
+    </div>
+    
+    <div layout="column" layout-align="start start" ng-if="!authorized" class="font20 bold">
+        You do not have access to view this information. Login above to try again.
+    </div>
+    <div id="spacer">
+    </div>
+</div>

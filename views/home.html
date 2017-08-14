@@ -1,0 +1,129 @@
+<div align="center">
+    <img src="loader.gif"><br/>
+    Loading please wait..
+
+</div>
+
+
+<!--
+<!doctype html>
+<html>
+<head>
+    <title>EduReport.in</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="h5J2DtsPFc4gqycYUUFLC_i0VvUJuOfVp_AOZaApllQ" />
+    
+    <link href="imgur.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+    <link rel="stylesheet"; href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
+    <script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script> 
+    
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    
+    <script src="//unpkg.com/angular-ui-router/release/angular-ui-router.min.js"></script>
+    
+    <script src="angular-cloudinary.js"></script>
+    <script src="cloudinary-angular.min.js"></script>
+    <script src="ng-file-upload-shim.js"></script>
+    <script src="ng-file-upload.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <style>
+        div.well{
+            opacity: 0.75;
+        }
+        body         { 
+            padding-top:70px; 
+            background-color: #e8f5fc;
+            background-image: url("arabesque.png");
+            /*background-repeat: repeat;*/
+        }
+        em {position: absolute; bottom: 0; right: 0}
+        
+        
+    </style>
+</head>
+<body  ng-app="edureport" ng-cloak >
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">
+              <i class="fa fa-pencil-square-o" aria-hidden="true"></i> {{thisuser._institute.basic.name}}
+          </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#">{{thisuser.firstName}}</a></li>
+                <li><a href="#">Profile</a></li>
+            </ul>
+          <ul class="nav navbar-nav navbar-right">
+              
+              <li>
+                  <img ng-src="{{thisuser._student.account.imageUrl}}" alt="{{thisuser.firstName}}" height="65"/>
+              </li>
+              <li><a href="/logout">Logout</a></li>
+                    
+            </ul>
+          
+        </div>
+      </div>
+    </nav>
+    
+<div class="container" id="MainWrap">
+    <h4>Welcome {{thisuser.firstName}}</h4>
+    
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="well">
+                <p ng-repeat="subject in thisuser._teacher.subjects">
+                <a ui-sref="subject({ subjectId:{{'subject._id'}} })">
+                {{subject._batch.name}} {{subject.name}}
+                </a>
+                </p>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="well">
+            {{thisuser._teacher.basic.firstName}}
+            {{thisuser._teacher.basic.lastName}}
+            {{thisuser._teacher.basic.gender}}
+            {{thisuser._teacher.basic.dob | date}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="well">
+                {{thisuser._student.batch}}
+                <br/>
+                Transport: {{thisuser._student.transportVehicle.driver.name}}
+                <img ng-src="{{thisuser._student.transportVehicle.driver.imageUrl}}" height="65"/>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="well">
+            {{thisuser._student}}
+            </div>
+        </div>
+    </div>
+    
+    <button onclick="document.getElementById('fileUpload').click()">Upload Image</button>
+    <input id="fileUpload" style="visibility: collapse; width: 0px;" type="file" onchange="upload(this.files[0])">
+    <img id="imgsrc" height="100" >
+</div>
+</body>
+</html>
+-->

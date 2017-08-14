@@ -1,0 +1,104 @@
+<div class="container">
+    <md-content flex layout-padding>
+    <!--<h4 class="md-headline text">{{student.basic.firstName}} {{student.basic.lastName}}</h4>-->
+    <div layout="row" layout-xs="column" layout-margin  layout-align="center" >
+        <div  class="panel panel-default" >
+            <div class="panel-heading">
+                <h6 class="md-subhead text-primary">Student Profile</h6>
+            </div>
+            <div class="panel-body">
+                <table ng-table="showprofile" class="table">
+                    <tr>
+                        <td><strong>Name</strong></td>
+                        <td>{{student.basic.firstName}} {{student.basic.lastName}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Profile Pic</strong></td>
+                        <td>
+                            <span ng-if="student.imageUrl">
+                                <img ng-if="!uploadImageUrl" ng-src="{{student.imageUrl}}" height="100">
+                                <img ng-if="uploadImageUrl" ng-src="{{uploadImageUrl}}" height="100">
+                            
+                            </span>
+                            <input type="file" nv-file-select uploader="uploader" class="pull-right btn">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Date of Birth</strong></td>
+                        <td>{{student.basic.dob | date}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gender</strong></td>
+                        <td>{{student.basic.gender}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Registered Mobile</strong>
+                        
+                        </td>
+                        <td>{{student.contact.mobile}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Registered Email</strong></td>
+                        <td>{{student.contact.email}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Address</strong></td>
+                        <td>
+                            {{student.address.street}}<br/>
+                            {{student.address.city}} -
+                            {{student.address.pincode}}
+                        </td>
+                    </tr>
+                </table> 
+            </div>
+        </div>
+        <div  class="panel panel-default" >
+            <div class="panel-heading">
+                <h6 class="md-subhead text-primary">Parent Information</h6>
+            </div>
+            <div class="panel-body">
+                <div ng-repeat="parent in student.parents" flex-gt-sm class="md-primary">
+                    <table ng-table="showparent" class="table">
+                    <tr>
+                        <td><strong>Name</strong></td>
+                        <td>{{parent.basic.firstName}} {{parent.basic.lastName}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Date of Birth</strong></td>
+                        <td>{{parent.basic.dob | date}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gender</strong></td>
+                        <td>{{parent.basic.gender}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Registered Mobile</strong></td>
+                        <td>{{parent.contact.mobile}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Registered Email</strong></td>
+                        <td>{{parent.contact.email}}</td>
+                    </tr>
+                    
+                </table> 
+                </div>
+            </div>
+        </div>
+    </div>
+        
+        
+    <!--<div layout="row" layout-xs="column" layout-margin  layout-align="center" >
+        <div  class="panel panel-default" >
+            <div class="panel-heading">
+                <h6 class="md-subhead text-primary">Utils</h6>
+            </div>
+            <div class="panel-body">
+                <md-button class="md-primary md-raised" ng-click="showPrompt($event)">
+                    Update Password
+                </md-button>
+            </div>
+        </div>
+        
+    </div>-->
+    </md-content>
+</div>

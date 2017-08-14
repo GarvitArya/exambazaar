@@ -1,0 +1,583 @@
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
+<style>
+    #autocompleteLogo{
+        max-height: 35px;
+        max-width: 70px;
+    }
+    .autocomplete li {
+        border-bottom: 1px solid #ccc;
+        height: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        white-space: normal; 
+    }
+    .autocomplete .item-title,  .autocomplete .item-metadata {
+          display: block;
+          line-height: 2; 
+    }
+    
+    #link{
+        color: black;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    
+     #hotTable{
+        overflow: hidden;
+        text-align: left;
+    }
+    #examTagHolder{
+        padding:5px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    #examTagHolder:hover{
+        color: white;
+        
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #existingExamTagHolder{
+        padding:5px;
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px #333333;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+</style>
+
+
+<div class="whiteBackground mainContent padded2" >
+    <div id="spacer">
+    </div>
+    <div layout="column" ng-controller="coachingGroupAutocompleteController as ctrl">
+        <md-autocomplete flex 
+        md-selected-item="ctrl.selectedItem"
+        md-selected-item-change= "ctrl.selectedItemChange(item)"
+        md-search-text="ctrl.searchText"
+        md-items="item in ctrl.querySearch(ctrl.searchText)"
+        md-item-text="item.name"
+        md-delay="300"
+        md-menu-class="autocomplete"
+        placeholder="Search Coaching Group"
+        class="width100">
+            <md-item-template >
+              <span class="item-title font12">
+                  <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                  <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
+              </span>
+              <span class="item-metadata">
+                <span class="item-metastat font10">
+                  {{item.city}}:
+                </span>&nbsp;
+                <span class="item-metastat font10">
+                  {{item.address}}
+                </span>
+              </span>
+            </md-item-template>
+          
+        </md-autocomplete>
+    </div>
+    <div layout="column" class="marginT40 textBlack" ng-if="coachingGroup.groupName">
+        <div layout="row" class="secondFont textBlack  marginB10" ><span class="bold">Coaching Group:</span>&nbsp; {{coachingGroup.groupName}}&nbsp;&nbsp;<span class="badge" id="badge">{{coachingGroupItems.length}}</span>&nbsp;
+        <a ng-click="showSpreadsheetDialog()" ng-if="spreadsheetMode" class="danger">
+            Spreadsheet
+        </a>
+        </div>
+        <div layout="row" class="width100 secondFont textBlack marginB20" ng-if="spreadsheetMode">
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showRenameCoachingDialog()">
+                Rename Coaching/Group
+            </md-button>
+            <!--<md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showRenameGroupDialog()">
+                Rename Group Name
+            </md-button>-->
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showExamDialog()">
+                Add Exams to this Group
+            </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showRemoveExamDialog()">
+                Remove Exams from this Group
+            </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="commonExamsInAll()">
+                Common Exams in this Group
+            </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showLogoDialog()">
+                Set Logo for Group
+            </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showEmailDialog()">
+                Add Email to Group
+            </md-button>
+            <md-button class="md-black md-small font10 tolowercase marginR10" ng-click="showWebsiteDialog()">
+                Add Website to All
+            </md-button>
+        </div>
+        
+        <div layout="row" class="editFont font11 bold greyBottomBorder textBlack">
+            <div flex="5" class="padding1">S.No.</div>
+            <div flex="10" class="padding1">Institute Name</div>
+            <div flex="15" class="padding1">Address</div>
+            <div flex="10" class="padding1">City</div>
+            <div flex="10" class="padding1">State</div>
+            <div flex="5" class="padding1">Pin Code</div>
+            <div flex="10" class="padding1">Logo</div>
+            <div flex="10" class="padding1">Email</div>
+            <div flex="10" class="padding1">Phone</div>
+            <div flex="10" class="padding1">Mobile</div>
+            <div flex="5" class="padding1">Website</div>
+
+        </div>
+        <div layout="row" class="editFont font11 greyBottomBorder textBlack" ng-repeat="thisProvider in coachingGroupItems" ng-if="thisProvider.groupName == coachingGroup.groupName">
+            <div flex="5" class="padding1">{{$index + 1}}</div>
+            <div flex="10" class="padding1">
+                <a ui-sref="claim({ coachingId:{{'thisProvider._id'}} })" target="_blank" id="link">
+                <strong>{{thisProvider.name}}</strong>
+                </a>
+            
+            </div>
+            <div flex="15" class="padding1">{{thisProvider.address}}</div>
+            <div flex="10" class="padding1">{{thisProvider.city}}</div>
+            <div flex="10" class="padding1">{{thisProvider.state}}</div>
+            <div flex="5" class="padding1">{{thisProvider.pincode}}</div>
+            <div flex="10" class="padding1">
+                <img ng-src="{{thisProvider.logo}}" id="autocompleteLogo"/>
+            </div>
+            <div flex="10" class="padding1">
+                <span ng-repeat="email in thisProvider.email">
+                    Email
+                    <md-tooltip>{{email}}</md-tooltip>
+                    <span ng-if="!last">,&nbsp;</span>
+                </span>
+            </div>
+            <div flex="10" class="padding1">
+                <span ng-repeat="phone in thisProvider.phone">
+                    {{phone}}<span ng-if="!last">,&nbsp;</span>
+                </span>
+            </div>
+            <div flex="10" class="padding1">
+                <span ng-repeat="mobile in thisProvider.mobile">
+                    {{mobile}}<span ng-if="!last">,&nbsp;</span>
+                </span>
+            </div>
+            <div flex="5" class="padding1">
+            <a ng-href="{{thisProvider.website[0]}}" target="_blank" ng-if="thisProvider.website.length > 0 && thisProvider.website[0] !=''" id="link">
+                <md-tooltip>{{thisProvider.website[0]}}</md-tooltip>
+                Url
+            </a></div>
+            
+        </div>
+    </div>
+        
+        
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="spreadsheetDialog">
+      <md-dialog class="offer-dialog whiteBackground">
+          
+          <div layout="column" layout-align="start center" class="padding20 width100">
+              <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange, stretchH: 'all', wordWrap:'true', renderAllRows: 'true'}" context-menu  datarows="spreadSheetCoachings" height="400" id="hotTable" class="width90">
+                  <hot-column data="sno" title="'S. No.'"  width="40"></hot-column>
+                  <hot-column data="_id" title="'EB Id'"  width="150"></hot-column>
+                  <hot-column data="name" title="'Name'"  width="200"></hot-column>
+                  <hot-column data="address" title="'Address'"  width="200"></hot-column>
+                  <hot-column data="city" title="'City'"  width="80"></hot-column>
+                  <hot-column data="state" title="'State'"  width="80"></hot-column>
+                  <hot-column data="pincode" title="'Pincode'"  width="80"></hot-column>
+                  <hot-column data="logo" title="'Logo'"  width="80"></hot-column>
+                  <hot-column data="email" title="'Email'"  width="120"></hot-column>
+                  <hot-column data="phone" title="'Phone'"  width="120"></hot-column>
+                  <hot-column data="mobile" title="'Mobile'"  width="120"></hot-column>
+                  <hot-column data="website" title="'Website'"  width="120"></hot-column>
+              </hot-table>
+                      
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="renameCoachingDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Rename Coaching Centre Name & Group Name of all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
+                        Rename Coaching Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginLR20 marginT20 blogFont">
+                Rename Coaching Name
+            </div>
+            <div layout="row" layout-align="center center" class="width100 marginLR20">
+                <div flex="40" layout="row" layout-align="start start" class="">
+                    <div>
+                        {{spreadSheetCoachings[1].name}}
+                    
+                    </div>
+                </div>
+                <div flex="40" layout="row" layout-align="start start" >
+                    <div class="width80">
+                        <input type="text" class="width100" ng-model="newName"  placeholder="{{spreadSheetCoachings[1].name}}">
+                    </div>
+                </div>
+                <div flex="20" layout="row" layout-align="start start" >
+                    <md-button class="md-black md-small font10 tolowercase" ng-click="renameCoachingConfirm()">
+                    Rename Coaching
+                </md-button>
+                </div>
+            </div> 
+          
+            
+            <div layout="row" layout-align="start center" class="width100 marginLR20 marginT40 blogFont">
+                Rename Coaching Group Name
+            </div>
+            <div layout="row" layout-align="center center" class="width100 marginLR20">
+                <div flex="40" layout="row" layout-align="start start" class="">
+                    <div>
+                        {{spreadSheetCoachings[1].groupName}}
+                    
+                    </div>
+                </div>
+                <div flex="40" layout="row" layout-align="start start" >
+                    <div class="width80">
+                        <input type="text" class="width100" ng-model="newGroupName"  placeholder="{{spreadSheetCoachings[1].name}}">
+                    </div>
+                </div>
+                <div flex="20" layout="row" layout-align="start start" >
+                    <md-button class="md-black md-small font10 tolowercase" ng-click="renameGroupNameConfirm()">
+                    Rename Group Name
+                </md-button>
+                </div>
+            </div>   
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="examDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Mark all Exams you want to be added to all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
+                        Marking Exams Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                <!--<div layout="row" layout-align="start start"  class="width100 marginB10 bold">
+                    <div flex="15">
+                        Stream
+                    </div>
+                    <div flex="85">
+                        Select Exams
+                    </div>
+                </div>-->
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
+                    <div flex="15">
+                        {{thisStream.displayname}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+                            <span class="badge" id="examTagHolder" ng-if="addExamsArray.indexOf(thisExam._id) == -1" ng-click="addExam(addExamsArray,thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="addExamsArray.indexOf(thisExam._id) != -1" ng-click="removeExam(addExamsArray,thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="addExamConfirm()">
+                    Add Exams to Group
+                </md-button>
+            </div>  
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="logoDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Set Logo for all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
+                        Setting Logo Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                
+                <div layout="row" layout-align="center center" class="width100 marginLR20">
+                    <div flex="40" layout="row" layout-align="start start" class="">
+                        <div>
+                            Logo
+
+                        </div>
+                    </div>
+                    <div flex="60" layout="row" layout-align="start start" >
+                        <div class="width80">
+                            <input type="text" class="width100" ng-model="newLogo"  placeholder="{{spreadSheetCoachings[1].logo}}">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="setLogoConfirm()">
+                    Set Logo for Group
+                </md-button>
+            </div>  
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="emailDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Add Email to all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
+                        Setting Email Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                
+                <div layout="row" layout-align="center center" class="width100 marginLR20">
+                    <div flex="40" layout="row" layout-align="start start" class="">
+                        <div>
+                            Email
+                        </div>
+                    </div>
+                    <div flex="60" layout="row" layout-align="start start" >
+                        <div class="width80">
+                            <input type="text" class="width100" ng-model="newEmail"  placeholder="email@example.com">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="setEmailConfirm()">
+                    Set Email for Group
+                </md-button>
+            </div>  
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="websiteDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Add Website to all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
+                        Setting Website Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                
+                <div layout="row" layout-align="center center" class="width100 marginLR20">
+                    <div flex="40" layout="row" layout-align="start start" class="">
+                        <div>
+                            Website
+                        </div>
+                    </div>
+                    <div flex="60" layout="row" layout-align="start start" >
+                        <div class="width80">
+                            <input type="text" class="width100" ng-model="newWebsite"  placeholder="www.example.com">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="row" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="setWebsiteConfirm()">
+                    Set Website for Group
+                </md-button>
+            </div>  
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="removeExamDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Mark all Exams you want to be removed from all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
+                        Marking Exams Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                <!--<div layout="row" layout-align="start start"  class="width100 marginB10 bold">
+                    <div flex="15">
+                        Stream
+                    </div>
+                    <div flex="85">
+                        Select Exams
+                    </div>
+                </div>-->
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
+                    <div flex="15">
+                        {{thisStream.displayname}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+                            <span class="badge" id="examTagHolder" ng-if="removeExamsArray.indexOf(thisExam._id) == -1" ng-click="addExam(removeExamsArray,thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="removeExamsArray.indexOf(thisExam._id) != -1" ng-click="removeExam(removeExamsArray,thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="column" layout-align="center center" class="width100">
+                <md-button class="md-black md-small font10 tolowercase width50" ng-click="removeExamConfirm()">
+                    Remove Exams from Group
+                </md-button>
+            </div>  
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="commonExamDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Common exams in all {{spreadSheetCoachings.length -1}} group institutes!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small font10 tolowercase" ng-click="closeDialog()">
+                        Common Exams Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
+                    <div flex="15">
+                        {{thisStream.displayname}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+                            <span class="badge" id="examTagHolder" ng-if="commonExamIds.indexOf(thisExam._id) == -1">
+                                {{thisExam.displayname}}
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="commonExamIds.indexOf(thisExam._id) != -1">
+                                {{thisExam.displayname}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>

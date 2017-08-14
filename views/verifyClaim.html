@@ -1,0 +1,206 @@
+<style>
+    .badge{
+        background: #20C39A;
+        color: white;
+        font-weight: bold;
+    }
+    .sectionBorder{
+        border: 1px solid #ccc;
+        padding-bottom: 20px;
+    }
+    .sectionHeader{
+        background: #20C39A;
+        color: white;
+        margin-bottom: 5px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .sectionText{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    #mainSection{
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    #twoSections{
+        min-height: 80vh;
+    }
+    #otpInput{
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ccc;
+        border-radius: 1px;
+        margin-left: 10px;
+    }
+    #passwordInput{
+        background-color : #f7f7f7;
+        font-weight: 100;
+        font-size: 12px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+    }
+    #passwordRow{
+        padding-bottom: 10px;
+    }
+    #doneButton{
+        height: 80%;
+        width: 80%;
+        margin: 10px;
+        margin-left: 20px;
+        
+    }
+</style>
+
+<div id="spacer" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<!-- Claim the page section -->
+<div layout="column" layout-xs="column" class="whiteBackground mainContent" id="mainSection">
+    <div flex layout="row">
+        
+        <div flex="50" layout="column" layout-align="center center" class="sectionBorder" id="twoSections">
+            <span ng-if="provider.logo">
+            <img ng-src="{{provider.logo}}" id="claimLogo"/>
+            </span>
+
+            <span class="md-title text-center bold">
+            {{provider.name}}
+            </span>
+            <span class="text-center">
+            {{provider.address}}
+            </span>
+            <span class="text-center">
+            {{provider.city}}
+            <span ng-if="provider.pincode">
+            - {{provider.pincode}}
+            </span>
+            </span>
+            <span ng-if="provider.phone.length > 0" class="text-center font10 marginT10">
+              Phone:&nbsp;
+              <span ng-repeat="phone in provider.phone">
+                {{phone}}
+                <span ng-if="!$last">
+                  ,&nbsp;
+                </span>
+              </span>
+            </span>
+            <span ng-if="provider.mobile.length > 0" class="text-center font10">
+              Mobile:&nbsp;
+              <span ng-repeat="mobile in provider.mobile">
+                {{mobile}}
+                <span ng-if="!$last">
+                  ,&nbsp;
+                </span>
+              </span>
+            </span>
+        
+        </div>
+        <div layout="column" layout-align="start center" flex="50" id="mainSection">
+            <div flex layout="column" layout-align="start center" id="twoSections" class="width100">
+                <div flex="30" layout="column" layout-align="start center" class="width100 sectionBorder" ng-if="currStep>=1" >
+                    <div layout="row" layout-align="start center" class="sectionHeader font16 width100">
+                        <div class="width100">
+                            1. Verify Mobile
+                            <md-tooltip>You will receive an OTP (one time password) on the mobile you select.</md-tooltip>
+                        </div>
+                        
+                    </div>
+                    <div flex layout="column" layout-align="start start" class="sectionText width100">
+                    <div class="width100 font12">
+                        In order to claim and edit this institute, you need to verify your identity by Mobile OTP. <!--We have <span ng-if="provider.mobile.length>0">{{provider.mobile.length}}</span><span ng-if="provider.mobile.length==0">no</span> mobile<span ng-if="provider.mobile.length>1">s</span> in our database against this listing. <span ng-if="provider.mobile.length>0"></span>-->
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100">
+                    <div flex="30" class="bold">
+                        Select Mobile
+                    </div>
+                    <div flex="70" layout="row" layout-align="start center" >
+                        <md-input-container class="width75 text-primary">
+                          <md-select ng-model="verifyMobile"  placeholder="Select Mobile">
+                              
+                            <md-option ng-value="mobile" ng-repeat="mobile in provider.mobile" class="text-primary" ng-click="update(mobile)">
+                              {{mobile}}
+                            </md-option>
+                          </md-select>
+                        </md-input-container>
+                        <md-button  class="md-green md-small font10" ng-click="sendOTP()" class="width25" ng-if="currStep==1">Send OTP</md-button>
+                    </div>
+                    </div>
+                    
+                    </div>
+                </div>
+                <div flex="5">
+                </div>
+                <div flex="20" layout="column" layout-align="start center" class="width100 sectionBorder">
+                <div class="width100 height100">
+                <div layout="row" layout-align="start center" class="sectionHeader font16 width100">
+                    <div class="width100">
+                        2. Enter OTP
+                        <md-tooltip>Enter the OTP received on your mobile {{verifyMobile}}</md-tooltip>
+                    </div>
+                </div>
+                <div flex ng-if="currStep >= 2" layout="row" layout-align="start center" class="sectionText width100 height100">
+                    
+                    <input type="text" class="form-control text-center" ng-model="enterOTP[0]" ng-minlength="1" ng-maxlength="1" id="otpInput" focus-me="currStep==2" only-digits limit-to="1" move-next-on-maxlength>
+                    <input type="text" class="form-control text-center" ng-model="enterOTP[1]" ng-minlength="1" ng-maxlength="1" id="otpInput" only-digits limit-to="1" move-next-on-maxlength>
+                    <input type="text" class="form-control text-center" ng-model="enterOTP[2]" ng-minlength="1" ng-maxlength="1" id="otpInput" only-digits limit-to="1" move-next-on-maxlength>
+                    <input type="text" class="form-control text-center" ng-model="enterOTP[3]" ng-minlength="1" ng-maxlength="1" id="otpInput" only-digits limit-to="1" move-next-on-maxlength>
+                    <md-button  class="md-green md-small font10" ng-click="verifyOTP()" class="width25"  ng-disabled="currStep<2" ng-if="incorrectOTP">Verify</md-button>
+                    
+                    <span class="danger" ng-if="enterOTP[0] && enterOTP[1] && enterOTP[2] && enterOTP[3] && incorrectOTP">
+                        Incorrect OTP, please try again!
+                    </span>
+                </div>
+                
+                </div>
+                </div>
+                <div flex="5">
+                </div>
+                <div flex="40" layout="column" layout-align="start center" class="width100 sectionBorder">
+                    <div layout="column" layout-align="start center" class="width100 height100"  >
+                    <div layout="row" layout-align="start center" class="sectionHeader font16 width100">
+                        <div class="width100">
+                            3. Choose Password
+                            <md-tooltip>Tell us your name and choose a password for your account</md-tooltip>
+                        </div>
+                        
+                    </div>
+                    <div flex ng-if="currStep>=3" layout="row" layout-align="start center" class="sectionText width100">
+                    <div flex="70" class="bold">
+                        <div layout="column" class="width100 height100">
+                            <div layout="row" layout-align="center center" id="passwordRow">
+                                <div flex>
+                                    Password
+                                </div>
+                                <div flex>
+                                    <input type="password" placeholder="Password" class="form-control text-center width100 text-left" focus-me="currStep==3" ng-model="userPassword" id="passwordInput" ng-change="updateUserPassword(userPassword)">
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="center center" id="passwordRow">
+                                <div flex>
+                                    Verify Password
+                                </div>
+                                <div flex>
+                                    <input type="password" placeholder="Verify Password" class="form-control text-center width100 text-left" ng-model="verifyPassword"  id="passwordInput" ng-change="updateVerifyPassword(verifyPassword)">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div flex="30" layout="row" layout-align="start end" class=" height100">
+                        
+                        <md-button class="md-raised md-primary md-small font12" ng-click="createProvider()" id="doneButton" ng-disabled="userPassword=='' || userPassword != verifyPassword">I am Done</md-button>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>   
+    </div>
+    
+ </div>
+

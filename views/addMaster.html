@@ -1,0 +1,56 @@
+<div class="container">
+    <div id="spacer">
+    </div>
+    <h4>Add Exam Bazaar SuperUsers</h4>
+    
+    <div class="row">
+
+    <div class="col-md-12" id="addMasterForm">
+    <md-content flex layout-padding>
+        <small>
+        <md-subheader class="md-primary">Super User Information</md-subheader>
+        <form name="masterForm" >
+        <div layout="column" >
+            <div layout="row">
+                
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Name</label>
+                    <input required ng-model="master.basic.name">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>  
+                    <md-select required ng-model="master.basic.gender" placeholder="Gender">
+                        <md-option ng-repeat="gender in genders" ng-value="gender" >{{gender}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>   
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Mobile <small>{{master.contact.mobile.length}}/10</small></label>
+                    <input required ng-model="master.contact.mobile" ng-minlength="10" ng-maxlength="10">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Email</label>
+                    <input type="Email" ng-model="master.contact.email">
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Password</label>
+                    <input required ng-model="master.password">
+                </md-input-container>
+            </div>
+            
+            
+            <md-button class="md-raised md-primary" ng-click="addMaster()" ng-disabled="masterForm.$invalid">Add Master</md-button>
+
+    </div>
+    </form>
+    </small>
+    </md-content>
+    </div>
+    </div>
+</div>
+<div>
+    {{ServerResponse}}
+</div>

@@ -1,0 +1,122 @@
+<div class="container">
+    <h4>{{institute.basic.name}} - Add Transport Vehicle</h4>
+    
+    <div class="row">
+    <div class="col-md-4">
+        <md-content flex layout-padding>
+        <md-subheader class="md-primary">Transport Vehicles</md-subheader>
+            <a ng-repeat = "transportVehicle in institute.transportVehicles">
+                <small>
+                    {{transportVehicle.owner.name}}
+                    {{transportVehicle.driver.name}}
+                </small><br/></a>
+        </md-content>
+    </div>
+    <div class="col-md-8" id="addTransportVehicleForm">
+        
+    <md-content flex layout-padding>
+        <small>
+        <md-subheader class="md-primary">Transport Vehicle Information {{TransportVehicle._id}}</md-subheader>
+        <form name="TransportVehicleForm" >
+        <div layout="column" >
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>  
+                    <md-select ng-model="TransportVehicle.type" placeholder="Type">
+                        <md-option ng-repeat="TransportVehicleType in TransportVehicleTypes" ng-value="TransportVehicleType" >{{TransportVehicleType}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Registration Number</label>
+                    <input required ng-model="TransportVehicle.registration">
+                </md-input-container>
+            </div>
+            <md-subheader class="md-primary">Owner Information</md-subheader>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Name</label>
+                    <input required ng-model="TransportVehicle.owner.name">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Mobile</label>
+                    <input required ng-model="TransportVehicle.owner.mobile">
+                </md-input-container>
+            </div>   
+            <!--<div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                <label for="profilepic">Add Photo</label><br>
+                <button onclick="document.getElementById('fileUpload1').click()">Upload Image</button>
+                <input id="fileUpload1" style="visibility: collapse; width: 0px;" type="file" onchange="uploadTransportVehicleOwnerProfilePic(this.files[0])">
+                <img id="imgsrc" height="100" >
+            </md-input-container>
+            </div>-->
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Address - Street</label>
+                    <input required ng-model="TransportVehicle.owner.address.street">
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>City</label>
+                    <input required ng-model="TransportVehicle.owner.address.city">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Pin Code</label>
+                    <input required ng-model="TransportVehicle.owner.address.pincode">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Landline</label>
+                    <input ng-model="TransportVehicle.owner.address.tel">
+                </md-input-container>
+            </div>
+            <md-subheader class="md-primary">Driver Information</md-subheader>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Name</label>
+                    <input required ng-model="TransportVehicle.driver.name">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Mobile</label>
+                    <input required ng-model="TransportVehicle.driver.mobile">
+                </md-input-container>
+            </div>   
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                <label for="profilepic">Add Photo</label><br>
+                <button onclick="document.getElementById('fileUpload2').click()">Upload Image</button>
+                <input id="fileUpload2" style="visibility: collapse; width: 0px;" type="file" onchange="uploadTransportVehicleDriverProfilePic(this.files[0])">
+                <img id="imgsrc" height="100" >
+            </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Address - Street</label>
+                    <input required ng-model="TransportVehicle.driver.address.street">
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>City</label>
+                    <input required ng-model="TransportVehicle.driver.address.city">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Pin Code</label>
+                    <input required ng-model="TransportVehicle.driver.address.pincode">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Landline</label>
+                    <input ng-model="TransportVehicle.driver.address.tel">
+                </md-input-container>
+            </div>
+            <md-button class="md-raised md-primary" ng-click="addTransportVehicle()" ng-disabled="TransportVehicleForm.$invalid">Add Transport Vehicle</md-button>
+        </div>
+    </form>
+    </small>
+    </md-content>
+    </div>
+    </div>
+</div>
+<div>
+    {{ServerResponse}}
+</div>

@@ -1,0 +1,74 @@
+<style>
+    #subject{
+        border-style: solid;
+        border-color: #99ccff;
+        min-height: 100px;
+        width: 100%;
+        display: block;
+        text-align: center;
+        padding: 10px;
+        margin: 10px;
+    }
+    .top-buffer { margin-top:20px; }
+    .bottom-buffer { margin-bottom:20px; }
+    .q1{
+        fill: #FFB6C1;
+    }
+    .q2{
+        fill: #BDFCC9;
+    }
+    .q3{
+        fill: #111;
+    }
+    .flexbox {
+     display:flex;
+     justify-content:center;
+     align-items: center;
+     flex-flow: column;
+    }
+</style>
+
+
+<div class="container">
+<md-divider></md-divider>
+    <div class ="row hidden-md hidden-lg">
+        <div layout="row" layout-align="center center">
+            <small>
+                <a ui-sref="student({ studentId:{{'student._id'}} })">Main</a> | 
+                <a ui-sref="student-attendance({ studentId:{{'student._id'}} })">Attendance</a> | 
+                <a ui-sref="student-subjects({ studentId:{{'student._id'}} })">Subjects</a> | 
+                <a ui-sref="student-class({ studentId:{{'student._id'}} })">Class</a> | 
+                <a ui-sref="student-profile({ studentId:{{'student._id'}} })">Profile</a>
+            </small>
+        </div>
+    </div>
+    <md-divider></md-divider>
+<div class="row top-buffer" align="center">
+    <div layout="row" layout-align="center center">
+        <h6 class="md-subhead text-primary">{{student.basic.firstName}}'s Attendance</h6>
+    </div>
+    <div ng-show="showButtons" layout="row" layout-align="center center">
+        <md-button id="previous-sm" >
+            <i class="glyphicon glyphicon-chevron-left" aria-hidden="true"></i>    
+        </md-button>
+        <md-button  id="next-sm" >
+            <i class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>       
+        </md-button>
+    </div>
+    <div layout="row" layout-align="center center">
+        <div class="hidden-xs hidden-sm col-md-1 ">
+            <md-button id="previous-lg" >
+            <i class="glyphicon glyphicon-chevron-left" aria-hidden="true"></i>    
+            </md-button>
+        </div>
+
+        <div class="col-xs-12 col-md-10" id="cal-heatmap"></div>
+        <div class="hidden-xs hidden-sm col-md-1">
+            <md-button  id="next-lg" >
+            <i class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>       
+            </md-button>
+        </div>
+    </div> 
+    <md-divider></md-divider>
+</div>
+</div>

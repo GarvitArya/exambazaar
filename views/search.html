@@ -1,0 +1,57 @@
+<style>
+    
+    md-autocomplete{
+        background-color: #F5F5F5;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    
+     
+    
+</style>
+
+
+<div class="whiteBackground mainContent padded2" >
+    <div id="spacer">
+    </div>
+    <div layout="column" ng-controller="autocompleteController as ctrl">
+        <md-autocomplete flex 
+        md-selected-item="ctrl.selectedItem"
+        md-selected-item-change= "ctrl.selectedItemChange(item)"
+        md-search-text="ctrl.searchText"
+        md-items="item in ctrl.querySearch(ctrl.searchText)"
+        md-item-text="item.name"
+        md-delay="300"
+        md-menu-class="autocomplete"
+        placeholder="Search for Coaching Institutes"
+        class="width100 ">
+            <md-item-template >
+              <span class="item-title font12">
+                  <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
+                  <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo"/>
+              </span>
+              <span class="item-metadata">
+                <span class="item-metastat font10">
+                  {{item.city}}:
+                </span>&nbsp;
+                <span class="item-metastat font10">
+                  {{item.address}}
+                </span>
+              </span>
+            </md-item-template>
+          
+        </md-autocomplete>
+    </div>
+    
+    
+    
+</div>

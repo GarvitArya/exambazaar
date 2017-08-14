@@ -1,0 +1,110 @@
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
+<style>
+    .md-block{
+        padding: 10px;
+        border: 1px solid #ccc; 
+    }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    
+    #mediaTypeContainer{
+        background: white;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+    #distinctTypeContainer{
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+<div class="container">
+    <div id="spacer1">
+    </div>
+    <div class="row top-buffer">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-repeat="mediaType in mediaTypes" id="mediaTypeContainer">
+            <div class="row text-center">
+                <h4 class="text-primary">
+                    {{mediaType.mediaType | uppercase}}
+                </h4>
+            </div>
+            <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4 text-center" ng-repeat="distinctType in mediaType.mediaTypeAndTags.distinctTypes" id="distinctTypeContainer">
+                <strong>{{distinctType | uppercase}}</strong><br/>
+                <span class="badge" ng-repeat="existingMediaTag in mediaType.mediaTypeAndTags.mediaTypeTags" ng-if="existingMediaTag.type == distinctType"><small>
+                <a ng-click="setMediaTag(existingMediaTag)" id="badgeLink"> {{existingMediaTag.subType}}</a>
+                </small></span>
+            </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <md-divider></md-divider>
+    <div ng-if="!bulkAddMode" layout="column" layout-margin layout-padding>
+    <h6 class="text-primary md-title">Add Location
+    <md-button class="md-raised md-primary" ng-click="setBulkAddMode()">Bulk Add Mode</md-button>
+    </h6>
+    <div class="col-md-12" id="addMasterForm">
+        <md-content flex layout-padding>
+            <form name="mediaTagForm" >
+            <div layout="column" >
+                <div layout="column">
+
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Media</label>
+                        <input required ng-model="mediaTag.media">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Type</label>
+                        <input required ng-model="mediaTag.type">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Sub Type</label>
+                        <input required ng-model="mediaTag.subType">
+                    </md-input-container>
+                    
+                </div>   
+
+                <md-button class="md-raised md-primary" ng-click="addMediaTag()" ng-disabled="mediaTagForm.$invalid">Add/Save Media Tag</md-button>
+
+            </div>
+        </form>
+        </md-content>
+        </div>
+    </div>
+
+    <div ng-if="bulkAddMode" layout="column" layout-margin layout-padding>
+    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange}"
+           row-headers="false"
+           min-spare-rows="5"
+           datarows="newmediaTags"
+           >
+        <hot-column data="media" title="'Media <br/>(eg. Image, Video)'"></hot-column>
+        <hot-column data="type" title="'Type <br/>(eg. Teaching Methodology)'"></hot-column>
+        <hot-column data="subType" title="'Sub Type <br/>(eg. Classroom)'"></hot-column>
+    </hot-table>
+        <md-button class="md-raised md-primary" ng-click="addMediaTags()">Add Media Tags</md-button>
+    </div>
+    
+</div>
+<div>
+</div>

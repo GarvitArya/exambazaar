@@ -1,0 +1,96 @@
+<link rel="stylesheet" media="screen" href="handsontable.full.css">
+<style>
+    .md-block{
+        padding: 10px;
+        border: 1px solid #ccc; 
+    }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    .sendingTag{
+        background: green;
+    }
+</style>
+<div class="container">
+    <div id="spacer">
+    </div>
+    <div layout="row" layout-wrap>
+        <div ng-repeat="subscriber in subscribersList " class="paddingR5 font8 narrowLine badge unselectedTag" ng-class="{selectedTag: subscriber.emailSent.length > 0 || subscriber.smsSent.length > 0, sendingTag: selectedBackground(subscriber)}" ng-click="setUser(subscriber)">
+            {{subscriber.name}}<i ng-if="subscriber.emailSent.length > 0 || subscriber.smsSent.length > 0" class="fa fa-check-circle" aria-hidden="true"></i>
+        </div>
+    </div>
+    
+    <md-divider></md-divider>
+    
+    <!--<div ng-if="!bulkAddMode" layout="column" layout-margin layout-padding>
+    <h6 class="text-primary md-title">Add Subscriber
+    <md-button class="md-raised md-primary" ng-click="setBulkAddMode()">Bulk Add Mode</md-button>
+    </h6>
+    <div class="col-md-12" id="addMasterForm">
+        <md-content flex layout-padding>
+            <form name="locationForm" >
+            <div layout="column" >
+                <div layout="column">
+
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Location City</label>
+                        <input required ng-model="location.city">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Location Area</label>
+                        <input required ng-model="location.area">
+                    </md-input-container>
+                    
+                </div>   
+
+                <md-button class="md-raised md-primary" ng-click="addLocation()" ng-disabled="locationForm.$invalid">Add/Save Location</md-button>
+
+            </div>
+        </form>
+        </md-content>
+        </div>
+    </div>-->
+    <div layout="column" layout-margin layout-padding>
+    <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange}"
+           row-headers="false"
+           min-spare-rows="5"
+           datarows="newSubscribers"
+           >
+        <hot-column data="name" width="200" title="'Name'"></hot-column>
+        <hot-column data="email" width="200"  title="'Email'"></hot-column>
+        <hot-column data="mobile" width="200"  title="'Mobile'"></hot-column>
+    </hot-table>
+    <md-button class="md-small md-green2" ng-click="addSubscribers()">Add Subscribers</md-button>
+    </div>
+    
+    <div layout="column" layout-margin layout-padding>
+    <div>
+        {{selectedUser.length}}
+    </div>
+    <div>
+        {{selectedUser}}    
+    </div>
+    
+    </div>
+    <div class="rightMidButton">
+        <md-button class="md-small md-danger" ng-click="sendReviewInvite()">Invite {{selectedUser.length}} Subscribers</md-button>
+    </div>
+</div>
+<div>
+</div>

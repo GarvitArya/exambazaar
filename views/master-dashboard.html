@@ -1,0 +1,812 @@
+<style>
+    #instituteInput{
+        background-color : #f7f7f7;
+        font-weight: 100;
+        font-size: 12px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+    }
+    #assignTask{
+        margin-bottom: 40px;
+    }
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    #badge{
+        background: #20C39A;
+    }
+    .noEmail{
+        border: 1px solid red;
+    }
+    #providerBox{
+        min-height: 5vh;
+        background-color: white;
+        box-shadow: 0 0 10px lightgray;
+    }
+    #logo{
+        width: 80px;
+    }
+    .todayDiv{
+        background-color: #D7EBBA;
+    }
+</style>
+<div class="container">
+    <div id="spacer1">
+    </div>
+    <div class="row">
+        <!--<h6 class="text-primary">Dashboard</h6>-->
+        <div layout="row" layout-xs="column" layout-margin  layout-align="center" >
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Users</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <div>
+                            <font size="10" class="text-primary" >{{usersCount}}</font>
+                        </div>
+                        <div>
+                            <strong>Verfied:</strong><br/>
+                            <font size="10" class="text-primary" >{{verifiedUsersCount}}</font>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Coaching Institutes</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{coachingCount}}</font>
+                    </div>
+                    
+                    <div layout="column" layout-align="center">
+                        <span>Saved: {{coachingSavedCount}}</span>
+                        <span>Filled by Interns: {{filledCount}}</span>
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Students</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{studentCount}}</font>
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Interns</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{internList.length}}</font>
+                    </div>
+                    <div layout-align="center">
+                        <strong>Due Deadline:</strong><br/>
+                        <font size="10" class="text-primary" >{{fillsDue}}</font>
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Reviews</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout-align="center">
+                        <font size="10" class="text-primary" >{{reviewsCount}}</font>
+                    </div>
+                    <div layout-align="center">
+                        <strong>Active:</strong><br/>
+                        <font size="10" class="text-primary" >{{couponsCount}}</font>
+                    </div>
+                    <div layout-align="center">
+                        <strong>Issued:</strong><br/>
+                        <font size="10" class="text-primary" >{{issuedcouponsCount}}</font>
+                    </div>
+                </div>
+            </div>
+            <div  class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Views (GMT)</strong>
+                </div>
+                <div class="panel-body">
+                    <div layout="column" layout-align="start start" class="font12">
+                        <span>
+                            Today:  {{masterViewSummary.today}}
+                        </span>
+                        <span>
+                            Yesterday:  {{masterViewSummary.yesterday}}
+                        </span>
+                        <span>
+                            Last 7 days:  {{masterViewSummary.week}}
+                        </span>
+                        <span>
+                            Total:  {{masterViewSummary.total}}
+                        </span>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <md-divider></md-divider>
+        
+    </div>
+   <div>
+        <md-button  class="md-green md-small font10" ng-click="couponDatabaseEdit()" class="width25">Coupon Database Service</md-button>
+    </div>
+    <div class="row whiteBackground greyBorder" id="assignTask">
+        <div layout="row" layout-xs="column" layout-margin  layout-align="center" class="font20">
+            Assign CI Claim Task
+        </div>
+        <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
+            <div flex="40" layout="row" layout-align="start center">
+                <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left" ng-model="instituteInput" id="instituteInput" >
+            </div>
+            <div flex="20" layout="row" layout-align="start center">
+                <md-datepicker ng-model="ciDeadline" md-placeholder="Set Deadline"></md-datepicker>
+            </div>
+            <div flex="40" layout="row" layout-align="start center">
+                <md-input-container class="width75 text-primary">
+                  <md-select ng-model="ciIntern"  placeholder="Select Intern">
+
+                    <md-option ng-value="intern._id" ng-repeat="intern in activeInternList | orderBy: 'basic.name'" class="text-primary" ng-click="update(intern)">
+                      {{intern.basic.name}}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+                <md-button  class="md-green md-small font10" ng-click="assignCIFill()" class="width25">Assign</md-button>
+            </div>
+        </div>
+        <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
+            <span ng-if="fetching">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </span>
+            <span ng-if="prevFilledLength > 0" class="danger">
+                {{assignGroup}}: Another institute from this group has been filled before! Check before assigning.
+            </span>
+            <span ng-if="prevFilledLength == 0" class="text-primary bold">
+                {{assignGroup}}: Go ahead, assign it to an intern!
+            </span>
+            <span ng-if="assignError" class="danger">
+                Something went wrong!
+            </span>
+        </div>
+    </div>
+    <div class="row whiteBackground greyBorder" id="assignTask">
+        <div layout="column"   layout-align="center center" class="font10">
+            <span class="top-buffer">
+                <span class="font20">Assigned Filling Tasks</span>&nbsp;<span class="badge" id="badge">{{fillsAssigned}}</span>
+                <br/>
+                <span class="font20">Due Deadline</span>&nbsp;<span class="badge" id="badge">{{fillsDue}}</span>
+            </span>
+            <div flex layout="row" class="width100">
+                <div flex="50" layout="column" class="font12 padded2">
+                    <span class="secondFont bold">
+                    Intern Roaster
+                    </span>
+                <div layout="column">
+                    <div flex layout="row" class="width100">
+                        <div flex="40">
+                            Name
+                        </div>
+                        <div flex="15">
+                            Assigned
+                        </div>
+                        <div flex="15">
+                            Due
+                        </div>
+                        <div flex="15">
+                            Completed
+                        </div>
+                        <div flex="15">
+                            Timeline
+                        </div>
+                    </div>
+                    
+                    <div ng-repeat="due in internDueList | orderBy: '-done'" ng-if="due.intern.active" flex layout="row" class="width100">
+                        <div flex="40">
+                            {{due.intern.basic.name}}
+                        </div>
+                        <div flex="15">
+                            {{due.assigned}}
+                        </div>
+                        <div flex="15">
+                            {{due.due}}
+                        </div>
+                        <div flex="15">
+                            {{due.done}}
+                        </div>
+                        <div flex="15">
+                        <span ng-click="getInternAssigned(due)">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        </span>
+                        
+                        </div>
+                    </div>
+                    
+                    </div>
+                </div>
+                <div flex="50" layout="column"  class="font12 padded2">
+                    <span class="secondFont bold">
+                    Marked as Done Yesterday (after {{yesterday | date: "dd-MMM-yy HH:mm"}})<span class="badge" id="badge">{{yesterdayTasks.length}}</span>
+                    </span>
+                    <div ng-repeat="yesterdayTask in yesterdayTasks | orderBy:'_finished'">
+                        <a ui-sref="claim({ coachingId:{{'yesterdayTask.institute._id'}} })" target="_blank" id="link">
+                        <strong>{{yesterdayTask.institute.name}}</strong>
+                        </a>
+                         by 
+                        {{yesterdayTask.user.basic.name}} on {{yesterdayTask._finished | date: "dd-MMM-yy HH:mm"}}
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div flex layout="row" class="width100 greyDashedBottomBorder bold">
+                
+                <div layout="column" layout="center center" flex="5">S. No.</div>
+                <div layout="column" layout="center center" flex="10">Created on</div>
+                <div layout="column" layout="center center" flex="10">Deadline</div>
+                <div layout="column" layout="center center" flex="10">Finished?</div>
+                <div layout="column" layout="center center" flex="10">Finished on</div>
+                <div layout="column" layout="center center" flex="10">Name</div>
+                <div layout="column" layout="center center" flex="20">Institute</div>
+                <div layout="column" layout="center center" flex="15">Id</div>
+                <div layout="column" layout="center center" flex="5">Summary</div>
+            </div>
+            <div layout="row" ng-repeat="tofillci in tofillciList | orderBy:['-active','-_finished','_deadline','_created']" class="width100 greyDashedBottomBorder" ng-class="{ pending: tofillci.active, noEmail: tofillci.noEmail }">
+                <div layout="column" layout="center center" flex="5">{{$index + 1}}</div>
+                <div layout="column" layout="center center" flex="10">{{tofillci._created | date: "dd-MMM-yy HH:mm"}}</div>
+                <div layout="column" layout="center center" flex="10">{{tofillci._deadline | date: "dd-MMM-yy HH:mm"}}</div>
+                <div layout="column" layout="center center" flex="10" ng-class="{ pending2: tofillci.active }">{{!tofillci.active}}</div>
+                <div layout="column" layout="center center" flex="10">{{tofillci._finished | date: "dd-MMM-yy HH:mm"}}</div>
+                <div layout="column" layout="center center" flex="10">{{tofillci.user.basic.name}}</div>
+                <div layout="column" layout="center center" flex="20">
+                    <a ui-sref="claim({ coachingId:{{'tofillci.institute._id'}} })" target="_blank" id="link">
+                    <strong>{{tofillci.institute.name}}</strong>
+                    </a>
+                </div>
+                <div layout="row" layout="center center" flex="15">{{tofillci.institute._id}}</div>
+                <div layout="row" layout="center center" flex="5">
+                    <span ng-click="getSummary(tofillci)">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                    </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span ng-if="tofillci.active" ng-click="showRemoveConfirm(tofillci)"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            
+        </div>
+        
+        
+        
+        
+    </div>
+    
+    <div class="row whiteBackground greyBorder top-buffer width100" id="assignTask">
+            <div layout="row" layout-xs="column" layout-margin  layout-align="center" class="font20">
+                Assign CI Verify Task
+            </div>
+            <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
+                <div flex="5" layout="row" layout-align="start center">
+                    <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left" ng-model="instituteVerifyCount" id="instituteInput" >
+                </div>
+                <div flex="35" layout="row" layout-align="start center">
+                    <md-input-container class="width75 text-primary">
+                      <md-select ng-model="verifyCity"  placeholder="Select City">
+                        <md-option ng-value="city" ng-repeat="city in rankedCities" class="text-primary">
+                          {{city}}
+                        </md-option>
+                      </md-select>
+                    </md-input-container>
+                </div>
+                <div flex="20" layout="row" layout-align="start center">
+                    <md-datepicker ng-model="ciVerifyDeadline" md-placeholder="Set Deadline"></md-datepicker>
+                </div>
+                <div flex="40" layout="row" layout-align="start center">
+                    <md-input-container class="width75 text-primary">
+                      <md-select ng-model="ciVerifyIntern"  placeholder="Select Intern">
+                        <md-option ng-value="intern._id" ng-repeat="intern in activeInternList | orderBy: 'basic.name'" class="text-primary" ng-click="update(intern)">
+                          {{intern.basic.name}}
+                        </md-option>
+                      </md-select>
+                    </md-input-container>
+                    <md-button  class="md-green md-small font10" ng-click="assignCIVerify()" class="width25">Assign</md-button>
+                    <!--<md-button  class="md-green md-small font10" ng-click="changeUser()" class="width25">Change User</md-button>-->
+                </div>
+
+
+
+            </div>
+        </div>
+    <div class="row whiteBackground greyBorder top-buffer width100" id="assignTask font10">
+        <div flex layout="row" class="width100 greyDashedBottomBorder bold">
+                
+            <div layout="column" layout="center center" flex="5">S. No.</div>
+            <div layout="column" layout="center center" flex="10">Created on</div>
+            <div layout="column" layout="center center" flex="10">Deadline</div>
+            <div layout="column" layout="center center" flex="10">Finished?</div>
+            <div layout="column" layout="center center" flex="10">Finished on</div>
+            <div layout="column" layout="center center" flex="10">Name</div>
+            <div layout="column" layout="center center" flex="20">Institute</div>
+            <div layout="column" layout="center center" flex="15">Id</div>
+            <div layout="column" layout="center center" flex="5">Remove</div>
+        </div>
+        <div layout="row" ng-repeat="toverifyci in toverifyciList | orderBy:['-active','-_finished','_deadline','_created']" class="width100 greyDashedBottomBorder font10" ng-class="{ pending: toverifyci.active, noEmail: toverifyci.noEmail }">
+            <div layout="row" layout="center center" flex="5">
+                {{$index + 1}}
+                <span ng-if="toverifyci.institute.email && toverifyci.institute.email.length > 0">
+                    
+                &nbsp;<i class="fa fa-envelope" aria-hidden="true"></i>
+                <md-tooltip>
+                    <span ng-repeat="email in toverifyci.institute.email">
+                        {{email}}&nbsp;
+                    </span>
+                </md-tooltip>
+                </span>
+            </div>
+            <div layout="column" layout="center center" flex="10">{{toverifyci._created | date: "dd-MMM-yy HH:mm"}}</div>
+            <div layout="column" layout="center center" flex="10">{{toverifyci._deadline | date: "dd-MMM-yy HH:mm"}}</div>
+            <div layout="column" layout="center center" flex="10" ng-class="{ pending2: toverifyci.active }">{{!toverifyci.active}}</div>
+            <div layout="column" layout="center center" flex="10">{{toverifyci._finished | date: "dd-MMM-yy HH:mm"}}</div>
+            <div layout="column" layout="center center" flex="10">{{toverifyci.user.basic.name}}</div>
+            <div layout="column" layout="center center" flex="20">
+                <a ui-sref="claim({ coachingId:{{'toverifyci.institute._id'}} })" target="_blank" id="link">
+                <strong>{{toverifyci.institute.name}}</strong>
+                </a>
+                
+            </div>
+            <div layout="column" layout="center center" flex="15">{{toverifyci.institute._id}}</div>
+            <!--ng-click="showRemoveConfirm(toverifyci)"-->
+            <div layout="column" layout="center center" flex="5"><span ng-if="toverifyci.active" ><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+            <span ng-if="toverifyci.institute.ebVerifyState">
+                {{toverifyci.institute.ebVerifyState}}
+            </span>
+            </div>
+        </div>
+    
+    </div>
+    
+    
+    <div class="row whiteBackground greyBorder top-buffer width100" id="assignTask">
+        <div layout="row" layout-xs="column" layout-margin  layout-align="center" class="font20">
+            Assign CI Add Contact Info Task
+        </div>
+        <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
+            <div flex="5" layout="row" layout-align="start center">
+                <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left" ng-model="addContactInfoCount" id="instituteInput" >
+            </div>
+            <div flex="35" layout="row" layout-align="start center">
+                <md-input-container class="width75 text-primary">
+                  <md-select ng-model="addContactInfoCity"  placeholder="Select City">
+                    <md-option ng-value="city" ng-repeat="city in rankedCities" class="text-primary">
+                      {{city}}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+            </div>
+            <div flex="20" layout="row" layout-align="start center">
+                <md-datepicker ng-model="addContactInfoDeadline" md-placeholder="Set Deadline"></md-datepicker>
+            </div>
+            <div flex="40" layout="row" layout-align="start center">
+                <md-input-container class="width75 text-primary">
+                  <md-select ng-model="addContactInfoIntern"  placeholder="Select Intern">
+                    <md-option ng-value="intern._id" ng-repeat="intern in activeInternList | orderBy: 'basic.name'" class="text-primary" ng-click="update(intern)">
+                      {{intern.basic.name}}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+                <md-button  class="md-green md-small font10" ng-click="assignAddContactInfo()" class="width25">Assign</md-button>
+                <md-button  class="md-green md-small font10" ng-click="changeUserContactInfo()" class="width25">Change User</md-button>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <div class="row whiteBackground greyBorder top-buffer width100" id="assignTask font10">
+        <div flex layout="row" class="width100 greyDashedBottomBorder bold">
+                
+            <div layout="column" layout="center center" flex="10">S. No.</div>
+            <div layout="column" layout="center center" flex="10">Created on</div>
+            <div layout="column" layout="center center" flex="10">Deadline</div>
+            <div layout="column" layout="center center" flex="10">Finished?</div>
+            <div layout="column" layout="center center" flex="10">Finished on</div>
+            <div layout="column" layout="center center" flex="10">Name</div>
+            <div layout="column" layout="center center" flex="20">Institute</div>
+            <div layout="column" layout="center center" flex="15">Id</div>
+        </div>
+        <div layout="row" ng-repeat="addContactInfo in addContactInfoList | orderBy:['-active','-_finished','_deadline','_created']" class="width100 greyDashedBottomBorder font10" ng-class="{ pending: addContactInfo.active }">
+            <div layout="row" layout="center center" flex="10">
+                {{$index + 1}}
+                <span ng-if="addContactInfo.institute.email && addContactInfo.institute.email.length > 0">
+                    
+                &nbsp;<i class="fa fa-envelope" aria-hidden="true"></i>
+                <md-tooltip>
+                    <span ng-repeat="email in addContactInfo.institute.email">
+                        {{email}}&nbsp;
+                    </span>
+                </md-tooltip>
+                </span>
+                <span ng-if="addContactInfo.institute.website && addContactInfo.institute.website.length > 0 && addContactInfo.institute.website[0] !=''">
+                    
+                &nbsp;<i class="fa fa-link" aria-hidden="true"></i>
+                <md-tooltip>
+                    <span ng-repeat="website in addContactInfo.institute.website">
+                        {{website}}&nbsp;
+                    </span>
+                </md-tooltip>
+                </span>
+                <span ng-if="addContactInfo.institute.facebookPage && addContactInfo.institute.facebookPage !=''">
+                    
+                &nbsp;<i class="fa fa-facebook-official" aria-hidden="true"></i>
+                <md-tooltip>
+                    {{addContactInfo.institute.facebookPage}}
+                </md-tooltip>
+                </span>
+                <span ng-if="addContactInfo.institute.youtubeChannel && addContactInfo.institute.youtubeChannel !=''">
+                    
+                &nbsp;<i class="fa fa-youtube" aria-hidden="true"></i>
+                <md-tooltip>
+                    {{addContactInfo.institute.youtubeChannel}}
+                </md-tooltip>
+                </span>
+            </div>
+            <div layout="column" layout="center center" flex="10">{{addContactInfo._created | date: "dd-MMM-yy HH:mm"}}</div>
+            <div layout="column" layout="center center" flex="10">{{addContactInfo._deadline | date: "dd-MMM-yy HH:mm"}}</div>
+            <div layout="column" layout="center center" flex="10" ng-class="{ pending2: addContactInfo.active }">{{!addContactInfo.active}}</div>
+            <div layout="column" layout="center center" flex="10">{{addContactInfo._finished | date: "dd-MMM-yy HH:mm"}}</div>
+            <div layout="column" layout="center center" flex="10">{{addContactInfo.user.basic.name}}</div>
+            <div layout="column" layout="center center" flex="20">
+                <a ui-sref="claim({ coachingId:{{'addContactInfo.institute._id'}} })" target="_blank" id="link">
+                <strong>{{addContactInfo.institute.name}}</strong>
+                </a>
+                
+            </div>
+            <div layout="column" layout="center center" flex="15">{{addContactInfo.institute._id}}</div>
+            
+        </div>
+        
+    </div>
+    
+    
+    <div class="row whiteBackground greyBorder" id="assignTask">
+        <div layout="row" layout-xs="column" layout-margin  layout-align="center" class="font20">
+            Assign CI Rate Task
+        </div>
+        <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
+            <div flex="40" layout="row" layout-align="start center">
+                <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left" ng-model="rateInstitute" id="rateInstitute" >
+            </div>
+            <div flex="20" layout="row" layout-align="start center">
+                <md-datepicker ng-model="ciRateDeadline" md-placeholder="Set Deadline"></md-datepicker>
+            </div>
+            <div flex="40" layout="row" layout-align="start center">
+                <md-input-container class="width75 text-primary">
+                  <md-select ng-model="ciRateIntern"  placeholder="Select Intern">
+
+                    <md-option ng-value="intern._id" ng-repeat="intern in activeInternList | orderBy: 'basic.name'" class="text-primary" ng-click="update(intern)">
+                      {{intern.basic.name}}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+                <md-button  class="md-green md-small font10" ng-click="assignCIRate()" class="width25">Assign</md-button>
+            </div>
+        </div>
+        <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
+            <span ng-if="rateInstitutefetching">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </span>
+            <span ng-if="prevRateLength > 0" class="danger">
+                {{assignGroup}}: Another institute from this group has been filled before! Check before assigning.
+            </span>
+            <span ng-if="prevRateLength == 0" class="text-primary bold">
+                {{assignGroup}}: Go ahead, assign it to an intern!
+            </span>
+            <span ng-if="assignError" class="danger">
+                Something went wrong!
+            </span>
+        </div>
+    </div>
+    
+    <div class="row whiteBackground greyBorder" id="assignTask">
+        <div layout="column"   layout-align="center center" class="font10">
+            <span class="top-buffer">
+                <span class="font20">Assigned Rating Tasks</span>
+                
+                <!--&nbsp;<span class="badge" id="badge">{{fillsAssigned}}</span>
+                <br/>
+                <span class="font20">Due Deadline</span>&nbsp;<span class="badge" id="badge">{{fillsDue}}</span>-->
+            </span>
+            <!--<div flex layout="row" class="width100">
+                <div flex="50" layout="column" class="font12 padded2">
+                    <span class="secondFont bold">
+                    Intern Roaster
+                    </span>
+                <div layout="column">
+                    <div flex layout="row" class="width100">
+                        <div flex="40">
+                            Name
+                        </div>
+                        <div flex="15">
+                            Assigned
+                        </div>
+                        <div flex="15">
+                            Due
+                        </div>
+                        <div flex="15">
+                            Completed
+                        </div>
+                        <div flex="15">
+                            Timeline
+                        </div>
+                    </div>
+                    
+                    <div ng-repeat="due in internDueList | orderBy: '-done'" ng-if="due.intern.active" flex layout="row" class="width100">
+                        <div flex="40">
+                            {{due.intern.basic.name}}
+                        </div>
+                        <div flex="15">
+                            {{due.assigned}}
+                        </div>
+                        <div flex="15">
+                            {{due.due}}
+                        </div>
+                        <div flex="15">
+                            {{due.done}}
+                        </div>
+                        <div flex="15">
+                        <span ng-click="getInternAssigned(due)">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        </span>
+                        
+                        </div>
+                    </div>
+                    
+                    </div>
+                </div>
+                <div flex="50" layout="column"  class="font12 padded2">
+                    <span class="secondFont bold">
+                    Marked as Done Yesterday (after {{yesterday | date: "dd-MMM-yy HH:mm"}})<span class="badge" id="badge">{{yesterdayTasks.length}}</span>
+                    </span>
+                    <div ng-repeat="yesterdayTask in yesterdayTasks | orderBy:'_finished'">
+                        <a ui-sref="claim({ coachingId:{{'yesterdayTask.institute._id'}} })" target="_blank" id="link">
+                        <strong>{{yesterdayTask.institute.name}}</strong>
+                        </a>
+                         by 
+                        {{yesterdayTask.user.basic.name}} on {{yesterdayTask._finished | date: "dd-MMM-yy HH:mm"}}
+                    </div>
+                </div>
+            </div>
+            -->
+            
+            <div flex layout="row" class="width100 greyDashedBottomBorder bold">
+                
+                <div layout="column" layout="center center" flex="5">S. No.</div>
+                <div layout="column" layout="center center" flex="10">Created on</div>
+                <div layout="column" layout="center center" flex="10">Deadline</div>
+                <div layout="column" layout="center center" flex="10">Finished?</div>
+                <div layout="column" layout="center center" flex="10">Finished on</div>
+                <div layout="column" layout="center center" flex="10">Name</div>
+                <div layout="column" layout="center center" flex="20">Institute</div>
+                <div layout="column" layout="center center" flex="15">Id</div>
+                <div layout="column" layout="center center" flex="5">Summary</div>
+            </div>
+            <div layout="row" ng-repeat="rateInstitute in rateInstituteList | orderBy:['-active','-_finished','_deadline','_created']" class="width100 greyDashedBottomBorder" ng-class="{ pending: rateInstitute.active, noEmail: rateInstitute.noEmail }">
+                <div layout="column" layout="center center" flex="5">{{$index + 1}}</div>
+                <div layout="column" layout="center center" flex="10">{{rateInstitute._created | date: "dd-MMM-yy HH:mm"}}</div>
+                <div layout="column" layout="center center" flex="10">{{rateInstitute._deadline | date: "dd-MMM-yy HH:mm"}}</div>
+                <div layout="column" layout="center center" flex="10" ng-class="{ pending2: rateInstitute.active }">{{!rateInstitute.active}}</div>
+                <div layout="column" layout="center center" flex="10">{{rateInstitute._finished | date: "dd-MMM-yy HH:mm"}}</div>
+                <div layout="column" layout="center center" flex="10">{{rateInstitute.user.basic.name}}</div>
+                <div layout="column" layout="center center" flex="20">
+                    <a ui-sref="claim({ coachingId:{{'rateInstitute.institute._id'}} })" target="_blank" id="link">
+                    <strong>{{rateInstitute.institute.name}}</strong>
+                    </a>
+                </div>
+                <div layout="row" layout="center center" flex="15">{{rateInstitute.institute._id}}</div>
+                <div layout="row" layout="center center" flex="5">
+                    <!--<span ng-click="getSummary(rateInstitute)">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                    </span>&nbsp;&nbsp;&nbsp;&nbsp;-->
+                    <span ng-if="rateInstitute.active" ng-click="showRateRemoveConfirm(rateInstitute)"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            
+        </div>
+        
+        
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 paddingTB10 paddingLR20">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="fillDialog">
+    <md-dialog class="fullscreen-dialog2">
+
+    <div layout="column" layout-align="start start" layout-fill>
+        
+        <div flex layout="row" id="providerBox" class="width100 paddingT10 ">
+            <div flex ="15" layout="column" layout-align="start start" class="padding10 ">
+                <img ng-src="{{fillProvider.logo}}" id="logo"/>
+            </div>
+            <div flex ="85" layout="column" class="editFont ">
+                <div class="fifthFont textBlack">
+                {{fillProvider.name}}
+                </div>
+                <div class="text-left font10 textBlack">
+
+                Address:&nbsp;{{fillProvider.address}},&nbsp;{{fillProvider.city}},&nbsp;{{fillProvider.state}} 
+                <span ng-if="fillProvider.pincode && fillProvider.pincode!=''">&nbsp;-&nbsp; {{fillProvider.pincode}}</span>
+
+                </div>
+                <div class="thirdFont">
+                Filled by: {{fillUser.basic.name}}
+                </div>
+                  
+            </div>
+        </div>
+        <div layout="column" layout-align="start start" class="width100  editFont textBlack paddingLR40" >
+            <div flex layout="column" class="width100">
+                <div class="lightGreyBackground thirdFont">Contact Information Added</div>
+                <div layout="row" class="width100" layout-padding>
+                <span>
+                    Phones: {{fillProvider.contact.phone}}
+                </span>
+                <span>
+                    Mobiles: {{fillProvider.contact.mobile}}
+                </span>
+                <span>
+                    Emails: {{fillProvider.contact.email}}
+                </span>
+                <span ng-if="fillProvider.contact.website && fillProvider.contact.website !=''">
+                    <a ng-href="{{fillProvider.contact.website}}" target="_blank" class="textBlack">
+                    Website
+                    </a>
+                </span>
+                <span ng-if="fillProvider.contact.facebookPage && fillProvider.contact.facebookPage !=''">
+                    <a ng-href="{{fillProvider.contact.facebookPage}}" target="_blank" class="textBlack">
+                    <i class="fa fa-facebook-official" aria-hidden="true"></i>
+                    </a>
+                </span>
+                <span ng-if="fillProvider.contact.youtubeChannel && fillProvider.contact.youtubeChannel !=''">
+                    <a ng-href="{{fillProvider.contact.youtubeChannel}}" target="_blank" class="textBlack">
+                    <i class="fa fa-youtube" aria-hidden="true"></i>
+                    </a>
+                </span>
+                </div>    
+            </div>
+            <div flex layout="column" class="width100">
+                <div class="lightGreyBackground thirdFont">CI Information Added</div>
+                <div layout="row" class="width100" layout-padding>
+                <span>
+                    #Results: {{fillProvider.info.results}}
+                </span>
+                <span>
+                    #Photo: {{fillProvider.info.photo}}
+                </span>
+                <span>
+                    #Video: {{fillProvider.info.video}}
+                </span>
+                <span>
+                    #Faculty: {{fillProvider.info.faculty}}
+                </span>
+                    
+                </div>
+            </div>
+            <div flex layout="column" class="width100">
+                <div class="lightGreyBackground thirdFont">Additional Information</div>
+                <div layout="row" class="width100" layout-padding>
+                    <span>
+                    LatLng Marked: 
+                    <span ng-if="fillProvider.latlng">
+                    Yes
+                    </span>
+                    <span ng-if="!fillProvider.latlng">
+                        No
+                        </span>
+                    </span>
+                    <span>
+                        EB Verify State: {{fillProvider.ebVerifyState}}
+                    </span>
+                    <span>
+                        #times saved: {{fillProvider._savedLength}}
+                    </span>
+                </div>
+                
+            </div>
+            <div flex layout="row" class="width100" layout-padding>
+                <div layout="column" class="width100" >
+                    <span>EB Notes</span>
+                    <div flex layout="row" ng-repeat="note in fillProvider.ebNote" ng-if="note.note !=''">
+                        <div flex="5">
+                            {{$index+1}}
+                        </div>
+                        <div flex="95">
+                            {{note.note}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </md-dialog>
+    </div>    
+</div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="internAssignedDialog">
+    <md-dialog class="fullscreen-dialog2">
+
+    <div layout="column" layout-align="start start" layout-fill >
+        
+        <div layout="row" id="providerBox" class="width100 thirdFont padding20">
+            {{activeIntern.intern.basic.name}}
+        </div>
+        <div layout="column" class="width100 paddingLR40 " layout-wrap>
+            
+            <div layout="row" ng-repeat="day in days" class="greyDashedBottomBorder padding5" ng-class="{ todayDiv: {{(today | date:'dd/MM/yyyy') == (day | date:'dd/MM/yyyy')}}}" layout-wrap>
+                <div flex="25">
+                    {{day | date : 'dd-MMM'}}
+                </div>
+                <div flex="75" class="width100">
+                    
+                    <div layout="row" ng-repeat="task in activeIntern.taskList" ng-if="(task._deadline | date:'dd/MM/yyyy') == (day | date:'dd/MM/yyyy')">
+                        <div>
+                            <a ui-sref="claim({ coachingId:{{'task.institute._id'}} })" target="_blank" id="link">
+                            <strong>{{task.institute.name}}</strong>
+                            </a>
+                        </div>
+                        <div ng-if="!task.active" class="text-primary">
+                        &nbsp;<i class="fa fa-check-circle" aria-hidden="true"></i>
+                        </div>
+                        <div ng-if="task.active" class="text-primary">
+                        &nbsp;<span class="badge font10">
+                            Pending
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+    </md-dialog>
+    </div>    
+</div>
+

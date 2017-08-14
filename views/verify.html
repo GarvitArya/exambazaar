@@ -1,0 +1,97 @@
+<div class="container">
+    <div class="row">
+        <!--<h4 class="md-headline text-primary">Hi {{user.firstName}}</h4>-->
+        <h4 class="md-headline text">Welcome to ExamBazaar.com</h4>
+        <div  class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="md-subhead text-primary">
+                1. Verify Mobile
+                </h4>
+            </div>
+            <div class="panel-body">
+                <h6 class="md-subhead text">
+                ExamBazaar brings to you ability to schedule demo classes, counselling sessions and look and feel all education providers around you.
+                </h6>
+                <h6 class="md-subhead text">
+                    To get started, verify your mobile number <span class="text-primary">{{user.mobile}}</span> by OTP (one time password).
+                </h6>
+                <md-button class="md-raised md-primary" ng-click="generateUserOTP()" >Generate OTP</md-button>
+            </div> 
+        </div>
+        
+        <div  class="panel panel-default" ng-show="OTPgenerated">
+            <div class="panel-heading">
+                <h4 class="md-subhead text-primary">
+                2. Enter OTP
+                </h4>
+            </div>
+            <div class="panel-body">
+                <h6 class="md-subhead text">
+                <form name="OTPForm" >
+                    <div layout="row">
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Enter OTP</label>
+                            <input required ng-model="inputOTP" md-maxlength="4">
+                        </md-input-container>
+                    </div>
+                    <md-button class="md-raised md-primary" ng-click="checkOTP()" ng-disabled="OTPForm.$invalid">Next</md-button>
+                </form>
+                </h6>
+            </div> 
+        </div>
+        <div  class="panel panel-default" ng-show="privacyPolicy">
+            <div class="panel-heading">
+                <h4 class="md-subhead text-primary">
+                3. Privacy Policy
+                </h4>
+            </div>
+            <div class="panel-body">
+                <h6 class="md-subhead text">
+                <form name="OTPForm" >
+                    <div layout="row">
+                        <md-switch ng-model="acceptPrivacyPolicy" aria-label="Accept Privacy Policy">
+                            Accept Privacy Policy
+                          </md-switch>
+                    </div>
+                    <div layout="row">
+                        <small>
+                        <a  ui-sref="privacy" class="pull-right">
+                            Read our Privacy Policy
+                        </a>
+                        </small>
+                    </div>
+                </form>
+                </h6>
+            </div> 
+        </div>
+        <div  class="panel panel-default" ng-show="acceptPrivacyPolicy">
+            <div class="panel-heading">
+                <h4 class="md-subhead text">
+                4. Choose new password
+                </h4>
+            </div>
+            <div class="panel-body" >
+                <h6 class="md-subhead text-primary">
+                <form name="PasswordForm" >
+                
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Enter New Password</label>
+                        <input required ng-model="password" size="8" type="password">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Confirm Password</label>
+                        <input required ng-model="confirmPassword" size="8" type="password">
+                    </md-input-container>
+                
+                <md-button class="md-raised md-primary" ng-click="setNewPassword()" ng-disabled="PasswordForm.$invalid" ng-show="password==confirmPassword && password !=''">Set Password</md-button>
+                </form>
+                </h6>
+            </div> 
+        </div>
+        
+    </div>
+    <div class="row">
+    
+    
+    </div>
+</div>

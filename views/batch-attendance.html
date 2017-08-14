@@ -1,0 +1,124 @@
+<style>
+    .q1{
+        fill: #BDFCC9;
+        background-color:#FFB6C1;
+    }
+    .q2{
+        fill: #111;
+    }
+    .center {
+        text-align: center;
+    }
+    #holiday{
+        background-image: url("images/background/food.png");
+        background-repeat: repeat;
+        background-color: #fff;
+        min-height:25vh;
+    }
+    
+</style>
+<div class="container">
+
+    <div class = "row">
+        <div class="col-md-12">
+            <div class="row top-buffer">
+            <div layout="row" ng-hide="1">
+            <div flex>
+                <h6 class="md-subhead text">{{batch.name}}</h6>
+            </div>    
+            <div flex>
+                <md-datepicker required ng-model="fetchDate" md-placeholder="Select Date"></md-datepicker>
+            </div>
+
+            </div>
+            </div>
+            <md-divider></md-divider>
+            <div layout="row" layout-align="center center">
+                <div class="hidden-xs hidden-sm col-md-1 ">
+                    <md-button id="previous-lg" >
+                    <i class="glyphicon glyphicon-chevron-left" aria-hidden="true"></i>    
+                    </md-button>
+                </div>
+
+                <div class="col-xs-12 col-md-10" id="cal-heatmap"></div>
+                <div class="hidden-xs hidden-sm col-md-1">
+                    <md-button  id="next-lg" >
+                    <i class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>       
+                    </md-button>
+                </div>
+            </div> 
+            
+            <md-divider></md-divider>
+            <div class ="row">
+
+                <span ng-if="daymarked">
+                    <div class="alert alert-success" ng-repeat="day in filteredDate">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                        
+                    Attendance of Class {{batch.name}} is <strong>marked</strong> for {{day.date | amDateFormat: 'dddd, MMMM Do YYYY'}}
+                    </div>
+                </span>
+                <span ng-if="!daymarked">
+                    <div class="alert alert-danger center" ng-repeat="day in filteredDate">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        
+                    <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                    Attendance of Class {{batch.name}} is <strong>NOT marked</strong> for {{day.date | amDateFormat: 'dddd, MMMM Do YYYY'}}, mark now!
+                    </div>
+                </span> 
+
+            </div>
+            <md-divider></md-divider>
+            <div class="row center" ng-if="!holiday">
+                <strong>
+                Present: {{ getTotal() }}
+                Absent: {{ batch.students.length - getTotal() }}
+                </strong>
+                <md-divider></md-divider>
+            </div>
+            
+            <div class ="row top-buffer" ng-if="holiday" id="holiday" layout="row" layout-align="center center">
+            <h2 class="md-subhead text-primary center">
+                {{fetchDate | date}} is a holiday!
+            </h2>  
+            </div>
+            <div class = "row top-buffer" ng-if="!holiday">
+                <div ng-repeat="student in batch.students | orderBy: ['basic.firstName','basic.lastName']" ng-click="flip(student)"  class="col-md-4 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="col-md-2 col-sm-2 col-xs-2">
+                    {{$index + 1}}
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6" >
+                    {{student.basic.firstName}}
+                    {{student.basic.middleName}}
+                    {{student.basic.lastName}}
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4" ng-class="student.dayattendance ? 'q2' : 'q1'">
+                        {{student.dayattendance ? 'Present' : 'Absent'}}    
+                    </div>
+                </div>
+                    <md-divider></md-divider>
+                    
+                </div>
+                
+                
+            </div>
+            <md-divider></md-divider>
+            <div class="row center">
+            <md-button class="md-raised md-primary" ng-click="markAttendance()" ng-if="!holiday">Mark Attendance</md-button>
+            </div>
+            
+        </div>
+        <!--<div class="col-md-6">
+        <div layout="column">
+        <div ng-repeat="day in holidays">
+            {{day.date | amDateFormat: 'dddd, MMMM Do YYYY' }}
+            {{day.academicHolidayDesc}}
+        </div>
+        </div>
+        </div>-->
+
+    </div>
+
+</div>

@@ -1,0 +1,571 @@
+<style>
+    #categories{
+        margin-top: 20px;
+    }
+    #categoryFont{
+        min-height: 5vh;
+        color: white;
+        min-width: 175px;
+        border-style: solid;
+        border-radius: 10px;
+        border-width: 1px;
+        background-color: rgba(0,0,0,0.6);
+        margin-top: 7px;
+        margin-bottom: 7px;
+        margin-right: 0px;
+        padding: 5px;
+        letter-spacing: 2px;
+        box-shadow: 1px 1px 1px #6A6968;
+        font-family: "Avenir";
+    }
+    #categoryFont:hover{
+        background-color: #20C39A;
+        font-weight: 900;
+    }
+    #categoryLink a:hover{
+      padding: 0px;
+      color: white;
+      text-decoration: none;
+    }
+    #pageHeader{
+        color: rgba(0,0,0,0.8);
+        letter-spacing: 4px;
+        font-family: "Avenir";
+        margin-top: 10px;
+    }
+    #pageHeaderFont{
+        border-bottom: solid 3px;
+        border-color: #20C39A;
+        letter-spacing: 4px;
+    }
+    a:hover{
+        text-decoration: none;
+    }
+    #breadcrumb{
+        letter-spacing: 0px;
+    }
+    
+    
+    #coachingDetails{
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+        border: none;
+        height: 100%;
+        margin-bottom: 20px;
+    }
+    #coachingHeader{
+        font-family: "Avenir";
+        letter-spacing: 2px;
+    }
+    #coachingHeader a{
+        color: #20C39A;
+    }
+    #linkFont{
+        color: rgba(0,0,0,0.6);
+        font-family: "Avenir";
+    }
+    #linkFont a{
+        color: rgba(0,0,0,0.6);
+    }
+    a{
+        color: #20C39A;
+    }
+    #knowmore{
+        width:100%;
+        background-color: #20C39A;
+        margin-top: 10px;
+    }
+    #subcategory{
+        height: 100%;
+        background: whitesmoke;
+        
+    }
+    #subcategory a{
+        color: #5B5B5B;
+    }
+    .highlight{
+        border-bottom: solid;
+        border-width: 3px;
+        border-color: #20C39A;
+        color: #20C39A;
+    }
+    div{
+        font-family: "Avenir";
+    }
+    #map{
+        width: 95%;
+        margin-top:20px;
+    }
+    #logo{
+        margin-right: 20px;
+    }
+    #logoImage{
+        min-height: 40px;
+        max-height: 60px;
+        border-radius: 2px;
+        
+    }
+    .panel-heading{
+        background-color:white; 
+    }
+    .panel-body{
+        background-color:white; 
+    }
+    .vertical-center {
+      
+      display: flex;
+      align-items: center;
+    }
+    #heroHeader{
+        margin-top: 10px;
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+    }
+    #heroHeaderContent{
+        min-height: 25vh;
+        padding-top: 20px;
+    }
+    #componentsHeaderContent{
+        min-height: 7vh;
+    }
+    #components{
+        
+    }
+    #componentsHeader{
+        margin-top: 0px;
+        /*background-color: rgba(255,90,95,0.8);
+        color: white;*/
+        background-color: white;
+        color: rgba(0,0,0,0.6);
+        
+    }
+    #providerContentHeader{
+        margin-top: 20px;
+        /*background-color: rgba(255,90,95,0.8);
+        color: white;*/
+        color: rgba(0,0,0,0.6);
+        
+    }
+    
+    #providerContentLeft{
+        background: blue;
+        min-height: 100vh;
+    }
+    #providerContentCentre{
+        background: white;
+        min-height: 100vh;
+    }
+    #providerContentRight{
+        background: black;
+        min-height: 100vh;
+    }
+    
+    #overviewLeft{
+        min-height: 30vh;
+        background: white;
+        padding-top: 20px;
+        
+    }
+    overviewLeftContent{
+        
+    }
+    overviewRightContent{
+        min-height: 30vh;
+    }
+    #overviewRight{
+        min-height: 30vh;
+        background: white;
+    }
+    #componentsDiv{
+        font-family: "Avenir";
+        padding-right: 60px;
+    }
+    #activeComponent{
+        border-bottom: solid;
+        border-width: 3px;
+        border-color: #FF5A5F;
+    }
+    #locationHolder{
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    .actionButton{
+        background-color: #FF5A5F;
+        font-family: "Open Sans";
+        color:white;
+    }
+    .heroButton{
+        
+        margin-top: 20px;
+        margin-right: 10px;
+    }
+    .actionButton:hover{
+        background-color: white;
+        color: #FF5A5F;
+        font-weight: bold;
+    }
+    .tolowercase {
+        text-transform: none;
+    }
+    
+    .row .transparent {
+        border-width: 0px;
+        -webkit-box-shadow: 0px 0px;
+        box-shadow: 0px 0px;
+        background-color: rgba(0,0,0,0.0);
+        background-image: -webkit-gradient(linear, 50.00% 0.00%, 50.00% 100.00%, color-stop( 0% , rgba(0,0,0,0.00)),color-stop( 100% , rgba(0,0,0,0.00)));
+        background-image: -webkit-linear-gradient(270deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+        background-image: linear-gradient(180deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+    }
+    
+    #overviewIcon{
+        max-height: 40px;
+        padding-bottom: 7px;
+     }
+    #iconText{
+        color:rgba(0,0,0,0.4);
+        padding-top: 2px;
+        border-top: solid;
+        border-width: 1px;
+        border-color: lightgray;
+        border-spacing: 10px;
+    }
+    #iconTextContainer{
+        margin-top:1px;
+        
+    }
+    #iconData{
+        color:rgba(0,0,0,0.6);
+        font-weight: bold;
+        padding-top: 10px;
+    }
+    #overviewIcons{
+    }
+    #fullPageContent{
+        background: white;
+    }
+    #breadcrumb{
+        margin-top:-10px;
+    }
+    #section1{
+        padding-bottom: 10px;
+    }
+    .baseFont{
+        font-family: "Avenir";
+    }
+    #borderBottom{
+        border-bottom: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+</style>
+
+<div id="fullPageContent">
+<div class="">
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div id="spacer">
+        </div>
+        <div class="container">
+            <div class="row">
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
+            <small>
+            <span><a ui-sref="main">EXAMBAZAAR</a></span>
+            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
+            <span> >> <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
+            <span> >>> <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{city | uppercase}}</a></span>
+            <span> >>>> {{provider.name | uppercase}}</span>
+            </small>
+            </div>
+            </div>
+        </div>
+        <div class="row" id="heroHeader">
+        <div class="container">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div layout="column" layout-align="end start" id="heroHeaderContent">
+            <div class="row">
+                <span class="hidden-xs text md-headline" id="coachingHeader">
+                    {{provider.name | uppercase}}
+                    <span class="badge" ng-if="editable" ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })"><small>
+                            Edit
+                    </small>
+                    </span>
+                </span>
+                <span class="hidden-sm hidden-md hidden-lg text md-subhead" id="coachingHeader">
+                    {{provider.name | uppercase}}
+                </span>
+            </div>
+            <div class="row">
+               <span>
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span ng-if="provider.location">
+                {{provider.location.area}},
+                </span>
+                {{provider.city}}
+                </span>
+            </div>
+            <div class="row" id="locationHolder">
+                <span class="hidden-sm hidden-md hidden-lg">
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-heart-o" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-inr" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                    </button>
+                </span>
+            </div>    
+            </div>
+            </div>
+            <div class="hidden-xs col-sm-12 col-md-6 col-lg-6">
+            <div layout="row" layout-align="end start">
+                <button class="btn actionButton heroButton tolowercase"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;Shortlist
+                </button>
+                <button class="btn actionButton heroButton tolowercase"><i class="fa fa-inr" aria-hidden="true"></i>&nbsp;&nbsp;Avail Discount
+                </button>
+                <button class="btn actionButton heroButton tolowercase"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i>&nbsp;&nbsp;Schedule Demo
+                </button>
+            </div>
+            </div>
+        </div>
+        </div>
+        
+       <div class="row" id="componentsHeader">
+        <div class="container">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div layout="row" layout-align="start center" id="componentsHeaderContent">
+                <div class="row transparent" id="components">
+                    <span class="" id="componentsDiv" ng-repeat="component in components">
+                        <span id="activeComponent1">
+                        {{component}}
+                        </span>
+                    </span>
+                </div>
+                </div>
+            </div>
+           </div>
+        </div>
+        <md-divider></md-divider>
+        
+        <div class="row" id="">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10" id="borderBottom">
+                        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2" id="overviewLeft">
+                        </div>
+                        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8" id="overviewLeft">
+                            <div layout="row" layout-align="center center" id="section1">  
+                            <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="section in overviewIcons" id="overviewIcons">
+
+                                <div class="row">
+                                    <img ng-src="{{section.icon}}" id="overviewIcon"/>
+                                </div>
+
+                                <div class="row text-center" id="iconTextContainer">
+                                    <span id="iconText">
+                                    {{section.text}}
+                                    </span>
+                                </div>
+                                <div class="row text-center" id="iconTextContainer">
+                                    <span class="md-display-1" id="iconData">
+                                    {{section.data}}
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="hidden-xs col-sm-2 col-md-2 col-lg-2" id="overviewRight">
+                        <span id="overviewRightContent">
+                        
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="hidden-xs col-sm-2 col-md-2 col-lg-2" id="providerContentLeft">
+                        
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8" id="providerContentCentre">
+                    <div layout="row" layout-align="start center" id="providerContent">
+                        
+                    </div>
+                    </div>
+                    <div class="hidden-xs col-sm-2 col-md-2 col-lg-2" id="providerContentRight">
+                        
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+        <div class="row" id="providerContentHeader">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10" id="borderBottom">
+                        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2" id="overviewLeft">
+                        </div>
+                        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8" id="overviewLeft">
+                            <div class="row text top-buffer borderBottom">
+                            <div layout="column" layout-align="start center">  
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-if="provider.phone.length > 0">
+                                <i class="fa fa-phone" aria-hidden="true"></i>
+                                <span ng-repeat="phone in provider.phone track by $index">
+                                    {{phone}}
+                                    <span ng-if="!$last">, </span>
+                                </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-if="provider.mobile.length > 0">
+                                    <i class="fa fa-mobile" aria-hidden="true"></i>
+                                    <span ng-repeat="mobile in provider.mobile track by $index">
+                                        <a ng-href="tel:{{mobile}}">{{mobile}}</a>
+                                        <span ng-if="!$last">, </span>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-if="provider.website">
+                                    <i class="fa fa-link" aria-hidden="true"></i> 
+                                    <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website" id="linkFont">
+                                        {{provider.website}}
+                                    </a>
+                                </div>
+                            </div>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="hidden-xs col-sm-2 col-md-2 col-lg-2" id="overviewRight">
+                        <span id="overviewRightContent">
+                        
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="hidden-xs col-sm-2 col-md-2 col-lg-2" id="providerContentLeft">
+                        
+                    </div>
+                    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8" id="providerContentCentre">
+                    <div layout="row" layout-align="start center" id="providerContent">
+                        
+                    </div>
+                    </div>
+                    <div class="hidden-xs col-sm-2 col-md-2 col-lg-2" id="providerContentRight">
+                        
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        <div class="container" id="mainContent">
+            
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
+                <div class="row">
+            <div  class="panel" >
+            <div class="panel-heading">
+            
+                &nbsp;
+                </div>
+                <md-divider></md-divider>
+                <div class="panel-body">
+                <div class="column ">
+                <v-accordion class="vAccordion--default" multiple>
+                  <v-pane expanded>
+                    <v-pane-header>
+                      <span class="text-primary md-subhead">Basic Information</span>
+                    </v-pane-header>
+
+                    <v-pane-content>
+                    <div class="column" id="map" ng-show="showMap">
+                    <!--<small>{{provider.mapAddress}}</small> -->   
+                    <ng-map center="{{provider.mapAddress}}" zoom="14" >
+                        <!-- tilt="45"
+map-type-id="SATELLITE"-->
+                        <marker position="{{provider.mapAddress}}"
+                          title="{{provider.mapAddress}}"
+                          animation="Animation.BOUNCE"
+                          centered="true"></marker>
+                    </ng-map>
+                    </div>
+                    <div class="column" ng-if="provider.phone.length > 0">
+                        <i class="fa fa-phone" aria-hidden="true"></i>
+                        <span ng-repeat="phone in provider.phone track by $index">
+                            {{phone}}
+                            <span ng-if="!$last">, </span>
+                        </span>
+                    </div>
+                    <div class="column" ng-if="provider.mobile.length > 0">
+                        <i class="fa fa-mobile" aria-hidden="true"></i>
+                        <span ng-repeat="mobile in provider.mobile track by $index">
+                            <a ng-href="tel:{{mobile}}">{{mobile}}</a>
+                            <span ng-if="!$last">, </span>
+                        </span>
+                    </div>
+                    <div class="column">
+                        Courses: 
+                        <span ng-repeat="course in provider.coursesOffered">
+                            {{course}}
+                        <span ng-if="!$last">&nbsp;&#8226;&nbsp;</span>
+                        </span>
+                    </div>
+                    <div class="column" ng-if="provider.website">
+                        <small>Website: 
+                        <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website" id="linkFont">
+                            {{provider.website}}
+                        </a></small>
+                    </div>
+                        
+                        
+                        
+                        
+                    </v-pane-content>
+                  </v-pane>
+
+                  <v-pane>
+                    <v-pane-header>
+                      Pane header #2
+                    </v-pane-header>
+
+                    <v-pane-content>
+                      Pane content #2
+                    </v-pane-content>
+                  </v-pane>
+
+                </v-accordion>
+                        
+
+
+                </div>
+
+                </div>
+            </div> 
+                <span class="pull-right">
+                    <small>
+                        <a ui-sref="claim({ coachingId:{{'provider._id'}} })">
+                        Claim
+                        </a>
+                    </small>
+                </span>
+                </div>
+            
+                
+            </div>
+        </div>
+    </div>
+    
+    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    
+    </div>
+    
+</div>
+</div>

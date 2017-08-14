@@ -1,0 +1,247 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #upload2{
+        background: white;
+        color: black;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    #upload2:hover {
+        background: #ccc;
+        cursor: pointer;
+    }
+    #copyLink{
+        cursor: pointer;
+    }
+    #fullHeightPage{
+        min-height: 90vh;
+    }
+    #instituteSection{
+        min-height: 30vh;
+    }
+    .min8vh{
+        min-height: 8vh;
+    }
+    .min20vh{
+        min-height: 20vh;
+    }
+    .min30vh{
+        min-height: 30vh;
+    }
+    .min50vh{
+        min-height: 50vh;
+    }
+    #partner{
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
+    }
+    #loginInput{
+        border: 0;
+        outline: 0;
+        background: transparent;
+        padding: 5px;
+        margin-bottom: 2px;
+        text-align: left;
+        font-family: "Open Sans";
+        color: black;
+        border: 1px solid gainsboro;
+        font-size:12px;
+    }
+    .numberCircle {
+        border-radius: 50%;
+
+        width: 36px;
+        height: 36px;
+        padding: 4px;
+
+        background: #fff;
+        border: 2px solid black;
+        color: black;
+        text-align: center;
+        font-size: 16px;
+    }
+    
+    .imgBorder {
+/*      padding: 15px 15px 0;*/
+        background-color: white;
+        box-shadow: 0 0 10px black;
+        border-radius: 4px;
+        border: 0px;
+ /*     -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
+      -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);*/
+    }
+    .unselectedTagLeft{
+        padding: 10px 15px 10px 25px;
+        border-radius: 40px 0px 0px 40px;
+        color: #333333;
+        background: white;
+    }
+    .unselectedTagLeft:hover{
+        color: white;
+        background: #FF5A5F;
+    }
+    .selectedTagLeft{
+        padding: 10px 15px 10px 25px;
+        border-radius: 40px 0px 0px 40px;
+        color: white;
+        background: #FF5A5F;
+    }
+    .unselectedTagRight{
+        padding: 10px 25px 10px 15px;
+        border-radius: 0px 40px 40px 0px;
+        color: #333333;
+        background: white;
+    }
+    .unselectedTagRight:hover{
+        color: white;
+        background: #FF5A5F;
+    }
+    .selectedTagRight{
+        padding: 10px 25px 10px 15px;
+        border-radius: 0px 40px 40px 0px;
+        color: white;
+        background: #FF5A5F;
+    }
+</style>
+
+<div id="rankersWallPage">
+<div id="spacer1" class="hidden-xs">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg">
+</div>
+<div flex layout="row" layout-align="center start" class="" id="fullHeightPage">
+    
+    
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 height100 width100">
+        <div layout-wrap layout="column" layout-align="center center" class="secondFont textWhite paddingTB10 textShadow">
+            <div class="rankersWallFont font36 narrowLine">Rankers Wall</div>
+            <div class="font20">{{exam.displayname}} {{year}}</div>
+        </div>
+        <div layout-wrap layout="row" layout-xs="column" layout-align="start center" class="thirdFont width100 paddingTB5">
+            <div flex layout="row" layout-align="start center" class="font14 paddingTB5 marginLR20">
+                <div class="unselectedTagLeft" ng-class="{selectedTagLeft: !coachingMode}" ng-click="flipAll()">
+                    Top Students
+                </div>
+                <div class="unselectedTagRight" ng-class="{selectedTagRight: coachingMode}" ng-click="flipAll()">
+                    Top Coachings
+                </div>
+            </div>
+            <div flex layout="column" layout-align="center center" class="rankersWallFont paddingTB5">
+                <div class="font24 textWhiteSmoke">Congratulations Stars!</div>
+                <div class="font11 thirdFont textWhiteSmoke">All results are from Classroom Programmes only</div>
+            
+            </div>
+            <div flex layout="row" layout-align="end center" class="paddingTB5 font12">
+                <div hide-gt-xs class="marginR10">
+                    <a href="#"
+                    socialshare 
+                    socialshare-provider="whatsapp"
+                    socialshare-text="{{shareText}}" 
+                    socialshare-url="{{currURL}}">
+                    <img src="icons/whatsapp.png" class="socialIcon"/>    
+                    </a>
+                </div>
+                <div hide-xs class="marginR10">
+                    <a ng-click="shareFacebook()">
+                        <img src="icons/facebook.png" class="socialIcon"/>
+                    </a>
+                </div>
+                <div hide-gt-xs class="marginR10">
+                    <a href="#"
+                    socialshare
+                    socialshare-provider="facebook-messenger"
+                    socialshare-url="{{currURL}}">
+                        <img src="icons/facebook.png" class="socialIcon"/>
+                    </a>
+                </div>
+                <div class="marginR10">
+                    <a href="#"
+                    socialshare
+                    socialshare-provider="twitter"
+                    socialshare-text="{{shareText2}}"
+                    socialshare-hashtags="{{hashtags}}"
+                    socialshare-url="{{currURL}}">
+                    <img src="icons/twitter.png" class="socialIcon"/>
+                    </a>
+                </div>
+                
+            </div>
+            
+            
+            
+        </div>
+    
+    
+        <div layout-wrap layout="row" layout-align="center start">
+        
+        <div flex-gt-xs="10" flex-xs="50" class="text-center padding10 marginB10" ng-repeat="resultPair in yearResults" ng-click="goToCoaching(resultPair)">
+        <!--| orderBy: 'result.rank'-->    
+        <div class=" ">
+            <div layout="column" layout-align="start center" class="thirdFont font20 textWhite marginB5 textShadow">
+                AIR {{$index + 1}}
+            </div>
+            
+            <div class="imgBorder">
+                
+                <div ng-if="!coachingMode && !resultPair.coachingMode" ng-click="flipRank(resultPair)" ng-mouseenter="logMouseEvent(resultPair)"  ng-mouseleave="logMouseEvent(resultPair)">
+                    <div  id="thumbnailImage" ng-style="{'background-image':'url({{resultPair.result.image}})'}" ng-if="resultPair.result.name">
+                    </div>
+                    <div  id="thumbnailImage" ng-style="{'background-image':'url(icons/student.jpg)'}" ng-if="!resultPair.result.name">
+                    </div>
+                </div>
+                
+                <div ng-if="coachingMode || resultPair.coachingMode" ng-click="flipRank(resultPair)" ng-mouseenter="logMouseEvent(resultPair)"  ng-mouseleave="logMouseEvent(resultPair)">
+                    <div  id="thumbnailImage" >
+                        
+                        <div layout="row" layout-align="center center" id="thumbnailLogo" class="padding5">
+                            <img ng-src="{{resultPair.coaching.logo}}"/>
+                            
+                        </div>
+                        
+                        
+                        
+                    </div>
+                    
+                    
+                </div>
+                
+            </div>
+            
+            
+            
+            <div layout="column" layout-align="start center" class="editFont textWhite textShadow marginTB5 spacedLetter050">
+                <div ng-if="!coachingMode" class="font11 textGainsboro">
+                    {{resultPair.result.name }}
+                </div>
+                <div ng-if="coachingMode" class="font11 textGainsboro">
+                    {{resultPair.coaching.name }}
+                </div>
+            </div>
+            
+        
+        </div>
+        </div>
+        </div>
+
+</div>
+</div>
+</div>

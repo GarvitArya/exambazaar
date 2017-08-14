@@ -1,0 +1,54 @@
+<style>
+    .optionClass{
+        background: rgba(255,255,255,0.9);
+        color: black;
+        border: 1px solid black;
+    }
+    .optionClass:hover{
+        
+        box-shadow: 0 0 10px black;
+    }
+    
+</style>
+
+
+<div layout="column" layout-align="center center" class="text-center" id="whyReviewPage">
+    
+    <div layout-fill layout="row" layout-align="center center " class="paddingLR10" >
+        <div flex-xs="100" flex-gt-xs="60" layout="column" layout-align="start center" class="width100 thirdFont spacedLetter025 paddingT40 ">
+            
+            <div layout="column" layout-align="center center" class="marginTB20 width100">
+                <div class="textShadow font32 textWhite narrowLine">
+                        {{currentQuestion.text}}
+                </div>
+                <div class="font16 textWhiteSmoke textShadow marginT10">
+                    {{currentQuestion.subtext}}
+                </div>
+            </div>
+            
+            <div layout-gt-xs="row" layout-xs="column" layout-align="center center" class="width100 ">
+                <div flex-gt-xs="50" ng-repeat="option in currentQuestion.options" class="padding10 width100">
+                    <div  layout="column" layout-align="center center" class="min25vh padding20 optionClass width100 " ng-click="updateState(option)">
+                        <div class="font20 bold">
+                            {{option.title}}
+                        </div>
+                        <div class="font16">
+                            {{option.subtitle}}
+                        </div>
+                    </div>
+                    
+                </div>
+                <div  layout="column" layout-align="center center" class="min25vh padding20 width100" ng-if="showReviewButton" ng-click="showUserReviewSearchDialog()" ng-controller="offerController">
+                    <md-button class="md-danger md-small font14 width50 primaryFont spacedLetter1 padding10">
+                    Review
+                    </md-button>   
+                </div>
+            </div>
+            <div layout="row" layout-align="end center" class="font12 textWhite width100 paddingR20" ng-if="currState != '1'" ng-click="previousState()">
+                <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>&nbsp;Back
+            </div>
+        </div>
+    </div>
+</div>
+    
+ 

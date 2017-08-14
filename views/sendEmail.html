@@ -1,0 +1,235 @@
+<style>
+    .md-block{
+        padding: 10px;
+        border: 1px solid #ccc; 
+    }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    .badge{
+        background: #FF4136;
+    }
+    #logo{
+        max-height: 30px;
+        max-width: 60px;
+    }
+</style>
+<div class="container">
+    <div id="spacer1">
+    </div>
+    <div layout="column" layout-margin layout-padding>
+    <h4 class="text-primary md-title">Send Claim Email to Institutes</h4>
+    <div class="col-md-12" id="addMasterForm" ng-if="showLevel > 5">
+        <md-button class="md-cancel md-small font10" ng-click="flipSendingMode()">
+            <span ng-if="sendingMode">Show History</span>
+            <span ng-if="!sendingMode">New Email</span>
+        </md-button>
+        <md-button class="md-cancel md-small font10" ng-click="fetchEmails()">
+            Auto Send Emails
+        </md-button>
+        <md-button class="md-cancel md-small font10" ng-click="emailService()" ng-if="user.userType =='Master'">
+            Email Service
+        </md-button>
+        <md-content flex layout-padding ng-show="sendingMode">
+            <div layout="column" ng-if="bulkEmails.length > 0">
+                <div class="secondFont">
+                {{bulkEmails.length}} coaching institutes
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <span ng-repeat="bulkEmailProviderId in bulkEmails" ng-click="setBulkProvider(bulkEmailProviderId)" class="font8">
+                    {{bulkEmailProviderId}}&nbsp;
+                </span>
+                </div>
+            </div>
+            <form name="emailForm" >
+            <div layout="column" >
+                <div layout="row">
+                    <md-input-container class="width50 text-primary">
+                      <md-select ng-model="email.templateName"  placeholder="Select Template" required>
+
+                        <md-option ng-value="templateName" ng-repeat="templateName in templateNames" class="text-primary" >
+                            <!--ng-click="update(mobile)"-->
+                          {{templateName}}
+                        </md-option>
+                      </md-select>
+                    </md-input-container>
+                    
+                    
+                </div>
+                <div layout="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>From</label>
+                        <input required ng-model="email.from" disabled>
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Sender</label>
+                        <input ng-model="email.sender" disabled>
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="start center">
+                    <!--<md-input-container class="md-block" flex-gt-sm>
+                        <label>Institute Id</label>
+                        <input required ng-model="email.instituteId" focus-me="true">
+                    </md-input-container>-->
+                    <md-input-container class="width50 md-block" flex-gt-sm>
+                        <label>Institute Id</label>
+                        <input required ng-model="email.instituteId" focus-me="true">
+                    </md-input-container>  
+                        
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Institute Name</label>
+                        <input required ng-model="email.instituteName" disabled>
+                    </md-input-container>
+                </div>
+                <div layout="row" class="marginTB5">
+                    <span ng-repeat="email in provider.email" ng-click="setEmail(email)">
+                        <span class="badge">{{email}}</span>&nbsp;&nbsp;
+                    </span>
+                   
+                </div>
+                <div layout="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>To</label>
+                        <input required ng-model="email.to">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Subject</label>
+                        <input required ng-model="email.subject">
+                    </md-input-container>
+                </div>
+                <div layout="column" layout-align="center center">
+                    <span class="secondFont bold">Earlier Emails Sent</span>
+                    <div class="font8" ng-repeat="email in emailSent | orderBy:'-_date'">
+                        {{email.name}} on {{email._date | date: "dd-MMM-yy HH:mm"}} ({{email.fromNow}}). From Email: {{email.fromEmail.email}}, To Email: {{email.to}}
+                    </div>
+                </div>
+                <!--<md-input-container class="md-block" flex-gt-sm>
+                    <label>Content</label>
+                    <input ng-model="email.html">
+                </md-input-container>-->
+                 
+
+                <md-button class="md-raised md-primary" ng-click="sendEmail()" ng-disabled="emailForm.$invalid">Send Email</md-button>
+
+            </div>
+        </form>
+        </md-content>
+        
+        <md-content flex layout-padding ng-show="!sendingMode">
+            <div flex layout="row" layout-align="start center" class="font8 width100 bold">
+                <div flex="5">
+                    No.
+                </div>
+                <div flex="10">
+                    Date
+                </div>
+                <div flex="10">
+                    Logo
+                </div>
+                <div flex="15">
+                    Institute Name
+                </div>
+                <div flex="15">
+                    Sent To
+                </div>
+                <div flex="15">
+                    Sent From
+                </div>
+                <div flex="10">
+                    Status
+                </div>
+                <div flex="10">
+                    Institute Id
+                </div>
+            
+            </div>
+            <div flex layout="row" layout-align="start center" ng-repeat="email in userEmails | orderBy:'-_date'" class="font8 width100">
+                <div flex="5">
+                    {{$index + 1}}
+                </div>
+                <div flex="10">
+                    {{email._date | date: "dd-MMM-yy HH:mm"}}
+                </div>
+                <div flex="10">
+                    <img ng-src="{{email.institute.logo}}" id="logo"/>
+                </div>
+                <div flex="15">
+                    {{email.institute.name}}
+                </div>
+                <div flex="15">
+                    {{email.to}}
+                </div>
+                <div flex="15">
+                    {{email.fromEmail.email}}
+                </div>
+                <div flex="10">
+                    <span ng-if="email.response.status =='202'" class="text-primary">
+                        Success
+                    </span>
+                    <span ng-if="!email.response.status =='202'" class="danger">
+                        Failed
+                    </span>
+                </div>
+                <div flex="10">
+                    {{email.institute._id}}
+                </div>
+            </div>
+        </md-content>
+        
+        
+        </div>
+    </div>
+</div>
+<div>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="sentDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Email Sent to {{email.to}}!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="errorDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                </span>
+                <span class="md-title danger">
+                    Something went wrong! Email not sent.
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>

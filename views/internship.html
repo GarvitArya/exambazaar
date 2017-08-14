@@ -1,0 +1,152 @@
+<style>
+    .top-buffer { margin-top:10px; }
+    .top-buffer2 { margin-top:10px; }
+    .top-buffer2 { margin-top:30px; }
+    
+    .input-group .icon-addon .form-control {
+    border-radius: 0;
+    }
+    #apply {
+        margin:30px 0px 0px 0px;
+    }
+    #landingPage{
+        min-height: 85vh;
+        background-color: rgba(255,255,255,0.95);
+    }
+    
+</style>
+<div class="container" id="landingPage"  layout-margin layout-padding>
+<div id="spacer1">
+</div>
+<div class="row top-buffer">
+    <h3 class="text-primary"><strong>
+    INTERNSHIP
+    </strong></h3>
+    <h5>
+    <strong>MARKETING</strong>
+    </h5>
+</div>
+<md-divider></md-divider>
+<div class="row" ng-show="submitted">
+    <br/>
+    <br/>
+    <br/>
+    <h6 class="text">
+        Thank you {{applicant.name}}!
+        <br/>
+        Your application has been submitted. We will get back to you as soon as possible.
+    </h6>
+    
+</div>
+<div class="row" ng-show="!submitted">
+   
+       
+<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">    
+    
+    <div class="row top-buffer">
+        <h4 class="text-primary">
+        <strong>ABOUT US</strong>
+        </h4>
+    </div>
+    <div class="row">
+        <span class="h6">
+            Exambazaar.com is India’s biggest and largest education discovery platform which provides comprehensive information for test prep for entrance exams, colleges, courses, universities and career options in India. You can find information about more than 100 exams and how to prepare for them. Students can also find exclusive videos and photographs of thousands of coaching institutes in every nook and corner of India. We currently cover 93 cities across India with over 30,000 education providers and are looking to expand.
+        </span>
+    </div>
+    <div class="row top-buffer">
+        <h4 class="text-primary">
+        <strong>ABOUT INTERNSHIP</strong>
+        </h4>
+    </div>
+    <div class="row">
+        <span class="h6">
+            We are looking for ambitious interns to help us grow the business further to reach students all across India contemplating their next big step. The role will involve a mix of marketing, sales and business development elements which will give you a huge opportunity to learn multiple business skills directly from the founders (IITB, IITD & IIM Bangalore Alumni with 9 years of international work ex) and get hands-on experience that will boost for your future career remarkably. We do not expect any prior experience and will help and guide in your tasks, however we do expect abundant enthusiasm and a keen desire to learn. We are also looking to hire full time soon, so this can be your opportunity to bag an envious full time job!
+        </span>
+        <br/>
+        <br/>
+        <span class="h6">
+            <p>
+            You will work on several exciting tasks: 
+            </p>
+            
+            <p>1. Building partnerships & collating further information about education providers </p>
+            <p>2. Assisting in the preparation, distribution and delivery of marketing material</p>
+            <p>3. Growing the business through social media and traditional expansion means</p>
+            <p>4. Receiving feedback from users and developing techniques to improve the service consequently</p>
+            
+            <p class="text-primary"><strong>
+                # of Internships available: 4
+            </strong></p>        
+        </span>
+    </div>
+    <div class="row top-buffer">
+        <h4 class="text-primary">
+        <strong>PERKS</strong>
+        </h4>
+    </div>
+    <div class="row">
+        <span class="h6">
+            Certificate, Letter of recommendation, Flexible work hours, Informal dress code, Free snacks & beverages.
+        </span>
+        <p class="text-primary"><strong>
+            Stipend: Rs. 4000 / month
+        </strong></p> 
+    </div>
+    
+    <div class="row top-buffer">
+        <h4 class="text-primary">
+        <strong>DETAILS</strong>
+        </h4>
+    </div>
+    <div class="row">
+        <span class="h6">
+            Location: Work from home<br/>
+            Hours/week: 20<br/>
+            Start Date: Immediately<br/>
+        </span>
+    </div>
+</div>
+<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+    <div class="row" id="apply">
+        <form name="applicantForm" >
+        <div  class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="text-primary"><strong>APPLY NOW</strong></h4>
+            </div>
+            <div class="panel-body">
+                <div layout="column">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Name</label>
+                    <input required ng-model="applicant.name">
+                </md-input-container>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Email</label>
+                    <input required ng-model="applicant.email">
+                </md-input-container>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Mobile</label>
+                    <input required ng-model="applicant.mobile">
+                </md-input-container>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <label>Resume</label>
+                    <input type="file" nv-file-select uploader="uploader" >
+                </div>
+                
+                <div layout="row" layout-margin layout-padding layout-align="center center">
+                    <md-button class="md-raised md-primary" ng-click="submit()" ng-disabled="applicantForm.$invalid">Submit</md-button>
+                </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>   
+    
+</div>
+</div>

@@ -1,0 +1,264 @@
+<style>
+    .top-buffer { margin-top:20px; }
+    #addRow{
+        color: blue;
+    }
+    a{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:visited:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    #locations{
+        margin-bottom:20px;
+    }
+    #suggestedEmails{
+        margin: 10px;
+    }
+    
+    #uploadContainer{
+        min-height: 200px;
+        background: white;
+    }
+    #upload{
+        /*min-width: 400px;
+        min-height: 100px;*/
+        background: white;
+        border: 1px solid #ccc;
+        font-weight: bold;
+        padding: 10px;
+    }
+    #upload:hover {
+        background: #e1e1e1;
+        border: 1px solid #20C39A;
+    }
+    
+    
+    #progressBar{
+        max-width: 100px;
+        margin-top: 20px;
+    }
+</style>
+<div class="container">
+    <div id="spacer">
+    </div>
+    <div class="column">
+        <div class="row" ng-if="!provider.location">
+            <md-button class="md-raised md-primary" ng-click="getLocations()" ng-show="showButton">Assign Location</md-button>
+            <md-button type="submit" class="md-raised md-primary" ng-click="saveCoaching()">Save</md-button>
+            <div id="locations">
+            <span ng-repeat="location in locations | orderBy:'area'">
+            <span class="badge"  ng-click="setLocation(location)">
+                {{location.area}}
+            </span>&nbsp;
+            </span>
+            </div>
+        </div>
+        <div class="row" >
+            <div class="row text-center" id="suggestedEmails">
+                <span ng-repeat="suggestedEmail in suggestedEmails">
+                <span class="badge"  ng-click="setEmail(suggestedEmail)">
+                    {{suggestedEmail}}
+                </span>&nbsp;
+                </span>
+            </div>
+            <table style="width:100%">
+                <tr id="addRow" >
+                    <td>email</td>
+                    <td><input ng-model="provider.email" size="100"></td>
+                </tr>
+                <tr ng-repeat="(key, value) in provider" ng-if="key!='_id' && key != '__v' && key != '_created' && key != 'targetStudyWebsite' && key != 'logo' && key != 'oldlogo'">
+                    <td> {{key}} </td> 
+                    <td>
+                        <input ng-model="provider[key]" size="100">
+                    </td>
+                </tr>
+                
+                 <!--<tr id="addRow">
+                    <td>tgt study</td>
+                    <td>
+                        <a ng-href="{{provider.targetStudyWebsite}}" target="_blank">TS URL
+                        </a>
+                    </td>
+                </tr>-->
+            </table>
+            
+        </div>
+        
+        
+    </div>
+    <div class="row top-buffer">
+        <md-button type="submit" class="md-raised md-primary" ng-click="saveCoaching()">Save</md-button>
+    </div>
+    <!--
+    
+    
+    <div class="row top-buffer10">
+        <div class="text-center" ngf-select="uploadPhotos()" multiple="multiple" ng-model="photos" id="upload" ngf-accept="'image/*'">
+        <div class="row text-center">
+            <h5>
+                <div class="row top-buffer">
+                    <i class="fa fa-camera" aria-hidden="true"></i>
+                    Add Photos <span class="badge" ng-if="photos.length > 0">{{photos.length}}</span>
+                </div>
+            </h5>
+        </div>
+        </div>
+    </div>
+    <div class="row top-buffer" id="upload">
+        <form name="addPhotoForm" >
+        <div class="row" ng-repeat="photo in photos">
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 text-center">
+            <div layout="column" layout-align="center center" id="uploadContainer">
+                <md-progress-linear md-mode="determinate" value="{{photo.uploadProgress}}" id="progressBar"></md-progress-linear>
+                <span><small>
+                    {{photo.size | bytes}}
+                </small></span>
+                <img ngf-thumbnail="photo" class="thumb">
+                <span ng-if="photo.link">
+                <a ng-href="{{photo.link}}" target="_blank">Link</a>
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 text-center" ng-if="showAddPhotosForm" >
+            <md-content flex>
+                <div layout="column">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                        <div class="row">
+                            Add Tags
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4 text-center" ng-repeat="imageType in imageTypes">
+                            {{imageType | uppercase}}<br/>
+                            <small>
+                            <span ng-repeat="imageTag in imageTags" ng-if="imageTag.type == imageType" class="badge">
+                                {{imageTag.subType}}
+                            </span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </md-content>
+        </div>
+            <md-divider></md-divider>
+        </div>
+        <md-button class="md-raised md-primary" ng-click="updateFaculties()" ng-disabled="addFacultyForm.$invalid">Add/Save Photos</md-button>
+        </form>
+    </div>
+    
+    <div class="row  top-buffer10 whiteBackground">
+        <div class="col-xs-3 col-sm-2 col-md-1 col-lg-1 text-center" ng-repeat="faculty in provider.faculty" ng-if="$index<12" id="imageContainer">
+            <div ng-if="$index != 11" id="thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}">
+            </div>
+            <div ng-if="$index == 11" id="thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}">
+                <div layout="row" layout-align="center center" class="md-headline text-white" id="thumbnailText">
+                    +{{provider.faculty.length - 12}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row top-buffer10">
+        <div class="text-center" ngf-select="uploadFaculties()" multiple="multiple" ng-model="faculties" id="upload" ngf-accept="'image/*'">
+        <div class="row text-center">
+            <h5>
+                <div class="row top-buffer">
+                    <i class="fa fa-camera" aria-hidden="true"></i>
+                    Add Faculty Photos <span class="badge" ng-if="faculties.length > 0">{{faculties.length}}</span>
+                </div>
+            </h5>
+        </div>
+        </div>
+    </div>
+   
+    <div class="row top-buffer" id="upload">
+        <form name="addFacultyForm" >
+        <div class="row" ng-repeat="faculty in faculties">
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 text-center">
+            <div layout="column" layout-align="center center" id="uploadContainer">
+                <md-progress-linear md-mode="determinate" value="{{faculty.uploadProgress}}" id="progressBar"></md-progress-linear>
+                <span>
+                    {{faculty.size | bytes}}
+                </span>
+                <img ngf-thumbnail="faculty" class="thumb">
+                <span ng-if="faculty.link">
+                <a ng-href="{{faculty.link}}" target="_blank">Link</a>
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 text-center" ng-if="showAddFacultiesForm" >
+            <md-content flex>
+            <div layout="column" >
+                <div layout="column">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Faculty Name</label>
+                        <input ng-model="faculty.newFaculty.name">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Subject Taught</label>
+                        <input ng-model="faculty.newFaculty.subject">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Qualification</label>
+                        <input ng-model="faculty.newFaculty.qualification">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Years of Experience</label>
+                        <input ng-model="faculty.newFaculty.yearsExperience">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Description</label>
+                        <input ng-model="faculty.newFaculty.description">
+                    </md-input-container>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                        <div class="row">
+                            Add Tags
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4 text-center" ng-repeat="imageType in imageTypes">
+                            {{imageType | uppercase}}<br/>
+                            <small>
+                            <span ng-repeat="imageTag in imageTags" ng-if="imageTag.type == imageType" class="badge">
+                                {{imageTag.subType}}
+                            </span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            
+            </md-content>
+        </div>
+            <md-divider></md-divider>
+        </div>
+        <md-button class="md-raised md-primary" ng-click="updateFaculties()" ng-disabled="addFacultyForm.$invalid">Add/Save Faculties</md-button>
+        </form>
+    </div>
+    
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+        <div class="row">
+            Add Tags
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4 text-center" ng-repeat="imageType in imageTypes">
+            {{imageType | uppercase}}<br/>
+            <small>
+            <span ng-repeat="imageTag in imageTags" ng-if="imageTag.type == imageType" class="badge">
+                {{imageTag.subType}}
+            </span>
+            </small>
+        </div>
+
+    </div>-->
+    
+    
+</div>

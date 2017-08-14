@@ -1,0 +1,473 @@
+<style>
+    .whiteBackground{
+        background: white;
+    }
+    .greenBackground{
+        background-color: lightgreen;
+    }
+    .pinkBackground{
+        background-color: lightpink;
+    }
+    .bottomBorder{
+        border-bottom: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    .topBorder{
+        border-top: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    .rightBorder{
+        border-right: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    .leftBorder{
+        border-left: solid;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    
+    .component{
+        font-weight: bold;
+        font-family: "Avenir";
+        color: rgba(0,0,0,0.4);
+        /*letter-spacing: 2px;*/
+    }
+    .mainContent{
+        min-height: 200vh;
+        
+    }
+    #heroHeader{
+        margin-top: 10px;
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+    }
+    #heroHeaderContent{
+        min-height: 25vh;
+        padding-top: 20px;
+    }
+    #coachingHeader{
+        font-family: "Avenir";
+        letter-spacing: 2px;
+    }
+    #coachingHeader a{
+        color: #20C39A;
+    }
+    
+    .actionButton{
+        background-color: #FF5A5F;
+        font-family: "Open Sans";
+        color:white;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+    .actionButton:hover{
+        background-color: white;
+        color: #FF5A5F;
+        font-weight: bold;
+    }
+    .tolowercase {
+        text-transform: none;
+    }
+    #locationHolder{
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    .coachingNavBar{
+        min-height: 7vh;
+        background: rgba(255, 255, 255, 1);
+        z-index: 100;
+    }
+    a{
+        color: rgba(0,0,0,0.6);
+    }
+    a.link{
+        color: rgba(0,0,0,0.6);
+    }
+    a.visted{
+        color: rgba(0,0,0,0.6);
+    }
+    a:hover{
+        text-decoration: none;
+        color: #20C39A;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a.active {
+      background: #FF5A5F;
+      color: #fff;
+    }
+    .affix-top {
+        top: 100px;
+    }
+
+    .affix-bottom {
+        bottom: 0px;
+    }
+    .component{
+        margin-right: 20px;
+        font-weight: bold;
+    }
+    .componentRow{
+        min-height: 25vh;
+        font-family: "Avenir";
+    }
+    .componentRowElement{
+        padding-top: 20px;
+        padding-bottom: 20px;
+        min-height: 25vh;
+    }
+    #overviewIcon{
+        max-height: 40px;
+        padding-bottom: 7px;
+     }
+    #iconText{
+        color:rgba(0,0,0,0.4);
+        padding-top: 2px;
+        border-top: solid;
+        border-width: 1px;
+        border-color: lightgray;
+        border-spacing: 10px;
+    }
+    #iconTextContainer{
+        margin-top:1px;
+        
+    }
+    #iconData{
+        color:rgba(0,0,0,0.6);
+        font-weight: bold;
+        padding-top: 10px;
+    }
+    #linkFont{
+        color:rgba(0,0,0,0.6);
+    }
+    #breadcrumb{
+        margin-top: 5vh;
+    }
+    #paneLeft{
+        
+    }
+    #paneMiddle{
+    }
+    #spacerXS{
+        min-height: 13vh;
+    }
+</style>
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div layout="column" layout-xs="column" class="whiteBackground mainContent">
+    <div layout="row">
+        <div class="container">
+            <div class="row">
+            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 md-subhead" id="breadcrumb">
+            <small>
+            <span><a ui-sref="main">EXAMBAZAAR</a></span>
+            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{category.displayname | uppercase}}</a></span>
+            <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })"> {{subcategory.displayname | uppercase}}</a></span>
+            <span> > <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{city | uppercase}}</a></span>
+            <span> > {{provider.name | uppercase}}</span>
+            </small>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div layout="row" id="heroHeader">
+
+        <div class="container">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <div layout="column" layout-align="end start" id="heroHeaderContent">
+            <div class="row">
+                <span class="hidden-xs text md-headline" id="coachingHeader">
+                    {{provider.name | uppercase}}
+                    <span class="badge" ng-if="editable" ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })"><small>
+                            Edit
+                    </small>
+                    </span>
+                </span>
+                <span class="hidden-sm hidden-md hidden-lg text md-subhead" id="coachingHeader">
+                    {{provider.name | uppercase}}
+                </span>
+            </div>
+            <div class="row">
+               <span>
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span ng-if="provider.location">
+                {{provider.location.area}},
+                </span>
+                {{provider.city}}
+                </span>
+            </div>
+            <div class="row" id="locationHolder">
+                <span class="hidden-sm hidden-md hidden-lg">
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-heart-o" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-inr" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn actionButton  tolowercase"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                    </button>
+                </span>
+            </div>    
+            </div>
+            </div>
+            <div class="hidden-xs col-sm-6 col-md-6 col-lg-6">
+            <div layout="row" layout-align="end start">
+                <button class="btn actionButton heroButton tolowercase"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;Shortlist
+                </button>
+                <button class="btn actionButton heroButton tolowercase"><i class="fa fa-inr" aria-hidden="true"></i>&nbsp;&nbsp;Avail Discount
+                </button>
+                <button class="btn actionButton heroButton tolowercase"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i>&nbsp;&nbsp;Schedule Demo
+                </button>
+            </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div bs-affix data-offset-top="200"  layout="row" class="topBorder bottomBorder coachingNavBar" layout-align="start center">
+        <div class="container">
+        <div class="row  hidden-xs hidden-sm col-md-12 col-lg-12">
+            <a href="#{{component}}" du-smooth-scroll du-scrollspy offset="200" class="col-xs-2 col-sm-1 col-md-1 col-lg-1 component" ng-repeat="component in components">
+                <span>
+                    <span id="">
+                    {{component}}
+                    </span>
+                </span>        
+            </a>
+        </div>
+        </div>
+    </div>
+    <!--start of Overview -->
+    <div layout="row " class="componentRow" id="Overview">
+        <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 bottomBorder componentRowElement" id="paneMiddle">
+            <div layout="row" layout-align="start center">  
+            <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="section in overviewIcons" id="overviewIcons">
+                <div class="row">
+                    <img ng-src="{{section.icon}}" id="overviewIcon"/>
+                </div>
+                <div class="row text-center" id="iconTextContainer">
+                    <span id="iconText">
+                    {{section.text}}
+                    </span>
+                </div>
+                <div class="row text-center" id="iconTextContainer">
+                    <span class="md-display-1" id="iconData">
+                    <!--{{section.data}}-->
+                    </span>
+                </div>
+            </div>
+            </div>
+        </div> 
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement" id="paneRight">
+        </div>
+    </div>
+    
+    <div layout="row" layout-xs="column" class="componentRow" id="Contact">
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 bottomBorder" id="paneLeft">
+            <div class="componentRowElement" layout="column" layout-align="start center">
+                Contact
+            </div>
+        </div>
+        <div class="col-xs-12 hidden-sm hidden-md hidden-lg bottomBorder " id="paneLeft">
+            Contact
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement" id="paneMiddle">
+            <div class="row">
+                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10" ng-if="provider.phone.length > 0">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span ng-repeat="phone in provider.phone track by $index">
+                    <a ng-href="tel:{{phone}}">
+                        {{phone}}
+                    </a>
+                    <span ng-if="!$last">, </span>
+                </span>
+                </div>
+                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10" ng-if="provider.mobile.length > 0">
+                    <i class="fa fa-mobile" aria-hidden="true"></i>
+                    <span ng-repeat="mobile in provider.mobile track by $index">
+                        <a ng-href="tel:{{mobile}}">
+                            {{mobile}}
+                        </a>
+                        <span ng-if="!$last">, </span>
+                    </span>
+                </div>
+                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10" ng-if="provider.website">
+                    <i class="fa fa-link" aria-hidden="true"></i> 
+                    <a ng-href="{{provider.website}}" target="_blank" ng-if="provider.website" id="linkFont">
+                        {{provider.website}}
+                    </a>
+                </div>
+            </div>
+        </div> 
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement" id="paneRight">
+        </div>
+    </div>
+    <div layout="row" layout-xs="column" class="componentRow" id="Results">
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 bottomBorder" id="paneLeft">
+            <div class="componentRowElement" layout="column" layout-align="start center">
+                Results
+            </div>
+        </div>
+        <div class="col-xs-12 hidden-sm hidden-md hidden-lg bottomBorder " id="paneLeft">
+            Results
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
+            
+        </div> 
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement" id="paneRight">
+        </div>
+    </div>
+    <div layout="row" layout-xs="column" class="componentRow " id="Courses">
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 bottomBorder" id="paneLeft">
+            <div class="componentRowElement"layout="column" layout-align="start center">
+                Courses
+            </div>
+        </div>
+        <div class="col-xs-12 hidden-sm hidden-md hidden-lg bottomBorder" id="paneLeft">
+            Courses
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement" id="paneMiddle">
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3" ng-repeat="stream in streams">
+                <span class="text-primary"><strong>{{stream.displayname}}</strong></span><br/>
+                <span class="text" ng-repeat="existingExam in exams" ng-if="existingExam.stream._id == stream._id"><small>
+                    {{existingExam.displayname}}<br/>
+                <!--<span ng-if="!$last">, </span>-->
+                </small></span>
+            </div>
+        </div> 
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement" id="paneRight">
+        </div>
+    </div>
+    <div layout="row" layout-xs="column" class="componentRow " id="Photos">
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 bottomBorder" id="paneLeft">
+            <div class="componentRowElement"layout="column" layout-align="start center">
+                Photos
+            </div>
+        </div>
+        <div class="col-xs-12 hidden-sm hidden-md hidden-lg bottomBorder " id="paneLeft">
+            Photos
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
+            
+        </div> 
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement" id="paneRight">
+        </div>
+    </div>
+    <div layout="row" layout-xs="column" class="componentRow " id="Videos">
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 bottomBorder" id="paneLeft">
+            <div class="componentRowElement"layout="column" layout-align="start center">
+                Videos
+            </div>
+        </div>
+        <div class="col-xs-12 hidden-sm hidden-md hidden-lg bottomBorder " id="paneLeft">
+            Vidoes
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
+            
+        </div> 
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement" id="paneRight">
+        </div>
+    </div>
+    <div layout="row" layout-xs="column" class="componentRow " id="Faculty">
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 bottomBorder" id="paneLeft">
+            <div class="componentRowElement"layout="column" layout-align="start center">
+                Faculty
+            </div>
+        </div>
+        <div class="col-xs-12 hidden-sm hidden-md hidden-lg bottomBorder " id="paneLeft">
+            Faculty
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
+            
+        </div> 
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement" id="paneRight">
+        </div>
+    </div>
+    <div layout="row" layout-xs="column" class="componentRow " id="Location">
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 bottomBorder" id="paneLeft">
+            <div class="componentRowElement"layout="column" layout-align="center center">
+                Location
+            </div>
+        </div>
+        <div class="col-xs-12 hidden-sm hidden-md hidden-lg bottomBorder " id="paneLeft">
+            Location
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
+            <div class="column" id="map">
+                <ng-map center="{{provider.mapAddress}}" zoom="14" scrollwheel="false">
+                <marker position="{{provider.mapAddress}}"
+                      title="{{provider.mapAddress}}"
+                      animation="Animation.BOUNCE"
+                      centered="true"></marker>
+                </ng-map>
+            </div>
+        </div> 
+        <div class="hidden-xs col-sm-2 col-md-2 col-lg-2 componentRowElement" id="paneRight">
+        </div>
+    </div>
+ </div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="claimDialog">
+      <md-dialog layout-padding>
+        <p class="text-center md-subhead" id="pageHeaderFont">
+            <span>CLAIM THIS LISTING</span>
+          <span class="pull-right" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
+        </p>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show ="!started" >
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-center" id="leftSection1">
+                <span class="pageHeaderFont2 ">
+                <div layout="row" layout-align="center center">
+                <span ng-if="provider.oldlogo" class="pull-left" id="logo">
+                    <img ng-src="{{provider.logo}}" alt="{{provider.name}}" id="logoImage"/>
+                </span>
+                </div>
+                <span class="text-primary md-subhead">{{provider.name}}</span><br/>
+                <span ng-if="provider.location.area">   <small>{{provider.location.area}},</small>
+                </span>
+                <span ng-if="provider.city">   <small>{{provider.city}}</small>
+                </span>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 text-center">
+                <span>
+                <span class="text-primary md-subhead">Do you own this institute?</span><br/>
+                Claim your listing in order to manage your ExamBazaar.com page. You will get access to a free dashboard where you can upload photos, videos and manage your institute.
+                </span>
+            </div>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center md-subhead" ng-show ="!started">
+            <button type="submit" class="btn" ng-click = "getStarted()" id="getStarted">GET STARTED</button>  
+        </div>
+
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" ng-show ="started">
+            In this step ExamBazaar will send you an SMS on the mobile number listed on this institute. Enter the verification code to claim your institute.
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" ng-show ="started">
+        <form name="claimForm" >
+            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
+            <md-input-container class="md-block" flex-gt-sm>
+            <md-select required ng-model="verifyMobile" placeholder="Select mobile">
+            <md-option ng-repeat="mobile in provider.mobile" ng-value="mobile">
+            {{mobile}}
+            </md-option>
+            </md-select>
+            </md-input-container>
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
+            <md-button class="md-raised md-primary" ng-click="nextStep()" ng-disabled="claimForm.$invalid">Send OTP</md-button>
+            </div>
+        </form>
+        </div>  
+      </md-dialog>
+    </div>    
+    </div> 

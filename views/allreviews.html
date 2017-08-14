@@ -1,0 +1,115 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #upload2{
+        background: white;
+        color: black;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    #upload2:hover {
+        background: #ccc;
+        cursor: pointer;
+    }
+    #copyLink{
+        cursor: pointer;
+    }
+    #fullHeightPage{
+        min-height: 90vh;
+    }
+    #instituteSection{
+        min-height: 30vh;
+    }
+    .min30vh{
+        min-height: 30vh;
+    }
+    .min50vh{
+        min-height: 50vh;
+    }
+    #partner{
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
+    }
+    #loginInput{
+        border: 0;
+        outline: 0;
+        background: transparent;
+        padding: 5px;
+        margin-bottom: 2px;
+        text-align: left;
+        font-family: "Open Sans";
+        color: black;
+        border: 1px solid gainsboro;
+        font-size:12px;
+    }
+    
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
+    
+    
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 height100 width100">
+    <div layout="row" layout-align="center center" class="marginT20 secondFont font20 textBlack bold paddingB10">
+        All Reviews&nbsp;<span class="badge" id="badge">{{allReviews.length}}</span>
+    </div>
+    <div layout="column" layout-align="start start" class="marginT20">
+        <div layout="row" layout-align="start start" class="width100 bold">
+            <div flex="5" class="paddingR10 font10">S. No.</div>
+            <div flex="10" class="paddingR10 font10">Reviewer</div>
+            <div flex="10" class="paddingR10 font10">Coaching</div>
+            <div flex="40" class="paddingR10 font10">Review</div>
+            <div flex="10" class="paddingR10 font10">Date</div>
+            <div flex="10" class="paddingR10 font10">Active</div>
+            <div flex="10" class="paddingR10 font10">Coupon</div>
+        </div>
+        <div layout="row" layout-align="start start" ng-repeat="review in allReviews | orderBy:'-_created'" class="width100 paddingTB5 gainsboroBottomBorder">
+            <div flex="5" class="paddingR10 font10">{{$index+1}}</div>
+            <div layout="column" layout-align="start start" flex="10" class="paddingR10 font10">
+                <div>{{review.user.basic.name}}</div>
+                <div class="font8">{{review.user._id}}</div>
+            
+            </div>
+            <div layout="column" layout-align="start start" flex="10" class="paddingR10 font10">
+                <div ng-click="openReview(review)">{{review.institute.name}}, {{review.institute.city}}</div>
+                
+                <div><img ng-src="{{review.institute.logo}}" id="logo"/></div>
+            
+            </div>
+            <div flex="40" class="paddingR10 font10">{{review.text}}</div>
+            <div flex="10" class="paddingR10 font10">{{review._created | date}}</div>
+            <div flex="10" class="paddingR10 font10">
+                <md-button class="md-danger md-small font10 tolowercase" ng-click="disablereview(review)" ng-if="review.active">
+                    Disable
+                </md-button>
+                <md-button class="md-green2 md-small font10 tolowercase" ng-click="enablereview(review)" ng-if="!review.active">
+                    Enable
+                </md-button>
+            </div>
+            <div flex="10" class="paddingR10 font10">{{review.coupon}}</div>
+        </div>
+    </div>
+    
+</div>
+</div>
