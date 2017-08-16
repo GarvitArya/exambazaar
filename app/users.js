@@ -732,7 +732,7 @@ router.get('/hourlyHeatmap', function(req, res) {
 router.get('/query/:query', function(req, res) {
     var query = req.params.query;
     //console.log(query);
-    user.find({"basic.name":{'$regex' : query, '$options' : 'i'}}, {basic:1, blogger:1, image:1},function(err, docs) {
+    user.find({"basic.name":{'$regex' : query, '$options' : 'i'}}, {basic:1, blogger:1, image:1, userType:1},function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}
@@ -1066,12 +1066,13 @@ router.get('/blogger/:userId', function(req, res) {
 router.get('/activateIntern/:userId', function(req, res) {
     var userId = req.params.userId;
     var thisUser = user
-        .findOne({ '_id': userId },{userType:1})
+        .findOne({ '_id': userId },{basic:1, userType:1})
         .exec(function (err, thisUser) {
         if (!err){
             thisUser.userType = 'Intern - Business Development';
             thisUser.save(function(err, thisUser) {
                 if (err) return console.error(err);
+                console.log('Intern Activated: ' + thisUser.basic.name);
                 res.json(thisUser._id);
             });
         } else {throw err;}
@@ -1080,12 +1081,13 @@ router.get('/activateIntern/:userId', function(req, res) {
 router.get('/deactivateIntern/:userId', function(req, res) {
     var userId = req.params.userId;
     var thisUser = user
-        .findOne({ '_id': userId },{userType:1})
+        .findOne({ '_id': userId },{userType:1, basic:1})
         .exec(function (err, thisUser) {
         if (!err){
             thisUser.userType = 'Student';
             thisUser.save(function(err, thisUser) {
                 if (err) return console.error(err);
+                console.log('Intern deactivated: ' + thisUser.basic.name);
                 res.json(thisUser._id);
             });
         } else {throw err;}

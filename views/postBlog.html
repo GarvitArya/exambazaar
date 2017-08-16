@@ -31,14 +31,50 @@
 <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="paddingTB20 width100 blogFont" ng-if="user">
     <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 ">
         <div layout="row" layout-align="center center" class="width100 font16">
-            <div ng-if="user.image">
-            <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
+            <div layout="column" layout-align="start start" class="paddingL20 editFont">
+                <div layout="column" layout-align="center center" ng-if="user.image">
+                    <img id="userPic" ng-src="{{user.image}}" class="img-circle" />
+                    <span ngf-select="uploadBloggerPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.8, centerCrop: true}">Change</span>
+                </div>
+                <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadBloggerPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.7, centerCrop: true}">
+                    <div layout="row" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Image
+                    </div>
+
+                </div>
+
             </div>
             <div class="marginL10">
                 {{user.basic.name}}
             </div>
+            <div class="marginL10 font10 danger" ng-click="setCredentials()">
+                Edit Credentials
+            </div>
         </div>
-        <div layout="row" layout-align="center center" class="width100 font12 marginTB10">
+        <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100 marginT20" id="profileSection" ng-if="user.blogger.active && credentialsMode">
+            <div layout="row" layout-align="start start" class="width100">
+                Credentials & Highlights
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginT20">
+                <div flex="25" layout="column" layout-align="start start">
+                    <div>
+                        Add profile credential
+                    </div>
+                    <div class="editFont font10 ">
+                        Credentials also appear on blogs you write
+                    </div>
+                </div>
+                <div flex>
+                    <input type="text" class="font12 width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
+                </div>
+            </div>
+            <div layout="row" layout-align="end center" class="width100" >
+                <md-button class="md-raised md-primary" ng-click="saveBlogger()">
+                     Save
+                </md-button>
+            </div>
+        </div>
+        <div layout="row" layout-align="center center" class="width100 font12 marginTB10" ng-if="masterUser">
             <div ng-click="sanitizeblogposts()" class="danger">Sanitize All Blogs</div>
             
         </div>

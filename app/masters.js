@@ -238,7 +238,7 @@ router.post('/extractEmails/', function(req, res) {
         
         res.json('Done');
     } else {throw err;}
-    }).limit(1000).skip(1000);
+    }).limit(1000).skip(00);
     
     
 });

@@ -244,6 +244,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.deactivateBlogger = function(userId) {
             return $http.get('/api/users/deactivateBlogger/'+userId, {userId: userId});
         };
+        this.activateIntern = function(userId) {
+            return $http.get('/api/users/activateIntern/'+userId, {userId: userId});
+        };
+        this.deactivateIntern = function(userId) {
+            return $http.get('/api/users/deactivateIntern/'+userId, {userId: userId});
+        };
         this.getUser = function(userId) {
             return $http.get('/api/users/edit/'+userId, {userId: userId});
         };
@@ -10957,11 +10963,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                 function displayPosition(position) {
                     $scope.currLocation = [position.coords.latitude, position.coords.longitude];
-                    $scope.currLocation = [13.029595, 77.569381];
+                    //$scope.currLocation = [13.029595, 77.569381];
                     //$scope.currLocation = [18.935322, 72.825932];
                     //$scope.currLocation = [31.633979, 74.872264];
                     //$scope.currLocation = [28.515623, 77.250452];
                     //$scope.currLocation = [28.576849, 77.161944];
+                    //$scope.currLocation = [19.056719, 72.828877];
                 }
                 function displayError(error) {
                   var errors = { 
@@ -11541,8 +11548,110 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     exambazaar.controller("postBlogController", 
         [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService','userBlogs', 'thisuser', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, userBlogs, thisuser, upvoteService, allBlogsUpvotesCount, allBloggers){
             $scope.user = thisuser.data;
+            $scope.credentialsMode = false;
+            $scope.setCredentials = function(){
+                $scope.credentialsMode = true;
+            };
+            $scope.saveBlogger = function(){
+                $scope.credentialsMode = false;
+                UserService.updateUser($scope.user).success(function (data, status, headers) {
+                    $scope.showSavedDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });    
+            };
+            $scope.uploadBloggerPic = function (newPic) {
+            //var pic = $scope.newPic;
+            var pic = [newPic];
+            var nFiles = pic.length;
+            
+            var counter = 0;
+            console.log(JSON.stringify($scope.user));
+            var userId = $scope.user._id;
+            if (pic && pic.length) {
+            
+            pic.forEach(function(thisFile, index){
+            var fileInfo = {
+                filename: thisFile.name,
+                contentType: thisFile.type
+            }; ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+            var s3Request = {};
+            var allParams = data.params;
+            for (var key in allParams) {
+              if (allParams.hasOwnProperty(key)) {
+                s3Request[key] = allParams[key];
+              }
+            }
+                 
+            s3Request.file = thisFile;
+            Upload.upload({
+                url: data.endpoint_url,
+                data: s3Request
+            }).then(function (resp) {
+                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                var picLink = $(resp.data).find('Location').text();
+                
+                var newPicForm ={
+                    image: picLink,
+                    userId: userId
+                };
+                
+                UserService.addPic(newPicForm).success(function (data, status, headers) {
+                    counter = counter + 1;
+                    if(counter == nFiles){
+                    
+                        
+                    if($cookies.getObject('sessionuser')){
+                        var sessionuser = $cookies.getObject( 'sessionuser');
+                        sessionuser.image = picLink;
+                        $cookies.putObject('sessionuser', sessionuser);
+                    }
+
+                    $state.reload();
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    
+                });
+
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error");
+            });   
+                 
+            });
+            }
+         };
+            //console.log($scope.user);
+            if(!$scope.user){
+                if($cookies.getObject('sessionuser')){
+                    $scope.user = $cookies.getObject('sessionuser');
+                    if($scope.user.userType == 'Master'){
+                        $scope.masterUser = true;
+                    }
+                    UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                        var userGallery = data.blogger.gallery;
+                        //console.log(userGallery);
+                        $scope.blogGallery = userGallery;
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+
+                }else{
+                    $scope.user = null;
+                }
+            }
+            
+            
             $scope.allBloggers = allBloggers.data;
-            console.log($scope.allBloggers);
+            //console.log($scope.allBloggers);
             $scope.masterUser = false;
             
             $scope.userBlogs = userBlogs.data;
@@ -11583,23 +11692,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.blogpost = thisblog;
             };
             
-            if($cookies.getObject('sessionuser')){
-                $scope.user = $cookies.getObject('sessionuser');
-                if($scope.user.userType == 'Master'){
-                    $scope.masterUser = true;
-                }
-                UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
-                    var userGallery = data.blogger.gallery;
-                    //console.log(userGallery);
-                    $scope.blogGallery = userGallery;
-                })
-                .error(function (data, status, header, config) {
-                    console.info("Error ");
-                });
-                
-            }else{
-                $scope.user = null;
-            }
+            
             $scope.mediumBindOptions = {
                 toolbar: {
                     buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'indent', 'outdent', 'quote', 'anchor', 'h1','h2', 'h3', 'image', 'removeFormat', 'table', 'orderedlist', 'unorderedlist','html']
@@ -11675,8 +11768,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     blogpostService.getUserBlogposts($stateParams.userId).success(function (data, status, headers) {
                         $scope.userBlogs = data;
                         $scope.refreshVoteCount();
-                        var url = $state.href('editblog', {blogpostId: blogpostId});
-                        window.open(url,'_blank');
+                        //var url = $state.href('editblog', {blogpostId: blogpostId});
+                        //window.open(url,'_blank');
+                        $state.go('editblog', {blogpostId: blogpostId});
                     })
                     .error(function (data, status, header, config) {
                         console.info("Error ");
@@ -14356,7 +14450,7 @@ function getLatLng(thisData) {
             "Half-Yearly",
             "Quarter-Yearly",
             "Monthly",
-            "Through the year",
+            "Anytime",
         ];
         $scope.cycleYears = ["2016","2017","2018","2019","2020"];
         
@@ -14376,7 +14470,7 @@ function getLatLng(thisData) {
                 if(newValue == 'Monthly'){
                     $scope.cycleNumbers = ["1","2","3","4","5","6","7","8","9","10","11","12"];
                 }
-                if(newValue == 'Through the year'){
+                if(newValue == 'Anytime'){
                     $scope.cycleNumbers = ["N/A"];
                     
                 }
