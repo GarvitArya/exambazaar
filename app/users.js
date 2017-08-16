@@ -1063,6 +1063,35 @@ router.get('/blogger/:userId', function(req, res) {
         } else {throw err;}
     });
 });
+router.get('/activateIntern/:userId', function(req, res) {
+    var userId = req.params.userId;
+    var thisUser = user
+        .findOne({ '_id': userId },{userType:1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            thisUser.userType = 'Intern - Business Development';
+            thisUser.save(function(err, thisUser) {
+                if (err) return console.error(err);
+                res.json(thisUser._id);
+            });
+        } else {throw err;}
+    });
+});
+router.get('/deactivateIntern/:userId', function(req, res) {
+    var userId = req.params.userId;
+    var thisUser = user
+        .findOne({ '_id': userId },{userType:1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            thisUser.userType = 'Student';
+            thisUser.save(function(err, thisUser) {
+                if (err) return console.error(err);
+                res.json(thisUser._id);
+            });
+        } else {throw err;}
+    });
+});
+
 router.get('/activateBlogger/:userId', function(req, res) {
     var userId = req.params.userId;
     var thisUser = user

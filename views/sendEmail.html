@@ -46,6 +46,9 @@
         <md-button class="md-cancel md-small font10" ng-click="emailService()" ng-if="user.userType =='Master'">
             Email Service
         </md-button>
+        <md-button class="md-cancel md-small font10" ng-click="groupWebsiteService()" ng-if="user.userType =='Master'">
+            Group Website Service
+        </md-button>
         <md-content flex layout-padding ng-show="sendingMode">
             <div layout="column" ng-if="bulkEmails.length > 0">
                 <div class="secondFont">

@@ -57,16 +57,23 @@
                         {{thisuser.basic.name}}
                     </div>
                 </div>
-                <div layout="column" layout-align="start start" class="paddingL20 editFont">
-                    <div layout="column" layout-align="start start" ng-if="thisuser.blogger">
-                        <md-button class="md-green md-small width100 editFont" ng-click="activateBlogger(thisuser)" ng-if="!thisuser.blogger.active">
+                <div layout="row" layout-align="start start" class="paddingL20 editFont">
+                    <div layout="column" layout-align="start start" ng-if="thisuser.blogger" class="paddingLR10">
+                        <md-button class="md-green2 md-small  editFont" ng-click="activateBlogger(thisuser)" ng-if="!thisuser.blogger.active">
                         Activate Blogging
                         </md-button>
-                        <md-button class="md-danger md-small width100 editFont" ng-click="deactivateBlogger(thisuser)" ng-if="thisuser.blogger.active">
+                        <md-button class="md-danger md-small editFont" ng-click="deactivateBlogger(thisuser)" ng-if="thisuser.blogger.active">
                         Deactivate Blogging
                         </md-button>
                     </div>
-
+                    <div layout="column" layout-align="start start" ng-if="thisuser.blogger" class="paddingLR10">
+                        <md-button class="md-green2 md-small  editFont" ng-click="activateIntern(thisuser)" ng-if="thisuser.userType=='Student'">
+                        Activate Intern
+                        </md-button>
+                        <md-button class="md-danger md-small editFont" ng-click="deactivateIntern(thisuser)" ng-if="thisuser.userType=='Intern - Business Development'">
+                        Deactivate Intern
+                        </md-button>
+                    </div>
                 </div>
                 
             </div>

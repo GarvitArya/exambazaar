@@ -3163,4 +3163,45 @@ router.get('/emailService', function(req, res) {
         }
     });
 });
+router.get('/groupWebsiteService', function(req, res) {
+    console.log("Group Website Service Starting now");
+    res.json('Done');
+    
+    var groupNames = targetStudyProvider.aggregate(
+    [
+        {$match: {disabled: false} },
+        {"$group": { "_id": { groupName: "$groupName" }, count:{$sum:1} } },
+        {$sort:{"count":-1}}
+
+    ],function(err, groupNames) {
+    if (!err){
+        groupNames = groupNames.map(function(a) {return {name:a._id.groupName, count: a.count};});
+        console.log(groupNames);
+        //res.json(cityNames);
+    } else {throw err;}
+    });
+    
+    /*, $where:'this.email.length>0'*/
+    /*var allProviders = targetStudyProvider.find({website: {$exists: true} , $where:"this.website.length==0"}, {website:1, groupName: 1},function(err, allProviders) {
+        if (!err){
+            var websiteLength = 0;
+            var nProviders = allProviders.length;
+            var counter = 0;
+            console.log("There are " + nProviders + " providers!");
+            
+            allProviders.forEach(function(thisprovider, index){
+                //console.log(thisprovider.groupName);
+                if(!thisprovider.website){
+                    thisprovider.website = [];
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        console.log("Website saved for " + thisprovider._id);
+                    });
+                }
+                
+            });
+            
+        }
+    });*/
+});
 module.exports = router;

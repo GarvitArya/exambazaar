@@ -1243,6 +1243,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.emailService = function() {
             return $http.get('/api/targetStudyProviders/emailService');
         };
+        this.groupWebsiteService = function() {
+            return $http.get('/api/targetStudyProviders/groupWebsiteService');
+        };
         this.sandbox2Service = function(city) {
             return $http.get('/api/targetStudyProviders/sandbox2Service/'+city, {city: city});
         };
@@ -10954,8 +10957,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                 function displayPosition(position) {
                     $scope.currLocation = [position.coords.latitude, position.coords.longitude];
-                    //$scope.currLocation = [12.971572, 79.158781];
-                    //$scope.currLocation = [13.029595, 77.569381];
+                    $scope.currLocation = [13.029595, 77.569381];
+                    //$scope.currLocation = [18.935322, 72.825932];
+                    //$scope.currLocation = [31.633979, 74.872264];
+                    //$scope.currLocation = [28.515623, 77.250452];
+                    //$scope.currLocation = [28.576849, 77.161944];
                 }
                 function displayError(error) {
                   var errors = { 
@@ -15229,12 +15235,28 @@ function getLatLng(thisData) {
             };
     }]);
     
-    exambazaar.controller("addBloggerController", 
+    exambazaar.controller("manageUsersController", 
         [ '$scope', 'UserService','$http','$state', '$rootScope', function($scope, UserService,$http,$state, $rootScope){
             $rootScope.$on("setBloggerUser", function(event, data){
-                //console.log(data.user);
+                console.log(data.user);
                 $scope.thisuser = data.user;
             });
+            $scope.activateIntern = function(thisuser){
+                UserService.activateIntern(thisuser._id).success(function (data, status, headers) {
+                    console.info("Done");
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            $scope.deactivateIntern = function(thisuser){
+                UserService.deactivateIntern(thisuser._id).success(function (data, status, headers) {
+                    console.info("Done");
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
             $scope.activateBlogger = function(thisuser){
                 UserService.activateBlogger(thisuser._id).success(function (data, status, headers) {
                     console.info("Done");
@@ -15466,6 +15488,16 @@ function getLatLng(thisData) {
             
             $scope.emailService = function(){
                 targetStudyProviderService.emailService().success(function (data, status, headers) {
+                    //$scope.distinctStates = data;
+                    console.info("Done");
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            
+            $scope.groupWebsiteService = function(){
+                targetStudyProviderService.groupWebsiteService().success(function (data, status, headers) {
                     //$scope.distinctStates = data;
                     console.info("Done");
                 })
@@ -19604,16 +19636,16 @@ function getLatLng(thisData) {
             resolve: {
             }
         })
-        .state('addBlogger', {
-            url: '/master/:masterId/addBlogger',
+        .state('manageUsers', {
+            url: '/master/:masterId/manageUsers',
             views: {
                 'header':{
                     templateUrl: 'header.html',
                     
                 },
                 'body':{
-                    templateUrl: 'addBlogger.html',
-                    controller: 'addBloggerController',
+                    templateUrl: 'manageUsers.html',
+                    controller: 'manageUsersController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
