@@ -406,14 +406,84 @@ router.get('/clusterUrls', function(req, res) {
     });
 });
 
-//to get all masters
-router.get('/targetstudyurlsList', function(req, res) {
-    sourceUrl.find({'added':false}, function(err, docs) {
-    if (!err){ 
-        //console.log(docs);
-        res.json(docs);
+
+
+
+//to get google places
+router.get('/googlePlaces', function(req, res) {
+    res.json('Done');
+    var GooglePlaces = require('google-places');
+
+    var places = new GooglePlaces('AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4');
+
+    /*places.autocomplete({input: 'Allen Career Institute Jaipur'}, function(err, response) {
+      if(err) { console.log(err); return; }
+        var results = response.predictions;
+      console.log(response.predictions.length);
+      console.log("autocomplete: ", response.predictions);
+
+      var success = function(err, response) {
+        if(err) { console.log(err); return; }
+        console.log("did you mean: ", response.result.name);
+      };
+
+      for(var index in response.predictions) {
+        places.details({reference: response.predictions[index].reference}, success);
+      }
+    });*/
+    var ObjectId = require('mongodb').ObjectID;
+    
+    var allProviders = targetStudyProvider.find( { latlng: {$exists: true}, latlngna:false, exams: ObjectId("58ac27030be6311eccbbc3a6"),  disabled: false}, {latlng:1, name: 1},function(err, allProviders) {
+    if (!err){
+        var nLength = allProviders.length;
+        var counter = 0;
+        console.log(nLength);
+        allProviders.forEach(function(thisprovider, index){
+            var thisLatLng = thisprovider.latlng;
+            var thisLng = Number(thisLatLng.lng);
+            var thisLat = Number(thisLatLng.lat);
+            var coordinates = [thisLat, thisLng];
+            var thisName = thisprovider.name;
+            
+            console.log(thisName + " " + JSON.stringify(coordinates));
+            
+            if(thisName && coordinates){
+                places.search({name: thisName, location:coordinates, radius:500}, function(err, response) {
+                    //, rankby:'distance'
+                    var results = response.results;
+                    if(results.length > 0){
+                        console.log("search: " + thisName + " " + thisprovider._id);
+                        results.forEach(function(thisResult, rindex){
+                            console.log(rindex + " " + thisResult.name + " " + thisResult.place_id);   
+                        });
+                          /*places.details({reference: response.results[0].reference}, function(err, response) {
+                            console.log("search details: ", response.result.website);
+                            // search details:  http://www.vermonster.com/
+                          });*/
+                    }else{
+                        console.log("search: " + thisprovider._id + " found nothing");
+                    }
+                  
+                });
+            }
+        });
+        
+        if(nLength == 0){
+            //res.json('Done');    
+        }
+        
     } else {throw err;}
-    }).limit(1500);
+    }).limit(10);
+    //
+    /*places.search({name: 'Shekhawati Institute Of Competitions', location:[26.876856,75.79724999999996], rankby:'distance'}, function(err, response) {
+      console.log("search: ", response.results);
+
+      places.details({reference: response.results[0].reference}, function(err, response) {
+        console.log("search details: ", response.result.website);
+        // search details:  http://www.vermonster.com/
+      });
+    });*/
+    
 });
 
 router.post('/addIntern/', function(req, res) {
@@ -717,20 +787,5 @@ router.post('/urls2/', function(req, res) {
     });
     res.send("Done");
 });
-//to get a particular master with _id masterId
-router.get('/edit/:masterId', function(req, res) {
-    var masterId = req.params.masterId;
-    console.log("Master id is: " + masterId);
-    master
-        .findOne({ '_id': masterId })
-        .deepPopulate('batches _institute subjects subjects._batch subjects._batch.students')
-        .exec(function (err, docs) {
-        if (!err){ 
-            //console.log('The master name is: ' + JSON.stringify(master.batchlist));
-            console.log(docs);
-            res.json(docs);
-            //process.exit();
-        } else {throw err;}
-    });
-});
+
 module.exports = router;

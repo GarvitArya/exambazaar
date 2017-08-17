@@ -3163,21 +3163,40 @@ router.get('/emailService', function(req, res) {
         }
     });
 });
-router.get('/groupWebsiteService', function(req, res) {
+
+
+router.get('/groupSummaryService', function(req, res) {
     console.log("Group Website Service Starting now");
-    res.json('Done');
+    //res.json('Done');
     
     var groupNames = targetStudyProvider.aggregate(
     [
         {$match: {disabled: false} },
-        {"$group": { "_id": { groupName: "$groupName" }, count:{$sum:1} } },
+        {"$group": { "_id": { groupName: "$groupName" }, count:{$sum:1}, exams: { $addToSet: "$exams" } } },
         {$sort:{"count":-1}}
 
     ],function(err, groupNames) {
     if (!err){
-        groupNames = groupNames.map(function(a) {return {name:a._id.groupName, count: a.count};});
-        console.log(groupNames);
-        //res.json(cityNames);
+        
+        groupNames.forEach(function(thisgroup, index){
+            
+            var thisExams = thisgroup.exams;
+            var allExams = [];
+            thisExams.forEach(function(thisset, sindex){
+                thisset.forEach(function(thisExam, eindex){
+                    var exIndex = allExams.indexOf(thisExam.toString());
+                    if(exIndex == -1){
+                        allExams.push(thisExam.toString());
+                    }
+                });
+            });
+            thisgroup.exams = allExams;
+        });
+        
+        
+        groupNames = groupNames.map(function(a) {return {name:a._id.groupName, count: a.count, exams: a.exams};});
+        //console.log(groupNames);
+        res.json(groupNames);
     } else {throw err;}
     });
     

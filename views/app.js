@@ -1249,8 +1249,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.emailService = function() {
             return $http.get('/api/targetStudyProviders/emailService');
         };
-        this.groupWebsiteService = function() {
-            return $http.get('/api/targetStudyProviders/groupWebsiteService');
+        this.groupSummaryService = function() {
+            return $http.get('/api/targetStudyProviders/groupSummaryService');
         };
         this.sandbox2Service = function(city) {
             return $http.get('/api/targetStudyProviders/sandbox2Service/'+city, {city: city});
@@ -1282,6 +1282,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.extractEmails = function(providerIds) {
             return $http.post('/api/masters/extractEmails/',providerIds);
+        };
+        this.googlePlaces = function() {
+            return $http.get('/api/masters/googlePlaces/');
         };
     }]);    
         
@@ -3352,7 +3355,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.markLatlng = function(){
             GMaps.geocode({
-                address: $scope.provider.address + ", " + $scope.provider.city,
+                address: $scope.provider.address + ", " + $scope.provider.city ,
                 callback: function(results, status) {
                     
                     if (status == 'OK') {
@@ -9918,7 +9921,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             if($scope.user.userType =='Master'){
                 $scope.spreadsheetMode = true;
             }
-            if($scope.user._id =='59154e2e838df93c1c27ab41'){
+            if($scope.user._id =='59899631a68cea0154b49502'){
                 $scope.spreadsheetMode = true;
             }
             
@@ -9983,6 +9986,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                   clickOutsideToClose: true
                 });
             };
+            
             $scope.showWebsiteDialog = function(ev) {
                 $mdDialog.show({
                   contentElement: '#websiteDialog',
@@ -10423,6 +10427,55 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });       
             };
             
+            $scope.disableConfirm = function(){
+                var instituteLength = $scope.spreadSheetCoachings.length;
+                
+                console.log($scope.newName);
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    instituteLength = allInstitutes.length - 1;
+                }
+                
+                var groupName = '';
+                if($scope.spreadSheetCoachings.length > 1){
+                    groupName = $scope.spreadSheetCoachings[1].name;
+                }
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to disable these ' + instituteLength + ' coaching centers of ' +  groupName + '?')
+                .textContent('You will not be able to revert it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.disableAll();
+                }, function() {
+                  //nothing
+                    $scope.showExamDialog();
+                }); 
+            };
+            
+            $scope.disableAll = function(){
+                
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    allInstitutes.splice(0,1);
+                }
+                
+                var disableForm = {
+                    user: $scope.user._id,
+                    instituteIds: allInstitutes
+                };
+                console.log('Disabling: ' + allInstitutes.length);
+                targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+                    console.log('Done');
+                    $scope.showSavedDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });   
+            };
             
             $rootScope.$on("setSpreadSheetCoachings", function(event, data){
                 $scope.spreadSheetCoachings = [];
@@ -10823,7 +10876,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
       
     exambazaar.controller("aroundmeController", 
-        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', 'viewService', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification, viewService){
+        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', 'viewService','MasterService', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification, viewService, MasterService){
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
             
@@ -10833,6 +10886,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }else{
                 $scope.user = null;
             }
+            
+            
             
             var viewForm = {
                 state: $state.current.name,
@@ -10862,6 +10917,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.info('Error ' + data + ' ' + status);
                 });   
             };
+            
+            $scope.googlePlaces = function(){
+                MasterService.googlePlaces().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });   
+            };
+            
             
             NgMap.getMap().then(function(map) {
                 //console.log('map', map);
@@ -10969,6 +11034,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     //$scope.currLocation = [28.515623, 77.250452];
                     //$scope.currLocation = [28.576849, 77.161944];
                     //$scope.currLocation = [19.056719, 72.828877];
+                    //$scope.currLocation = [28.917227, 77.064013];
+                    //$scope.currLocation = [28.486915, 77.507298];
+                    $scope.currLocation = [12.823035, 80.043792];
                 }
                 function displayError(error) {
                   var errors = { 
@@ -12762,7 +12830,31 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.showChartDialog();
             };
     }]);
-        
+    
+    exambazaar.controller("coachingGroupSummaryController", 
+        [ '$scope', '$http', '$rootScope','$state', '$mdDialog', 'MasterService','groupSummary', 'examList', function($scope, $http, $rootScope, $state, $mdDialog, MasterService, groupSummary, examList){
+            
+            $rootScope.pageTitle = 'EB Coaching Group Summary';
+            $scope.groupSummary = groupSummary.data;
+            var examList = examList.data;
+            var examIds = examList.map(function(a) {return a._id;});
+            $scope.groupSummary.forEach(function(thisGroup, gindex){
+                var thisExams = thisGroup.exams;
+                var allExams = [];
+                thisExams.forEach(function(thisExam, eindex){
+                    var exIndex = examIds.indexOf(thisExam);
+                    if(exIndex != -1){
+                        //thisExam = examList[exIndex];
+                        allExams.push(examList[exIndex]);
+                    }else{
+                        console.log('something is wrong: ' + thisExam);
+                    }
+                });
+                thisGroup.exams = allExams;
+            });
+            
+            
+    }]); 
     exambazaar.controller("extractEmailsController", 
         [ '$scope', '$http', '$rootScope','$state', '$mdDialog', 'MasterService', function($scope, $http, $rootScope, $state, $mdDialog, MasterService){
             
@@ -12779,57 +12871,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             
             $scope.extractEmailfromIds = function(){
-                var providerIds = ['5870f16db2a1c11da874022f',
-'5870f767b2a1c11da8740279',
-'5870f858b2a1c11da8740285',
-'5870f9aab2a1c11da8740295',
-'5870f9bfb2a1c11da8740297',
-'5870fa24b2a1c11da874029b',
-'5870fc03b2a1c11da87402b3',
-'5870fc7bb2a1c11da87402b9',
-'5870fc99b2a1c11da87402bc',
-'5870fd94b2a1c11da87402c9',
-'5870fe01b2a1c11da87402ce',
-'587100b4b2a1c11da87402ef',
-'587101b7b2a1c11da87402fd',
-'587101cbb2a1c11da87402ff',
-'58710487b2a1c11da8740321',
-'5871049bb2a1c11da8740323',
-'58710563b2a1c11da874032b',
-'5871058eb2a1c11da874032f',
-'5871266e72dbba182cb4a63a',
-'587126be72dbba182cb4a63f',
-'5871296913e8b934b42c2f2d',
-'5871297c13e8b934b42c2f2f',
-'587129d613e8b934b42c2f32',
-'58712a0c13e8b934b42c2f33',
-'58712a4f13e8b934b42c2f38',
-'58712a6313e8b934b42c2f3a',
-'58712ab113e8b934b42c2f3c',
-'58712ad013e8b934b42c2f3f',
-'58712bd213e8b934b42c2f4a',
-'58712bd713e8b934b42c2f4b',
-'58712c2313e8b934b42c2f4f',
-'58712cbc13e8b934b42c2f58',
-'58712d1213e8b934b42c2f5b',
-'58712d4313e8b934b42c2f5f',
-'587137535f53bc1f94b020eb',
-'58713ab05f53bc1f94b02117',
-'58713af55f53bc1f94b02118',
-'58713afe5f53bc1f94b02119',
-'58713b1d5f53bc1f94b0211c',
-'58713bd95f53bc1f94b02121',
-'58713c265f53bc1f94b02127',
-'58713c6a5f53bc1f94b02129',
-'58713d7a5f53bc1f94b02135',
-'58713d8e5f53bc1f94b02137',
-'58713dc75f53bc1f94b02138',
-'58713e0d5f53bc1f94b0213b',
-'58713e405f53bc1f94b0213c',
-'58713e655f53bc1f94b0213f',
-'58713ec15f53bc1f94b02143',
-'587140ab5f53bc1f94b0215b',];
-                MasterService.extractEmails(providerIds).success(function (data, status, headers) {
+                MasterService.extractEmails().success(function (data, status, headers) {
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {
@@ -15375,7 +15417,7 @@ function getLatLng(thisData) {
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
-        if($scope.user._id == '59154e2e838df93c1c27ab41'){
+        if($scope.user._id == '59899631a68cea0154b49502'){
             $scope.showLevel = 10;
         }
         $scope.disableinstitutes =[];
@@ -15423,7 +15465,7 @@ function getLatLng(thisData) {
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
-        if($scope.user._id == '59154e2e838df93c1c27ab41'){
+        if($scope.user._id == '59899631a68cea0154b49502'){
             $scope.showLevel = 10;
         }
             
@@ -15590,15 +15632,7 @@ function getLatLng(thisData) {
                 });
             };
             
-            $scope.groupWebsiteService = function(){
-                targetStudyProviderService.groupWebsiteService().success(function (data, status, headers) {
-                    //$scope.distinctStates = data;
-                    console.info("Done");
-                })
-                .error(function (data, status, header, config) {
-                    console.info("Error ");
-                });
-            };
+            
             
             $scope.fetchEmails = function(){
                 tofillciService.sendEmails().success(function (data, status, headers) {
@@ -17616,7 +17650,32 @@ function getLatLng(thisData) {
                 }
             }
         })
-        
+        .state('coachingGroupSummary', {
+            url: '/coachingGroupSummary', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'coachingGroupSummary.html',
+                    controller: 'coachingGroupSummaryController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                groupSummary: ['targetStudyProviderService',
+                    function(targetStudyProviderService){
+                    return targetStudyProviderService.groupSummaryService();
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+            }
+        })
         .state('rankerswall', {
             url: '/rankerswall/:examName/:year', //masterId?
             views: {

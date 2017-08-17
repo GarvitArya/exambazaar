@@ -61,6 +61,7 @@
     "forever": "^0.15.3",
     "forever-monitor": "^1.7.1",
     "google-auth-library": "^0.10.0",
+    "google-places": "0.0.2",
     "googleapis": "^19.0.0",
     "handsontable": "^0.32.0-beta1",
     "headroom.js": "^0.9.3",

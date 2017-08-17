@@ -732,7 +732,7 @@ router.get('/hourlyHeatmap', function(req, res) {
 router.get('/query/:query', function(req, res) {
     var query = req.params.query;
     //console.log(query);
-    user.find({"basic.name":{'$regex' : query, '$options' : 'i'}}, {basic:1, blogger:1, image:1, userType:1},function(err, docs) {
+    user.find({"basic.name":{'$regex' : query, '$options' : 'i'}}, {basic:1, blogger:1, image:1, userType:1, mobile:1, email:1},function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}
