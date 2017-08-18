@@ -14999,10 +14999,10 @@ function getLatLng(thisData) {
         };
           
         $scope.removeDoc = function(doc){
-            var syllabusIds = $scope.newExamCycle.syllabus.map(function(a) {return a.url;});
-            var sIndex = syllabusIds.indexOf(syllabus.url);
-            if(sIndex!= -1){
-                $scope.newExamCycle.syllabus.splice(sIndex,1);
+            var docIds = $scope.newExamCycle.docs.map(function(a) {return a.url;});
+            var dIndex = docIds.indexOf(doc.url);
+            if(dIndex!= -1){
+                $scope.newExamCycle.docs.splice(dIndex,1);
             }
         };    
         //upload helper functions for test papers
@@ -15263,7 +15263,57 @@ function getLatLng(thisData) {
 
                 });
             }
-         };     
+         };
+        $scope.uploadDocs = function (docs) {
+            var nFiles = docs.length;
+            var counter = 0;
+            if (docs && docs.length) {
+                docs.forEach(function(thisFile, index){
+
+                    var fileInfo = {
+                        filename: thisFile.name,
+                        contentType: thisFile.type
+                    };
+                     ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                    var s3Request = {};
+                    var allParams = data.params;
+                    for (var key in allParams) {
+                      if (allParams.hasOwnProperty(key)) {
+                        s3Request[key] = allParams[key];
+                      }
+                    }
+                    s3Request.file = thisFile;
+                    Upload.upload({
+                        url: data.endpoint_url,
+                        data: s3Request
+                    }).then(function (resp) {
+                            console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                            thisFile.link = $(resp.data).find('Location').text();
+                        
+                           var newDoc = {
+                                name: '',
+                                description: '',
+                                url: thisFile.link,
+                            };
+                            if(!$scope.newExamCycle.docs){
+                                $scope.newExamCycle.docs = [];
+                            }
+                            $scope.newExamCycle.docs.push(newDoc);
+
+                        }, function (resp) {
+                            console.log('Error status: ' + resp.status);
+                        }, function (evt) {
+                            
+                        });
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error");
+                    });   
+
+                });
+            }
+         };
         $scope.uploadBrochure = function (brochures) {
             var nFiles = brochures.length;
             var counter = 0;
