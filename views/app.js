@@ -14510,7 +14510,9 @@ function getLatLng(thisData) {
         };
     }]);    
     exambazaar.controller("addExamController", 
-        [ '$scope',  'examList', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', function($scope, examList, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification){
+        [ '$scope',  'examList', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', function($scope, examList, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope){
+            
+        $rootScope.title = 'All Exams listed on EB';        
         $scope.exams = examList.data;
         $scope.streams = streamList.data;
         $scope.showAllExams = true;    
@@ -15063,7 +15065,10 @@ function getLatLng(thisData) {
             var fileInfo = {
                 filename: thisFile.name,
                 contentType: thisFile.type
-            }; 
+            };
+            var fileName = fileInfo.filename;
+            var splits = fileName.split('.');
+            fileName = splits[0];
             ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
             var s3Request = {};
             var allParams = data.params;
@@ -15081,7 +15086,7 @@ function getLatLng(thisData) {
                 console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 var questionpaperLink = $(resp.data).find('Location').text();
                 $scope.toAddTest.url.question = questionpaperLink;
-                
+                $scope.toAddTest.name = fileName;
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
                 }, function (evt) {
@@ -15573,7 +15578,9 @@ function getLatLng(thisData) {
     }]);        
         
     exambazaar.controller("addInstituteController", 
-        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', 'examList', 'streamList', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService, examList, streamList){
+        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', 'examList', 'streamList', '$rootScope', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService, examList, streamList,$rootScope){
+            
+        $rootScope.title = 'Add Coaching in EB';    
         $scope.user = thisuser.data;
         $scope.exams = examList.data;
             console.log($scope.exams);
