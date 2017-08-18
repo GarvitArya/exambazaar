@@ -1289,6 +1289,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.bulkSaveLatLng = function() {
             return $http.get('/api/masters/bulkSaveLatLng/');
         };
+        this.latLngSummary = function() {
+            return $http.get('/api/masters/latLngSummary/');
+        };
     }]);    
         
     exambazaar.service('StudentService', ['$http', function($http) {
@@ -10882,10 +10885,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', 'viewService','MasterService', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification, viewService, MasterService){
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
+            $scope.masterUser = false;
             
             $rootScope.pageTitle ='Coaching Centers around you!';
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
+                if($scope.user.userType == 'Master'){
+                    $scope.masterUser = true;
+                }
             }else{
                 $scope.user = null;
             }
@@ -10932,6 +10939,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $scope.bulkSaveLatLng = function(){
                 MasterService.bulkSaveLatLng().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });   
+            };
+            $scope.latLngSummary = function(){
+                MasterService.latLngSummary().success(function (data, status, headers) {
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {

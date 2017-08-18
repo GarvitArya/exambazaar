@@ -430,15 +430,34 @@ Quotas per day per key:
 */
 
 router.get('/latLngSummary', function(req, res) {
+    console.log('Lat Long summary starting');
+    res.json('Done');
     var allProviders = targetStudyProvider.find( { latlng: {$exists: false}, possibleGeoCodings:{$exists: true},latlngna:true,  disabled: false}, {possibleGeoCodings:1},function(err, allProviders) {
     if (!err){
+        var foundNone = [];
+        var foundOne = [];
+        var foundTwoOrMore = [];
         var nLength = allProviders.length;
         var counter = 0;
         console.log('Looking at: ' + nLength + ' providers!');
         allProviders.forEach(function(thisprovider, index){
-            var thisPossibleGeoCodings = thisprovider.possibleGeoCodings;
             
+            var thisPossibleGeoCodings = thisprovider.possibleGeoCodings.geocodings;
+            
+            if(!thisPossibleGeoCodings){
+                foundNone.push(thisprovider);
+            }else{
+                if(thisPossibleGeoCodings.length == 1){
+                    foundOne.push(thisprovider);
+                }else{
+                    foundTwoOrMore.push(thisprovider);
+                }
+            }
         });
+        
+        console.log("None: " + foundNone.length);
+        console.log("One: " + foundOne.length);
+        console.log("Two: " + foundTwoOrMore.length);
         
         if(nLength == 0){
             //res.json('Done');    

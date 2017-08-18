@@ -128,7 +128,7 @@
             </div>
         </div>
     </md-button>
-    <md-button class="md-black md-small tolowercase" ng-click="googlePlaces()"> <!--aroundme-->
+    <md-button class="md-black md-small tolowercase" ng-click="googlePlaces()" ng-if="masterUser"> <!--aroundme-->
         <div layout="row" layout-align="start center">
             <div layout="row" layout-align="start center" class="marginR10">
                 <i class="fa fa-map-marker font18" aria-hidden="true"></i>
@@ -138,13 +138,23 @@
             </div>
         </div>
     </md-button>
-    <md-button class="md-danger md-small tolowercase" ng-click="bulkSaveLatLng()"> <!--aroundme-->
+    <md-button class="md-danger md-small tolowercase" ng-click="bulkSaveLatLng()" ng-if="masterUser"> <!--aroundme-->
         <div layout="row" layout-align="start center">
             <div layout="row" layout-align="start center" class="marginR10">
                 <i class="fa fa-map-marker font18" aria-hidden="true"></i>
             </div>
             <div layout="row" layout-align="start center">
                 Bulk Lat Lng
+            </div>
+        </div>
+    </md-button>
+    <md-button class="md-danger md-small tolowercase" ng-click="latLngSummary()" ng-if="masterUser"> <!--aroundme-->
+        <div layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center" class="marginR10">
+                <i class="fa fa-map-marker font18" aria-hidden="true"></i>
+            </div>
+            <div layout="row" layout-align="start center">
+                Lat Lng summary
             </div>
         </div>
     </md-button>

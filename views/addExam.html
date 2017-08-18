@@ -361,7 +361,7 @@
                         </div>
                         <div flex layout="row" layout-align="start start"  class="paddingLR10" >
                             <div>
-                                <a href="{{toAddTest.url.question}}" target="_blank">
+                                <a ng-href="{{toAddTest.url.question}}" target="_blank">
                                     Link
                                 </a>
                             </div>
@@ -378,7 +378,7 @@
                         </div>
                         <div flex layout="row" layout-align="start start"  class="paddingLR10" >
                             <div>
-                                <a href="{{toAddTest.url.answer}}" target="_blank">
+                                <a ng-href="{{toAddTest.url.answer}}" target="_blank">
                                     Link
                                 </a>
                             </div>
@@ -395,7 +395,7 @@
                         </div>
                         <div flex layout="row" layout-align="start start"  class="paddingLR10" layout-wrap>
                             <div ng-repeat="screenshot in toAddTest.screenshots" class="marginR5">
-                                <a href="{{screenshot}}" target="_blank">
+                                <a ng-href="{{screenshot}}" target="_blank">
                                     Link
                                 </a>
                             </div>
@@ -638,7 +638,7 @@
                         <div layout="column" layout-align="center center">
                             <div layout="row" layout-align="start center" ng-repeat="brochure in newExamCycle.brochure" class="marginB5">
                                 <div flex>
-                                    <a href="{{brochure.url}}" target="_blank">
+                                    <a ng-href="{{brochure.url}}" target="_blank">
                                         Brochure {{$index+1}}
                                     </a>
                                 </div>
@@ -666,7 +666,7 @@
                         <div layout="column" layout-align="center center">
                             <div layout="row" layout-align="start center" ng-repeat="syllabus in newExamCycle.syllabus" class="marginB5">
                                 <div flex>
-                                    <a href="{{syllabus.url}}" target="_blank">
+                                    <a ng-href="{{syllabus.url}}" target="_blank">
                                         Syllabus {{$index+1}}
                                     </a>
                                 </div>
@@ -679,7 +679,34 @@
                             </div>
                         </div>
                     </div>
+                    <div flex="15" layout="column" layout-align="start center" class="marginR10 padding5 whiteBackground" id="pageLogoHolder">
+                        <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadSyllabus(syllabuses)" ng-model="syllabuses" multiple="multiple" >
+                            <span class="md-display-1">
+                                <i class="fa fa-file-text" aria-hidden="true"></i>
+                            </span>
+                            <span>
+                                Other Docs
+                            </span>
+                        </div>
+                        <a ng-if="newExamCycle.syllabus.length > 0" target="_blank" class="bold">
+                            <i class="fa fa-check text-primary font16" aria-hidden="true"></i> Uploaded
+                        </a>
+                        <div layout="column" layout-align="center center">
+                            <div layout="row" layout-align="start center" ng-repeat="syllabus in newExamCycle.syllabus" class="marginB5">
+                                <div flex>
+                                    <a ng-href="{{syllabus.url}}" target="_blank">
+                                        Doc {{$index+1}}
+                                    </a>
+                                </div>
 
+                                <div flex>
+                                    <div class="badge" id="removebadge" ng-click="removeSyllabus(syllabus)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Remove
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
