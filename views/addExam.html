@@ -680,7 +680,7 @@
                         </div>
                     </div>
                     <div flex="15" layout="column" layout-align="start center" class="marginR10 padding5 whiteBackground" id="pageLogoHolder">
-                        <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadSyllabus(syllabuses)" ng-model="syllabuses" multiple="multiple" >
+                        <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadDocs(docs)" ng-model="docs" multiple="multiple" >
                             <span class="md-display-1">
                                 <i class="fa fa-file-text" aria-hidden="true"></i>
                             </span>
@@ -688,19 +688,19 @@
                                 Other Docs
                             </span>
                         </div>
-                        <a ng-if="newExamCycle.syllabus.length > 0" target="_blank" class="bold">
+                        <a ng-if="newExamCycle.docs.length > 0" target="_blank" class="bold">
                             <i class="fa fa-check text-primary font16" aria-hidden="true"></i> Uploaded
                         </a>
                         <div layout="column" layout-align="center center">
-                            <div layout="row" layout-align="start center" ng-repeat="syllabus in newExamCycle.syllabus" class="marginB5">
+                            <div layout="row" layout-align="start center" ng-repeat="doc in newExamCycle.docs" class="marginB5">
                                 <div flex>
-                                    <a ng-href="{{syllabus.url}}" target="_blank">
+                                    <a ng-href="{{doc.url}}" target="_blank">
                                         Doc {{$index+1}}
                                     </a>
                                 </div>
 
                                 <div flex>
-                                    <div class="badge" id="removebadge" ng-click="removeSyllabus(syllabus)">
+                                    <div class="badge" id="removebadge" ng-click="removeDoc(doc)">
                                         <i class="fa fa-trash" aria-hidden="true"></i> Remove
                                     </div>
                                 </div>

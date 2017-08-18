@@ -52,6 +52,11 @@ var examSchema = mongoose.Schema({
             description: {type: String},
             url: {type: String, required: true},
         }],
+        docs: [{
+            name: {type: String},
+            description: {type: String},
+            url: {type: String, required: true},
+        }],
         steps: {
             registration: {type: Boolean},
             admitCard: {type: Boolean},

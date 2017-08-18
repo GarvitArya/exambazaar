@@ -14726,6 +14726,7 @@ function getLatLng(thisData) {
                 description: '',
                 brochure: [],
                 syllabus: [],
+                docs: [],
                 active: false,
                 examMode: false,
                 studentsAppearing: '',
@@ -14996,7 +14997,14 @@ function getLatLng(thisData) {
                 $scope.newExamCycle.syllabus.splice(sIndex,1);
             }
         };
-            
+          
+        $scope.removeDoc = function(doc){
+            var syllabusIds = $scope.newExamCycle.syllabus.map(function(a) {return a.url;});
+            var sIndex = syllabusIds.indexOf(syllabus.url);
+            if(sIndex!= -1){
+                $scope.newExamCycle.syllabus.splice(sIndex,1);
+            }
+        };    
         //upload helper functions for test papers
         $scope.uploadAnswerKey = function (newanswerkey) {
             var answerkey = [newanswerkey];
