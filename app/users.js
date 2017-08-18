@@ -1064,16 +1064,17 @@ router.get('/blogger/:userId', function(req, res) {
     });
 });
 router.get('/activateIntern/:userId', function(req, res) {
+    
     var userId = req.params.userId;
     var thisUser = user
-        .findOne({ '_id': userId },{basic:1, userType:1})
+        .findOne({ '_id': userId },{basic:1, blogger:1, image:1, userType:1, mobile:1, email:1})
         .exec(function (err, thisUser) {
         if (!err){
             thisUser.userType = 'Intern - Business Development';
             thisUser.save(function(err, thisUser) {
                 if (err) return console.error(err);
                 console.log('Intern Activated: ' + thisUser.basic.name);
-                res.json(thisUser._id);
+                res.json(thisUser);
             });
         } else {throw err;}
     });
@@ -1081,14 +1082,14 @@ router.get('/activateIntern/:userId', function(req, res) {
 router.get('/deactivateIntern/:userId', function(req, res) {
     var userId = req.params.userId;
     var thisUser = user
-        .findOne({ '_id': userId },{userType:1, basic:1})
+        .findOne({ '_id': userId },{basic:1, blogger:1, image:1, userType:1, mobile:1, email:1})
         .exec(function (err, thisUser) {
         if (!err){
             thisUser.userType = 'Student';
             thisUser.save(function(err, thisUser) {
                 if (err) return console.error(err);
                 console.log('Intern deactivated: ' + thisUser.basic.name);
-                res.json(thisUser._id);
+                res.json(thisUser);
             });
         } else {throw err;}
     });
@@ -1097,13 +1098,13 @@ router.get('/deactivateIntern/:userId', function(req, res) {
 router.get('/activateBlogger/:userId', function(req, res) {
     var userId = req.params.userId;
     var thisUser = user
-        .findOne({ '_id': userId },{blogger:1})
+        .findOne({ '_id': userId },{basic:1, blogger:1, image:1, userType:1, mobile:1, email:1})
         .exec(function (err, thisUser) {
         if (!err){
             thisUser.blogger.active = true;
             thisUser.save(function(err, thisUser) {
                 if (err) return console.error(err);
-                res.json(thisUser._id);
+                res.json(thisUser);
             });
         } else {throw err;}
     });
@@ -1111,13 +1112,13 @@ router.get('/activateBlogger/:userId', function(req, res) {
 router.get('/deactivateBlogger/:userId', function(req, res) {
     var userId = req.params.userId;
     var thisUser = user
-        .findOne({ '_id': userId },{blogger:1})
+        .findOne({ '_id': userId },{basic:1, blogger:1, image:1, userType:1, mobile:1, email:1})
         .exec(function (err, thisUser) {
         if (!err){
             thisUser.blogger.active = false;
             thisUser.save(function(err, thisUser) {
                 if (err) return console.error(err);
-                res.json(thisUser._id);
+                res.json(thisUser);
             });
         } else {throw err;}
     });

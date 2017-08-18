@@ -22,6 +22,8 @@ var bcrypt   = require('bcrypt-nodejs');
 var unirest = require('unirest');
 var cheerio = require('cheerio');
 
+var NodeGeocoder = require('node-geocoder');
+
 //to add a master
 router.post('/save', function(req, res) {
     var thisMaster = req.body;
@@ -106,6 +108,11 @@ function onlyUnique(value, index, self) {
 }
 
 router.post('/extractEmails/', function(req, res) {
+    var params = req.body;
+    var limit = params.limit;
+    var skip = params.skip;
+    console.log(limit + " " + skip);
+    
     var images = ['.jpg','.png','.jpeg','.gif'];
     var validExtensions = ['.com', '.in', '.biz'];
     var providerIds = req.body;
@@ -238,7 +245,7 @@ router.post('/extractEmails/', function(req, res) {
         
         res.json('Done');
     } else {throw err;}
-    }).limit(1000).skip(00);
+    }).limit(limit).skip(skip);
     
     
 });
@@ -406,6 +413,120 @@ router.get('/clusterUrls', function(req, res) {
     });
 });
 
+/*
+Places API and Youtube Data Keys
+1) AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw
+2) AIzaSyCs1Q1NsFZy0o-RHqoWaXyxda_ZVgTKIaw
+
+Geolocation keys
+1) AIzaSyCBS48UI_f9OXepU5PerZ_hssAx7ZwDImY
+2) AIzaSyCBZDrCuQ2l79RItjz5xoK_lEIJv_V3Pak
+
+Quotas per day per key:
+1) Places: 150,000
+2) Youtube: 1,000,000
+3) Geolocation: 100,000
+
+*/
+
+router.get('/latLngSummary', function(req, res) {
+    var allProviders = targetStudyProvider.find( { latlng: {$exists: false}, possibleGeoCodings:{$exists: true},latlngna:true,  disabled: false}, {possibleGeoCodings:1},function(err, allProviders) {
+    if (!err){
+        var nLength = allProviders.length;
+        var counter = 0;
+        console.log('Looking at: ' + nLength + ' providers!');
+        allProviders.forEach(function(thisprovider, index){
+            var thisPossibleGeoCodings = thisprovider.possibleGeoCodings;
+            
+        });
+        
+        if(nLength == 0){
+            //res.json('Done');    
+        }
+        
+    } else {throw err;}
+    });
+});  
+router.get('/bulkSaveLatLng', function(req, res) {
+    res.json('Done');
+    var options = {
+      provider: 'google',
+
+      httpAdapter: 'https', // Default 
+      //apiKey: 'AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4', // for Mapquest, OpenCage, Google Premier 
+      apiKey: 'AIzaSyCBZDrCuQ2l79RItjz5xoK_lEIJv_V3Pak',
+      formatter: null
+    };
+
+    var geocoder = NodeGeocoder(options);
+    
+    var allProviders = targetStudyProvider.find( { latlng: {$exists: false}, possibleGeoCodings:{$exists: false},latlngna:true,  disabled: false}, {latlng:1, latlngna:1, address:1, city:1, state:1, pincode:1, disabled:1, name: 1,possibleGeoCodings:1},function(err, allProviders) {
+    if (!err){
+        var nLength = allProviders.length;
+        var counter = 0;
+        console.log('Looking at: ' + nLength + ' providers!');
+        allProviders.forEach(function(thisprovider, index){
+            var thisLatLng = thisprovider.latlng;
+            var searchAddress = thisprovider.address + ", " + thisprovider.city + " " + thisprovider.pincode;
+            geocoder.geocode(searchAddress, function(err, res) {
+                if(err) { console.log(err); return; }
+                if(res && res.length > 0){
+                    //console.log(thisprovider.name + " " + searchAddress + " " + res.length);
+                    
+                    thisprovider.possibleGeoCodings = {
+                        searched: true,
+                        _when: Date.now(),
+                        geocodings: [],
+                    };
+                    res.forEach(function(thisgeocode, gindex){
+                        if(thisgeocode){
+                            var newgeocode = {};
+                            for (var property in thisgeocode) {
+                            newgeocode[property] = thisgeocode[property];
+                            }
+                            thisprovider.possibleGeoCodings.geocodings.push(newgeocode);
+                        }
+                    });
+                    var nGeocodings = thisprovider.possibleGeoCodings.geocodings.length;
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        console.log(nGeocodings + " geocodings added for provider id: "+ thisprovider._id);
+
+                    });
+                    
+                    
+                    
+                    
+                    //JSON.stringify(res)
+                }else{
+                    thisprovider.possibleGeoCodings = {
+                        searched: true,
+                        _when: Date.now(),
+                        geocodings: null,
+                    };
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        console.log("None geocodings added for provider id: "+ thisprovider._id);
+
+                    });
+                }
+              
+            });
+        });
+        
+        if(nLength == 0){
+            //res.json('Done');    
+        }
+        
+    } else {throw err;}
+    }).limit(100);
+    
+    
+    
+    
+
+});
+
 
 
 
@@ -415,6 +536,7 @@ router.get('/googlePlaces', function(req, res) {
     var GooglePlaces = require('google-places');
 
     var places = new GooglePlaces('AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4');
+    
 
     /*places.autocomplete({input: 'Allen Career Institute Jaipur'}, function(err, response) {
       if(err) { console.log(err); return; }

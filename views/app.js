@@ -1286,6 +1286,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.googlePlaces = function() {
             return $http.get('/api/masters/googlePlaces/');
         };
+        this.bulkSaveLatLng = function() {
+            return $http.get('/api/masters/bulkSaveLatLng/');
+        };
     }]);    
         
     exambazaar.service('StudentService', ['$http', function($http) {
@@ -10927,6 +10930,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });   
             };
             
+            $scope.bulkSaveLatLng = function(){
+                MasterService.bulkSaveLatLng().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });   
+            };
             
             NgMap.getMap().then(function(map) {
                 //console.log('map', map);
@@ -11036,7 +11047,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     //$scope.currLocation = [19.056719, 72.828877];
                     //$scope.currLocation = [28.917227, 77.064013];
                     //$scope.currLocation = [28.486915, 77.507298];
-                    $scope.currLocation = [12.823035, 80.043792];
+                    //$scope.currLocation = [12.823035, 80.043792];
+                    $scope.currLocation = [28.688274, 77.205712];
                 }
                 function displayError(error) {
                   var errors = { 
@@ -12867,12 +12879,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.emails = $scope.text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
                 console.log($scope.emails);
             };
-            $scope.text = 'sdabhikagathara@rediffmail.com, "assdsdf" <dsfassdfhsdfarkal@gmail.com>, "rodnsdfald ferdfnson" <rfernsdfson@gmal.com>, "Affdmdol Gondfgale" <gyfanamosl@gmail.com>, "truform techno" <pidfpinfg@truformdftechnoproducts.com>, "NiTsdfeSh ThIdfsKaRe" <nthfsskare@ysahoo.in>, "akasdfsh kasdfstla" <akashkatsdfsa@yahsdfsfoo.in>, "Bisdsdfamal Prakaasdsh" <bimsdaalprakash@live.com>,; "milisdfsfnd ansdfasdfnsftwar" <dfdmilifsd.ensfdfcogndfdfatia@gmail.com>';
-            
-            
+            //$scope.text = 'sdabhikagathara@rediffmail.com, "assdsdf" <dsfassdfhsdfarkal@gmail.com>, "rodnsdfald ferdfnson" <rfernsdfson@gmal.com>, "Affdmdol Gondfgale" <gyfanamosl@gmail.com>, "truform techno" <pidfpinfg@truformdftechnoproducts.com>, "NiTsdfeSh ThIdfsKaRe" <nthfsskare@ysahoo.in>, "akasdfsh kasdfstla" <akashkatsdfsa@yahsdfsfoo.in>, "Bisdsdfamal Prakaasdsh" <bimsdaalprakash@live.com>,; "milisdfsfnd ansdfasdfnsftwar" <dfdmilifsd.ensfdfcogndfdfatia@gmail.com>';
+            $scope.text = '';
+            $scope.limit = 1000;
+            $scope.skip = 0;
             $scope.extractEmailfromIds = function(){
-                MasterService.extractEmails().success(function (data, status, headers) {
+                var params = {
+                    limit: $scope.limit,   
+                    skip: $scope.skip,   
+                };
+                
+                MasterService.extractEmails(params).success(function (data, status, headers) {
                     console.log(data);
+                    $scope.skip += $scope.limit;
                 })
                 .error(function (data, status, header, config) {
                     console.info('Error ' + data + ' ' + status);
@@ -14661,9 +14680,28 @@ function getLatLng(thisData) {
             $scope.toAddTest = null;
             $scope.setExam($scope.exam);
         };
+        
+        $scope.newOfficialLink = null;   
+        $scope.addNewOfficialLink = function(){
+            $scope.newOfficialLink = {
+                url: '',
+                description: '',
+            };
+        };
+        $scope.saveNewOfficialLink = function(){
             
-        $scope.newExamCycle = null;    
+            if($scope.newOfficialLink.url){
+                if(!$scope.exam.links){
+                    $scope.exam.links = [];
+                }
+                $scope.exam.links.push($scope.newOfficialLink);
+                console.log('Done');
+                $scope.newOfficialLink = null;
+            }
             
+        };
+            
+        $scope.newExamCycle = null;   
         $scope.addNewExamCycle = function(){
             
             $scope.newExamCycle = {
@@ -15373,6 +15411,8 @@ function getLatLng(thisData) {
     
     exambazaar.controller("manageUsersController", 
         [ '$scope', 'UserService','$http','$state', '$rootScope', function($scope, UserService,$http,$state, $rootScope){
+            
+            $rootScope.pageTitle = "Manage users on EB";
             $rootScope.$on("setBloggerUser", function(event, data){
                 console.log(data.user);
                 $scope.thisuser = data.user;
@@ -15380,6 +15420,7 @@ function getLatLng(thisData) {
             $scope.activateIntern = function(thisuser){
                 UserService.activateIntern(thisuser._id).success(function (data, status, headers) {
                     console.info("Done");
+                    $scope.thisuser = data;
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error ");
@@ -15388,6 +15429,7 @@ function getLatLng(thisData) {
             $scope.deactivateIntern = function(thisuser){
                 UserService.deactivateIntern(thisuser._id).success(function (data, status, headers) {
                     console.info("Done");
+                    $scope.thisuser = data;
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error ");
@@ -15396,6 +15438,7 @@ function getLatLng(thisData) {
             $scope.activateBlogger = function(thisuser){
                 UserService.activateBlogger(thisuser._id).success(function (data, status, headers) {
                     console.info("Done");
+                    $scope.thisuser = data;
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error ");
@@ -15404,6 +15447,7 @@ function getLatLng(thisData) {
             $scope.deactivateBlogger = function(thisuser){
                 UserService.deactivateBlogger(thisuser._id).success(function (data, status, headers) {
                     console.info("Done");
+                    $scope.thisuser = data;
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error ");
@@ -15620,8 +15664,8 @@ function getLatLng(thisData) {
         
         
     exambazaar.controller("sendEmailController", 
-        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService){
-            
+        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope){
+            $rootScope.pageTitle = "Send Emails via Sendgrid";
             $scope.emailService = function(){
                 targetStudyProviderService.emailService().success(function (data, status, headers) {
                     //$scope.distinctStates = data;
@@ -15852,6 +15896,15 @@ function getLatLng(thisData) {
       span.innerHTML= s;
       return span.textContent || span.innerText;
     };
+    function titleCase(str) {
+      str = str.toLowerCase();
+      str = str.split(' ');
+      for (var i = 0; i < str.length; i++) {
+        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+      }
+      return str.join(' ');
+    }    
+        
     function slugify(string) {
       return string
         .toString()

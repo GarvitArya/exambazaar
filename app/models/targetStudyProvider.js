@@ -182,7 +182,34 @@ var targetStudyProviderSchema = mongoose.Schema({
             }
         }],
     },
-    
+    possibleGeoCodings:{
+        searched: {type: Boolean,default: false},
+        _when: {type: Date},
+        geocodings: [
+            {
+                formattedAddress: {type: String},
+                latitude: {type: String},
+                longitude: {type: String},
+                extra: {
+                    googlePlaceId: {type: String},
+                    confidence: {type: String},
+                    premise: {type: String},
+                    subpremise: {type: String},
+                    neighborhood: {type: String},
+                    establishment: {type: String},
+                },
+                administrativeLevels:{
+                    level1long: {type: String},
+                    level1short: {type: String},
+                    city: {type: String},
+                    country: {type: String},
+                    countryCode: {type: String},
+                    zipcode: {type: String},
+                    provider: {type: String},
+                }
+            }
+        ],
+    }
 });
 
 targetStudyProviderSchema.index({ loc: '2dsphere'});

@@ -18,6 +18,8 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
+
+
 //to get all providers
 router.get('/cities', function(req, res) {
     
@@ -860,7 +862,7 @@ router.get('/coachingAddressService/', function(req, res) {
 });
 
 router.post('/bulkSaveLatLng', function(req, res) {
-    var LatLngForm = req.body;
+    /*var LatLngForm = req.body;
     var nLength = LatLngForm.length;
     var counter = 0;
     //console.log(LatLngForm);
@@ -904,7 +906,10 @@ router.post('/bulkSaveLatLng', function(req, res) {
         });
         
         
-    });
+    });*/
+    
+    
+    
     
 });
 

@@ -27,7 +27,10 @@ var examSchema = mongoose.Schema({
     colleges: {type: String},
     doubts: {type: String},
     
-    
+    links:[{
+        url: {type: String},
+        description: {type: String},
+    }],
     
     
     cycle: [{

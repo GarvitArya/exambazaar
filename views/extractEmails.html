@@ -74,13 +74,20 @@
     <div layout="row" layout-align="start start" class="width100 marginT20 secondFont font20 textBlack bold paddingB10">
         <textarea class="font11 width100" ng-model="text" placeholder="Paste html code here" rows="10"></textarea>
     </div>
-    <div layout="row" layout-align="start start" class="marginT20 secondFont font20 textBlack bold paddingB10">
+    <div layout="row" layout-align="start center" class="marginT20 secondFont font20 textBlack bold paddingB10">
         <md-button class="md-green2 md-small secondFont tolowercase marginR10" ng-click="extractEmails()">
             Extract Emails
         </md-button>
-        <md-button class="md-green2 md-small secondFont tolowercase" ng-click="extractEmailfromIds()">
-            Extract Emails from Ids
-        </md-button>
+        <div layout="column" layout-align="center center">
+            <div layout="row" layout-align="start center">
+                <input type="text" class="marginR10 width8" ng-model="limit"  placeholder="How many?">
+                <input type="text" class="width8" ng-model="skip"  placeholder="Skip?">
+            </div>
+            <md-button class="md-green2 md-small secondFont tolowercase" ng-click="extractEmailfromIds()">
+                Extract Emails from Ids
+            </md-button>
+        </div>
+        
     </div>
     <div layout="column" layout-align="start start" class="width100 marginT20 secondFont font20 textBlack bold paddingB10">
         <div layout="row" layout-align="start start" class="font10" ng-repeat="email in emails track by $index">
