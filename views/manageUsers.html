@@ -17,7 +17,25 @@
     #profileSection{
         min-height: 20vh;
     }
-     
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    } 
     
 </style>
 
@@ -35,7 +53,7 @@
         md-delay="300"
         md-menu-class="autocomplete"
         placeholder="Search for Users"
-        class="width100 ">
+        class="width100 min20vh">
             <md-item-template >
               <span class="item-title font12">
                   <span class="font14"><strong>{{item.name}}</strong></span>&nbsp;&nbsp;
@@ -58,8 +76,12 @@
                     </div>
                     <div layout="row" layout-align="start center" class="font10">
                         <div class="marginR10">{{thisuser._id}}</div>
-                        <div class="marginR10">{{thisuser.mobile}}</div>
-                        <div class="marginR10">{{thisuser.email}}</div>
+                        <div class="marginR10" ng-if="thisuser.mobile">{{thisuser.mobile}}</div>
+                        <div class="marginR10" ng-if="thisuser.email">{{thisuser.email}}</div>
+                        <div class="marginR10" ng-if="thisuser.facebook.link">
+                            <a ng-href="{{thisuser.facebook.link}}" target="_blank">FB Profile</a>
+                            
+                        </div>
                     </div>
                 </div>
                 <div layout="row" layout-align="start start" class="paddingL20 editFont">
@@ -81,8 +103,40 @@
                     </div>
                 </div>
                 
+                
+                
+                
             </div>
-            
+            <div layout="row" layout-align="start center" layout-wrap ng-if="thisuserViewed.length > 0" class="width100 marginT20">
+                <div layout="column" layout-align="center center" ng-repeat="view in thisuserViewed | orderBy:'-_date'" flex-gt-xs="33" flex-xs="100" class="width100 padding10">
+                    <div layout="column" layout-align="start start" class="width100 gainsboroBorder padding10">
+                    <div layout="row" layout-align="start start" class="width100 gainsboroBottomBorder">
+                        <div layout="row" layout-align="start start" id="logoHolder">
+                            <img ng-src="{{view.logo}}" id="logo"/>
+                        </div>
+                        <div layout="column" layout-align="start start" class="paddingL20">
+                        <div layout="column" layout-align="start start" class="secondFont bold">
+                            <div>{{view.groupName}}</div>
+
+                        </div>
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start start" layout-wrap class="width100 paddingT10 editFont">
+                        <div class="paddingR10">
+                            Cities:
+                        </div>
+                        <div layout="column" layout-aling="center center" ng-repeat="cityView in view.viewSummary | orderBy:'-_date'" class="paddingR10">
+                        <div layout="row" layout-align="center center">
+                            <a ui-sref="showGroup({ categoryName:{{'cityView.stream'}}, subCategoryName:{{'cityView.exam'}}, cityName:{{'cityView.city'}}, groupName:{{'view.groupName'}} })" target="_blank">{{cityView.city}}</a>
+                        </div>    
+                        <div layout="row" layout-align="center center" class="font8">   
+                            {{cityView._date | date:'dd MMM yy'}}
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         

@@ -100,3 +100,69 @@
     
 </div>
 </div>
+
+<div layout="column" layout-align="center end" class="rightMidButton">
+    <md-button class="md-black md-small tolowercase" ng-click="showExamDialog()">
+        <div layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center" class="marginR10">
+                <i class="fa fa-search font18" aria-hidden="true"></i>
+            </div>
+            <div layout="row" layout-align="start center">
+                Filter by Exams
+            </div>
+        </div>
+    </md-button>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="examDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="start center" class="paddingL10">
+                    Tell us the exam we are looking to partner for!
+                </div>
+                <div flex layout="row" layout-align="end center">
+                    
+                    <div>
+                        <md-button class="md-black md-small  tolowercase" ng-click="filterCoachings()">
+                            Go
+                        </md-button>
+                    </div>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                <div layout="row" layout-align="start start"  class="width100 marginB10 bold">
+                    <div flex="15">
+                        Stream
+                    </div>
+                    <div flex="85">
+                        Select Exams
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
+                    <div flex="15">
+                        {{thisStream.displayname}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
+                            <span class="badge" id="examTagHolder" ng-if="searchExams.indexOf(thisExam._id) == -1" ng-click="addExam(thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="searchExams.indexOf(thisExam._id) != -1" ng-click="removeExam(thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+              
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 

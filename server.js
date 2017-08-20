@@ -144,6 +144,7 @@ var masters = require('./app/masters.js',masters);
 //var students = require('./app/students.js',students); 
 
 var users = require('./app/users.js',users); 
+var procmons = require('./app/procmons.js',procmons); 
 var subscribers = require('./app/subscribers.js',subscribers); 
 
 var notifications = require('./app/notifications.js',notifications); 
@@ -184,6 +185,7 @@ app.use('/api/logourls', logourls);
 app.use('/api/masters', masters);
 //app.use('/api/students', students);
 app.use('/api/users', users);
+app.use('/api/procmons', procmons);
 app.use('/api/subscribers', subscribers);
 app.use('/api/notifications', notifications);
 app.use('/api/emails', emails);
@@ -278,6 +280,25 @@ app.use(function(req, res, next) {
 
 //app.use(require('prerender-node').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm'));
 
+/*function fn60sec() {
+    // runs every 60 sec and runs on init.
+    console.log(Moment().format('LLLL'));
+    //procmons.procmon();
+    //console.log('Process');
+}
+fn60sec();
+setInterval(fn60sec, 60*1000);*/
+
+
+var now = new Date();
+var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 13, 0, 0, 0) - now;
+if (millisTill10 < 0) {
+     millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
+}
+setTimeout(function(){
+    procmons.procmon();
+    console.log("It's 1pm!");
+}, millisTill10);
 
 
 var server = app.listen(port);

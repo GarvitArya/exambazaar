@@ -111,6 +111,26 @@
     
 </div>
 
+<div layout="column" layout-align="start start" class="width100">
+    <div layout="row" layout-align="center center" ng-repeat="coaching in coachings" class="width100 margin10">
+        <div flex="5" class="paddingLR10">{{$index+1}}</div>
+        <div flex="20" class="paddingLR10">
+            <a ui-sref="claim({ coachingId:{{'coaching._id'}} })" target="_blank" id="link">
+            <strong>{{coaching.name}}</strong>
+            </a>
+        
+        </div>
+        <div flex="35" class="paddingLR10">{{coaching.address}}, {{coaching.city}} {{coaching.pincode}}</div>
+        <div flex="40" layout="column" layout-align="start start"  class="paddingLR10">
+            <div layout="row" layout-align="start start"  ng-repeat="geocoding in coaching.possibleGeoCodings.geocodings">
+                {{geocoding.latitude}},{{geocoding.longitude}} & {{geocoding.extra.googlePlaceId}}
+            </div>
+        
+        </div>
+        
+        
+    </div>
+</div>
 
 
 

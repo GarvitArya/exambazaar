@@ -3182,9 +3182,16 @@ router.get('/groupSummaryService', function(req, res) {
 
     ],function(err, groupNames) {
     if (!err){
+        var filterGroupNames = [];
         
         groupNames.forEach(function(thisgroup, index){
-            
+            if(thisgroup.count > 5){
+                filterGroupNames.push(thisgroup);
+            }
+        });
+        console.log(filterGroupNames.length);
+        filterGroupNames.forEach(function(thisgroup, index){
+            //console.log(thisgroup);
             var thisExams = thisgroup.exams;
             var allExams = [];
             thisExams.forEach(function(thisset, sindex){
@@ -3199,9 +3206,10 @@ router.get('/groupSummaryService', function(req, res) {
         });
         
         
-        groupNames = groupNames.map(function(a) {return {name:a._id.groupName, count: a.count, exams: a.exams};});
-        //console.log(groupNames);
-        res.json(groupNames);
+        filterGroupNames = filterGroupNames.map(function(a) {return {name:a._id.groupName, count: a.count, exams: a.exams};});
+        //console.log(filterGroupNames);
+        
+        res.json(filterGroupNames);
     } else {throw err;}
     });
     

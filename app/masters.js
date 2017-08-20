@@ -431,8 +431,8 @@ Quotas per day per key:
 
 router.get('/latLngSummary', function(req, res) {
     console.log('Lat Long summary starting');
-    res.json('Done');
-    var allProviders = targetStudyProvider.find( { latlng: {$exists: false}, possibleGeoCodings:{$exists: true},latlngna:true,  disabled: false}, {possibleGeoCodings:1},function(err, allProviders) {
+    //res.json('Done');
+    var allProviders = targetStudyProvider.find( { latlng: {$exists: false}, possibleGeoCodings:{$exists: true},latlngna:true,  disabled: false}, {possibleGeoCodings:1, name:1, address:1, city:1, pincode:1,latlng:1, latlngna:1, loc:1},function(err, allProviders) {
     if (!err){
         var foundNone = [];
         var foundOne = [];
@@ -448,19 +448,62 @@ router.get('/latLngSummary', function(req, res) {
                 foundNone.push(thisprovider);
             }else{
                 if(thisPossibleGeoCodings.length == 1){
+                    var latlng = {
+                        lat: thisPossibleGeoCodings[0].latitude, 
+                        lng: thisPossibleGeoCodings[0].longitude, 
+                    };
+                    thisprovider.latlng = latlng;
+                    thisprovider.latlngna = false;
+                    thisprovider.loc = {
+                        type : 'Point',
+                        coordinates : [thisprovider.latlng.lng, thisprovider.latlng.lat]
+                    };
+                    
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        console.log("Latlng saved for: "+ thisprovider._id);
+
+                    });
+                    //console.log(thisprovider.latlng);
                     foundOne.push(thisprovider);
-                }else{
+                }
+                if(thisPossibleGeoCodings.length >= 2){
+                    var latlng = {
+                        lat: thisPossibleGeoCodings[0].latitude, 
+                        lng: thisPossibleGeoCodings[0].longitude, 
+                    };
+                    thisprovider.latlng = latlng;
+                    thisprovider.latlngna = false;
+                    thisprovider.loc = {
+                        type : 'Point',
+                        coordinates : [thisprovider.latlng.lng, thisprovider.latlng.lat]
+                    };
+                    
+                    thisprovider.save(function(err, thisprovider) {
+                        if (err) return console.error(err);
+                        console.log("Latlng saved for: "+ thisprovider._id);
+
+                    });
+                    
                     foundTwoOrMore.push(thisprovider);
                 }
             }
         });
         
+        
         console.log("None: " + foundNone.length);
         console.log("One: " + foundOne.length);
         console.log("Two: " + foundTwoOrMore.length);
-        
+        var responses = [];
+        responses.push(foundTwoOrMore[0]);
+        responses.push(foundTwoOrMore[1]);
+        responses.push(foundTwoOrMore[2]);
+        responses.push(foundTwoOrMore[3]);
+        responses.push(foundTwoOrMore[4]);
+        res.json(responses);
         if(nLength == 0){
-            //res.json('Done');    
+            console.log('No provider to look at!');
+            res.json([]);    
         }
         
     } else {throw err;}

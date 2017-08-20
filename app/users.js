@@ -116,7 +116,70 @@ function sendWelcome(user){
     }
 };
 
-
+//to run procmon service
+router.post('/procmon', function(req, res) {
+    var templateName = 'EB Internal - Procmon - 1';
+    var fromEmail = {
+        email: 'always@exambazaar.com',
+        name: 'Always Exambazaar'
+    };
+    
+    var to = 'gaurav@exambazaar.com';
+    
+    sendGridCredential.findOne({'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+                if(thisEmailTemplate.name == templateName){
+                    templateFound = true;
+                    templateId = thisEmailTemplate.templateKey;
+                    var from_email = new helper.Email(fromEmail);
+                    
+                    var to_email = new helper.Email(to);
+                    var html = ' ';
+                    var subject = ' ';
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-usersaddedtoday-', 10));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-totalusers-', 1000));
+                    var emailrequest = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+                    sg.API(emailrequest, function(error, response) {
+                        if(error){
+                            console.log('Could not send email! ' + error);
+                        }else{
+                            res.json('Done');
+                            console.log(response);
+                        }
+                    });
+                }
+                if(counter == nLength){
+                    if(!templateFound){
+                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    }
+                }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+});
 
 
 function sendReferralSMS(smsForm){
@@ -732,7 +795,7 @@ router.get('/hourlyHeatmap', function(req, res) {
 router.get('/query/:query', function(req, res) {
     var query = req.params.query;
     //console.log(query);
-    user.find({"basic.name":{'$regex' : query, '$options' : 'i'}}, {basic:1, blogger:1, image:1, userType:1, mobile:1, email:1},function(err, docs) {
+    user.find({"basic.name":{'$regex' : query, '$options' : 'i'}}, {basic:1, blogger:1, image:1, userType:1, mobile:1, email:1, facebook:1},function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}

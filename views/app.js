@@ -205,6 +205,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
        );
         
     exambazaar.service('UserService', ['$http', function($http) {
+        this.procMon = function() {
+            
+            return $http.post('/api/users/procmon');
+        };
         this.saveUser = function(user) {
             
             return $http.post('/api/users/save', user);
@@ -10948,6 +10952,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.latLngSummary = function(){
                 MasterService.latLngSummary().success(function (data, status, headers) {
                     console.log(data);
+                    $scope.coachings = data;
                 })
                 .error(function (data, status, header, config) {
                     console.info('Error ' + data + ' ' + status);
@@ -11063,7 +11068,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     //$scope.currLocation = [28.917227, 77.064013];
                     //$scope.currLocation = [28.486915, 77.507298];
                     //$scope.currLocation = [12.823035, 80.043792];
-                    $scope.currLocation = [28.688274, 77.205712];
+                    //$scope.currLocation = [28.688274, 77.205712];
+                    $scope.currLocation = [26.277995, 73.011094];
                 }
                 function displayError(error) {
                   var errors = { 
@@ -12858,29 +12864,101 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
     }]);
     
+    function intersect_safe(a, b)
+        {
+          var ai=0, bi=0;
+          var result = [];
+
+          while( ai < a.length && bi < b.length )
+          {
+             if      (a[ai] < b[bi] ){ ai++; }
+             else if (a[ai] > b[bi] ){ bi++; }
+             else /* they're equal */
+             {
+               result.push(a[ai]);
+               ai++;
+               bi++;
+             }
+          }
+
+          return result;
+        }
     exambazaar.controller("coachingGroupSummaryController", 
-        [ '$scope', '$http', '$rootScope','$state', '$mdDialog', 'MasterService','groupSummary', 'examList', function($scope, $http, $rootScope, $state, $mdDialog, MasterService, groupSummary, examList){
+        [ '$scope', '$http', '$rootScope','$state', '$mdDialog', 'MasterService','groupSummary', 'examList', 'streamList', function($scope, $http, $rootScope, $state, $mdDialog, MasterService, groupSummary, examList, streamList){
             
             $rootScope.pageTitle = 'EB Coaching Group Summary';
-            $scope.groupSummary = groupSummary.data;
-            var examList = examList.data;
-            var examIds = examList.map(function(a) {return a._id;});
+            $scope.allGroups = groupSummary.data;
+            $scope.groupSummary = $scope.allGroups;
+            $scope.examList = examList.data;
+            $scope.allExams = $scope.examList;
+            $scope.allStreams = streamList.data;
+            var examIds = $scope.examList.map(function(a) {return a._id;});
             $scope.groupSummary.forEach(function(thisGroup, gindex){
                 var thisExams = thisGroup.exams;
                 var allExams = [];
                 thisExams.forEach(function(thisExam, eindex){
                     var exIndex = examIds.indexOf(thisExam);
                     if(exIndex != -1){
-                        //thisExam = examList[exIndex];
-                        allExams.push(examList[exIndex]);
+                        //thisExam = $scope.examList[exIndex];
+                        allExams.push($scope.examList[exIndex]);
                     }else{
                         console.log('something is wrong: ' + thisExam);
                     }
                 });
                 thisGroup.exams = allExams;
             });
+            $scope.searchExams = [];
             
-            
+            $scope.addExam = function(exam){
+                var examId = exam._id;
+                var eIndex = $scope.searchExams.indexOf(examId);
+                if(eIndex == -1){
+                    $scope.searchExams.push(examId.toString());
+                }
+            };
+            $scope.removeExam = function(exam){
+                var examId = exam._id;
+                var eIndex = $scope.searchExams.indexOf(examId);
+                if(eIndex != -1){
+                    $scope.searchExams.splice(eIndex, 1);
+                }
+            };
+            $scope.filterCoachings = function(){
+                console.log($scope.searchExams);
+                $scope.groupSummary = [];
+                
+                $scope.allGroups.forEach(function(thisGroup, gindex){
+                    var thisFilter = false;
+                    var thisExams = thisGroup.exams;
+                    thisExams = thisExams.map(function(a) {return a._id.toString();});
+                    
+                    $scope.searchExams.forEach(function(thisExam, eindex){
+                        if(!thisFilter){
+                            var exIndex = thisExams.indexOf(thisExam);
+                            if(exIndex != -1){
+                                thisFilter = true;
+                            }
+                        }
+                        
+                    });
+                    if(thisFilter > 0){
+                        $scope.groupSummary.push(thisGroup);
+                        
+                        console.log(thisGroup.name);
+                    }
+                });
+                $mdDialog.hide();
+            };
+            $scope.showExamDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#examDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
     }]); 
     exambazaar.controller("extractEmailsController", 
         [ '$scope', '$http', '$rootScope','$state', '$mdDialog', 'MasterService', function($scope, $http, $rootScope, $state, $mdDialog, MasterService){
@@ -14594,6 +14672,8 @@ function getLatLng(thisData) {
         $scope.unsetExam = function(){
             $scope.showAllExams = true;
             $scope.exam = null;
+            $scope.toAddTest = null;
+            $scope.newExamCycle = null;
         };
         $scope.showSavedDialog = function(ev) {
             $mdDialog.show({
@@ -15488,12 +15568,23 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("manageUsersController", 
-        [ '$scope', 'UserService','$http','$state', '$rootScope', function($scope, UserService,$http,$state, $rootScope){
+        [ '$scope', 'UserService', 'viewService','$http','$state', '$rootScope', function($scope, UserService, viewService, $http,$state, $rootScope){
             
             $rootScope.pageTitle = "Manage users on EB";
             $rootScope.$on("setBloggerUser", function(event, data){
-                console.log(data.user);
-                $scope.thisuser = data.user;
+                //console.log(data.user);
+                if(data && data.user){
+                    $scope.thisuser = data.user;
+                    viewService.getuserviews($scope.thisuser._id).success(function (data2, status, headers) {
+                        //console.info("Done");
+                        $scope.thisuserViewed = data2;
+                        console.log($scope.thisuserViewed);
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+                }
+                
             });
             $scope.activateIntern = function(thisuser){
                 UserService.activateIntern(thisuser._id).success(function (data, status, headers) {
@@ -15638,6 +15729,7 @@ function getLatLng(thisData) {
             var institutes = [];
             $scope.newinstitutes.forEach(function(thisinstitute, iIndex){
                 if(thisinstitute.name && thisinstitute.name != ''){
+                    thisinstitute.name = thisinstitute.name.trim();
                     thisinstitute.groupName = thisinstitute.name;
                     var saveProvider = {
                         targetStudyProvider:thisinstitute,
@@ -15744,7 +15836,7 @@ function getLatLng(thisData) {
         
         
     exambazaar.controller("sendEmailController", 
-        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', function($scope,$http,$state,EmailService, targetStudyProviderService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope){
+        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'UserService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', function($scope,$http,$state,EmailService, targetStudyProviderService, UserService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope){
             $rootScope.pageTitle = "Send Emails via Sendgrid";
             $scope.emailService = function(){
                 targetStudyProviderService.emailService().success(function (data, status, headers) {
@@ -15756,7 +15848,15 @@ function getLatLng(thisData) {
                 });
             };
             
-            
+            $scope.procMon = function(){
+                UserService.procMon().success(function (data, status, headers) {
+                    //$scope.distinctStates = data;
+                    console.info("Done");
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
             
             $scope.fetchEmails = function(){
                 tofillciService.sendEmails().success(function (data, status, headers) {
@@ -17032,7 +17132,7 @@ function getLatLng(thisData) {
                 if(!thisUser.basic || !thisUser.basic.name){
                     console.log(thisUser._id);
                 }
-                if(thisUser.userType == 'Student'){
+                if(thisUser.userType == 'Student' || thisUser.userType == 'Intern - Business Development'){
                     $scope.allUsers.push(thisUser);
                 }
             });
@@ -17806,6 +17906,10 @@ function getLatLng(thisData) {
                 examList: ['ExamService',
                     function(ExamService){
                     return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
                 }],
             }
         })
@@ -20389,7 +20493,6 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
 
      // Insert the Facebook JS SDK into the DOM
      firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
-    
     
     
     
