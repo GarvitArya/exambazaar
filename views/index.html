@@ -652,6 +652,27 @@
             background-size:     cover;
             background-position: center center;
         }
+        #fbpopup{
+            height: 500px;
+            width: 600px;
+            margin: 0px;
+            padding: 0px;
+            background-image: url("images/popups/fb_like_popup_compressed.jpg");
+            background-size:     cover;
+            background-position: center center;
+        }
+        #fblikebutton{
+            position:fixed;
+            top: 315px;
+            left: 80px;
+            z-index: 21000;
+        }
+        #closebutton{
+            position:fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 21000;
+        }
         #whyReviewPage{
             height: 100vh;
             margin: 0px;
@@ -1014,7 +1035,8 @@
             padding: 0px 20px 0px 20px;
             margin: 0px;
             border: 1.5px solid white;
-            background: transparent;
+            /*background: transparent;*/
+            background: rgba(0,0,0,0.5);
             color: white;
         }
         .md-button.md-upvote:hover{
@@ -1708,6 +1730,12 @@
         md-dialog{
             z-index: 20000;
         }
+        md-dialog.fbpopup-dialog {
+            z-index: 10000;
+            top: 5vh;
+            border-radius: 10px;
+            background:white;
+        }
         md-dialog.login-dialog {
             z-index: 20000;
             min-width: 300px;
@@ -2013,6 +2041,8 @@
     
     <body twitter-widget-initialize ng-cloak>
     
+        
+        
     <div  layout="column" ng-controller="headerController" ng-cloak>
         <div ui-view="header"></div>
         <div ui-view="body" class="min90vh" ></div>
@@ -2429,6 +2459,23 @@
       </md-dialog>
     </div>    
 </div>   -->     
+   
+
+<div hide-xs style="visibility: hidden">    
+    <div class="md-dialog-container" id="fblikeDialog">
+      <md-dialog class="fbpopup-dialog">
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="fbpopup" >
+              <div class="margin20 padding10">
+                <div ng-click="hideLoginDialog()" id="closebutton">
+                    <i class="fa fa-times font24 textWhite" aria-hidden="true"></i>  
+                </div>
+                <div class="fb-like" data-href="https://www.facebook.com/exambazaar/" data-width="250" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true" id="fblikebutton"></div> 
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>        
         
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="partnerDialog">

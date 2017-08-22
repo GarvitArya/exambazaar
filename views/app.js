@@ -6990,11 +6990,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });
             }
             
-        };    
+        };
         $scope.hideLoginDialog = function(ev){
             $mdDialog.hide();
         };
+           
         
+            
         $scope.signupMode = false;
         $scope.resetMode = false;
         $scope.signupToggle = function(){
@@ -7261,6 +7263,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.sessionuser.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
                     UserService.fbSave($scope.sessionuser).success(function (data, status, headers) {
                         $mdDialog.hide();
+                        
                         var fulluser = data;
                         var sessionuser = {
                             _id: fulluser._id,
@@ -7303,6 +7306,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
         function loginReroute(){
             $mdDialog.hide();
+            
             $rootScope.$emit("userset", {});
             console.log('Rerouting to state');
             if($state.current.name == 'landing'){
@@ -7557,7 +7561,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });
             
         }    
-            
+        $rootScope.fblikeDialog;
+        $rootScope.showfblikeDialog = function(ev) {
+            $rootScope.fblikeDialog = $mdDialog.show({
+              contentElement: '#fblikeDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: false,
+              escapeToClose: false,
+              //hasBackdrop: true,
+              openFrom: {
+                  top: -50,
+                  width: 30,
+                  height: 80
+                },
+             closeTo: {
+                left: 1500
+                }
+            });
+
+        };
+        
+        
+        
     }]); 
     
       
@@ -11013,7 +11039,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         }
                         });
                            
-                        console.log(userAddress);
+                        //console.log(userAddress);
                         if(userAddress.sublocality && userAddress.city){
                            Notification.success("Great, we have located you at " + userAddress.sublocality + ", " + userAddress.city);
                            
@@ -11069,7 +11095,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     //$scope.currLocation = [28.486915, 77.507298];
                     //$scope.currLocation = [12.823035, 80.043792];
                     //$scope.currLocation = [28.688274, 77.205712];
-                    $scope.currLocation = [26.277995, 73.011094];
+                    //$scope.currLocation = [26.277995, 73.011094];
+                    //$scope.currLocation = [17.413502, 78.528736];
+                    //$scope.currLocation = [24.434886, 77.161200];
+                    $scope.currLocation = [17.318687, 78.543050];
                 }
                 function displayError(error) {
                   var errors = { 
@@ -11226,6 +11255,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     //map.setZoom(4);
                 });
             };
+         
+            
+            $scope.$on('$locationChangeStart', function( event ) {
+                var answer = confirm("Are you sure you want to leave this page?")
+                if (!answer) {
+                    event.preventDefault();
+                }
+            });
             
     }]); 
     
@@ -11492,7 +11529,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
       return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
     exambazaar.controller("blogController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', 'blogpostService','allBlogs', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, blogpostService, allBlogs, Socialshare, viewService, upvoteService, allBlogsUpvotesCount){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService','allBlogs', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, allBlogs, Socialshare, viewService, upvoteService, allBlogsUpvotesCount){
             $scope.allBlogs = allBlogs.data;
             
             var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
@@ -11644,11 +11681,44 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             .error(function (data, status, header, config) {
                 console.info();
             });
+            
+            $document.on('mouseleave', leaveFromTop);
+            function leaveFromTop(e){
+                if( e.clientY < 0 && !$rootScope.fblikeDialog && $scope.t.counts > 10){
+                    //console.log($rootScope.fblikeDialog);
+                    $rootScope.showfblikeDialog();
+                }
+                //console.log($scope.t.counts);
+            };
+            $scope.t = pageTimer(1000);
+            
     }]);   
     
     exambazaar.controller("postBlogController", 
         [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService','userBlogs', 'thisuser', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, userBlogs, thisuser, upvoteService, allBlogsUpvotesCount, allBloggers){
             $scope.user = thisuser.data;
+            if(!$scope.user){
+                if($cookies.getObject('sessionuser')){
+                    $scope.user = $cookies.getObject('sessionuser');
+                     UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                        var userGallery = data.blogger.gallery;
+                        //console.log(userGallery);
+                        $scope.blogGallery = userGallery;
+                    })
+                    .error(function (data, status, header, config) {
+                        console.info("Error ");
+                    });
+
+                }else{
+                    $scope.user = null;
+                }
+            }
+            if($scope.user.userType == 'Master'){
+                $scope.masterUser = true;
+                console.log($scope.masterUser);
+                console.log($scope.user);
+            }
+                   
             $scope.credentialsMode = false;
             $scope.setCredentials = function(){
                 $scope.credentialsMode = true;
@@ -11730,30 +11800,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
          };
             //console.log($scope.user);
-            if(!$scope.user){
-                if($cookies.getObject('sessionuser')){
-                    $scope.user = $cookies.getObject('sessionuser');
-                    if($scope.user.userType == 'Master'){
-                        $scope.masterUser = true;
-                    }
-                    UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
-                        var userGallery = data.blogger.gallery;
-                        //console.log(userGallery);
-                        $scope.blogGallery = userGallery;
-                    })
-                    .error(function (data, status, header, config) {
-                        console.info("Error ");
-                    });
-
-                }else{
-                    $scope.user = null;
-                }
-            }
+            
             
             
             $scope.allBloggers = allBloggers.data;
             //console.log($scope.allBloggers);
-            $scope.masterUser = false;
+            
             
             $scope.userBlogs = userBlogs.data;
             
@@ -16784,7 +16836,7 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("showblogController", 
-        [ '$scope','$http','$state', '$stateParams','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', 'viewService','$cookies', 'upvoteService', 'upvoteCount', 'commentService', 'thisblogComments', function($scope,$http, $state, $stateParams, blogpostService, thisblog, $rootScope, Socialshare, $location, viewService,$cookies, upvoteService, upvoteCount, commentService, thisblogComments){
+        [ '$scope','$http','$state', '$stateParams', '$document','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', '$window', 'pageTimer', 'viewService','$cookies', 'upvoteService', 'upvoteCount', 'commentService', 'thisblogComments', function($scope,$http, $state, $stateParams, $document, blogpostService, thisblog, $rootScope, Socialshare, $location, $window, pageTimer, viewService,$cookies, upvoteService, upvoteCount, commentService, thisblogComments){
             $scope.blogpost = thisblog.data;
             $scope.blogComments = thisblogComments.data;
             $scope.blogpost.upvotes = upvoteCount.data;
@@ -16839,9 +16891,6 @@ function getLatLng(thisData) {
                 }
             }
             
-            
-            
-            
             if(!$scope.blogpost){
                 window.location = "http://www.exambazaar.com/error";
             }
@@ -16872,7 +16921,6 @@ function getLatLng(thisData) {
                 
             ];
             
-            //console.log($scope.blogpost.blogTags);
             var defaultBlogCover = "images/background/examinfo.jpg";
             if($scope.blogpost.coverPhoto){
                 $scope.thisBlogCover = $scope.blogpost.coverPhoto;
@@ -17060,7 +17108,16 @@ function getLatLng(thisData) {
                     });
                 }
             };
-            
+            $document.on('mouseleave', leaveFromTop);
+
+            function leaveFromTop(e){
+                if( e.clientY < 0 && !$rootScope.fblikeDialog && $scope.t.counts > 10){
+                    //console.log($rootScope.fblikeDialog);
+                    $rootScope.showfblikeDialog();
+                }
+                //console.log($scope.t.counts);
+            };
+            $scope.t = pageTimer(1000);
     }]);
     exambazaar.controller("userSurveyController", 
         [ '$scope','$http','$state','UserService', 'thisuser', 'allUsers', '$rootScope', function($scope,$http, $state, UserService, thisuser, allUsers, $rootScope){
@@ -17187,6 +17244,17 @@ function getLatLng(thisData) {
        return moment(date).format('MMM DD YYYY');
         };
     });
+    exambazaar.factory('pageTimer', function($interval){
+        return function(delay){
+            var initialMs= (new Date()).getTime();
+            var result = {totalMilliseconds:0, counts:0};                
+            $interval(function() {
+                result.totalMilliseconds = (new Date()).getTime() - initialMs;
+                result.counts++;
+            }, delay);
+            return result;
+        };
+     });
         
     exambazaar.factory('metaService', function () {
         var title = 'Exambazaar: Select the stream you want to study',

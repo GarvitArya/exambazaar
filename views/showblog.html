@@ -206,6 +206,31 @@
                 <div class="marginT20 blogContent blogSeparator" ng-bind-html="blogpost.content" >
                 </div>
                 <div layout="column" layout-align="start start" class="blogSeparator width100">
+                    
+                <div layout="row" layout-align="start center" class="width100">
+                    <div class="">
+                        <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                </div>
+                            </div>
+                        </md-button>
+                        <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                </div>
+                            </div>
+                        </md-button>
+                    </div>
+                </div>    
                 <div layout="row" layout-align="start center" class="width100 font16 bold padding10">
                     Share this blog
                 </div>
