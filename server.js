@@ -76,14 +76,14 @@ app.get('/*', function (req, res, next) {
 
 
 
-/*app.get('*', function(req, res, next) {
+app.get('*', function(req, res, next) {
     if (req.get('x-forwarded-proto') != "https") {
         res.set('x-forwarded-proto', 'https');
         res.redirect('https://' + req.get('host') + req.url);
     } else {
         next();     
     }
-});*/
+});
 
 
 
@@ -292,9 +292,9 @@ setInterval(fn60sec, 60*1000);*/
 
 
 
-/*
+
 var now = new Date();
-var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 13, 30, 0, 0) - now;
+var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 1, 0, 0) - now;
 if (millisTill10 < 0) {
      millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
 }
@@ -303,7 +303,7 @@ setTimeout(function(){
     //procmons.procmon();
     console.log("It's 1:10pm!");
 }, millisTill10);
-*/
+
 
 
 var server = app.listen(port);
