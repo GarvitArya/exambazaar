@@ -6831,7 +6831,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS){
+        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS','$timeout', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS,$timeout){
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
@@ -7561,8 +7561,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });
             
         }    
-        $rootScope.fblikeDialog;
+        $rootScope.fblikeDialog = null;
+        $rootScope.fbpopupMode = false;
         $rootScope.showfblikeDialog = function(ev) {
+            $rootScope.fbpopupMode = true;
             $rootScope.fblikeDialog = $mdDialog.show({
               contentElement: '#fblikeDialog',
               parent: angular.element(document.body),
@@ -7570,18 +7572,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
               clickOutsideToClose: false,
               escapeToClose: false,
               //hasBackdrop: true,
-              openFrom: {
-                  top: -50,
-                  width: 30,
-                  height: 80
-                },
-             closeTo: {
-                left: 1500
-                }
+              
             });
 
         };
-        
+        $timeout(function() {
+          if($rootScope.fblikeDialog && !$rootScope.fblikeDialog.$$state.status) { 
+           console.log("Dialog is still active");
+          }else{
+              console.log("Dialog is not open");
+              $rootScope.fblikeDialog = null;
+              $rootScope.fbpopupMode = false;
+          }
+        }, 1000);
         
         
     }]); 

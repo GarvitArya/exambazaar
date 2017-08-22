@@ -663,7 +663,7 @@
         }
         #fblikebutton{
             position:fixed;
-            top: 315px;
+            top: 310px;
             left: 80px;
             z-index: 21000;
         }
@@ -1731,7 +1731,7 @@
             z-index: 20000;
         }
         md-dialog.fbpopup-dialog {
-            z-index: 10000;
+            
             top: 5vh;
             border-radius: 10px;
             background:white;
@@ -2461,16 +2461,15 @@
 </div>   -->     
    
 
-<div hide-xs style="visibility: hidden">    
-    <div class="md-dialog-container" id="fblikeDialog">
+<div style="visibility: hidden">    
+    <div hide-xs class="md-dialog-container" id="fblikeDialog">
       <md-dialog class="fbpopup-dialog">
           <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="fbpopup" >
               <div class="margin20 padding10">
                 <div ng-click="hideLoginDialog()" id="closebutton">
                     <i class="fa fa-times font24 textWhite" aria-hidden="true"></i>  
                 </div>
-                <div class="fb-like" data-href="https://www.facebook.com/exambazaar/" data-width="250" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true" id="fblikebutton"></div> 
-                
+                <div ng-show="fbpopupMode" class="fb-like" data-href="https://www.facebook.com/exambazaar/" data-width="250" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true" id="fblikebutton"></div>
               </div>
           </div>
       </md-dialog>
