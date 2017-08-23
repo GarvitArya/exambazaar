@@ -14,6 +14,7 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
+var ObjectId = require('mongodb').ObjectID;
 //to get a particular addContactInfo with _id addContactInfoId
 router.get('/edit/:addContactInfoId', function(req, res) {
     var addContactInfoId = req.params.addContactInfoId;
@@ -116,8 +117,9 @@ router.post('/markDone', function(req, res) {
 });
 
 router.get('/', function(req, res) {
+    var pastInternId = '599c2bab54161317886da9f6';
     var addContactInfos = addContactInfo
-        .find({})
+        .find({user: { $ne: ObjectId(pastInternId) }})
         .exec(function (err, addContactInfos) {
         if (!err){
             var basicFillTasks = [];

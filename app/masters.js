@@ -589,7 +589,34 @@ router.get('/bulkSaveLatLng', function(req, res) {
 
 });
 
+function levenshteinDistance (s, t) {
+    console.log('Distance function: ' + s + ' ' + t);
+    if (!s.length) return t.length;
+    if (!t.length) return s.length;
 
+    return Math.min(
+        levenshteinDistance(s.substr(1), t) + 1,
+        levenshteinDistance(t.substr(1), s) + 1,
+        levenshteinDistance(s.substr(1), t.substr(1)) + (s[0] !== t[0] ? 1 : 0)) + 1;
+};
+
+function matchingName(providerName, googlePlaceName){
+    console.log(providerName + " " + googlePlaceName);
+    var matching = false;
+    if(googlePlaceName.indexOf(providerName) != -1){
+        matching = true;
+    }else{
+        /*var distance = levenshteinDistance(providerName, googlePlaceName, function(err, distance){
+            console.log(distance);
+            if(distance < 5){
+                matching = true;
+            }
+        });*/
+        
+    }
+    
+    return matching;
+};
 
 
 //to get google places
@@ -597,7 +624,9 @@ router.get('/googlePlaces', function(req, res) {
     res.json('Done');
     var GooglePlaces = require('google-places');
 
-    var places = new GooglePlaces('AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4');
+    var places = new GooglePlaces('AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw');
+    //AIzaSyCj1hPurugAfBtML3GhSxIdBg3lWMLiJdw
+    //AIzaSyA7KEqF0FkVdsvQ_Qmoo8g69-DTjpaAvD4
     
 
     /*places.autocomplete({input: 'Allen Career Institute Jaipur'}, function(err, response) {
@@ -616,8 +645,8 @@ router.get('/googlePlaces', function(req, res) {
       }
     });*/
     var ObjectId = require('mongodb').ObjectID;
-    
-    var allProviders = targetStudyProvider.find( { latlng: {$exists: true}, latlngna:false, exams: ObjectId("58ac27030be6311eccbbc3a6"),  disabled: false}, {latlng:1, name: 1},function(err, allProviders) {
+    //, exams: ObjectId("58ac27030be6311eccbbc3a6")
+    var allProviders = targetStudyProvider.find( { latlng: {$exists: true}, latlngna:false,  disabled: false, googlePlaceSearchTry: {$ne: true}}, {latlng:1, name: 1},function(err, allProviders) {
     if (!err){
         var nLength = allProviders.length;
         var counter = 0;
@@ -629,17 +658,73 @@ router.get('/googlePlaces', function(req, res) {
             var coordinates = [thisLat, thisLng];
             var thisName = thisprovider.name;
             
-            console.log(thisName + " " + JSON.stringify(coordinates));
+            //console.log(thisName + " " + JSON.stringify(coordinates));
+            thisprovider.googlePlaceSearchTry = true;
+                                
+            thisprovider.save(function(err, thisprovider) {
+                if (err) return console.error(err);
+                console.log("Google place search try saved for: " + thisprovider._id);
+                //res.send('Done');
+            });
             
             if(thisName && coordinates){
-                places.search({name: thisName, location:coordinates, radius:500}, function(err, response) {
+                places.search({name: thisName, location:coordinates, radius:1000}, function(err, response) {
                     //, rankby:'distance'
-                    var results = response.results;
-                    if(results.length > 0){
+                    
+                    if(response && response.results.length > 0){
+                        var results = response.results;
                         console.log("search: " + thisName + " " + thisprovider._id);
                         results.forEach(function(thisResult, rindex){
-                            console.log(rindex + " " + thisResult.name + " " + thisResult.place_id);   
+                            var googlePlaceName = thisResult.name;
+                            var googlePlaceId = thisResult.place_id;
+                            
+                            /*console.log(thisName + " "+ googlePlaceName);
+                            var distance = levenshteinDistance(thisName, googlePlaceName, function(err, distance){
+                                console.log(distance);
+                            });*/
+                            if(googlePlaceName.indexOf(thisName) != -1 || thisName.indexOf(googlePlaceName)!= -1){
+                                console.log(rindex + " " + googlePlaceName + " " + googlePlaceId); 
+                                    console.log(thisResult);
+                                
+                                
+                                thisprovider.googlePlace = thisResult;
+                                
+                                thisprovider.save(function(err, thisprovider) {
+                                    if (err) return console.error(err);
+                                    console.log("Provider google place saved: " + thisprovider._id);
+                                    //res.send('Done');
+                                });
+                            }else{
+                                console.log("Did not match: " + rindex + " " + googlePlaceName + " " + googlePlaceId); 
+                            }
+                            /*var matching = matchingName(thisName, googlePlaceName,function(err, matching){
+                                console.log('Matching: ' + matching);
+                                if(matching){
+                                    console.log(rindex + " " + googlePlaceName + " " + googlePlaceId); 
+                                    console.log(thisResult); 
+                                }else{
+                                    console.log("Did not match: " + rindex + " " + googlePlaceName + " " + googlePlaceId); 
+                                }
+                            });*/
+                            
+                            
+                              
                         });
+                        
+                        /*{ 
+                            geometry:{
+                            location: { lat: 30.73562609999999, lng: 76.74880189999999 },
+                            viewport: { northeast: [Object], southwest: [Object] } 
+                            },
+                            icon: 'https://maps.gstatic.com/mapfiles/place_api/icons/school-71.png',
+                            id: 'c88be54d91516cd66605195dd9bfb53bf4cfbcf0',
+                            name: 'Maxx Institute',
+                            place_id: 'ChIJ____r8PtDzkRWm7k_Z1L7aQ',
+                            reference: 'CmRSAAAA8A_cn5P5spdNrRviG6pcI5Rh8Np28xfBvK5ILMfKqHgbYmR93Z7dzvQAtceb8XuYaJqcYAyWut0Z7KJaqCNEho7PigSLGYAPtq76PVCRL4GG5Z7BgUMFe1dnpsIdRgvKEhDIaXVonnBha4T8LGlgzH_8GhTefTB2QfFgRV1YZ5QPD4nhLSOj1A',
+                            scope: 'GOOGLE',
+                            types: [ 'point_of_interest', 'establishment' ],
+                            vicinity: 'Sco 223, Top Floor, Sector 37-c, Sector 37-c, Chandigarh' 
+                        }*/
                           /*places.details({reference: response.results[0].reference}, function(err, response) {
                             console.log("search details: ", response.result.website);
                             // search details:  http://www.vermonster.com/
@@ -657,7 +742,7 @@ router.get('/googlePlaces', function(req, res) {
         }
         
     } else {throw err;}
-    }).limit(10);
+    }).limit(1000);
     //
     /*places.search({name: 'Shekhawati Institute Of Competitions', location:[26.876856,75.79724999999996], rankby:'distance'}, function(err, response) {
       console.log("search: ", response.results);

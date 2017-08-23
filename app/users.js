@@ -4,6 +4,10 @@ var request = require("request");
 
 var config = require('../config/mydatabase.js');
 var user = require('../app/models/user');
+var view = require('../app/models/view');
+var tofillci = require('../app/models/tofillci');
+var toverifyci = require('../app/models/toverifyci');
+var addContactInfo = require('../app/models/addContactInfo');
 var coupon = require('../app/models/coupon');
 var userrefer = require('../app/models/userrefer');
 var email = require('../app/models/email');
@@ -1158,6 +1162,161 @@ router.get('/deactivateIntern/:userId', function(req, res) {
     });
 });
 
+function closeFillCI(userId, pastInternId, res){
+    console.log('Starting close fills process:');
+    var allElements = tofillci
+    .find({user: userId, active: false},{user:1})
+    .exec(function (err, allElements) {
+    if (!err){
+        var nElements = allElements.length;
+        var eCounter = 0;
+        allElements.forEach(function(thisElement, index){
+            thisElement.user = pastInternId;
+            thisElement.save(function(err, thisElement) {
+                if (err) return console.error(err);
+                console.log('To fill CI closed: ' + thisElement._id);
+                eCounter += 1;
+
+                if(eCounter == nElements){
+                    res.tofillci = true;
+                    res.tofillciCount = nElements;
+                    closeVerifyCI(userId, pastInternId, res);
+                }
+            });
+        });
+        if(nElements == 0){
+            res.tofillci = true;
+            res.tofillciCount = 0;
+            closeVerifyCI(userId, pastInternId, res);
+        }
+    } else {throw err;}
+    });
+};
+function closeVerifyCI(userId, pastInternId, res){
+    console.log('Starting close verify process:');
+    var allElements = toverifyci
+    .find({user: userId, active: false},{user:1})
+    .exec(function (err, allElements) {
+    if (!err){
+        var nElements = allElements.length;
+        var eCounter = 0;
+        allElements.forEach(function(thisElement, index){
+            thisElement.user = pastInternId;
+            thisElement.save(function(err, thisElement) {
+                if (err) return console.error(err);
+                console.log('To verify CI closed: ' + thisElement._id);
+                eCounter += 1;
+
+                if(eCounter == nElements){
+                    res.toverifyci = true;
+                    res.toverifyciCount = nElements;
+                    closeContactCI(userId, pastInternId, res);
+                }
+            });
+        });
+        if(nElements == 0){
+            res.toverifyci = true;
+            res.toverifyciCount = 0;
+            closeContactCI(userId, pastInternId, res);
+        }
+    } else {throw err;}
+    });
+};
+function closeContactCI(userId, pastInternId, res){
+    console.log('Starting close contacts process:');
+    var allElements = addContactInfo
+    .find({user: userId, active: false},{user:1})
+    .exec(function (err, allElements) {
+    if (!err){
+        var nElements = allElements.length;
+        var eCounter = 0;
+        allElements.forEach(function(thisElement, index){
+            thisElement.user = pastInternId;
+            thisElement.save(function(err, thisElement) {
+                if (err) return console.error(err);
+                console.log('Contact CI closed: ' + thisElement._id);
+                eCounter += 1;
+
+                if(eCounter == nElements){
+                    res.addContactInfo = true;
+                    res.addContactInfoCount = nElements;
+                    
+                    var thisUser = user
+                        .findOne({ '_id': userId, userType:'Intern - Business Development' },{userType:1, basic: 1})
+                        .exec(function (err, thisUser) {
+                        if (!err){
+                            if(thisUser){
+                                thisUser.userType = 'Student';
+                                thisUser.save(function(err, thisUser) {
+                                    if (err) return console.error(err);
+                                    console.log('Internship completely closed: ' + thisUser.basic.name);
+                                    console.log(JSON.stringify(res));
+                                    //console.log(thisUser);
+                                    return(thisUser);
+                                });
+                            }
+                            else{
+                                return(false);
+                            }
+
+                        } else {throw err;}
+                    });
+                    
+                }
+            });
+        });
+        if(nElements == 0){
+            res.addContactInfo = true;
+            res.addContactInfoCount = 0;
+            
+            var thisUser = user
+                .findOne({ '_id': userId, userType:'Intern - Business Development' },{userType:1, basic: 1})
+                .exec(function (err, thisUser) {
+                if (!err){
+                    if(thisUser){
+                        thisUser.userType = 'Student';
+                        thisUser.save(function(err, thisUser) {
+                            if (err) return console.error(err);
+                            console.log('Internship completely closed: ' + thisUser.basic.name);
+                            console.log(JSON.stringify(res));
+                            //console.log(thisUser);
+                            return(thisUser);
+                        });
+                    }
+                    else{
+                        return(false);
+                    }
+
+                } else {throw err;}
+            });
+        }
+    } else {throw err;}
+    });
+};
+
+
+router.get('/closeInternship/:userId', function(req, res) {
+    var pastInternId = '599c2bab54161317886da9f6';
+    var userId = req.params.userId;
+    var thisUser = user
+        .findOne({ '_id': userId, userType:'Intern - Business Development' },{userType:1, basic: 1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            if(thisUser){
+                console.log('Starting close internship process:');
+                closeFillCI(userId, pastInternId, {}, function(err, summary) {
+                    console.log('Summary is: ' + JSON.stringify(summary));
+                    res.json(summary);
+                });
+            }
+            else{
+                res.json(false);
+            }
+            
+        } else {throw err;}
+    });
+});
+
 router.get('/activateBlogger/:userId', function(req, res) {
     var userId = req.params.userId;
     var thisUser = user
@@ -1185,6 +1344,53 @@ router.get('/deactivateBlogger/:userId', function(req, res) {
             });
         } else {throw err;}
     });
+});
+
+router.get('/activeUsers', function(req, res) {
+    /*, institute: { $addToSet: "$institute" }*/
+    var activeUsers = view.aggregate(
+    [
+        {$match: { user: {$exists: true}} },
+        {"$group": { "_id": { user: "$user" }, count:{$sum:1}, institute: { $addToSet: "$institute" } } },
+        {$sort:{"count":-1}}
+
+    ],function(err, activeUsers) {
+    if (!err){
+        var nUsers = activeUsers.length;
+        //console.log(activeUsers);
+        var counter = 0;
+        
+        var resArray = [];
+        activeUsers.forEach(function(thisUser, index){
+            var userId = thisUser._id.user;
+            var basicUser = user
+                .findOne({ '_id': userId },{basic:1, facebook:1, image:1, userType:1, mobile:1, email:1})
+                .exec(function (err, basicUser) {
+                if (!err){
+                    counter += 1;
+                    if(thisUser.count > 10){
+                       var newActiveUser = {
+                            user: basicUser,   
+                            count: thisUser.count,   
+                            institutes: thisUser.institute,   
+                        };
+                        resArray.push(newActiveUser);
+                    }
+                    
+                    if(counter == nUsers){
+                        console.log(resArray.length);
+                        res.json(resArray);
+                    }
+                } else {throw err;}
+            });
+        });
+        if(nUsers == 0){
+            console.log(resArray);
+            res.json(resArray);
+        }
+    } else {throw err;}
+    });
+
 });
 
 //to get a particular user with _id userId

@@ -1,0 +1,34 @@
+<style>
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px transparent;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    
+    #profileSection{
+        min-height: 20vh;
+    }
+</style>
+<div class="whiteBackground mainContent" >
+    <div id="spacer">
+    </div>
+    <div layout="row" layout-align="start start" class="padded" ng-if="masterUser" layout-wrap>
+    <div flex="33" layout="row" layout-align="start start" ng-repeat="user in activeUsers">
+        {{user.user.basic.name}}&nbsp;{{user.count}}
+    </div>
+    </div>
+</div>

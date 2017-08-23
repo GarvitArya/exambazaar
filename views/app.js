@@ -248,12 +248,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.deactivateBlogger = function(userId) {
             return $http.get('/api/users/deactivateBlogger/'+userId, {userId: userId});
         };
+        this.activeUsers = function() {
+            return $http.get('/api/users/activeUsers');
+        };
         this.activateIntern = function(userId) {
             return $http.get('/api/users/activateIntern/'+userId, {userId: userId});
         };
         this.deactivateIntern = function(userId) {
             return $http.get('/api/users/deactivateIntern/'+userId, {userId: userId});
         };
+        this.closeInternship = function(userId) {
+            return $http.get('/api/users/closeInternship/'+userId, {userId: userId});
+        };
+        
         this.getUser = function(userId) {
             return $http.get('/api/users/edit/'+userId, {userId: userId});
         };
@@ -11101,7 +11108,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     //$scope.currLocation = [26.277995, 73.011094];
                     //$scope.currLocation = [17.413502, 78.528736];
                     //$scope.currLocation = [24.434886, 77.161200];
-                    $scope.currLocation = [17.318687, 78.543050];
+                    //$scope.currLocation = [17.318687, 78.543050];
                 }
                 function displayError(error) {
                   var errors = { 
@@ -11697,6 +11704,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
     }]);   
     
+    exambazaar.controller("activeUsersController", 
+        [ '$scope', 'thisuser','activeUsers', function($scope, thisuser, activeUsers){
+            $scope.user = thisuser.data;
+            $scope.activeUsers = activeUsers.data;
+            console.log($scope.activeUsers);
+            if($scope.user && $scope.user.userType=='Master'){
+                $scope.masterUser = true;
+            }
+            
+    }]);  
     exambazaar.controller("postBlogController", 
         [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService','userBlogs', 'thisuser', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, userBlogs, thisuser, upvoteService, allBlogsUpvotesCount, allBloggers){
             $scope.user = thisuser.data;
@@ -15633,7 +15650,7 @@ function getLatLng(thisData) {
                     viewService.getuserviews($scope.thisuser._id).success(function (data2, status, headers) {
                         //console.info("Done");
                         $scope.thisuserViewed = data2;
-                        console.log($scope.thisuserViewed);
+                        //console.log($scope.thisuserViewed);
                     })
                     .error(function (data, status, header, config) {
                         console.info("Error ");
@@ -15644,7 +15661,11 @@ function getLatLng(thisData) {
             $scope.activateIntern = function(thisuser){
                 UserService.activateIntern(thisuser._id).success(function (data, status, headers) {
                     console.info("Done");
-                    $scope.thisuser = data;
+                    alert(data);
+                    if($scope.thisuser){
+                        $scope.thisuser = data;
+                    }
+                    
                 })
                 .error(function (data, status, header, config) {
                     console.info("Error ");
@@ -15652,6 +15673,15 @@ function getLatLng(thisData) {
             };
             $scope.deactivateIntern = function(thisuser){
                 UserService.deactivateIntern(thisuser._id).success(function (data, status, headers) {
+                    console.info("Done");
+                    $scope.thisuser = data;
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });
+            };
+            $scope.closeInternship = function(thisuser){
+                UserService.closeInternship(thisuser._id).success(function (data, status, headers) {
                     console.info("Done");
                     $scope.thisuser = data;
                 })
@@ -17803,6 +17833,34 @@ function getLatLng(thisData) {
                 reviewSummary: ['reviewService',
                     function(reviewService) {
                     return reviewService.dailySummary();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('activeUsers', {
+            url: '/:userId/activeUsers', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'activeUsers.html',
+                    controller: 'activeUsersController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                activeUsers: ['UserService',
+                    function(UserService) {   
+                    return UserService.activeUsers();
                 }],
                 provider: function() { return {}; }
                 

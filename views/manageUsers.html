@@ -101,6 +101,11 @@
                         Deactivate Intern
                         </md-button>
                     </div>
+                    <div layout="column" layout-align="start start" ng-if="thisuser.userType=='Intern - Business Development'" class="paddingLR10">
+                        <md-button class="md-danger md-small editFont" ng-click="closeInternship(thisuser)">
+                        Close Internship
+                        </md-button>
+                    </div>
                 </div>
                 
                 

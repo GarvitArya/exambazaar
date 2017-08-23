@@ -16,6 +16,7 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
+var ObjectId = require('mongodb').ObjectID;
 //to get a particular tofillci with _id tofillciId
 router.get('/edit/:tofillciId', function(req, res) {
     var tofillciId = req.params.tofillciId;
@@ -239,10 +240,12 @@ router.get('/sendEmails', function(req, res) {
 
 //to get all tofillcis
 router.get('/', function(req, res) {
+    var pastInternId = '599c2bab54161317886da9f6';
     var tofillcis = tofillci
-        .find({})
+        .find({user: { $ne: "599c2bab54161317886da9f6" }})
         .exec(function (err, tofillcis) {
         if (!err){
+            //console.log(tofillcis.length);
             var basicFillTasks = [];
             var counter = 0;
             var nLength = tofillcis.length;

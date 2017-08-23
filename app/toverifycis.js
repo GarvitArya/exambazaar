@@ -14,6 +14,7 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
+var ObjectId = require('mongodb').ObjectID;
 //to get a particular toverifyci with _id toverifyciId
 router.get('/edit/:toverifyciId', function(req, res) {
     var toverifyciId = req.params.toverifyciId;
@@ -118,8 +119,9 @@ router.post('/markDone', function(req, res) {
 });
 
 router.get('/', function(req, res) {
+    var pastInternId = '599c2bab54161317886da9f6';
     var toverifycis = toverifyci
-        .find({})
+        .find({user: { $ne: ObjectId(pastInternId) }})
         .exec(function (err, toverifycis) {
         if (!err){
             var basicFillTasks = [];
@@ -136,7 +138,7 @@ router.get('/', function(req, res) {
                         
                     var thisUser = user
                         .findOne({ '_id': userId },{basic:1})
-                        .deepPopulate('partner partner.location')
+                        //.deepPopulate('partner partner.location')
                         .exec(function (err, thisUser) {
                         if (!err){
                             var newTask = {
@@ -147,7 +149,6 @@ router.get('/', function(req, res) {
                             _deadline: thisFillTask._deadline,
                             _finished: thisFillTask._finished,
                             active: thisFillTask.active,
-
                         };
                         counter = counter + 1;
                         basicFillTasks.push(newTask);

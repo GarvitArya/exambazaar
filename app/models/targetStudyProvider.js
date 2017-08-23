@@ -209,7 +209,9 @@ var targetStudyProviderSchema = mongoose.Schema({
                 }
             }
         ],
-    }
+    },
+    googlePlace:Schema.Types.Mixed,
+    googlePlaceSearchTry:Boolean,
 });
 
 targetStudyProviderSchema.index({ loc: '2dsphere'});
