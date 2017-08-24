@@ -408,13 +408,14 @@
                     </div>
                 </div>
                 <div flex="15" layout="column" layout-align="start center" class="marginR10 padding5 whiteBackground" id="pageLogoHolder">
-                    <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadQuestionPaper(newquestionpaper)" ng-model="newquestionpaper" >
+                    <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadQuestionPaper(newquestionpaper)" ng-model="newquestionpaper" ngf-max-size="50MB">
                         <span class="md-display-1">
                             <i class="fa fa-file-text" aria-hidden="true"></i>
                         </span>
                         <span>
                             Question Paper
                         </span>
+                        <span>{{respError}}</span>
                     </div>
                     <a ng-if="toAddTest.url.question" ng-href="{{toAddTest.url.question}}" target="_blank" class="bold">
                         <i class="fa fa-check text-primary font16" aria-hidden="true"></i> Uploaded
@@ -1199,36 +1200,19 @@
 </div>
 
 
-<!--<div class="bottomBar">
+<div class="bottomBar" ng-if="uploadProgress">
     <div layout="row" layout-align="start center">
         <div layout="row" layout-align="start center" flex ="40">
             <div class="marginR10">
-            Do you want to save changes to {{}}
+            Upload progress
             </div>
             <div>
-                {{photoProgess}}
+                {{uploadProgress}}%
             </div>
-        </div>
-        <div layout="row" layout-align="end center" flex = "60">
-            <md-button class="md-green2 md-small secondFont tolowercase font10" ng-click="fastPay()" ng-if="!fastPayMode">
-                Fast Pay
-            </md-button>
-            <md-button class="md-green2 md-small secondFont tolowercase font10" ng-click="undofastPay()" ng-if="fastPayMode">
-                Undo Fast Pay
-            </md-button>
-            <md-button class="md-black md-small secondFont tolowercase font10" ng-click="seeChart()">
-                Chart
-            </md-button>
-            <md-button class="md- md-small secondFont tolowercase font10" ng-click="initiate(initiatedEMI)">
-                Refresh
-            </md-button>
-            <md-button class="md-green2 md-small secondFont tolowercase font10" ng-click="calculateEMI()">
-                Calculate EMI
-            </md-button>
         </div>
         
     </div>
-</div>-->
+</div>
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="savedDialog">

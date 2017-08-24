@@ -1347,7 +1347,11 @@ router.get('/deactivateBlogger/:userId', function(req, res) {
 });
 
 router.get('/activeUsers', function(req, res) {
-    /*, institute: { $addToSet: "$institute" }*/
+     var start = moment().subtract(7, 'day').startOf('day');
+    var end = moment().endOf('day');
+    
+    //, _date: {  $gte : start, $lte : end} 
+    //state:'claim',_date:{  $gte : start, $lte : end}
     var activeUsers = view.aggregate(
     [
         {$match: { user: {$exists: true}} },
@@ -1357,7 +1361,7 @@ router.get('/activeUsers', function(req, res) {
     ],function(err, activeUsers) {
     if (!err){
         var nUsers = activeUsers.length;
-        //console.log(activeUsers);
+        console.log(start + " " + end + " " + nUsers);
         var counter = 0;
         
         var resArray = [];
@@ -1378,14 +1382,14 @@ router.get('/activeUsers', function(req, res) {
                     }
                     
                     if(counter == nUsers){
-                        console.log(resArray.length);
+                        //console.log(resArray.length);
                         res.json(resArray);
                     }
                 } else {throw err;}
             });
         });
         if(nUsers == 0){
-            console.log(resArray);
+            //console.log(resArray);
             res.json(resArray);
         }
     } else {throw err;}

@@ -1,7 +1,7 @@
 var express  = require('express');
 //var redirect = require("express-redirect");
 var compression = require('compression');
-var app      = express();
+
 var port     = process.env.PORT || 8000;
 var path = require('path');
 
@@ -12,6 +12,8 @@ var childProcess = require( "child_process" );
 var phantomjs = require( "phantomjs" );
 var binPath = phantomjs.path;
 */
+var app      = express();
+
 
 var mongoose = require('mongoose');
 var Moment = require('moment');
@@ -23,8 +25,8 @@ var flash        = require('req-flash');
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+
+
 
 var session      = require('express-session');
 var cors = require('cors');
@@ -49,7 +51,9 @@ Tesseract.recognize(filename)
     process.exit(0);
 });*/
 
-
+app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
 //mongoose.connect(configDB.url);
@@ -102,8 +106,7 @@ app.get('/auth/facebook/callback',
 
 
 app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/views'));
@@ -294,16 +297,15 @@ setInterval(fn60sec, 60*1000);*/
 
 
 var now = new Date();
-var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 10, 0, 0) - now;
+var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 00, 30, 0, 0) - now;
 if (millisTill10 < 0) {
      millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
 }
 setTimeout(function(){
     procmons.helper();
     //procmons.procmon();
-    console.log("It's 1:10pm!");
+    console.log("It's time to send procmon email:");
 }, millisTill10);
-
 
 
 var server = app.listen(port);

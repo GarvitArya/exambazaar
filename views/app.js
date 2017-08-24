@@ -27,7 +27,7 @@ function AppCtrl(SidebarJS) {
 }
 
 var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'angular-google-gapi', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js', 'ngSidebarJS', 'ui-notification', 'ngMaterialDatePicker']);
-//,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin'
+//,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave'
     (function() {
     'use strict';
     angular
@@ -10937,8 +10937,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.user = null;
             }
             
-            
-            
+            $scope.toPdf = function(){
+                var doc = new jsPDF({
+                  orientation: 'landscape',
+                  
+                });
+
+                doc.text('Hello world!', 35, 25);
+                doc.text('Hello world2!', 35, 25);
+                doc.save('two-by-four.pdf');
+            };
             var viewForm = {
                 state: $state.current.name,
                 claim: false,
@@ -15218,6 +15226,8 @@ function getLatLng(thisData) {
                 filename: thisFile.name,
                 contentType: thisFile.type
             };
+            console.log(thisFile);
+            console.log(thisFile.size);
             var fileName = fileInfo.filename;
             var splits = fileName.split('.');
             fileName = splits[0];
@@ -15240,9 +15250,12 @@ function getLatLng(thisData) {
                 $scope.toAddTest.url.question = questionpaperLink;
                 $scope.toAddTest.name = fileName;
                 }, function (resp) {
+                    $scope.respError = resp;
+                    console.log($scope.respError);
                     console.log('Error status: ' + resp.status);
                 }, function (evt) {
-                    
+                    $scope.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                    console.log($scope.uploadProgress);
                 });
 
             })
