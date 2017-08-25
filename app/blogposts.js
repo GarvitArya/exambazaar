@@ -103,8 +103,9 @@ router.get('/userblogs/:userId', function(req, res) {
     var thisUser = user.findOne({ '_id': userId },{mobile:1, email:1, basic:1, image:1, userType:1},function (err, thisUser) {
         if (!err){
             var thisUserType = thisUser.userType;
-            
-            if(thisUserType =='Master'){
+            var thisUserId = thisUser._id.toString();
+            var internIds = ['59369dea8a9d754dbd9ead2a'];
+            if(thisUserType =='Master' || internIds.indexOf(thisUserId) != -1){
                 var blogposts = blogpost
                 .find({})
                 .exec(function (err, blogposts) {
