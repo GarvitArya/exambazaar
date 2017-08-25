@@ -24,6 +24,9 @@ var blogpostSchema = mongoose.Schema({
     active: { type: Boolean, default: false },
     _created: { type: Date, default: Date.now },
     
+    seoKeywords: String,
+    seoDescription: String,
+    
 });
 blogpostSchema.plugin(deepPopulate);
 module.exports = mongoose.model('blogpost', blogpostSchema);

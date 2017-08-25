@@ -291,6 +291,35 @@
                         </md-button>
                     </div>
                 </div>
+                <div layout="column" layout-align="start start" class="width100 paddingT10 paddingB20 blogSeparator">
+                    <div layout="column" layout-align="start start">
+                        <div class="font20 bold">SEO</div>
+                        <div class="width100 font11 marginB10 textLightGrey">Information submitted here will be used by search engines like Google to rank your blogpost. Use the resources below to increase SEO effectiveness</div>
+                        <div layout="row" layout-align="start start" class="width100 font10">
+                            <span class="marginR10">Learn About SEO</span>
+                            <a href="https://searchenginewatch.com/2016/05/26/how-to-write-meta-descriptions-for-seo-with-good-and-bad-examples/" target="_blank" class="marginR10">Search Engine Watch</a>
+                            <a href="https://moz.com/blog/tactical-seo-how-many-termsphrases-should-i-target-on-a-single-page" target="_blank" class="marginR10">MOZ</a>
+                            <a href="https://static.googleusercontent.com/media/www.google.com/en//webmasters/docs/search-engine-optimization-starter-guide.pdf" target="_blank" class="marginR10">Google Started Guide</a>
+                        
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="start start" class="width100">
+                        <div class="width100">
+                            <textarea class="font11 width100" ng-model="blogpost.seoDescription" placeholder="Add a description of this blogpost for search engine optimization (SEO)" rows="4"></textarea>
+                        </div>
+                        <div layout="row" layout-align="end center" class="width100 font11 textLightGrey" >
+                            <span>{{blogpost.seoDescription.length}} / Optimal length 160 characters. <a href="https://moz.com/learn/seo/meta-description" target="_blank">Learn more</a></span>
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="start start" class="width100">
+                        <div class="width100">
+                            <textarea class="font11 width100" ng-model="blogpost.seoKeywords" placeholder="Add keywords for this blogpost for search engine optimization (SEO). Separate two keywords by comma (,)" rows="4"></textarea>
+                        </div>
+                        <div layout="row" layout-align="end center" class="width100 font11 textLightGrey" >
+                            <span>{{nKeywords}} / 10-12 Optimal keywords for this page <a href="https://moz.com/blog/tactical-seo-how-many-termsphrases-should-i-target-on-a-single-page" target="_blank">Learn more</a></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         

@@ -11116,7 +11116,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     //$scope.currLocation = [26.277995, 73.011094];
                     //$scope.currLocation = [17.413502, 78.528736];
                     //$scope.currLocation = [24.434886, 77.161200];
-                    //$scope.currLocation = [17.318687, 78.543050];
+                    $scope.currLocation = [17.318687, 78.543050];
                 }
                 function displayError(error) {
                   var errors = { 
@@ -16496,6 +16496,16 @@ function getLatLng(thisData) {
                 disableExtraSpaces: true,
                 toolbar: false
             };
+            
+            $scope.$watch('blogpost.seoKeywords', function (newValue, oldValue, scope) {
+                if(newValue && newValue.length > 0){
+                    $scope.nKeywords = (newValue.match(new RegExp(",", "g")) || []).length + 1;
+                    console.log($scope.nKeywords);
+                }
+
+            }, true);
+            
+            
             
             $scope.saveBlogPost = function(blogpost){
                 
