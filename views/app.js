@@ -17076,7 +17076,8 @@ function getLatLng(thisData) {
             
             $rootScope.pageTitle = $scope.blogpost.title + " | Exambazaar.com";
             $rootScope.pageImage = $scope.thisBlogCover;
-            
+            $rootScope.pageDescription =  $scope.blogpost.seoDescription;
+            $rootScope.pageKeywords =  $scope.blogpost.seoKeywords;
             
             var viewForm = {
                 state: $state.current.name,
