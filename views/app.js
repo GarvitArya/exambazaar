@@ -404,6 +404,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.addLogo = function(newLogoForm) {
             return $http.post('/api/exams/addLogo',newLogoForm);
         };
+        this.getExamPapers = function() {
+            return $http.get('/api/exams/papers');
+        };
     }]);
         
     exambazaar.service('SendGridService', ['$http', function($http) {
@@ -11722,6 +11725,39 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
             
     }]);  
+    exambazaar.controller("qadController", 
+        [ '$scope', 'thisuser','examList','testList', function($scope, thisuser, examList, testList){
+            $scope.user = thisuser.data;
+            $scope.allTests = testList.data;
+            var allExams = examList.data;
+            
+            var examIds = allExams.map(function(a) {return a._id;});
+            
+            allExams.forEach(function(thisExam, index){
+                if(!thisExam.tests){
+                    thisExam.tests = [];
+                }
+            });
+            
+            $scope.allTests.forEach(function(thisTest, index){
+                var eIndex = examIds.indexOf(thisTest.exam);
+                if(eIndex != -1){
+                    if(!allExams[eIndex].tests){
+                        allExams[eIndex].tests = [];
+                    }
+                    allExams[eIndex].tests.push(thisTest);
+                }
+            });
+            
+            $scope.allExams = allExams;
+            //console.log($scope.allTests);
+            if($scope.user && $scope.user.userType=='Master'){
+                $scope.masterUser = true;
+            }
+            
+    }]);    
+        
+        
     exambazaar.controller("postBlogController", 
         [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService','userBlogs', 'thisuser', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, userBlogs, thisuser, upvoteService, allBlogsUpvotesCount, allBloggers){
             $scope.user = thisuser.data;
@@ -17885,6 +17921,38 @@ function getLatLng(thisData) {
                 activeUsers: ['UserService',
                     function(UserService) {   
                     return UserService.activeUsers();
+                }],
+                provider: function() { return {}; }
+                
+            }
+        })
+        .state('qad', {
+            url: '/:userId/qad', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'qad.html',
+                    controller: 'qadController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                testList: ['testService',
+                    function(testService){
+                    return testService.getTests();
                 }],
                 provider: function() { return {}; }
                 

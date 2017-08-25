@@ -54,7 +54,7 @@ router.get('/', function(req, res) {
     //console.log('Here');
     test
         .find({ })
-        .deepPopulate('exam')
+        //.deepPopulate('exam')
         .exec(function (err, docs) {
         if (!err){
             //var testIds = docs.map(function(a) {return a.name;});
