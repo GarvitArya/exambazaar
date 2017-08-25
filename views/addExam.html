@@ -415,7 +415,7 @@
                         <span>
                             Question Paper
                         </span>
-                        <span>{{respError}}</span>
+                        <span ng-if="respError" class="danger">Error</span>
                     </div>
                     <a ng-if="toAddTest.url.question" ng-href="{{toAddTest.url.question}}" target="_blank" class="bold">
                         <i class="fa fa-check text-primary font16" aria-hidden="true"></i> Uploaded
