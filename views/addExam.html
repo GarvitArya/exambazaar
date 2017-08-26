@@ -210,7 +210,7 @@
                     Exam Frequency
                 </div>
                 <div class="width100">
-                    <md-select ng-model="exam.frequency" placeholder="Select the frequency of the exam" class="margin0">
+                    <md-select ng-model="exam.frequency" placeholder=a"Select the frequency of the exam" class="margin0">
                         <md-option ng-repeat="examFrequency in examFrequencies" ng-value="examFrequency">
                         {{examFrequency}}
                         </md-option>
@@ -290,7 +290,7 @@
                 Tests for {{exam.displayname}}
             </div>
             <div flex layout="row" layout-align="start center"  class="gainsboroBorder padding10 width100 height100" layout-wrap>
-                <div layout="row" layout-align="start center" class="bold marginR10 badge font16" id="removebadge" ng-repeat="test in exam.tests" ng-click="setTest(test)">
+                <div layout="row" layout-align="start center" class="bold marginR10 badge font16 marginB5" id="removebadge" ng-repeat="test in exam.tests" ng-click="setTest(test)">
                     {{test.name}}
                 </div>
                 

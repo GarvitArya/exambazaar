@@ -11119,7 +11119,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     //$scope.currLocation = [26.277995, 73.011094];
                     //$scope.currLocation = [17.413502, 78.528736];
                     //$scope.currLocation = [24.434886, 77.161200];
-                    $scope.currLocation = [17.318687, 78.543050];
+                    //$scope.currLocation = [17.318687, 78.543050];
                 }
                 function displayError(error) {
                   var errors = { 
@@ -14849,14 +14849,14 @@ function getLatLng(thisData) {
             $scope.toAddTest = {
                 name: '',
                 description: '',
-                year: '',
+                year: '2016',
                 url: {
                     question: null,
                     answer: null,
                 },
                 screenshots: [],
                 exam: $scope.exam._id,
-                official: false,
+                official: true,
                 mockPaper: false,
                 solved: false,
                 questionWithAnswer: false,
