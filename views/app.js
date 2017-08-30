@@ -1284,6 +1284,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.databaseService = function() {
             return $http.get('/api/targetStudyProviders/databaseService');
         };
+        this.cityStateService = function() {
+            return $http.get('/api/targetStudyProviders/cityStateService');
+        };
         this.emailService = function() {
             return $http.get('/api/targetStudyProviders/emailService');
         };
@@ -8127,7 +8130,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
             if($scope.user.userType=='Intern - Business Development'){
                 
-                if($scope.city != 'Jaipur' && $scope.city != 'New Delhi'){
+                if($scope.city != 'Ranchi' && $scope.city != 'New Delhi'){
                     $scope.showLevel = 0;
                 }else{
                     $scope.showLevel = 1; 

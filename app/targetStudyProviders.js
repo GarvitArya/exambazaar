@@ -2707,6 +2707,78 @@ router.get('/databaseService', function(req, res) {
     
 });
 
+function titleCase(str) {
+  str = str.toLowerCase();
+  str = str.split(' ');
+  for (var i = 0; i < str.length; i++) {
+    str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+  }
+  return str.join(' ');
+}
+
+router.get('/cityStateService', function(req, res) {
+    console.log("City State Service Starting now");
+    res.json('Done');
+    
+    var allProviders = targetStudyProvider.find({}, {name:1, city:1, state:1) {
+        if (!err){
+            var nProviders = allProviders.length;
+            var counter = 0;
+            console.log("There are " + nProviders + " providers!");
+            var allStates = [];
+            allProviders.forEach(function(thisprovider, index){
+                 
+                thisprovider.city = thisprovider.city.trim();
+                thisprovider.state = thisprovider.state.trim();
+                thisprovider.city = titleCase(thisprovider.city);
+                thisprovider.state =    titleCase(thisprovider.state);
+                
+                var stateNames = allStates.map(function(a) {return a.state;});
+                var sIndex = stateNames.indexOf(thisprovider.state);
+                
+                if(sIndex == -1){
+                    var newState = {
+                        state: thisprovider.state,
+                        cities: []
+                    };
+                    allStates.push(newState);
+                }
+    
+                var stateNames = allStates.map(function(a) {return a.state;});
+                var sIndex = stateNames.indexOf(thisprovider.state);
+                
+                if(sIndex != -1){
+                    var cities = allStates[sIndex].cities;
+                    var cIndex = cities.indexOf(thisprovider.city);
+                    if(cIndex == -1){
+                    allStates[sIndex].cities.push(thisprovider.city);
+                    }
+                }else{
+                    console.log('This shouldnt happen');
+                }
+    
+                counter += 1;
+                if(counter == nProviders){
+                    allStates.forEach(function(thisstate, index){
+                        console.log(thisstate);
+                        console.log(JSON.stringify(thisstate.cities));
+                    });
+                }
+                //console.log(thisprovider.city + ", " + thisprovider.city);
+                /*thisprovider.save(function(err, thisprovider) {
+                    if (err) return console.error(err);
+                    console.log(thisprovider._id + " saved!");
+                });*/
+            });
+            
+        }else{
+            
+        }
+    });
+    
+    
+});
+
 router.get('/logoService', function(req, res) {
     console.log("Logo Service Starting now");
     var allproviders =  targetStudyProvider.find({"logo": { $exists: true, $ne: null }, type: 'Coaching' }, {logo:1},function(err, allproviders) {
