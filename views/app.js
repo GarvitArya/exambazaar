@@ -8261,7 +8261,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
         $scope.getWebsites = function(){
-            alert('Starting');
+            //alert('Starting');
             targetStudyProviderService.getWebsites().success(function (data, status, headers) {
                 console.info("Done");
             })
@@ -8269,7 +8269,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 console.info("Error ");
             });
         };
-        
+        $scope.cityStateService = function(){
+            //alert('Starting');
+            targetStudyProviderService.cityStateService().success(function (data, status, headers) {
+                console.info("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
         $scope.getCityCount = function(){
             targetStudyProviderService.getCityCount().success(function (data, status, headers) {
                 console.info("Done");
@@ -16025,7 +16033,7 @@ function getLatLng(thisData) {
     }]);        
         
     exambazaar.controller("addInstituteController", 
-        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', 'examList', 'streamList', '$rootScope', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService, examList, streamList,$rootScope){
+        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', 'examList', 'streamList', '$rootScope', 'Notification', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService, examList, streamList,$rootScope, Notification){
             
         $rootScope.title = 'Add Coaching in EB';    
         $scope.user = thisuser.data;
@@ -16083,8 +16091,12 @@ function getLatLng(thisData) {
                 console.info("Error ");
             });
         };
-        
+        $scope.refreshPage = function(){
+            $state.reload();    
+        };
+        $scope.adding = null;
         $scope.addInstitutes = function(){
+            $scope.adding = true;
             var institutes = [];
             $scope.newinstitutes.forEach(function(thisinstitute, iIndex){
                 if(thisinstitute.name && thisinstitute.name != ''){
@@ -16106,6 +16118,8 @@ function getLatLng(thisData) {
             targetStudyProviderService.bulkSaveProviders(institutes).success(function (data, status, headers) {
                 $scope.addedInstituteIds = data;
                 console.info("Done");
+                Notification.success("Great, we have added " + $scope.addedInstituteIds.length + " institutes!");
+                Notification.warning("You will have to refresh this page to add more!");
             })
             .error(function (data, status, header, config) {
                 console.info("Error ");

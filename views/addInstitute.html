@@ -118,8 +118,13 @@
         </div>
             
             
-        <div flex layout="row" layout-align="center center" class="width100 marginB20 marginT40">
-            <md-button class="md-green md-small width50" ng-click="addInstitutes()" >Add</md-button>
+        <div flex layout="column" layout-align="center center" class="width100 marginB20 marginT40">
+            <div layout="column" layout-align="center center" class="width100">
+                <md-button class="md-green md-small width50" ng-click="addInstitutes()" ng-disabled="adding">Add</md-button>
+            </div>
+            <div layout="column" layout-align="center center" class="width100 font12 danger marginT10" ng-if="adding" ng-click="refreshPage()">
+                To add more institutes, refresh the page
+            </div>
         </div>
         <div flex layout="column" layout-align="start center" class="width100 marginT10 fourthFont" ng-if="addedInstituteIds.length > 0">
             <div>{{addedInstituteIds.length}} Institutes added sucessfully with ids</div>
