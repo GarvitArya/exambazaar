@@ -15,6 +15,7 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
+
 //to add an test
 router.post('/save', function(req, res) {
     var thisTest = req.body;
@@ -84,6 +85,27 @@ router.get('/test/:testId', function(req, res) {
         .deepPopulate('exam')
         .exec(function (err, thisTest) {
         if (!err){
+            
+            //console.log(thisTest);
+            res.json(thisTest);
+        } else {throw err;}
+    });
+    
+});
+
+router.get('/readTest/:testId', function(req, res) {
+    
+    var testId = req.params.testId;
+    console.log('Reading test: ' + testId);
+    var thisTest = test
+        .findOne({'_id': testId})
+        .exec(function (err, thisTest) {
+        if (!err){
+            var question = thisTest.url.question;
+            if(question){
+                console.log(question);
+                
+            }
             //console.log(thisTest);
             res.json(thisTest);
         } else {throw err;}
@@ -132,31 +154,5 @@ router.get('/edit/:testId', function(req, res) {
     });
 });
 
-router.post('/addLogo', function(req, res) {
-    var newLogoForm = req.body;
-    var logo = newLogoForm.logo;
-    var testId = newLogoForm.testId;
-    //console.log('Express received: ' + JSON.stringify(newLogoForm));
-    
-    var thisTest = test
-        .findOne({ _id: testId }, {logo:1})
-        .exec(function (err, thisTest) {
-        if (!err){
-            
-            if(thisTest){
-                thisTest.logo = logo;
-                thisTest.save(function(err, thisTest) {
-                    if (err) return console.error(err);
-                    //console.log("Logo data saved for " + thisTest._id);
-                    res.json('Done');
-                });
-            }else{
-                console.log('No such test');
-                res.json('Error');
-            }
-        } else {throw err;}
-    });
-    
-});
 
 module.exports = router;

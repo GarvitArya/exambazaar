@@ -1,0 +1,99 @@
+<style>
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px transparent;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    
+    #profileSection{
+        min-height: 20vh;
+    }
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    textarea{
+        width:100%;
+        padding: 5px 5px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 10px;
+    }
+    textarea:hover {
+        border: 1px solid #FF5A5F;
+    }
+    textarea:focus {
+        border: 1px solid #FF5A5F;
+    }
+    #pageLogoHolder{
+        border: 1px solid rgba(0,0,0,0.8);
+        min-height: 90px;
+        width: 90px;
+        border-radius: 4px;
+    }
+    .pageLogo{
+        max-height: 50px;
+    }
+    #removebadge{
+        background: #FF5A5F;
+    }
+</style>
+<div class="whiteBackground mainContent" >
+    <div id="spacer">
+    </div>
+    <div layout="column" layout-align="start start" class="padded width100" layout-wrap>
+        <div layout="row" layout-align="start start" class="width100 font20 bold paddingLR5" >
+            <a class="marginR10" ng-href="{{test.url.question}}" target="_blank" id="link">{{test.name}} ({{test.description}})</a>
+        </div>
+        
+        <div layout="column" layout-align="start start" class="width100 font14 marginTB10">
+            <div layout="row" layout-align="start center" class="width100 marginTB10">
+                <div layout="column" layout-align="start start" flex class="width100 paddingLR5">
+                    <div layout="row" layout-align="start start" class="width100 font16 paddingLR5 bold">
+                        Question
+                    </div>
+                    <textarea class="width100 font14" ng-model="toAddQuestion.text" placeholder="Add question here" rows="4"></textarea>
+                </div>
+                <div flex="15" layout="column" layout-align="start center" class="margin5 padding5 whiteBackground font12" id="pageLogoHolder">
+                    <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadImage(image)" ng-model="image">
+                        <span class="md-display-1">
+                            <i class="fa fa-file-text" aria-hidden="true"></i>
+                        </span>
+                        <span>
+                            Add Image
+                        </span>
+                    </div>
+                    <div layout="row" layout-align="center center" ng-if="toAddQuestion.image">
+                        <div class="marginR10">
+                            <a ng-href="{{toAddQuestion.image}}" target="_blank">
+                                <i class="fa fa-check-square-o text-primary marginR5" aria-hidden="true"></i> Uploaded
+                            </a>
+                        </div>
+                        <div class="badge" id="removebadge" ng-click="removeImage()">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -368,12 +368,32 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
     }]);
+    exambazaar.service('questionService', ['$http', function($http) {
+        this.saveQuestion = function(question) {
+            return $http.post('/api/questions/save', question);
+        };
+        this.getQuestion = function(questionId) {
+            return $http.get('/api/questions/edit/'+questionId, {questionId: questionId});
+        };
+        this.removeQuestion = function(questionId) {
+            return $http.get('/api/questions/remove/'+questionId, {questionId: questionId});
+        };
+        this.getQuestions = function() {
+            return $http.get('/api/questions');
+        };
+        this.getExamQuestions = function(examId) {
+            return $http.get('/api/questions/exam/'+examId, {examName: examId});
+        };
+    }]);
     exambazaar.service('testService', ['$http', function($http) {
         this.saveTest = function(test) {
             return $http.post('/api/tests/save', test);
         };
         this.getTest = function(testId) {
             return $http.get('/api/tests/edit/'+testId, {testId: testId});
+        };
+        this.readTest = function(testId) {
+            return $http.get('/api/tests/readTest/'+testId, {testId: testId});
         };
         this.removeTest = function(testId) {
             return $http.get('/api/tests/remove/'+testId, {testId: testId});
@@ -385,6 +405,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             return $http.get('/api/tests/exam/'+examId, {examName: examId});
         };
     }]);
+    
     exambazaar.service('ExamService', ['$http', function($http) {
         this.saveExam = function(exam) {
             return $http.post('/api/exams/save', exam);
@@ -1189,6 +1210,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.getProvider = function(coachingId) {
             return $http.get('/api/targetStudyProviders/coaching/'+coachingId, {coachingId: coachingId});
+        };
+        this.getClaimProvider = function(coachingId) {
+            return $http.get('/api/targetStudyProviders/claimcoaching/'+coachingId, {coachingId: coachingId});
         };
         this.getProviderReview = function(coachingId) {
             return $http.get('/api/targetStudyProviders/coachingreview/'+coachingId, {coachingId: coachingId});
@@ -4509,7 +4533,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
         $scope.saveProvider = function(){
-                //console.info($scope.provider);
+                console.info($scope.provider);
                 var saveProvider = {
                     targetStudyProvider:$scope.provider,
                     user: $scope.user.userId
@@ -11726,7 +11750,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
     }]);  
     exambazaar.controller("qadController", 
-        [ '$scope', 'thisuser','examList','testList', function($scope, thisuser, examList, testList){
+        [ '$scope', 'thisuser','examList','testList', 'testService', '$facebook', function($scope, thisuser, examList, testList, testService, $facebook){
             $scope.user = thisuser.data;
             $scope.allTests = testList.data;
             var allExams = examList.data;
@@ -11755,6 +11779,98 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.masterUser = true;
             }
             
+            $scope.readTest = function(test){
+                var question = test.url.question;
+                var answer = test.url.question;
+                testService.readTest(test._id).success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.info("Error ");
+                });    
+            };
+            
+            /*https://graph.facebook.com/200878263783095/feed?message=Hello&link=https://www.exambazaar.com/*/
+            $scope.postToFB = function(){
+                console.log('I am here');
+                
+                /*FB.api(
+                    "/10153935528090678/accounts",
+                    function (response) {
+                      if (response && !response.error) {
+                          console.log(response);
+                         handle the result 
+                      }else{
+                          console.log(response);
+                      }
+                    }
+                );
+                
+                $facebook.api("/200878263783095?fields=access_token").then( 
+                  function(response) {
+                      console.log(response);
+                      //console.log('Done');
+                      FB.api('/200878263783095/feed', function(response) {
+                          console.log(response);
+                          FB.api(
+                            "/200878263783095/feed",
+                            "POST",
+                            {
+                                "message": "This is a test message"
+                            },
+                            function (response) {
+                              if (response && !response.error) {
+                                  console.log('Done');
+                              }else{
+                                  console.log(response);
+                              }
+                            }
+                          );
+                      });
+                      
+                  },
+                  function(err) {
+                    $scope.welcomeMsg = "Please log in";
+                  }); */
+                
+                
+                FB.login(function(response){
+                    console.log(response);
+                    FB.api('/me/accounts', function(response){
+                        console.log(response.data[0]);
+                        var p_id = response.data[0].id;
+                        var string_id = '/' + p_id + '/feed';
+                        var p_accessToken = response.data[0].access_token; 
+                        var p_name = response.data[0].name; 
+                        console.log('The pagename is: '
+                        + p_name + 'Page access token is: ' 
+                        + p_accessToken);
+
+
+                        FB.api(
+                            string_id,
+                            "POST",
+                            {
+                                "message": "This is a test message"
+                            },
+                            function (response) {
+                              if (response && !response.error) {
+                                  console.log('Done');
+                              }else{
+                                  console.log(response);
+                              }
+                          });
+                        /*FB.api(string_id, function(response) {
+                          console.log(response);
+                        },{scope:"manage_pages"});*/
+
+
+
+                    });
+                
+                },{scope:'manage_pages,publish_actions,publish_pages'}); 
+            };
+            $scope.postToFB();
     }]);    
         
         
@@ -14702,6 +14818,108 @@ function getLatLng(thisData) {
         $scope.setExam = function(exam){
             $scope.exam = exam;
         };
+    }]);
+        
+        
+         
+    exambazaar.controller("addQuestionController", 
+        [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', function($scope, Notification, $rootScope, thisTest, Upload, ImageService){
+            $scope.test = thisTest.data;
+            console.log($scope.test);
+            $scope.toAddQuestion = null;
+            $scope.addNewQuestion = function(){
+                $scope.toAddQuestion = {
+                    text: '',
+                    image: null,
+                    otherimages: [],
+                    options: [],
+                    test: $scope.test._id,
+                    exam: $scope.test.exam,
+                    explanation: '',
+                    answer: '',
+                };
+            };
+            $scope.addNewQuestion();
+            $scope.saveNewQuestion = function(){
+                questionService.saveTest($scope.toAddQuestion).success(function (data, status, headers) {
+                    console.log(data);
+                    $scope.toAddQuestion = data;
+                    $scope.showSavedDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.info('Error ' + data + ' ' + status);
+                });
+            };
+            
+            $scope.$watch('toAddQuestion.text', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue != '' && !$scope.addNewQuestion._id){
+                    newValue = newValue.replace(/(\r\n|\n|\r)/gm," ");
+                    $scope.toAddQuestion.text = newValue;
+                }
+
+            }, true);
+        
+            $scope.removeImage = function(){
+                $scope.toAddQuestion.image = null;
+            };
+            $scope.uploadImage = function (image) {
+                image = [image];
+                var nFiles = image.length;
+                
+                var counter = 0;
+                $scope.imageProgess = 0;
+                if (image && image.length) {
+                    image.forEach(function(thisFile, index){
+
+                        var fileInfo = {
+                            filename: thisFile.name,
+                            contentType: thisFile.type
+                        };
+                         ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                        var s3Request = {};
+                        var allParams = data.params;
+                        for (var key in allParams) {
+                          if (allParams.hasOwnProperty(key)) {
+                            s3Request[key] = allParams[key];
+                          }
+                        }
+                        s3Request.file = thisFile;
+                        Upload.upload({
+                            url: data.endpoint_url,
+                            data: s3Request
+                        }).then(function (resp) {
+                                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                                thisFile.link = $(resp.data).find('Location').text();
+
+                                $scope.toAddQuestion.image = thisFile.link;
+                                console.log($scope.toAddQuestion);
+
+                            }, function (resp){
+                                console.log('Error status: ' + resp.status);
+                            }, function (evt) {
+                                $scope.imageProgess = 0;
+                                thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                                image.forEach(function(thisPhoto, index){
+                                    console.log(index + ' ' + thisPhoto.uploadProgress + ' ' + nFiles);
+                                    if(!thisPhoto.uploadProgress){
+                                        thisPhoto.uploadProgress = 0;
+                                    }
+                                    $scope.imageProgess += thisPhoto.uploadProgress;
+                                    //console.log($scope.imageProgess);
+                                });
+                                $scope.imageProgess = $scope.imageProgess / nFiles;
+                                //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
+                            });
+
+                        })
+                        .error(function (data, status, header, config) {
+                            console.info("Error");
+                        });   
+
+                    });
+                }
+             };
+            
     }]);    
     exambazaar.controller("addExamController", 
         [ '$scope',  'examList', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', function($scope, examList, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope){
@@ -14863,6 +15081,7 @@ function getLatLng(thisData) {
             };
             
         };
+        
         
         $scope.setTest = function(test){
             $scope.toAddTest = test;
@@ -15815,6 +16034,9 @@ function getLatLng(thisData) {
             $scope.showLevel = 10;
         }
         if($scope.user._id == '59899631a68cea0154b49502'){
+            $scope.showLevel = 10;
+        }
+        if($scope.user._id == '59a1248f702fef7ef4c7e4f2'){
             $scope.showLevel = 10;
         }
             
@@ -20194,6 +20416,29 @@ function getLatLng(thisData) {
                 streamList: ['StreamService',
                     function(StreamService){
                     return StreamService.getStreams();
+                }],
+                exam: function() { return {}; }
+            }
+        })
+        .state('addQuestion', {
+            url: '/:testId/addQuestion',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'addQuestion.html',
+                    controller: 'addQuestionController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisTest: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getTest($stateParams.testId);
                 }],
                 exam: function() { return {}; }
             }

@@ -35,12 +35,17 @@
     </div>
     <div layout="row" layout-align="start start" class="padded" ng-if="masterUser" layout-wrap>
     <div flex="100" layout="row" layout-align="start start" ng-repeat="exam in allExams | orderBy:['-tests.length']" class="width100">
-        <div flex="20">
+        <div flex="15">
             {{exam.displayname}}
+        </div>
+        <div flex="5">
+            {{exam.tests.length}}
         </div>
         <div layout="row" layout-align="start start" flex layout-wrap>
             <div ng-repeat="test in exam.tests">
-                <a ng-href="{{test.url.question}}" target="_blank" id="link" class="marginR5 marginB5">{{$index}}. Link</a>
+                <!--ng-click="readTest(test)"-->
+                <!--ng-href="{{test.url.question}}"-->
+                <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB5">{{$index}}. Link</a>
             </div>
         </div>
         

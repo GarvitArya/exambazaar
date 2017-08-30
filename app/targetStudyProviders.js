@@ -1977,6 +1977,7 @@ router.post('/bulksavecoaching', function(req, res) {
 router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;
     var userId = req.body.user;
+    console.log(req.body);
     //console.log("Other listings are: " + thisProvider.otherlistings);
     //console.log(thisProvider.rating);
     var coachingId = thisProvider._id;
@@ -2125,6 +2126,20 @@ router.get('/getGroupInfo/:coachingId', function(req, res) {
                 } else {throw err;}
             });
             
+        } else {throw err;}
+    });
+});
+
+router.get('/claimcoaching/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    console.log('Fetching coaching ' + coachingId);
+    //, type: 'Coaching'
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': coachingId},{type: 1, name: 1, description: 1, groupName: 1, targetStudyWebsite: 1, website: 1, otherlistings: 1, facebookPage: 1, twitter: 1, youtubeChannel: 1, email: 1, address: 1, mapAddress: 1, latlng: 1, loc: 1, location: 1, city: 1, state: 1, pincode: 1, logo: 1,  mobile: 1, phone: 1, results:1, course:1, photo:1, video:1, faculty:1, exams: 1, disabled: 1, ebVerifyState: 1, ebNote: 1, _saved:1, _created: 1, rating: 1})
+        .deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam rating.examRating.exam')
+        .exec(function (err, thisProvider) {
+        if (!err){
+            res.json(thisProvider);
         } else {throw err;}
     });
 });
