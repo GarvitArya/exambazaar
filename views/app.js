@@ -16036,7 +16036,7 @@ function getLatLng(thisData) {
         if($scope.user._id == '59899631a68cea0154b49502'){
             $scope.showLevel = 10;
         }
-        if($scope.user._id == '59a1248f702fef7ef4c7e4f2'){
+        if($scope.user._id == '59a1248f702fef7ef4c7e4f2' || $scope.user._id == '59a24d743011356248da915e'){
             $scope.showLevel = 10;
         }
             
