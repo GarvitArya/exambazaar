@@ -1916,7 +1916,19 @@ router.post('/bulksavecoaching', function(req, res) {
     
     thisProviders.forEach(function(thisProviderForm, pIndex){
         var thisProvider = thisProviderForm.targetStudyProvider;
+        if(thisProvider.city){
+            thisProvider.city = thisProvider.city.trim();
+            thisProvider.city = titleCase(thisProvider.city);
+        }
+        if(thisProvider.state){
+            thisProvider.state = thisProvider.state.trim();
+            thisProvider.state = titleCase(thisProvider.state);
+        }
+         
         var userId = thisProviderForm.user;
+        if(userId && !thisProvider._id){
+            thisProvider._createdBy = userId;
+        }
         //console.log(JSON.stringify(thisProvider));
         //console.log(userId);
         var arrayProps = ['email','phone','mobile','website'];
@@ -1959,10 +1971,6 @@ router.post('/bulksavecoaching', function(req, res) {
             }
             //res.json(thisprovider._id);
         });
-        
-        
-        
-        
         
         if(nLength == 0){
             res.json([]);
@@ -2786,10 +2794,36 @@ router.get('/cityStateService', function(req, res) {
                 
                 
                 //console.log(thisprovider.city + ", " + thisprovider.city);
-                /*thisprovider.save(function(err, thisprovider) {
+                thisprovider.save(function(err, thisprovider) {
                     if (err) return console.error(err);
                     console.log(thisprovider._id + " saved!");
-                });*/
+                });
+            });
+            
+        }else{
+            
+        }
+    });
+    
+    
+});
+
+router.get('/cityStateService2', function(req, res) {
+    console.log("City State 2 Service Starting now");
+    res.json('Done');
+    
+    
+    var allProviders = targetStudyProvider.find({type:'Coaching', state:'New Delhi'}, {name:1, city:1, state:1},function(err, allProviders) {
+        if (!err){
+            var nProviders = allProviders.length;
+            var counter = 0;
+            console.log("There are " + nProviders + " providers!");
+            allProviders.forEach(function(thisprovider, index){
+                thisprovider.state = 'Delhi';
+                thisprovider.save(function(err, thisprovider) {
+                    if (err) return console.error(err);
+                    console.log(index + ' ' + thisprovider._id + " saved!");
+                });
             });
             
         }else{

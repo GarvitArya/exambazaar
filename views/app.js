@@ -1287,6 +1287,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.cityStateService = function() {
             return $http.get('/api/targetStudyProviders/cityStateService');
         };
+        this.cityStateService2 = function() {
+            return $http.get('/api/targetStudyProviders/cityStateService2');
+        };
         this.emailService = function() {
             return $http.get('/api/targetStudyProviders/emailService');
         };
@@ -8272,6 +8275,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.cityStateService = function(){
             //alert('Starting');
             targetStudyProviderService.cityStateService().success(function (data, status, headers) {
+                console.info("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.info("Error ");
+            });
+        };
+        $scope.cityStateService2 = function(){
+            //alert('Starting');
+            targetStudyProviderService.cityStateService2().success(function (data, status, headers) {
                 console.info("Done");
             })
             .error(function (data, status, header, config) {

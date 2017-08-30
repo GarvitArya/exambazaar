@@ -150,6 +150,7 @@ var targetStudyProviderSchema = mongoose.Schema({
         _time: { type: Date, default: Date.now }
     }],
     _created: { type: Date, default: Date.now },
+    _createdBy: { type: Schema.ObjectId, ref: 'user' },
     rating: {
         total_students: {option: String, estimate: Boolean, value: String,},
         avg_batch_strength: {option: String, estimate: Boolean, value: String,},
