@@ -2720,7 +2720,8 @@ router.get('/cityStateService', function(req, res) {
     console.log("City State Service Starting now");
     res.json('Done');
     
-    var allProviders = targetStudyProvider.find({}, {name:1, city:1, state:1) {
+    
+    var allProviders = targetStudyProvider.find({}, {name:1, city:1, state:1},function(err, allProviders) {
         if (!err){
             var nProviders = allProviders.length;
             var counter = 0;
