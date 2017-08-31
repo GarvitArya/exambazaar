@@ -6878,6 +6878,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.loginState = $rootScope.stateName;
             
             
+            $rootScope.permittedToAdd = ['59899631a68cea0154b49502', '59a1248f702fef7ef4c7e4f2', '59a24d743011356248da915e', '59085f0fc7289d0011d6ea8c', '59a158c496e4b71238967ab4'];
+            $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             //ABCD
             var headerGreenStates = ["findCoaching", "showCoaching", "showGroup"];
             var headerTransparentStates = ["landing", "main", "category", "city"];
@@ -16008,9 +16010,12 @@ function getLatLng(thisData) {
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
-        if($scope.user._id == '59899631a68cea0154b49502'){
+        if($rootScope.permittedToDisable.indexOf($scope.user._id) != -1){
             $scope.showLevel = 10;
         }
+        /*if($scope.user._id == '59899631a68cea0154b49502'){
+            $scope.showLevel = 10;
+        }*/
         $scope.disableinstitutes =[];
         $scope.disableinstitute = {
             _id: ''
@@ -16058,12 +16063,12 @@ function getLatLng(thisData) {
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
-        if($scope.user._id == '59899631a68cea0154b49502'){
+        if($rootScope.permittedToAdd.indexOf($scope.user._id) != -1){
             $scope.showLevel = 10;
         }
-        if($scope.user._id == '59a1248f702fef7ef4c7e4f2' || $scope.user._id == '59a24d743011356248da915e'  || $scope.user._id == '59085f0fc7289d0011d6ea8c'){
+        /*if($scope.user._id == '59a1248f702fef7ef4c7e4f2' || $scope.user._id == '59a24d743011356248da915e'  || $scope.user._id == '59085f0fc7289d0011d6ea8c'){
             $scope.showLevel = 10;
-        }
+        }*/
             
         $scope.newinstitutes =[];
         $scope.commonExams = [];
