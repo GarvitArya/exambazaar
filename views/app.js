@@ -16005,7 +16005,7 @@ function getLatLng(thisData) {
     }]);    
         
     exambazaar.controller("bulkDisableController", 
-        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService){
+        [ '$scope', '$rootScope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', function($scope, $rootScope, UserService,$http,$state, thisuser, targetStudyProviderService){
         $scope.user = thisuser.data;
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
