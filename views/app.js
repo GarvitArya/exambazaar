@@ -1427,13 +1427,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
         $scope.generateUserOTP = function(){
                 UserService.userexists($scope.newUser.contact.mobile).success(function (data, status, headers) {
                     var userExists = data;
-                    console.info(userExists);
+                    console.log(userExists);
                     if(userExists){
                         $scope.userExistMessage = "User with mobile " + $scope.newUser.contact.mobile + ' already exists!';    
                     }else{
@@ -1445,7 +1445,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
                             $scope.enterOTP = true;
                             $scope.setOTP = data.otp;
-                            console.info("OTP sent to mobile " + thisOTP.mobile);
+                            console.log("OTP sent to mobile " + thisOTP.mobile);
                         })
                         .error(function (data, status, header, config) {
 
@@ -1459,7 +1459,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });
             
         };
@@ -1741,7 +1741,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }
                 });
                
-                //console.info(coursesOffered);
+                //console.log(coursesOffered);
             });
             thisGroup.coursesOffered = coursesOffered;
             thisGroup.groupResults = groupResults;
@@ -1876,14 +1876,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 otp: generateOtp(),
                 reason : 'Claiming ' + $scope.provider._id
             };
-            //console.info(JSON.stringify(thisOTP));
+            //console.log(JSON.stringify(thisOTP));
             
             OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
                 $scope.serverOTP = data.otp;
                 $scope.currStep = 2;
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });
         };
         $scope.incorrectOTP = false;
@@ -1895,10 +1895,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 if(enterOTP == $scope.serverOTP){
                     $scope.currStep = 3;
                     $scope.incorrectOTP = false;
-                    console.info('OTP verified');
+                    console.log('OTP verified');
                 }else{
                     $scope.incorrectOTP = true;
-                    console.info('OTP incorrect');
+                    console.log('OTP incorrect');
                     $scope.currStep = 2;
                 }
                 console.log($scope.currStep);
@@ -1955,7 +1955,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });
             }
             
@@ -2020,7 +2020,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
             })
             .error(function (data, status, header, config) {
-                console.info('Shortlist Error' + status + " " + data);    
+                console.log('Shortlist Error' + status + " " + data);    
             }); 
             
             if($scope.user.userType=='Master' || $scope.user.userType=='Intern - Business Development'){
@@ -2072,10 +2072,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                console.info('View Marked');
+                console.log('View Marked');
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });*/
         }
         
@@ -2201,7 +2201,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         });
         
         $scope.groupExamsOnly = $scope.groupExams.map(function(a) {return a.exam;});
-        //console.info($scope.groupResults);
+        //console.log($scope.groupResults);
         
         $scope.showPhotoDialog = function(ev,index) {
             $scope.activePhotoIndex = index;
@@ -2256,7 +2256,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.activePhotoIndex = index;
                 $scope.activePhoto = $scope.groupPhotos[index];
                 var indexPair = startEndIndex(index, $scope.groupPhotos.length);
-                //console.info(JSON.stringify(indexPair));
+                //console.log(JSON.stringify(indexPair));
                 $scope.startPhotoIndex = indexPair.start;
                 $scope.endPhotoIndex = indexPair.end;
             }
@@ -2315,7 +2315,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     instituteId: instituteId
                 };
                 UserService.shortlistInstitute(shortListForm).success(function (data, status, headers) {
-                    console.info('Institute Shortlisted');
+                    console.log('Institute Shortlisted');
                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
@@ -2406,10 +2406,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             viewForm.ip = ip;
         }
         viewService.saveview(viewForm).success(function (data, status, headers) {
-            //console.info('View Marked');
+            //console.log('View Marked');
         })
         .error(function (data, status, header, config) {
-            console.info();
+            console.log();
         });
         
         
@@ -2506,7 +2506,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
         })
         .error(function (data, status, header, config) {
-            console.info('Error ' + data + ' ' + status);
+            console.log('Error ' + data + ' ' + status);
         });
         //groupIds
         $scope.updateReviewInstitute = function(thisGroup){
@@ -2562,7 +2562,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     } 
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 }); 
             }else{
             }
@@ -2696,7 +2696,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         //$state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });
                 }else{
                     console.log('No user set');
@@ -2895,7 +2895,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         thisCoupon.user = data;
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });
 
 
@@ -3185,7 +3185,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });
                     
                     
@@ -3250,7 +3250,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                     $scope.fetching = false;
                 }).error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             }
         }, true);
@@ -3275,7 +3275,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                         $scope.fetching = false;
                     }).error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     }); 
                     
                 }
@@ -3302,8 +3302,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         
         
-        /*console.info($scope.videoTags);
-        console.info($scope.videoTypes);*/
+        /*console.log($scope.videoTags);
+        console.log($scope.videoTypes);*/
         
         $scope.resultSet = [
         ];
@@ -3337,13 +3337,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 otp: generateOtp(),
                 reason : 'Claiming ' + $scope.provider._id
             };
-            //console.info(JSON.stringify(thisOTP));
+            //console.log(JSON.stringify(thisOTP));
             OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
                 $scope.serverOTP = data.otp;
                 
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });
             $scope.verifyStep = 2;
         };
@@ -3361,7 +3361,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.$watch('[provider.address, provider.city]', function (newValue, oldValue, scope) {
             if(newValue != null && newValue[0] != '' && newValue[1] != ''){
-                //console.info(newValue);
+                //console.log(newValue);
                 var address = newValue[0];
                 var city = newValue[0];
                 
@@ -3464,7 +3464,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
             
         };*/
@@ -3605,20 +3605,20 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                //console.info('View Marked');
+                //console.log('View Marked');
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });
             UserService.getUserShortlisted($scope.user.userId).success(function (data, status, headers) {
                 var shortlistedIds = data.map(function(a) {return a._id;});
                 if(shortlistedIds.indexOf($scope.provider._id) != -1){
                     $scope.shortlisted = true;
                 }
-                //console.info(data);
+                //console.log(data);
             })
             .error(function (data, status, header, config) {
-                console.info('Shortlist Error' + status + " " + data);    
+                console.log('Shortlist Error' + status + " " + data);    
             }); 
             
             if($scope.user.userType=='Master'){
@@ -3667,10 +3667,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                console.info('View Marked');
+                console.log('View Marked');
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });
             $scope.showClaimDialog();
         }
@@ -3683,10 +3683,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         var city =  $scope.provider.city;
         LocationService.getCityLocations(city).success(function (data, status, headers) {
             $scope.cityLocations = data;
-            //console.info($scope.cityLocations);
+            //console.log($scope.cityLocations);
         })
         .error(function (data, status, header, config) {
-            console.info("Error ");
+            console.log("Error ");
         });
         
         $scope.allExams = examList.data;
@@ -3720,7 +3720,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     state: verifyState,
                     user: $scope.user.userId
                 };
-                //console.info(ebVerfiyForm);
+                //console.log(ebVerfiyForm);
                 targetStudyProviderService.setEBVerifyState(ebVerfiyForm).success(function (data, status, headers) {
                     
                     var toverifyciForm = {
@@ -3735,12 +3735,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error");
+                    console.log("Error");
                 });
             }else{
                 alert('Cannot Edit without logging in or verifying identity');
@@ -3758,7 +3758,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     contactInfoState: contactInfoState,
                     user: $scope.user.userId
                 };
-                console.info(contactInfoForm);
+                console.log(contactInfoForm);
                 targetStudyProviderService.setEBContactInfoState(contactInfoForm).success(function (data, status, headers) {
                     
                     var addContactInfoForm = {
@@ -3770,12 +3770,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error");
+                    console.log("Error");
                 });
             }else{
                 alert('Cannot Edit without logging in or verifying identity');
@@ -3813,7 +3813,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             }
         };
@@ -3861,7 +3861,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     instituteId: $scope.provider._id
                 };
                 UserService.shortlistInstitute(shortListForm).success(function (data, status, headers) {
-                    console.info('Institute Shortlisted');
+                    console.log('Institute Shortlisted');
                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
@@ -3901,8 +3901,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.examPivotResults.forEach(function(thisExamResult, index){
                 
                 if(thisExamResult.pivot !='null'){
-                    //console.info(JSON.stringify(thisExamResult));
-                    //console.info('--' + thisExamResult.result.length + ' ' + thisExamResult.initialLength);
+                    //console.log(JSON.stringify(thisExamResult));
+                    //console.log('--' + thisExamResult.result.length + ' ' + thisExamResult.initialLength);
                     if(thisExamResult.result.length != thisExamResult.initialLength + 1){
                         spreadSheetEdited = true;
                     }
@@ -4122,7 +4122,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 mode: ''
             };
             $scope.provider.course.push(newCourse);
-            console.info(JSON.stringify($scope.provider.course));
+            console.log(JSON.stringify($scope.provider.course));
             
         };
         $scope.removeExam = function(exam){
@@ -4214,7 +4214,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             //$scope.saveProvider();
         };
         $scope.saveProvider = function(){
-            //console.info($scope.provider);
+            //console.log($scope.provider);
             var saveProvider = {
                 targetStudyProvider:$scope.provider,
                 user: $scope.user.userId
@@ -4222,10 +4222,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.showSavedDialog();
                 $state.reload();
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.provider.faculty.forEach(function(thisFaculty, facultyIndex){
@@ -4304,7 +4304,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     pivotResult.push(newpivotResult);
                 }else{
                     if(!thisResult[pivot]){
-                        console.info('Pivot not set');
+                        console.log('Pivot not set');
                         pivotResult[lenPivotVal].result.push(thisResult);
                     }else{                              
                         pivotResult[pivotIndex].result.push(thisResult);
@@ -4360,7 +4360,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 if(counter == nResults){
                     
                     $scope.resultWithImages = resultWithImages;
-                    //console.info(resultWithImages);
+                    //console.log(resultWithImages);
                 }
             });  
         };
@@ -4402,7 +4402,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 examWiseResult.forEach(function(thisExamResult, examResultIndex){
                     if(thisExamResult.exam == exam){
                      yearResult = thisExamResult.yearResult;
-                    //console.info(yearResult);
+                    //console.log(yearResult);
                     yearResult.forEach(function(thisYearResult, yearResultIndex){
                         if(thisYearResult.year == year){
                             thisYearResult.result.push(thisResult);
@@ -4412,7 +4412,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });
                 if(counter == nLength){
                     $scope.examWiseResult = examWiseResult;
-                    //console.info($scope.examWiseResult);
+                    //console.log($scope.examWiseResult);
                 }
             });
             if(nLength ==0){
@@ -4422,9 +4422,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.resultHelper('exam',$scope.providerExamIds);
         $scope.examPivotResults =$scope.pivotResult;
-        //console.info($scope.examPivotResults);
+        //console.log($scope.examPivotResults);
         $scope.resultSortExamYear();
-        //console.info($scope.examWiseResult);
+        //console.log($scope.examWiseResult);
         
         $scope.yearWiseResult = [];
         $scope.resultSortYearExam = function(){
@@ -4458,7 +4458,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 yearWiseResult.forEach(function(thisYearResult, yearResultIndex){
                     if(thisYearResult.year == year){
                      yearResult = thisYearResult.examResult;
-                    //console.info(yearResult);
+                    //console.log(yearResult);
                     yearResult.forEach(function(thisYearResult, yearResultIndex){
                         if(thisYearResult.exam == exam){
                             thisYearResult.result.push(thisResult);
@@ -4469,9 +4469,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
                 
                 
-                //console.info(year + ' ' + exam);
+                //console.log(year + ' ' + exam);
                 if(counter == nLength){
-                    //console.info(pivotResult);
+                    //console.log(pivotResult);
                     $scope.yearWiseResult = yearWiseResult;
                 }
             });
@@ -4484,7 +4484,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 institute: $scope.provider._id,
                 user: $scope.user.userId
             };
-            console.info(cisavedForm);
+            console.log(cisavedForm);
             cisavedService.savecisaved(cisavedForm).success(function (data, status, headers) {
                 tofillciService.markDone(cisavedForm)
                 .success( function (data, status, headers) {
@@ -4492,12 +4492,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.updateResultPhoto = function(result, photo, examResult, ev){
@@ -4539,7 +4539,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
         $scope.saveProvider = function(){
-                console.info($scope.provider);
+                console.log($scope.provider);
                 var saveProvider = {
                     targetStudyProvider:$scope.provider,
                     user: $scope.user.userId
@@ -4551,12 +4551,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }else{
                         $scope.showSavedDialog();
                         $state.reload();
-                        console.info("Done");
+                        console.log("Done");
                     }
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
         
@@ -4606,18 +4606,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });
                 
             }); targetStudyProviderService.bulkAddResult(finalExamResult).success(function (data, status, headers) {
-                //console.info("Done");
+                //console.log("Done");
                 if(data == 'Done'){
                     var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                     $scope.provider = refreshedProvider;
                      $scope.resultHelper('exam',$scope.providerExamIds);
                     $scope.examPivotResults =$scope.pivotResult;
-                    //console.info(JSON.stringify($scope.examPivotResults));
+                    //console.log(JSON.stringify($scope.examPivotResults));
                     $scope.resultSortExamYear();
                     $scope.editResult = false;
 
                     }).error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     
                     
@@ -4626,7 +4626,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.saveResults= function(){
@@ -4773,7 +4773,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.activePhotoIndex = index;
                 $scope.activePhoto = $scope.provider.photo[index];
                 var indexPair = startEndIndex(index, $scope.provider.photo.length);
-                //console.info(JSON.stringify(indexPair));
+                //console.log(JSON.stringify(indexPair));
                 $scope.startPhotoIndex = indexPair.start;
                 $scope.endPhotoIndex = indexPair.end;
             }
@@ -4804,7 +4804,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 user: $scope.user.userId
             };
             $scope.provider.ebNote.push(newebNote);
-            console.info(JSON.stringify($scope.provider.ebNote));
+            console.log(JSON.stringify($scope.provider.ebNote));
             
         };
         
@@ -4819,7 +4819,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
         };
         $scope.addVideoTag = function(tag){
-            //console.info(JSON.stringify($scope.tagThisVideo));
+            //console.log(JSON.stringify($scope.tagThisVideo));
             if($scope.tagThisVideo.tags.indexOf(tag._id) == -1){
                 $scope.tagThisVideo.tags.push(tag._id);
             }
@@ -4827,7 +4827,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
         $scope.removeVideoTag = function(tag){
-            //console.info(JSON.stringify($scope.tagThisVideo));
+            //console.log(JSON.stringify($scope.tagThisVideo));
             var vIndex = $scope.tagThisVideo.tags.indexOf(tag._id);
             if(vIndex != -1){
                 
@@ -5075,8 +5075,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.activeResultIndex = index;
             $scope.activeResult = examResult.result[index];
             var indexPair = startEndIndex(index, examResult.result.length);
-            console.info(index + ' ' + examResult.result.length); 
-            console.info(JSON.stringify(indexPair));
+            console.log(index + ' ' + examResult.result.length); 
+            console.log(JSON.stringify(indexPair));
             $scope.startResultIndex = indexPair.start;
             $scope.endResultIndex = indexPair.end;
             $scope.dialogExamResult = examResult;
@@ -5140,7 +5140,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 thisFile.link = $(resp.data).find('Location').text();
                 thisFile.newPhoto = {
                     image: thisFile.link
@@ -5157,12 +5157,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             $scope.provider = refreshedProvider;
                             $scope.editPhotos();
                         }).error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                     }
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
@@ -5183,7 +5183,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -5218,7 +5218,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 thisFile.link = $(resp.data).find('Location').text();
                 
                 }, function (resp) {
@@ -5240,7 +5240,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -5277,7 +5277,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 var logoLink = $(resp.data).find('Location').text();
                 
                 var newResultPicForm ={
@@ -5293,7 +5293,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             $scope.provider = refreshedProvider;
                             $scope.resultHelper('exam',$scope.providerExamIds);
                             $scope.examPivotResults =$scope.pivotResult;
-                            //console.info(JSON.stringify($scope.examPivotResults));
+                            //console.log(JSON.stringify($scope.examPivotResults));
                             $scope.resultSortExamYear();
                             $scope.editResult = false;
                             
@@ -5301,7 +5301,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             $scope.showSavedDialog();
                             //$state.reload();
                         }).error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                        
                         
@@ -5309,7 +5309,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
@@ -5319,7 +5319,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -5353,7 +5353,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 var logoLink = $(resp.data).find('Location').text();
                 
                 var newLogoForm ={
@@ -5367,7 +5367,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             $scope.showSavedDialog();
                             $scope.provider = refreshedProvider;
                         }).error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                        
                         
@@ -5375,7 +5375,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
@@ -5385,7 +5385,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -5419,7 +5419,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 thisFile.link = $(resp.data).find('Location').text();
                 thisFile.newResult = {
                     image: thisFile.link
@@ -5436,12 +5436,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             $scope.provider = refreshedProvider;
                             $scope.editResults();
                         }).error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                     }
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
@@ -5457,7 +5457,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -5491,7 +5491,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 thisFile.link = $(resp.data).find('Location').text();
                 thisFile.newFaculty = {
                     image: thisFile.link
@@ -5508,12 +5508,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             $scope.provider = refreshedProvider;
                             $scope.editFaculties();
                         }).error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                     }
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
@@ -5532,7 +5532,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -5776,10 +5776,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 .success( function (data, status, headers) {
                     $scope.showRatingDoneDialog();
                     //$state.reload();
-                    console.info("Rating Marked");
+                    console.log("Rating Marked");
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 
                 
@@ -5788,7 +5788,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
              
             
@@ -5871,7 +5871,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.streams.push(thisExam.stream);
             }
         });
-        console.info($scope.streams);
+        console.log($scope.streams);
         
         
         
@@ -5976,10 +5976,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                          targetStudyProviderService.removeManagement(newManagementForm).success(function (data, status, headers) {
                             $scope.showSavedDialog();
                             $state.reload();
-                            console.info("Done");
+                            console.log("Done");
                         })
                         .error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                         
                     }else{
@@ -6005,10 +6005,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                          targetStudyProviderService.addPrimaryManagement(newManagementForm).success(function (data, status, headers) {
                             $scope.showSavedDialog();
                             $state.reload();
-                            console.info("Done");
+                            console.log("Done");
                         })
                         .error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                     }else{
                         $scope.existingManagement = $scope.management[mIndex];
@@ -6048,10 +6048,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                          targetStudyProviderService.addManagement(newManagementForm).success(function (data, status, headers) {
                             $scope.showSavedDialog();
                             $state.reload();
-                            console.info("Done");
+                            console.log("Done");
                         })
                         .error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                     }else{
                         $scope.existingManagement = $scope.management[mIndex];
@@ -6138,7 +6138,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $scope.daysTask = function(task, day){
                 var comp = $scope.compareDates(task._deadline, day);
-                console.info(task._deadline + ' ' + day + ' ' + comp);
+                console.log(task._deadline + ' ' + day + ' ' + comp);
                 if(comp == 0){
                     return true;
                 }else{
@@ -6160,7 +6160,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.coachingSavedCount = coachingSavedCount.data;
             $scope.internList = internList.data;
             $scope.activeInternList = [];
-            //console.info($scope.internList);
+            //console.log($scope.internList);
             $scope.internList.forEach( function(thisIntern, index){
                 if(thisIntern.active){
                     $scope.activeInternList.push(thisIntern);    
@@ -6173,7 +6173,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     alert('All Done');
                 })
                 .error(function (data, status, header, config) {
-                    console.info(status + " " + data);
+                    console.log(status + " " + data);
                 });
                 
             };
@@ -6214,7 +6214,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
-                    console.info(status + " " + data);
+                    console.log(status + " " + data);
                 });
             };
             
@@ -6224,7 +6224,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
-                    console.info(status + " " + data);
+                    console.log(status + " " + data);
                 });
             };
             $scope.filledCount = filledCount.data;
@@ -6282,10 +6282,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 if(thisTask.active){
                     $scope.fillsAssigned += 1;
                     var internIndex = internIds.indexOf(thisTask.user._id);
-                    //console.info(internIndex);
+                    //console.log(internIndex);
                     $scope.internDueList[internIndex].assigned += 1;
                     
-                    //console.info(thisTask._deadline + ' ' + rightNow + ' ' + compare(rightNow, new Date(thisTask._deadline)));
+                    //console.log(thisTask._deadline + ' ' + rightNow + ' ' + compare(rightNow, new Date(thisTask._deadline)));
                     if(compare(rightNow, new Date(thisTask._deadline)) == 1){
                         $scope.internDueList[internIndex].due += 1;
                         
@@ -6334,7 +6334,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info(status + " " + data);
+                        console.log(status + " " + data);
                     });
                 }
             };
@@ -6360,10 +6360,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.fillProvider = data;
                     $scope.fillUser = tofillci.user;
                     $scope.showFillDialog();
-                    console.info(JSON.stringify(data));
+                    console.log(JSON.stringify(data));
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             
@@ -6396,12 +6396,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         user: intern,
                         _deadline: ciVerifyDeadline,
                     };
-                   console.info(toverifyciForm); toverifyciService.savetoverifyci(toverifyciForm).success(function (data, status, headers) {
-                        console.info('Done');
+                   console.log(toverifyciForm); toverifyciService.savetoverifyci(toverifyciForm).success(function (data, status, headers) {
+                        console.log('Done');
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info(status + " " + data);
+                        console.log(status + " " + data);
                     });
                 }
             };
@@ -6425,12 +6425,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         user: intern,
                         _deadline: addContactInfoDeadline,
                     };
-                   console.info(addContactInfoForm); addContactInfoService.saveaddContactInfo(addContactInfoForm).success(function (data, status, headers) {
-                        console.info('Done');
+                   console.log(addContactInfoForm); addContactInfoService.saveaddContactInfo(addContactInfoForm).success(function (data, status, headers) {
+                        console.log('Done');
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info(status + " " + data);
+                        console.log(status + " " + data);
                     });
                 }
             };
@@ -6491,12 +6491,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.fetching = false;
             $scope.$watch('instituteInput', function (newValue, oldValue, scope) {
             if(newValue != null && newValue != ''){
-                //console.info(newValue);
+                //console.log(newValue);
                 //DEF
                 var newValueArr = newValue.split("/");
                 newValue = newValueArr[newValueArr.length-1];
                 //$scope.email.instituteId = newValue;
-                //console.info(newValue);
+                //console.log(newValue);
                 if(newValue.length > 5){
                     $scope.fetching = true;
                     $scope.assignError = false;
@@ -6516,7 +6516,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         
                         $scope.fetching = false;
                     }).error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     
                     //tofillGroupNames 
@@ -6526,7 +6526,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $scope.fetching = false;
                     })
                     .error(function (data, status, header, config) {
-                        console.info(status + " " + data);
+                        console.log(status + " " + data);
                     });*/
                     
                     
@@ -6544,12 +6544,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.rateInstitutefetching = false;
             $scope.$watch('rateInstitute', function (newValue, oldValue, scope) {
             if(newValue != null && newValue != ''){
-                //console.info(newValue);
+                //console.log(newValue);
                 //DEF
                 var newValueArr = newValue.split("/");
                 newValue = newValueArr[newValueArr.length-1];
                 //$scope.email.instituteId = newValue;
-                //console.info(newValue);
+                //console.log(newValue);
                 if(newValue.length > 5){
                     $scope.fetching = true;
                     $scope.assignError = false;
@@ -6569,7 +6569,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         
                         $scope.fetching = false;
                     }).error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     
                     //tofillGroupNames 
@@ -6579,7 +6579,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $scope.fetching = false;
                     })
                     .error(function (data, status, header, config) {
-                        console.info(status + " " + data);
+                        console.log(status + " " + data);
                     });*/
                     
                     
@@ -6615,7 +6615,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info(status + " " + data);
+                        console.log(status + " " + data);
                     });
                 }
             };
@@ -6630,7 +6630,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $scope.internList = internList.data;
             $scope.activeInternList = [];
-            //console.info($scope.internList);
+            //console.log($scope.internList);
             $scope.internList.forEach( function(thisIntern, index){
                 if(thisIntern.active){
                     $scope.activeInternList.push(thisIntern);    
@@ -6669,10 +6669,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 if(thisTask.active){
                     $scope.fillsAssigned += 1;
                     var internIndex = internIds.indexOf(thisTask.user._id);
-                    //console.info(internIndex);
+                    //console.log(internIndex);
                     $scope.internDueList[internIndex].assigned += 1;
                     
-                    //console.info(thisTask._deadline + ' ' + rightNow + ' ' + compare(rightNow, new Date(thisTask._deadline)));
+                    //console.log(thisTask._deadline + ' ' + rightNow + ' ' + compare(rightNow, new Date(thisTask._deadline)));
                     if(compare(rightNow, new Date(thisTask._deadline)) == 1){
                         $scope.internDueList[internIndex].due += 1;
                         $scope.fillsDue += 1;
@@ -6716,14 +6716,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info(status + " " + data);
+                        console.log(status + " " + data);
                     });
                 }
             };
             
             $scope.showRemoveConfirm = function(tofillci, ev) {
-                console.info(JSON.stringify(tofillci.institute));
-                console.info(JSON.stringify(tofillci.user));
+                console.log(JSON.stringify(tofillci.institute));
+                console.log(JSON.stringify(tofillci.user));
                 
                 var confirm = $mdDialog.confirm()
                     .title('Would you like to remove ' + tofillci.institute.name + ' for ' +  tofillci.user.name + '?')
@@ -6777,7 +6777,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                    
                 })
                 .error(function (data, status, header, config) {
-                    console.info(status + " " + data);
+                    console.log(status + " " + data);
                 });
             }    
         } 
@@ -6797,18 +6797,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     var ip = $cookies.getObject('ip');
                     loginForm.ip = ip;
                 }
-                console.info(JSON.stringify(loginForm));
+                console.log(JSON.stringify(loginForm));
                 UserService.markLogin(loginForm).success(function (data, status, headers) {
-                    console.info('Login marked');
+                    console.log('Login marked');
                 })
                 .error(function (data, status, header, config) {
-                    console.info(status + " " + data);    
+                    console.log(status + " " + data);    
                 });
                 UserService.getUser(user._id).success(function (data, status, headers) {
                     var fulluser = data;
                     var sessionuser;
                     if(user.verified===true){
-                        console.info('User type is: ' + user.userType);
+                        console.log('User type is: ' + user.userType);
                         
                         sessionuser = {
                             userId: fulluser._id,
@@ -6849,7 +6849,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                console.info('Error');
+                console.log('Error');
                 })
             
             })
@@ -6961,11 +6961,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     };
                     EmailService.welcomeEmail($scope.email).success(function (data, status, headers) {
                         var response = data;
-                        console.info(JSON.stringify(response));
+                        console.log(JSON.stringify(response));
 
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });  
 
                 }else{
@@ -6981,7 +6981,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });  
         
         if($rootScope.stateName == 'showGroup'){
@@ -7065,7 +7065,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $cookies.putObject('ip', ip);
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });
         }
             
@@ -7155,10 +7155,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
                 
                 UserService.markLogin(loginForm).success(function (data, status, headers) {
-                    console.info('Login marked');
+                    console.log('Login marked');
                 })
                 .error(function (data, status, header, config) {
-                    console.info(status + " " + data);    
+                    console.log(status + " " + data);    
                 });
                 UserService.getUser(user._id).success(function (data, status, headers) {
                     $scope.hideLoginDialog();
@@ -7195,7 +7195,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                console.info('Error');
+                console.log('Error');
                 })
             
             })
@@ -7281,7 +7281,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         loginReroute();
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     }
 
@@ -7323,7 +7323,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     }
                 }
@@ -7512,7 +7512,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
             
@@ -7529,7 +7529,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
                         $scope.ResetOTPsent = true;
                         $scope.setResetOTP = data.otp;
-                        console.info("OTP sent to mobile " + thisOTP.mobile);
+                        console.log("OTP sent to mobile " + thisOTP.mobile);
                     })
                     .error(function (data, status, header, config) {
 
@@ -7542,7 +7542,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
             
         };
@@ -7550,7 +7550,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.generateUserOTP = function(){
             UserService.userexists($scope.signup.mobile).success(function (data, status, headers) {
                 var userExists = data;
-                //console.info(userExists);
+                //console.log(userExists);
                 if(userExists){
                     $scope.userExistMessage = "User with mobile " + $scope.signup.mobile + ' already exists!';    
                 }else{
@@ -7562,7 +7562,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
                         $scope.OTPsent = true;
                         $scope.setOTP = data.otp;
-                        console.info("OTP sent to mobile " + thisOTP.mobile);
+                        console.log("OTP sent to mobile " + thisOTP.mobile);
                     })
                     .error(function (data, status, header, config) {
 
@@ -7572,7 +7572,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
             
         };
@@ -7717,9 +7717,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             autoUpload: true
             });
             uploader.onSuccessItem = function(fileItem, response, status, headers) {
-                //console.info('onSuccessItem', fileItem, response, status, headers);
+                //console.log('onSuccessItem', fileItem, response, status, headers);
                 var link = response.link;
-                console.info('Resume added');
+                console.log('Resume added');
                 if(link){
                     $scope.applicant.resume = link;
                 }
@@ -7727,13 +7727,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $scope.submit = function(){
                 if($scope.applicant.resume){
-                    console.info("Ready to add to database");
+                    console.log("Ready to add to database");
                     MasterService.addIntern($scope.applicant).success(function (data, status, headers) {
-                        console.info("Done");
+                        console.log("Done");
                         $scope.submitted = 1;
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error!!!");
+                        console.log("Error!!!");
                         alert("Something went wrong. Instead email you candidacy to gaurav@educhronicle.com");
                     });
                 }else{
@@ -7766,7 +7766,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     filename: thisFile.name,
                     contentType: thisFile.type
                 };
-                console.info(fileInfo);
+                console.log(fileInfo);
                 ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
                 var s3Request = {};
                 var allParams = data.params;
@@ -7792,7 +7792,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });    
                     
             });
@@ -7806,9 +7806,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 filename: $scope.file.name,
                 contentType: $scope.file.type
             };
-            console.info(JSON.stringify(fileInfo));
+            console.log(JSON.stringify(fileInfo));
             ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
-                //console.info(data);
+                //console.log(data);
                 var s3Request = {
                 };
                 var allParams = data.params;
@@ -7835,17 +7835,17 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.upload(s3Request,data.endpoint_url);
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
             
           }else{
-              console.info('Error');
+              console.log('Error');
           }
         };
 
         // upload on file select or drop
         $scope.upload = function (s3Request,url) {
-            console.info(s3Request,url);
+            console.log(s3Request,url);
             Upload.upload({
                 url: url,
                 data: s3Request
@@ -7887,7 +7887,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.$watch('searchText', function (val) {
             
             if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
-            console.info(val);
+            console.log(val);
             tempFilterText = val;
             filterTextTimeout = $timeout(function() {
                 $scope.filterText = tempFilterText;
@@ -7907,11 +7907,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
            
            if($scope.startsWith != ''){
                targetStudyProviderService.changeProvidersStartingWith($scope.startsWith).success(function (data, status, headers) {
-                    console.info("Done");
+                    console.log("Done");
                    $scope.clear();
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
            }
             
@@ -7933,10 +7933,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.findPartners = function (query){
             targetStudyProviderService.groupProviders(query).success(function (data, status, headers) {
                 $scope.providersList = data;
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
             
             
@@ -7961,10 +7961,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.cancel();
                 
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         
@@ -7994,7 +7994,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
         var institutesSaved = institutesSavedList.data;
         var institutesFilled = institutesFilledList.data;
-        //console.info(institutesFilled);
+        //console.log(institutesFilled);
         
         
         $scope.filledCounter = 0;
@@ -8105,7 +8105,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
         });
         
-        $scope.cityStates = targetStudyCities.data.map(function(a) {return a._id;});;
+        $scope.cityStates = targetStudyCities.data.map(function(a) {return a._id;});
         
         var repStates = $scope.cityStates.map(function(a) {return a.state;});
         $scope.states = [];
@@ -8154,7 +8154,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             }
         };
@@ -8186,10 +8186,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.cancel();
                 
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
             
         };
@@ -8199,18 +8199,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.uprank = function(provider){
             targetStudyProviderService.uprank(provider._id).success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.downrank = function(provider){
             targetStudyProviderService.downrank(provider._id).success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         
@@ -8248,72 +8248,73 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.removeDuplicates = function(){
             targetStudyProviderService.removeDuplicates($scope.city).success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.rank0 = function(){
             targetStudyProviderService.rank0().success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         
         $scope.getWebsites = function(){
             //alert('Starting');
             targetStudyProviderService.getWebsites().success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.cityStateService = function(){
             //alert('Starting');
             targetStudyProviderService.cityStateService().success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.cityStateService2 = function(){
             //alert('Starting');
             targetStudyProviderService.cityStateService2().success(function (data, status, headers) {
-                console.info("Done");
+                console.log(data);
+                //$scope.allCities = data;
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.getCityCount = function(){
             targetStudyProviderService.getCityCount().success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         
         $scope.logoService = function(){
             targetStudyProviderService.logoService().success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.databaseService = function(){
             targetStudyProviderService.databaseService().success(function (data, status, headers) {
                 $scope.distinctStates = data;
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.UniqueLogoService = function(){
@@ -8323,7 +8324,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.uniquelogos = data;
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         
@@ -8333,30 +8334,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 alert('Done');
                 //$scope.allProviderNames = data;
                 //$scope.allDistinctBool = true;
-                //console.info(JSON.stringify(data));
+                //console.log(JSON.stringify(data));
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.allCourses = false;
         $scope.getAllCourses = function(){
             targetStudyProviderService.getAllCourses().success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
                 $scope.allCourses = true;
                 $scope.courses = data;
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         
         $scope.cleanTargetstudyurls = function(){
             targetStudyProviderService.cleanTargetstudyurls().success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
     }]); 
@@ -8384,10 +8385,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             LocationService.getCityLocations(city).success(function (data, status, headers) {
                 $scope.showButton = false;
                 $scope.locations = data;
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.suggestedLeft = [
@@ -8439,7 +8440,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 filename: thisFile.name,
                 contentType: thisFile.type
             };
-            //console.info(JSON.stringify(fileInfo));
+            //console.log(JSON.stringify(fileInfo));
             ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
             var s3Request = {};
             var allParams = data.params;
@@ -8453,7 +8454,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 thisFile.link = $(resp.data).find('Location').text();
                 thisFile.newPhoto = {
                     image: thisFile.link
@@ -8468,7 +8469,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
@@ -8479,7 +8480,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -8500,7 +8501,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 filename: thisFile.name,
                 contentType: thisFile.type
             };
-            console.info(JSON.stringify(fileInfo));
+            console.log(JSON.stringify(fileInfo));
             ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
             var s3Request = {};
             var allParams = data.params;
@@ -8514,7 +8515,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 thisFile.link = $(resp.data).find('Location').text();
                 thisFile.newFaculty = {
                     name: '',
@@ -8529,8 +8530,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     providerId: providerId
                 }; targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
                     counter = counter + 1;
-                    //console.info('Counter is: ' + counter);
-                    //console.info("Faculty added to database " + thisFile.newFaculty.image);
+                    //console.log('Counter is: ' + counter);
+                    //console.log("Faculty added to database " + thisFile.newFaculty.image);
                     if(counter == nFiles){
                         $scope.showAddFacultiesForm = true;
                         $scope.preUploadFacultyLength = $scope.provider.faculty.length;
@@ -8538,13 +8539,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             $scope.provider = refreshedProvider;
                             $scope.editPhotos();
                         }).error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                         
                     }
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
@@ -8555,7 +8556,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -8575,10 +8576,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         $scope.uprank = function(provider){
             targetStudyProviderService.uprank(provider._id).success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         
@@ -8594,12 +8595,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     data: $scope.Imagedata,
                     contentType: 'image/png'
                 };
-                console.info(JSON.stringify($scope.newImage));
+                console.log(JSON.stringify($scope.newImage));
                 ImageService.saveImage($scope.newImage).success(function (data, status, headers) {
-                   console.info('Done'); 
+                   console.log('Done'); 
                 })
                 .error(function (data, status, header, config) {
-                    console.info(data);
+                    console.log(data);
                 });
                 
             }
@@ -8608,10 +8609,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.downrank = function(provider){
             targetStudyProviderService.downrank(provider._id).success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.saveCoaching = function(){
@@ -8619,10 +8620,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
            var provider = {
                targetStudyProvider: $scope.provider
            }; targetStudyProviderService.saveProvider(provider).success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         
@@ -8656,10 +8657,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.removeDuplicates = function(){
             ProviderService.removeDuplicates($scope.city).success(function (data, status, headers) {
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         
@@ -8729,7 +8730,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $state.go('institute', {instituteId: $scope.institute._id});
             })
             .error(function (data, status, header, config) {
-                console.info("Data: " + data +
+                console.log("Data: " + data +
                     "\n\n\n\nstatus: " + status +
                     "\n\n\n\nheaders: " + header +
                     "\n\n\n\nconfig: " + config);
@@ -8777,7 +8778,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 alert("SendGrid Credential saved: " + $scope.sendGridCredential.apiKey);
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
             
@@ -8792,7 +8793,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
-            console.info('Item changed to ' + JSON.stringify(item));
+            console.log('Item changed to ' + JSON.stringify(item));
             //$state.go('claim', {coachingId: item._id});
             $rootScope.reviewInstitute = item;
         };
@@ -8804,7 +8805,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 };
                 
                 return targetStudyProviderService.searchCityProviders(cityQueryForm).then(function(response){
-                    //console.info(response.data);
+                    //console.log(response.data);
                     return response.data;
                 });
             }
@@ -8823,7 +8824,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 //console.log($scope.offersList);
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
             
             $scope.$watch('offersList', function (newValue, oldValue, scope) {
@@ -8914,7 +8915,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 //console.log($scope.offersList);
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
             
             $scope.$watch('offersList', function (newValue, oldValue, scope) {
@@ -8998,7 +8999,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
-            //console.info('Item changed to ' + JSON.stringify(item));
+            //console.log('Item changed to ' + JSON.stringify(item));
             $rootScope.coachingGroup = item;
             
             var items = $rootScope.coachingGroupItems;
@@ -9020,7 +9021,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             if(query.length > 2){
                 $rootScope.coachingGroupItems = [];
                 return targetStudyProviderService.searchCoachingGroupProviders(query).then(function(response){
-                    //console.info(response.data);
+                    //console.log(response.data);
                     
                     $rootScope.coachingGroupItems = response.data;
                     return response.data;
@@ -9048,7 +9049,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.querySearch = function(query){
             if(query.length > 2){
                 return targetStudyProviderService.searchBlogCoachingGroupProviders(query).then(function(response){
-                    //console.info(response.data);
+                    //console.log(response.data);
                     
                     $rootScope.coachingGroupItems = response.data;
                     return response.data;
@@ -9065,7 +9066,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
-            //console.info('Item changed to ' + JSON.stringify(item));
+            //console.log('Item changed to ' + JSON.stringify(item));
             $rootScope.$emit("setBloggerUser", {user: item});
         };
         this.querySearch = function(query){
@@ -9102,19 +9103,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });
         };    
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
-            console.info('Item changed to ' + JSON.stringify(item));
+            console.log('Item changed to ' + JSON.stringify(item));
             $scope.goToCoaching(item);
         };
         this.querySearch = function(query){
             if(query.length > 2){
                 return targetStudyProviderService.searchProviders(query).then(function(response){
-                    //console.info(response.data);
+                    //console.log(response.data);
                     return response.data;
                 });
             }
@@ -9159,7 +9160,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
-            console.info('Item changed to ' + JSON.stringify(item));
+            console.log('Item changed to ' + JSON.stringify(item));
             $rootScope.newReviewCoaching = item;
         };
         this.querySearch = function(query){
@@ -9175,7 +9176,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 //console.log($rootScope.newReviewCity);
 
                 return targetStudyProviderService.searchCityReviewProviders(cityQueryForm).then(function(response){
-                    //console.info(response.data);
+                    //console.log(response.data);
                     return response.data;
                 });
             }
@@ -9201,7 +9202,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $state.go('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: $rootScope.newReviewCity, groupName: $rootScope.newReviewCoaching.name,'#': 'Reviews'});
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });
                     
                     
@@ -9214,7 +9215,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 //console.log($scope.offersList);
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
             
             $scope.$watch('offersList', function (newValue, oldValue, scope) {
@@ -9231,14 +9232,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
-            console.info('Item changed to ' + JSON.stringify(item));
+            console.log('Item changed to ' + JSON.stringify(item));
             $state.go('claim', {coachingId: item._id});
             
         };
         this.querySearch = function(query){
             if(query.length > 2){
                 return targetStudyProviderService.searchProviders(query).then(function(response){
-                    //console.info(response.data);
+                    //console.log(response.data);
                     return response.data;
                 });
             }
@@ -9320,7 +9321,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         console.log($scope.deliveredCoupon);
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });
                     
                 }
@@ -9408,7 +9409,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             thisMobile.exists = data;
                         })
                         .error(function (data, status, header, config) {
-                            console.info('Error ' + data + ' ' + status);
+                            console.log('Error ' + data + ' ' + status);
                         });
                     }   
                 });
@@ -9473,7 +9474,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         console.log('Delivered');
                         $scope.userSocial = true;
                     }).error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     
                 }
@@ -9563,7 +9564,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                                 console.log('Delivered');
                                 
                             }).error(function (data, status, header, config) {
-                                console.info("Error ");
+                                console.log("Error ");
                             });
                             
                         }else{
@@ -9573,7 +9574,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             
                         
                         }).error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                         
                         
@@ -9582,7 +9583,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         console.log('Error: No more active coupon for this offer! Sorry');
                     }
                 }).error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             
@@ -9595,7 +9596,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.log('Delivered');
 
                 }).error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });    
             };
             
@@ -9696,7 +9697,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
-            console.info('Item changed to ' + JSON.stringify(item));
+            console.log('Item changed to ' + JSON.stringify(item));
             //$state.go('claim', {coachingId: item._id});
             $rootScope.reviewInstitute = item;
         };
@@ -9710,7 +9711,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 };
                 
                 return targetStudyProviderService.cityGroupExamQueryForm(cityGroupExamQuery).then(function(response){
-                    //console.info(response.data);
+                    //console.log(response.data);
                     return response.data;
                 });
             }
@@ -9874,7 +9875,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 }); 
             }
         }, true);
@@ -9961,7 +9962,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.showSavedReviewDialog();
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });
             }else{
                 console.log('No user set');
@@ -10200,7 +10201,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });       
             };
             
@@ -10223,7 +10224,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });       
             };
             
@@ -10353,7 +10354,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });       
             };
             
@@ -10376,7 +10377,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });       
             };
             $scope.newEmail = '';
@@ -10403,7 +10404,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });  
                    
                 }
@@ -10434,7 +10435,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });  
                    
                 }
@@ -10486,7 +10487,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });       
             };
             
@@ -10519,7 +10520,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });       
             };
             
@@ -10569,7 +10570,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });   
             };
             
@@ -10698,7 +10699,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });       
                 
             };
@@ -10894,7 +10895,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
             };
 
-            //console.info($scope.user);
+            //console.log($scope.user);
             
             $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
                 //console.log(newValue);
@@ -10938,7 +10939,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         //$state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 }
                 
@@ -10965,7 +10966,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info();
+                    console.log();
                 });    
             };
             
@@ -11011,10 +11012,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                //console.info('View Marked');
+                //console.log('View Marked');
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });
             
             $scope.setLocofAll = function(){
@@ -11022,7 +11023,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });   
             };
             
@@ -11031,7 +11032,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });   
             };
             
@@ -11040,7 +11041,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });   
             };
             $scope.latLngSummary = function(){
@@ -11049,7 +11050,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.coachings = data;
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });   
             };
             
@@ -11068,7 +11069,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         window.open(url,'_blank');
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });
             };
             function reverseGeocodeUser(lat, lng){
@@ -11262,7 +11263,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     //console.log(data);
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });
             };
             
@@ -11620,7 +11621,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.userUpvotes = data;
                 })
                 .error(function (data, status, header, config) {
-                    console.info();
+                    console.log();
                 });
                 
             }else{
@@ -11650,11 +11651,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                     })
                     .error(function (data, status, header, config) {
-                        console.info();
+                        console.log();
                     });
                 })
                 .error(function (data, status, header, config) {
-                    console.info();
+                    console.log();
                 });
             };
             
@@ -11671,16 +11672,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                                 blogpost.upvotes = sdata;
                             })
                             .error(function (data, status, header, config) {
-                                console.info();
+                                console.log();
                             });
 
                         })
                         .error(function (data, status, header, config) {
-                            console.info();
+                            console.log();
                         });
                     })
                     .error(function (data, status, header, config) {
-                        console.info();
+                        console.log();
                     });   
                 }
             };
@@ -11744,10 +11745,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                //console.info('View Marked');
+                //console.log('View Marked');
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });
             
             $document.on('mouseleave', leaveFromTop);
@@ -11809,7 +11810,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });    
             };
             
@@ -11860,15 +11861,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 FB.login(function(response){
                     console.log(response);
                     FB.api('/me/accounts', function(response){
-                        console.log(response.data[0]);
-                        var p_id = response.data[0].id;
+                        console.log(response.data[2]);
+                        var p_id = response.data[2].id;
                         var string_id = '/' + p_id + '/feed';
                         var p_accessToken = response.data[0].access_token; 
-                        var p_name = response.data[0].name; 
+                        var p_name = response.data[2].name; 
                         console.log('The pagename is: '
                         + p_name + 'Page access token is: ' 
                         + p_accessToken);
-
 
                         FB.api(
                             string_id,
@@ -11882,7 +11882,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                               }else{
                                   console.log(response);
                               }
-                          });
+                        });
                         /*FB.api(string_id, function(response) {
                           console.log(response);
                         },{scope:"manage_pages"});*/
@@ -11891,7 +11891,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                     });
                 
-                },{scope:'manage_pages,publish_actions,publish_pages'}); 
+                },{scope:'manage_pages,publish_pages'});
+                
+                //publish_actions,
             };
             $scope.postToFB();
     }]);    
@@ -11909,7 +11911,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $scope.blogGallery = userGallery;
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
 
                 }else{
@@ -11932,7 +11934,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });    
             };
             $scope.uploadBloggerPic = function (newPic) {
@@ -11963,7 +11965,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 var picLink = $(resp.data).find('Location').text();
                 
                 var newPicForm ={
@@ -11986,7 +11988,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
@@ -11996,7 +11998,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -12040,7 +12042,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     });
                 })
                 .error(function (data, status, header, config) {
-                    console.info();
+                    console.log();
                 });    
             };
             
@@ -12129,11 +12131,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $state.go('editblog', {blogpostId: blogpostId});
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             
@@ -12180,11 +12182,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         window.open(url,'_blank');
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             
@@ -12228,7 +12230,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });    
             };
             
@@ -12239,11 +12241,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $scope.refreshVoteCount();
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             
@@ -12256,7 +12258,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info();
+                    console.log();
                 });
             };
             $scope.sanitizeblogposts = function(){
@@ -12264,7 +12266,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 
             };
@@ -12290,11 +12292,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             $scope.blogGallery = userGallery;
                         })
                         .error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 }, function() {
                   //nothing
@@ -12328,7 +12330,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     url: data.endpoint_url,
                     data: s3Request
                 }).then(function (resp) {
-                    console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                    console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                     var picLink = $(resp.data).find('Location').text();
                     console.log(picLink);
                     
@@ -12343,12 +12345,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             $scope.blogGallery = userGallery;
                         })
                         .error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                         //$state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     }, function (resp) {
                         console.log('Error status: ' + resp.status);
@@ -12358,7 +12360,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error");
+                    console.log("Error");
                 });   
 
                 });
@@ -12404,7 +12406,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             $scope.previewBlogPost = function(blogpost){
@@ -12586,7 +12588,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
             };
 
-            //console.info($scope.user);
+            //console.log($scope.user);
             
             $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
                 //console.log(newValue);
@@ -12630,7 +12632,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         //$state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 }
                 
@@ -13242,7 +13244,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.skip += $scope.limit;
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });
             };
             
@@ -13267,7 +13269,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $state.go('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: $rootScope.newReviewCity, groupName: $rootScope.newReviewCoaching.name,'#': 'Reviews'});
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });    
             };
             
@@ -13286,7 +13288,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });
                     
                 }, function() {
@@ -13309,7 +13311,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error ' + data + ' ' + status);
+                        console.log('Error ' + data + ' ' + status);
                     });
                     
                 }, function() {
@@ -13331,7 +13333,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });
                 
             };
@@ -13341,7 +13343,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });
                 
             };
@@ -13455,10 +13457,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                //console.info('View Marked');
+                //console.log('View Marked');
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });
             
             
@@ -13646,7 +13648,7 @@ function getLatLng(thisData) {
                 alert('Marked');
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
             
@@ -13695,7 +13697,7 @@ function getLatLng(thisData) {
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 var picLink = $(resp.data).find('Location').text();
                 
                 var newPicForm ={
@@ -13718,7 +13720,7 @@ function getLatLng(thisData) {
                     }
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 }, function (resp) {
                     console.log('Error status: ' + resp.status);
@@ -13728,7 +13730,7 @@ function getLatLng(thisData) {
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -13746,7 +13748,7 @@ function getLatLng(thisData) {
                 $scope.showSavedDialog();
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });    
         };
         
@@ -13813,7 +13815,7 @@ function getLatLng(thisData) {
                 
         };
 
-            //console.info($scope.user);
+            //console.log($scope.user);
             
         $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
             //console.log(newValue);
@@ -13846,7 +13848,7 @@ function getLatLng(thisData) {
                     //$state.reload();
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             }
 
@@ -13914,7 +13916,7 @@ function getLatLng(thisData) {
                     alert("Subscribers saved!");
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });
                 
             };
@@ -13976,7 +13978,7 @@ function getLatLng(thisData) {
                         console.log('Delivered');
                         $scope.userSocial = true;
                     }).error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });    
                 }
                 
@@ -13994,7 +13996,7 @@ function getLatLng(thisData) {
                 alert("AWS Credential saved: " + $scope.awsCredential.accessKey);
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
             
@@ -14031,10 +14033,10 @@ function getLatLng(thisData) {
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                //console.info('View Marked');
+                //console.log('View Marked');
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });
     }]);    
     exambazaar.controller("addMediaTagController", 
@@ -14060,7 +14062,7 @@ function getLatLng(thisData) {
                 alert("Media Tag saved: " + $scope.mediaTag.media + ' > ' + $scope.mediaTag.type + ' > ' + $scope.mediaTag.subType);
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
             
@@ -14075,7 +14077,7 @@ function getLatLng(thisData) {
                 alert('MediaTags Saved!');
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error: ' + data);
+                    console.log('Error: ' + data);
                 });      
         };
         $scope.setMediaTag = function(mediaTag){
@@ -14102,7 +14104,7 @@ function getLatLng(thisData) {
                 alert("Group saved: " + $scope.group.media + ' > ' + $scope.group.type + ' > ' + $scope.group.subType);
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
             
@@ -14117,7 +14119,7 @@ function getLatLng(thisData) {
                 alert('Groups Saved!');
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error: ' + data);
+                    console.log('Error: ' + data);
                 });      
         };
         $scope.setGroup = function(group){
@@ -14144,7 +14146,7 @@ function getLatLng(thisData) {
                 alert("Location saved: " + $scope.location.area);
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
             
@@ -14159,7 +14161,7 @@ function getLatLng(thisData) {
                 alert('Locations Saved!');
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error: ' + data);
+                    console.log('Error: ' + data);
                 });      
         };
         $scope.setLocation = function(location){
@@ -14200,7 +14202,7 @@ function getLatLng(thisData) {
         $scope.exams.forEach(function(thisExam, eIndex){
             $scope.examNames += thisExam.displayname+',';
         });
-        //console.info($scope.examNames);    
+        //console.log($scope.examNames);    
         $scope.streams = streamList.data;
         $scope.categoryOptions = ["general","sc","st","obc"];
         $scope.educationLevels = [
@@ -14510,7 +14512,7 @@ function getLatLng(thisData) {
             document.body.scrollTop = document.documentElement.scrollTop = 0;
         };
         $scope.checkEligibility = function(){
-            console.info($scope.elgInput);
+            console.log($scope.elgInput);
             
             $scope.error = false;
             var error = false;
@@ -14614,13 +14616,13 @@ function getLatLng(thisData) {
                 $scope.categoryOptions.forEach(function(thisItem, itemIndex){
                     if(thisEligibility.category[thisItem] && $scope.elgInput.category[thisItem]){
                         categoryBool = true;
-                        //console.info(index + " " + valid + " " + thisItem + " " + thisEligibility._id);
+                        //console.log(index + " " + valid + " " + thisItem + " " + thisEligibility._id);
                     }
                 });
                 if(!categoryBool){
                     valid = false;
                         /*if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
-                            console.info(index + " " + valid + " " + thisItem + " " + thisEligibility._id);
+                            console.log(index + " " + valid + " " + thisItem + " " + thisEligibility._id);
                         }*/
                 }
                 
@@ -14629,9 +14631,9 @@ function getLatLng(thisData) {
                 if($scope.elgInput.age < thisEligibility.age.minage || $scope.elgInput.age > thisEligibility.age.maxage){
                     valid = false;
                     if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
-                        console.info(index + " " + valid + " " + thisEligibility._id);
+                        console.log(index + " " + valid + " " + thisEligibility._id);
                     }
-                    //console.info(index + " " + valid + " " + thisEligibility._id);
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
                 }
             }
             if(checkClass12Subjects){
@@ -14643,16 +14645,16 @@ function getLatLng(thisData) {
                     if(thisEligibility.class12Subjects[thisItem.name] && !$scope.elgInput.class12Subjects[thisItem.name]){
                         valid = false;
                         if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
-                            console.info(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
+                            console.log(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
                         }
-                        //console.info(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
+                        //console.log(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
                     }
                 });
             }    
             if(checkClass12Percentage){
                 if(thisEligibility.class12Percentage.minPercentage && $scope.elgInput.class12Percentage < thisEligibility.class12Percentage.minPercentage){
                     valid = false;
-                    //console.info(index + " " + valid + " " + thisEligibility._id);
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
                 }
                 if($scope.elgInput.class12Percentage == null || $scope.elgInput.class12Percentage == 0){
                     valid = false;
@@ -14666,18 +14668,18 @@ function getLatLng(thisData) {
                 $scope.undergradMajors.forEach(function(thisItem, itemIndex){
                     if(thisEligibility.undergradMajor[thisItem.name] && $scope.elgInput.undergradMajor[thisItem.name]){
                         undergradBool = true;
-                        //console.info(index + " " + valid + " " + thisItem.name + " "+ thisEligibility._id);
+                        //console.log(index + " " + valid + " " + thisItem.name + " "+ thisEligibility._id);
                     }
                 });
                 if(!undergradBool){
                     valid = false;
-                    //console.info(index + " " + valid + " " + thisEligibility._id);
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
                }
             }
             if(checkUndergradPercentage){
                 if(thisEligibility.undergradPercentage.minPercentage && $scope.elgInput.undergradPercentage < thisEligibility.undergradPercentage.minPercentage){
                     valid = false;
-                    //console.info(index + " " + valid + " " + thisEligibility._id);
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
                 }
                 if($scope.elgInput.undergradPercentage == null || $scope.elgInput.undergradPercentage == 0){
                     valid = false;
@@ -14695,13 +14697,13 @@ function getLatLng(thisData) {
                 });
                 if(!postgradBool){
                     valid = false;
-                    //console.info(index + " " + valid + " " + thisEligibility._id);
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
                }
             }    
             if(checkPostgradPercentage){
                 if(thisEligibility.postgradPercentage.minPercentage && $scope.elgInput.postgradPercentage < thisEligibility.postgradPercentage.minPercentage){
                     valid = false;
-                    //console.info(index + " " + valid + " " + thisEligibility._id);
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
                 }
                 if($scope.elgInput.postgradPercentage == null || $scope.elgInput.postgradPercentage == 0){
                     valid = false;
@@ -14709,7 +14711,7 @@ function getLatLng(thisData) {
             } 
                 
             if(valid){
-                //console.info(thisEligibility.level + " " + $scope.elgInput.educationLevel.level);
+                //console.log(thisEligibility.level + " " + $scope.elgInput.educationLevel.level);
                 if(thisEligibility.level >= $scope.elgInput.educationLevel.level){
                     $scope.validEligibilities.push(thisEligibility);
                 }
@@ -14807,7 +14809,7 @@ function getLatLng(thisData) {
         $scope.exams.forEach(function(thisExam, eIndex){
             $scope.examNames += thisExam.displayname+',';
         });
-        //console.info($scope.examNames);    
+        //console.log($scope.examNames);    
         $scope.streams = streamList.data;
         
         $scope.addEligibility = function () {
@@ -14824,7 +14826,7 @@ function getLatLng(thisData) {
                     eligibilitys.push(thisEligibility);
                 }else{
                     if(thisEligibility.examName){
-                        console.info("Please check exam name: " + thisEligibility.examName +". You need to match it exactly.");
+                        console.log("Please check exam name: " + thisEligibility.examName +". You need to match it exactly.");
                     }
                     
                 }
@@ -14835,7 +14837,7 @@ function getLatLng(thisData) {
                 alert("Eligibilities saved!");
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
         $scope.setExam = function(exam){
@@ -14870,7 +14872,7 @@ function getLatLng(thisData) {
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });
             };
             
@@ -14911,7 +14913,7 @@ function getLatLng(thisData) {
                             url: data.endpoint_url,
                             data: s3Request
                         }).then(function (resp) {
-                                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                                 thisFile.link = $(resp.data).find('Location').text();
 
                                 $scope.toAddQuestion.image = thisFile.link;
@@ -14936,7 +14938,7 @@ function getLatLng(thisData) {
 
                         })
                         .error(function (data, status, header, config) {
-                            console.info("Error");
+                            console.log("Error");
                         });   
 
                     });
@@ -15002,7 +15004,7 @@ function getLatLng(thisData) {
                 $scope.showSavedDialog();
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
             
@@ -15023,7 +15025,7 @@ function getLatLng(thisData) {
                 }
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
         $scope.unsetExam = function(){
@@ -15081,7 +15083,7 @@ function getLatLng(thisData) {
                 $scope.setExam($scope.exam);
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
             
         }; 
@@ -15128,7 +15130,7 @@ function getLatLng(thisData) {
                 $scope.cancelNewTest();
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
         $scope.cancelNewTest = function(){
@@ -15472,7 +15474,7 @@ function getLatLng(thisData) {
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 var answerkeyLink = $(resp.data).find('Location').text();
                 $scope.toAddTest.url.answer = answerkeyLink;
                 
@@ -15486,7 +15488,7 @@ function getLatLng(thisData) {
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -15523,7 +15525,7 @@ function getLatLng(thisData) {
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 var questionpaperLink = $(resp.data).find('Location').text();
                 $scope.toAddTest.url.question = questionpaperLink;
                 $scope.toAddTest.name = fileName;
@@ -15538,7 +15540,7 @@ function getLatLng(thisData) {
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -15570,14 +15572,14 @@ function getLatLng(thisData) {
                 url: data.endpoint_url,
                 data: s3Request
             }).then(function (resp) {
-                console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                 var logoLink = $(resp.data).find('Location').text();
                 
                 var newLogoForm ={
                     logo: logoLink,
                     examId: $scope.exam._id
                 };
-                console.info(newLogoForm);
+                console.log(newLogoForm);
                 
                 if(newLogoForm.examId){
                     ExamService.addLogo(newLogoForm).success(function (data, status, headers) {
@@ -15586,7 +15588,7 @@ function getLatLng(thisData) {
                         $state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 }else{
                     $scope.saveExamFirstDialog();
@@ -15602,7 +15604,7 @@ function getLatLng(thisData) {
 
             })
             .error(function (data, status, header, config) {
-                console.info("Error");
+                console.log("Error");
             });   
                  
             });
@@ -15633,7 +15635,7 @@ function getLatLng(thisData) {
                         url: data.endpoint_url,
                         data: s3Request
                     }).then(function (resp) {
-                            console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                            console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                             thisFile.link = $(resp.data).find('Location').text();
                         
                             $scope.toAddTest.screenshots.push(thisFile.link);
@@ -15657,7 +15659,7 @@ function getLatLng(thisData) {
 
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error");
+                        console.log("Error");
                     });   
 
                 });
@@ -15688,7 +15690,7 @@ function getLatLng(thisData) {
                         url: data.endpoint_url,
                         data: s3Request
                     }).then(function (resp) {
-                            console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                            console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                             thisFile.link = $(resp.data).find('Location').text();
                         
                            var newSyllabus = {
@@ -15706,7 +15708,7 @@ function getLatLng(thisData) {
 
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error");
+                        console.log("Error");
                     });   
 
                 });
@@ -15735,7 +15737,7 @@ function getLatLng(thisData) {
                         url: data.endpoint_url,
                         data: s3Request
                     }).then(function (resp) {
-                            console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                            console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                             thisFile.link = $(resp.data).find('Location').text();
                         
                            var newDoc = {
@@ -15756,7 +15758,7 @@ function getLatLng(thisData) {
 
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error");
+                        console.log("Error");
                     });   
 
                 });
@@ -15786,7 +15788,7 @@ function getLatLng(thisData) {
                         url: data.endpoint_url,
                         data: s3Request
                     }).then(function (resp) {
-                            console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                            console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                             thisFile.link = $(resp.data).find('Location').text();
                         
                            var newBrochure = {
@@ -15815,7 +15817,7 @@ function getLatLng(thisData) {
 
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error");
+                        console.log("Error");
                     });   
 
                 });
@@ -15828,14 +15830,14 @@ function getLatLng(thisData) {
     exambazaar.controller("addStreamController", 
         [ '$scope',  'streamList','StreamService','$http','$state', function($scope, streamList, StreamService,$http,$state){
         $scope.streams = streamList.data;
-        console.info(streamList.data);
+        console.log(streamList.data);
         $scope.addStream = function () {
             var saveStream = StreamService.saveStream($scope.stream).success(function (data, status, headers) {
                //$state.go('master-dashboard', {masterId: masterId});
             
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
         $scope.setStream = function(stream){
@@ -15854,7 +15856,7 @@ function getLatLng(thisData) {
             
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
         };
         $scope.setOffer = function(offer){
@@ -15885,7 +15887,7 @@ function getLatLng(thisData) {
         ];    
         
         $scope.addIntern = function () {
-            console.info(JSON.stringify($scope.intern));
+            console.log(JSON.stringify($scope.intern));
             var saveIntern = UserService.saveUser($scope.intern).success(function (data, status, headers) {
                 var internId = data;
             //$scope.formmessage = "Intern " + $scope.intern.basic.firstName + " " + $scope.intern.basic.lastName + " saved!";
@@ -15895,7 +15897,7 @@ function getLatLng(thisData) {
                 
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
             };
     }]);          
@@ -15925,7 +15927,7 @@ function getLatLng(thisData) {
                 
             })
             .error(function (data, status, header, config) {
-                console.info('Error ' + data + ' ' + status);
+                console.log('Error ' + data + ' ' + status);
             });
             };
     }]);
@@ -15939,19 +15941,19 @@ function getLatLng(thisData) {
                 if(data && data.user){
                     $scope.thisuser = data.user;
                     viewService.getuserviews($scope.thisuser._id).success(function (data2, status, headers) {
-                        //console.info("Done");
+                        //console.log("Done");
                         $scope.thisuserViewed = data2;
                         //console.log($scope.thisuserViewed);
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 }
                 
             });
             $scope.activateIntern = function(thisuser){
                 UserService.activateIntern(thisuser._id).success(function (data, status, headers) {
-                    console.info("Done");
+                    console.log("Done");
                     alert(data);
                     if($scope.thisuser){
                         $scope.thisuser = data;
@@ -15959,43 +15961,43 @@ function getLatLng(thisData) {
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             $scope.deactivateIntern = function(thisuser){
                 UserService.deactivateIntern(thisuser._id).success(function (data, status, headers) {
-                    console.info("Done");
+                    console.log("Done");
                     $scope.thisuser = data;
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             $scope.closeInternship = function(thisuser){
                 UserService.closeInternship(thisuser._id).success(function (data, status, headers) {
-                    console.info("Done");
+                    console.log("Done");
                     $scope.thisuser = data;
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             $scope.activateBlogger = function(thisuser){
                 UserService.activateBlogger(thisuser._id).success(function (data, status, headers) {
-                    console.info("Done");
+                    console.log("Done");
                     $scope.thisuser = data;
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             $scope.deactivateBlogger = function(thisuser){
                 UserService.deactivateBlogger(thisuser._id).success(function (data, status, headers) {
-                    console.info("Done");
+                    console.log("Done");
                     $scope.thisuser = data;
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
     }]);    
@@ -16031,10 +16033,10 @@ function getLatLng(thisData) {
             console.log(institutes.length);
             targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
                 //$scope.disabledIds = data;
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.claimInstitute = function(){
@@ -16059,7 +16061,7 @@ function getLatLng(thisData) {
         if($scope.user._id == '59899631a68cea0154b49502'){
             $scope.showLevel = 10;
         }
-        if($scope.user._id == '59a1248f702fef7ef4c7e4f2' || $scope.user._id == '59a24d743011356248da915e'){
+        if($scope.user._id == '59a1248f702fef7ef4c7e4f2' || $scope.user._id == '59a24d743011356248da915e'  || $scope.user._id == '59085f0fc7289d0011d6ea8c'){
             $scope.showLevel = 10;
         }
             
@@ -16097,10 +16099,10 @@ function getLatLng(thisData) {
             };
             targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.addedInstituteId = data;
-                console.info("Done");
+                console.log("Done");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.refreshPage = function(){
@@ -16129,12 +16131,12 @@ function getLatLng(thisData) {
             console.log(institutes);
             targetStudyProviderService.bulkSaveProviders(institutes).success(function (data, status, headers) {
                 $scope.addedInstituteIds = data;
-                console.info("Done");
+                console.log("Done");
                 Notification.success("Great, we have added " + $scope.addedInstituteIds.length + " institutes!");
                 Notification.warning("You will have to refresh this page to add more!");
             })
             .error(function (data, status, header, config) {
-                console.info("Error ");
+                console.log("Error ");
             });
         };
         $scope.claimInstitute = function(){
@@ -16226,20 +16228,20 @@ function getLatLng(thisData) {
             $scope.emailService = function(){
                 targetStudyProviderService.emailService().success(function (data, status, headers) {
                     //$scope.distinctStates = data;
-                    console.info("Done");
+                    console.log("Done");
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             
             $scope.procMon = function(){
                 UserService.procMon().success(function (data, status, headers) {
                     //$scope.distinctStates = data;
-                    console.info("Done");
+                    console.log("Done");
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             
@@ -16255,11 +16257,11 @@ function getLatLng(thisData) {
                     });
                     
                     $scope.bulkEmails = uniqueIds;
-                    console.info(JSON.stringify(uniqueIds.length));
+                    console.log(JSON.stringify(uniqueIds.length));
                     
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });  
             };
             //$scope.fetchEmails();
@@ -16368,17 +16370,17 @@ function getLatLng(thisData) {
             }
             $scope.$watch('email.instituteId', function (newValue, oldValue, scope) {
             if(newValue != null && newValue != ''){
-                //console.info(newValue);
+                //console.log(newValue);
                 //DEF
                 var newValueArr = newValue.split("/");
                 newValue = newValueArr[newValueArr.length-1];
                 //$scope.email.instituteId = newValue;
-                //console.info(newValue);
+                //console.log(newValue);
                 if(newValue.length > 5){
                 //alert($scope.email.instituteId);
                  targetStudyProviderService.getProviderBasic(newValue).success(function (data, status, headers) {
                 if(data){
-                    //console.info(data);
+                    //console.log(data);
                     var refreshedProvider = data.provider;
                     
                     if(data.emailSent){
@@ -16427,7 +16429,7 @@ function getLatLng(thisData) {
                     $scope.email.subject = $scope.provider.name + " - Don't Wait! Claim Your Free Exambazaar Listing Now";
                 }
                 }).error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 }
 
@@ -16442,7 +16444,7 @@ function getLatLng(thisData) {
                 //
                 EmailService.sendGrid($scope.email).success(function (data, status, headers) {
                     var response = data;
-                    console.info(JSON.stringify(response));
+                    console.log(JSON.stringify(response));
                     if(response.statusCode == '202'){
                         $scope.showSentDialog();
                     }else{
@@ -16451,7 +16453,7 @@ function getLatLng(thisData) {
                     //alert(JSON.stringify(data));
                 })
                 .error(function (data, status, header, config) {
-                    console.info('Error ' + data + ' ' + status);
+                    console.log('Error ' + data + ' ' + status);
                 });  
             };
             
@@ -16505,7 +16507,7 @@ function getLatLng(thisData) {
                     $scope.blogGallery = userGallery;
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 
             }else{
@@ -16554,7 +16556,7 @@ function getLatLng(thisData) {
                         
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     
                     
@@ -16628,11 +16630,11 @@ function getLatLng(thisData) {
                          $scope.allTags = data;
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             
@@ -16811,7 +16813,7 @@ function getLatLng(thisData) {
                             $scope.showSavedDialog();
                         })
                         .error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                         
                         
@@ -16832,7 +16834,7 @@ function getLatLng(thisData) {
                                 $scope.showSavedDialog();
                             })
                             .error(function (data, status, header, config) {
-                                console.info("Error ");
+                                console.log("Error ");
                             });
                         }else{
                             $scope.showUrlslugDialog();
@@ -16844,7 +16846,7 @@ function getLatLng(thisData) {
 
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 
                 
@@ -16861,7 +16863,7 @@ function getLatLng(thisData) {
                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             $scope.disableblogpost = function(blogpost){
@@ -16869,7 +16871,7 @@ function getLatLng(thisData) {
                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
             };
             $scope.dontsaveChanges = function(ev){
@@ -16916,11 +16918,11 @@ function getLatLng(thisData) {
                             $scope.showBlogGalleryDialog();
                         })
                         .error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 }, function() {
                   //nothing
@@ -16964,12 +16966,12 @@ function getLatLng(thisData) {
                             
                         })
                         .error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                         
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                 }, function() {
                   //nothing
@@ -17003,7 +17005,7 @@ function getLatLng(thisData) {
                     url: data.endpoint_url,
                     data: s3Request
                 }).then(function (resp) {
-                    console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                    console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                     var picLink = $(resp.data).find('Location').text();
                     console.log(picLink);
                     
@@ -17018,12 +17020,12 @@ function getLatLng(thisData) {
                             $scope.blogGallery = userGallery;
                         })
                         .error(function (data, status, header, config) {
-                            console.info("Error ");
+                            console.log("Error ");
                         });
                         //$state.reload();
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     }, function (resp) {
                         console.log('Error status: ' + resp.status);
@@ -17033,7 +17035,7 @@ function getLatLng(thisData) {
 
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error");
+                    console.log("Error");
                 });   
 
                 });
@@ -17069,7 +17071,7 @@ function getLatLng(thisData) {
                     url: data.endpoint_url,
                     data: s3Request
                 }).then(function (resp) {
-                    //console.info('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                    //console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                     var picLink = $(resp.data).find('Location').text();
                     //console.log(picLink);
                     
@@ -17094,7 +17096,7 @@ function getLatLng(thisData) {
                         }
                     })
                     .error(function (data, status, header, config) {
-                        console.info("Error ");
+                        console.log("Error ");
                     });
                     }, function (resp) {
                         console.log('Error status: ' + resp.status);
@@ -17104,7 +17106,7 @@ function getLatLng(thisData) {
 
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error");
+                    console.log("Error");
                 });   
 
                 });
@@ -17200,7 +17202,7 @@ function getLatLng(thisData) {
                     $scope.userUpvotes = data;
                 })
                 .error(function (data, status, header, config) {
-                    console.info();
+                    console.log();
                 });
                 if($scope.user){
                     $scope.newComment.user = $scope.user
@@ -17218,7 +17220,7 @@ function getLatLng(thisData) {
                     //console.log($scope.thisUserComment);
                 })
                 .error(function (data, status, header, config) {
-                    console.info();
+                    console.log();
                 });
                 
                 
@@ -17326,11 +17328,11 @@ function getLatLng(thisData) {
 
                     })
                     .error(function (data, status, header, config) {
-                        console.info();
+                        console.log();
                     });
                 })
                 .error(function (data, status, header, config) {
-                    console.info();
+                    console.log();
                 });
             };
             
@@ -17347,16 +17349,16 @@ function getLatLng(thisData) {
                                 blogpost.upvotes = sdata;
                             })
                             .error(function (data, status, header, config) {
-                                console.info();
+                                console.log();
                             });
 
                         })
                         .error(function (data, status, header, config) {
-                            console.info();
+                            console.log();
                         });
                     })
                     .error(function (data, status, header, config) {
-                        console.info();
+                        console.log();
                     });   
                 }
             };
@@ -17380,10 +17382,10 @@ function getLatLng(thisData) {
                 viewForm.ip = ip;
             }
             viewService.saveview(viewForm).success(function (data, status, headers) {
-                //console.info('View Marked');
+                //console.log('View Marked');
             })
             .error(function (data, status, header, config) {
-                console.info();
+                console.log();
             });
             
             $scope.backToBlog = function(){
@@ -17397,7 +17399,7 @@ function getLatLng(thisData) {
                         $scope.userUpvotes = data;
                     })
                     .error(function (data, status, header, config) {
-                        console.info();
+                        console.log();
                     });
                     if($scope.user){
                         $scope.newComment.user = $scope.user
@@ -17415,7 +17417,7 @@ function getLatLng(thisData) {
                         //console.log($scope.thisUserComment);
                     })
                     .error(function (data, status, header, config) {
-                        console.info();
+                        console.log();
                     });
                     
                     console.log($scope.user);
@@ -17444,11 +17446,11 @@ function getLatLng(thisData) {
                             $scope.blogComments = data;
                         })
                         .error(function (data, status, header, config) {
-                            console.info('Error');
+                            console.log('Error');
                         });
                     })
                     .error(function (data, status, header, config) {
-                        console.info('Error');
+                        console.log('Error');
                     });
                 }
             };
@@ -17512,10 +17514,10 @@ function getLatLng(thisData) {
                 
                 UserService.userSurvey($scope.selectedUsers).success(function (data, status, headers) {
                     
-                    console.info("Done");
+                    console.log("Done");
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 
             };
@@ -17571,10 +17573,10 @@ function getLatLng(thisData) {
                 
                 UserService.userMarketing($scope.selectedUsers).success(function (data, status, headers) {
                     
-                    console.info("Done");
+                    console.log("Done");
                 })
                 .error(function (data, status, header, config) {
-                    console.info("Error ");
+                    console.log("Error ");
                 });
                 
             };

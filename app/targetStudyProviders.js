@@ -2777,7 +2777,7 @@ router.get('/cityStateService', function(req, res) {
                         var nCities = 0;
                         allStates.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );  
                         allStates.forEach(function(thisstate, index){
-                            console.log(thisstate.state);
+                            //console.log(thisstate.state);
                             //console.log(JSON.stringify(thisstate.cities));
                             nCities += thisstate.cities.length;
                         });
@@ -2810,9 +2810,8 @@ router.get('/cityStateService', function(req, res) {
 
 router.get('/cityStateService2', function(req, res) {
     console.log("City State 2 Service Starting now");
+    
     res.json('Done');
-    
-    
     var allProviders = targetStudyProvider.find({type:'Coaching', state:'New Delhi'}, {name:1, city:1, state:1},function(err, allProviders) {
         if (!err){
             var nProviders = allProviders.length;
@@ -2831,7 +2830,12 @@ router.get('/cityStateService2', function(req, res) {
         }
     });
     
-    
+    /*targetStudyProvider.distinct( ("city"),function(err, docs) {
+    if (!err){
+        //console.log(docs);
+        res.json(docs);
+    } else {throw err;}
+    });*/
 });
 
 router.get('/logoService', function(req, res) {
