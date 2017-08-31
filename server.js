@@ -95,7 +95,6 @@ app.get('*', function(req, res, next) {
 
 
 
-
 app.get('/auth/facebook',
   passport.authenticate('facebook'));
 
