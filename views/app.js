@@ -8135,7 +8135,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
             if($scope.user.userType=='Intern - Business Development'){
                 
-                if($scope.city != 'Ranchi' && $scope.city != 'New Delhi'){
+                if($scope.city != 'Ranchi' && $scope.city != 'New Delhi' && $scope.city != 'Kanpur'){
                     $scope.showLevel = 0;
                 }else{
                     $scope.showLevel = 1; 
