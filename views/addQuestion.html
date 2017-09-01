@@ -5,7 +5,7 @@
         color: #333333;
         margin-bottom: 5px;
         padding: 10px;
-        border: solid 1px transparent;
+        border: solid 1px #333333;
         transition: box-shadow 0.3s, border 0.3s;
         box-shadow: 0 0 5px 1px white;
     }
@@ -55,45 +55,146 @@
     #removebadge{
         background: #FF5A5F;
     }
+    #screenshot{
+        max-height: 60px;
+        max-width: 60px;
+    }
+    #upload3{
+        background-color: #F5F5F5;
+        color: #333333;
+        border: 7px solid #fff;
+        padding: 5px;
+    }
+    #upload3:hover {
+        background: #FF5A5F;
+        color: white;
+    }
 </style>
 <div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
-    <div layout="column" layout-align="start start" class="padded width100" layout-wrap>
-        <div layout="row" layout-align="start start" class="width100 font20 bold paddingLR5" >
-            <a class="marginR10" ng-href="{{test.url.question}}" target="_blank" id="link">{{test.name}} ({{test.description}})</a>
+    <div layout="column" layout-align="start start" class="padded width100">
+        <div layout="row" layout-align="start center" class="width100 font20 bold paddingB5 headingBottomBorder" >
+            <div layout="column" layout-align="start start">
+                <div layout="row" layout-align="start center">
+                    <div class="marginR20">
+                        {{test.name}}</div>
+                    <div><a class="" ng-href="{{test.url.question}}" target="_blank" id="link"><i class="fa fa-file-pdf-o font24" aria-hidden="true"></i>&nbsp;<span class="font12">Download</span></a></div>
+                </div>
+                <div class="font12">{{test.description}}</div>
+            </div>
         </div>
         
-        <div layout="column" layout-align="start start" class="width100 font14 marginTB10">
-            <div layout="row" layout-align="start center" class="width100 marginTB10">
-                <div layout="column" layout-align="start start" flex class="width100 paddingLR5">
-                    <div layout="row" layout-align="start start" class="width100 font16 paddingLR5 bold">
-                        Question
-                    </div>
-                    <textarea class="width100 font14" ng-model="toAddQuestion.text" placeholder="Add question here" rows="4"></textarea>
+        <div layout="column" layout-align="start start" class="width100 font14 marginTB10" >
+            <div layout="row" layout-align="start center" class="width100 font16 bold marginT5" layout-wrap>
+                <div layout="row" layout-align="start center" class="marginR20">
+                    Add Question or Question Set
                 </div>
-                <div flex="15" layout="column" layout-align="start center" class="margin5 padding5 whiteBackground font12" id="pageLogoHolder">
-                    <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadImage(image)" ng-model="image">
-                        <span class="md-display-1">
-                            <i class="fa fa-file-text" aria-hidden="true"></i>
-                        </span>
-                        <span>
-                            Add Image
-                        </span>
+                <div layout="row" layout-align="start center">
+                    <div layout="row" layout-align="start center" class="marginR10">
+                        <input type="text" class="" ng-model="toAddQuestion._startnumber"  placeholder="Q.No. in PDF">
                     </div>
-                    <div layout="row" layout-align="center center" ng-if="toAddQuestion.image">
-                        <div class="marginR10">
-                            <a ng-href="{{toAddQuestion.image}}" target="_blank">
-                                <i class="fa fa-check-square-o text-primary marginR5" aria-hidden="true"></i> Uploaded
+                    <div layout="row" layout-align="start center" class="marginR10" ng-if="toAddQuestion._groupOfQuestions">
+                        <input type="text" class="" ng-model="toAddQuestion._endnumber"  placeholder="Ending Q.No. in PDF">
+                    </div>
+                
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginT5" layout-wrap>
+                <div layout="row" layout-align="start center" class="marginR10">
+                    <md-switch ng-model="toAddQuestion._groupOfQuestions" aria-label="Question Group?" class="margin0">
+                        Adding a group of questions?
+                    </md-switch>
+                </div>
+                <div layout="row" layout-align="start center" class="marginR10">
+                    <md-switch ng-model="toAddQuestion._hascontext" aria-label="Write Up?" class="margin0">
+                        Would you add a write up?
+                    </md-switch>
+                </div>
+                <div layout="row" layout-align="start center" class="marginR10">
+                    <md-switch ng-model="toAddQuestion._multipleCorrect" aria-label="Multiple Correct Answers?" class="margin0">
+                        Multiple Correct Answers?
+                    </md-switch>
+                </div>
+                
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginT5" ng-if="toAddQuestion._hascontext">
+                <textarea class="width100 font14" ng-model="toAddQuestion.context" placeholder="Add question context here. Paragraph of RC, etc" rows="4"></textarea>
+            </div>
+            
+            <div layout="column" layout-align="start start" class="font12 width100 marginT10" ng-repeat="question in toAddQuestion.questions">
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex="15" layout="column" layout-align="center center" class="textDarkGrey width100 height100 font16 bold paddingLR10" id="pageLogoHolder">
+                        Question {{$index + 1}}
+                    </div>
+                    <div flex layout="column" layout-align="start start" class="paddingL20 width100">
+                        <div layout="row" layout-align="start start" class="width100 marginB10">
+                            <textarea class="width100 font14 margin0" ng-model="question.question" placeholder="Add question here" rows="3"></textarea>
+                        </div>
+                        <div layout="column" layout-align="start start" class="width100 marginB5" ng-repeat="option in question.options">
+                            <div layout="row" layout-align="start center" class="width100">
+                                <div layout="row" layout-align="start center" flex="20">
+                                    <div class="font14 bold marginR10">
+                                        Option {{$index+1}}
+                                    </div>
+                                    <div>
+                                        <md-switch ng-model="option._correct" aria-label="Answer?" class="margin0">
+                                            Answer?
+                                        </md-switch>
+                                    </div>
+                                </div>
+                                <div flex>
+                                    <textarea class="width100 font14 margin0" ng-model="option.option" placeholder="Add option here" rows="1"></textarea>
+                                </div>
+                                <div layout="row" layout-align="center center" class="marginL10">
+                                    <div class="badge" id="removebadge" ng-click="removeOption(question, option, $index)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="center center" id="upload3" ng-click="addNewOption(question)" class="width100 marginT10">
+                            <span>
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Option
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div layout="row" layout-align="start start" class="font12 width100 marginT20" >
+                <div flex="15" layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadImage(images)" ng-model="images" multiple="multiple" id="pageLogoHolder">
+                    <span class="md-display-1">
+                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                    </span>
+                    <span>
+                        Add Images
+                    </span>
+                </div>
+                <div flex layout="row" layout-align="start start" ng-if="toAddQuestion.images && toAddQuestion.images.length > 0" class="paddingL20 width100">
+                    <div layout="column" layout-align="center center" ng-repeat="image in toAddQuestion.images" class="marginR10 marginB10">
+                        <div layout="row" layout-align="center center" class="marginB5">
+                            <a ng-href="{{image}}" target="_blank">
+                                <!--<i class="fa fa-check-square-o text-primary marginR10" aria-hidden="true"></i> Image {{$index}}-->
+                                <img ng-src="{{image}}" id="screenshot"/>
                             </a>
                         </div>
-                        <div class="badge" id="removebadge" ng-click="removeImage()">
+                        <div layout="row" layout-align="center center" class="badge" id="removebadge" ng-click="removeImage(image)">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </div>
                     </div>
-                    
                 </div>
             </div>
+            <!--<div layout="row" layout-align="start center" class="width100 marginTB10">
+                <div layout="column" layout-align="start start" flex class="width100">
+                    <div layout="row" layout-align="start start" class="width100 font16 paddingLR5 bold">
+                        Question
+                    </div>
+                    <textarea class="width100 font14" ng-model="toAddQuestion.context" placeholder="Add question here" rows="4"></textarea>
+                </div>
+                
+            </div>-->
         </div>
     </div>
 </div>

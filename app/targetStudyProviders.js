@@ -61,6 +61,7 @@ router.get('/providercities/:query', function(req, res) {
 
     ],function(err, cityNames) {
     if (!err){
+        console.log(cityNames);
         cityNames = cityNames.map(function(a) {return a._id.city;});
         //console.log(cityNames);
         /*var queryGroups = [];
@@ -2812,13 +2813,13 @@ router.get('/cityStateService2', function(req, res) {
     console.log("City State 2 Service Starting now");
     
     res.json('Done');
-    var allProviders = targetStudyProvider.find({type:'Coaching', state:'New Delhi'}, {name:1, city:1, state:1},function(err, allProviders) {
+    var allProviders = targetStudyProvider.find({type:'Coaching', city:'Nasik'}, {name:1, city:1, state:1},function(err, allProviders) {
         if (!err){
             var nProviders = allProviders.length;
             var counter = 0;
             console.log("There are " + nProviders + " providers!");
             allProviders.forEach(function(thisprovider, index){
-                thisprovider.state = 'Delhi';
+                thisprovider.city = 'Nashik';
                 thisprovider.save(function(err, thisprovider) {
                     if (err) return console.error(err);
                     console.log(index + ' ' + thisprovider._id + " saved!");
@@ -3381,5 +3382,27 @@ router.get('/groupSummaryService', function(req, res) {
             
         }
     });*/
+});
+
+router.get('/citySummaryService', function(req, res) {
+    console.log("City Summary Service Starting now");
+    //res.json('Done');
+    
+    var groupNames = targetStudyProvider.aggregate(
+    [
+        {$match: {disabled: false, type: 'Coaching'} },
+        {"$group": { "_id": { city: "$city" }, count:{$sum:1}, state: { $addToSet: "$state" } } },
+        {$sort:{"count":-1}}
+
+    ],function(err, groupNames) {
+    if (!err){
+        var filterGroupNames = [];
+        
+        console.log(groupNames);
+        
+        
+        res.json(groupNames);
+    } else {throw err;}
+    })
 });
 module.exports = router;

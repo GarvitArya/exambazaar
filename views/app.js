@@ -1296,6 +1296,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.groupSummaryService = function() {
             return $http.get('/api/targetStudyProviders/groupSummaryService');
         };
+        this.citySummaryService = function() {
+            return $http.get('/api/targetStudyProviders/citySummaryService');
+        };
         this.sandbox2Service = function(city) {
             return $http.get('/api/targetStudyProviders/sandbox2Service/'+city, {city: city});
         };
@@ -8126,6 +8129,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -8135,10 +8139,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
             if($scope.user.userType=='Intern - Business Development'){
                 
-                if($scope.city != 'Ranchi' && $scope.city != 'New Delhi' && $scope.city != 'Kanpur'){
-                    $scope.showLevel = 0;
+                if(allowedCities.indexOf($scope.city) != -1){
+                    $scope.showLevel = 1;
                 }else{
-                    $scope.showLevel = 1; 
+                    $scope.showLevel = 0; 
                 }
                 
             }
@@ -8274,9 +8278,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 console.log("Error ");
             });
         };
+        
         $scope.cityStateService = function(){
             //alert('Starting');
-            targetStudyProviderService.cityStateService().success(function (data, status, headers) {
+            targetStudyProviderService.citySummaryService().success(function (data, status, headers) {
+                
+                console.log("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error ");
+            });
+        };
+        $scope.citySummary = null;
+        $scope.citySummaryService = function(){
+            //alert('Starting');
+            targetStudyProviderService.citySummaryService().success(function (data, status, headers) {
+                $scope.citySummary = data;
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11866,25 +11883,87 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         console.log(response.data[2]);
                         var p_id = response.data[2].id;
                         var string_id = '/' + p_id + '/feed';
-                        var p_accessToken = response.data[0].access_token; 
+                        var photos_id = '/' + p_id + '/photos';
+                        var p_accessToken = response.data[2].access_token; 
                         var p_name = response.data[2].name; 
                         console.log('The pagename is: '
                         + p_name + 'Page access token is: ' 
                         + p_accessToken);
-
+                        var questionString1 = "Exambazaar Question a Day of " + moment().format("DD MMM YY") + " is: \r\n\r\n";
+                        var questionString2 = "Q. A water cooler of storage capacity 120 litres can cool water at a constant rate of P watts. In a closed circulation system (as shown schematically in the figure), the water from the cooler is used to cool an external device that generates constantly 3 kW of heat (thermal load). The temperature of water fed into the device cannot exceed 30 degree celcius and the entire stored 120 litres of water in initially cooled to 10 degree celcius. The entire system is thermally insulated. The minimum value of P (in watts) for which the devicde can be operated for 3 hours is: (specific heat of water is 4.2 kJ per kg per K and the density of water is 1000 kg per meter^3) θ  \r\n\r\n";
+                        var optionString = [];
+                        optionString.push("A. 1600\r\n");
+                        optionString.push("B. 2067\r\n");
+                        optionString.push("C. 2533\r\n");
+                        optionString.push("D. 3933\r\n");
+                        
+                        var postString = questionString1 + questionString2;
+                        
+                        optionString.forEach(function(thisOption, index){
+                            postString += thisOption;
+                        });
+                        
+                        postString += "\r\n\r\nFor detailed answers and explanations, logon to www.exambazaar.com";
+                        postString += "\r\n\r\n\#eqad #exambazaar";
+                        
+                        var myDate="31-08-2017";
+                        myDate=myDate.split("-");
+                        var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
+                        var backdate = new Date(newDate).getTime();
+                        console.log(backdate);
+                        
+                        var scheduledTime = moment().add(10, "minutes").unix();
+                        console.log(scheduledTime);
+                        //The specified scheduled publish time is invalid
+                        
                         FB.api(
-                            string_id,
+                            photos_id,
                             "POST",
                             {
-                                "message": "This is a test message"
+                                "url": "https://exambazaar.s3.amazonaws.com/1ef829c877a8f44c6d755fd7e335ecc2.PNG",
+                                access_token : p_accessToken,
+                                caption: postString,
+                                //no_story:1,
+                                //backdated_time : backdate,
+                                //published : false,
+                                //scheduled_publish_time : scheduledTime,
+                                //object_attachment
+                                
                             },
                             function (response) {
                               if (response && !response.error) {
-                                  console.log('Done');
+                                  console.log('Photo Posted');
+                                  console.log(response);
+                                  var photoId = response.id;
+                                  var photoPostId = response.post_id;
+                                  
+                                  /*FB.api(
+                                    string_id,
+                                    "POST",
+                                    {
+                                        "message": postString,
+                                        access_token : p_accessToken,
+                                        //backdated_time : backdate,
+                                        //published : false,
+                                        //scheduled_publish_time : scheduledTime,
+                                        object_attachment:photoId,
+
+                                    },
+                                    function (response) {
+                                      if (response && !response.error) {
+                                          console.log('Question Posted');
+                                          console.log(response);
+                                      }else{
+                                          console.log(response);
+                                      }
+                                });*/
+                                  
+                                  
                               }else{
                                   console.log(response);
                               }
                         });
+                        
                         /*FB.api(string_id, function(response) {
                           console.log(response);
                         },{scope:"manage_pages"});*/
@@ -14852,20 +14931,53 @@ function getLatLng(thisData) {
     exambazaar.controller("addQuestionController", 
         [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', function($scope, Notification, $rootScope, thisTest, Upload, ImageService){
             $scope.test = thisTest.data;
-            console.log($scope.test);
             $scope.toAddQuestion = null;
-            $scope.addNewQuestion = function(){
+            $scope.questionTypes = ["MCQ"];
+            $scope.addNewQuestionSet = function(){
                 $scope.toAddQuestion = {
-                    text: '',
-                    image: null,
-                    otherimages: [],
-                    options: [],
+                    _groupOfQuestions: false,
+                    //_multipleCorrect: false,
+                    _startnumber: '',
+                    _endnumber: '',
+                    _hascontext: false,
+                    context: '',
+                    images: null,
+                    questions:[],
                     test: $scope.test._id,
                     exam: $scope.test.exam,
-                    explanation: '',
-                    answer: '',
+                    
                 };
             };
+            $scope.addNewQuestion = function(){
+                if($scope.toAddQuestion){
+                    var newQuestion = {
+                        question: '',
+                        options: [],
+                        explanation: '',
+                        answer: '',
+                        images: [],
+                    };
+                    $scope.addNewOption(newQuestion);
+                    $scope.toAddQuestion.questions.push(newQuestion);
+                    
+                }
+            };
+            $scope.addNewOption = function(question){
+                if(!question.options){
+                    question.options = [];
+                }
+                var newOption = {
+                    option: '',
+                    _correct: false,
+                };
+                question.options.push(newOption);
+            };
+            $scope.removeOption = function(question, option, index){
+                if(question.options && question.options.length > index){
+                    question.options.splice(index, 1);
+                }
+            };
+            $scope.addNewQuestionSet();
             $scope.addNewQuestion();
             $scope.saveNewQuestion = function(){
                 questionService.saveTest($scope.toAddQuestion).success(function (data, status, headers) {
@@ -14886,17 +14998,22 @@ function getLatLng(thisData) {
 
             }, true);
         
-            $scope.removeImage = function(){
-                $scope.toAddQuestion.image = null;
+            $scope.removeImage = function(image){
+                if($scope.toAddQuestion.images && $scope.toAddQuestion.images.length > 0){
+                    var iIndex = $scope.toAddQuestion.images.indexOf(image);
+                    if(iIndex != -1){
+                        $scope.toAddQuestion.images.splice(iIndex, 1);
+                    }
+                }
             };
-            $scope.uploadImage = function (image) {
-                image = [image];
-                var nFiles = image.length;
+            $scope.uploadImage = function (images) {
+                
+                var nFiles = images.length;
                 
                 var counter = 0;
                 $scope.imageProgess = 0;
-                if (image && image.length) {
-                    image.forEach(function(thisFile, index){
+                if (images && images.length) {
+                    images.forEach(function(thisFile, index){
 
                         var fileInfo = {
                             filename: thisFile.name,
@@ -14917,8 +15034,10 @@ function getLatLng(thisData) {
                         }).then(function (resp) {
                                 console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                                 thisFile.link = $(resp.data).find('Location').text();
-
-                                $scope.toAddQuestion.image = thisFile.link;
+                                if(!$scope.toAddQuestion.images){
+                                    $scope.toAddQuestion.images = [];
+                                }
+                                $scope.toAddQuestion.images.push(thisFile.link);
                                 console.log($scope.toAddQuestion);
 
                             }, function (resp){
@@ -14926,8 +15045,8 @@ function getLatLng(thisData) {
                             }, function (evt) {
                                 $scope.imageProgess = 0;
                                 thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
-                                image.forEach(function(thisPhoto, index){
-                                    console.log(index + ' ' + thisPhoto.uploadProgress + ' ' + nFiles);
+                                images.forEach(function(thisPhoto, index){
+                                    //console.log(index + ' ' + thisPhoto.uploadProgress + ' ' + nFiles);
                                     if(!thisPhoto.uploadProgress){
                                         thisPhoto.uploadProgress = 0;
                                     }

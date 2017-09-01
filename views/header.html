@@ -52,7 +52,7 @@
 
 <nav class="navbar navbar-default navbar-fixed-top nav-justified secondFont font14 spacedLetter09" role="navigation" id="mainNav" ng-class="headerBackgroundCSS()">
     <div layout="row" layout-align="start center" class="" >
-        <div hide-gt-xs ng-if="!showMobileSearch" layout="row" layout-align="start center" class="paddingL20" sidebarjs-toggle>
+        <div hide-gt-sm ng-if="!showMobileSearch" layout="row" layout-align="start center" class="paddingL20" sidebarjs-toggle>
             <i class="fa fa-bars font32" aria-hidden="true" ng-class="headerLogoCSS()"></i>
             <a class="navbar-brand" href="/">
                 <span ng-class="headerLogoCSS()">
@@ -62,12 +62,12 @@
         </div>
         
         <div  layout="row" layout-align="start center" flex>
-        <a hide-xs class="navbar-brand" href="/">
+        <a hide-sm class="navbar-brand" href="/">
             <span ng-class="headerLogoCSS()">
                 EXAMBAZAAR
             </span>
         </a>
-        <ul hide-xs class="nav navbar-nav" ng-if="!searchMode">
+        <ul hide-sm class="nav navbar-nav" ng-if="!searchMode">
             <!--<li><a ui-sref="blog">Blog</a></li>-->
             <li class="dropdown">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog</a>
@@ -136,7 +136,7 @@
             
         </ul>
         
-        <div hide-xs layout="row" layout-align="start center" ng-if="!searchMode && headerShowOptions()">
+        <div hide-sm layout="row" layout-align="start center" ng-if="!searchMode && headerShowOptions()">
             
             <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Partner'">
                 <li><a ui-sref="partner-dashboard({ userId:{{'sessionuser.userId'}} })">Home</a></li>
@@ -260,7 +260,7 @@
             </ul>
         </div>
         <div  layout="row" layout-align="end center" flex class="paddingL10 paddingR40" >
-            <ul hide-xs flex class="nav navbar-nav navbar-right" ng-controller="autocompleteController as ctrl" ng-if="headerShowOptions()" >
+            <ul hide-sm flex class="nav navbar-nav navbar-right" ng-controller="autocompleteController as ctrl" ng-if="headerShowOptions()" >
                 <div flex layout="row" layout-align="end center">
                     <md-autocomplete id="custom" md-input-name="headerSearch" 
                     md-selected-item="ctrl.selectedItem"
@@ -294,7 +294,7 @@
                 </div>
                 
             </ul>    
-            <ul hide-gt-xs flex class="nav navbar-nav" ng-controller="autocompleteController as ctrl">
+            <ul hide-gt-sm flex class="nav navbar-nav" ng-controller="autocompleteController as ctrl">
                 <li ng-if="!showMobileSearch" ng-click="flipMobileSearch()">
                     <img src="images/icons/Hsearch.png" />
                 </li>
