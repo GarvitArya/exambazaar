@@ -11976,7 +11976,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
                 //publish_actions,
             };
-            $scope.postToFB();
+            //$scope.postToFB();
     }]);    
         
         
