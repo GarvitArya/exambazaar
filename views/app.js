@@ -264,6 +264,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getUser = function(userId) {
             return $http.get('/api/users/edit/'+userId, {userId: userId});
         };
+        this.getAddedInstitutes = function(userId) {
+            return $http.get('/api/users/addedInstitutes/'+userId, {userId: userId});
+        };
+        
         this.getEmails = function(userId) {
             return $http.get('/api/users/emails/'+userId, {userId: userId});
         };
@@ -288,6 +292,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getInterns = function() {
             return $http.get('/api/users/interns');
         };
+        this.getEBTeam = function() {
+            return $http.get('/api/users/ebteam');
+        };
+        
         this.getUserFilled = function(userId) {
             
             return $http.get('/api/users/editFilled/'+userId, {userId: userId});
@@ -371,6 +379,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     exambazaar.service('questionService', ['$http', function($http) {
         this.saveQuestion = function(question) {
             return $http.post('/api/questions/save', question);
+        };
+        this.getTestQuestions = function(testId) {
+            return $http.get('/api/questions/testQuestions/'+testId, {testId: testId});
         };
         this.getQuestion = function(questionId) {
             return $http.get('/api/questions/edit/'+questionId, {questionId: questionId});
@@ -9711,6 +9722,47 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.pageURL = currURL;*/
             $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
     }]);
+    exambazaar.controller("addedInstitutesController", 
+        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam){
+            $scope.user = thisuser.data;
+            
+            if($scope.user && ($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development')){
+                $scope.authorized = true;
+            }
+            $scope.allAddedInstitutes = addedInstitutes.data;
+            $scope.addedInstitutes = addedInstitutes.data;
+            var ebteam = ebteam.data;
+            var ebteamIds = ebteam.map(function(a) {return a._id;});
+            
+            var listedUsers = [];
+            
+            $scope.addedInstitutes.forEach(function(thisInstitute, index){
+                var addedByUser = thisInstitute._createdBy;
+                if(listedUsers.indexOf(addedByUser) == -1){
+                    listedUsers.push(addedByUser);
+                }
+                var uIndex = ebteamIds.indexOf(addedByUser);
+                thisInstitute._createdBy = ebteam[uIndex];
+            });
+            $scope.listedUsers = [];
+            listedUsers.forEach(function(thisUser, index){
+                var uIndex = ebteamIds.indexOf(thisUser);
+                $scope.listedUsers.push(ebteam[uIndex]);
+                
+            });
+            $scope.updateAddedInstitutes = function(user){
+                
+                var userId = user._id;
+                $scope.addedInstitutes = [];
+                $scope.allAddedInstitutes.forEach(function(thisInstitute, index){
+                    var addedByUser = thisInstitute._createdBy;
+                    if(addedByUser._id == userId){
+                        $scope.addedInstitutes.push(thisInstitute);
+                    }
+                });
+            };
+            
+    }]);
     exambazaar.controller("cityGroupExamQueryController", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
         
@@ -14929,8 +14981,10 @@ function getLatLng(thisData) {
         
          
     exambazaar.controller("addQuestionController", 
-        [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', function($scope, Notification, $rootScope, thisTest, Upload, ImageService){
+        [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', 'questionService', '$state', '$mdDialog', '$timeout', 'thisTestQuestions', function($scope, Notification, $rootScope, thisTest, Upload, ImageService, questionService, $state, $mdDialog, $timeout, thisTestQuestions){
             $scope.test = thisTest.data;
+            $scope.thisTestQuestions = thisTestQuestions.data;
+            console.log($scope.thisTestQuestions);
             $scope.toAddQuestion = null;
             $scope.questionTypes = ["MCQ"];
             $scope.addNewQuestionSet = function(){
@@ -14947,19 +15001,25 @@ function getLatLng(thisData) {
                     exam: $scope.test.exam,
                     
                 };
+                $scope.addNewQuestion();
+            };
+            $scope.reload = function(){
+                $state.reload();
             };
             $scope.addNewQuestion = function(){
                 if($scope.toAddQuestion){
                     var newQuestion = {
                         question: '',
                         options: [],
-                        explanation: '',
+                        solution: '',
                         answer: '',
                         images: [],
                     };
                     $scope.addNewOption(newQuestion);
+                    $scope.addNewOption(newQuestion);
+                    $scope.addNewOption(newQuestion);
+                    $scope.addNewOption(newQuestion);
                     $scope.toAddQuestion.questions.push(newQuestion);
-                    
                 }
             };
             $scope.addNewOption = function(question){
@@ -14978,9 +15038,9 @@ function getLatLng(thisData) {
                 }
             };
             $scope.addNewQuestionSet();
-            $scope.addNewQuestion();
+            
             $scope.saveNewQuestion = function(){
-                questionService.saveTest($scope.toAddQuestion).success(function (data, status, headers) {
+                questionService.saveQuestion($scope.toAddQuestion).success(function (data, status, headers) {
                     console.log(data);
                     $scope.toAddQuestion = data;
                     $scope.showSavedDialog();
@@ -14988,6 +15048,21 @@ function getLatLng(thisData) {
                 .error(function (data, status, header, config) {
                     console.log('Error ' + data + ' ' + status);
                 });
+            };
+            $scope.setQuestion = function(question){
+                console.log('I am here');
+                $scope.toAddQuestion = question;
+            };
+            $scope.showSavedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#savedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
             };
             
             $scope.$watch('toAddQuestion.text', function (newValue, oldValue, scope) {
@@ -18689,6 +18764,38 @@ function getLatLng(thisData) {
                 
             }
         })
+        .state('addedInstitutes', {
+            url: '/user/:userId/addedInstitutes', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'addedInstitutes.html',
+                    controller: 'addedInstitutesController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                ebteam: ['UserService',
+                    function(UserService){
+                    return UserService.getEBTeam();
+                }],
+                addedInstitutes: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getAddedInstitutes($stateParams.userId);
+                }],
+                
+            }
+        })
+        
         .state('blog', {
             url: '/blog', //masterId?
             views: {
@@ -20594,6 +20701,10 @@ function getLatLng(thisData) {
                 thisTest: ['testService','$stateParams',
                     function(testService, $stateParams){
                     return testService.getTest($stateParams.testId);
+                }],
+                thisTestQuestions: ['questionService','$stateParams',
+                    function(questionService, $stateParams){
+                    return questionService.getTestQuestions($stateParams.testId);
                 }],
                 exam: function() { return {}; }
             }

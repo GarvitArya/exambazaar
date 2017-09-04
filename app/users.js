@@ -1452,6 +1452,18 @@ router.get('/interns', function(req, res) {
     });
 });
 
+router.get('/ebteam', function(req, res) {
+    //console.log('Getting all interns');
+    user
+        .find({ $or: [ { userType: 'Intern - Business Development'}, { userType: 'Master' } ] },{basic:1})
+        //.deepPopulate('_master.contact')
+        .exec(function (err, docs) {
+        if (!err){ 
+            res.json(docs);
+        } else {throw err;}
+    });
+});
+
 router.get('/editPartner/:userId', function(req, res) {
     var userId = req.params.userId;
     //console.log("User is " + userId);
@@ -1602,6 +1614,50 @@ router.get('/editFilled/:userId', function(req, res) {
     
     
 });
+
+
+router.get('/addedInstitutes/:userId', function(req, res) {
+    var userId = req.params.userId.toString();
+    console.log('Finding Added Institutes for: ' + userId);
+    
+    var thisUser = user
+    .findOne({'_id': userId},{basic:1, userType:1})
+    .exec(function (err, thisUser) {
+    if (!err){
+        if(thisUser){
+            var fullUserScope = false;
+            if(thisUser.userType == 'Master' || thisUser._id == '59085f0fc7289d0011d6ea8c'){
+               fullUserScope = true; 
+            }
+            
+            if(fullUserScope){
+                var addedInstitutes = targetStudyProvider
+                .find({_createdBy: {$exists: true}},{name:1, website: 1, address:1, city:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1})
+                .exec(function (err, addedInstitutes) {
+                if (!err){
+                    res.json(addedInstitutes);
+                } else {throw err;}
+                });
+            }else{
+                var addedInstitutes = targetStudyProvider
+                .find({_createdBy: {$exists: true}, _createdBy: thisUser._id},{name:1, website: 1, address:1, city:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1})
+                .exec(function (err, addedInstitutes) {
+                if (!err){
+                    res.json(addedInstitutes);
+                } else {throw err;}
+                });
+            }
+        }else{
+            res.json(null);
+        }
+
+
+    } else {throw err;}
+});
+    
+    
+});
+
 
 router.get('/editShortlist/:userId', function(req, res) {
     var userId = req.params.userId;

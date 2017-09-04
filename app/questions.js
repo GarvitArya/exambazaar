@@ -18,6 +18,7 @@ mongoose.Promise = require('bluebird');
 
 //to add an question
 router.post('/save', function(req, res) {
+    console.log('Starting question save!');
     var thisQuestion = req.body;
     var questionId = '';
     if(thisQuestion._id){
@@ -33,6 +34,7 @@ router.post('/save', function(req, res) {
             }
             existingQuestion.save(function(err, existingQuestion) {
                 if (err) return console.error(err);
+                console.log(existingQuestion);
                 res.json(existingQuestion);
             });
         }else{
@@ -42,6 +44,7 @@ router.post('/save', function(req, res) {
             }
             existingQuestion.save(function(err, existingQuestion) {
                 if (err) return console.error(err);
+                console.log(existingQuestion);
                 res.json(existingQuestion);
             }); 
         }
@@ -70,6 +73,18 @@ router.get('/exam/:examId', function(req, res) {
     var examId = req.params.examId;
     var allQuestions = question
         .find({exam: examId})
+        .exec(function (err, allQuestions) {
+        if (!err){
+            res.json(allQuestions);
+        } else {throw err;}
+    });
+    
+});
+
+router.get('/testQuestions/:testId', function(req, res) {
+    var testId = req.params.testId;
+    var allQuestions = question
+        .find({test: testId})
         .exec(function (err, allQuestions) {
         if (!err){
             res.json(allQuestions);

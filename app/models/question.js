@@ -19,7 +19,7 @@ var questionSchema = mongoose.Schema({
             _correct: { type: Boolean, default: false},
             image: {type: String},
         }],
-        explanation: {type: String},
+        solution: {type: String},
         //answer: {type: String},
         images: [{type: String}],
     }],

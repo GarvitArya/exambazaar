@@ -207,6 +207,7 @@
                     <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
                     <li><a ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a></li>
                     <li><a ui-sref="coachingGroupSummary">Coaching Group Summary</a></li>
+                    <li><a ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })">Added Institutes</a></li>
                   </ul>
                 </li>
             </ul>
@@ -240,7 +241,7 @@
                 <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
                 <li ng-if="permittedToAdd.indexOf(sessionuser.userId)!=-1"><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
                 <li ng-if="permittedToDisable.indexOf(sessionuser.userId)!=-1"><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
-
+                <li><a ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })">Added Institutes</a></li>
                 <!--<li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>-->
               </ul>
             </li>
