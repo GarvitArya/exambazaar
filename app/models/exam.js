@@ -40,6 +40,7 @@ var examSchema = mongoose.Schema({
         cycleNumber: {type: String, required: true},
         name: {type: String, required: true},
         description: {type: String},
+        active: {type: Boolean, default:'false'},
         studentsAppearing: {type: String},
         studentSeats: {type: String},
         brochure: [{
@@ -57,6 +58,10 @@ var examSchema = mongoose.Schema({
             description: {type: String},
             url: {type: String, required: true},
         }],
+        
+        
+        examMode: {type: Boolean, default:'false'}, //true means online only, false means other than online also.
+        
         steps: {
             registration: {type: Boolean},
             admitCard: {type: Boolean},
@@ -165,9 +170,7 @@ var examSchema = mongoose.Schema({
                 text: {type: String},
             },
         },
-        active: {type: Boolean, default:'false'},
-
-        examMode: {type: Boolean, default:'false'}, //true means online only, false means other than online also.
+        
         
     }],
 });
