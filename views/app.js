@@ -6892,7 +6892,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.loginState = $rootScope.stateName;
             
             
-            $rootScope.permittedToAdd = ['59899631a68cea0154b49502', '59a9749112e754442af93d43', '59a24d743011356248da915e', '59085f0fc7289d0011d6ea8c', '59a158c496e4b71238967ab4'];
+            $rootScope.permittedToAdd = ['59899631a68cea0154b49502', '59a9749112e754442af93d43', '59a24d743011356248da915e', '59085f0fc7289d0011d6ea8c', '5995886d0f6bc61245d8464f'
+                                        ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             //ABCD
             var headerGreenStates = ["findCoaching", "showCoaching", "showGroup"];
@@ -15142,6 +15143,36 @@ function getLatLng(thisData) {
              };
             
     }]);    
+    
+    exambazaar.controller("editExamController", 
+        [ '$scope',  'thisexam', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', function($scope, thisexam, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope){
+        $scope.exam = thisexam.data;
+        $scope.streams = streamList.data;
+            
+        $rootScope.title = $scope.exam.displayname;        
+        $scope.reload = function(){
+            $state.reload();
+        };
+        
+        $scope.resultFormats = [
+            "Rank",
+            "Percentile",
+            "Percentage",
+            "Marks",
+            "Pass/Fail",
+        ];
+        $scope.examFrequencies = [
+            "Yearly",
+            "Half-Yearly",
+            "Quarter-Yearly",
+            "Monthly",
+            "Anytime",
+        ];
+        $scope.cycleYears = ["2016","2017","2018","2019","2020"];
+        
+        $scope.cycleNumbers = ["1","2","3","4","5","6","7","8","9","10","11","12"];    
+    }]);
+        
     exambazaar.controller("addExamController", 
         [ '$scope',  'examList', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', function($scope, examList, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope){
             
@@ -20674,6 +20705,33 @@ function getLatLng(thisData) {
                 examList: ['ExamService',
                     function(ExamService){
                     return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
+                exam: function() { return {}; }
+            }
+        })
+        .state('editExam', {
+            url: '/:examId/editExam',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'editExam.html',
+                    controller: 'editExamController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisexam: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExam($stateParams.examId);    
                 }],
                 streamList: ['StreamService',
                     function(StreamService){

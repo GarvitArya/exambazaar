@@ -23,13 +23,13 @@
         text-decoration: none;
     }
     #pageLogoHolder{
-        border: 1px solid rgba(0,0,0,0.8);
-        min-height: 90px;
-        width: 90px;
-        border-radius: 4px;
+        border: 1px solid #ccc;
+        min-height: 150px;
+        width: 150px;
+        border-radius: 2px;
     }
     .pageLogo{
-        max-height: 50px;
+        max-height: 120px;
     }
     #badge{
         background: #20C39A;
@@ -55,14 +55,15 @@
         padding: 5px 5px;
         display: inline-block;
         border: 1px solid #ccc;
-        border-radius: 4px;
         box-sizing: border-box;
     }
     textarea:hover {
-        border: 1px solid #FF5A5F;
+        border: solid 1px #707070;
+        box-shadow: 0 0 2px 1px #969696;
     }
     textarea:focus {
-        border: 1px solid #FF5A5F;
+        border: solid 1px #707070;
+        box-shadow: 0 0 2px 1px #969696;
     }
     input[type="text"]
     {
@@ -70,18 +71,17 @@
         color: #333333;
         margin-bottom: 5px;
         padding: 4px;
-        border: solid 1px #333333;
+        border: solid 1px #ccc;
         transition: box-shadow 0.3s, border 0.3s;
-        box-shadow: 0 0 5px 1px white;
+        box-shadow: 0 0 2px 1px white;
     }
-    
     input[type="text"]:hover {
         border: solid 1px #707070;
-        box-shadow: 0 0 5px 1px #969696;
+        box-shadow: 0 0 2px 1px #969696;
     }
     input[type="text"]:focus {
         border: solid 1px #707070;
-        box-shadow: 0 0 5px 1px #969696;
+        box-shadow: 0 0 2px 1px #969696;
     }
     #addText{
         color: #FF5A5F;
@@ -95,51 +95,52 @@
     
     
 <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="paddingTB10 height100 width100">
-    <div layout="row" layout-align="start center" class="marginTB10 secondFont font20 bold  width100 paddingB5 headingBottomBorder" ng-if="showAllExams">
-        <div layout="row" layout-align="start center" class="">
-            <div class="marginR10">   
-                All Exams listed on Exambazaar
-            </div>
-            <div ng-click="addNewExam()" class="font14 badge" id="badge">
-                Add a New Exam
-            </div>
-            
+    <div layout="row" layout-align="start center" class="secondFont font32 bold  width100 headingBottomBorder2" ng-if="exam">
+        <div layout="row" layout-align="start center" >
+            {{exam.displayname}} Exam
         </div>
     </div>
-    <div layout="row" layout-align="start start" layout-wrap ng-if="showAllExams" class="paddingTB20">
-        <div flex="25" layout="column" layout-align="start start" ng-repeat="stream in streams" class="marginB10">
-            <div class="font16 bold">
-                {{stream.displayname}}
+    <div layout="row" layout-align="start start" class="marginT20 secondFont font12 textBlack width100 paddingB20 greyBottomBorder">
+        <div layout="row" layout-align="start start"  class="width100">
+            <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
+                <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
+                <span ng-show="exam.logo && exam.logo !=''" class="font9 textDarkGrey" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
+                    Change Logo
+                </span>
+                <span class="textDarkGrey" ng-show="exam.logo == '' || !exam.logo" ng-click="">
+
+                    <div layout="column" layout-align="center center" class="width100 height100" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
+                        <span class="md-display-1">
+                            <i class="fa fa-camera" aria-hidden="true"></i>
+                        </span>
+                        <span>
+                            Add Logo
+                        </span>
+                    </div>
+                </span>
             </div>
-            <div layout="row" layout-align="start start" layout-wrap >
-                <div layout="row" layout-align="start start" class="font12 marginR5 marginB5 badge" id="examTagHolder" ng-repeat="existingExam in exams | orderBy: '-rank'" ng-if="existingExam.stream._id == stream._id" >
-                    {{existingExam.displayname}}<a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank"><i class="fa fa-pencil-square font20 marginL10" aria-hidden="true"></i></a>
+            <div flex layout="column" layout-align="start start"  class="paddingL20 width100">
+                <div layout="row" layout-align="start center" class="width100 font14">
+                    <div flex="15" layout="row" layout-align="start center">
+                        Website of {{exam.displayname}}
+                    </div>
+                    <div layout="row" layout-align="start center" flex class="marginL20">
+                        <input type="text" class="width100" ng-model="exam.website"  placeholder="Exam Name">
+                    </div>
+                </div>
+                <div layout="row" layout-align="start center" class="width100 font14">
+                    <div flex="15" layout="row" layout-align="start center"  class="width100">
+                        Exam Description
+                    </div>
+                    <div layout="row" layout-align="start center" flex class="marginL20">
+                        <textarea class="font12 width100" ng-model="exam.briefDescription" placeholder="Brief Description of Exam" rows="4"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        
     </div>
     
-    <div layout="row" layout-align="start center" class="marginTB10 secondFont font20 bold  width100 paddingB5 headingBottomBorder" ng-if="exam">
-        <div layout="row" layout-align="start center" >
-            {{exam.displayname}} Exam Details
-        </div>
-        <div layout="row" layout-align="start center" class="badge marginL10 font12 textWhite" id="badge" ng-if="exam" >
-            <span ng-click="unsetExam()">Back to all exams</span>
-        </div>
-        <div flex layout="row" layout-align="end center"  class="width100">
-            <md-button class="md-danger md-small secondFont tolowercase font10" ng-click="unsetExam()">
-                Cancel
-            </md-button>
-            <md-button class="md-green2 md-small secondFont tolowercase bold font12" ng-click="addExam()">
-                Save
-            </md-button>
-        </div>
-    </div>
-    
-    
-    <div layout="row" layout-align="start start" class="marginT20 secondFont font12 textBlack paddingB10 width100" ng-if="exam">
+    <div layout="row" layout-align="start start" class="marginT10 secondFont font12 textBlack paddingB10 width100" ng-if="exam">
         <div flex layout="column" layout-align="start start">
             <div class="width100">
                 Exam Name
@@ -161,7 +162,7 @@
                 Stream
             </div>
             <div class="width100">
-                <md-select ng-model="exam.stream._id" placeholder="Select the stream of the exam" class="margin0">
+                <md-select ng-model="exam.stream" placeholder="Select the stream of the exam" class="margin0">
                     <md-option ng-repeat="stream in streams" ng-value="stream._id">
                     {{stream.displayname}}
                     </md-option>
@@ -1299,4 +1300,18 @@
           <textarea class="font12 width100 paddingLR10" ng-model="newExamCycle.examdates.finalResultDate.text" placeholder="Write a brief about the final result date step & process. Maybe the official paragraph elaborating on the steps and additional information will suffice" rows="6"></textarea>
       </md-dialog>
     </div>    
+</div>
+
+<div layout="row" layout-align="start center" class="bottomBar">
+    <div layout="row" layout-align="start center" >
+        Save changes you have made to {{exam.displayname}}?
+    </div>
+    <div flex layout="row" layout-align="end center"  class="width100">
+        <md-button class="md-black md-small secondFont tolowercase font10" ng-click="reload()">
+            Cancel
+        </md-button>
+        <md-button class="md-green2 md-small secondFont tolowercase bold font12" ng-click="addExam()">
+            Save
+        </md-button>
+    </div>
 </div>
