@@ -81,7 +81,9 @@
                 </a>
             </div>
             <div flex="10" class="font10">
-                {{institute.city}}
+                <a ui-sref="targetStudyProviders({ city:{{'institute.city'}} })" target="_blank" id="link">
+                <strong>{{institute.city}}</strong>
+                </a>
             </div>
             <div flex="10" class="font10">
                 {{institute._createdBy.basic.name}}

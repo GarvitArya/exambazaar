@@ -1217,6 +1217,36 @@ function closeVerifyCI(userId, pastInternId, res){
         if(nElements == 0){
             res.toverifyci = true;
             res.toverifyciCount = 0;
+            closeCreatedCI(userId, pastInternId, res);
+        }
+    } else {throw err;}
+    });
+};
+function closeCreatedCI(userId, pastInternId, res){
+    console.log('Starting Coaching created by process:');
+    var allElements = targetStudyProvider
+    .find({_createdBy: userId},{_createdBy:1})
+    .exec(function (err, allElements) {
+    if (!err){
+        var nElements = allElements.length;
+        var eCounter = 0;
+        allElements.forEach(function(thisElement, index){
+            thisElement._createdBy = pastInternId;
+            thisElement.save(function(err, thisElement) {
+                if (err) return console.error(err);
+                console.log('Creation of CI closed: ' + thisElement._id);
+                eCounter += 1;
+
+                if(eCounter == nElements){
+                    res.createdCI = true;
+                    res.createdciCount = nElements;
+                    closeContactCI(userId, pastInternId, res);
+                }
+            });
+        });
+        if(nElements == 0){
+            res.toverifyci = true;
+            res.toverifyciCount = 0;
             closeContactCI(userId, pastInternId, res);
         }
     } else {throw err;}
