@@ -14985,7 +14985,6 @@ function getLatLng(thisData) {
         [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', 'questionService', '$state', '$mdDialog', '$timeout', 'thisTestQuestions', function($scope, Notification, $rootScope, thisTest, Upload, ImageService, questionService, $state, $mdDialog, $timeout, thisTestQuestions){
             $scope.test = thisTest.data;
             $scope.thisTestQuestions = thisTestQuestions.data;
-            console.log($scope.thisTestQuestions);
             $scope.toAddQuestion = null;
             $scope.questionTypes = ["MCQ"];
             $scope.addNewQuestionSet = function(){
@@ -15004,8 +15003,40 @@ function getLatLng(thisData) {
                 };
                 $scope.addNewQuestion();
             };
+            
             $scope.reload = function(){
                 $state.reload();
+            };
+            $scope.readyToSave = function(){
+                var ready = true;
+                if($scope.toAddQuestion._startnumber == ''){
+                    ready = false;
+                }
+                if($scope.toAddQuestion.questions.length > 1 && $scope.toAddQuestion._endnumber == ''){
+                   ready = false;
+                }
+                if($scope.toAddQuestion.questions.length == 1){
+                   $scope.toAddQuestion._endnumber = '';
+                   $scope.toAddQuestion.context = '';
+                   $scope.toAddQuestion._groupOfQuestions = false;
+                   $scope.toAddQuestion._hascontext = false;
+                }
+                if($scope.toAddQuestion.questions.length > 1){
+                    $scope.toAddQuestion._groupOfQuestions = true;
+                    $scope.toAddQuestion._hascontext = true;
+                }
+                $scope.toAddQuestion.questions.forEach(function(thisQuestion, index){
+                    if(thisQuestion.question.length < 10){
+                        ready = false;
+                    }
+                    thisQuestion.options.forEach(function(thisOption, oindex){
+                        if(thisOption.option == ''){
+                            ready = false;
+                        }
+                    });
+                });
+                ready = !ready;
+                return ready;
             };
             $scope.addNewQuestion = function(){
                 if($scope.toAddQuestion){
@@ -15021,7 +15052,16 @@ function getLatLng(thisData) {
                     $scope.addNewOption(newQuestion);
                     $scope.addNewOption(newQuestion);
                     $scope.toAddQuestion.questions.push(newQuestion);
+                    
+                    
                 }
+            };
+            $scope.removeQuestionFromSet = function(question, index){
+                console.log('I am here ' + index);
+                if(index && index < $scope.toAddQuestion.questions.length){
+                    $scope.toAddQuestion.questions.splice(index, 1);
+                    console.log('Done');
+                }    
             };
             $scope.addNewOption = function(question){
                 if(!question.options){
@@ -15045,6 +15085,7 @@ function getLatLng(thisData) {
                     console.log(data);
                     $scope.toAddQuestion = data;
                     $scope.showSavedDialog();
+                    $state.reload();
                 })
                 .error(function (data, status, header, config) {
                     console.log('Error ' + data + ' ' + status);

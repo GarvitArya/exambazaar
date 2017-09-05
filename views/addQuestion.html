@@ -37,10 +37,10 @@
         margin-top: 10px;
     }
     textarea:hover {
-        border: 1px solid #FF5A5F;
+        border: 1px solid #969696;
     }
     textarea:focus {
-        border: 1px solid #FF5A5F;
+        border: 1px solid #969696;
     }
     #pageLogoHolder{
         border: 1px solid #969696;
@@ -69,6 +69,9 @@
     #questionNoBadge{
         background-color: #FF5A5F;
         padding: 5px;
+    }
+    .disabled{
+        background-color: #FF5A5F;
     }
 </style>
 <div class="whiteBackground mainContent" >
@@ -104,15 +107,7 @@
                 <div layout="row" layout-align="start center" class="marginR20">
                     Add Question or Question Set
                 </div>
-                <div layout="row" layout-align="start center">
-                    <div layout="row" layout-align="start center" class="marginR10">
-                        <input type="text" class="" ng-model="toAddQuestion._startnumber"  placeholder="Q.No. in PDF">
-                    </div>
-                    <div layout="row" layout-align="start center" class="marginR10" ng-if="toAddQuestion._groupOfQuestions">
-                        <input type="text" class="" ng-model="toAddQuestion._endnumber"  placeholder="Ending Q.No. in PDF">
-                    </div>
                 
-                </div>
             </div>
             <div layout="row" layout-align="start center" class="width100 marginT5 paddingB10 gainsboroBottomBorder" layout-wrap>
                 <div layout="row" layout-align="start center" class="marginR10">
@@ -139,8 +134,11 @@
             <div layout="column" layout-align="start start" class="font12 width100 marginT20" ng-repeat="question in toAddQuestion.questions">
                 <div layout="row" layout-align="start start" class="width100">
                     <div flex="20" layout="column" layout-align="center center" class="textDarkGrey width100 paddingLR10" >
-                        <div class="width100 font16 bold">
-                            Question {{$index + 1}}
+                        <div layout="row" layout-align="start center" class="width100 font16 bold">
+                            <div layout="row" layout-align="start center">Question {{$index + 1}}</div>
+                            <div layout="row" layout-align="start center" ng-click="removeQuestionFromSet(question, $index)" class="marginL20" ng-if="$index > 0">
+                                <i class="fa fa-trash font20" aria-hidden="true"></i>
+                            </div>
                         </div>
                         
                         <div layout="column" layout-align="start start" class="font12 width100 marginT20" >
@@ -176,8 +174,8 @@
                         </div>
                         <div layout="column" layout-align="start start" class="width100 marginB5" ng-repeat="option in question.options">
                             <div layout="row" layout-align="start center" class="width100">
-                                <div layout="row" layout-align="start center" flex="20">
-                                    <div class="font14 bold marginR10">
+                                <div layout="row" layout-align="start center" flex="30">
+                                    <div class="font14 bold marginR20">
                                         Option {{$index+1}}
                                     </div>
                                     <div>
@@ -214,7 +212,7 @@
             
             <div layout="row" layout-align="center center" id="upload3" ng-click="addNewQuestion()" class="width100 marginT10">
                 <span>
-                    <i class="fa fa-plus" aria-hidden="true"></i> Add Option
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add another question to this set
                 </span>
             </div>
             
@@ -224,13 +222,30 @@
 
 <div class="bottomBar">
     <div layout="row" layout-align="start center">
-        <div flex ="80">
-            <span>
+        <div layout="row" layout-align="start center">
+            <div>
             Do you want to save your changes to the question? 
-            </span>
+            </div>
         </div>
-        <div layout="row" flex = "20">
-            <md-button class="md-green2 md-small font10 width8" ng-click="saveNewQuestion()">
+        <div layout="row" layout-align="end center" flex>
+            <div class="marginR20">
+                <div ng-if="!readyToSave()">
+                    <i class="fa fa-check-circle text-primary font20" aria-hidden="true"></i> Good to add!
+                </div>
+                <div ng-if="readyToSave()">
+                    <i class="fa fa-times danger font20" aria-hidden="true"></i> Enter all details before you can add
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="marginR20">
+                <div layout="row" layout-align="start center" class="marginR10">
+                    <input type="text" class="" ng-model="toAddQuestion._startnumber"  placeholder="Q.No. in PDF">
+                </div>
+                <div layout="row" layout-align="start center" class="marginR10" ng-if="toAddQuestion._groupOfQuestions">
+                    <input type="text" class="" ng-model="toAddQuestion._endnumber"  placeholder="Ending Q.No. in PDF">
+                </div>
+
+            </div>
+            <md-button class="md-green2 md-small font10 width8" ng-click="saveNewQuestion()" ng-disabled="readyToSave()">
             Save
             </md-button>
             <md-button class="md-default md-cancel md-small font10 width8" ng-click="reload()">
