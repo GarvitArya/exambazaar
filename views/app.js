@@ -15016,10 +15016,10 @@ function getLatLng(thisData) {
                    ready = false;
                 }
                 if($scope.toAddQuestion.questions.length == 1){
-                   $scope.toAddQuestion._endnumber = '';
+                   /*$scope.toAddQuestion._endnumber = '';
                    $scope.toAddQuestion.context = '';
                    $scope.toAddQuestion._groupOfQuestions = false;
-                   $scope.toAddQuestion._hascontext = false;
+                   $scope.toAddQuestion._hascontext = false;*/
                 }
                 if($scope.toAddQuestion.questions.length > 1){
                     $scope.toAddQuestion._groupOfQuestions = true;
