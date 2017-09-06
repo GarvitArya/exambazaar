@@ -267,7 +267,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getAddedInstitutes = function(userId) {
             return $http.get('/api/users/addedInstitutes/'+userId, {userId: userId});
         };
-        
+        this.getAddedQuestions = function(userId) {
+            return $http.get('/api/users/addedQuestions/'+userId, {userId: userId});
+        };
         this.getEmails = function(userId) {
             return $http.get('/api/users/emails/'+userId, {userId: userId});
         };
@@ -9723,6 +9725,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.pageURL = currURL;*/
             $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
     }]);
+        
     exambazaar.controller("addedInstitutesController", 
         [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam){
             $scope.user = thisuser.data;
@@ -9764,6 +9767,56 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             
     }]);
+        
+    exambazaar.controller("addedQuestionsController", 
+        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedQuestions', 'ebteam', 'examList', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedQuestions, ebteam, examList){
+            $scope.user = thisuser.data;
+            var exams = examList.data;
+            
+            if($scope.user && ($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development')){
+                $scope.authorized = true;
+            }
+            $scope.allAddedQuestions = addedQuestions.data;
+            $scope.addedQuestions = addedQuestions.data;
+            var ebteam = ebteam.data;
+            var ebteamIds = ebteam.map(function(a) {return a._id;});
+            var examIds = exams.map(function(a) {return a._id;});
+            
+            var listedUsers = [];
+            
+            $scope.addedQuestions.forEach(function(thisQuestion, index){
+                var addedByUser = thisQuestion._createdBy;
+                if(listedUsers.indexOf(addedByUser) == -1){
+                    listedUsers.push(addedByUser);
+                }
+                var uIndex = ebteamIds.indexOf(addedByUser);
+                thisQuestion._createdBy = ebteam[uIndex];
+                
+                var eIndex = examIds.indexOf(thisQuestion.exam);
+                if(eIndex != -1){
+                    thisQuestion.exam = exams[eIndex];
+                }
+            });
+            $scope.listedUsers = [];
+            listedUsers.forEach(function(thisUser, index){
+                var uIndex = ebteamIds.indexOf(thisUser);
+                $scope.listedUsers.push(ebteam[uIndex]);
+                
+            });
+            $scope.updateAddedQuestions = function(user){
+                
+                var userId = user._id;
+                $scope.addedQuestions = [];
+                $scope.allAddedQuestions.forEach(function(thisQuestion, index){
+                    var addedByUser = thisQuestion._createdBy;
+                    if(addedByUser._id == userId){
+                        $scope.addedQuestions.push(thisQuestion);
+                    }
+                });
+            };
+            
+    }]);
+        
     exambazaar.controller("cityGroupExamQueryController", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
         
@@ -15108,6 +15161,15 @@ function getLatLng(thisData) {
             $scope.setQuestion = function(question){
                 console.log('I am here');
                 $scope.toAddQuestion = question;
+                
+                $scope.toAddQuestion.questions.forEach(function(thisQuestion, index){
+                    if(!thisQuestion.solution){
+                        thisQuestion.solution = {
+                            solution: '',
+                            images: [],
+                        };
+                    }
+                });
             };
             $scope.showSavedDialog = function(ev) {
                 $mdDialog.show({
@@ -15234,6 +15296,7 @@ function getLatLng(thisData) {
                         }).then(function (resp) {
                                 console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
                                 thisFile.link = $(resp.data).find('Location').text();
+                                
                                 if(!question.solution.images){
                                     question.solution.images = [];
                                 }
@@ -18949,7 +19012,40 @@ function getLatLng(thisData) {
                 
             }
         })
-        
+        .state('addedQuestions', {
+            url: '/user/:userId/addedQuestions', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'addedQuestions.html',
+                    controller: 'addedQuestionsController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                ebteam: ['UserService',
+                    function(UserService){
+                    return UserService.getEBTeam();
+                }],
+                addedQuestions: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getAddedQuestions($stateParams.userId);
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+            }
+        })
         .state('blog', {
             url: '/blog', //masterId?
             views: {

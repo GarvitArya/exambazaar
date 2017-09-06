@@ -12,6 +12,7 @@ var coupon = require('../app/models/coupon');
 var userrefer = require('../app/models/userrefer');
 var email = require('../app/models/email');
 var cisaved = require('../app/models/cisaved');
+var question = require('../app/models/question');
 var mongoose = require('mongoose');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
 var helper = require('sendgrid').mail;
@@ -1688,6 +1689,50 @@ router.get('/addedInstitutes/:userId', function(req, res) {
     
 });
 
+
+router.get('/addedQuestions/:userId', function(req, res) {
+    var userId = req.params.userId.toString();
+    console.log('Finding Added Questions for: ' + userId);
+    
+    var thisUser = user
+    .findOne({'_id': userId},{basic:1, userType:1})
+    .exec(function (err, thisUser) {
+    if (!err){
+        if(thisUser){
+            var fullUserScope = false;
+            if(thisUser.userType == 'Master' || thisUser._id == '59085f0fc7289d0011d6ea8c'){
+               fullUserScope = true; 
+            }
+            //,{exam:1, test:1, _createdBy:1, _created:1}
+            if(fullUserScope){
+                var addedQuestions = question
+                .find({_createdBy: {$exists: true}})
+                .deepPopulate('test')
+                .exec(function (err, addedQuestions) {
+                if (!err){
+                    res.json(addedQuestions);
+                } else {throw err;}
+                });
+            }else{
+                var addedQuestions = question
+                .find({_createdBy: {$exists: true}, _createdBy: thisUser._id})
+                .deepPopulate('test')
+                .exec(function (err, addedQuestions) {
+                if (!err){
+                    res.json(addedQuestions);
+                } else {throw err;}
+                });
+            }
+        }else{
+            res.json(null);
+        }
+
+
+    } else {throw err;}
+});
+    
+    
+});
 
 router.get('/editShortlist/:userId', function(req, res) {
     var userId = req.params.userId;
