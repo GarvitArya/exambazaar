@@ -82,8 +82,17 @@
             <div layout="column" layout-align="start start">
                 <div layout="row" layout-align="start center">
                     <div class="marginR20">
-                        {{test.name}}</div>
-                    <div><a class="" ng-href="{{test.url.question}}" target="_blank" id="link"><i class="fa fa-file-pdf-o font24" aria-hidden="true"></i>&nbsp;<span class="font12">Download</span></a></div>
+                        {{test.name}}
+                    </div>
+                    <div layout="row" layout-align="start start">
+                        <a class="" ng-href="{{test.url.question}}" target="_blank" id="link">
+                            <i class="fa fa-file-pdf-o font20" aria-hidden="true"></i>&nbsp;<span class="font12">Question Paper</span>
+                        </a>
+                        <a class="marginL10" ng-href="{{test.url.answer}}" target="_blank" id="link" ng-if="test.url.answer">
+                            <i class="fa fa-file-pdf-o font20" aria-hidden="true"></i>&nbsp;<span class="font12">Answer</span>
+                        </a>
+                    </div>
+                    
                 </div>
                 <div class="font12">{{test.description}}</div>
             </div>
@@ -96,9 +105,7 @@
                         - {{testQuestion._endnumber}}
                     </span>
                 </div>
-                <div layout="row" layout-align="start center" class="badge marginR10" id="questionNoBadge" ng-click="addNewQuestionSet()">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </div>
+                
             </div>
         </div>
         
@@ -107,7 +114,9 @@
                 <div layout="row" layout-align="start center" class="marginR20">
                     Add Question or Question Set
                 </div>
-                
+                <div layout="row" layout-align="start center" class="badge marginL10" id="questionNoBadge" ng-click="addNewQuestionSet()">
+                    <i class="fa fa-plus " aria-hidden="true"></i> Add a new Question Set
+                </div>
             </div>
             <div layout="row" layout-align="start center" class="width100 marginT5 paddingB10 gainsboroBottomBorder" layout-wrap>
                 <div layout="row" layout-align="start center" class="marginR10">

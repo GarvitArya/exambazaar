@@ -140,6 +140,73 @@
         </div>
     </div>
     
+    <div layout="row" layout-align="start start" class="marginT20 secondFont font12 textBlack width100 paddingB20 greyBottomBorder">
+        <!--<div flex="10" layout="column" layout-align="start start" ng-if="!newExamCycle">
+            <div layout="row" layout-align="start center"  class="width100">
+                Add Official Pages
+            </div>
+            <div layout="row" layout-align="start center"  class="width100">
+                <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder" ng-click="addNewOfficialLink()">
+                    <span class="textDarkGrey" ng-click="">
+                        <div layout="column" layout-align="center center" class="width100 height100"  >
+                            <span class="md-display-1">
+                                <i class="fa fa-link" aria-hidden="true"></i>
+                            </span>
+                            <span>
+                                Add Link
+                            </span>
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>-->
+        
+        <div flex layout="column" layout-align="start start">
+            <div layout="row" layout-align="start center"  class="width100">
+                <div class="marginR20">
+                    Official Links for {{exam.displayname}}
+                </div>
+                <div>
+                
+                </div>
+            </div>
+            <div layout="column" layout-align="start start"  class="gainsboroBorder padding10 width100">
+                <div layout="row" layout-align="start center" class="width100 font12 marginB5 bold">
+                    <div flex="40" layout="row" layout-align="start center" class="">
+                        Link
+                    </div>
+                    <div flex="40" layout="row" layout-align="start center" class=" ">
+                        Description
+                    </div>
+                </div>
+                <div layout="row" layout-align="start center" class="width100 font12 marginB5" ng-repeat="link in exam.links">
+                    <div flex="40" layout="row" layout-align="start center" class="">
+                        <a ng-href="{{link.url}}" target="_blank">
+                            {{link.url}}
+                        </a>
+                    </div>
+                    <div flex="40" layout="row" layout-align="start center" class=" ">
+                        {{link.description}}
+                    </div>
+                </div>
+                
+                <div layout="row" layout-align="start center" class="width100 font12 marginTB5" ng-if="newOfficialLink">
+                    <div flex="40" layout="row" layout-align="start center" class="">
+                        <input type="text" class="width100" ng-model="newOfficialLink.url"  placeholder="Official Link URL">
+                    </div>
+                    <div flex="40" layout="row" layout-align="start center" class=" ">
+                        <input type="text" class="width100" ng-model="newOfficialLink.description"  placeholder="1 Line Description">
+                    </div>
+                    <div flex="20" layout="row" layout-align="start center" class="">
+                        <md-button class="md-danger md-small secondFont tolowercase padding0 margin0" ng-click="saveNewOfficialLink()">
+                            Add
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div layout="row" layout-align="start start" class="marginT10 secondFont font12 textBlack paddingB10 width100" ng-if="exam">
         <div flex layout="column" layout-align="start start">
             <div class="width100">
@@ -1135,67 +1202,7 @@
         </div>
     </div>
     
-    <div layout="row" layout-align="start start" class="marginT20 secondFont font12 textBlack paddingB10 width100" ng-if="exam">
-        <div flex="10" layout="column" layout-align="start start" ng-if="!newExamCycle">
-            <div layout="row" layout-align="start center"  class="width100">
-                Add Official Pages
-            </div>
-            <div layout="row" layout-align="start center"  class="width100">
-                <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder" ng-click="addNewOfficialLink()">
-                    <span class="textDarkGrey" ng-click="">
-                        <div layout="column" layout-align="center center" class="width100 height100"  >
-                            <span class="md-display-1">
-                                <i class="fa fa-link" aria-hidden="true"></i>
-                            </span>
-                            <span>
-                                Add Link
-                            </span>
-                        </div>
-                    </span>
-                </div>
-            </div>
-        </div>
-        
-        <div flex layout="column" layout-align="start start">
-            <div layout="row" layout-align="start center"  class="width100">
-                Official Links for {{exam.displayname}}
-            </div>
-            <div layout="column" layout-align="start start"  class="gainsboroBorder padding10 width100">
-                <div layout="row" layout-align="start center" class="width100 font12 marginB5 bold">
-                    <div flex="40" layout="row" layout-align="start center" class="">
-                        Link
-                    </div>
-                    <div flex="40" layout="row" layout-align="start center" class=" ">
-                        Description
-                    </div>
-                </div>
-                <div layout="row" layout-align="start center" class="width100 font12 marginB5" ng-repeat="link in exam.links">
-                    <div flex="40" layout="row" layout-align="start center" class="">
-                        <a ng-href="{{link.url}}" target="_blank">
-                            {{link.url}}
-                        </a>
-                    </div>
-                    <div flex="40" layout="row" layout-align="start center" class=" ">
-                        {{link.description}}
-                    </div>
-                </div>
-                
-                <div layout="row" layout-align="start center" class="width100 font12 marginTB5" ng-if="newOfficialLink">
-                    <div flex="40" layout="row" layout-align="start center" class="">
-                        <input type="text" class="width100" ng-model="newOfficialLink.url"  placeholder="Official Link URL">
-                    </div>
-                    <div flex="40" layout="row" layout-align="start center" class=" ">
-                        <input type="text" class="width100" ng-model="newOfficialLink.description"  placeholder="1 Line Description">
-                    </div>
-                    <div flex="20" layout="row" layout-align="start center" class="">
-                        <md-button class="md-danger md-small secondFont tolowercase padding0 margin0" ng-click="saveNewOfficialLink()">
-                            Add
-                        </md-button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </div>
 
 </div>

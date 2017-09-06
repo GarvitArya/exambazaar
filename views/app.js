@@ -13369,13 +13369,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.skip = 0;
             $scope.extractEmailfromIds = function(){
                 var params = {
-                    limit: $scope.limit,   
-                    skip: $scope.skip,   
+                    limit: parseInt($scope.limit),   
+                    skip: parseInt($scope.skip),   
                 };
                 
                 MasterService.extractEmails(params).success(function (data, status, headers) {
                     console.log(data);
-                    $scope.skip += $scope.limit;
+                    $scope.skip += parseInt($scope.skip) + parseInt($scope.limit);
                 })
                 .error(function (data, status, header, config) {
                     console.log('Error ' + data + ' ' + status);

@@ -42,10 +42,12 @@
             {{exam.tests.length}}
         </div>
         <div layout="row" layout-align="start start" flex layout-wrap>
-            <div ng-repeat="test in exam.tests">
+            <div layout="column" layout-align="center center" ng-repeat="test in exam.tests">
                 <!--ng-click="readTest(test)"-->
                 <!--ng-href="{{test.url.question}}"-->
-                <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB5">{{$index}}. Link</a>
+                <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB5">
+                    {{$index + 1}}. Link&nbsp;&nbsp;<i class="fa fa-anchor" aria-hidden="true" ng-if="test.url.answer"></i>
+                </a>
             </div>
         </div>
         

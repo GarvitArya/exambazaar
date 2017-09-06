@@ -113,7 +113,8 @@
             </div>
             <div layout="row" layout-align="start start" layout-wrap >
                 <div layout="row" layout-align="start start" class="font12 marginR5 marginB5 badge" id="examTagHolder" ng-repeat="existingExam in exams | orderBy: '-rank'" ng-if="existingExam.stream._id == stream._id" >
-                    {{existingExam.displayname}}<a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank"><i class="fa fa-pencil-square font20 marginL10" aria-hidden="true"></i></a>
+                    <span ng-click="setExam(existingExam)">{{existingExam.displayname}}</span>
+                    <a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank"><i class="fa fa-pencil-square font20 marginL10" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>
