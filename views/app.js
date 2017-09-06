@@ -8143,7 +8143,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi', 'Mysore','Hubli'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi', 'Mysore','Hubli', 'Vishakapatnam'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -9796,6 +9796,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 if(eIndex != -1){
                     thisQuestion.exam = exams[eIndex];
                 }
+                thisQuestion.hasSolution = 'No';
+                thisQuestion.questions.forEach(function(thisQuestionPart, index){
+                    
+                });
             });
             $scope.listedUsers = [];
             listedUsers.forEach(function(thisUser, index){

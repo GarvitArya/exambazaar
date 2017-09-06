@@ -30,7 +30,7 @@
     </div>
     <div layout="column" layout-align="start start" ng-if="authorized">
         <div layout="row" layout-align="center center" class="font20 text-primary bold width100">
-            Questions Added - Report for {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{addedQuestions.length}}</span>
+            Question Sets Added - Report for {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{addedQuestions.length}}</span>
         </div>
         <div layout="row" layout-align="center center" class="width100 marginTB10 font12">
             <div layout="row" layout-align="center center" class="marginR10">
@@ -49,11 +49,11 @@
             <div flex="5">
                 S. No.
             </div>
-            <div flex="30">
+            <div flex="15">
                 Test
             </div>
             <div flex="10">
-                Question
+                Exam
             </div>
             <div flex="10">
                 Added By
@@ -62,44 +62,51 @@
                 Created on
             </div>
             <div flex="10">
-                #Exams
+                Question Set
             </div>
             <div flex="10">
-                #Phone | Mobiles
+                #Questions
             </div>
+            
             <div flex="10">
+                #Images
+            </div>
+            <!--<div flex="10">
                 #Email | Websites
-            </div>
+            </div>-->
         </div>
         <div flex layout="row" layout-align="start center" ng-repeat="question in addedQuestions | orderBy:['-_created']" class="width100 greyDashedBottomBorder font10">
             <div flex="5">
                 {{$index+1}}
             </div>
-            <div flex="30" class="font12">
-                <a ui-sref="claim({ coachingId:{{'institute._id'}} })" target="_blank" id="link">
+            <div flex="15" class="font12">
+                <a ui-sref="addQuestion({ testId:{{'question.test._id'}} })" target="_blank" id="link">
                 <strong>{{question.test.name}}</strong>
                 </a>
             </div>
             <div flex="10" class="font10">
-                <a ui-sref="targetStudyProviders({ city:{{'institute.city'}} })" target="_blank" id="link">
-                <strong>{{institute.city}}</strong>
-                </a>
+                {{question.exam.displayname}}
+                
             </div>
             <div flex="10" class="font10">
-                {{institute._createdBy.basic.name}}
+                {{question._createdBy.basic.name}}
             </div>
             <div flex="10" class="font10">
-                {{institute._created | date: "dd-MMM-yy HH:mm"}}
+                {{question._created | date: "dd-MMM-yy HH:mm"}}
             </div>
             <div flex="10" class="font10">
-                {{institute.exams.length}}
+                {{question._startnumber}}<span ng-if="question._endnumber && question._endnumber!=''"> - {{question._endnumber}}</span>
             </div>
             <div flex="10" class="font10">
-                {{institute.phone.length}} | {{institute.mobile.length}}
+                {{question.questions.length}}
             </div>
+            
             <div flex="10" class="font10">
+                {{question.images.length}}
+            </div>
+            <!--<div flex="10" class="font10">
                 {{institute.email.length}} | {{institute.website.length}}
-            </div>
+            </div>-->
         </div>
         
         
