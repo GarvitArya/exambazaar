@@ -8143,7 +8143,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi', 'Mysore','Hubli', 'Vishakapatnam'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi', 'Mysore','Hubli', 'Vishakapatnam', 'Thiruvananthapuram'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -11990,12 +11990,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 FB.login(function(response){
                     console.log(response);
                     FB.api('/me/accounts', function(response){
-                        console.log(response.data[2]);
-                        var p_id = response.data[2].id;
+                        console.log(response.data[4]);
+                        var p_id = response.data[4].id;
                         var string_id = '/' + p_id + '/feed';
                         var photos_id = '/' + p_id + '/photos';
-                        var p_accessToken = response.data[2].access_token; 
-                        var p_name = response.data[2].name; 
+                        var p_accessToken = response.data[4].access_token; 
+                        var p_name = response.data[4].name; 
                         console.log('The pagename is: '
                         + p_name + 'Page access token is: ' 
                         + p_accessToken);
