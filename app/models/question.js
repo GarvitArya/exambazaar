@@ -19,7 +19,10 @@ var questionSchema = mongoose.Schema({
             _correct: { type: Boolean, default: false},
             image: {type: String},
         }],
-        solution: {type: String},
+        solution: {
+            solution: {type: String},
+            images: [{type: String}],
+        },
         //answer: {type: String},
         images: [{type: String}],
     }],
@@ -29,6 +32,7 @@ var questionSchema = mongoose.Schema({
     active : { type: Boolean, default: true},
     _readyToPublish : { type: Boolean, default: false},
     _created: { type: Date, default: Date.now },
+    _createdBy: { type: Schema.ObjectId, ref: 'user' },
 });
 questionSchema.plugin(deepPopulate);
 module.exports = mongoose.model('question', questionSchema);

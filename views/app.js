@@ -14982,11 +14982,18 @@ function getLatLng(thisData) {
         
          
     exambazaar.controller("addQuestionController", 
-        [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', 'questionService', '$state', '$mdDialog', '$timeout', 'thisTestQuestions', function($scope, Notification, $rootScope, thisTest, Upload, ImageService, questionService, $state, $mdDialog, $timeout, thisTestQuestions){
+        [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', 'questionService', '$state', '$mdDialog', '$timeout', 'thisTestQuestions', '$cookies', function($scope, Notification, $rootScope, thisTest, Upload, ImageService, questionService, $state, $mdDialog, $timeout, thisTestQuestions, $cookies){
             $scope.test = thisTest.data;
             $scope.thisTestQuestions = thisTestQuestions.data;
             $scope.toAddQuestion = null;
             $scope.questionTypes = ["MCQ"];
+            
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+            }else{
+                $scope.user = null;
+            }
+            
             $scope.addNewQuestionSet = function(){
                 $scope.toAddQuestion = {
                     _groupOfQuestions: false,
@@ -15001,6 +15008,10 @@ function getLatLng(thisData) {
                     exam: $scope.test.exam,
                     
                 };
+                if($scope.user){
+                    $scope.toAddQuestion._createdBy = $scope.user._id;
+                    console.log($scope.toAddQuestion);
+                }
                 $scope.addNewQuestion();
             };
             
@@ -15043,7 +15054,10 @@ function getLatLng(thisData) {
                     var newQuestion = {
                         question: '',
                         options: [],
-                        solution: '',
+                        solution: {
+                            solution: '',
+                            images: [],
+                        },
                         answer: '',
                         images: [],
                     };
@@ -15156,6 +15170,74 @@ function getLatLng(thisData) {
                                 }
                                 $scope.toAddQuestion.images.push(thisFile.link);
                                 console.log($scope.toAddQuestion);
+
+                            }, function (resp){
+                                console.log('Error status: ' + resp.status);
+                            }, function (evt) {
+                                $scope.imageProgess = 0;
+                                thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                                images.forEach(function(thisPhoto, index){
+                                    //console.log(index + ' ' + thisPhoto.uploadProgress + ' ' + nFiles);
+                                    if(!thisPhoto.uploadProgress){
+                                        thisPhoto.uploadProgress = 0;
+                                    }
+                                    $scope.imageProgess += thisPhoto.uploadProgress;
+                                    //console.log($scope.imageProgess);
+                                });
+                                $scope.imageProgess = $scope.imageProgess / nFiles;
+                                //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
+                            });
+
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log("Error");
+                        });   
+
+                    });
+                }
+             };
+            
+            $scope.removeSolutionImage = function(question, image){
+                if(question.solution.images && question.solution.images.length > 0){
+                    var iIndex = question.solution.images.indexOf(image);
+                    if(iIndex != -1){
+                        question.solution.images.splice(iIndex, 1);
+                    }
+                }
+            };
+            
+            $scope.uploadSolutionImages = function (question, images) {
+                
+                var nFiles = images.length;
+                
+                var counter = 0;
+                $scope.imageProgess = 0;
+                if (images && images.length) {
+                    images.forEach(function(thisFile, index){
+
+                        var fileInfo = {
+                            filename: thisFile.name,
+                            contentType: thisFile.type
+                        };
+                         ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                        var s3Request = {};
+                        var allParams = data.params;
+                        for (var key in allParams) {
+                          if (allParams.hasOwnProperty(key)) {
+                            s3Request[key] = allParams[key];
+                          }
+                        }
+                        s3Request.file = thisFile;
+                        Upload.upload({
+                            url: data.endpoint_url,
+                            data: s3Request
+                        }).then(function (resp) {
+                                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                                thisFile.link = $(resp.data).find('Location').text();
+                                if(!question.solution.images){
+                                    question.solution.images = [];
+                                }
+                                question.solution.images.push(thisFile.link);
 
                             }, function (resp){
                                 console.log('Error status: ' + resp.status);

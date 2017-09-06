@@ -77,7 +77,7 @@
 <div class="whiteBackground mainContent" >
     <div id="spacer3">
     </div>
-    <div layout="column" layout-align="start start" class="padded width100">
+    <div layout="column" layout-align="start start" class="padded width100" ng-if="user">
         <div layout="row" layout-align="start center" class="width100 font20 bold paddingB5 headingBottomBorder" >
             <div layout="column" layout-align="start start">
                 <div layout="row" layout-align="start center">
@@ -97,7 +97,7 @@
                 <div class="font12">{{test.description}}</div>
             </div>
             <div layout="row" layout-align="start center" flex layout-wrap class="marginL20">
-                <div ng-repeat="testQuestion in thisTestQuestions" layout="row" layout-align="start center" class="badge marginR10" id="questionNoBadge" ng-click="setQuestion(testQuestion)">
+                <div ng-repeat="testQuestion in thisTestQuestions" layout="row" layout-align="start center" class="badge marginR5 marginB5" id="questionNoBadge" ng-click="setQuestion(testQuestion)">
                     <span>
                         Q. {{testQuestion._startnumber}}
                     </span>
@@ -209,8 +209,36 @@
                             </span>
                         </div>
                         
-                        <div flex layout="column" layout-align="start start" class="marginB10 marginT20 width100">
-                            <textarea class="width100 font14 margin0" ng-model="question.explanation" placeholder="Add solution here (if available)" rows="3"></textarea>
+                        <div flex layout="row" layout-align="start start" class="marginB10 marginT20 width100">
+                            <div flex class="width100">
+                                <textarea class="width100 font14 margin0" ng-model="question.solution.solution" placeholder="Add solution here (if available)" rows="3"></textarea>
+                            </div>
+                            
+                            <div layout="column" layout-align="start start" class="font12 paddingL10" >
+                            <div layout="column" layout-align="center start" class=" textDarkGrey width100 height100" ngf-select="uploadSolutionImages(question, question.solutionimages)" ng-model="question.solutionimages" multiple="multiple" >
+                                <div class="padding10" id="pageLogoHolder">
+                                    <span>
+                                    <i class="fa fa-picture-o font24" aria-hidden="true"></i>
+                                    </span>
+                                    <span>
+                                        Upload Solution Images
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div flex layout="row" layout-align="start start" ng-if="question.solution.images && question.solution.images.length > 0" class="paddingL20 width100" layout-wrap>
+                                <div layout="column" layout-align="center center" ng-repeat="image in question.solution.images" class="marginR10 marginT10">
+                                    <div layout="row" layout-align="center center" class="marginB5">
+                                        <a ng-href="{{image}}" target="_blank">
+                                            <img ng-src="{{image}}" id="screenshot"/>
+                                        </a>
+                                    </div>
+                                    <div layout="row" layout-align="center center" class="badge" id="removebadge" ng-click="removeSolutionImage(question, image)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                         
                     </div>
@@ -226,6 +254,9 @@
             </div>
             
         </div>
+    </div>
+    <div layout="column" layout-align="start start" class="padded width100 font20 danger" ng-if="!user">
+        You are not permitted to access this without logging in! Please login and try again!
     </div>
 </div>
 

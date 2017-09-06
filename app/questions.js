@@ -27,14 +27,14 @@ router.post('/save', function(req, res) {
     console.log(JSON.stringify(thisQuestion));
     
     var existingQuestion = question.findOne({ '_id': questionId },function (err, existingQuestion) {
-        console.log(existingQuestion);
+        //console.log(existingQuestion);
         if(existingQuestion){
             for (var property in thisQuestion) {
                 existingQuestion[property] = thisQuestion[property];
             }
             existingQuestion.save(function(err, existingQuestion) {
                 if (err) return console.error(err);
-                console.log(existingQuestion);
+                console.log('Question saved: ' + existingQuestion._id);
                 res.json(existingQuestion);
             });
         }else{
@@ -44,7 +44,7 @@ router.post('/save', function(req, res) {
             }
             existingQuestion.save(function(err, existingQuestion) {
                 if (err) return console.error(err);
-                console.log(existingQuestion);
+                console.log('Question saved: ' + existingQuestion._id);
                 res.json(existingQuestion);
             }); 
         }
