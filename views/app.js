@@ -15042,6 +15042,16 @@ function getLatLng(thisData) {
         [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', 'questionService', '$state', '$mdDialog', '$timeout', 'thisTestQuestions', '$cookies', function($scope, Notification, $rootScope, thisTest, Upload, ImageService, questionService, $state, $mdDialog, $timeout, thisTestQuestions, $cookies){
             $scope.test = thisTest.data;
             $scope.thisTestQuestions = thisTestQuestions.data;
+            
+            $scope.sortQuestions = function(){
+                $scope.thisTestQuestions.forEach(function(thisQuestion, index){
+                    thisQuestion._startnumber = parseInt(thisQuestion._startnumber);
+                    thisQuestion._endnumber = parseInt(thisQuestion._endnumber);
+                });    
+            };
+            $scope.sortQuestions();
+            
+            
             $scope.toAddQuestion = null;
             $scope.questionTypes = ["MCQ"];
             
@@ -15070,6 +15080,8 @@ function getLatLng(thisData) {
                     console.log($scope.toAddQuestion);
                 }
                 $scope.addNewQuestion();
+                
+                $scope.sortQuestions();
             };
             
             $scope.reload = function(){
@@ -15126,6 +15138,8 @@ function getLatLng(thisData) {
                     
                     
                 }
+                
+                $scope.sortQuestions();
             };
             $scope.removeQuestionFromSet = function(question, index){
                 console.log('I am here ' + index);

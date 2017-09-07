@@ -97,7 +97,7 @@
                 <div class="font12">{{test.description}}</div>
             </div>
             <div layout="row" layout-align="start center" flex layout-wrap class="marginL20">
-                <div ng-repeat="testQuestion in thisTestQuestions" layout="row" layout-align="start center" class="badge marginR5 marginB5" id="questionNoBadge" ng-click="setQuestion(testQuestion)">
+                <div ng-repeat="testQuestion in thisTestQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR5 marginB5" id="questionNoBadge" ng-click="setQuestion(testQuestion)">
                     <span>
                         Q. {{testQuestion._startnumber}}
                     </span>
