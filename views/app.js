@@ -744,6 +744,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getblogs = function(userId) {
             return $http.get('/api/blogposts/getblogs');
         };
+        this.suggestedblogs = function(examId) {
+            return $http.get('/api/blogposts/suggestedblogs/'+examId, {examId: examId});
+        };
         this.headerBlogs = function() {
             return $http.get('/api/blogposts/headerBlogs');
         };
@@ -1592,7 +1595,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
     }]);    
     
-    exambazaar.controller("coachingController", 
+    exambazaar.controller("p4Controller", 
     [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam','streamExams', '$mdDialog', '$geolocation', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams,  $mdDialog, $geolocation){
        
         $scope.hideLoginDialog();
@@ -1619,7 +1622,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
                         $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
                         $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
-                        console.log($scope.userPosition);
+                        //console.log($scope.userPosition);
                         
                     }
                  });
@@ -1658,6 +1661,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.category = thisStream.data;
         $scope.subcategory = thisExam.data;
         //console.log($scope.subcategory);
+        var streamExamsData = streamExams.data;
+        var streamExamsIds = streamExamsData.map(function(a) {return a._id;});
         $scope.streamExams = streamExams.data.map(function(a) {return a.name;});
         
         $scope.providersList = targetStudyProvidersList.data;
@@ -1708,14 +1713,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 getDrivingDistance(origin1, destination1, providerIndex);
                 
                 
-                
-                
-                
-                
-                
-                
-                
-                
             };
             
             var position = $scope.uniqueProviders.indexOf(thisProvider.name);
@@ -1731,35 +1728,46 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.uniqueInstitutes[position].institutes.push(thisProvider);
             }
         });
-        var coursesOffered;
+        var examsOffered;
         var groupResults;
-        var thisProviderCourses;
+        var thisProviderExams;
         var thisProviderResults;
         
         
         $scope.uniqueInstitutes.forEach(function(thisGroup, index){
-            coursesOffered = [];
+            examsOffered = [];
             groupResults = [];
+            
             thisGroup.institutes.forEach(function(thisProvider, pIndex){
-                thisProviderCourses = thisProvider.coursesOffered;
+                thisProviderExams = thisProvider.exams;
                 thisProviderResults = thisProvider.results;
-                thisProviderCourses.forEach(function(thisCourse, cIndex){
-                    if(coursesOffered.indexOf(thisCourse) == -1){
-                        coursesOffered.push(thisCourse);
+                
+                thisProviderExams.forEach(function(thisExam, cIndex){
+                    if(examsOffered.indexOf(thisExam) == -1){
+                        examsOffered.push(thisExam);
+                        
                     }
                 });
                 /*if(thisProviderResults){
                     groupResults = groupResults.concat(thisProviderResults);
                 }*/
                 thisProviderResults.forEach(function(thisResult, rIndex){
-                    if(thisResult.exam == $scope.subcategory._id){
+                    if(thisResult.exam == $scope.subcategory._id && thisResult.image && thisResult.image != ''){
                         groupResults.push(thisResult);
                     }
                 });
                
-                //console.log(coursesOffered);
+                //console.log(examsOffered);
             });
-            thisGroup.coursesOffered = coursesOffered;
+            var streamExamsOffered = [];
+            examsOffered.forEach(function(thisExam, eIndex){
+                var examIndex = streamExamsIds.indexOf(thisExam);
+                if(examIndex != -1){
+                    streamExamsOffered.push(streamExamsData[examIndex]);
+                }
+            });
+            
+            thisGroup.examsOffered = streamExamsOffered;
             thisGroup.groupResults = groupResults;
         });
         /*$scope.providersList.forEach(function(thisProvider, providerIndex){
@@ -6892,6 +6900,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
             $rootScope.loginState = $rootScope.stateName;
+            $rootScope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
             
             
             $rootScope.permittedToAdd = ['59899631a68cea0154b49502', '59a9749112e754442af93d43', '59a24d743011356248da915e', '59085f0fc7289d0011d6ea8c', '5995886d0f6bc61245d8464f'
@@ -18240,7 +18249,7 @@ function getLatLng(thisData) {
                 },
                 'body':{
                     templateUrl: 'p4.html',
-                    controller: 'coachingController',
+                    controller: 'p4Controller',
                 },
                 'footer': {
                     templateUrl: 'footer.html'

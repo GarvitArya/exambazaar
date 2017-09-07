@@ -38,6 +38,37 @@ router.get('/blogpostsCount', function(req, res) {
     });
 });
 
+router.get('/suggestedblogs/:examId', function(req, res) {
+    var examId = req.params.examId;
+    
+    var blogposts = blogpost
+    .find({active: true})
+    .exec(function (err, blogposts) {
+        if (!err){
+            var allBlogposts = [];
+            var nBlogposts = blogposts.length;
+            var counter = 0;
+            if(nBlogposts == 0){
+                res.json([]);
+            }
+            blogposts.forEach(function(thisBlogpost, rindex){
+                var thisBlogUser = thisBlogpost.user;
+                var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                    if (!err){
+                        thisBlogpost.user = thisBlogUserInfo;
+                        counter += 1;
+                        allBlogposts.push(thisBlogpost);
+                        if(counter == nBlogposts){
+                            res.json(allBlogposts);   
+                        }
+                    }
+                });
+
+            });
+        } else {throw err;}
+    });
+});
+
 router.get('/getblogs', function(req, res) {
     var blogposts = blogpost
     .find({active: true})
