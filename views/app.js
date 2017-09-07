@@ -744,8 +744,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getblogs = function(userId) {
             return $http.get('/api/blogposts/getblogs');
         };
-        this.suggestedblogs = function(examId) {
-            return $http.get('/api/blogposts/suggestedblogs/'+examId, {examId: examId});
+        this.suggestedblogs = function(examName) {
+            return $http.get('/api/blogposts/suggestedblogs/'+examName, {examName: examName});
         };
         this.headerBlogs = function() {
             return $http.get('/api/blogposts/headerBlogs');
@@ -1596,7 +1596,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);    
     
     exambazaar.controller("p4Controller", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','targetStudyProvidersList','cities','$state','$stateParams', '$cookies','thisStream','thisExam','streamExams', '$mdDialog', '$geolocation', function($scope,$rootScope, targetStudyProviderService,targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams,  $mdDialog, $geolocation){
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'targetStudyProvidersList','cities','$state','$stateParams', '$cookies', 'thisStream', 'thisExam','streamExams', '$mdDialog', '$geolocation', 'suggestedblogs', function($scope,$rootScope, targetStudyProviderService, targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams,  $mdDialog, $geolocation, suggestedblogs){
        
         $scope.hideLoginDialog();
         $scope.editable = false;
@@ -1607,8 +1607,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
         }
         $scope.userPosition = null;
-        
-        //Gaurav
+       
+     
         if($cookies.getObject('userlocation')){
             $scope.userlocation = $cookies.getObject('userlocation');
             //console.log($scope.userlocation);
@@ -1652,12 +1652,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         
-        
+        $scope.goToBlog = function(blog){
+            var url = $state.href('showblog', {blogpostSlug: blog.urlslug});
+            window.open(url,'_blank');  
+        };
         
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
         $scope.city = $stateParams.cityName;
         
+        $scope.suggestedblogs = suggestedblogs.data;
         $scope.category = thisStream.data;
         $scope.subcategory = thisExam.data;
         //console.log($scope.subcategory);
@@ -13441,7 +13445,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
                 MasterService.extractEmails(params).success(function (data, status, headers) {
                     console.log(data);
-                    $scope.skip += parseInt($scope.skip) + parseInt($scope.limit);
+                    $scope.skip = parseInt($scope.skip) + parseInt($scope.limit);
                 })
                 .error(function (data, status, header, config) {
                     console.log('Error ' + data + ' ' + status);
@@ -18279,6 +18283,11 @@ function getLatLng(thisData) {
                     return targetStudyProviderService.getCourseProviders(cityCourse);
                        
                 }],
+                suggestedblogs: ['blogpostService','$stateParams',
+                    function(blogpostService,$stateParams){
+                    return blogpostService.suggestedblogs($stateParams.subCategoryName);
+                }],
+                
                 provider: function() { return {}; }
                 
             }

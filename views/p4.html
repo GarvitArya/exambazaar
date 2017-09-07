@@ -29,89 +29,16 @@
     #pageHeader{
         color: rgba(0,0,0,0.8);
         letter-spacing: 4px;
-        margin-top: 10px;
-        
-        /*background-image: url("images/background/collage.jpg");
-        background-size:     cover;
-        background-position: center center;*/
     }
     #pageHeaderFont{
-        /*border-bottom: solid 3px;
-        border-color: #20C39A;*/
         letter-spacing: 2px;
     }
     a:hover{
         text-decoration: none;
     }
     #breadcrumb{
-        letter-spacing: 0px;
         color: #20C39A;
     }
-    
-    .bs-callout {
-        padding: 10px;
-        border: 1px solid #eee;
-        /*border-left-width: 5px;
-        border-left-color: #20C39A;*/
-        border-radius: 10px;
-    }
-    *.bs-callout:empty {
-       padding: 20px;
-       margin: 0px;
-       border: none;
-        
-    }
-    .bs-callout h4 {
-        margin-top: 0;
-        margin-bottom: 5px;
-    }
-    .bs-callout p:last-child {
-        margin-bottom: 0;
-    }
-    .bs-callout code {
-        border-radius: 3px;
-    }
-    .bs-callout+.bs-callout {
-        margin-top: -5px;
-    }
-    .bs-callout-default {
-        border-left-color: #777;
-    }
-    .bs-callout-default h4 {
-        color: #777;
-    }
-    .bs-callout-primary {
-        border-left-color: #428bca;
-    }
-    .bs-callout-primary h4 {
-        color: #428bca;
-    }
-    .bs-callout-success {
-        border-left-color: #20C39A;
-    }
-    .bs-callout-success h4 {
-        color: #20C39A;
-        
-    }
-    .bs-callout-danger {
-        border-left-color: #d9534f;
-    }
-    .bs-callout-danger h4 {
-        color: #d9534f;
-    }
-    .bs-callout-warning {
-        border-left-color: #f0ad4e;
-    }
-    .bs-callout-warning h4 {
-        color: #f0ad4e;
-    }
-    .bs-callout-info {
-        border-left-color: #5bc0de;
-    }
-    .bs-callout-info h4 {
-        color: #5bc0de;
-    }
-    
     
     #coachingHeader{
         color: #20C39A;
@@ -160,7 +87,6 @@
         padding-top: 20px;
         padding-bottom: 20px;
         min-height: 15vh;
-        margin-right:20px;
         
         /*border-style: solid;
         border-radius: 10px;*/
@@ -219,45 +145,69 @@
         color: #6A6968;
     }
 </style>
-<div class="whiteBackground">
-<div class="container whiteBackground">
-    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div id="spacer3">
-        </div>
-        <div class="row" hide-xs>
-            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 editFont text-primary" id="breadcrumb">
-            <small>
-            <span><a ui-sref="main">{{category.displayname | uppercase}}</a></span>
-            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a></span>
-            <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{city | uppercase}}</a></span>
-            </small>
+
+<div class="whiteBackground mainContent" >
+    <div id="spacer3">
+    </div>
+    <div layout="row" layout-align="start start" class="width100">
+    
+    <div layout="column" layout-align="start start" class="width100">
+        <div layout="row" layout-align="start start"  hide-xs class="editFont text-primary font11 width100 min5vh" id="breadcrumb">
+            <div flex="5">
+            </div>
+            <div layout="row" layout-align="start start" flex>
+            <div layout="row" layout-align="start start" class="marginR5">
+                <a ui-sref="main">{{category.displayname | uppercase}}</a>
+            </div>
+            <div layout="row" layout-align="start start" class="marginR5">
+            >
+            </div>
+            <div layout="row" layout-align="start start" class="marginR5">
+                <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a>
+            </div>
+            <div layout="row" layout-align="start start" class="marginR5">
+            >
+            </div>
+            <div layout="row" layout-align="start start" class="marginR5">
+                <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{city | uppercase}}</a>
+            </div>
             </div>
         </div>
-        <div class="row ">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 animated fadeIn narrowLine" id="pageHeader">
-            <span class="text font16" id="pageHeaderFont"><strong>Great! We found {{uniqueInstitutes.length}} {{subcategory.displayname | uppercase}} Coaching Classes in {{city}}</strong></span>
-            <!--<span id="normal" ng-if="editable"><small>
-                <a ui-sref="targetStudyProviders({ city:{{'city'}} })">
-                Edit Ranking
-                </a>
-            </small></span>-->
+        <div layout="row" layout-align="start start" class="width100">
+            <div flex="5">
+            </div>
+            <div flex>
+            <h2 class="width100 marginT10 marginB30 font26 narrowLine spacedLetter1">
+                {{subcategory.displayname}} Coaching Classes  in {{city}}
+            </h2>
+            </div>
         </div>
+        <div layout="row" layout-align="start start"  class="width100 marginB20 animated fadeIn font14 narrowLine spacedLetter1 textDarkGrey">
+            <div flex="5">
+            </div>
+            <div flex>
+                Great! We found {{uniqueInstitutes.length}} coaching classes around you!
+            </div>
+            <div layout="column" layout-align="start start" flex="25" class="paddingLR30">
+                Recommended Reading
+            </div>
         </div>
-        <div class="row " id="mainContent">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categories">
-
-            <div layout="column">
-            <div ng-repeat="coachingGroup in uniqueInstitutes | orderBy:['-institutes.length'] " class="fourthFont" id="coachingList" >
-                <div class="row" >
-                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10" id="leftTabs">
-                <div layout="column" id="subcategory">
+    </div>
+    </div>
+    <div layout="row" layout-align="start start" class="width100">
+        <div flex="5">
+        
+        </div>
+        <div flex layout="column" layout-align="start start" class="width100">
+                <div layout="column" id="subcategory" ng-repeat="coachingGroup in uniqueInstitutes | orderBy:['-institutes.length'] " class="fourthFont width100 marginB20">
+                    
                     <div layout="row" layout-align="start start" layout-xs="column">
                         <div layout="row" layout-align="center start" id="pageLogoHolder" class="marginL20" hide-xs ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                             <img ng-src="{{coachingGroup.logo}}" class="pageLogo" ng-if="coachingGroup.logo"/>
                             <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup.logo"/>
                         </div>
                         <div flex layout="column" layout-align="center start" class="paddingL20">
-                            <h2 class=" text-primary thirdFont font20 bold">
+                            <h2 class=" text-primary thirdFont font18 bold">
                             <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                                 {{coachingGroup.groupName}}
                             </a>
@@ -271,7 +221,7 @@
                                         {{thisInstitute.distance.text}}
                                     </span>
                                 </span>
-                                
+
                                 <!--<span>
                                   <img src="images/icons/thinking.svg" alt="Kiwi standing on oval" class="width32px" >
                                 </span>-->
@@ -295,13 +245,13 @@
                                     </div>-->
                                 </div>
                             </div>
-                            
+
                             <div layout="row" class="font14 bold narrowLine marginT10 width100 basicFont" ng-if="coachingGroup.groupResults.length > 0">
                                  {{subcategory.displayname}}&nbsp;Results
 
                             </div>
                             <div layout="row" class="width100 marginT5" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
-                            
+
                             <div class="col-xs-4 col-sm-4 col-md-1 col-lg-1" ng-repeat="result in coachingGroup.groupResults" ng-if="$index <= 11" id="imageContainer" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                              <!--
                             ng-click="showResultDialog($event, $index, result)"
@@ -333,66 +283,50 @@
 
 
                     </div>
-                            
+
                         </div>
-                        
+
                     </div>
-                    
-                    
-                    
+
                     
                 </div>
-                
-                </div>
-                
-                    
-                    
-                </div>
-            </div>  
-            </div>
-                
-            </div>
         </div>
-        <!--<div class="row">
-            {{uniqueInstitutes.length}}
-            <div ng-repeat="uProvider in uniqueInstitutes | orderBy:'-length'">
-                {{uProvider[0].name}} {{uProvider.length}}
-                <span ng-repeat="center in uProvider">
-                    {{center.pincode}}
-                </span>
+        <div layout="column" layout-align="start start" flex="25" class="paddingLR30">
+            
+            <div layout="row" layout-align="start start" class="width100 marginB30 gainsboroBorder" ng-repeat="blogpost in suggestedblogs | orderBy: '-_created'" ng-click="goToBlog(blogpost)">
+                <div layout="column" layout-align="center start" class="width100" id="blogpost" >
+                <div layout="column" layout-align="center center" class="suggestedblogpostImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+                <div layout="row" layout-align="start center" id="blogPostRead" class="width100 paddingLR20 paddingB20">
+                    <div flex layout="row" layout-align="start center">
+                        {{blogpost.readingTime.text}}
+                    </div>
+                </div>
+                </div>
+
+                <div layout="column" layout-align="start center" class="min10vh paddingLR15 paddingTB10 width100 blogpostBorder rounderBorderBottom">
+                    <div layout="row" layout-align="start start" class="width100 marginB10">
+                        <div flex layout="column" layout-align="start start" flex class="font14 wideLine2" >
+                            {{blogpost.title}}
+                        </div>
+
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100 font12 textLightGrey">
+                        <div flex layout="column" layout-align="start start" class="">
+                            <div class="narrowLine">
+                                By {{blogpost.user.basic.name}}
+                            </div>
+                        </div>
+                        <div layout="column" layout-align="center start" class="">
+                            {{blogpost._created | date: "MMMM dd"}}
+                        </div>
+                    </div>
+
+                </div>    
+                </div>
+                        
             </div>
-        </div>-->
+            
+            
+        </div>
     </div>
 </div>
-</div>
-    
-    
-                    <!--<div layout="row" >
-                        <small>
-                        Courses:&nbsp;
-                        <span ng-repeat="course in coachingGroup.examsOffered">
-                            {{course}}
-                        <span ng-if="!$last">&#8226;</span>
-                        </span>
-                        </small>
-                    </div>
-                    <div layout="row">
-                        
-                    </div>
-                    <div layout="row" ng-if="coachingGroup.mobile.length > 0">
-                        Mobiles:
-                        <span ng-repeat="mobile in coachingGroup.mobile track by $index">
-                            {{mobile}}
-                            <span ng-if="!$last">,&nbsp;</span>
-                        </span>
-                    </div>-->
-                    
-                    <!--<div class="row text-center marginT20"  >
-                       
-                        <md-button class="md-small md-green2 tolowercase" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })"><span class="textWhite width25">Know More</span>
-                        
-                        </md-button>
-                        <md-button class="md-small md-danger tolowercase textWhite" ><span class="textWhite width25">Review Now</span>
-                        
-                        </md-button>
-                    </div>-->
