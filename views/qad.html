@@ -23,40 +23,92 @@
         min-height: 20vh;
     }
     #link{
-        color: rgba(0,0,0,0.6);
+        color: #FF5A5F;
     }
     #link:hover{
         color: #20C39A;
     }
-    
+    #examTagHolder{
+        padding:5px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    #examTagHolder:hover{
+        color: white;
+        
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #existingExamTagHolder{
+        padding:5px;
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
 </style>
 <div class="whiteBackground mainContent" >
-    <div id="spacer">
+    <div id="spacer3">
     </div>
     <div layout="row" layout-align="start start" class="padded" ng-if="masterUser" layout-wrap>
-    <div flex="100" layout="row" layout-align="start start" ng-repeat="exam in allExams | orderBy:['-tests.length']" class="width100">
-        <div flex="15">
-            {{exam.displayname}}
-        </div>
-        <div flex="5">
-            {{exam.tests.length}}
-        </div>
-        <div layout="row" layout-align="start start" flex layout-wrap>
-            <div layout="column" layout-align="center center" ng-repeat="test in exam.tests">
-                <!--ng-click="readTest(test)"-->
-                <!--ng-href="{{test.url.question}}"-->
-                <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB5">
-                    {{$index + 1}}. Link&nbsp;&nbsp;<i class="fa fa-anchor" aria-hidden="true" ng-if="test.url.answer"></i>
-                </a>
+        <div flex="50" layout="row" layout-align="start start" ng-repeat="page in allPages | orderBy:['facebook.name']" class="padding10 width100">
+            <div layout="column" layout-align="start start" class="gainsboroBorder width100 paddingLR20 paddingT10 paddingB20">
+                <div layout="row" layout-align="center center" class="width100 font16 bold gainsboroBottomBorder marginB10">
+                    {{page.facebook.name}}
+                </div>
+                <div layout="row" layout-align="start start" class="width100 font12">
+                    <div flex="25">
+                        Category
+                    </div>
+                    <div flex>
+                        {{page.facebook.category}}
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex="25">
+                        FB Page
+                    </div>
+                    <div flex>
+                        <a ng-href="{{page.facebook.link}}" target="_blank" id="link">Link</a>
+                    </div> 
+                </div>
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex="25">
+                        Exams Linked
+                    </div>
+                    <div layout="row" layout-align="start start" layout-wrap flex>
+                        <div layout="row" layout-align="start start" ng-repeat="exam in page.exams" class="marginR10">
+                            {{exam.displayname}}
+                        </div>
+                    </div> 
+                </div>
+                <div layout="row" layout-align="start center" class="width100 marginT20" layout-wrap>
+                    <div class="margin5">
+                        <md-button class="md-default md-cancel md-small font11 tolowercase margin0 padding0" ng-click="postToFBPage(page)">
+                            Schedule Post
+                        </md-button>
+                    </div>
+                    <div class="margin5">
+                        <md-button class="md-black md-small font11 tolowercase margin0 padding0" ng-click="showExamDialog(page)">
+                            Mark Exams
+                        </md-button>
+                    </div>
+                    <div class="margin5">
+                        <md-button class="md-green2 md-small font11 tolowercase margin0 padding0" ng-click="savePage(page)">
+                            Save Page
+                        </md-button>
+                    </div>
+                </div>
             </div>
         </div>
-        
     </div>
+    <div layout="row" layout-align="start start" class="padded font20 marginTB20" ng-if="!masterUser" layout-wrap>
+        You do not have access to view this information. Login above to try again.
     </div>
 </div>
 
 
-<div layout="column" layout-align="center end" class="rightMidButton">
+<!--<div layout="column" layout-align="center end" class="rightMidButton">
     <md-button class="md-black md-small tolowercase" ng-click="postToFB()">
         <div layout="row" layout-align="start center">
             <div layout="row" layout-align="start center" class="marginR10">
@@ -67,4 +119,108 @@
             </div>
         </div>
     </md-button>
+</div>-->
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
 </div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="postedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-facebook-official" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    FB Post Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div class="bottomBar">
+    <div layout="row" layout-align="start center">
+        <div layout="row" layout-align="start center" flex ="60">
+            <span>
+            What would you like to do with these Facebook Pages? 
+            </span>
+        </div>
+        <div layout="row" layout-align="start center" flex = "40">
+            <md-button class="md-green2 md-small font11 tolowercase" ng-click="syncFB()">
+                Sync FB Pages
+            </md-button>
+            
+        </div>
+        
+    </div>
+</div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="examDialog">
+      <md-dialog class="edit-dialog whiteBackground">
+          <md-content flex layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Mark Exams relevant to this facebook page!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small  tolowercase font11" ng-click="markExamsDone()">
+                        Marking Exams Done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
+                <div layout="row" layout-align="start start"  class="width100 marginB10 bold">
+                    <div flex="15">
+                        Stream
+                    </div>
+                    <div flex="85">
+                        Select Exams
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
+                    <div flex="15">
+                        {{thisStream.displayname}}
+                    </div>
+                    <div flex="85">
+                        <span ng-repeat="thisExam in allExams  | orderBy:'-rank'" ng-if="thisExam.stream._id == thisStream._id">
+                            <span class="badge" id="examTagHolder" ng-if="markingPage.exams.indexOf(thisExam._id) == -1" ng-click="addPageExam(thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="markingPage.exams.indexOf(thisExam._id) != -1" ng-click="removePageExam(thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+              
+          
+          
+        </md-content>  
+      </md-dialog>
+    </div>    
+</div> 

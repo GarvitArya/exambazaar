@@ -494,7 +494,25 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
         
-    }]);    
+    }]);
+        
+    exambazaar.service('socialMediaCredentialService', ['$http', function($http) {
+        this.saveSocialMediaCredential = function(socialMediaCredential) {
+            return $http.post('/api/socialMediaCredentials/save', socialMediaCredential);
+        };
+        
+        this.getSocialMediaCredential = function(socialMediaCredentialId) {
+            return $http.get('/api/socialMediaCredentials/edit/'+socialMediaCredentialId, {socialMediaCredentialId: socialMediaCredentialId});
+        };
+        this.getActiveSocialMediaCredential = function() {
+            return $http.get('/api/socialMediaCredentials/getOne');
+        };
+        this.getSocialMediaCredentials = function() {
+            return $http.get('/api/socialMediaCredentials');
+        };
+        
+        
+    }]);     
     
     exambazaar.service('MediaTagService', ['$http', function($http) {
        
@@ -8156,7 +8174,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi', 'Mysore','Hubli', 'Vishakapatnam', 'Thiruvananthapuram', 'Kozhikode', 'Guwahati'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi', 'Mysore','Hubli', 'Vishakapatnam', 'Thiruvananthapuram', 'Trichy', 'Nagpur'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -11914,9 +11932,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.masterUser = true;
             }
             
-    }]);  
-    exambazaar.controller("qadController", 
-        [ '$scope', 'thisuser','examList','testList', 'testService', '$facebook', function($scope, thisuser, examList, testList, testService, $facebook){
+    }]);
+    
+    exambazaar.controller("allTestsController", 
+        [ '$scope', 'thisuser','examList','testList', 'testService', function($scope, thisuser, examList, testList, testService){
             $scope.user = thisuser.data;
             $scope.allTests = testList.data;
             var allExams = examList.data;
@@ -11955,151 +11974,396 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.log("Error ");
                 });    
             };
+    }]);    
+        
             
-            /*https://graph.facebook.com/200878263783095/feed?message=Hello&link=https://www.exambazaar.com/*/
-            $scope.postToFB = function(){
-                console.log('I am here');
+        
+    exambazaar.controller("qadController", 
+        [ '$scope', 'thisuser', 'allPages', 'socialMediaCredentialService', '$mdDialog', '$timeout', 'examList', 'streamList', function($scope, thisuser, allPages, socialMediaCredentialService, $mdDialog, $timeout, examList, streamList){
+            $scope.user = thisuser.data;
+            $scope.allExams = examList.data;
+            var examIds = $scope.allExams.map(function(a) {return a._id;});
+            $scope.allStreams = streamList.data;
+            
+            if($scope.user._id =='59a7eb973d71f10170dbb468' || $scope.user.userType == 'Master'){
+                $scope.masterUser = true;
+            }
+            
+            
+            $scope.allPages = allPages.data;
+            
+            $scope.allPages.forEach(function(thisPage, index){
+                thisPage.facebook.link = "https://www.facebook.com/" + thisPage.facebook.id;
                 
-                /*FB.api(
-                    "/10153935528090678/accounts",
-                    function (response) {
-                      if (response && !response.error) {
-                          console.log(response);
-                         handle the result 
-                      }else{
-                          console.log(response);
-                      }
+                thisPage.exams.forEach(function(thisExam, eindex){
+                    var examIndex = examIds.indexOf(thisExam);
+                    if(examIndex != -1){
+                        $scope.allPages[index].exams[eindex] = $scope.allExams[examIndex];
                     }
-                );
-                
-                $facebook.api("/200878263783095?fields=access_token").then( 
-                  function(response) {
-                      console.log(response);
-                      //console.log('Done');
-                      FB.api('/200878263783095/feed', function(response) {
-                          console.log(response);
-                          FB.api(
-                            "/200878263783095/feed",
-                            "POST",
-                            {
-                                "message": "This is a test message"
-                            },
-                            function (response) {
-                              if (response && !response.error) {
-                                  console.log('Done');
-                              }else{
-                                  console.log(response);
-                              }
-                            }
-                          );
-                      });
-                      
-                  },
-                  function(err) {
-                    $scope.welcomeMsg = "Please log in";
-                  }); */
-                
-                
-                FB.login(function(response){
-                    console.log(response);
-                    FB.api('/me/accounts', function(response){
-                        console.log(response.data[4]);
-                        var p_id = response.data[4].id;
-                        var string_id = '/' + p_id + '/feed';
-                        var photos_id = '/' + p_id + '/photos';
-                        var p_accessToken = response.data[4].access_token; 
-                        var p_name = response.data[4].name; 
-                        console.log('The pagename is: '
-                        + p_name + 'Page access token is: ' 
-                        + p_accessToken);
-                        var questionString1 = "Exambazaar Question a Day of " + moment().format("DD MMM YY") + " is: \r\n\r\n";
-                        var questionString2 = "Q. A water cooler of storage capacity 120 litres can cool water at a constant rate of P watts. In a closed circulation system (as shown schematically in the figure), the water from the cooler is used to cool an external device that generates constantly 3 kW of heat (thermal load). The temperature of water fed into the device cannot exceed 30 degree celcius and the entire stored 120 litres of water in initially cooled to 10 degree celcius. The entire system is thermally insulated. The minimum value of P (in watts) for which the devicde can be operated for 3 hours is: (specific heat of water is 4.2 kJ per kg per K and the density of water is 1000 kg per meter^3) θ  \r\n\r\n";
-                        var optionString = [];
-                        optionString.push("A. 1600\r\n");
-                        optionString.push("B. 2067\r\n");
-                        optionString.push("C. 2533\r\n");
-                        optionString.push("D. 3933\r\n");
-                        
-                        var postString = questionString1 + questionString2;
-                        
-                        optionString.forEach(function(thisOption, index){
-                            postString += thisOption;
+                });
+            });
+            
+            $scope.showSavedDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#savedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
+            $scope.showPostedDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#postedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
+            $scope.markingPage = null;
+            $scope.showExamDialog = function(page, ev) {
+                $scope.markingPage = page;
+                $mdDialog.show({
+                  contentElement: '#examDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
+            $scope.markExamsDone = function(){
+                $mdDialog.hide();    
+            };
+            $scope.addPageExam = function(thisExam){
+                if(!$scope.markingPage.exams){
+                    $scope.markingPage.exams = [];
+                }
+                var eIndex = $scope.markingPage.exams.indexOf(thisExam._id);
+                if(eIndex == -1){
+                    $scope.markingPage.exams.push(thisExam._id);
+                }else{
+                    //exam already exists
+                }
+            };
+            
+            $scope.removePageExam = function(thisExam){
+                if(!$scope.markingPage.exams){
+                    //do nothing
+                }else{
+                    var eIndex = $scope.markingPage.exams.indexOf(thisExam._id);
+                    if(eIndex == -1){
+                        //do nothing
+                    }else{
+                         $scope.markingPage.exams.splice(eIndex, 1);
+                    }
+                }
+            };
+            
+            $scope.savePage = function(page){
+                socialMediaCredentialService.saveSocialMediaCredential(page).success(function (data, status, headers) {
+                    socialMediaCredentialService.getSocialMediaCredentials().success(function (data, status, headers) {
+                        $scope.allPages = data;
+                        $scope.allPages.forEach(function(thisPage, index){
+                            thisPage.facebook.link = "https://www.facebook.com/" + thisPage.facebook.id;
                         });
-                        
-                        postString += "\r\n\r\nFor detailed answers and explanations, logon to www.exambazaar.com";
-                        postString += "\r\n\r\n\#eqad #exambazaar";
-                        
-                        var myDate="31-08-2017";
-                        myDate=myDate.split("-");
-                        var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
-                        var backdate = new Date(newDate).getTime();
-                        console.log(backdate);
-                        
-                        var scheduledTime = moment().add(10, "minutes").unix();
-                        console.log(scheduledTime);
-                        //The specified scheduled publish time is invalid
-                        
-                        FB.api(
-                            photos_id,
-                            "POST",
-                            {
-                                "url": "https://exambazaar.s3.amazonaws.com/1ef829c877a8f44c6d755fd7e335ecc2.PNG",
-                                access_token : p_accessToken,
-                                caption: postString,
-                                //no_story:1,
-                                //backdated_time : backdate,
-                                //published : false,
-                                //scheduled_publish_time : scheduledTime,
-                                //object_attachment
-                                
-                            },
-                            function (response) {
-                              if (response && !response.error) {
-                                  console.log('Photo Posted');
-                                  console.log(response);
-                                  var photoId = response.id;
-                                  var photoPostId = response.post_id;
-                                  
-                                  /*FB.api(
-                                    string_id,
-                                    "POST",
-                                    {
-                                        "message": postString,
-                                        access_token : p_accessToken,
-                                        //backdated_time : backdate,
-                                        //published : false,
-                                        //scheduled_publish_time : scheduledTime,
-                                        object_attachment:photoId,
-
-                                    },
-                                    function (response) {
-                                      if (response && !response.error) {
-                                          console.log('Question Posted');
-                                          console.log(response);
-                                      }else{
-                                          console.log(response);
-                                      }
-                                });*/
-                                  
-                                  
-                              }else{
-                                  console.log(response);
-                              }
-                        });
-                        
-                        /*FB.api(string_id, function(response) {
-                          console.log(response);
-                        },{scope:"manage_pages"});*/
-
-
-
+                        $scope.showSavedDialog();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
                     });
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });    
+            };
+            
+            
+            $scope.postToFB = function(){
+                FB.login(function(response){
+                
+                FB.api('/me/accounts', function(response){
+
+                var fbpages = response.data;
+                fbpages.forEach(function(thisPage, index){
+                    
+                    var p_id = thisPage.id;
+                    var string_id = '/' + p_id + '/feed';
+                    var photos_id = '/' + p_id + '/photos';
+                    var p_accessToken = thisPage.access_token;
+                    var p_name = thisPage.name; 
+                    //console.log('The pagename is: '+ p_name + 'Page access token is: ' + p_accessToken);
+                    
+                    FB.api(string_id, function(response) {
+                        //console.log(response);
+                        thisPage.data = response.data;
+                        console.log(thisPage);
+                        var newSocialMediaCredential = {
+                            platform: 'Facebook',
+                            facebook: thisPage,
+                            exams: []
+                        };
+                        
+                        socialMediaCredentialService.saveSocialMediaCredential(newSocialMediaCredential).success(function (data, status, headers) {
+                            console.log(data);
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log("Error ");
+                        });
+                        
+                    });
+                    
+                    
+                    var questionString1 = "Exambazaar Question a Day of " + moment().format("DD MMM YY") + " is: \r\n\r\n";
+
+                    var questionString1 = "Exambazaar Question a Day of " + moment().format("DD MMM YY") + " is: \r\n\r\n";
+                    var questionString2 = "Q. A water cooler of storage capacity 120 litres can cool water at a constant rate of P watts. In a closed circulation system (as shown schematically in the figure), the water from the cooler is used to cool an external device that generates constantly 3 kW of heat (thermal load). The temperature of water fed into the device cannot exceed 30 degree celcius and the entire stored 120 litres of water in initially cooled to 10 degree celcius. The entire system is thermally insulated. The minimum value of P (in watts) for which the devicde can be operated for 3 hours is: (specific heat of water is 4.2 kJ per kg per K and the density of water is 1000 kg per meter^3) θ  \r\n\r\n";
+                    var optionString = [];
+                    optionString.push("A. 1600\r\n");
+                    optionString.push("B. 2067\r\n");
+                    optionString.push("C. 2533\r\n");
+                    optionString.push("D. 3933\r\n");
+
+
+                    var postString = questionString1 + questionString2;
+
+                    optionString.forEach(function(thisOption, index){
+                        postString += thisOption;
+                    });
+
+                    postString += "\r\n\r\nFor detailed answers and explanations, logon to www.exambazaar.com";
+                    postString += "\r\n\r\n\#eqad #exambazaar";
+
+                    var myDate="31-08-2017";
+                    myDate=myDate.split("-");
+                    var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
+                    var backdate = new Date(newDate).getTime();
+                    //console.log(backdate);
+
+                    var scheduledTime = moment().add(10, "minutes").unix();
+                    //console.log(scheduledTime);
+                    //The specified scheduled publish time is invalid
+
+                    /*FB.api(
+                        photos_id,
+                        "POST",
+                        {
+                            "url": "https://exambazaar.s3.amazonaws.com/1ef829c877a8f44c6d755fd7e335ecc2.PNG",
+                            access_token : p_accessToken,
+                            caption: postString,
+                            //no_story:1,
+                            //backdated_time : backdate,
+                            //published : false,
+                            //scheduled_publish_time : scheduledTime,
+                            //object_attachment
+
+                        },
+                        function (response) {
+                          if (response && !response.error) {
+                              console.log('Photo Posted');
+                              console.log(response);
+                              var photoId = response.id;
+                              var photoPostId = response.post_id;
+                          }else{
+                              console.log(response);
+                          }
+                    });*/
+                    /*FB.api(
+                        string_id,
+                        "POST",
+                        {
+                            "message": postString,
+                            access_token : p_accessToken,
+                            //backdated_time : backdate,
+                            //published : false,
+                            //scheduled_publish_time : scheduledTime,
+                            object_attachment:photoId,
+
+                        },
+                        function (response) {
+                          if (response && !response.error) {
+                              console.log('Question Posted');
+                              console.log(response);
+                          }else{
+                              console.log(response);
+                          }
+                    });*/
+
+                });
+                });
                 
                 },{scope:'manage_pages,publish_pages'});
                 
                 //publish_actions,
             };
-            //$scope.postToFB();
+            
+            $scope.syncFB = function(){
+            FB.login(function(response){
+
+            FB.api('/me/accounts', function(response){
+            var fbpages = response.data;
+            var nPages = fbpages.length;
+            var counter = 0;
+
+            fbpages.forEach(function(thisPage, index){
+                var p_id = thisPage.id;
+                var string_id = '/' + p_id + '/feed';
+                var p_accessToken = thisPage.access_token;
+                var p_name = thisPage.name;
+
+                FB.api(string_id, function(response) {
+                    thisPage.data = response.data;
+                    console.log(thisPage);
+                    var newSocialMediaCredential = {
+                        platform: 'Facebook',
+                        facebook: thisPage,
+                        exams: []
+                    }; socialMediaCredentialService.saveSocialMediaCredential(newSocialMediaCredential).success(function (data, status, headers) {
+                        console.log(data);
+                        counter += 1;
+                        if(counter == nPages){ 
+                        socialMediaCredentialService.getSocialMediaCredentials().success(function (data, status, headers) {
+                            $scope.allPages = data;
+                            $scope.allPages.forEach(function(thisPage, index){
+                                thisPage.facebook.link = "https://www.facebook.com/" + thisPage.facebook.id;
+                            });
+                            $scope.showSavedDialog();
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log("Error ");
+                        });
+
+                        }
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                });
+            });
+            });
+
+            },{scope:'manage_pages,publish_pages'});
+            };
+            
+            $scope.postToFBPage = function(page){
+            var thisPage = page.facebook;
+            FB.login(function(response){
+                FB.api('/me/accounts', function(response){
+                    var p_id = thisPage.id;
+                    var string_id = '/' + p_id + '/feed';
+                    var photos_id = '/' + p_id + '/photos';
+                    var p_accessToken = thisPage.access_token;
+                    var p_name = thisPage.name; 
+                    //console.log('The pagename is: '+ p_name + 'Page access token is: ' + p_accessToken);
+                    
+                    var questionString1 = "Exambazaar Question a Day of " + moment().format("DD MMM YY") + " is: \r\n\r\n";
+
+                    var questionString2 = "Q. A water cooler of storage capacity 120 litres can cool water at a constant rate of P watts. In a closed circulation system (as shown schematically in the figure), the water from the cooler is used to cool an external device that generates constantly 3 kW of heat (thermal load). The temperature of water fed into the device cannot exceed 30 degree celcius and the entire stored 120 litres of water in initially cooled to 10 degree celcius. The entire system is thermally insulated. The minimum value of P (in watts) for which the devicde can be operated for 3 hours is: (specific heat of water is 4.2 kJ per kg per K and the density of water is 1000 kg per meter^3) θ  \r\n\r\n";
+                    var optionString = [];
+                    optionString.push("A. 1600\r\n");
+                    optionString.push("B. 2067\r\n");
+                    optionString.push("C. 2533\r\n");
+                    optionString.push("D. 3933\r\n");
+
+                    var postString = questionString1 + questionString2;
+
+                    optionString.forEach(function(thisOption, index){
+                        postString += thisOption;
+                    });
+
+                    postString += "\r\n\r\nFor detailed answers and explanations, logon to www.exambazaar.com";
+                    postString += "\r\n\r\n\#eqad #exambazaar";
+
+                    var myDate="31-08-2017";
+                    myDate=myDate.split("-");
+                    var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
+                    var backdate = new Date(newDate).getTime();
+                    //console.log(backdate);
+
+                    var scheduledTime = moment().add(10, "minutes").unix();
+                    //schedule time should be from 10 minutes to 6 months from now
+                    console.log(scheduledTime);
+                    
+                    FB.api(
+                        string_id,
+                        "POST",
+                        {
+                            "message": postString,
+                            access_token : p_accessToken,
+                            //backdated_time : backdate,
+                            //published : false,
+                            //scheduled_publish_time : scheduledTime,
+
+                        },
+                        function (response) {
+                          if (response && !response.error) {
+                              $scope.showPostedDialog();
+                              console.log('Question Posted');
+                              console.log(response);
+                          }else{
+                              console.log(response);
+                          }
+                    });
+                    
+                    //console.log(scheduledTime);
+                    //The specified scheduled publish time is invalid
+
+                    /*FB.api(
+                        photos_id,
+                        "POST",
+                        {
+                            "url": "https://exambazaar.s3.amazonaws.com/1ef829c877a8f44c6d755fd7e335ecc2.PNG",
+                            access_token : p_accessToken,
+                            caption: postString,
+                            //no_story:1,
+                            //backdated_time : backdate,
+                            //published : false,
+                            //scheduled_publish_time : scheduledTime,
+                            //object_attachment
+
+                        },
+                        function (response) {
+                          if (response && !response.error) {
+                              console.log('Photo Posted');
+                              console.log(response);
+                              var photoId = response.id;
+                              var photoPostId = response.post_id;
+                          }else{
+                              console.log(response);
+                          }
+                    });*/
+                    /*FB.api(
+                        string_id,
+                        "POST",
+                        {
+                            "message": postString,
+                            access_token : p_accessToken,
+                            //backdated_time : backdate,
+                            //published : false,
+                            //scheduled_publish_time : scheduledTime,
+                            object_attachment:photoId,
+
+                        },
+                        function (response) {
+                          if (response && !response.error) {
+                              console.log('Question Posted');
+                              console.log(response);
+                          }else{
+                              console.log(response);
+                          }
+                    });*/
+                
+                    
+                });
+            },{scope:'manage_pages,publish_pages'});
+                
+                //publish_actions,
+            };
     }]);    
         
         
@@ -18631,6 +18895,36 @@ function getLatLng(thisData) {
                 
             }
         })
+        .state('allTests', {
+            url: '/:userId/allTests', //masterId?
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'allTests.html',
+                    controller: 'allTestsController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                testList: ['testService',
+                    function(testService){
+                    return testService.getTests();
+                }]
+            }
+        })
         .state('qad', {
             url: '/:userId/qad', //masterId?
             views: {
@@ -18651,15 +18945,18 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
                 }],
+                allPages: ['socialMediaCredentialService',
+                    function(socialMediaCredentialService){
+                    return socialMediaCredentialService.getSocialMediaCredentials();
+                }],
                 examList: ['ExamService',
                     function(ExamService){
                     return ExamService.getExams();
                 }],
-                testList: ['testService',
-                    function(testService){
-                    return testService.getTests();
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
                 }],
-                provider: function() { return {}; }
                 
             }
         })

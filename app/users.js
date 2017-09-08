@@ -1241,18 +1241,50 @@ function closeCreatedCI(userId, pastInternId, res){
                 if(eCounter == nElements){
                     res.createdCI = true;
                     res.createdciCount = nElements;
+                    closeCreatedQuestion(userId, pastInternId, res);
+                }
+            });
+        });
+        if(nElements == 0){
+            res.createdCI = true;
+            res.createdciCount = 0;
+            closeCreatedQuestion(userId, pastInternId, res);
+        }
+    } else {throw err;}
+    });
+};
+
+function closeCreatedQuestion(userId, pastInternId, res){
+    console.log('Starting Question created by process:');
+    var allElements = question
+    .find({_createdBy: userId},{_createdBy:1})
+    .exec(function (err, allElements) {
+    if (!err){
+        var nElements = allElements.length;
+        var eCounter = 0;
+        allElements.forEach(function(thisElement, index){
+            thisElement._createdBy = pastInternId;
+            thisElement.save(function(err, thisElement) {
+                if (err) return console.error(err);
+                console.log('Creation of Question closed: ' + thisElement._id);
+                eCounter += 1;
+
+                if(eCounter == nElements){
+                    res.createdQuestion = true;
+                    res.createdquestionCount = nElements;
                     closeContactCI(userId, pastInternId, res);
                 }
             });
         });
         if(nElements == 0){
-            res.toverifyci = true;
-            res.toverifyciCount = 0;
+            res.createdQuestion = true;
+            res.createdquestionCount = 0;
             closeContactCI(userId, pastInternId, res);
         }
     } else {throw err;}
     });
 };
+
 function closeContactCI(userId, pastInternId, res){
     console.log('Starting close contacts process:');
     var allElements = addContactInfo

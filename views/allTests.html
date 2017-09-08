@@ -1,0 +1,56 @@
+<style>
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px transparent;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    
+    #profileSection{
+        min-height: 20vh;
+    }
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+</style>
+<div class="whiteBackground mainContent" >
+    <div id="spacer">
+    </div>
+    <div layout="row" layout-align="start start" class="padded" ng-if="masterUser" layout-wrap>
+    <div flex="100" layout="row" layout-align="start start" ng-repeat="exam in allExams | orderBy:['-tests.length']" class="width100">
+        <div flex="15">
+            {{exam.displayname}}
+        </div>
+        <div flex="5">
+            {{exam.tests.length}}
+        </div>
+        <div layout="row" layout-align="start start" flex layout-wrap>
+            <div layout="column" layout-align="center center" ng-repeat="test in exam.tests">
+                <!--ng-click="readTest(test)"-->
+                <!--ng-href="{{test.url.question}}"-->
+                <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB5">
+                    {{$index + 1}}. Link&nbsp;&nbsp;<i class="fa fa-anchor" aria-hidden="true" ng-if="test.url.answer"></i>
+                </a>
+            </div>
+        </div>
+        
+    </div>
+    </div>
+</div>
