@@ -8174,7 +8174,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi', 'Mysore','Hubli', 'Vishakapatnam', 'Thiruvananthapuram', 'Trichy', 'Nagpur'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi', 'Mysore','Hubli', 'Vishakapatnam', 'Jamshedpur', 'Ujjain', 'Gorakhpur'];
         
         if($cookies.getObject('sessionuser')){
             

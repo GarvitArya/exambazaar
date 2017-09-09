@@ -114,7 +114,7 @@
             <div layout="row" layout-align="start start" layout-wrap >
                 <div layout="row" layout-align="start start" class="font12 marginR5 marginB5 badge" id="examTagHolder" ng-repeat="existingExam in exams | orderBy: '-rank'" ng-if="existingExam.stream._id == stream._id" >
                     <span ng-click="setExam(existingExam)">{{existingExam.displayname}}</span>
-                    <a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank"><i class="fa fa-pencil-square font20 marginL10" aria-hidden="true"></i></a>
+                    <!--<a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank"><i class="fa fa-pencil-square font20 marginL10" aria-hidden="true"></i></a>-->
                 </div>
             </div>
         </div>
@@ -211,7 +211,7 @@
                     Exam Frequency
                 </div>
                 <div class="width100">
-                    <md-select ng-model="exam.frequency" placeholder=a"Select the frequency of the exam" class="margin0">
+                    <md-select ng-model="exam.frequency" placeholder="Select the frequency of the exam" class="margin0">
                         <md-option ng-repeat="examFrequency in examFrequencies" ng-value="examFrequency">
                         {{examFrequency}}
                         </md-option>
