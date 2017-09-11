@@ -16,6 +16,21 @@ mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
 
+
+router.post('/questionToPost', function(req, res) {
+    var examArray = req.body;
+    console.log(examArray);
+    var thisQuestion = question
+        .findOne({exam: examArray[0], $where: "this.questions.length == 1"})
+        .deepPopulate('exam test')
+        .exec(function (err, thisQuestion) {
+        if (!err){
+            res.json(thisQuestion);
+        } else {throw err;}
+    });
+});
+
+
 //to add an question
 router.post('/save', function(req, res) {
     console.log('Starting question save!');
@@ -80,6 +95,9 @@ router.get('/exam/:examId', function(req, res) {
     });
     
 });
+
+
+
 
 router.get('/testQuestions/:testId', function(req, res) {
     var testId = req.params.testId;

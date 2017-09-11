@@ -397,6 +397,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getExamQuestions = function(examId) {
             return $http.get('/api/questions/exam/'+examId, {examName: examId});
         };
+        this.questionToPost = function(examArray) {
+            return $http.post('/api/questions/questionToPost',examArray);
+        };
     }]);
     exambazaar.service('testService', ['$http', function($http) {
         this.saveTest = function(test) {
@@ -8174,7 +8177,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi', 'Mysore','Hubli', 'Vishakapatnam', 'Jamshedpur', 'Ujjain', 'Gorakhpur'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Gurgaon', 'Amritsar', 'Gwalior', 'Nashik', 'Ranchi', 'Mysore','Hubli', 'Vishakapatnam', 'Shimla', 'Gurgaon'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -11979,7 +11982,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
         
     exambazaar.controller("qadController", 
-        [ '$scope', 'thisuser', 'allPages', 'socialMediaCredentialService', '$mdDialog', '$timeout', 'examList', 'streamList', function($scope, thisuser, allPages, socialMediaCredentialService, $mdDialog, $timeout, examList, streamList){
+        [ '$scope', 'thisuser', 'allPages', 'socialMediaCredentialService', '$mdDialog', '$timeout', 'examList', 'streamList', 'questionService', function($scope, thisuser, allPages, socialMediaCredentialService, $mdDialog, $timeout, examList, streamList, questionService){
             $scope.user = thisuser.data;
             $scope.allExams = examList.data;
             var examIds = $scope.allExams.map(function(a) {return a._id;});
@@ -12028,6 +12031,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.markingPage = null;
             $scope.showExamDialog = function(page, ev) {
                 $scope.markingPage = page;
+                console.log($scope.markingPage.exams);
                 $mdDialog.show({
                   contentElement: '#examDialog',
                   parent: angular.element(document.body),
@@ -12040,30 +12044,25 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.markExamsDone = function(){
                 $mdDialog.hide();    
             };
-            $scope.addPageExam = function(thisExam){
+            
+            $scope.addRemovePageExam = function(thisExam){
                 if(!$scope.markingPage.exams){
                     $scope.markingPage.exams = [];
                 }
-                var eIndex = $scope.markingPage.exams.indexOf(thisExam._id);
+                var examIds = $scope.markingPage.exams.map(function(a) {return a._id;});
+                var eIndex = examIds.indexOf(thisExam._id);
+                console.log(eIndex);
                 if(eIndex == -1){
                     $scope.markingPage.exams.push(thisExam._id);
                 }else{
                     //exam already exists
+                    $scope.markingPage.exams.splice(eIndex, 1);
                 }
             };
             
-            $scope.removePageExam = function(thisExam){
-                if(!$scope.markingPage.exams){
-                    //do nothing
-                }else{
-                    var eIndex = $scope.markingPage.exams.indexOf(thisExam._id);
-                    if(eIndex == -1){
-                        //do nothing
-                    }else{
-                         $scope.markingPage.exams.splice(eIndex, 1);
-                    }
-                }
-            };
+            
+            
+            
             
             $scope.savePage = function(page){
                 socialMediaCredentialService.saveSocialMediaCredential(page).success(function (data, status, headers) {
@@ -12071,6 +12070,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $scope.allPages = data;
                         $scope.allPages.forEach(function(thisPage, index){
                             thisPage.facebook.link = "https://www.facebook.com/" + thisPage.facebook.id;
+
+                            thisPage.exams.forEach(function(thisExam, eindex){
+                                var examIndex = examIds.indexOf(thisExam);
+                                if(examIndex != -1){
+                                    $scope.allPages[index].exams[eindex] = $scope.allExams[examIndex];
+                                }
+                            });
                         });
                         $scope.showSavedDialog();
                     })
@@ -12215,23 +12221,44 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var string_id = '/' + p_id + '/feed';
                 var p_accessToken = thisPage.access_token;
                 var p_name = thisPage.name;
-
+                var existingPagesFBIds = $scope.allPages.map(function(a) {return a.facebook.id;});
+                var eIndex = existingPagesFBIds.indexOf(p_id);
+                
                 FB.api(string_id, function(response) {
                     thisPage.data = response.data;
-                    console.log(thisPage);
                     var newSocialMediaCredential = {
                         platform: 'Facebook',
                         facebook: thisPage,
                         exams: []
-                    }; socialMediaCredentialService.saveSocialMediaCredential(newSocialMediaCredential).success(function (data, status, headers) {
+                    }; 
+                    if(eIndex != -1){
+                        
+                        var currExams = $scope.allPages[eIndex].exams;
+                        if(currExams.length > 0){
+                            currExams = currExams.map(function(a) {return a._id;});
+                        }
+                        newSocialMediaCredential.exams = currExams;
+                        
+                    }
+                    
+                    socialMediaCredentialService.saveSocialMediaCredential(newSocialMediaCredential).success(function (data, status, headers) {
                         console.log(data);
                         counter += 1;
-                        if(counter == nPages){ 
+                        if(counter == nPages){
                         socialMediaCredentialService.getSocialMediaCredentials().success(function (data, status, headers) {
                             $scope.allPages = data;
                             $scope.allPages.forEach(function(thisPage, index){
                                 thisPage.facebook.link = "https://www.facebook.com/" + thisPage.facebook.id;
+
+                                thisPage.exams.forEach(function(thisExam, eindex){
+                                    var examIndex = examIds.indexOf(thisExam);
+                                    if(examIndex != -1){
+                                        $scope.allPages[index].exams[eindex] = $scope.allExams[examIndex];
+                                    }
+                                });
                             });
+                            
+                            
                             $scope.showSavedDialog();
                         })
                         .error(function (data, status, header, config) {
@@ -12250,35 +12277,56 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             },{scope:'manage_pages,publish_pages'});
             };
             
-            $scope.postToFBPage = function(page){
+            $scope.questionToPost = function(page){
+                var examArray = page.exams.map(function(a) {return a._id;});
+                //console.log(examArray);
+                questionService.questionToPost(examArray).success(function (data, status, headers) {
+                    var question = data;
+                    
+                    if(question){
+                        $scope.postToFBPage(page, question);
+                        
+                    }else{
+                        alert('Found no question');
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });  
+            };
+            
+            $scope.postToFBPage = function(page, question){
+                console.log('FB Post Initiating');
             var thisPage = page.facebook;
             FB.login(function(response){
                 FB.api('/me/accounts', function(response){
+                    var thisQuestion = question.questions[0];
                     var p_id = thisPage.id;
                     var string_id = '/' + p_id + '/feed';
                     var photos_id = '/' + p_id + '/photos';
                     var p_accessToken = thisPage.access_token;
                     var p_name = thisPage.name; 
                     //console.log('The pagename is: '+ p_name + 'Page access token is: ' + p_accessToken);
-                    
-                    var questionString1 = "Exambazaar Question a Day of " + moment().format("DD MMM YY") + " is: \r\n\r\n";
-
-                    var questionString2 = "Q. A water cooler of storage capacity 120 litres can cool water at a constant rate of P watts. In a closed circulation system (as shown schematically in the figure), the water from the cooler is used to cool an external device that generates constantly 3 kW of heat (thermal load). The temperature of water fed into the device cannot exceed 30 degree celcius and the entire stored 120 litres of water in initially cooled to 10 degree celcius. The entire system is thermally insulated. The minimum value of P (in watts) for which the devicde can be operated for 3 hours is: (specific heat of water is 4.2 kJ per kg per K and the density of water is 1000 kg per meter^3) θ  \r\n\r\n";
+                    var miniseparator = "\r\n";
+                    var separator = "\r\n\r\n";
+                    var preQText = "As appeared in " + question.test.name + separator + " Exambazaar Question a Day of " + moment().format("DD MMM YY") + " is:" + separator;
+                    var Qtext = "Q. " + thisQuestion.question + separator;
+                    var optionPrefixes = ["A. ", "B. ", "C. ", "D. ", "E. ", "F. ", "G. "];
                     var optionString = [];
-                    optionString.push("A. 1600\r\n");
-                    optionString.push("B. 2067\r\n");
-                    optionString.push("C. 2533\r\n");
-                    optionString.push("D. 3933\r\n");
-
-                    var postString = questionString1 + questionString2;
-
-                    optionString.forEach(function(thisOption, index){
-                        postString += thisOption;
+                    var options = thisQuestion.options;
+                    var Otext = "";
+                    options.forEach(function(thisOption, index){
+                        var nextOption = optionPrefixes[index] + thisOption.option + miniseparator;
+                        Otext += nextOption;
                     });
+                    
+                    Otext = Otext + separator;
 
-                    postString += "\r\n\r\nFor detailed answers and explanations, logon to www.exambazaar.com";
-                    postString += "\r\n\r\n\#eqad #exambazaar";
+                    var postOText = "For detailed answers and explanations, logon to www.exambazaar.com" + separator;
+                    var hashTags = "#eqad #exambazaar";
 
+                    var postString = preQText + Qtext + Otext + postOText + hashTags;
+                    
                     var myDate="31-08-2017";
                     myDate=myDate.split("-");
                     var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
@@ -12287,7 +12335,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
 
                     var scheduledTime = moment().add(10, "minutes").unix();
                     //schedule time should be from 10 minutes to 6 months from now
-                    console.log(scheduledTime);
                     
                     FB.api(
                         string_id,

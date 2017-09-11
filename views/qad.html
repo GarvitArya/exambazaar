@@ -84,7 +84,7 @@
                 </div>
                 <div layout="row" layout-align="start center" class="width100 marginT20" layout-wrap>
                     <div class="margin5">
-                        <md-button class="md-default md-cancel md-small font11 tolowercase margin0 padding0" ng-click="postToFBPage(page)">
+                        <md-button class="md-default md-cancel md-small font11 tolowercase margin0 padding0" ng-click="questionToPost(page)">
                             Schedule Post
                         </md-button>
                     </div>
@@ -206,12 +206,12 @@
                     </div>
                     <div flex="85">
                         <span ng-repeat="thisExam in allExams  | orderBy:'-rank'" ng-if="thisExam.stream._id == thisStream._id">
-                            <span class="badge" id="examTagHolder" ng-if="markingPage.exams.indexOf(thisExam._id) == -1" ng-click="addPageExam(thisExam)">
+                            <span class="badge" id="examTagHolder" ng-if="markingPage.exams.indexOf(thisExam._id) == -1" ng-click="addRemovePageExam(thisExam)">
                                 {{thisExam.displayname}}
                             </span>
-                            <span class="badge" id="existingExamTagHolder" ng-if="markingPage.exams.indexOf(thisExam._id) != -1" ng-click="removePageExam(thisExam)">
+                            <!--<span class="badge" id="existingExamTagHolder" ng-if="markingPage.exams.indexOf(thisExam._id) != -1" ng-click="removePageExam(thisExam)">
                                 {{thisExam.displayname}}
-                            </span>
+                            </span>-->
                         </span>
                     </div>
                 </div>
