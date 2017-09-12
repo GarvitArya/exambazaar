@@ -126,6 +126,29 @@ router.get('/question/:questionId', function(req, res) {
     
 });
 
+router.get('/markCreator/:testId', function(req, res) {
+    var creatorId = '59ae8cf5a4a2e43f2519ea8d';
+    var testId = req.params.testId;
+    res.json('Done');
+    var allQuestions = question
+        .find({'test': testId},{_createdBy: 1})
+        .exec(function (err, allQuestions) {
+        if (!err){
+            console.log(allQuestions.length);
+            
+            allQuestions.forEach(function(thisQuestion, qIndex){
+                thisQuestion._createdBy = creatorId;
+                thisQuestion.save(function(err, thisQuestion) {
+                    if (err) return console.error(err);
+                    console.log('Question saved: ' + thisQuestion._id);
+                });
+            });
+            
+        } else {throw err;}
+    });
+    
+});
+
 router.get('/readQuestion/:questionId', function(req, res) {
     
     var questionId = req.params.questionId;

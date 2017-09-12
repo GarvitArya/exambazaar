@@ -108,7 +108,9 @@
                 
             </div>
         </div>
-        
+        <div layout="row" layout-align="start center" class="width100 marginTB5" ng-if="user.userType=='Master'" >
+            <a ng-click="markCreator()">Mark Creator</a>
+        </div>
         <div layout="column" layout-align="start start" class="width100 font14 marginTB10" >
             <div layout="row" layout-align="start center" class="width100 font16 bold marginT5" layout-wrap>
                 <div layout="row" layout-align="start center" class="marginR20">

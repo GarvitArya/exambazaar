@@ -11,22 +11,9 @@ var examSchema = mongoose.Schema({
     active: {type: Boolean, default:'false'},
     rank: {type: Number},
     stream: { type: Schema.ObjectId, ref: 'stream' },
-    resultFormat: {type: String},
-    website: {type: String},
-    
-    registration:{
-        website: {type: String},
-        mode: {type: String},
-        fee:{
-            general_obc: {type: String},
-            sc_st_ph: {type: String},
-            females: {type: String},
-            paymentModes: [{type: String}],
-        },
-        otherInformation:{type: String},
-    },
-    /*what: {type: String},
+    what: {type: String},
     brochure: {type: String},
+    website: {type: String},
     appear: {type: String},
     registration: {type: String},
     dates: {type: String},
@@ -35,14 +22,17 @@ var examSchema = mongoose.Schema({
     preparation: {type: String},
     studysource: {type: String},
     previouspapers: {type: String},
+    resultFormat: {type: String},
     qualify: {type: String},
     colleges: {type: String},
-    doubts: {type: String},*/
+    doubts: {type: String},
     
     links:[{
         url: {type: String},
         description: {type: String},
     }],
+    
+    
     cycle: [{
         name: {type: String, required: true},
         description: {type: String},
@@ -71,30 +61,7 @@ var examSchema = mongoose.Schema({
         
         
         examMode: {type: Boolean, default:'false'}, //true means online only, false means other than online also.
-        examMode2: {type: String},
         
-        examSteps:[{
-            name: {type: String},
-            description: {type: String},
-            stepType: {type: String}, //Written, Counselling, Interview
-            stepDate:{
-                dateRangeBool: {type: Boolean, default:'false'},
-                dateRange:{
-                    startDate: { type: Date },
-                    endDate: { type: Date },
-                },
-                dateArray:[{ type: Date }],
-                timeRange:{
-                    startTime: { type: String },
-                    endTime: { type: String },
-                },
-                dates:[{
-                    start: { type: Date },
-                    end: { type: Date },
-                }],
-            },
-        }],
-        examStepInstructions: { type: String },
         steps: {
             registration: {type: Boolean},
             admitCard: {type: Boolean},

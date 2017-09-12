@@ -78,6 +78,7 @@ app.get('/*', function (req, res, next) {
         next();
 });
 
+
 app.get('*', function(req, res, next) {
     if (req.get('x-forwarded-proto') != "https") {
         res.set('x-forwarded-proto', 'https');
@@ -86,6 +87,7 @@ app.get('*', function(req, res, next) {
         next();     
     }
 });
+
 
 
 app.get('/auth/facebook',
