@@ -91,6 +91,7 @@ var examSchema = mongoose.Schema({
                 dates:[{
                     start: { type: Date },
                     end: { type: Date },
+                    name: { type: String },
                 }],
             },
         }],

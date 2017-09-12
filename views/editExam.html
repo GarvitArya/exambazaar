@@ -566,14 +566,67 @@
                         Exam Steps
                     </div>
                     <div layout="row" layout-align="start start"  class="width100" layout-wrap>
-                        <div layout="column" layout-align="start start" class="padding10" ng-repeat="examStep in newExamCycle.examSteps">
-                            {{examStep}}
+                        <div layout="column" layout-align="start start" class="padding10" ng-repeat="examStep in newExamCycle.examSteps" ng-click="setExamStep(examStep)">
+                            {{examStep.stepType}}
                         </div>
                     </div>
                     <div layout="column" layout-align="start start"  class="width100 paddingLR10">
                     
                         <div layout="row" layout-align="center center" id="upload3" class="width100 marginTB10" ng-click="addNewExamStep(newExamCycle)">
                             <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Exam Step
+                        </div>
+                    </div>
+                </div>
+                <div layout="column" layout-align="start start"  class="width100 marginTB10" ng-if="newExamStep">
+                    <div layout="row" layout-align="start start"  class="width100 marginB10">
+                        <div flex layout="column" layout-align="start start" class="paddingLR10">
+                            <div class="width100">
+                                Step Type
+                            </div>
+                            <div class="width100">
+                                <md-select ng-model="newExamStep.stepType" placeholder="Select the mode of the Exam" class="margin0">
+                                    <md-option ng-repeat="stepType in stepTypes" ng-value="stepType">
+                                    {{stepType}}
+                                    </md-option>
+                                </md-select>
+                            </div>
+                        </div>
+                        <div flex layout="column" layout-align="start start" class="paddingLR10">
+                            <div class="width100">
+                                Step Name
+                            </div>
+                            <div class="width100">
+                                <input type="text" class="width100" ng-model="newExamStep.name"  placeholder="Step name">
+                            </div>
+                        </div>
+                        <div flex layout="column" layout-align="start start" class="paddingLR10">
+                            <div class="width100">
+                                Step Description
+                            </div>
+                            <div class="width100">
+                                <input type="text" class="width100" ng-model="newExamStep.description"  placeholder="Step Description">
+                            </div>
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start start"  class="width100 marginB10">
+                        <div flex layout="column" layout-align="start start" class="paddingLR10">
+                            <div class="width100">
+                                Date Range?
+                            </div>
+                            <div class="width100">
+                                <md-switch ng-model="newExamStep.stepDate.dateRangeBool" aria-label="Registration?" class="margin0">
+                                  Date Range?
+                            </md-switch>
+                            </div>
+                        </div>
+                        <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="newExamStep.stepDate.dateRangeBool">
+                            <div class="width100">
+                                Enter Date Range
+                            </div>
+                            <div layout="column" layout-align="start start" class="width100">
+                                <md-datepicker ng-model="newExamStep.stepDate.dateRange.startDate" md-placeholder="Start Date"></md-datepicker>
+                                <md-datepicker ng-model="newExamStep.stepDate.dateRange.endDate" md-placeholder="End Date"></md-datepicker>
+                            </div>
                         </div>
                     </div>
                 </div>

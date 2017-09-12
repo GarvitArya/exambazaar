@@ -6931,7 +6931,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
             
             
-            $rootScope.permittedToAdd = ['59899631a68cea0154b49502', '59a9749112e754442af93d43', '59a24d743011356248da915e', '59085f0fc7289d0011d6ea8c', '5995886d0f6bc61245d8464f'
+            $rootScope.permittedToAdd = ['59899631a68cea0154b49502',  '59085f0fc7289d0011d6ea8c',   '5995886d0f6bc61245d8464f',
+             '599fca5e4c74d419da60f1f1',
                                         ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             //ABCD
@@ -16432,6 +16433,8 @@ function getLatLng(thisData) {
             $scope.newExamCycle = cycle;
             //console.log(cycle);
         };
+            
+        $scope.stepTypes = ["Written", "Counselling", "Interview"];
         $scope.newExamStep = null;
         var today = moment();
         $scope.addNewExamStep = function(newExamCycle){
@@ -16458,7 +16461,28 @@ function getLatLng(thisData) {
                 newExamCycle.examSteps = [];
             }
             newExamCycle.examSteps.push($scope.newExamStep);
-        }; 
+        };
+            
+        $scope.$watch('newExamStep.stepDate.dateRangeBool', function (newValue, oldValue, scope) {
+            if(newValue != null){
+                if(newValue == true){
+                    $scope.newExamStep.stepDate.dateRange.startDate = moment();
+                    $scope.newExamStep.stepDate.dateRange.endDate = moment();
+                    
+                    $scope.newExamStep.stepDate.dateArray = [];
+                }else{
+                    $scope.newExamStep.stepDate.dateRange.startDate = null;
+                    $scope.newExamStep.stepDate.dateRange.endDate = null;
+                    
+                    //$scope.newExamStep.stepDate.dateArray = [];
+                }
+
+            }
+
+        }, true);
+        $scope.setExamStep = function(examStep){
+            $scope.newExamStep = examStep;
+        };
             
         $scope.saveNewExamCycle = function(){
             
