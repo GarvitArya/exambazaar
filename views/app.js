@@ -6933,7 +6933,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $rootScope.permittedToAdd = ['59899631a68cea0154b49502',  '59085f0fc7289d0011d6ea8c',   '5995886d0f6bc61245d8464f',
              '599fca5e4c74d419da60f1f1',
-                                        ];
+             '59a7eb973d71f10170dbb468'];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             //ABCD
             var headerGreenStates = ["findCoaching", "showCoaching", "showGroup"];
