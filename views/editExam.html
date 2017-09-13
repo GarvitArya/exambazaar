@@ -608,7 +608,7 @@
                             </div>
                         </div>
                     </div>
-                    <div layout="row" layout-align="start start"  class="width100 marginB10">
+                    <div layout="row" layout-align="start start"  class="width100 marginTB10">
                         <div flex layout="column" layout-align="start start" class="paddingLR10">
                             <div class="width100">
                                 Date Range?
@@ -636,6 +636,33 @@
                                 <md-datepicker ng-model="toAddDate" md-placeholder="To Add Date"></md-datepicker>
                                 <md-button class="md-black md-small secondFont tolowercase font12" ng-click="addNewExamDate(newExamCycle)">
                                     Add
+                                </md-button>
+                            </div>
+                        </div>
+                        <div flex layout="column" layout-align="start start" class="paddingLR10" >
+                            <div class="width100">
+                                Enter Time Range
+                            </div>
+                            <div layout="column" layout-align="start start" class="width100">
+                                <md-select ng-model="toAddTimeRange.startTime" placeholder="Start time" class="margin0">
+                                    <md-option ng-repeat="timeSlot in timeSlots" ng-value="timeSlot">
+                                    {{timeSlot}}
+                                    </md-option>
+                                </md-select>
+                                <md-select ng-model="toAddTimeRange.endTime" placeholder="End time" class="margin0">
+                                    <md-option ng-repeat="timeSlot in timeSlots" ng-value="timeSlot">
+                                    {{timeSlot}}
+                                    </md-option>
+                                </md-select>
+                            </div>
+                        </div>
+                        <div flex layout="column" layout-align="start start" class="paddingLR10" >
+                            <div class="width100">
+                                Build Slots
+                            </div>
+                            <div layout="column" layout-align="start start" class="width100">
+                                <md-button class="md-black md-small secondFont tolowercase font12" ng-click="buildSlots()">
+                                    Go
                                 </md-button>
                             </div>
                         </div>

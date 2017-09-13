@@ -84,10 +84,10 @@ var examSchema = mongoose.Schema({
                     endDate: { type: Date },
                 },
                 dateArray:[{ type: Date }],
-                timeRange:{
+                timeRange:[{
                     startTime: { type: String },
                     endTime: { type: String },
-                },
+                }],
                 dates:[{
                     start: { type: Date },
                     end: { type: Date },

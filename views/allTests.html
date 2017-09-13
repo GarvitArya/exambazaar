@@ -46,7 +46,7 @@
                 <!--ng-click="readTest(test)"-->
                 <!--ng-href="{{test.url.question}}"-->
                 <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB5">
-                    {{$index + 1}}. Link&nbsp;&nbsp;<i class="fa fa-anchor" aria-hidden="true" ng-if="test.url.answer"></i>
+                    {{$index + 1}}. {{test.name}}&nbsp;&nbsp;<i class="fa fa-anchor" aria-hidden="true" ng-if="test.url.answer"></i>
                 </a>
             </div>
         </div>

@@ -28,19 +28,19 @@
     #link:hover{
         color: #20C39A;
     }
-    #examTagHolder{
+    .examTagHolder{
         padding:5px;
         color: #333333;
         background: white;
         border: 1px solid #FF5A5F;
     }
-    #examTagHolder:hover{
+    .examTagHolder:hover{
         color: white;
         
         background: #FF5A5F;
         border: 1px solid #fff;
     }
-    #existingExamTagHolder{
+    .existingExamTagHolder{
         padding:5px;
         color: white;
         background: #FF5A5F;
@@ -206,7 +206,7 @@
                     </div>
                     <div flex="85">
                         <span ng-repeat="thisExam in allExams  | orderBy:'-rank'" ng-if="thisExam.stream._id == thisStream._id">
-                            <span class="badge" id="examTagHolder" ng-if="markingPage.exams.indexOf(thisExam._id) == -1" ng-click="addRemovePageExam(thisExam)">
+                            <span class="badge" ng-class="examBadgeClass(thisExam)"  ng-click="addRemovePageExam(thisExam)">
                                 {{thisExam.displayname}}
                             </span>
                             <!--<span class="badge" id="existingExamTagHolder" ng-if="markingPage.exams.indexOf(thisExam._id) != -1" ng-click="removePageExam(thisExam)">
