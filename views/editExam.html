@@ -628,6 +628,17 @@
                                 <md-datepicker ng-model="newExamStep.stepDate.dateRange.endDate" md-placeholder="End Date"></md-datepicker>
                             </div>
                         </div>
+                        <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="!newExamStep.stepDate.dateRangeBool">
+                            <div class="width100">
+                                Enter Dates
+                            </div>
+                            <div layout="column" layout-align="start start" class="width100">
+                                <md-datepicker ng-model="toAddDate" md-placeholder="To Add Date"></md-datepicker>
+                                <md-button class="md-black md-small secondFont tolowercase font12" ng-click="addNewExamDate(newExamCycle)">
+                                    Add
+                                </md-button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--<div layout="column" layout-align="start start"  class="width100 marginTB10">

@@ -1359,7 +1359,7 @@ function closeContactCI(userId, pastInternId, res){
 
 
 router.get('/closeInternship/:userId', function(req, res) {
-    var pastInternId = '599c2bab54161317886da9f6';
+    var pastInternId = '59a7eb973d71f10170dbb468';
     var userId = req.params.userId;
     var thisUser = user
         .findOne({ '_id': userId, userType:'Intern - Business Development' },{userType:1, basic: 1})

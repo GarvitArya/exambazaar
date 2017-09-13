@@ -8181,7 +8181,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Ranchi', 'Mysore','Pondicherry', 'Kochi', 'Gurgaon', 'Bathinda', 'Jalandhar'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Ranchi', 'Mysore','Pondicherry', 'Kochi', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -16437,6 +16437,7 @@ function getLatLng(thisData) {
         $scope.stepTypes = ["Written", "Counselling", "Interview"];
         $scope.newExamStep = null;
         var today = moment();
+        $scope.toAddDate = moment();
         $scope.addNewExamStep = function(newExamCycle){
             $scope.newExamStep = {
                 name: '',
@@ -16462,6 +16463,13 @@ function getLatLng(thisData) {
             }
             newExamCycle.examSteps.push($scope.newExamStep);
         };
+        $scope.addNewExamDate = function(newExamCycle){
+            if(!$scope.newExamStep.stepDate.dateArray){
+                $scope.newExamStep.stepDate.dateArray = [];
+            }
+            $scope.newExamStep.stepDate.dateArray.push($scope.toAddDate);
+            console.log($scope.newExamStep.stepDate.dateArray);
+        };
             
         $scope.$watch('newExamStep.stepDate.dateRangeBool', function (newValue, oldValue, scope) {
             if(newValue != null){
@@ -16473,7 +16481,9 @@ function getLatLng(thisData) {
                 }else{
                     $scope.newExamStep.stepDate.dateRange.startDate = null;
                     $scope.newExamStep.stepDate.dateRange.endDate = null;
-                    
+                    if(!$scope.newExamStep.stepDate.dateArray){
+                        $scope.newExamStep.stepDate.dateArray = [];
+                    }
                     //$scope.newExamStep.stepDate.dateArray = [];
                 }
 
