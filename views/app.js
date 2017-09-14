@@ -8181,7 +8181,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur','Malappuram', 'Kannur', 'Vijayawada','Agartala'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -16446,7 +16446,7 @@ function getLatLng(thisData) {
         $scope.stepTypes = ["Written", "Counselling", "Interview"];
         $scope.newExamStep = null;
         var today = moment();
-        $scope.toAddDate = moment();
+        $scope.toAddDate = new Date();
         $scope.toAddTimeRange = null;
         $scope.addNewExamStep = function(newExamCycle){
             $scope.newExamStep = {
@@ -16484,11 +16484,22 @@ function getLatLng(thisData) {
                     endTime: '23:00',
                 }];
                 $scope.newExamStep.stepDate.timeRange = timeRange;
+                $scope.toAddTimeRange = timeRange[0];
+               
             }
             if(dateRangeBool){
                 var startDate = $scope.newExamStep.stepDate.dateRange.startDate;
                 var endDate = $scope.newExamStep.stepDate.dateRange.endDate;
-                
+                console.log(startDate + " " + endDate);
+                /*
+                for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+                    console.log(d);
+                    timeRange.forEach(function(thisRange, index){
+                        console.log(d + " " + thisRange.startTime);
+                        console.log(d + " " + thisRange.endTime);
+                    }); 
+                }
+
                 for (var m = startDate; m.diff(endDate, 'days') <= 0; m.add(1, 'days')) {
                     console.log(m.format('YYYY-MM-DD'));
                     timeRange.forEach(function(thisRange, index){
@@ -16496,7 +16507,7 @@ function getLatLng(thisData) {
                         console.log(m.format('YYYY-MM-DD') + " " + thisRange.endTime);
                     }); 
                   
-                }
+                }*/
             }
         };
         $scope.addNewExamDate = function(newExamCycle){
@@ -16509,8 +16520,8 @@ function getLatLng(thisData) {
         $scope.$watch('newExamStep.stepDate.dateRangeBool', function (newValue, oldValue, scope) {
             if(newValue != null){
                 if(newValue == true){
-                    $scope.newExamStep.stepDate.dateRange.startDate = moment();
-                    $scope.newExamStep.stepDate.dateRange.endDate = moment();
+                    $scope.newExamStep.stepDate.dateRange.startDate = new Date();
+                    $scope.newExamStep.stepDate.dateRange.endDate = new Date();
                     
                     $scope.newExamStep.stepDate.dateArray = [];
                 }else{

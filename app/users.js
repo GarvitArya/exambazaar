@@ -1256,6 +1256,8 @@ function closeCreatedCI(userId, pastInternId, res){
 
 function closeCreatedQuestion(userId, pastInternId, res){
     console.log('Starting Question created by process:');
+    console.log('User is:' + userId);
+    console.log('Past intern is:' + pastInternId);
     var allElements = question
     .find({_createdBy: userId},{_createdBy:1})
     .exec(function (err, allElements) {
