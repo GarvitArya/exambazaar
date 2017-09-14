@@ -15693,7 +15693,23 @@ function getLatLng(thisData) {
                 }
              };
             
-    }]);    
+    }]);
+    Date.prototype.addDays = function(days) {
+        var date = new Date(this.valueOf())
+        date.setDate(date.getDate() + days);
+        return date;
+    }
+    function getDateRange(startDate, endDate, addFn, interval) {
+         addFn = addFn || Date.prototype.addDays;
+         interval = interval || 1;
+         var retVal = [];
+         var current = new Date(startDate);
+         while (current <= endDate) {
+          retVal.push(new Date(current));
+          current = addFn.call(current, interval);
+         }
+         return retVal;
+    }
     
     exambazaar.controller("editExamController", 
         [ '$scope',  'thisexam', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', '$cookies', 'testList', function($scope, thisexam, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope, $cookies, testList){
@@ -15762,7 +15778,7 @@ function getLatLng(thisData) {
             "Challan",
         ];
         $scope.cycleYears = ["2016","2017","2018","2019","2020"];
-        $scope.timeSlots = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"];
+        $scope.timeSlots = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "00:00", "01:00", "02:00", "03:00", "04:00", "05:00"];
         $scope.cycleNumbers = ["1","2","3","4","5","6","7","8","9","10","11","12"];
         
         $scope.newOfficialLink = null;   
@@ -16447,6 +16463,7 @@ function getLatLng(thisData) {
         $scope.newExamStep = null;
         var today = moment();
         $scope.toAddDate = new Date();
+        $scope.toAddDate.setUTCHours(0,0,0,0)
         $scope.toAddTimeRange = null;
         $scope.addNewExamStep = function(newExamCycle){
             $scope.newExamStep = {
@@ -16455,15 +16472,13 @@ function getLatLng(thisData) {
                 stepType: 'Written', //Written, Counselling, Interview
                 stepDate:{
                     dateRangeBool: true,
+                    timeRangeBool: true,
                     dateRange:{
                         startDate: null,
                         endDate: null,
                     },
                     dateArray:[],
-                    timeRange:[{
-                        startTime: '00:00',
-                        endTime: '23:00',
-                    }],
+                    timeRange:[],
                     dates:[],
                 },
             };
@@ -16475,61 +16490,155 @@ function getLatLng(thisData) {
             $scope.toAddTimeRange = $scope.newExamStep.stepDate.timeRange[0];
             console.log($scope.toAddTimeRange);
         };
-        $scope.buildSlots = function(){
-            var dateRangeBool = $scope.newExamStep.stepDate.dateRangeBool;
-            var timeRange = $scope.newExamStep.stepDate.timeRange;
-            if(!timeRange){
-                timeRange = [{
-                    startTime: '00:00',
-                    endTime: '23:00',
-                }];
-                $scope.newExamStep.stepDate.timeRange = timeRange;
-                $scope.toAddTimeRange = timeRange[0];
-               
-            }
-            if(dateRangeBool){
-                var startDate = $scope.newExamStep.stepDate.dateRange.startDate;
-                var endDate = $scope.newExamStep.stepDate.dateRange.endDate;
-                console.log(startDate + " " + endDate);
-                /*
-                for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-                    console.log(d);
-                    timeRange.forEach(function(thisRange, index){
-                        console.log(d + " " + thisRange.startTime);
-                        console.log(d + " " + thisRange.endTime);
-                    }); 
-                }
-
-                for (var m = startDate; m.diff(endDate, 'days') <= 0; m.add(1, 'days')) {
-                    console.log(m.format('YYYY-MM-DD'));
-                    timeRange.forEach(function(thisRange, index){
-                        console.log(m.format('YYYY-MM-DD') + " " + thisRange.startTime);
-                        console.log(m.format('YYYY-MM-DD') + " " + thisRange.endTime);
-                    }); 
-                  
-                }*/
-            }
-        };
-        $scope.addNewExamDate = function(newExamCycle){
+        
+        
+        $scope.addNewExamDate = function(newExamCycle, toAddDate){
             if(!$scope.newExamStep.stepDate.dateArray){
                 $scope.newExamStep.stepDate.dateArray = [];
             }
-            $scope.newExamStep.stepDate.dateArray.push($scope.toAddDate);
+            toAddDate.setUTCHours(0,0,0,0);
+            console.log(toAddDate);
+            $scope.newExamStep.stepDate.dateArray.push(toAddDate);
         };
+        $scope.addNewTimeRange = function(newExamCycle, toAddTimeRange){
+            if(!$scope.newExamStep.stepDate.timeRange){
+                $scope.newExamStep.stepDate.timeRange = [];
+            }
+            var exists = false;
+            var overlaps = false;
+            $scope.newExamStep.stepDate.timeRange.forEach(function(thisRange, rindex){
+                if(thisRange.startTime == toAddTimeRange.startTime && thisRange.endTime == toAddTimeRange.endTime){
+                   exists = true;
+                }
+                
+                var trst = $scope.timeSlots.indexOf(thisRange.startTime);
+                var tret = $scope.timeSlots.indexOf(thisRange.endTime);
+                var tast = $scope.timeSlots.indexOf(toAddTimeRange.startTime);
+                var taet = $scope.timeSlots.indexOf(toAddTimeRange.endTime);
+                
+                if(trst < tast && tret > tast){
+                    overlaps = true;
+                }
+                if(trst < taet && tret > taet){
+                    overlaps = true;
+                }
+            });
+            if(!exists && !overlaps){
+                var newTimeRange = {
+                    startTime: toAddTimeRange.startTime,
+                    endTime: toAddTimeRange.endTime,
+                }
+                $scope.newExamStep.stepDate.timeRange.push(newTimeRange);
+                Notification.success("Time slot added successfully!");
+                
+            }else{
+                if(exists){
+                    Notification.warning("Did not add this time slot, as it already exists!");
+                }
+                if(overlaps){
+                    Notification.warning("Did not add this time slot, as it overlaps with an existing timeslot!");
+                }
+            }
+            
+            
+            
+        };
+            
+        $scope.buildSlots = function(){
+            var allDates = $scope.newExamStep.stepDate.allDates;
+            var timeRange = $scope.newExamStep.stepDate.timeRange;
+            console.log(timeRange);
+            if(allDates.length > 0 && timeRange.length > 0){
+                $scope.newExamStep.stepDate.dates = [];
+                allDates.forEach(function(thisDate, dindex){
+                    timeRange.forEach(function(thisRange, tindex){
+                        var startTime = thisRange.startTime;
+                        var endTime = thisRange.endTime;
+                        var startDateTime = new Date(thisDate);
+                        var endDateTime = new Date(thisDate);
+                        
+                        if(startTime){
+                            var res = startTime.split(":");
+                            var hours = res[0];
+                            var minutes = res[1];
+                            startDateTime.setHours(hours);
+                            startDateTime.setMinutes(minutes);
+                        }
+                        if(endTime){
+                            var res = endTime.split(":");
+                            var hours = res[0];
+                            var minutes = res[1];
+                            endDateTime.setHours(hours);
+                            endDateTime.setMinutes(minutes);
+                        }
+                        var newDate = {
+                            start: startDateTime,
+                            end: endDateTime,
+                            name: '',
+                        };
+                        $scope.newExamStep.stepDate.dates.push(newDate);
+                    });
+                });
+            }
+            console.log($scope.newExamStep.stepDate.dates);
+        };
+        $scope.$watch('newExamStep.stepDate.dateRange', function (newValue, oldValue, scope) {
+            if(newValue != null){
+                if($scope.newExamStep.stepDate.dateRangeBool){
+                    var dateRange = getDateRange($scope.newExamStep.stepDate.dateRange.startDate, $scope.newExamStep.stepDate.dateRange.endDate);
+                    $scope.newExamStep.stepDate.allDates = dateRange;
+                    console.log($scope.newExamStep.stepDate.allDates);
+                }
+            }
+
+        }, true);
+            
+        $scope.$watch('newExamStep.stepDate.timeRangeBool', function (newValue, oldValue, scope) {
+            if(newValue != null){
+                if(newValue == true){
+                    /*$scope.newExamStep.stepDate.timeRange = [{
+                        startTime: '00:00',
+                        endTime: '23:00',
+                    }];*/
+                }else{
+                   if($scope.newExamStep.stepDate.timeRange){
+                       console.log($scope.newExamStep.stepDate.timeRange);
+                       $scope.newExamStep.stepDate.timeRange.forEach(function(thisRange, rindex){
+                           if(thisRange.startTime == "00:00" && thisRange.endTime == "23:00"){
+                               $scope.newExamStep.stepDate.timeRange.splice(rindex, 1);
+                           }
+                       });
+                   }
+                }
+
+            }
+
+        }, true);
             
         $scope.$watch('newExamStep.stepDate.dateRangeBool', function (newValue, oldValue, scope) {
             if(newValue != null){
                 if(newValue == true){
-                    $scope.newExamStep.stepDate.dateRange.startDate = new Date();
-                    $scope.newExamStep.stepDate.dateRange.endDate = new Date();
+                    if(!$scope.newExamStep.stepDate.dateRange.startDate){
+                        $scope.newExamStep.stepDate.dateRange.startDate = new Date();
+                        $scope.newExamStep.stepDate.dateRange.startDate.setUTCHours(0,0,0,0);
+                    }
+                    if(!$scope.newExamStep.stepDate.dateRange.endDate){
+                        $scope.newExamStep.stepDate.dateRange.endDate = new Date();
+                        $scope.newExamStep.stepDate.dateRange.endDate.setUTCHours(0,0,0,0);
+                    }
+                    var dateRange = getDateRange($scope.newExamStep.stepDate.dateRange.startDate, $scope.newExamStep.stepDate.dateRange.endDate);
+                    
+                    $scope.newExamStep.stepDate.allDates = dateRange;
                     
                     $scope.newExamStep.stepDate.dateArray = [];
+                    
                 }else{
                     $scope.newExamStep.stepDate.dateRange.startDate = null;
                     $scope.newExamStep.stepDate.dateRange.endDate = null;
                     if(!$scope.newExamStep.stepDate.dateArray){
                         $scope.newExamStep.stepDate.dateArray = [];
                     }
+                    $scope.newExamStep.stepDate.allDates = $scope.newExamStep.stepDate.dateArray;
                     //$scope.newExamStep.stepDate.dateArray = [];
                 }
 
@@ -16538,6 +16647,7 @@ function getLatLng(thisData) {
         }, true);
         $scope.setExamStep = function(examStep){
             $scope.newExamStep = examStep;
+            //console.log(examStep);
         };
             
         $scope.saveNewExamCycle = function(){
@@ -16548,6 +16658,8 @@ function getLatLng(thisData) {
             var examCylceIds = $scope.exam.cycle.map(function(a) {return a._id;});
             var examCycleNames = $scope.exam.cycle.map(function(a) {return a.name;});
             if($scope.newExamCycle._id){
+                console.log($scope.newExamCycle);
+                
                 var cIndex = examCylceIds.indexOf($scope.newExamCycle._id);
                 if(cIndex != -1){
                     $scope.exam.cycle[cIndex] = $scope.newExamCycle;
@@ -16616,6 +16728,8 @@ function getLatLng(thisData) {
         }; 
             
     }]);
+        
+        
         
     exambazaar.controller("addExamController", 
         [ '$scope',  'examList', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', function($scope, examList, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope){
@@ -18161,14 +18275,13 @@ function getLatLng(thisData) {
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
             
-            
-            
-            var defaultBlogCover = "images/background/examinfo.jpg";
+            var defaultBlogCover = "https://exambazaar.com/images/background/examinfo.jpg";
             if($scope.blogpost.coverPhoto){
                 $scope.thisBlogCover = $scope.blogpost.coverPhoto;
             }else{
                 $scope.thisBlogCover = defaultBlogCover;
             }
+            console.log($scope.blogpost.coverPhoto);
             
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser'); UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
@@ -18459,7 +18572,7 @@ function getLatLng(thisData) {
             $scope.$watch('blogpost.seoKeywords', function (newValue, oldValue, scope) {
                 if(newValue && newValue.length > 0){
                     $scope.nKeywords = (newValue.match(new RegExp(",", "g")) || []).length + 1;
-                    console.log($scope.nKeywords);
+                    //console.log($scope.nKeywords);
                 }
 
             }, true);
@@ -18478,7 +18591,7 @@ function getLatLng(thisData) {
                         for (var property in blogpost) {
                             blogpostForm[property] = blogpost[property];
                         }
-                        console.log(blogpostForm);
+                        //console.log(blogpostForm);
                         blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                             $scope.showSavedDialog();
                         })
@@ -18490,7 +18603,7 @@ function getLatLng(thisData) {
                     }else{
                         if($scope.blogpost._id == data){
                             //do nothing
-                            console.log(data);
+                            //console.log(data);
                             
                             
                             var blogpostForm = {
@@ -18499,7 +18612,7 @@ function getLatLng(thisData) {
                             for (var property in blogpost) {
                                 blogpostForm[property] = blogpost[property];
                             }
-                            console.log(blogpostForm);
+                            //console.log(blogpostForm);
                             blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                                 $scope.showSavedDialog();
                             })
@@ -19035,6 +19148,7 @@ function getLatLng(thisData) {
             
             $rootScope.pageTitle = $scope.blogpost.title + " | Exambazaar.com";
             $rootScope.pageImage = $scope.thisBlogCover;
+            
             $rootScope.pageDescription =  $scope.blogpost.seoDescription;
             $rootScope.pageKeywords =  $scope.blogpost.seoKeywords;
             

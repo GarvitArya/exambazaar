@@ -577,7 +577,7 @@
                         </div>
                     </div>
                 </div>
-                <div layout="column" layout-align="start start"  class="width100 marginTB10" ng-if="newExamStep">
+                <div layout="column" layout-align="start start"  class="width100 marginTB10 padding10 greyBorder" ng-if="newExamStep">
                     <div layout="row" layout-align="start start"  class="width100 marginB10">
                         <div flex layout="column" layout-align="start start" class="paddingLR10">
                             <div class="width100">
@@ -615,8 +615,13 @@
                             </div>
                             <div class="width100">
                                 <md-switch ng-model="newExamStep.stepDate.dateRangeBool" aria-label="Registration?" class="margin0">
-                                  Date Range?
-                            </md-switch>
+                                      Date Range?
+                                </md-switch>
+                            </div>
+                            <div class="width100">
+                                <md-switch ng-model="newExamStep.stepDate.timeRangeBool" aria-label="Full Day?" class="margin0">
+                                      Full Day?
+                                </md-switch>
                             </div>
                         </div>
                         <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="newExamStep.stepDate.dateRangeBool">
@@ -634,17 +639,18 @@
                             </div>
                             <div layout="column" layout-align="start start" class="width100">
                                 <md-datepicker ng-model="toAddDate" md-placeholder="To Add Date"></md-datepicker>
-                                <md-button class="md-black md-small secondFont tolowercase font12" ng-click="addNewExamDate(newExamCycle)">
+                                <md-button class="md-black md-small secondFont tolowercase font12" ng-click="addNewExamDate(newExamCycle, toAddDate)">
                                     Add
                                 </md-button>
                             </div>
                         </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10" >
-                            <div class="width100">
-                                Enter Time Range
+                        <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="!newExamStep.stepDate.timeRangeBool">
+                            <div layout="row" layout-align="start start" class="width100">
+                                Enter Time Slot
                             </div>
                             <div layout="column" layout-align="start start" class="width100">
-                                <md-select ng-model="toAddTimeRange.startTime" placeholder="Start time" class="margin0">
+                                <div layout="row" layout-align="start start">
+                                <md-select ng-model="toAddTimeRange.startTime" placeholder="Start time" class="margin0 marginR10">
                                     <md-option ng-repeat="timeSlot in timeSlots" ng-value="timeSlot">
                                     {{timeSlot}}
                                     </md-option>
@@ -654,6 +660,10 @@
                                     {{timeSlot}}
                                     </md-option>
                                 </md-select>
+                                </div>
+                                <md-button class="md-black md-small secondFont tolowercase font12" ng-click="addNewTimeRange(newExamCycle, toAddTimeRange)">
+                                    Add
+                                </md-button>
                             </div>
                         </div>
                         <div flex layout="column" layout-align="start start" class="paddingLR10" >
@@ -668,7 +678,24 @@
                         </div>
                     </div>
                     <div layout="row" layout-align="start start"  class="width100 marginB10">
-                        {{newExamStep.stepDate}}
+                        <div layout="row" layout-align="start start" flex layout-wrap>
+                            <div flex="20" ng-repeat="dateRange in newExamStep.stepDate.dates" class="padding10 greyBorder">
+                                <div ng-if="!newExamStep.stepDate.timeRangeBool">
+                                    {{dateRange.start | date:'MMM d, y HH:mm'}} to {{dateRange.end | date:'MMM d, y HH:mm'}}
+                                </div>
+                                <div ng-if="newExamStep.stepDate.timeRangeBool">
+                                    {{dateRange.start | date:'MMM d, y'}} full day
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                    <div layout="row" layout-align="start start"  class="width100 marginB10">
+                        <div layout="row" layout-align="start start" flex>
+                            {{newExamStep.stepDate}}
+                        </div>
+                        
                     </div>
                 </div>
                 <!--<div layout="column" layout-align="start start"  class="width100 marginTB10">
