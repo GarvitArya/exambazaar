@@ -15700,15 +15700,18 @@ function getLatLng(thisData) {
         return date;
     }
     function getDateRange(startDate, endDate, addFn, interval) {
-         addFn = addFn || Date.prototype.addDays;
-         interval = interval || 1;
-         var retVal = [];
-         var current = new Date(startDate);
-         while (current <= endDate) {
-          retVal.push(new Date(current));
-          current = addFn.call(current, interval);
-         }
-         return retVal;
+        
+        addFn = addFn || Date.prototype.addDays;
+        interval = interval || 1;
+        var retVal = [];
+        var current = new Date(startDate);
+        var endDate = new Date(endDate);
+        while (current <= endDate) {
+            //console.log(current);
+            retVal.push(new Date(current));
+            current = addFn.call(current, interval);
+        }
+        return retVal;
     }
     
     exambazaar.controller("editExamController", 
@@ -15808,7 +15811,8 @@ function getLatLng(thisData) {
             }
         };
         $scope.saveExam = function () {
-            console.log($scope.exam);
+            //console.log($scope.exam);
+            
             var saveExam = ExamService.saveExam($scope.exam).success(function (data, status, headers) {
                 $scope.showSavedDialog();
             })
@@ -16459,27 +16463,32 @@ function getLatLng(thisData) {
             //console.log(cycle);
         };
             
-        $scope.stepTypes = ["Written", "Counselling", "Interview"];
+        $scope.stepTypes = ["Registration", "Admit Card", "Written", "Counselling", "Interview"];
+        $scope.writtenStepNames = ["Prelims", "Mains", "Other"];    
         $scope.newExamStep = null;
         var today = moment();
         $scope.toAddDate = new Date();
-        $scope.toAddDate.setUTCHours(0,0,0,0)
+        $scope.toAddDate.setUTCHours(0,0,0,0);
+        var today = new Date();
+        today.setUTCHours(0,0,0,0);
         $scope.toAddTimeRange = null;
         $scope.addNewExamStep = function(newExamCycle){
             $scope.newExamStep = {
-                name: '',
+                name: 'Prelims',
                 description: '',
                 stepType: 'Written', //Written, Counselling, Interview
+                otherName: '',
                 stepDate:{
                     dateRangeBool: true,
                     timeRangeBool: true,
                     dateRange:{
-                        startDate: null,
-                        endDate: null,
+                        startDate: today,
+                        endDate: today,
                     },
                     dateArray:[],
                     timeRange:[],
                     dates:[],
+                    allDates:[],
                 },
             };
             
@@ -16490,7 +16499,24 @@ function getLatLng(thisData) {
             $scope.toAddTimeRange = $scope.newExamStep.stepDate.timeRange[0];
             console.log($scope.toAddTimeRange);
         };
-        
+        $scope.moveStepBefore = function(newExamCycle, $index){
+            var nLength = newExamCycle.examSteps.length;
+            if($index > 0){
+                var stepBefore = newExamCycle.examSteps[$index - 1];
+                var thisStep = newExamCycle.examSteps[$index];
+                newExamCycle.examSteps[$index - 1] = thisStep;
+                newExamCycle.examSteps[$index] = stepBefore;
+            }
+        };
+        $scope.moveStepAfter = function(newExamCycle, $index){
+            var nLength = newExamCycle.examSteps.length;
+            if($index < nLength-1){
+                var stepAfter = newExamCycle.examSteps[$index + 1];
+                var thisStep = newExamCycle.examSteps[$index];
+                newExamCycle.examSteps[$index + 1] = thisStep;
+                newExamCycle.examSteps[$index] = stepAfter;
+            }
+        };
         
         $scope.addNewExamDate = function(newExamCycle, toAddDate){
             if(!$scope.newExamStep.stepDate.dateArray){
@@ -16499,6 +16525,7 @@ function getLatLng(thisData) {
             toAddDate.setUTCHours(0,0,0,0);
             console.log(toAddDate);
             $scope.newExamStep.stepDate.dateArray.push(toAddDate);
+            $scope.buildSlots();
         };
         $scope.addNewTimeRange = function(newExamCycle, toAddTimeRange){
             if(!$scope.newExamStep.stepDate.timeRange){
@@ -16540,14 +16567,31 @@ function getLatLng(thisData) {
                 }
             }
             
+            $scope.buildSlots();
             
-            
+        };
+        
+        $scope.removeExamDate = function(index){
+            if(index < $scope.newExamStep.stepDate.allDates.length){
+                $scope.newExamStep.stepDate.allDates.splice(index, 1); 
+            }
+        };
+        
+        $scope.removeTimeRange = function(index){
+            if(index < $scope.newExamStep.stepDate.timeRange.length){
+                $scope.newExamStep.stepDate.timeRange.splice(index, 1); 
+            }
+        };
+        $scope.removeDates = function(index){
+            if(index < $scope.newExamStep.stepDate.dates.length){
+                $scope.newExamStep.stepDate.dates.splice(index, 1); 
+            }
         };
             
         $scope.buildSlots = function(){
             var allDates = $scope.newExamStep.stepDate.allDates;
             var timeRange = $scope.newExamStep.stepDate.timeRange;
-            console.log(timeRange);
+            
             if(allDates.length > 0 && timeRange.length > 0){
                 $scope.newExamStep.stepDate.dates = [];
                 allDates.forEach(function(thisDate, dindex){
@@ -16580,14 +16624,13 @@ function getLatLng(thisData) {
                     });
                 });
             }
-            console.log($scope.newExamStep.stepDate.dates);
+            //console.log($scope.newExamStep.stepDate.dates);
         };
         $scope.$watch('newExamStep.stepDate.dateRange', function (newValue, oldValue, scope) {
             if(newValue != null){
                 if($scope.newExamStep.stepDate.dateRangeBool){
                     var dateRange = getDateRange($scope.newExamStep.stepDate.dateRange.startDate, $scope.newExamStep.stepDate.dateRange.endDate);
                     $scope.newExamStep.stepDate.allDates = dateRange;
-                    console.log($scope.newExamStep.stepDate.allDates);
                 }
             }
 
@@ -16596,13 +16639,13 @@ function getLatLng(thisData) {
         $scope.$watch('newExamStep.stepDate.timeRangeBool', function (newValue, oldValue, scope) {
             if(newValue != null){
                 if(newValue == true){
-                    /*$scope.newExamStep.stepDate.timeRange = [{
+                    $scope.newExamStep.stepDate.timeRange = [{
                         startTime: '00:00',
                         endTime: '23:00',
-                    }];*/
+                    }];
                 }else{
                    if($scope.newExamStep.stepDate.timeRange){
-                       console.log($scope.newExamStep.stepDate.timeRange);
+                       //console.log($scope.newExamStep.stepDate.timeRange);
                        $scope.newExamStep.stepDate.timeRange.forEach(function(thisRange, rindex){
                            if(thisRange.startTime == "00:00" && thisRange.endTime == "23:00"){
                                $scope.newExamStep.stepDate.timeRange.splice(rindex, 1);
@@ -16633,12 +16676,15 @@ function getLatLng(thisData) {
                     $scope.newExamStep.stepDate.dateArray = [];
                     
                 }else{
+                    $scope.newExamStep.stepDate.dates = [];
+                    $scope.newExamStep.stepDate.allDates = [];
                     $scope.newExamStep.stepDate.dateRange.startDate = null;
                     $scope.newExamStep.stepDate.dateRange.endDate = null;
                     if(!$scope.newExamStep.stepDate.dateArray){
                         $scope.newExamStep.stepDate.dateArray = [];
                     }
                     $scope.newExamStep.stepDate.allDates = $scope.newExamStep.stepDate.dateArray;
+                    $scope.buildSlots();
                     //$scope.newExamStep.stepDate.dateArray = [];
                 }
 
@@ -16647,6 +16693,13 @@ function getLatLng(thisData) {
         }, true);
         $scope.setExamStep = function(examStep){
             $scope.newExamStep = examStep;
+            //console.log(examStep);
+        };
+        $scope.removeExamStep = function(newExamCycle, index){
+            if(index < newExamCycle.examSteps.length){
+                newExamCycle.examSteps.splice(index, 1);
+            }
+            
             //console.log(examStep);
         };
             

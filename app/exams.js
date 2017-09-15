@@ -19,7 +19,7 @@ router.post('/save', function(req, res) {
     var thisExam = req.body;
     var examId = req.body._id;
     var examName = thisExam.name;
-    //console.log("Exam is: " + JSON.stringify(examName));
+    //console.log("Exam is: " + JSON.stringify(thisExam.cycle));
     var existingExam = exam.findOne({ '_id': examId },function (err, existingExam) {
         if(existingExam){
             for (var property in thisExam) {
@@ -33,7 +33,11 @@ router.post('/save', function(req, res) {
                 res.json('Done');
             });
         }else{
-           var this_exam = new exam({
+            var this_exam = new exam({});
+            for (var property in thisExam) {
+                this_exam[property] = thisExam[property];
+            }
+           /*var this_exam = new exam({
                 name : thisExam.name,
                 displayname : thisExam.displayname,
                 rank : thisExam.rank,
@@ -53,7 +57,7 @@ router.post('/save', function(req, res) {
                 qualify : thisExam.qualify,
                 colleges : thisExam.qualify,
                 doubts : thisExam.qualify
-            });
+            });*/
             this_exam.save(function(err, this_exam) {
                 if (err) return console.error(err);
                 res.json(this_exam._id);
