@@ -97,6 +97,12 @@
         border: solid 1px #A3A3A3;
         box-shadow: 0 0 1px 1px #eaeaea;
     }
+    .sectionBorder{
+        border: 1px solid #eaeaea;
+    }
+    .subsectionBorder2{
+        border: 1px dashed #D1DEDE;
+    }
     input[type="text"]
     {
         font-size: 13px;
@@ -127,6 +133,13 @@
     .section{
         border-bottom: 2px solid #20C39A;
         
+        padding-bottom: 30px;
+        margin-top: 10px;
+    }
+    .editBox{
+        padding: 5px;
+        color: white;
+        background: #FF5A5F;
     }
 </style>
 <div id="spacer3">
@@ -140,7 +153,7 @@
             {{exam.displayname}} Exam
         </div>
     </div>
-    <div layout="column" layout-align="start start" class="   textBlack width100 paddingB20 subhheadingBottomBorder2">
+    <div layout="column" layout-align="start start" class="width100 section">
         <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
             Exam Basic Information
         </div>
@@ -191,17 +204,17 @@
         </div>
     </div>
     
-    <div layout="column" layout-align="start start" class="   textBlack width100 paddingB20 subhheadingBottomBorder2 lightGreyBackground" ng-if="masterUser">
-        <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
+    <div layout="column" layout-align="start start" class="width100 section" ng-if="masterUser">
+        <div layout="row" layout-align="start center"  class="width100 marginTB10 text-primary font16 bold">
             EB Parameters
         </div>
-        <div layout="row" layout-align="start start" class="width100">
+        <div layout="column" layout-align="start start" class="width100 paddingLR10">
             
-        <div flex layout="column" layout-align="start start" class="paddingLR10">
-            <div class="width100">
+        <div layout="row" layout-align="start center" class="width100 padding5">
+            <div flex="20">
                 Stream
             </div>
-            <div class="width100">
+            <div flex>
                 <md-select ng-model="exam.stream" placeholder="Select the stream of the exam" class="margin0">
                     <md-option ng-repeat="stream in streams" ng-value="stream._id">
                     {{stream.displayname}}
@@ -209,41 +222,23 @@
                 </md-select>
             </div>
         </div>
-        <div flex layout="column" layout-align="start start" class="paddingLR10">
-        <div class="width100">
-            Exam Active?
-        </div>
-            <div class="width100">
-                <md-switch ng-model="exam.active" aria-label="Active?" class="margin0">
-                      Active on EB?
-                </md-switch>
-            </div>
-        </div>
-        <div flex layout="column" layout-align="start start" class="paddingLR10">
-            <div class="width100">
-                Exam Display Rank (1-100)
-            </div>
-            <div class="width100">
-                <input type="text" class="width100" ng-model="exam.rank"  placeholder="Exam Display Name">
-            </div>
-        </div>
-        <div flex layout="column" layout-align="start start" class="paddingLR10">
-            <div class="width100">
+        <div layout="row" layout-align="start center" class="width100 padding5">
+            <div flex="20">
                 Frequency of {{exam.displayname}}
             </div>
-            <div class="width100">
+            <div flex>
                 <md-select ng-model="exam.frequency" placeholder="Select the frequency of the exam" class="margin0 width100">
                 <md-option ng-repeat="examFrequency in examFrequencies" ng-value="examFrequency">
                     {{examFrequency}}
                     </md-option>
                 </md-select>
             </div>
-        </div>
-        <div flex layout="column" layout-align="start start" class="paddingLR10">
-            <div class="width100">
+        </div>    
+        <div layout="row" layout-align="start center" class="width100 padding5">
+            <div flex="20">
                 Result Format
             </div>
-            <div class="width100">
+            <div flex>
                 <md-select ng-model="exam.resultFormat" placeholder="Select the format of Exam Result?" class="margin0">
                     <md-option ng-repeat="resultFormat in resultFormats" ng-value="resultFormat">
                     {{resultFormat}}
@@ -251,90 +246,106 @@
                 </md-select>
             </div>
         </div>
+            
+        <div layout="row" layout-align="start center" class="width100 padding5">
+            <div flex="20">
+                Active Exam
+            </div>
+            <div flex>
+                <md-switch ng-model="exam.active" aria-label="Active?" class="margin0">
+                      Active on EB?
+                </md-switch>
+            </div>
+        </div>
+        <div layout="row" layout-align="start center" class="width100 padding5">
+            <div flex="20">
+                Exam Display Rank (1-100)
+            </div>
+            <div flex>
+                <input type="text" class="width100" ng-model="exam.rank"  placeholder="Exam Display Name">
+            </div>
+        </div>
+            
+        
         
         </div>
     </div>
-    <div layout="column" layout-align="start start" class="  textBlack width100 paddingB20 subhheadingBottomBorder2">
+    <div layout="column" layout-align="start start" class="width100 section">
         <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
             Exam Registration
         </div>
         
-        <div layout="column" layout-align="start start"  class="width100">
-            <div layout="row" layout-align="start center" class="width100  marginB5 bold">
+        <div layout="column" layout-align="start start"  class="width100 paddingLR10">
+            <div layout="row" layout-align="start center" class="width100 bold marginTB10">
                 Registration Information for {{exam.displayname}}
             </div>
-            <div layout="column" layout-align="start center" class="width100 marginB5">
-                <div layout="row" layout-align="start start" class="padding5 width100">
-                    <div flex="20" class="width100">
-                        Registration Website
-                    </div>
-                    <div flex>
-                        <input type="text" class="width100" ng-model="exam.registration.website"  placeholder="Exam Registration Website">
-                    </div>
+            <div layout="row" layout-align="start start" class="padding5 width100">
+                <div flex="20" class="width100">
+                    Registration Website
                 </div>
-                <div flex layout="row" layout-align="start start" class="padding5 width100">
-                    <div flex="20" class="width100">
-                        Registration Mode
-                    </div>
-                    <div flex>
-                        <md-select ng-model="exam.registration.mode" placeholder="Select the mode of Exam Registration" class="margin0">
-                            <md-option ng-repeat="registrationMode in registrationModes" ng-value="registrationMode">
-                            {{registrationMode}}
-                            </md-option>
-                        </md-select>
-                    </div>
+                <div flex>
+                    <input type="text" class="width100" ng-model="exam.registration.website"  placeholder="Exam Registration Website">
                 </div>
-                <div layout="row" layout-align="start start" class="padding5 width100">
-                    <div flex="20" class="width100">
-                        Registration details Write Up
-                    </div>
-                    <div flex>
-                        <textarea class=" width100" ng-model="exam.registration.otherInformation" placeholder="Other information about the registration" rows="4"></textarea>
-                    </div>
+            </div>
+            <div flex layout="row" layout-align="start start" class="padding5 width100">
+                <div flex="20" class="width100">
+                    Registration Mode
+                </div>
+                <div flex>
+                    <md-select ng-model="exam.registration.mode" placeholder="Select the mode of Exam Registration" class="margin0">
+                        <md-option ng-repeat="registrationMode in registrationModes" ng-value="registrationMode">
+                        {{registrationMode}}
+                        </md-option>
+                    </md-select>
+                </div>
+            </div>
+            <div layout="row" layout-align="start start" class="padding5 width100">
+                <div flex="20" class="width100">
+                    Registration details Write Up
+                </div>
+                <div flex>
+                    <textarea class=" width100" ng-model="exam.registration.otherInformation" placeholder="Other information about the registration" rows="4"></textarea>
                 </div>
             </div>
             
-            <div layout="column" layout-align="start center" class="width100 marginB5">
-                <div layout="row" layout-align="start center" class="width100 marginT5 bold">
+            <div layout="row" layout-align="start center" class="width100 marginTB10 bold">
                     Fee Details for {{exam.displayname}}
+            </div>
+            
+            <div  layout="row" layout-align="start start" class="padding5 width100">
+                <div flex="20" class="width100">
+                    Fee for General & OBC
                 </div>
-                <div layout="column" layout-align="start start" class="width100 marginB5">
-                    <div  layout="row" layout-align="start start" class="padding5 width100">
-                        <div flex="20" class="width100">
-                            Fee for General & OBC
-                        </div>
-                        <div flex>
-                            <input type="text" class="width100" ng-model="exam.registration.fee.general_obc"  placeholder="Registration Fee">
-                        </div>
-                    </div>
-                    <div  layout="row" layout-align="start start" class="padding5 width100">
-                        <div flex="20" class="width100">
-                            Fee for SC/ST/PH
-                        </div>
-                        <div flex>
-                            <input type="text" class="width100" ng-model="exam.registration.fee.sc_st_ph"  placeholder="Registration Fee">
-                        </div>
-                    </div>
-                    <div  layout="row" layout-align="start start" class="padding5 width100">
-                        <div flex="20" class="width100">
-                            Fee for females
-                        </div>
-                        <div flex>
-                            <input type="text" class="width100" ng-model="exam.registration.fee.females"  placeholder="Registration Fee">
-                        </div>
+                <div flex>
+                    <input type="text" class="width100" ng-model="exam.registration.fee.general_obc"  placeholder="Registration Fee">
+                </div>
+            </div>
+            <div  layout="row" layout-align="start start" class="padding5 width100">
+                <div flex="20" class="width100">
+                    Fee for SC/ST/PH
+                </div>
+                <div flex>
+                    <input type="text" class="width100" ng-model="exam.registration.fee.sc_st_ph"  placeholder="Registration Fee">
+                </div>
+            </div>
+            <div  layout="row" layout-align="start start" class="padding5 width100">
+                <div flex="20" class="width100">
+                    Fee for females
+                </div>
+                <div flex>
+                    <input type="text" class="width100" ng-model="exam.registration.fee.females"  placeholder="Registration Fee">
+                </div>
+            </div>
+            
+            <div layout="row" layout-align="start center" class="padding5 width100">
+                <div flex="20" layout="row" layout-align="start center">
+                    Fee payment modes
+                </div>
+                <div flex layout="row" layout-align="start center" layout-wrap>
+                    <div layout="row" layout-align="start center" ng-repeat="feePaymentMode in feePaymentModes" class="badge marginTB5 marginR5" ng-class="feePaymentBadge(feePaymentMode)" ng-click="feePaymentModeToggle(feePaymentMode)">
+                        {{feePaymentMode}}
                     </div>
                 </div>
-                <div layout="column" layout-align="start start" class="paddingLR10 width100">
-                    <div layout="row" layout-align="start center" class="width100">
-                        Fee payment modes
-                    </div>
-                    <div layout="row" layout-align="start center" class="width100" layout-wrap>
-                        <div layout="row" layout-align="start center" ng-repeat="feePaymentMode in feePaymentModes" class="badge marginTB5 marginR5" ng-class="feePaymentBadge(feePaymentMode)" ng-click="feePaymentModeToggle(feePaymentMode)">
-                            {{feePaymentMode}}
-                        </div>
-                    </div>
-                </div>
-                
             </div>
             
         </div>
@@ -344,169 +355,140 @@
     
     
     
-    <div layout="column" layout-align="start start" class=" subhheadingBottomBorder2 textBlack paddingB10 width100">
-        <!--<div flex="10" layout="column" layout-align="start start" ng-if="!newExamCycle">
-            <div layout="row" layout-align="start center"  class="width100">
-                Add Exam Cycle
-            </div>
-            <div layout="row" layout-align="start center"  class="width100">
-                <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder" ng-click="addNewExamCycle()">
-                    <span class="textDarkGrey" ng-click="">
-                        <div layout="column" layout-align="center center" class="width100 height100"  >
-                            <span class="md-display-1">
-                                <i class="fa fa-bell" aria-hidden="true"></i>
-                            </span>
-                            <span>
-                                Add Cycle
-                            </span>
-                        </div>
-                    </span>
-                </div>
-            </div>
-        </div>-->
+    <div layout="column" layout-align="start start" class="width100 section">
         <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
-            Exam Cycles
+            Exam Cycles for {{exam.displayname}}
         </div>
         
-        
-        
-        
-        <div flex layout="column" layout-align="start start" class="width100">
-            <div layout="row" layout-align="start center"  class="width100 bold">
-                Exam Cycles for {{exam.displayname}}
-            </div>
+        <div flex layout="column" layout-align="start start" class="width100 paddingLR10">
             <div layout="row" layout-align="center center" id="upload3" class="width100" ng-click="addNewExamCycle()">
                 <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Exam Cylce
             </div>
-            <div flex layout="row" layout-align="start center"  class="width100 height100 marginTB20" layout-wrap>
-                <div layout="row" layout-align="start center" class="bold marginR10 badge font16" id="removebadge" ng-repeat="cycle in exam.cycle" ng-click="setExamCycle(cycle)">
+            <div flex layout="row" layout-align="start center"  class="width100 marginTB20" layout-wrap>
+                <div layout="row" layout-align="start center" class="margin5 badge" id="examTagHolder" ng-repeat="cycle in exam.cycle" ng-click="setExamCycle(cycle)">
                     {{cycle.name}} <i class="fa fa-check text-primary" aria-hidden="true" ng-if="cycle._id == newExamCycle._id"></i>
                 </div>
-                
             </div>
             
-        </div>
-        
-        <div flex layout="column" layout-align="start start" ng-if="newExamCycle" class="width100 marginT10 padding20 greyBorder">
-            <div layout="row" layout-align="start center"  class="width100 marginTB10">
-                <!--<div layout="row" layout-align="start center">
-                    Fill in details of the Exam Cycle
-                </div>-->
-                
-                
-            </div>
+            <div flex layout="column" layout-align="start start" ng-if="newExamCycle" class="width100 padding20 sectionBorder">
             <div layout="column" layout-align="start start" class="greyDashedBottomBorder width100">
-                <div layout="row" layout-align="start center"  class="width100 padding5 font16 bold">
-                    <div layout="row" layout-align="start center"  flex>
-                        <span>Basic Details about&nbsp;</span><span ng-if="newExamCycle.name != ''">{{newExamCycle.name}}</span><span ng-if="newExamCycle.name == ''">Exam Cycle</span>
+                
+                <div layout="row" layout-align="start center"  class="width100 text-primary padding5 font16 bold marginB10">
+                    <div layout="row" layout-align="start center" class="marginR10">
+                        <span ng-if="newExamCycle.name != ''">{{newExamCycle.name}}</span><span ng-if="newExamCycle.name == ''">New Exam Cycle</span>
                     </div>
-                    
-                    <div layout="row" layout-align="end center"  flex>
+                    <div layout="row" layout-align="start center"  flex>
                         <div layout="row" layout-align="end center" class="badge marginR10  textWhite" id="badge">
                             <span ng-click="cancelNewExamCycle()"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;Back to all exam cycles</span>
                         </div>
                     </div>
-                    
+
                 </div>
-                <div layout="column" layout-align="start start"  class="width100">
-                    <div layout="row" layout-align="start start"  class="width100 marginB20">
-                        <div flex layout="column" layout-align="start start" class="paddingLR10">
-                            <div class="width100">
-                                Year
-                            </div>
-                            <div class="width100">
-                                <md-select ng-model="newExamCycle.year" placeholder="Select the year of exam cycle" class="margin0">
-                                    <md-option ng-repeat="year in cycleYears" ng-value="year">
-                                    {{year}}
-                                    </md-option>
-                                </md-select>
-                            </div>
+                <div layout="column" layout-align="start start"  class="width100 paddingLR10">
+                    <div layout="row" layout-align="start center" class="width100 padding5">
+                        <div flex="20">
+                            Year
                         </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10">
-                            <div class="width100">
-                                Cycle #
-                            </div>
-                            <div class="width100">
-                                <md-select ng-model="newExamCycle.cycleNumber" placeholder="Select the number of exam cycle" class="margin0">
-                                    <md-option ng-repeat="cycleNumber in cycleNumbers" ng-value="cycleNumber">
-                                    {{cycleNumber}}
-                                    </md-option>
-                                </md-select>
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10">
-                            <div class="width100">
-                                Name
-                            </div>
-                            <div class="width100">
-                                <input type="text" class="width100" ng-model="newExamCycle.name"  placeholder="Give this cycle a name">
-                            </div>
+                        <div flex>
+                            <md-select ng-model="newExamCycle.year" placeholder="Select the year of exam cycle" class="margin0">
+                                <md-option ng-repeat="year in cycleYears" ng-value="year">
+                                {{year}}
+                                </md-option>
+                            </md-select>
                         </div>
                     </div>
-                    <div layout="row" layout-align="start start"  class="width100 marginB20">
-                        <div flex layout="column" layout-align="start start" class="paddingLR10">
-                            <div class="width100">
-                                Exam Mode
-                            </div>
-                            <div class="width100">
-                                <md-select ng-model="newExamCycle.examMode2" placeholder="Select the mode of the Exam" class="margin0">
-                                    <md-option ng-repeat="examMode in examModes" ng-value="examMode">
-                                    {{examMode}}
-                                    </md-option>
-                                </md-select>
-                            </div>
+                    <div layout="row" layout-align="start center" class="width100 padding5">
+                        <div flex="20">
+                            Cycle #
                         </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10">
-                            <div class="width100">
-                                Exam Cycle
-                            </div>
-                            <div class="width100">
-                                <md-switch ng-model="newExamCycle.active" aria-label="Active?" class="margin0">
-                                    Is this the active cycle?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10">
-                            <div class="width100">
-                                Cycle Description
-                            </div>
-                            <div class="width100">
-                                <input type="text" class="width100" ng-model="newExamCycle.description"  placeholder="Give a 1 line description">
-                            </div>
+                        <div flex>
+                            <md-select ng-model="newExamCycle.cycleNumber" placeholder="Select the number of exam cycle" class="margin0">
+                                <md-option ng-repeat="cycleNumber in cycleNumbers" ng-value="cycleNumber">
+                                {{cycleNumber}}
+                                </md-option>
+                            </md-select>
                         </div>
                     </div>
-                    <div layout="row" layout-align="start start"  class="width100 marginTB20">
-                            <div flex="25" class="paddingLR10">
-                                Exam Acceptance
-                            </div>
-                            <div layout="row" layout-align="start start"  flex class="paddingLR10">
-                                <div flex="40" layout="column" layout-align="start start" class="paddingR20">
-                                    <div>
-                                        # Students appearing
-                                    </div>
+                    <div layout="row" layout-align="start center" class="width100 padding5">
+                        <div flex="20">
+                            Cycle Description
+                        </div>
+                        <div flex>
+                            <input type="text" class="width100" ng-model="newExamCycle.description"  placeholder="Give a 1 line description">
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 padding5">
+                        <div flex="20">
+                            Name
+                        </div>
+                        <div flex>
+                            <input type="text" class="width100" ng-model="newExamCycle.name"  placeholder="Give this cycle a name">
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 padding5">
+                        <div flex="20">
+                            Exam Mode
+                        </div>
+                        <div flex>
+                            <md-select ng-model="newExamCycle.examMode2" placeholder="Select the mode of the Exam" class="margin0">
+                                <md-option ng-repeat="examMode in examModes" ng-value="examMode">
+                                {{examMode}}
+                                </md-option>
+                            </md-select>
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 padding5">
+                        <div flex="20">
+                            Active Cycle
+                        </div>
+                        <div flex>
+                            <md-switch ng-model="newExamCycle.active" aria-label="Active?" class="margin0">
+                                Is this the active cycle?
+                            </md-switch>
+                        </div>
+                    </div>
+                    
+                    <div layout="row" layout-align="start center" class="width100 padding5 marginTB10">
+                        <div flex="20">
+                            Exam Acceptance Ratios
+                        </div>
+                        <div flex layout="column" layout-align="start start" >
+                            <div layout="row" layout-align="start start" class="width100 padding5">
+                                <div flex="20">
+                                    # Students appearing
+                                </div>
+                                <div flex>
                                     <input type="text" class="width100" ng-model="newExamCycle.studentsAppearing"  placeholder="Number of students appearing">
                                 </div>
-                                <div flex="40" layout="column" layout-align="start start" class="paddingR20">
-                                    <div>
-                                        # of seats
-                                    </div>
+                            </div>
+                            <div layout="row" layout-align="start start" class="width100 padding5">
+                                <div flex="20">
+                                    # of seats
+                                </div>
+                                <div flex>
                                     <input type="text" class="width100" ng-model="newExamCycle.studentSeats"  placeholder="Number of seats">
                                 </div>
-                                <div flex="20" layout="column" layout-align="start start" class="paddingR20">
-                                    <div>
-                                        Acceptance Ratio
-                                    </div>
+                            </div>
+                            <div layout="row" layout-align="start start" class="width100 padding5">
+                                <div flex="20">
+                                    Acceptance Ratio
+                                </div>
+                                <div flex>
                                     <div ng-if="newExamCycle.studentSeats/newExamCycle.studentsAppearing">
                                         {{newExamCycle.studentSeats*100/newExamCycle.studentsAppearing | number: 2}}%&nbsp;&nbsp;<i class="fa fa-check text-primary font16" aria-hidden="true"></i> 
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
-                    <div layout="row" layout-align="start start"  class="width100 paddingLR10">
-                        <div flex="25">
+                    </div>
+                    
+                    
+                    <div layout="row" layout-align="start center"  class="width100 padding5 marginTB10">
+                        <div flex="20">
                             Exam Documents
                         </div>
-                        <div flex="20" layout="column" layout-align="start center" class="marginR10 padding5 font12" id="pageLogoHolder">
+                        <div flex="20" layout="column" layout-align="center center" class="marginR10 padding5 font12" id="pageLogoHolder">
                         <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadBrochure(brochures)" ng-model="brochures" multiple="multiple" >
                             <span class="md-display-1">
                                 <i class="fa fa-file-text" aria-hidden="true"></i>
@@ -534,687 +516,308 @@
                         </div>
                     </div>
 
-                    <div flex="20" layout="column" layout-align="start center" class="marginR10 padding5 font12" id="pageLogoHolder">
-                        <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadSyllabus(syllabuses)" ng-model="syllabuses" multiple="multiple" >
-                            <span class="md-display-1">
-                                <i class="fa fa-file-text" aria-hidden="true"></i>
-                            </span>
-                            <span>
-                                Syllabus
-                            </span>
-                        </div>
-                        <a ng-if="newExamCycle.syllabus.length > 0" target="_blank" class="bold">
-                            <i class="fa fa-check text-primary font16" aria-hidden="true"></i> Uploaded
-                        </a>
-                        <div layout="column" layout-align="center center">
-                            <div layout="row" layout-align="start center" ng-repeat="syllabus in newExamCycle.syllabus" class="marginB5">
-                                <div flex>
-                                    <a ng-href="{{syllabus.url}}" target="_blank">
-                                        Syllabus {{$index+1}}
-                                    </a>
-                                </div>
+                        <div flex="20" layout="column" layout-align="center center" class="marginR10 padding5 font12" id="pageLogoHolder">
+                            <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadSyllabus(syllabuses)" ng-model="syllabuses" multiple="multiple" >
+                                <span class="md-display-1">
+                                    <i class="fa fa-file-text" aria-hidden="true"></i>
+                                </span>
+                                <span>
+                                    Syllabus
+                                </span>
+                            </div>
+                            <a ng-if="newExamCycle.syllabus.length > 0" target="_blank" class="bold">
+                                <i class="fa fa-check text-primary font16" aria-hidden="true"></i> Uploaded
+                            </a>
+                            <div layout="column" layout-align="center center">
+                                <div layout="row" layout-align="start center" ng-repeat="syllabus in newExamCycle.syllabus" class="marginB5">
+                                    <div flex>
+                                        <a ng-href="{{syllabus.url}}" target="_blank">
+                                            Syllabus {{$index+1}}
+                                        </a>
+                                    </div>
 
-                                <div flex>
-                                    <div class="badge" id="removebadge" ng-click="removeSyllabus(syllabus)">
-                                        <i class="fa fa-trash" aria-hidden="true"></i> Remove
+                                    <div flex>
+                                        <div class="badge" id="removebadge" ng-click="removeSyllabus(syllabus)">
+                                            <i class="fa fa-trash" aria-hidden="true"></i> Remove
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div flex="20" layout="column" layout-align="start center" class="marginR10 padding5 font12" id="pageLogoHolder">
-                        <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadDocs(docs)" ng-model="docs" multiple="multiple" >
-                            <span class="md-display-1">
-                                <i class="fa fa-file-text" aria-hidden="true"></i>
-                            </span>
-                            <span>
-                                Other Docs
-                            </span>
-                        </div>
-                        <a ng-if="newExamCycle.docs.length > 0" target="_blank" class="bold">
-                            <i class="fa fa-check text-primary font16" aria-hidden="true"></i> Uploaded
-                        </a>
-                        <div layout="column" layout-align="center center">
-                            <div layout="row" layout-align="start center" ng-repeat="doc in newExamCycle.docs" class="marginB5">
-                                <div flex>
-                                    <a ng-href="{{doc.url}}" target="_blank">
-                                        Doc {{$index+1}}
-                                    </a>
-                                </div>
+                        <div flex="20" layout="column" layout-align="center center" class="marginR10 padding5 font12" id="pageLogoHolder">
+                            <div layout="column" layout-align="center center" class=" textDarkGrey width100 height100" ngf-select="uploadDocs(docs)" ng-model="docs" multiple="multiple" >
+                                <span class="md-display-1">
+                                    <i class="fa fa-file-text" aria-hidden="true"></i>
+                                </span>
+                                <span>
+                                    Other Docs
+                                </span>
+                            </div>
+                            <a ng-if="newExamCycle.docs.length > 0" target="_blank" class="bold">
+                                <i class="fa fa-check text-primary font16" aria-hidden="true"></i> Uploaded
+                            </a>
+                            <div layout="column" layout-align="center center">
+                                <div layout="row" layout-align="start center" ng-repeat="doc in newExamCycle.docs" class="marginB5">
+                                    <div flex>
+                                        <a ng-href="{{doc.url}}" target="_blank">
+                                            Doc {{$index+1}}
+                                        </a>
+                                    </div>
 
-                                <div flex>
-                                    <div class="badge" id="removebadge" ng-click="removeDoc(doc)">
-                                        <i class="fa fa-trash" aria-hidden="true"></i> Remove
+                                    <div flex>
+                                        <div class="badge" id="removebadge" ng-click="removeDoc(doc)">
+                                            <i class="fa fa-trash" aria-hidden="true"></i> Remove
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                     </div>
                 </div>
-                
+
                 <div layout="column" layout-align="start start"  class="width100 marginT20">
-                    <div layout="column" layout-align="start start"  class="width100 font16 bold">
-                        Exam Steps
-                    </div>
-                    <div layout="column" layout-align="start start"  class="width100 paddingLR10">
-                    
-                        <div layout="row" layout-align="center center" id="upload3" class="width100 marginTB20" ng-click="addNewExamStep(newExamCycle)">
-                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Exam Step
+                    <div layout="column" layout-align="start start"  class="width100">
+                        <div class="width100 font16 bold">Exam Steps</div>
+                        <div class="width100 font12 paddingLR10 italic">
+                            This cycle has {{newExamCycle.examSteps.length}} exam steps in it. Add more steps or edit them below.
+                        
                         </div>
                     </div>
-                    <div layout="row" layout-align="start start"  class="width100" layout-wrap>
-                        <div flex="33" layout="column" layout-align="start start" class="padding10" ng-repeat="examStep in newExamCycle.examSteps" ng-click="setExamStep(examStep)">
-                            <div layout="column" layout-align="start start" class="width100 padding10 greyBorder">
-                                <div layout="row" layout-align="end start" class="width100">
-                                    <i class="fa fa-times-circle text-black" aria-hidden="true" ng-click="removeExamStep(newExamCycle, $index)"></i>
+                    <div layout="column" layout-align="start start"  class="width100 paddingLR10">
+
+                    <div layout="row" layout-align="center center" id="upload3" class="width100 marginTB20" ng-click="addNewExamStep(newExamCycle)">
+                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Exam Step
+                    </div>
+                    <div layout="row" layout-align="start start"  class="width100 marginTB10" layout-wrap>
+                        <div flex="33" layout="column" layout-align="start start" class="padding10 min10vh marginTB10" ng-repeat="examStep in newExamCycle.examSteps" >
+
+                            <div layout="column" layout-align="start start" class="width100 padding5 sectionBorder">
+                                <div layout="row" layout-align="start start" class="width100">
+                                    <div flex layout="row" layout-align="center center" class="text-primary width100 bold marginB10 font16">
+                                        Step {{$index + 1}}
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-times-circle text-black" aria-hidden="true" ng-click="removeExamStep(newExamCycle, $index)"></i>
+                                    </div>
+
                                 </div>
-                                <div layout="column" layout-align="center center" class="width100">
-                                    <div class="bold">
+                                <div layout="row" layout-align="center center" class="width100 paddingLR10 marginTB10">
+                                    <div class="bold marginR5">
                                         {{examStep.stepType}}
                                     </div>
                                     <div>
-                                        {{examStep.name}}
+                                        ({{examStep.name}})
                                     </div>
                                 </div>
-                                <div layout="row" layout-align="start center" class="width100">
+                                <div layout="row" layout-align="start center" class="width100 paddingLR10 font12 marginT10">
                                     <div flex layout="row" layout-align="start center" class="" ng-click="moveStepBefore(newExamCycle, $index)">
                                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                         <div class="marginL5">
-                                            Before
+                                            Move Before
                                         </div>
                                     </div>
                                     <div flex layout="row" layout-align="end center" class="marginR10" ng-click="moveStepAfter(newExamCycle, $index)">
                                         <div class="marginR5">
-                                            After
+                                            Move After
                                         </div>
                                         <i class="fa fa-arrow-right" aria-hidden="true"></i>
                                     </div>
                                 </div>
                             </div>
-                            
-                        </div>
-                    </div>
-                    
-                </div>
-                <div layout="column" layout-align="start start"  class="width100 marginTB10 padding10 greyBorder" ng-if="newExamStep">
-                    <div layout="row" layout-align="start start"  class="width100 marginB20">
-                        <div flex layout="column" layout-align="start start" class="paddingLR10">
-                            <div class="width100">
-                                Step Type
-                            </div>
-                            <div class="width100">
-                                <md-select ng-model="newExamStep.stepType" placeholder="Select the mode of the Exam" class="margin0">
-                                    <md-option ng-repeat="stepType in stepTypes" ng-value="stepType">
-                                    {{stepType}}
-                                    </md-option>
-                                </md-select>
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="newExamStep.stepType == 'Written'">
-                            <div class="width100">
-                                Written Step
-                            </div>
-                            <div class="width100">
-                                <!--<input type="text" class="width100" ng-model="newExamStep.name"  placeholder="Step name" ng-if="newExamStep.name && newExamStep.name != 'Main' &&  newExamStep.name != 'Prelims'">-->
-                                <md-select ng-model="newExamStep.name" placeholder="Name of the exam step" class="margin0">
-                                    <md-option ng-repeat="writtenStepName in writtenStepNames" ng-value="writtenStepName">
-                                    {{writtenStepName}}
-                                    </md-option>
-                                </md-select>
-                            </div>
-                        </div>
-                        
-                        <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="newExamStep.name == 'Other'">
-                            <div class="width100">
-                                Step Name
-                            </div>
-                            <div class="width100">
-                                <input type="text" class="width100" ng-model="newExamStep.otherName"  placeholder="Step name" ng-if="newExamStep.name == 'Other'">
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="newExamStep.stepType != 'Written'">
-                            <div class="width100">
-                                Step Name
-                            </div>
-                            <div class="width100">
-                                <input type="text" class="width100" ng-model="newExamStep.name"  placeholder="Step Name">
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10">
-                            <div class="width100">
-                                Step Description
-                            </div>
-                            <div class="width100">
-                                <input type="text" class="width100" ng-model="newExamStep.description"  placeholder="Step Description">
-                            </div>
-                        </div>
-                    </div>
-                    <div layout="row" layout-align="start start"  class="width100 marginB20">
-                        
-                    </div>
-                    <div layout="row" layout-align="start start"  class="width100 marginTB20">
-                        <div flex layout="column" layout-align="start start" class="paddingLR10">
-                            <div class="width100">
-                                Date Range?
-                            </div>
-                            <div class="width100">
-                                <md-switch ng-model="newExamStep.stepDate.dateRangeBool" aria-label="Registration?" class="margin0">
-                                      Date Range?
-                                </md-switch>
-                            </div>
-                            <div class="width100">
-                                <md-switch ng-model="newExamStep.stepDate.timeRangeBool" aria-label="Full Day?" class="margin0">
-                                      Full Day?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="newExamStep.stepDate.dateRangeBool">
-                            <div class="width100">
-                                Add Date Range
-                            </div>
-                            <div layout="column" layout-align="start start" class="width100">
-                                <md-datepicker ng-model="newExamStep.stepDate.dateRange.startDate" md-placeholder="Start Date"></md-datepicker>
-                                <md-datepicker ng-model="newExamStep.stepDate.dateRange.endDate" md-placeholder="End Date"></md-datepicker>
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="!newExamStep.stepDate.dateRangeBool">
-                            <div class="width100">
-                                Add Dates Individually
-                            </div>
-                            <div layout="column" layout-align="start start" class="width100">
-                                <md-datepicker ng-model="toAddDate" md-placeholder="To Add Date"></md-datepicker>
-                                <md-button class="md-black md-small  tolowercase font12" ng-click="addNewExamDate(newExamCycle, toAddDate)">
-                                    Add
-                                </md-button>
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="!newExamStep.stepDate.timeRangeBool">
-                            <div layout="row" layout-align="start start" class="width100">
-                                Add Time Slot
-                            </div>
-                            <div layout="column" layout-align="start start" class="width100">
-                                <div layout="row" layout-align="start start">
-                                <md-select ng-model="toAddTimeRange.startTime" placeholder="Start time" class="margin0 marginR10">
-                                    <md-option ng-repeat="timeSlot in timeSlots" ng-value="timeSlot">
-                                    {{timeSlot}}
-                                    </md-option>
-                                </md-select>
-                                <md-select ng-model="toAddTimeRange.endTime" placeholder="End time" class="margin0">
-                                    <md-option ng-repeat="timeSlot in timeSlots" ng-value="timeSlot">
-                                    {{timeSlot}}
-                                    </md-option>
-                                </md-select>
-                                </div>
-                                <md-button class="md-black md-small  tolowercase font12" ng-click="addNewTimeRange(newExamCycle, toAddTimeRange)">
-                                    Add
-                                </md-button>
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start start" class="paddingLR10" >
-                            <div class="width100">
-                                Build Slots
-                            </div>
-                            <div layout="column" layout-align="start start" class="width100">
-                                <md-button class="md-black md-small  tolowercase font12" ng-click="buildSlots()">
-                                    Go
-                                </md-button>
-                            </div>
-                        </div>
-                    </div>
-                    <div layout="row" layout-align="start start"  class="width100 marginB20">
-                        <div layout="column" layout-align="start start" flex class="margin10 padding10 greyBorder min10vh">
-                            <div layout="row" layout-align="center start" class="bold width100" layout-wrap>
-                                Exam Step Dates
-                            </div>
-                            <div layout="row" layout-align="start start" class="width100" layout-wrap>
-                                <div layout="row" layout-align="start center" class="badge margin5" id="examTagHolder" ng-repeat="allDate in newExamStep.stepDate.allDates">
-                                    <i class="fa fa-calendar-check-o text-primary" aria-hidden="true"></i>&nbsp;{{allDate | date:'MMM d, y'}}&nbsp;<i class="fa fa-times-circle text-black" aria-hidden="true" ng-click="removeExamDate($index)"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start start" flex class="margin10 padding10 greyBorder min10vh">
-                            <div layout="row" layout-align="center start" class="bold width100" layout-wrap>
-                                Exam Step Time Slot
-                            </div>
-                            <div layout="row" layout-align="start start" class="width100" layout-wrap>
-                                <div layout="row" layout-align="start center" class="badge margin5" id="examTagHolder" ng-repeat="timeRange in newExamStep.stepDate.timeRange">
-                                    <i class="fa fa-clock-o text-primary" aria-hidden="true"></i>&nbsp;{{timeRange.startTime}} to {{timeRange.endTime}}&nbsp;<i class="fa fa-times-circle text-black" aria-hidden="true" ng-click="removeTimeRange($index)"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div layout="row" layout-align="start start"  class="width100 marginB20" layout-wrap>
-                        <div layout="row" layout-align="start start"  flex="25"  ng-repeat="dateRange in newExamStep.stepDate.dates" class="padding10">
-                            <div layout="column" layout-align="center center" class="width100 greyBorder padding10 font12">
-                                <div layout="row" layout-align="end center" class="width100 marginB10">
-                                    <i class="fa fa-times-circle text-black" aria-hidden="true" ng-click="removeDates($index)"></i>
-                                </div>
-                                <div class="bold">
-                                    {{dateRange.start | date:'MMM d, y HH:mm'}} to {{dateRange.end | date:'MMM d, y HH:mm'}}
-                                </div>
-                                
-                                <div class="width100 marginT10">
-                                    <input type="text" class="width100 font12" ng-model="newExamStep.stepDate.dates[$index].name"  placeholder="Name this slot">
-                                </div>
-                                
+                            <div layout="row" layout-align="center center" class="bold editBox width100" ng-click="setExamStep(examStep)">
+                                Edit this step
                             </div>
                             
                         </div>
+                    </div>
+                        
+                        
+                    <div layout="column" layout-align="start start"  class="width100 margin10 padding10 subsectionBorder2" ng-if="newExamStep">
+                        <div layout="row" layout-align="start center" class="width100 text-primary bold marginTB10 font16 padding5">
+                            <div class="marginR10 bold">
+                                {{newExamStep.stepType}}
+                            </div>
+                            <div>
+                                (<span ng-if="newExamStep.name != ''">{{newExamStep.name}}</span>
+                                <span ng-if="newExamCycle.name == ''">New Exam Step</span>)
+                            </div>
+                        </div>
+                        
+                        <div layout="row" layout-align="start center" class="width100 bold marginTB10 paddingLR10">
+                            Step Basic Details
+                        </div>
+                        <div layout="column" layout-align="start start" class="paddingLR10 width100">
+                            <div layout="row" layout-align="start center" class="width100 padding5">
+                                <div flex="20">
+                                    Step Type
+                                </div>
+                                <div flex>
+                                    <md-select ng-model="newExamStep.stepType" placeholder="Select the mode of the Exam" class="margin0">
+                                        <md-option ng-repeat="stepType in stepTypes" ng-value="stepType">
+                                        {{stepType}}
+                                        </md-option>
+                                    </md-select>
+                                </div>
+                            </div>
+                            
+                            <div layout="row" layout-align="start center" class="width100 padding5" ng-if="newExamStep.stepType == 'Written'">
+                                <div flex="20">
+                                    Written Step
+                                </div>
+                                <div flex>
+                                    <md-select ng-model="newExamStep.name" placeholder="Name of the exam step" class="margin0">
+                                        <md-option ng-repeat="writtenStepName in writtenStepNames" ng-value="writtenStepName">
+                                        {{writtenStepName}}
+                                        </md-option>
+                                    </md-select>
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 padding5" ng-if="newExamStep.name == 'Other'">
+                                <div flex="20">
+                                    Name this Step
+                                </div>
+                                <div flex>
+                                    <input type="text" class="width100" ng-model="newExamStep.otherName"  placeholder="Step name" ng-if="newExamStep.name == 'Other'">
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 padding5">
+                                <div flex="20">
+                                    Step Description
+                                </div>
+                                <div flex>
+                                    <input type="text" class="width100" ng-model="newExamStep.description"  placeholder="Step Description">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div layout="row" layout-align="start center" class="width100 bold marginT20 marginB10 paddingLR10">
+                            Build Step Dates
+                        </div>
+                        <div layout="row" layout-align="start start"  class="width100 marginTB20">
+                            <div flex layout="column" layout-align="start start" class="paddingLR10">
+                                <div class="width100">
+                                    Date Range?
+                                </div>
+                                <div class="width100">
+                                    <md-switch ng-model="newExamStep.stepDate.dateRangeBool" aria-label="Registration?" class="margin0">
+                                          Date Range?
+                                    </md-switch>
+                                </div>
+                                <div class="width100">
+                                    <md-switch ng-model="newExamStep.stepDate.timeRangeBool" aria-label="Full Day?" class="margin0">
+                                          Full Day?
+                                    </md-switch>
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="newExamStep.stepDate.dateRangeBool">
+                                <div class="width100">
+                                    Add Date Range
+                                </div>
+                                <div layout="column" layout-align="start start" class="width100">
+                                    <md-datepicker ng-model="newExamStep.stepDate.dateRange.startDate" md-placeholder="Start Date"></md-datepicker>
+                                    <md-datepicker ng-model="newExamStep.stepDate.dateRange.endDate" md-placeholder="End Date"></md-datepicker>
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="!newExamStep.stepDate.dateRangeBool">
+                                <div class="width100">
+                                    Add Dates Individually
+                                </div>
+                                <div layout="column" layout-align="start start" class="width100">
+                                    <md-datepicker ng-model="toAddDate" md-placeholder="To Add Date"></md-datepicker>
+                                    <md-button class="md-black md-small  tolowercase font12" ng-click="addNewExamDate(newExamCycle, toAddDate)">
+                                        Add
+                                    </md-button>
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="start start" class="paddingLR10" ng-if="!newExamStep.stepDate.timeRangeBool">
+                                <div layout="row" layout-align="start start" class="width100">
+                                    Add Time Slot
+                                </div>
+                                <div layout="column" layout-align="start start" class="width100">
+                                    <div layout="row" layout-align="start start">
+                                    <md-select ng-model="toAddTimeRange.startTime" placeholder="Start time" class="margin0 marginR10">
+                                        <md-option ng-repeat="timeSlot in timeSlots" ng-value="timeSlot">
+                                        {{timeSlot}}
+                                        </md-option>
+                                    </md-select>
+                                    <md-select ng-model="toAddTimeRange.endTime" placeholder="End time" class="margin0">
+                                        <md-option ng-repeat="timeSlot in timeSlots" ng-value="timeSlot">
+                                        {{timeSlot}}
+                                        </md-option>
+                                    </md-select>
+                                    </div>
+                                    <md-button class="md-black md-small  tolowercase font12" ng-click="addNewTimeRange(newExamCycle, toAddTimeRange)">
+                                        Add
+                                    </md-button>
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="start start" class="paddingLR10" >
+                                <div class="width100">
+                                    Build Slots
+                                </div>
+                                <div layout="column" layout-align="start start" class="width100">
+                                    <md-button class="md-black md-small  tolowercase font12" ng-click="buildSlots()">
+                                        Go
+                                    </md-button>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start"  class="width100 marginB20">
+                            <div layout="column" layout-align="start start" flex class="margin10 padding10 sectionBorder min10vh">
+                                <div layout="row" layout-align="center start" class="bold width100" layout-wrap>
+                                    Exam Step Dates
+                                </div>
+                                <div layout="row" layout-align="start start" class="width100" layout-wrap>
+                                    <div layout="row" layout-align="start center" class="badge margin5" id="examTagHolder" ng-repeat="allDate in newExamStep.stepDate.allDates">
+                                        <i class="fa fa-calendar-check-o text-primary" aria-hidden="true"></i>&nbsp;{{allDate | date:'MMM d, y'}}&nbsp;<i class="fa fa-times-circle text-black" aria-hidden="true" ng-click="removeExamDate($index)"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div layout="column" layout-align="start start" flex class="margin10 padding10 sectionBorder min10vh">
+                                <div layout="row" layout-align="center start" class="bold width100" layout-wrap>
+                                    Exam Step Time Slot
+                                </div>
+                                <div layout="row" layout-align="start start" class="width100" layout-wrap>
+                                    <div layout="row" layout-align="start center" class="badge margin5" id="examTagHolder" ng-repeat="timeRange in newExamStep.stepDate.timeRange">
+                                        <i class="fa fa-clock-o text-primary" aria-hidden="true"></i>&nbsp;{{timeRange.startTime}} to {{timeRange.endTime}}&nbsp;<i class="fa fa-times-circle text-black" aria-hidden="true" ng-click="removeTimeRange($index)"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start"  class="width100 marginB20" layout-wrap>
+                            <div layout="row" layout-align="start start"  flex="25"  ng-repeat="dateRange in newExamStep.stepDate.dates" class="padding10">
+                                <div layout="column" layout-align="center center" class="width100 sectionBorder padding10 font12">
+                                    <div layout="row" layout-align="end center" class="width100 marginB10">
+                                        <i class="fa fa-times-circle text-black" aria-hidden="true" ng-click="removeDates($index)"></i>
+                                    </div>
+                                    <div class="bold">
+                                        {{dateRange.start | date:'MMM d, y HH:mm'}} to {{dateRange.end | date:'MMM d, y HH:mm'}}
+                                    </div>
+
+                                    <div class="width100 marginT10">
+                                        <input type="text" class="width100 font12" ng-model="newExamStep.stepDate.dates[$index].name"  placeholder="Name this slot">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                        
+                        
                         
                     </div>
                     
+
                 </div>
-                <!--<div layout="column" layout-align="start start"  class="width100 marginTB10">
-                    <div layout="column" layout-align="start start"  class="width100 padding5 font16 bold">
-                        Exam Steps
-                    </div>
-                    <div layout="row" layout-align="start start"  class="width100 padding5 " layout-wrap>
-                        <div flex="25" layout="column" layout-align="center center" class="marginTB20">
-                            <div class="subhheadingBottomBorder">Registration</div>
-                            <div class="marginB10 font12">Does this exam have exam registration deadline?</div>
-                            <md-switch ng-model="newExamCycle.steps.registration" aria-label="Registration?" class="margin0">
-                                  Registration?
-                            </md-switch>
-                        </div>
-                        <div flex="25" layout="column" layout-align="center center" class="marginTB20">
-                            <div class="subhheadingBottomBorder">Admit Card Dates</div>
-                            <div class="marginB10 font12">Does this exam have admit card issue dates?</div>
-                            <md-switch ng-model="newExamCycle.steps.admitCard" aria-label="Admit Card?" class="margin0">
-                                  Admit Card?
-                            </md-switch>
-                        </div>
-                        <div flex="25" layout="column" layout-align="center center" class="marginTB20">
-                            <div class="subhheadingBottomBorder">Written Exam Dates</div>
-                            <div class="marginB10 font12">Do we know the written exam dates?</div>
-                            <md-switch ng-model="newExamCycle.steps.examDate" aria-label="Written Exam Dates?" class="margin0">
-                                  Written Exam Dates?
-                            </md-switch>
-                        </div>
-                        <div flex="25" layout="column" layout-align="center center" class="marginTB20">
-                            <div class="subhheadingBottomBorder">Written Exam Result Dates</div>
-                            <div class="marginB10 font12">Do we have written exam result dates?</div>
-                            <md-switch ng-model="newExamCycle.steps.writtenResultDate" aria-label="Written?" class="margin0">
-                                  Written Exam Result Dates?
-                            </md-switch>
-                        </div>
-                        <div flex="25" layout="column" layout-align="center center" class="marginTB20">
-                            <div class="subhheadingBottomBorder">Counselling</div>
-                            <div class="marginB10 font12">Does this exam have counselling?</div>
-                            <md-switch ng-model="newExamCycle.steps.counselling" aria-label="Counselling?" class="margin0">
-                                  Counselling?
-                            </md-switch>
-                        </div>
-                        <div flex="25" layout="column" layout-align="center center" class="marginTB20">
-                            <div class="subhheadingBottomBorder">Interview</div>
-                            <div class="marginB10 font12">Does this exam have Interviews?</div>
-                            <md-switch ng-model="newExamCycle.steps.interview" aria-label="Interview?" class="margin0">
-                                  Interview?
-                            </md-switch>
-                        </div>
-                        <div flex="25" layout="column" layout-align="center center" class="marginTB20">
-                            <div class="subhheadingBottomBorder">Final Result Dates</div>
-                            <div class="marginB10 font12">Do we know the final result dates?</div>
-                            <md-switch ng-model="newExamCycle.steps.finalResultDate" aria-label="Final Result?" class="margin0">
-                                  Final Result?
-                            </md-switch>
-                        </div>
-                    </div>
-                    
-                    
-                    
-                    
-                    
-                </div>
-                -->
-                <!--<div layout="column" layout-align="start start"  class="width100 marginTB10">
-                    <div layout="column" layout-align="start start"  class="width100 font16 bold">
-                        Exam Steps Writeup
-                    </div>
-                    <div layout="column" layout-align="start start"  class="width100 paddingTB5 paddingLR10">
-                        <textarea class=" width100" ng-model="newExamCycle.examStepInstructions" placeholder="Write a brief about the steps in the Exam" rows="4"></textarea>
-                    </div>
-                </div>-->
                 
-                <!--<div layout="column" layout-align="start start"  class="width100 marginTB10">
-                    <div layout="column" layout-align="start start"  class="width100 padding5 font16 bold">
-                        Add Exam step dates
-                    </div>
-                    <div layout="column" layout-align="start start"  class="width100 padding5 ">
-                    
-                    <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.registration">
-                    <div flex="25" layout="column" layout-align="start start" class="bold padding5">
-                        <div class="marginB10">Registration Deadlines</div>
-                        <div><a id="addText" class=" font12" ng-click="registrationText()">
-                        Add Registration Details
-                        </a></div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">Start Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.registration.start.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.registration.start.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.registration.start._date" class="md-input margin0">
-                            <md-switch ng-model="newExamCycle.examdates.registration.start.tentative" aria-label="Tentative?" class="margin0 font12">
-                            Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">End Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.registration.end.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.registration.end.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.registration.end._date" class="md-input margin0" >
-                            <md-switch ng-model="newExamCycle.examdates.registration.end.tentative" aria-label="Tentative?" class="margin0 font12">
-                                Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">End Date with Late Fees</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.registration.endwithlatefees.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.registration.endwithlatefees.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.registration.endwithlatefees._date" class="md-input margin0" >
-                            <md-switch ng-model="newExamCycle.examdates.registration.endwithlatefees.tentative" aria-label="Tentative?" class="margin0 font12">
-                                Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    </div>
-                        
-                    <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.admitCard">
-                    <div flex="25" layout="column" layout-align="start start" class="bold padding5">
-                        <div class="marginB10">Admit Card Dates</div>
-                        <div><a id="addText" class=" font12" ng-click="admitCardText()">
-                        Add Admit Card Details
-                        </a></div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">Start Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.admitCard.start.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.admitCard.start.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.admitCard.start._date" class="md-input margin0">
-                            <md-switch ng-model="newExamCycle.examdates.admitCard.start.tentative" aria-label="Tentative?" class="margin0 font12">
-                            Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">End Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.admitCard.end.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.admitCard.end.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.admitCard.end._date" class="md-input margin0" >
-                            <md-switch ng-model="newExamCycle.examdates.admitCard.end.tentative" aria-label="Tentative?" class="margin0 font12">
-                                Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    </div>    
-                    <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.examDate">
-                    <div flex="25" layout="column" layout-align="start start" class="bold padding5">
-                        <div class="marginB10">Written Exam Dates</div>
-                        <div><a id="addText" class=" font12" ng-click="examDateText()">
-                        Add Written Exam Details
-                        </a></div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">Start Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.examDate.start.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.examDate.start.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.examDate.start._date" class="md-input margin0">
-                            <md-switch ng-model="newExamCycle.examdates.examDate.start.tentative" aria-label="Tentative?" class="margin0 font12">
-                            Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">End Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.examDate.end.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.examDate.end.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.examDate.end._date" class="md-input margin0" >
-                            <md-switch ng-model="newExamCycle.examdates.examDate.end.tentative" aria-label="Tentative?" class="margin0 font12">
-                                Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    </div>   
-                        
-                    
-                    <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.writtenResultDate">
-                    <div flex="25" layout="column" layout-align="start start" class="bold padding5">
-                        <div class="marginB10">Written Exam Result Dates</div>
-                        <div><a id="addText" class=" font12" ng-click="writtenResultDateText()">
-                        Add Written Exam Result Details
-                        </a></div>
-                        
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">Start Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.writtenResultDate.start.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.writtenResultDate.start.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.writtenResultDate.start._date" class="md-input margin0">
-                            <md-switch ng-model="newExamCycle.examdates.writtenResultDate.start.tentative" aria-label="Tentative?" class="margin0 font12">
-                            Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">End Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.writtenResultDate.end.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.writtenResultDate.end.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.writtenResultDate.end._date" class="md-input margin0" >
-                            <md-switch ng-model="newExamCycle.examdates.writtenResultDate.end.tentative" aria-label="Tentative?" class="margin0 font12">
-                                Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    </div>    
-                    
-                        
-                    <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.counselling">
-                    <div flex="25" layout="column" layout-align="start start" class="bold padding5">
-                        
-                        <div class="marginB10">Counselling Dates</div>
-                        <div><a id="addText" class=" font12" ng-click="counsellingText()">
-                        Add Counselling Details
-                        </a></div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">Start Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.counselling.start.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.counselling.start.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.counselling.start._date" class="md-input margin0">
-                            <md-switch ng-model="newExamCycle.examdates.counselling.start.tentative" aria-label="Tentative?" class="margin0 font12">
-                            Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">End Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.counselling.end.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.counselling.end.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.counselling.end._date" class="md-input margin0" >
-                            <md-switch ng-model="newExamCycle.examdates.counselling.end.tentative" aria-label="Tentative?" class="margin0 font12">
-                                Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    </div>    
-                        
-                    
-                    <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.interview">
-                    <div flex="25" layout="column" layout-align="start start" class="bold padding5">
-                        
-                        <div class="marginB10">Interview Dates</div>
-                        <div><a id="addText" class=" font12" ng-click="interviewText()">
-                        Add Interview Details
-                        </a></div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">Start Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.interview.start.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.interview.start.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.interview.start._date" class="md-input margin0">
-                            <md-switch ng-model="newExamCycle.examdates.interview.start.tentative" aria-label="Tentative?" class="margin0 font12">
-                            Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">End Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.interview.end.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.interview.end.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.interview.end._date" class="md-input margin0" >
-                            <md-switch ng-model="newExamCycle.examdates.interview.end.tentative" aria-label="Tentative?" class="margin0 font12">
-                                Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    </div>    
-                    
-                    <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.finalResultDate">
-                    <div flex="25" layout="column" layout-align="start start" class="bold padding5">
-                        
-                        <div class="marginB10">Final Result Dates</div>
-                        <div><a id="addText" class=" font12" ng-click="finalResultDateText()">
-                        Add Final Result Details
-                        </a></div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">Start Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.finalResultDate.start.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.finalResultDate.start.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.finalResultDate.start._date" class="md-input margin0">
-                            <md-switch ng-model="newExamCycle.examdates.finalResultDate.start.tentative" aria-label="Tentative?" class="margin0 font12">
-                            Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    <div flex="25" layout="column" layout-align="center start" class="padding5">
-                        <div layout="row" layout-align="start center" class="marginB10">
-                            <div class="marginR10">End Date</div>
-                            <div>
-                                <md-switch ng-model="newExamCycle.examdates.finalResultDate.end.applicable" aria-label="Applicable?" class="margin0 font12">
-                                      Applicable?
-                                </md-switch>
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="start center" ng-if="newExamCycle.examdates.finalResultDate.end.applicable" class="marginTB10">
-                            <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetime"
-                            placeholder="Date" show-todays-date="" ng-model="newExamCycle.examdates.finalResultDate.end._date" class="md-input margin0" >
-                            <md-switch ng-model="newExamCycle.examdates.finalResultDate.end.tentative" aria-label="Tentative?" class="margin0 font12">
-                                Is this date tentative?
-                            </md-switch>
-                        </div>
-                    </div>
-                    </div>    
-                        
-                    </div>
-                    
-                </div>
-            -->
             </div>
-            
-            <div layout="row" layout-align="end center"  class="width100 marginB10">
-                <div layout="row" layout-align="start center" class="" ng-click="removeExamCycleConfirm(newExamCycle)">
+
+            <div layout="row" layout-align="end center"  class="width100 paddingLR20 paddingTB5">
+                <div layout="row" layout-align="start center" ng-click="removeExamCycleConfirm(newExamCycle)">
                     <div layout="row" layout-align="start center" class="marginR5">
                         <i class="fa fa-trash font20" aria-hidden="true"></i>
                     </div>
@@ -1222,8 +825,8 @@
                         Remove Exam Cycle
                     </div>
                 </div>
-                
-                
+
+
                 <div flex layout="row" layout-align="end center" class="">
                     <a ng-click="cancelNewExamCycle()" id="cancelLink" class="paddingLR10">
                         Cancel
@@ -1232,30 +835,14 @@
                         Save
                     </a>
                 </div>
-                
+
             </div>
-            <!--<div layout="row" layout-align="end center"  class="width100 marginB10">
-                <div layout="row" layout-align="start center" class="" ng-click="removeExamCycleConfirm(newExamCycle)">
-                    <div layout="row" layout-align="start center" class="marginR5">
-                        <i class="fa fa-trash font20" aria-hidden="true"></i>
-                    </div>
-                    <div layout="row" layout-align="start center">
-                        Remove Exam Cycle
-                    </div>
-                </div>
-                
-                
-                <div flex layout="row" layout-align="end center">
-                    <md-button class="md-black md-small  tolowercase font12" ng-click="cancelNewExamCycle()">
-                        Cancel
-                    </md-button>
-                    <md-button class="md-danger md-small  tolowercase font12" ng-click="saveNewExamCycle()">
-                        Done
-                    </md-button>
-                </div>
-                
-            </div>-->
         </div>
+            
+            
+        </div>
+        
+        
     </div>
     
     
@@ -1272,7 +859,7 @@
                 <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Test
             </div>
             <div layout="row" layout-align="start center"  class="width100 marginT20" layout-wrap>
-                <div layout="row" layout-align="start center" class="bold marginR10 badge font16 marginB5" id="removebadge" ng-repeat="test in exam.tests" ng-click="setTest(test)">
+                <div layout="row" layout-align="start center" class="badge margin5" id="examTagHolder" ng-repeat="test in exam.tests" ng-click="setTest(test)">
                     {{test.name}} <i class="fa fa-check text-primary" aria-hidden="true" ng-if="test._id == toAddTest._id"></i>
                 </div>
                 
