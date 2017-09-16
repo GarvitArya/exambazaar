@@ -27,6 +27,10 @@ router.get('/edit/:viewId', function(req, res) {
     });
 });
 
+function onlyUnique(value, index, self) { 
+    return self.indexOf(value) === index;
+}      
+
 router.get('/masterViewSummary', function(req, res) {
     view.count({}, function(err, totalViews) {
     if (!err){
@@ -266,6 +270,34 @@ router.get('/user/:userId', function(req, res) {
             if(nLength == 0){
                 res.json([]);
             }
+        } else {throw err;}
+    });
+    
+});
+
+//to get all views for a user
+router.get('/userBlog/:userId', function(req, res) {
+    var userId = req.params.userId;
+    var views = view
+        .find({user: userId, state:'showblog',user: userId})
+        .sort( { _date: -1 } )
+        //.deepPopulate('institute institute.exams institute.exams.stream')
+        .exec(function (err, views) {
+        if (!err){
+            
+            var basicViews = [];
+            var groupNames = [];
+            var counter = 0;
+            var nLength = views.length;
+            var viewedBlogs =  views.map(function(a) {return a.url;});
+            viewedBlogs = viewedBlogs.filter(onlyUnique);
+            
+            
+            viewedBlogs.forEach(function(thisBlog, index){
+                viewedBlogs[index] = "https://www.exambazaar.com" + viewedBlogs[index];
+            });
+            //console.log(viewedBlogs);
+            res.json(viewedBlogs);
         } else {throw err;}
     });
     

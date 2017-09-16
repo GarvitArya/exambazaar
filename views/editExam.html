@@ -81,6 +81,8 @@
         background: #FF5A5F;
     }
     textarea{
+        font-size: 13px;
+        color: #333333;
         width:100%;
         padding: 5px 5px;
         display: inline-block;
@@ -97,6 +99,7 @@
     }
     input[type="text"]
     {
+        font-size: 13px;
         color: #333333;
         margin-bottom: 5px;
         padding: 2px;
@@ -129,13 +132,16 @@
 <div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
     
     
-<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="paddingTB10 height100 width100 font14 marginB80">
-    <div layout="row" layout-align="start center" class="secondFont font32 bold  width100 headingBottomBorder2" ng-if="exam">
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="paddingTB10 height100 width100 marginB80 secondFont font14">
+    <div layout="row" layout-align="start center" class=" font32 bold  width100 headingBottomBorder2" ng-if="exam">
         <div layout="row" layout-align="start center" >
             {{exam.displayname}} Exam
         </div>
     </div>
-    <div layout="row" layout-align="start start" class="marginT20 secondFont  textBlack width100 paddingB20 subhheadingBottomBorder2">
+    <div layout="column" layout-align="start start" class="   textBlack width100 paddingB20 subhheadingBottomBorder2">
+        <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
+            Exam Basic Information
+        </div>
         <div layout="row" layout-align="start start"  class="width100">
             <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
                 <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
@@ -185,7 +191,12 @@
         </div>
     </div>
     
-    <div layout="row" layout-align="start start" class=" secondFont  textBlack width100 paddingB20 subhheadingBottomBorder2 lightGreyBackground" ng-if="masterUser">
+    <div layout="column" layout-align="start start" class="   textBlack width100 paddingB20 subhheadingBottomBorder2 lightGreyBackground" ng-if="masterUser">
+        <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
+            EB Parameters
+        </div>
+        <div layout="row" layout-align="start start" class="width100">
+            
         <div flex layout="column" layout-align="start start" class="paddingLR10">
             <div class="width100">
                 Stream
@@ -228,8 +239,14 @@
                 </md-select>
             </div>
         </div>
+        
+        </div>
     </div>
-    <div layout="row" layout-align="start start" class="secondFont  textBlack width100 paddingB20 subhheadingBottomBorder2">
+    <div layout="column" layout-align="start start" class="  textBlack width100 paddingB20 subhheadingBottomBorder2">
+        <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
+            Exam Registration
+        </div>
+        
         <div layout="column" layout-align="start start"  class="width100">
             <div layout="row" layout-align="start center" class="width100  marginB5 bold">
                 Registration Information for {{exam.displayname}}
@@ -316,7 +333,7 @@
     
     
     
-    <div layout="column" layout-align="start start" class="secondFont subhheadingBottomBorder2 textBlack paddingB10 width100">
+    <div layout="column" layout-align="start start" class=" subhheadingBottomBorder2 textBlack paddingB10 width100">
         <!--<div flex="10" layout="column" layout-align="start start" ng-if="!newExamCycle">
             <div layout="row" layout-align="start center"  class="width100">
                 Add Exam Cycle
@@ -336,7 +353,9 @@
                 </div>
             </div>
         </div>-->
-        
+        <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
+            Exam Cycles
+        </div>
         
         
         
@@ -345,30 +364,38 @@
             <div layout="row" layout-align="start center"  class="width100 bold">
                 Exam Cycles for {{exam.displayname}}
             </div>
+            <div layout="row" layout-align="center center" id="upload3" class="width100" ng-click="addNewExamCycle()">
+                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Exam Cylce
+            </div>
             <div flex layout="row" layout-align="start center"  class="width100 height100 marginTB20" layout-wrap>
                 <div layout="row" layout-align="start center" class="bold marginR10 badge font16" id="removebadge" ng-repeat="cycle in exam.cycle" ng-click="setExamCycle(cycle)">
                     {{cycle.name}} <i class="fa fa-check text-primary" aria-hidden="true" ng-if="cycle._id == newExamCycle._id"></i>
                 </div>
                 
             </div>
-            <div layout="row" layout-align="center center" id="upload3" class="width100" ng-click="addNewExamCycle()">
-                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Exam Cylce
-            </div>
+            
         </div>
         
-        <div flex layout="column" layout-align="start start" ng-if="newExamCycle" class="width100 marginT10">
+        <div flex layout="column" layout-align="start start" ng-if="newExamCycle" class="width100 marginT10 padding20 greyBorder">
             <div layout="row" layout-align="start center"  class="width100 marginTB10">
                 <!--<div layout="row" layout-align="start center">
                     Fill in details of the Exam Cycle
                 </div>-->
-                <div layout="row" layout-align="start center" class="badge marginR10  textWhite" id="badge">
-                    <span ng-click="cancelNewExamCycle()"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;Back to all exam cycles</span>
-                </div>
+                
                 
             </div>
             <div layout="column" layout-align="start start" class="greyDashedBottomBorder width100">
-                <div layout="column" layout-align="start start"  class="width100 padding5 font16 bold">
-                    Basic Details about Exam Cycle
+                <div layout="row" layout-align="start center"  class="width100 padding5 font16 bold">
+                    <div layout="row" layout-align="start center"  flex>
+                        <span>Basic Details about&nbsp;</span><span ng-if="newExamCycle.name != ''">{{newExamCycle.name}}</span><span ng-if="newExamCycle.name == ''">Exam Cycle</span>
+                    </div>
+                    
+                    <div layout="row" layout-align="end center"  flex>
+                        <div layout="row" layout-align="end center" class="badge marginR10  textWhite" id="badge">
+                            <span ng-click="cancelNewExamCycle()"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;Back to all exam cycles</span>
+                        </div>
+                    </div>
+                    
                 </div>
                 <div layout="column" layout-align="start start"  class="width100">
                     <div layout="row" layout-align="start start"  class="width100 marginB20">
@@ -556,9 +583,15 @@
                     </div>
                 </div>
                 
-                <div layout="column" layout-align="start start"  class="width100 marginTB10">
+                <div layout="column" layout-align="start start"  class="width100 marginT20">
                     <div layout="column" layout-align="start start"  class="width100 font16 bold">
                         Exam Steps
+                    </div>
+                    <div layout="column" layout-align="start start"  class="width100 paddingLR10">
+                    
+                        <div layout="row" layout-align="center center" id="upload3" class="width100 marginTB20" ng-click="addNewExamStep(newExamCycle)">
+                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Exam Step
+                        </div>
                     </div>
                     <div layout="row" layout-align="start start"  class="width100" layout-wrap>
                         <div flex="33" layout="column" layout-align="start start" class="padding10" ng-repeat="examStep in newExamCycle.examSteps" ng-click="setExamStep(examStep)">
@@ -592,12 +625,7 @@
                             
                         </div>
                     </div>
-                    <div layout="column" layout-align="start start"  class="width100 paddingLR10">
                     
-                        <div layout="row" layout-align="center center" id="upload3" class="width100 marginTB20" ng-click="addNewExamStep(newExamCycle)">
-                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Exam Step
-                        </div>
-                    </div>
                 </div>
                 <div layout="column" layout-align="start start"  class="width100 marginTB10 padding10 greyBorder" ng-if="newExamStep">
                     <div layout="row" layout-align="start start"  class="width100 marginB20">
@@ -686,7 +714,7 @@
                             </div>
                             <div layout="column" layout-align="start start" class="width100">
                                 <md-datepicker ng-model="toAddDate" md-placeholder="To Add Date"></md-datepicker>
-                                <md-button class="md-black md-small secondFont tolowercase font12" ng-click="addNewExamDate(newExamCycle, toAddDate)">
+                                <md-button class="md-black md-small  tolowercase font12" ng-click="addNewExamDate(newExamCycle, toAddDate)">
                                     Add
                                 </md-button>
                             </div>
@@ -708,7 +736,7 @@
                                     </md-option>
                                 </md-select>
                                 </div>
-                                <md-button class="md-black md-small secondFont tolowercase font12" ng-click="addNewTimeRange(newExamCycle, toAddTimeRange)">
+                                <md-button class="md-black md-small  tolowercase font12" ng-click="addNewTimeRange(newExamCycle, toAddTimeRange)">
                                     Add
                                 </md-button>
                             </div>
@@ -718,7 +746,7 @@
                                 Build Slots
                             </div>
                             <div layout="column" layout-align="start start" class="width100">
-                                <md-button class="md-black md-small secondFont tolowercase font12" ng-click="buildSlots()">
+                                <md-button class="md-black md-small  tolowercase font12" ng-click="buildSlots()">
                                     Go
                                 </md-button>
                             </div>
@@ -847,7 +875,7 @@
                     <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.registration">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
                         <div class="marginB10">Registration Deadlines</div>
-                        <div><a id="addText" class="secondFont font12" ng-click="registrationText()">
+                        <div><a id="addText" class=" font12" ng-click="registrationText()">
                         Add Registration Details
                         </a></div>
                     </div>
@@ -907,7 +935,7 @@
                     <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.admitCard">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
                         <div class="marginB10">Admit Card Dates</div>
-                        <div><a id="addText" class="secondFont font12" ng-click="admitCardText()">
+                        <div><a id="addText" class=" font12" ng-click="admitCardText()">
                         Add Admit Card Details
                         </a></div>
                     </div>
@@ -949,7 +977,7 @@
                     <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.examDate">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
                         <div class="marginB10">Written Exam Dates</div>
-                        <div><a id="addText" class="secondFont font12" ng-click="examDateText()">
+                        <div><a id="addText" class=" font12" ng-click="examDateText()">
                         Add Written Exam Details
                         </a></div>
                     </div>
@@ -993,7 +1021,7 @@
                     <div layout="row" layout-align="start start"  class="subhheadingBottomBorder2 marginTB10 width100 padding10 " layout-wrap ng-if="newExamCycle.steps.writtenResultDate">
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
                         <div class="marginB10">Written Exam Result Dates</div>
-                        <div><a id="addText" class="secondFont font12" ng-click="writtenResultDateText()">
+                        <div><a id="addText" class=" font12" ng-click="writtenResultDateText()">
                         Add Written Exam Result Details
                         </a></div>
                         
@@ -1039,7 +1067,7 @@
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
                         
                         <div class="marginB10">Counselling Dates</div>
-                        <div><a id="addText" class="secondFont font12" ng-click="counsellingText()">
+                        <div><a id="addText" class=" font12" ng-click="counsellingText()">
                         Add Counselling Details
                         </a></div>
                     </div>
@@ -1084,7 +1112,7 @@
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
                         
                         <div class="marginB10">Interview Dates</div>
-                        <div><a id="addText" class="secondFont font12" ng-click="interviewText()">
+                        <div><a id="addText" class=" font12" ng-click="interviewText()">
                         Add Interview Details
                         </a></div>
                     </div>
@@ -1128,7 +1156,7 @@
                     <div flex="25" layout="column" layout-align="start start" class="bold padding5">
                         
                         <div class="marginB10">Final Result Dates</div>
-                        <div><a id="addText" class="secondFont font12" ng-click="finalResultDateText()">
+                        <div><a id="addText" class=" font12" ng-click="finalResultDateText()">
                         Add Final Result Details
                         </a></div>
                     </div>
@@ -1207,10 +1235,10 @@
                 
                 
                 <div flex layout="row" layout-align="end center">
-                    <md-button class="md-black md-small secondFont tolowercase font12" ng-click="cancelNewExamCycle()">
+                    <md-button class="md-black md-small  tolowercase font12" ng-click="cancelNewExamCycle()">
                         Cancel
                     </md-button>
-                    <md-button class="md-danger md-small secondFont tolowercase font12" ng-click="saveNewExamCycle()">
+                    <md-button class="md-danger md-small  tolowercase font12" ng-click="saveNewExamCycle()">
                         Done
                     </md-button>
                 </div>
@@ -1220,22 +1248,25 @@
     </div>
     
     
-    <div layout="column" layout-align="start start" class="secondFont subhheadingBottomBorder2 textBlack paddingB20 width100">
-        
+    <div layout="column" layout-align="start start" class=" subhheadingBottomBorder2 textBlack paddingB20 width100">
+        <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
+            Exam Question Papers
+        </div>
         <!--ng-if="!toAddTest"-->
-        <div flex layout="column" layout-align="start start" class="width100">
-            <div layout="row" layout-align="start center"  class="width100 marginTB20 bold">
+        <div layout="column" layout-align="start start" class="width100">
+            <div layout="row" layout-align="start center"  class="width100 bold">
                 Tests for {{exam.displayname}}
             </div>
-            <div flex layout="row" layout-align="start center"  class="width100 height100" layout-wrap>
+            <div layout="row" layout-align="center center" id="upload3" class="width100" ng-click="addNewTest()">
+                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Test
+            </div>
+            <div layout="row" layout-align="start center"  class="width100 marginT20" layout-wrap>
                 <div layout="row" layout-align="start center" class="bold marginR10 badge font16 marginB5" id="removebadge" ng-repeat="test in exam.tests" ng-click="setTest(test)">
                     {{test.name}} <i class="fa fa-check text-primary" aria-hidden="true" ng-if="test._id == toAddTest._id"></i>
                 </div>
                 
             </div>
-            <div layout="row" layout-align="center center" id="upload3" class="width100 marginTB10" ng-click="addNewTest()">
-                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Test
-            </div>
+            
         </div>
         
         <div flex layout="column" layout-align="start start" ng-if="toAddTest" class="width100 marginT10">
@@ -1416,11 +1447,16 @@
         </div>
     </div>
     
-    <div layout="row" layout-align="start start" class="secondFont  textBlack width100 paddingB20 subhheadingBottomBorder2">
-        
-        <div flex layout="column" layout-align="start start">
+    <div layout="column" layout-align="start start" class="  textBlack width100 paddingB20 subhheadingBottomBorder2">
+        <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
+            Exam Links
+        </div>
+        <div layout="column" layout-align="start start" class="width100">
             
             <div layout="column" layout-align="start start"  class="width100">
+                <div layout="row" layout-align="center center" id="upload3" class="width100" ng-click="addNewOfficialLink()">
+                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Official Link
+                </div>
                 <div layout="row" layout-align="start center" class="width100  marginTB20 bold">
                     <div flex="45" layout="row" layout-align="start center" class="">
                         Other Official Links of {{exam.displayname}}
@@ -1429,6 +1465,7 @@
                         Description
                     </div>
                 </div>
+                
                 <div layout="row" layout-align="start center" class="width100" ng-repeat="link in exam.links">
                     <div flex="45" layout="row" layout-align="start center" class="">
                         <a ng-href="{{link.url}}" target="_blank">
@@ -1455,9 +1492,7 @@
                         <i class="fa fa-times font24 paddingLR10 danger" aria-hidden="true" ng-click="removeNewOfficialLink()"></i>
                     </div>
                 </div>
-                <div layout="row" layout-align="center center" id="upload3" class="width100" ng-click="addNewOfficialLink()">
-                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Official Link
-                </div>
+                
                 
             </div>
         </div>
@@ -1573,10 +1608,10 @@
         Save changes you have made to {{exam.displayname}}?
     </div>
     <div flex layout="row" layout-align="end center"  class="width100">
-        <md-button class="md-black md-small secondFont tolowercase font12" ng-click="reload()">
+        <md-button class="md-black md-small  tolowercase font12" ng-click="reload()">
             Cancel
         </md-button>
-        <md-button class="md-green2 md-small secondFont tolowercase bold font12" ng-click="saveExam()">
+        <md-button class="md-green2 md-small  tolowercase bold font12" ng-click="saveExam()">
             Save
         </md-button>
     </div>

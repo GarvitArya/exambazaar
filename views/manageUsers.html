@@ -13,6 +13,7 @@
     
     #badge{
         background: #20C39A;
+        color: white;
     }
     #profileSection{
         min-height: 20vh;
@@ -32,10 +33,6 @@
     #link:hover{
         color: #20C39A;
     }
-    
-    #badge{
-        background: #20C39A;
-    } 
     
 </style>
 
@@ -111,6 +108,13 @@
                 
                 
                 
+            </div>
+            <div layout="row" layout-align="start center" layout-wrap ng-if="thisuserBlogViewed.length > 0" class="width100 marginT20">
+                <div layout="row" layout-align="start center" ng-repeat="blog in thisuserBlogViewed" class="font10 margin5">
+                    <div class="badge" id="badge">
+                        <a ng-href="{{blog}}" target="_blank">{{blog}}</a>
+                    </div>
+                </div>
             </div>
             <div layout="row" layout-align="start center" layout-wrap ng-if="thisuserViewed.length > 0" class="width100 marginT20">
                 <div layout="column" layout-align="center center" ng-repeat="view in thisuserViewed | orderBy:'-_date'" flex-gt-xs="33" flex-xs="100" class="width100 padding10">

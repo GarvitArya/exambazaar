@@ -7,10 +7,11 @@ var socialMediaPostSchema = mongoose.Schema({
     facebook:{
         postid: {type: String, unique: true},
     },
-    exams: [{ type: Schema.ObjectId, ref: 'exam' }],
+    question: { type: Schema.ObjectId, ref: 'question' },
     active:{type: Boolean, default: true},
     deleted:{type: Boolean, default: false},
-    _created: { type: Date, default: Date.now }
+    _created: { type: Date, default: Date.now },
+    _scheduled: { type: Date }
     
 });
 socialMediaPostSchema.plugin(deepPopulate);

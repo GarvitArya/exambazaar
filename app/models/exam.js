@@ -78,25 +78,6 @@ var examSchema = mongoose.Schema({
             otherName: {type: String},
             description: {type: String},
             stepType: {type: String}, //Written, Counselling, Interview
-            registration:{
-                dateRangeBool: {type: Boolean, default:'false'},
-                timeRangeBool: {type: Boolean, default:'false'}, //true is full day
-                dateRange:{
-                    startDate: { type: Date },
-                    endDate: { type: Date },
-                },
-                dateArray:[{ type: Date }],
-                allDates:[{ type: Date }],
-                timeRange:[{
-                    startTime: { type: String },
-                    endTime: { type: String },
-                }],
-                dates:[{
-                    start: { type: Date },
-                    end: { type: Date },
-                    name: { type: String },
-                }],
-            },
             stepDate:{
                 dateRangeBool: {type: Boolean, default:'false'},
                 timeRangeBool: {type: Boolean, default:'false'}, //true is full day

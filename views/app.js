@@ -604,6 +604,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getuserviews = function(userId) {
             return $http.get('/api/views/user/'+userId, {userId: userId});
         };
+        this.getuserBlogviews = function(userId) {
+            return $http.get('/api/views/userBlog/'+userId, {userId: userId});
+        };
         this.getinstituteviews = function(instituteId) {
             return $http.get('/api/views/institute/'+instituteId, {instituteId: instituteId});
         };
@@ -12102,6 +12105,74 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });    
             };
             
+            $scope.syncFB = function(){
+            FB.login(function(response){
+
+            FB.api('/me/accounts', function(response){
+            var fbpages = response.data;
+            var nPages = fbpages.length;
+            var counter = 0;
+
+            fbpages.forEach(function(thisPage, index){
+                var p_id = thisPage.id;
+                var string_id = '/' + p_id + '/feed';
+                var p_accessToken = thisPage.access_token;
+                var p_name = thisPage.name;
+                var existingPagesFBIds = $scope.allPages.map(function(a) {return a.facebook.id;});
+                var eIndex = existingPagesFBIds.indexOf(p_id);
+                
+                FB.api(string_id, function(response) {
+                    thisPage.data = response.data;
+                    var newSocialMediaCredential = {
+                        platform: 'Facebook',
+                        facebook: thisPage,
+                        exams: []
+                    }; 
+                    if(eIndex != -1){
+                        
+                        var currExams = $scope.allPages[eIndex].exams;
+                        if(currExams.length > 0){
+                            currExams = currExams.map(function(a) {return a._id;});
+                        }
+                        newSocialMediaCredential.exams = currExams;
+                        
+                    }
+                    
+                    socialMediaCredentialService.saveSocialMediaCredential(newSocialMediaCredential).success(function (data, status, headers) {
+                        console.log(data);
+                        counter += 1;
+                        if(counter == nPages){
+                        socialMediaCredentialService.getSocialMediaCredentials().success(function (data, status, headers) {
+                            $scope.allPages = data;
+                            $scope.allPages.forEach(function(thisPage, index){
+                                thisPage.facebook.link = "https://www.facebook.com/" + thisPage.facebook.id;
+
+                                thisPage.exams.forEach(function(thisExam, eindex){
+                                    var examIndex = examIds.indexOf(thisExam);
+                                    if(examIndex != -1){
+                                        $scope.allPages[index].exams[eindex] = $scope.allExams[examIndex];
+                                    }
+                                });
+                            });
+                            
+                            
+                            $scope.showSavedDialog();
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log("Error ");
+                        });
+
+                        }
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                });
+            });
+            });
+
+            },{scope:'manage_pages,publish_pages'});
+            };
             
             $scope.postToFB = function(){
                 FB.login(function(response){
@@ -12221,75 +12292,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 //publish_actions,
             };
             
-            $scope.syncFB = function(){
-            FB.login(function(response){
-
-            FB.api('/me/accounts', function(response){
-            var fbpages = response.data;
-            var nPages = fbpages.length;
-            var counter = 0;
-
-            fbpages.forEach(function(thisPage, index){
-                var p_id = thisPage.id;
-                var string_id = '/' + p_id + '/feed';
-                var p_accessToken = thisPage.access_token;
-                var p_name = thisPage.name;
-                var existingPagesFBIds = $scope.allPages.map(function(a) {return a.facebook.id;});
-                var eIndex = existingPagesFBIds.indexOf(p_id);
-                
-                FB.api(string_id, function(response) {
-                    thisPage.data = response.data;
-                    var newSocialMediaCredential = {
-                        platform: 'Facebook',
-                        facebook: thisPage,
-                        exams: []
-                    }; 
-                    if(eIndex != -1){
-                        
-                        var currExams = $scope.allPages[eIndex].exams;
-                        if(currExams.length > 0){
-                            currExams = currExams.map(function(a) {return a._id;});
-                        }
-                        newSocialMediaCredential.exams = currExams;
-                        
-                    }
-                    
-                    socialMediaCredentialService.saveSocialMediaCredential(newSocialMediaCredential).success(function (data, status, headers) {
-                        console.log(data);
-                        counter += 1;
-                        if(counter == nPages){
-                        socialMediaCredentialService.getSocialMediaCredentials().success(function (data, status, headers) {
-                            $scope.allPages = data;
-                            $scope.allPages.forEach(function(thisPage, index){
-                                thisPage.facebook.link = "https://www.facebook.com/" + thisPage.facebook.id;
-
-                                thisPage.exams.forEach(function(thisExam, eindex){
-                                    var examIndex = examIds.indexOf(thisExam);
-                                    if(examIndex != -1){
-                                        $scope.allPages[index].exams[eindex] = $scope.allExams[examIndex];
-                                    }
-                                });
-                            });
-                            
-                            
-                            $scope.showSavedDialog();
-                        })
-                        .error(function (data, status, header, config) {
-                            console.log("Error ");
-                        });
-
-                        }
-                    })
-                    .error(function (data, status, header, config) {
-                        console.log("Error ");
-                    });
-                });
-            });
-            });
-
-            },{scope:'manage_pages,publish_pages'});
-            };
-            
             $scope.questionToPost = function(page){
                 var examArray = page.exams.map(function(a) {return a._id;});
                 //console.log(examArray);
@@ -12313,7 +12315,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             var thisPage = page.facebook;
             FB.login(function(response){
                 FB.api('/me/accounts', function(response){
-                    var thisQuestion = question.questions[0];
+                    
+                    var nQuestions = question.questions.length;
+                    console.log(nQuestions);
                     var p_id = thisPage.id;
                     var string_id = '/' + p_id + '/feed';
                     var photos_id = '/' + p_id + '/photos';
@@ -12323,30 +12327,42 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     var miniseparator = "\r\n";
                     var separator = "\r\n\r\n";
                     var preQText = "As appeared in " + question.test.name + separator + " Exambazaar Question a Day of " + moment().format("DD MMM YY") + " is:" + separator;
-                    var Qtext = "Q. " + thisQuestion.question + separator;
-                    var optionPrefixes = ["A. ", "B. ", "C. ", "D. ", "E. ", "F. ", "G. "];
-                    var optionString = [];
-                    var options = thisQuestion.options;
-                    var Otext = "";
-                    options.forEach(function(thisOption, index){
-                        var nextOption = optionPrefixes[index] + thisOption.option + miniseparator;
-                        Otext += nextOption;
+                    
+                    var totalQtexts = [];
+                    
+                    question.questions.forEach(function(thisQuestion, index){
+                        //var thisQuestion = question.questions[0];
+                        var Qtext = "Q. " + thisQuestion.question + separator;
+                        var optionPrefixes = ["A. ", "B. ", "C. ", "D. ", "E. ", "F. ", "G. "];
+                        var optionString = [];
+                        var options = thisQuestion.options;
+                        var Otext = "";
+                        options.forEach(function(thisOption, index){
+                            var nextOption = optionPrefixes[index] + thisOption.option + miniseparator;
+                            Otext += nextOption;
+                        });
+                        Otext = Otext + separator;
+                        var totalQtext = Qtext + Otext;
+                        totalQtexts.push(totalQtext);
                     });
                     
-                    Otext = Otext + separator;
-
+                    var allQText = '';
+                    totalQtexts.forEach(function(thisQuestionPart, index){
+                        allQText += thisQuestionPart;
+                    });
+                    
                     var postOText = "For detailed answers and explanations, logon to www.exambazaar.com" + separator;
                     var hashTags = "#eqad #exambazaar";
 
-                    var postString = preQText + Qtext + Otext + postOText + hashTags;
+                    var postString = preQText + allQText + postOText + hashTags;
                     
-                    var myDate="31-08-2017";
+                    var myDate="10-09-2017";
                     myDate=myDate.split("-");
                     var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
                     var backdate = new Date(newDate).getTime();
                     //console.log(backdate);
 
-                    var scheduledTime = moment().add(10, "minutes").unix();
+                    var scheduledTime = moment().add(60, "minutes").unix();
                     //schedule time should be from 10 minutes to 6 months from now
                     
                     FB.api(
@@ -12356,8 +12372,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             "message": postString,
                             access_token : p_accessToken,
                             //backdated_time : backdate,
-                            //published : false,
-                            //scheduled_publish_time : scheduledTime,
+                            published : false,
+                            scheduled_publish_time : scheduledTime,
 
                         },
                         function (response) {
@@ -15812,7 +15828,6 @@ function getLatLng(thisData) {
         };
         $scope.saveExam = function () {
             //console.log($scope.exam);
-            
             var saveExam = ExamService.saveExam($scope.exam).success(function (data, status, headers) {
                 $scope.showSavedDialog();
             })
@@ -17782,6 +17797,15 @@ function getLatLng(thisData) {
                     .error(function (data, status, header, config) {
                         console.log("Error ");
                     });
+                    viewService.getuserBlogviews($scope.thisuser._id).success(function (data3, status, headers) {
+                        //console.log("Done");
+                        $scope.thisuserBlogViewed = data3;
+                        //console.log($scope.thisuserViewed);
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                    
                 }
                 
             });

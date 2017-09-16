@@ -21,10 +21,11 @@ router.post('/questionToPost', function(req, res) {
     var examArray = req.body;
     console.log(examArray);
     var thisQuestion = question
-        .findOne({exam: examArray[0], $where: "this.questions.length == 1"})
+        .findOne({exam: {$in: examArray}, images: { $exists: true, $ne: null }}) //, $where: "this.questions.length == 1"
         .deepPopulate('exam test')
         .exec(function (err, thisQuestion) {
         if (!err){
+            console.log(thisQuestion);
             res.json(thisQuestion);
         } else {throw err;}
     });
