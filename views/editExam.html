@@ -1,7 +1,7 @@
 <style>
     .md-block{
         padding: 10px;
-        border: 1px solid #ccc; 
+        border: 1px solid #eaeaea; 
     }
     a{
         color:#20C39A;
@@ -34,7 +34,7 @@
         color: white;
     }
     #pageLogoHolder{
-        border: 1px solid #ccc;
+        border: 1px solid #eaeaea;
         min-height: 150px;
         width: 150px;
         border-radius: 2px;
@@ -86,16 +86,16 @@
         width:100%;
         padding: 5px 5px;
         display: inline-block;
-        border: 1px solid #ccc;
+        border: 1px solid #eaeaea;
         box-sizing: border-box;
     }
     textarea:hover {
-        border: solid 1px #707070;
-        box-shadow: 0 0 1px 1px #969696;
+        border: solid 1px #A3A3A3;
+        box-shadow: 0 0 1px 1px #eaeaea;
     }
     textarea:focus {
-        border: solid 1px #707070;
-        box-shadow: 0 0 1px 1px #969696;
+        border: solid 1px #A3A3A3;
+        box-shadow: 0 0 1px 1px #eaeaea;
     }
     input[type="text"]
     {
@@ -103,17 +103,17 @@
         color: #333333;
         margin-bottom: 5px;
         padding: 2px;
-        border: solid 1px #ccc;
+        border: solid 1px #eaeaea;
         transition: box-shadow 0.3s, border 0.3s;
         box-shadow: 0 0 1px 1px white;
     }
     input[type="text"]:hover {
-        border: solid 1px #707070;
-        box-shadow: 0 0 1px 1px #969696;
+        border: solid 1px #A3A3A3;
+        box-shadow: 0 0 1px 1px #eaeaea;
     }
     input[type="text"]:focus {
-        border: solid 1px #707070;
-        box-shadow: 0 0 1px 1px #969696;
+        border: solid 1px #A3A3A3;
+        box-shadow: 0 0 1px 1px #eaeaea;
     }
     #addText{
         color: #FF5A5F;
@@ -124,15 +124,17 @@
     #cancelLink{
         color: #FF5A5F;
     }
+    .section{
+        border-bottom: 2px solid #20C39A;
+        
+    }
 </style>
-<div id="spacer1" class="hidden-xs whiteBackground">
-</div>
-<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+<div id="spacer3">
 </div>
 <div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
     
     
-<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="paddingTB10 height100 width100 marginB80 secondFont font14">
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="width100 marginB80 secondFont font14">
     <div layout="row" layout-align="start center" class=" font32 bold  width100 headingBottomBorder2" ng-if="exam">
         <div layout="row" layout-align="start center" >
             {{exam.displayname}} Exam
@@ -142,52 +144,50 @@
         <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
             Exam Basic Information
         </div>
-        <div layout="row" layout-align="start start"  class="width100">
-            <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
-                <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
-                <span ng-show="exam.logo && exam.logo !=''" class="font9 textDarkGrey" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
-                    Change Logo
-                </span>
-                <span class="textDarkGrey" ng-show="exam.logo == '' || !exam.logo" ng-click="">
+        <div layout="column" layout-align="start start"  class="paddingLR10 width100">
+            <div layout="row" layout-align="start center" class="width100 padding5">
+                <div flex="20" layout="row" layout-align="start center">
+                    Logo of {{exam.displayname}}
+                </div>
+                <div flex layout="row" layout-align="start center"  class="">
+                    <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
+                        <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
+                        <span ng-show="exam.logo && exam.logo !=''" class="font9 textDarkGrey" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
+                            Change Logo
+                        </span>
+                        <span class="textDarkGrey" ng-show="exam.logo == '' || !exam.logo" ng-click="">
 
-                    <div layout="column" layout-align="center center" class="width100 height100" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
-                        <span class="md-display-1">
-                            <i class="fa fa-camera" aria-hidden="true"></i>
+                            <div layout="column" layout-align="center center" class="width100 height100" ngf-select="uploadLogo(newlogo)" ng-model="newlogo" ngf-accept="'image/*'">
+                                <span class="md-display-1">
+                                    <i class="fa fa-camera" aria-hidden="true"></i>
+                                </span>
+                                <span>
+                                    Add Logo
+                                </span>
+                            </div>
                         </span>
-                        <span>
-                            Add Logo
-                        </span>
                     </div>
-                </span>
-            </div>
-            <div flex layout="column" layout-align="start start"  class="paddingL10 width100">
-                <div layout="row" layout-align="start center" class="width100 ">
-                    <div flex="20" layout="row" layout-align="start center">
-                        Website of {{exam.displayname}}
-                    </div>
-                    <div layout="row" layout-align="start center" flex class="paddingL10">
-                        <input type="text" class="width100" ng-model="exam.website"  placeholder="Exam Name">
-                    </div>
-                    <div flex="20" layout="row" layout-align="start center" class="paddingLR10">
-                        Frequency of {{exam.displayname}}
-                    </div>
-                    <div layout="row" layout-align="start center" flex class="paddingL10">
-                        <md-select ng-model="exam.frequency" placeholder="Select the frequency of the exam" class="margin0 width100">
-                        <md-option ng-repeat="examFrequency in examFrequencies" ng-value="examFrequency">
-                            {{examFrequency}}
-                            </md-option>
-                        </md-select>
-                    </div>
-                </div>
-                <div layout="row" layout-align="start center" class="width100  marginT10">
-                    <div flex="20" layout="row" layout-align="start center"  class="width100">
-                        Exam Description
-                    </div>
-                    <div layout="row" layout-align="start center" flex class="paddingL10">
-                        <textarea class=" width100" ng-model="exam.briefDescription" placeholder="Brief Description of Exam" rows="4"></textarea>
-                    </div>
+
                 </div>
             </div>
+            <div layout="row" layout-align="start center" class="width100 padding5">
+                <div flex="20" layout="row" layout-align="start center">
+                    Website of {{exam.displayname}}
+                </div>
+                <div layout="row" layout-align="start center" flex class="">
+                    <input type="text" class="width100" ng-model="exam.website"  placeholder="Exam Name">
+                </div>
+
+            </div>
+            <div layout="row" layout-align="start center" class="width100 padding5">
+                <div flex="20" layout="row" layout-align="start center"  class="width100">
+                    Exam Description
+                </div>
+                <div layout="row" layout-align="start center" flex class="">
+                    <textarea class=" width100" ng-model="exam.briefDescription" placeholder="Brief Description of Exam" rows="4"></textarea>
+                </div>
+            </div>
+            
         </div>
     </div>
     
@@ -229,6 +229,18 @@
         </div>
         <div flex layout="column" layout-align="start start" class="paddingLR10">
             <div class="width100">
+                Frequency of {{exam.displayname}}
+            </div>
+            <div class="width100">
+                <md-select ng-model="exam.frequency" placeholder="Select the frequency of the exam" class="margin0 width100">
+                <md-option ng-repeat="examFrequency in examFrequencies" ng-value="examFrequency">
+                    {{examFrequency}}
+                    </md-option>
+                </md-select>
+            </div>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR10">
+            <div class="width100">
                 Result Format
             </div>
             <div class="width100">
@@ -251,20 +263,20 @@
             <div layout="row" layout-align="start center" class="width100  marginB5 bold">
                 Registration Information for {{exam.displayname}}
             </div>
-            <div layout="row" layout-align="start center" class="width100 marginB5">
-                <div flex layout="column" layout-align="start start" class="paddingLR10">
-                    <div class="width100">
+            <div layout="column" layout-align="start center" class="width100 marginB5">
+                <div layout="row" layout-align="start start" class="padding5 width100">
+                    <div flex="20" class="width100">
                         Registration Website
                     </div>
-                    <div class="width100">
+                    <div flex>
                         <input type="text" class="width100" ng-model="exam.registration.website"  placeholder="Exam Registration Website">
                     </div>
                 </div>
-                <div flex layout="column" layout-align="start start" class="paddingLR10">
-                    <div class="width100">
+                <div flex layout="row" layout-align="start start" class="padding5 width100">
+                    <div flex="20" class="width100">
                         Registration Mode
                     </div>
-                    <div class="width100">
+                    <div flex>
                         <md-select ng-model="exam.registration.mode" placeholder="Select the mode of Exam Registration" class="margin0">
                             <md-option ng-repeat="registrationMode in registrationModes" ng-value="registrationMode">
                             {{registrationMode}}
@@ -272,43 +284,42 @@
                         </md-select>
                     </div>
                 </div>
-            </div>
-            <div layout="row" layout-align="start center" class="width100 marginB5">
-                <div flex layout="column" layout-align="start start" class="paddingLR10">
-                    <div class="width100">
+                <div layout="row" layout-align="start start" class="padding5 width100">
+                    <div flex="20" class="width100">
                         Registration details Write Up
                     </div>
-                    <div class="width100">
+                    <div flex>
                         <textarea class=" width100" ng-model="exam.registration.otherInformation" placeholder="Other information about the registration" rows="4"></textarea>
                     </div>
                 </div>
             </div>
+            
             <div layout="column" layout-align="start center" class="width100 marginB5">
                 <div layout="row" layout-align="start center" class="width100 marginT5 bold">
                     Fee Details for {{exam.displayname}}
                 </div>
-                <div layout="row" layout-align="start center" class="width100 marginB5">
-                    <div flex layout="column" layout-align="start start" class="paddingLR10">
-                        <div class="width100">
+                <div layout="column" layout-align="start start" class="width100 marginB5">
+                    <div  layout="row" layout-align="start start" class="padding5 width100">
+                        <div flex="20" class="width100">
                             Fee for General & OBC
                         </div>
-                        <div class="width100">
+                        <div flex>
                             <input type="text" class="width100" ng-model="exam.registration.fee.general_obc"  placeholder="Registration Fee">
                         </div>
                     </div>
-                    <div flex layout="column" layout-align="start start" class="paddingLR10">
-                        <div class="width100">
+                    <div  layout="row" layout-align="start start" class="padding5 width100">
+                        <div flex="20" class="width100">
                             Fee for SC/ST/PH
                         </div>
-                        <div class="width100">
+                        <div flex>
                             <input type="text" class="width100" ng-model="exam.registration.fee.sc_st_ph"  placeholder="Registration Fee">
                         </div>
                     </div>
-                    <div flex layout="column" layout-align="start start" class="paddingLR10">
-                        <div class="width100">
+                    <div  layout="row" layout-align="start start" class="padding5 width100">
+                        <div flex="20" class="width100">
                             Fee for females
                         </div>
-                        <div class="width100">
+                        <div flex>
                             <input type="text" class="width100" ng-model="exam.registration.fee.females"  placeholder="Registration Fee">
                         </div>
                     </div>
