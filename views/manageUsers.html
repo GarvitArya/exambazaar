@@ -71,6 +71,17 @@
                     <div>
                         {{thisuser.basic.name}}
                     </div>
+                    <div layout="row" layout-align="start center" layout-wrap>
+                        <div class="margin5">
+                            {{thisuser.userType}}
+                        </div>
+                        <div ng-repeat="partnerId in thisuser.partner" class="font12 margin5">
+                            <a ui-sref="claim({ coachingId:{{'partnerId'}} })" target="_blank">
+                            {{partnerId}}
+                            </a>
+                        </div>
+                    </div>
+                    
                     <div layout="row" layout-align="start center" class="font10">
                         <div class="marginR10">{{thisuser._id}}</div>
                         <div class="marginR10" ng-if="thisuser.mobile">{{thisuser.mobile}}</div>
@@ -81,7 +92,7 @@
                         </div>
                     </div>
                 </div>
-                <div layout="row" layout-align="start start" class="paddingL20 editFont">
+                <div layout="row" layout-align="start start" class="paddingL20 editFont" layout-wrap>
                     <div layout="column" layout-align="start start" ng-if="thisuser.blogger" class="paddingLR10">
                         <md-button class="md-green2 md-small  editFont" ng-click="activateBlogger(thisuser)" ng-if="!thisuser.blogger.active">
                         Activate Blogging
@@ -101,6 +112,16 @@
                     <div layout="column" layout-align="start start" ng-if="thisuser.userType=='Intern - Business Development'" class="paddingLR10">
                         <md-button class="md-danger md-small editFont" ng-click="closeInternship(thisuser)">
                         Close Internship
+                        </md-button>
+                    </div>
+                    <div layout="column" layout-align="start start" ng-if="thisuser.userType == 'Student'">
+                        <md-button class="md-danger md-small editFont" ng-click="makePartnerDialog()">
+                        Convert to Partner
+                        </md-button>
+                    </div>
+                    <div layout="column" layout-align="start start" ng-if="thisuser.userType == 'Partner'">
+                        <md-button class="md-danger md-small editFont" ng-click="unmakePartner()">
+                        Convert to Student
                         </md-button>
                     </div>
                 </div>
@@ -152,4 +173,63 @@
     </div>
     
 </div>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="parnterDialog">
+      <md-dialog>
+          <div layout="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20">
+                <span class="danger md-headline">
+                  <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    <input type="text" class="" ng-model="partnerInstituteId"  placeholder="Partner Id">
+                </span>
+              </div>
+              <div class="padding10">
+                  
+                  <md-button class="md-green2 md-small" ng-click="makePartner()">
+                    Mark Partner!
+                  </md-button>
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="errorDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                    <i class="fa fa-exclamation-triangle danger" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Something went wrong!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
 </div>

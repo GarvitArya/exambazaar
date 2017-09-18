@@ -800,7 +800,7 @@ router.get('/hourlyHeatmap', function(req, res) {
 router.get('/query/:query', function(req, res) {
     var query = req.params.query;
     //console.log(query);
-    user.find({"basic.name":{'$regex' : query, '$options' : 'i'}}, {basic:1, blogger:1, image:1, userType:1, mobile:1, email:1, facebook:1},function(err, docs) {
+    user.find({"basic.name":{'$regex' : query, '$options' : 'i'}}, {basic:1, blogger:1, image:1, userType:1, mobile:1, email:1, facebook:1, partner: 1},function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}
@@ -1858,6 +1858,82 @@ router.get('/userShortlist/:userId', function(req, res) {
             }
         } else {throw err;}
     });
+});
+
+router.post('/makePartner', function(req, res) {
+    var partnerUser = req.body;
+    var userId = partnerUser.userId;
+    var partnerInstituteId = partnerUser.partnerInstituteId;
+    
+    var thisUser = user
+        .findOne({ '_id': userId }, {userType: 1, partner: 1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            
+            var thisInstitute = targetStudyProvider
+            .findOne({ '_id': partnerInstituteId })
+            .exec(function (err, thisInstitute) {
+            if (!err){
+                if(thisUser && thisInstitute){
+                    thisUser.userType = 'Partner';
+                    if(!thisUser.partner){
+                        thisUser.partner = [];
+                    }
+                    thisUser.partner.push(partnerInstituteId);
+                    thisUser.save(function(err, thisUser) {
+                        if (err) return console.error(err);
+                        
+                        res.json(true);
+                    });
+                }else{
+                    res.json(null);
+                }
+            }
+            });
+            
+            
+            
+        }
+    });
+    
+});
+
+router.post('/unmakePartner', function(req, res) {
+    var partnerUser = req.body;
+    var userId = partnerUser.userId;
+    var partnerInstituteId = partnerUser.partnerInstituteId;
+    
+    var thisUser = user
+        .findOne({ '_id': userId }, {userType: 1, partner: 1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            
+            var thisInstitute = targetStudyProvider
+            .findOne({ '_id': partnerInstituteId })
+            .exec(function (err, thisInstitute) {
+            if (!err){
+                if(thisUser && thisInstitute){
+                    thisUser.userType = 'Student';
+                    if(!thisUser.partner){
+                        thisUser.partner = [];
+                    }
+                    thisUser.partner = [];
+                    thisUser.save(function(err, thisUser) {
+                        if (err) return console.error(err);
+                        
+                        res.json(true);
+                    });
+                }else{
+                    res.json(null);
+                }
+            }
+            });
+            
+            
+            
+        }
+    });
+    
 });
 
 router.post('/updatePassword', function(req, res) {

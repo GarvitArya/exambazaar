@@ -1,68 +1,152 @@
 <style>
-    
     #categories{
-        margin-top: 30px;
-    }
-    #category{
-        text-align: center;
-        min-height: 10vh;
-        padding: 0px;
-        border: white;
-        
+        margin-top: 20px;
     }
     #categoryFont{
+        min-height: 5vh;
         color: white;
         min-width: 175px;
         border-style: solid;
         border-radius: 10px;
         border-width: 1px;
-        background-color: rgba(0,0,0,0.5);
+        background-color: rgba(0,0,0,0.6);
         margin-top: 7px;
         margin-bottom: 7px;
-        
-        
         margin-right: 0px;
         padding: 5px;
-        letter-spacing: 2px;
-        box-shadow: 1px 1px 1px #6A6968;
-        font-family: "Avenir";
         
+        box-shadow: 2px 2px 2px #6A6968;
     }
     #categoryFont:hover{
         background-color: #20C39A;
         font-weight: 900;
     }
-    a{
-        color: white;
-        text-decoration: none;
-        
-    }
-    a:hover{
-        color: white;
-    }
     #categoryLink a:hover{
       padding: 0px;
       color: white;
       text-decoration: none;
-        
     }
     #pageHeader{
         color: rgba(0,0,0,0.8);
         letter-spacing: 4px;
-        font-family: "Avenir";
-        
     }
     #pageHeaderFont{
-        letter-spacing: 1px;
-        font-family: 'Roboto', sans-serif;
-        font-weight: 400;
-        /*border-bottom: solid 3px;
-        border-color: #20C39A;*/
-        color: white;
-        text-shadow: 0 0 10px #383838;
-    }
-    .letterspacing2{
         letter-spacing: 2px;
+    }
+    a:hover{
+        text-decoration: none;
+    }
+    #breadcrumb{
+        color: #20C39A;
+    }
+    
+    #coachingHeader{
+        color: #20C39A;
+        letter-spacing: 1px;
+    }
+    #coachingCourses{
+        letter-spacing: 0px;
+    }
+    #knowmore{
+        width:100%;
+        background-color: #20C39A;
+        margin-top: 10px;
+    }
+    #fullPageGradient1{
+        
+    }
+    
+    .nohighlight{
+        border-bottom: solid;
+        border-width: 1px;
+        border-color: rgba(0,0,0,0.6);
+        
+    }
+    .highlight{
+        border-bottom: solid;
+        border-width: 3px;
+        border-color: #20C39A;
+        color: #20C39A;
+    }
+    
+    #normal{
+        color: #20C39A;
+        letter-spacing: 0px;
+    }
+    #normal a{
+        color: #20C39A;
+    }
+    #leftTabs{
+        
+        margin-bottom: 20px;
+    }
+    
+    #subcategory{
+        height: 100%;
+        padding-right: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        min-height: 15vh;
+        
+        /*border-style: solid;
+        border-radius: 10px;*/
+        
+        /*border-width: 2px;
+        border-color: whitesmoke;
+        box-shadow: 1px 1px 1px #6A6968;
+        border: 1px solid #ccc;
+        */
+        
+        background-color: white;
+        box-shadow: 0 0 7px gainsboro;
+    }
+    
+    #rightTabs{
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+        border: none;
+        height: 100%;
+        margin-bottom: 20px;
+        
+    }
+    
+    .label-eb{
+        background: #20C39A;
+    }
+    .btn:active{
+        background: #20C39A;
+    }
+    .btn:selected{
+        background: #20C39A;
+    }
+    .pageLogo{
+        max-height: 100px;
+        max-width: 150px;
+    }
+    #pageLogoHolder{
+        height: 100px;
+        width: 150px;
+    }
+    #coachingList{
+        /*min-height: 40vh;*/
+    }
+    a{
+        color: #20C39A;
+    }
+    #reviewLink{
+        color: #20C39A;
+    }
+    #reviewLink:hover{
+        text-decoration: underline;
+    }
+    #distanceBadge{
+        border: 1px solid #6A6968;
+        background: transparent;
+        color: #6A6968;
+    }
+    #landingPage{
+        padding-top: 25px;
+        min-height: 80vh;
     }
     #subheading{
         letter-spacing: 4px;
@@ -72,98 +156,63 @@
         text-shadow: 0 0 10px #383838;
         max-width: 700px;
     }
-    a:hover{
-        text-decoration: none;
-    }
-    #leftSection{
-        min-height: 80vh;
-        /*border-right: solid 3px;
-        border-color: #20C39A;*/
-    }
-    #rightSection{
-        min-height: 90vh;
-        padding-top:20px;
-    }
-    #landingPage{
-        padding-top: 25px;
-        min-height: 90vh;
-    }
-    
-    .landingButton{
-        background: transparent;
-        color: white;
-        border: 2px solid white;
-        border-radius: 10px;
-    }
-    #rightLogo{
-        max-height: 50px;
-        max-width: 100px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
-    }
-    #logoContainer{
-        min-height: 12vh;
-        margin-bottom: 5px;
-    }
-    
 </style>
-<div>
-<div class="container-fluid" id="fullPage">
-    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="spacer1">
+
+<div layout="column" layout-align="center center" class="text-white mainContent" id="fullPage">
+    <div id="spacer2">
     </div>
-    <div>
-    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="landingPage">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" >
-        <div layout="column" layout-align="center center" id="leftSection" class="">
-            <div layout="row" layout-xs="column" hide-xs class="md-display-2 " id="pageHeaderFont">
-                SEARCH&nbsp;&nbsp;&#8226;&nbsp;&nbsp;COMPARE&nbsp;&nbsp;&#8226;&nbsp;&nbsp;APPLY
+    <div layout="column" layout-align="center center" class="width100" id="landingPage">
+        <div layout="row" layout-align="center center" hide-xs class="font48 bold" id="pageHeaderFont" layout-wrap>
+            <div class="marginR20">
+                SEARCH
             </div>
-            <div layout="row" layout-xs="column" hide-gt-xs class="font20" id="pageHeaderFont">
-                SEARCH&nbsp;&nbsp;&#8226;&nbsp;&nbsp;COMPARE&nbsp;&nbsp;&#8226;&nbsp;&nbsp;APPLY
+            <div class="marginR20">
+                &#8226;
             </div>
-            <div  class=" marginT20" id="subheading">
-                <span class="font20" hide-xs>
-                    <strong>26,000+ COACHING INSTITUTES | 90+ CITIES</strong>
-                    <br/>
-                    <span class="font16 letterspacing2">Explore photos, videos, discounts, reviews and more.</span>
-                    <!--Browse through thousands of Coaching Institutes offering Amazing Discounts and Find the one Right For You!-->
-                </span>
-                <span class="font18" hide-gt-xs>
-                    <strong>26,000+ COACHING INSTITUTES | 90+ CITIES</strong>
-                    <br/>
-                    <span class="font14 letterspacing2">Explore photos, videos, discounts, reviews and more.</span>
-                    <!--Thousands of Coaching Institutes offering Amazing Discounts. Find the one Right For You!-->
-                </span>
+            <div class="marginR20">
+                COMPARE
             </div>
-            <div class="marginT40">
-                <md-button type="submit" class="md-large md-start width100 mainFont font20" ui-sref="main">Search Now</md-button>
+            <div class="marginR20">
+                &#8226;
             </div>
-            <!--<a class="landingButton " ui-sref="main">
-                Search
-            <span class="text-primary md-display-4 landingButton">
-            <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>    
-            </span>
-            </a>-->
             <div>
-            
+                APPLY
             </div>
         </div>
-        </div>
-        <!--<div class="hidden-xs hidden-sm col-md-6 col-lg-6 text-center" id="rightSection">
-        <div layout="row" layout-align ="center" >
-        
-        <div class="row">
-            <div ng-repeat="i in getNumber(number) track by $index" class="col-md-3 col-lg-3" id="logoContainer">
-                <img ng-src="images/coachinglogo/{{$index+1}}.jpg" id="rightLogo"/>
-                
+        <div layout="row" layout-align="center center" hide-gt-xs class="font22 bold" id="pageHeaderFont">
+            <div class="marginR10">
+                SEARCH
+            </div>
+            <div class="marginR10">
+                &#8226;
+            </div>
+            <div class="marginR10">
+                COMPARE
+            </div>
+            <div class="marginR10">
+                &#8226;
+            </div>
+            <div>
+                APPLY
             </div>
         </div>
+        <div  layout="row" layout-align="center center" class=" marginT20  text-center width100" id="subheading">
+            <div flex="90" layout="column" layout-align="center center" class="" hide-xs>
+                <div layout="column" layout-align="center center" class="font20 bold width100">
+                    26,000+ COACHING INSTITUTES | 90+ CITIES
+                </div>
+                <div layout="column" layout-align="center center" class="font16 letterspacing2 marginT20 width100">Explore photos, videos, discounts, reviews and more</div>
+                <!--Browse through thousands of Coaching Institutes offering Amazing Discounts and Find the one Right For You!-->
+            </div>
+            <div flex="90" layout="column" layout-align="center center" class="" hide-gt-xs>
+                <div layout="column" layout-align="center center" class="font16 bold width100">26,000+ COACHING INSTITUTES | 90+ CITIES</div>
+                <div layout="column" layout-align="center center" class="font14 letterspacing2 marginT20 width100">Explore photos, videos, discounts, reviews and more</div>
+                <!--Thousands of Coaching Institutes offering Amazing Discounts. Find the one Right For You!-->
+            </div>
         </div>
-        </div>-->
+        <div class="marginT40">
+            <md-button type="submit" class="md-large md-start width100 mainFont font20" ui-sref="main">Search Now</md-button>
+        </div>
     </div>
-    </div>
-</div>
     
- 
+</div>

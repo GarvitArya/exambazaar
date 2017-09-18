@@ -84,7 +84,7 @@
         <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20" ng-repeat="blogpost in allBlogs | orderBy: '-_created'">
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
             <div layout="column" layout-align="center center" class="blogpostImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
-            <div layout="row" layout-align="start center" id="blogPostRead" class="width100 paddingLR20 paddingB20">
+            <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
                 <div flex layout="row" layout-align="start center">
                     {{blogpost.readingTime.text}}
                 </div>
@@ -116,14 +116,14 @@
             </div>
                 
                 <div layout="column" layout-align="start center" class="min20vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
-                    <div layout="row" layout-align="start start" class="width100 marginB10">
-                        <div flex layout="column" layout-align="start start" flex class="font22 bold wideLine2" ng-click="goToBlog(blogpost)">
+                    <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
+                        <div flex layout="column" layout-align="start start" flex class="font20 bold wideLine2 marginR10" ng-click="goToBlog(blogpost)">
                             {{blogpost.title}}
                         </div>
                         
                         
                         <div layout="row" layout-align="end start" class="font12 paddingT5">
-                            <div hide-gt-xs class="marginL10 ">
+                            <div hide-gt-xs class="marginR10 ">
                                 <a href="#"
                                 socialshare 
                                 socialshare-provider="whatsapp"
@@ -132,12 +132,12 @@
                                 <img src="icons/whatsapp.png" class="socialIconBlog"/>    
                                 </a>
                             </div>
-                            <div hide-xs class="marginL10 ">
+                            <div hide-xs class="marginR10 ">
                                 <a ng-click="postFacebook(blogpost)">
                                     <img src="icons/facebook.png" class="socialIconBlog"/>
                                 </a>
                             </div>
-                            <div hide-gt-xs class="marginL10 ">
+                            <div hide-gt-xs class="marginR10 ">
                                 <a href="#"
                                 socialshare
                                 socialshare-provider="facebook-messenger"
@@ -145,7 +145,7 @@
                                     <img src="icons/facebook.png" class="socialIconBlog"/>
                                 </a>
                             </div>
-                            <div class="marginL10 ">
+                            <div class="marginR10 ">
                                 <a href="#"
                                 socialshare
                                 socialshare-provider="twitter"

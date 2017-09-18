@@ -343,6 +343,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.updatePassword = function(userPassword) {
             return $http.post('/api/users/updatePassword',userPassword);
         };
+        this.makePartner = function(partnerUser) {
+            return $http.post('/api/users/makePartner',partnerUser);
+        };
+        this.unmakePartner = function(partnerUser) {
+            return $http.post('/api/users/unmakePartner',partnerUser);
+        };
         this.userMarketing = function(userList) {
             return $http.post('/api/users/userMarketing',userList);
         };
@@ -17784,25 +17790,64 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("manageUsersController", 
-        [ '$scope', 'UserService', 'viewService','$http','$state', '$rootScope', function($scope, UserService, viewService, $http,$state, $rootScope){
+        [ '$scope', 'UserService', 'viewService','$http','$state', '$rootScope', '$mdDialog', '$timeout', function($scope, UserService, viewService, $http,$state, $rootScope, $mdDialog, $timeout){
             
             $rootScope.pageTitle = "Manage users on EB";
             $rootScope.$on("setBloggerUser", function(event, data){
-                //console.log(data.user);
                 if(data && data.user){
                     $scope.thisuser = data.user;
+                    console.log($scope.thisuser);
                     viewService.getuserviews($scope.thisuser._id).success(function (data2, status, headers) {
-                        //console.log("Done");
                         $scope.thisuserViewed = data2;
-                        //console.log($scope.thisuserViewed);
                     })
                     .error(function (data, status, header, config) {
                         console.log("Error ");
                     });
                     viewService.getuserBlogviews($scope.thisuser._id).success(function (data3, status, headers) {
-                        //console.log("Done");
                         $scope.thisuserBlogViewed = data3;
-                        //console.log($scope.thisuserViewed);
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                    
+                }
+            });
+            $scope.showSavedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#savedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
+            $scope.showErrorDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#errorDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
+            
+            $scope.partnerInstituteId = null;
+            $scope.makePartner = function(){
+                if($scope.partnerInstituteId && $scope.thisuser._id){
+                    $scope.partnerUser = {
+                        userId: $scope.thisuser._id,
+                        partnerInstituteId: $scope.partnerInstituteId
+                    };
+                    UserService.makePartner($scope.partnerUser).success(function (data, status, headers) {
+                        if(data){
+                            $scope.showSavedDialog();
+                        }else{
+                            $scope.showErrorDialog();
+                        }
                     })
                     .error(function (data, status, header, config) {
                         console.log("Error ");
@@ -17810,7 +17855,37 @@ function getLatLng(thisData) {
                     
                 }
                 
-            });
+            };
+            $scope.unmakePartner = function(){
+                if($scope.thisuser.partner && $scope.thisuser.partner.length > 0 && $scope.thisuser._id){
+                    $scope.partnerUser = {
+                        userId: $scope.thisuser._id,
+                        partnerInstituteId: $scope.thisuser.partner[0],
+                    };
+                    UserService.unmakePartner($scope.partnerUser).success(function (data, status, headers) {
+                        if(data){
+                            $scope.showSavedDialog();
+                        }else{
+                            $scope.showErrorDialog();
+                        }
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                    
+                }
+                
+            };
+            $scope.makePartnerDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#parnterDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
             $scope.activateIntern = function(thisuser){
                 UserService.activateIntern(thisuser._id).success(function (data, status, headers) {
                     console.log("Done");
