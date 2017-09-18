@@ -3,7 +3,7 @@
         padding: 10px;
         border: 1px solid #eaeaea; 
     }
-    a{
+    a, a:visited{
         color:#20C39A;
     }
     a:hover{
@@ -11,14 +11,6 @@
         text-decoration: none;
     }
     a:link:hover{
-        color: #20C39A;
-        text-decoration: none;
-    }
-    a:visited{
-        color: #20C39A;
-        text-decoration: none;
-    }
-    a:visited:hover{
         color: #20C39A;
         text-decoration: none;
     }
@@ -586,9 +578,24 @@
                     </div>
                     <div layout="column" layout-align="start start"  class="width100 paddingLR10">
 
-                    <div layout="row" layout-align="center center" id="upload3" class="width100 marginTB20" ng-click="addNewExamStep(newExamCycle)">
-                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Exam Step
-                    </div>
+                    <div layout="row" layout-align="start start" class="width100 marginTB20">
+                        <div flex layout="row" layout-align="center center" id="upload3" class="marginR10" ng-click="addRegistration(newExamCycle)">
+                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Registration
+                        </div>
+                        <div flex layout="row" layout-align="center center" id="upload3" class="marginR10" ng-click="addAdmitCard(newExamCycle)">
+                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Admit Card
+                        </div>
+                        <div flex layout="row" layout-align="center center" id="upload3" class="marginR10" ng-click="addWritten(newExamCycle)">
+                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Written Exam
+                        </div>
+                        <div flex layout="row" layout-align="center center" id="upload3" class="marginR10" ng-click="addCounselling(newExamCycle)">
+                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Counselling
+                        </div>
+                        <div flex layout="row" layout-align="center center" id="upload3" class="marginR10" ng-click="addInterview(newExamCycle)">
+                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Interview
+                        </div>
+                    </div>    
+                    
                     <div layout="row" layout-align="start start"  class="width100 marginTB10" layout-wrap>
                         <div flex="33" layout="column" layout-align="start start" class="padding10 min10vh marginTB10" ng-repeat="examStep in newExamCycle.examSteps" >
 
@@ -606,7 +613,7 @@
                                     <div class="bold marginR5">
                                         {{examStep.stepType}}
                                     </div>
-                                    <div>
+                                    <div ng-if="examStep.name && examStep.name != ''">
                                         ({{examStep.name}})
                                     </div>
                                 </div>
@@ -673,7 +680,7 @@
                                     </md-select>
                                 </div>
                             </div>
-                            <div layout="row" layout-align="start center" class="width100 padding5" ng-if="newExamStep.name == 'Other' || newExamStep.stepType != 'Written'">
+                            <div layout="row" layout-align="start center" class="width100 padding5" ng-if="newExamStep.name == 'Other'">
                                 <div flex="20">
                                     Name this Step
                                 </div>
@@ -681,14 +688,23 @@
                                     <input type="text" class="width100" ng-model="newExamStep.otherName"  placeholder="Step name" ng-if="newExamStep.name == 'Other'">
                                 </div>
                             </div>
-                            <div layout="row" layout-align="start center" class="width100 padding5">
+                            
+                            <div layout="row" layout-align="start center" class="width100 padding5" ng-if="newExamStep.name == 'Other' && newExamStep.stepType == 'Written'">
+                                <div flex="20">
+                                    Name this Step
+                                </div>
+                                <div flex>
+                                    <input type="text" class="width100" ng-model="newExamStep.otherName"  placeholder="Step name" ng-if="newExamStep.name == 'Other'">
+                                </div>
+                            </div>
+                            <!--<div layout="row" layout-align="start center" class="width100 padding5">
                                 <div flex="20">
                                     Step Description
                                 </div>
                                 <div flex>
                                     <input type="text" class="width100" ng-model="newExamStep.description"  placeholder="Step Description">
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                         
                         <div layout="row" layout-align="start center" class="width100 bold marginT20 marginB10 paddingLR10">

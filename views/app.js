@@ -8197,7 +8197,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -15810,6 +15810,7 @@ function getLatLng(thisData) {
             "Wallets",
             "Demand Draft",
             "Challan",
+            "Cash",
         ];
         $scope.cycleYears = ["2016","2017","2018","2019","2020"];
         $scope.timeSlots = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "00:00", "01:00", "02:00", "03:00", "04:00", "05:00"];
@@ -16529,6 +16530,128 @@ function getLatLng(thisData) {
             $scope.toAddTimeRange = $scope.newExamStep.stepDate.timeRange[0];
             console.log($scope.toAddTimeRange);
         };
+            //"Registration", "Admit Card", "Written", "Counselling", "Interview"
+        $scope.addRegistration = function(newExamCycle){
+            $scope.newExamStep = {
+                name: '',
+                description: '',
+                stepType: 'Registration', //Written, Counselling, Interview
+                otherName: '',
+                stepDate:{
+                    dateRangeBool: true,
+                    timeRangeBool: true,
+                    dateRange:{
+                        startDate: today,
+                        endDate: today,
+                    },
+                    dateArray:[],
+                    timeRange:[],
+                    dates:[],
+                    allDates:[],
+                },
+            };
+            if(!newExamCycle.examSteps){
+                newExamCycle.examSteps = [];
+            }
+            newExamCycle.examSteps.push($scope.newExamStep);
+        };
+        $scope.addAdmitCard = function(newExamCycle){
+            $scope.newExamStep = {
+                name: '',
+                description: '',
+                stepType: 'Admit Card', //Written, Counselling, Interview
+                otherName: '',
+                stepDate:{
+                    dateRangeBool: true,
+                    timeRangeBool: true,
+                    dateRange:{
+                        startDate: today,
+                        endDate: today,
+                    },
+                    dateArray:[],
+                    timeRange:[],
+                    dates:[],
+                    allDates:[],
+                },
+            };
+            if(!newExamCycle.examSteps){
+                newExamCycle.examSteps = [];
+            }
+            newExamCycle.examSteps.push($scope.newExamStep);
+        };
+        $scope.addWritten = function(newExamCycle){
+            $scope.newExamStep = {
+                name: '',
+                description: '',
+                stepType: 'Written', //Written, Counselling, Interview
+                otherName: '',
+                stepDate:{
+                    dateRangeBool: true,
+                    timeRangeBool: true,
+                    dateRange:{
+                        startDate: today,
+                        endDate: today,
+                    },
+                    dateArray:[],
+                    timeRange:[],
+                    dates:[],
+                    allDates:[],
+                },
+            };
+            if(!newExamCycle.examSteps){
+                newExamCycle.examSteps = [];
+            }
+            newExamCycle.examSteps.push($scope.newExamStep);
+        };
+        $scope.addCounselling = function(newExamCycle){
+            $scope.newExamStep = {
+                name: '',
+                description: '',
+                stepType: 'Counselling', //Written, Counselling, Interview
+                otherName: '',
+                stepDate:{
+                    dateRangeBool: true,
+                    timeRangeBool: true,
+                    dateRange:{
+                        startDate: today,
+                        endDate: today,
+                    },
+                    dateArray:[],
+                    timeRange:[],
+                    dates:[],
+                    allDates:[],
+                },
+            };
+            if(!newExamCycle.examSteps){
+                newExamCycle.examSteps = [];
+            }
+            newExamCycle.examSteps.push($scope.newExamStep);
+        };
+        $scope.addInterview = function(newExamCycle){
+            $scope.newExamStep = {
+                name: '',
+                description: '',
+                stepType: 'Interview', //Written, Counselling, Interview
+                otherName: '',
+                stepDate:{
+                    dateRangeBool: true,
+                    timeRangeBool: true,
+                    dateRange:{
+                        startDate: today,
+                        endDate: today,
+                    },
+                    dateArray:[],
+                    timeRange:[],
+                    dates:[],
+                    allDates:[],
+                },
+            };
+            if(!newExamCycle.examSteps){
+                newExamCycle.examSteps = [];
+            }
+            newExamCycle.examSteps.push($scope.newExamStep);
+        };
+            
         $scope.moveStepBefore = function(newExamCycle, $index){
             var nLength = newExamCycle.examSteps.length;
             if($index > 0){
