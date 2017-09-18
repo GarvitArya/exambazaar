@@ -41,25 +41,54 @@ router.get('/blogpostsCount', function(req, res) {
 
 router.get('/suggestedblogs/:examName', function(req, res) {
     var examName = req.params.examName;
+    
     var thisExam = exam
         .findOne({'name': examName}, {_id:1, name:1})
         .exec(function (err, thisExam) {
         if (!err){
-            var examId = thisExam._id.toString();
+            
+            console.log(thisExam);
+            
+            if(thisExam){
+                var examId = thisExam._id.toString();
             //console.log('Exam Id is: ' + examId);
-            var examblogposts = blogpost
-            .find({active: true, exams:examId})
-            .exec(function (err, examblogposts) {
-                if (!err){
-                    var nBlogs = examblogposts.length;
-                    var examblogpostsIds = examblogposts .map(function(a) {return a._id;});
-                    var required = 4 - nBlogs;
-                    //console.log("required are: " + required);
-                    if(required > 0){
-                        var additionalblogposts = blogpost
-                        .find({_id: { $nin: examblogpostsIds }, active: true}).limit(required)
-                        .exec(function (err, additionalblogposts) {
-                            examblogposts = examblogposts.concat(additionalblogposts);
+                var examblogposts = blogpost
+                .find({active: true, exams:examId})
+                .exec(function (err, examblogposts) {
+                    if (!err){
+                        var nBlogs = examblogposts.length;
+                        var examblogpostsIds = examblogposts .map(function(a) {return a._id;});
+                        var required = 4 - nBlogs;
+                        //console.log("required are: " + required);
+                        if(required > 0){
+                            var additionalblogposts = blogpost
+                            .find({_id: { $nin: examblogpostsIds }, active: true}).limit(required)
+                            .exec(function (err, additionalblogposts) {
+                                examblogposts = examblogposts.concat(additionalblogposts);
+                                var allBlogposts = [];
+                                var nBlogposts = examblogposts.length;
+                                var counter = 0;
+                                if(nBlogposts == 0){
+                                    res.json([]);
+                                }
+                                examblogposts.forEach(function(thisBlogpost, rindex){
+                                    var thisBlogUser = thisBlogpost.user;
+                                    var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                                        if (!err){
+                                            thisBlogpost.user = thisBlogUserInfo;
+                                            counter += 1;
+                                            allBlogposts.push(thisBlogpost);
+                                            if(counter == nBlogposts){
+                                                res.json(allBlogposts);   
+                                            }
+                                        }
+                                    });
+
+                                });
+
+                            });
+
+                        }else{
                             var allBlogposts = [];
                             var nBlogposts = examblogposts.length;
                             var counter = 0;
@@ -80,13 +109,40 @@ router.get('/suggestedblogs/:examName', function(req, res) {
                                 });
 
                             });
-                            
-                        });
-                        
+                        }
+
+                    } else {throw err;}
+                });
+            }else{
+                var required = 4;
+                var additionalblogposts = blogpost
+                .find({_id: { $nin: examblogpostsIds }, active: true}).limit(required)
+                .exec(function (err, additionalblogposts) {
+                    examblogposts = examblogposts;
+                    var allBlogposts = [];
+                    var nBlogposts = examblogposts.length;
+                    var counter = 0;
+                    if(nBlogposts == 0){
+                        res.json([]);
                     }
-                    
-                } else {throw err;}
-            });
+                    examblogposts.forEach(function(thisBlogpost, rindex){
+                        var thisBlogUser = thisBlogpost.user;
+                        var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                            if (!err){
+                                thisBlogpost.user = thisBlogUserInfo;
+                                counter += 1;
+                                allBlogposts.push(thisBlogpost);
+                                if(counter == nBlogposts){
+                                    res.json(allBlogposts);   
+                                }
+                            }
+                        });
+
+                    });
+
+                });
+            }
+            
             
         } else {throw err;}
     });

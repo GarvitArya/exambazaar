@@ -1813,7 +1813,7 @@ router.get('/changeProvidersStartingWith/:startsWith', function(req, res) {
 
 router.post('/cityCourse', function(req, res) {
     var cityCourse = req.body;
-    //console.log("cityCourse is : "+JSON.stringify(cityCourse));
+    console.log("cityCourse is : "+JSON.stringify(cityCourse));
     var city = cityCourse.city;
     var course = cityCourse.course;
     

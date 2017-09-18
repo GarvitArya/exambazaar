@@ -11,6 +11,8 @@ var coupon = require('../app/models/coupon');
 var userrefer = require('../app/models/userrefer');
 var email = require('../app/models/email');
 var cisaved = require('../app/models/cisaved');
+var question = require('../app/models/question');
+var blogpost = require('../app/models/blogpost');
 var mongoose = require('mongoose');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
 var helper = require('sendgrid').mail;
@@ -107,6 +109,48 @@ function prevDayReviewCount(res){
     review.count({_date: {  $gte : start, $lte : end}}, function(err, docs) {
     if (!err){
         res.reviews.prevDay = docs;
+        totalQuestionCount(res);
+    } else {throw err;}
+    });
+};
+
+function totalQuestionCount(res){
+    question.count({}, function(err, docs) {
+    if (!err){
+        res.questions = {
+            all: docs
+        };
+        prevDayQuestionCount(res);
+    } else {throw err;}
+    });
+};
+function prevDayQuestionCount(res){
+    var start = moment().subtract(1, 'day').startOf('day');
+    var end = moment().subtract(1, 'day').endOf('day');
+    question.count({_date: {  $gte : start, $lte : end}}, function(err, docs) {
+    if (!err){
+        res.questions.prevDay = docs;
+        totalBlogCount(res);
+    } else {throw err;}
+    });
+};
+
+function totalBlogCount(res){
+    blogpost.count({active: true}, function(err, docs) {
+    if (!err){
+        res.blogs = {
+            all: docs
+        };
+        prevDayBlogCount(res);
+    } else {throw err;}
+    });
+};
+function prevDayBlogCount(res){
+    var start = moment().subtract(1, 'day').startOf('day');
+    var end = moment().subtract(1, 'day').endOf('day');
+    blogpost.count({_date: {  $gte : start, $lte : end}, active: true}, function(err, docs) {
+    if (!err){
+        res.blogs.prevDay = docs;
         router.procmon(res);
     } else {throw err;}
     });
@@ -151,18 +195,20 @@ router.procmon = function(stats){
                     var mail = new helper.Mail(fromEmail, subject, to_email, content);
                     mail.setTemplateId(templateId);
                     
-                    console.log(stats);
+                    console.log(JSON.stringify(stats));
                     
-                    var usersaddedprevDay = stats.users.prevDay;
+                    /*var usersaddedprevDay = stats.users.prevDay;
                     var totalusers = stats.users.all;
                     var viewsprevDay = stats.views.prevDay;
                     var totalviews = stats.views.all;
                     var providerssprevDay = stats.providers.prevDay;
                     var totalproviders = stats.providers.all;
+                    var questionsprevDay = stats.questions.prevDay;
+                    var totalquestions = stats.questions.all;
                     
                     console.log(totalusers);
                     console.log(totalviews);
-                    console.log(totalproviders);
+                    console.log(totalproviders);*/
                     
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-runtime-', timeNow));
                     
@@ -178,6 +224,11 @@ router.procmon = function(stats){
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-totalreviews-', stats.reviews.all));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-reviewsprevDay-', stats.reviews.prevDay));
                     
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-totalquestions-', stats.questions.all));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-questionsprevDay-', stats.questions.prevDay));
+                    
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-totalblogs-', stats.blogs.all));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-blogsprevDay-', stats.blogs.prevDay));
                     
                     var attachment = new helper.Attachment();
                     //var file = fs.readFileSync('/https://exambazaar.s3.amazonaws.com/bbfa995da1ab3d520daaea76c810c4c7.pdf');
