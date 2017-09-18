@@ -12329,7 +12329,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     var preQText = "As appeared in " + question.test.name + separator + " Exambazaar Question a Day of " + moment().format("DD MMM YY") + " is:" + separator;
                     
                     var totalQtexts = [];
-                    
+                    if(question.context && question.context.length > 10){
+                        totalQtexts.push(question.context);
+                    }
                     question.questions.forEach(function(thisQuestion, index){
                         //var thisQuestion = question.questions[0];
                         var Qtext = "Q. " + thisQuestion.question + separator;
