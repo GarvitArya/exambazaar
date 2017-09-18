@@ -115,7 +115,7 @@
                 <div layout="row" layout-align="start start" class="font12 marginR5 marginB5 badge" id="examTagHolder" ng-repeat="existingExam in exams | orderBy: '-rank'" ng-if="existingExam.stream._id == stream._id" >
                     <!--ng-click="setExam(existingExam)"-->
                     
-                    <a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank"><i class="fa fa-pencil-square font20 marginL10" aria-hidden="true"></i>{{existingExam.displayname}}</a>
+                    <a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank">{{existingExam.displayname}}</a>
                 </div>
             </div>
         </div>
