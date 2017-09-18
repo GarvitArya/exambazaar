@@ -6940,9 +6940,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $rootScope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
             
             
-            $rootScope.permittedToAdd = ['59899631a68cea0154b49502',  '59085f0fc7289d0011d6ea8c',   '5995886d0f6bc61245d8464f',
-             '599fca5e4c74d419da60f1f1',
-             '59a7eb973d71f10170dbb468'];
+            $rootScope.permittedToAdd = [
+                '59899631a68cea0154b49502',
+                '59085f0fc7289d0011d6ea8c',
+                '5995886d0f6bc61245d8464f',
+                '59a7eb973d71f10170dbb468',
+                '59bcd748b0cdd5440a424d03'
+            ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
             
