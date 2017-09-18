@@ -153,9 +153,9 @@
     
     <div layout="column" layout-align="start start" class="width100">
         <div layout="row" layout-align="start start"  hide-xs class="editFont text-primary font11 width100 min5vh" id="breadcrumb">
-            <div flex="5">
+            <div hide-xs flex="5">
             </div>
-            <div layout="row" layout-align="start start" flex>
+            <div layout="row" layout-align="start start" flex class="paddingLR10">
             <div layout="row" layout-align="start start" class="marginR5">
                 <a ui-sref="main">{{category.displayname | uppercase}}</a>
             </div>
@@ -174,124 +174,124 @@
             </div>
         </div>
         <div layout="row" layout-align="start start" class="width100">
-            <div flex="5">
+            <div hide-xs flex="5">
             </div>
-            <div flex>
+            <div flex class="paddingLR10">
             <h2 class="width100 marginT10 marginB30 font26 narrowLine spacedLetter1">
                 {{subcategory.displayname}} Coaching Classes  in {{city}}
             </h2>
             </div>
         </div>
         <div layout="row" layout-align="start start"  class="width100 marginB20 animated fadeIn font14 narrowLine spacedLetter1 textDarkGrey">
-            <div flex="5">
+            <div hide-xs flex="5">
             </div>
-            <div flex>
+            <div flex class="paddingLR10">
                 Great! We found {{uniqueInstitutes.length}} coaching classes around you!
             </div>
-            <div layout="column" layout-align="start start" flex="25" class="paddingLR30">
+            <div hide-xs layout="column" layout-align="start start" flex="25" class="paddingLR30">
                 Recommended Reading
             </div>
         </div>
     </div>
     </div>
     <div layout="row" layout-align="start start" class="width100">
-        <div flex="5">
+        <div hide-xs flex="5">
         
         </div>
-        <div flex layout="column" layout-align="start start" class="width100">
-                <div layout="column" id="subcategory" ng-repeat="coachingGroup in uniqueInstitutes | orderBy:['-institutes.length'] " class="fourthFont width100 marginB20">
-                    
-                    <div layout="row" layout-align="start start" layout-xs="column">
-                        <div layout="row" layout-align="center start" id="pageLogoHolder" class="marginL20" hide-xs ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
-                            <img ng-src="{{coachingGroup.logo}}" class="pageLogo" ng-if="coachingGroup.logo"/>
-                            <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup.logo"/>
+        <div flex layout="column" layout-align="start start" class="width100 paddingLR10">
+            <div layout="column" id="subcategory" ng-repeat="coachingGroup in uniqueInstitutes | orderBy:['-institutes.length'] " class="fourthFont width100 marginB20">
+
+                <div layout="row" layout-align="start start" layout-xs="column">
+                    <div layout="row" layout-align="center start" id="pageLogoHolder" class="marginL20" hide-xs ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
+                        <img ng-src="{{coachingGroup.logo}}" class="pageLogo" ng-if="coachingGroup.logo"/>
+                        <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup.logo"/>
+                    </div>
+                    <div flex layout="column" layout-align="center start" class="paddingL20">
+                        <h2 class=" text-primary thirdFont font18 bold">
+                        <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
+                            {{coachingGroup.groupName}}
+                        </a>
+                        </h2>
+                        <div layout="row" layout-align="start center" class="width100 marginT5 " layout-wrap>
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
+                            <span>{{coachingGroup.institutes.length}} centre<span ng-if="coachingGroup.institutes.length > 1">s</span>&nbsp;in {{city}}
+                            </span>
+                            <span class="marginLR5">
+                                <span ng-repeat="thisInstitute in coachingGroup.institutes | orderBy: 'distance.value'" ng-if="thisInstitute.distance" class="badge marginR5" id="distanceBadge">
+                                    {{thisInstitute.distance.text}}
+                                </span>
+                            </span>
+
+                            <!--<span>
+                              <img src="images/icons/thinking.svg" alt="Kiwi standing on oval" class="width32px" >
+                            </span>-->
                         </div>
-                        <div flex layout="column" layout-align="center start" class="paddingL20">
-                            <h2 class=" text-primary thirdFont font18 bold">
-                            <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
-                                {{coachingGroup.groupName}}
-                            </a>
-                            </h2>
-                            <div layout="row" layout-align="start center" class="width100 marginT5 " layout-wrap>
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
-                                <span>{{coachingGroup.institutes.length}} centre<span ng-if="coachingGroup.institutes.length > 1">s</span>&nbsp;in {{city}}
-                                </span>
-                                <span class="marginLR5">
-                                    <span ng-repeat="thisInstitute in coachingGroup.institutes | orderBy: 'distance.value'" ng-if="thisInstitute.distance" class="badge marginR5" id="distanceBadge">
-                                        {{thisInstitute.distance.text}}
-                                    </span>
-                                </span>
-
-                                <!--<span>
-                                  <img src="images/icons/thinking.svg" alt="Kiwi standing on oval" class="width32px" >
-                                </span>-->
+                        <div class="width100 marginT5 paddingB5 gainsboroBottomBorder font14">
+                            <a ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
+                        </div>
+                        <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT10 width100">
+                            <div layout="row" layout-align="start center" class="bold narrowLine basicFont" ng-if="coachingGroup.examsOffered.length > 0">
+                                Courses
                             </div>
-                            <div class="width100 marginT5 paddingB5 gainsboroBottomBorder font14">
-                                <a ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
-                            </div>
-                            <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT10 width100">
-                                <div layout="row" layout-align="start center" class="bold narrowLine basicFont" ng-if="coachingGroup.examsOffered.length > 0">
-                                    Courses
-                                </div>
-                                <div layout="row" layout-align="start center" layout-wrap class="marginT5">
-                                    <div layout="row"  layout-align="start center" ng-repeat="exam in coachingGroup.examsOffered | orderBy:'-rank'">
-                                        <div>{{exam.displayname}}</div>
-                                        <div ng-if="!$last">
-                                            &nbsp;|&nbsp;
-                                        </div>
-                                    </div >
-                                    <!--<div ng-if="!$last">
+                            <div layout="row" layout-align="start center" layout-wrap class="marginT5">
+                                <div layout="row"  layout-align="start center" ng-repeat="exam in coachingGroup.examsOffered | orderBy:'-rank'">
+                                    <div>{{exam.displayname}}</div>
+                                    <div ng-if="!$last">
                                         &nbsp;|&nbsp;
-                                    </div>-->
-                                </div>
-                            </div>
-
-                            <div layout="row" class="font14 bold narrowLine marginT10 width100 basicFont" ng-if="coachingGroup.groupResults.length > 0">
-                                 {{subcategory.displayname}}&nbsp;Results
-
-                            </div>
-                            <div layout="row" class="width100 marginT5" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
-
-                            <div class="col-xs-4 col-sm-4 col-md-1 col-lg-1" ng-repeat="result in coachingGroup.groupResults" ng-if="$index <= 11" id="imageContainer" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
-                             <!--
-                            ng-click="showResultDialog($event, $index, result)"
-                            && result.image && result.image!=''-->
-                            <div layout="row" layout-align="start center" ng-if="$index < 11 && result.image" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
-                                <div layout="row" layout-align="center center" class="text-white font7" id="thumbnailResultText">
-                                    <div flex="60" layout="row"  layout-align="start center" class="paddingL5">
-                                        <span ng-if="subcategory.resultFormat == 'Rank'">
-                                            AIR {{result.rank}}
-                                        </span>
-                                        <span ng-if="subcategory.resultFormat == 'Marks'">
-                                            {{result.marks}}
-                                        </span>
                                     </div>
-                                    <div flex="40" layout="row"  layout-align="end center" class="paddingR5">
-                                        {{result.year}}
-                                    </div>
-                                </div>
-                                <!--<div layout="row" layout-align="center center" class="text-white font7" id="thumbnailResultTextTop">
-                                    {{result.name}}
+                                </div >
+                                <!--<div ng-if="!$last">
+                                    &nbsp;|&nbsp;
                                 </div>-->
                             </div>
-                            <div ng-if="$index == 11 &&  coachingGroup.groupResults.length > 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
-                                <div layout="row" layout-align="center center" class="md-headline text-white" id="thumbnailText">
-                                    +{{coachingGroup.groupResults.length - 12}}
+                        </div>
+
+                        <div layout="row" class="font14 bold narrowLine marginT10 width100 basicFont" ng-if="coachingGroup.groupResults.length > 0">
+                             {{subcategory.displayname}}&nbsp;Results
+
+                        </div>
+                        <div layout="row" class="width100 marginT5" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
+
+                        <div class="col-xs-4 col-sm-4 col-md-1 col-lg-1" ng-repeat="result in coachingGroup.groupResults" ng-if="$index <= 11" id="imageContainer" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
+                         <!--
+                        ng-click="showResultDialog($event, $index, result)"
+                        && result.image && result.image!=''-->
+                        <div layout="row" layout-align="start center" ng-if="$index < 11 && result.image" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
+                            <div layout="row" layout-align="center center" class="text-white font7" id="thumbnailResultText">
+                                <div flex="60" layout="row"  layout-align="start center" class="paddingL5">
+                                    <span ng-if="subcategory.resultFormat == 'Rank'">
+                                        AIR {{result.rank}}
+                                    </span>
+                                    <span ng-if="subcategory.resultFormat == 'Marks'">
+                                        {{result.marks}}
+                                    </span>
+                                </div>
+                                <div flex="40" layout="row"  layout-align="end center" class="paddingR5">
+                                    {{result.year}}
                                 </div>
                             </div>
+                            <!--<div layout="row" layout-align="center center" class="text-white font7" id="thumbnailResultTextTop">
+                                {{result.name}}
+                            </div>-->
                         </div>
-
-
+                        <div ng-if="$index == 11 &&  coachingGroup.groupResults.length > 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
+                            <div layout="row" layout-align="center center" class="md-headline text-white" id="thumbnailText">
+                                +{{coachingGroup.groupResults.length - 12}}
+                            </div>
+                        </div>
                     </div>
 
-                        </div>
 
-                    </div>
-
-                    
                 </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
         </div>
-        <div layout="column" layout-align="start start" flex="25" class="paddingLR30">
+        <div hide-xs  layout="column" layout-align="start start" flex="25" class="paddingLR30">
             
             <div layout="row" layout-align="start start" class="width100 marginB30 gainsboroBorder" ng-repeat="blogpost in suggestedblogs | orderBy: '-_created'" ng-click="goToBlog(blogpost)">
                 <div layout="column" layout-align="center start" class="width100" id="blogpost" >

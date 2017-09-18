@@ -52,28 +52,39 @@ router.get('/suggestedblogs/:examName', function(req, res) {
             .exec(function (err, examblogposts) {
                 if (!err){
                     var nBlogs = examblogposts.length;
-                    var required = 3;
-                    
-                    var allBlogposts = [];
-                    var nBlogposts = examblogposts.length;
-                    var counter = 0;
-                    if(nBlogposts == 0){
-                        res.json([]);
-                    }
-                    examblogposts.forEach(function(thisBlogpost, rindex){
-                        var thisBlogUser = thisBlogpost.user;
-                        var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
-                            if (!err){
-                                thisBlogpost.user = thisBlogUserInfo;
-                                counter += 1;
-                                allBlogposts.push(thisBlogpost);
-                                if(counter == nBlogposts){
-                                    res.json(allBlogposts);   
-                                }
+                    var examblogpostsIds = examblogposts .map(function(a) {return a._id;});
+                    var required = 4 - nBlogs;
+                    //console.log("required are: " + required);
+                    if(required > 0){
+                        var additionalblogposts = blogpost
+                        .find({_id: { $nin: examblogpostsIds }, active: true}).limit(required)
+                        .exec(function (err, additionalblogposts) {
+                            examblogposts = examblogposts.concat(additionalblogposts);
+                            var allBlogposts = [];
+                            var nBlogposts = examblogposts.length;
+                            var counter = 0;
+                            if(nBlogposts == 0){
+                                res.json([]);
                             }
-                        });
+                            examblogposts.forEach(function(thisBlogpost, rindex){
+                                var thisBlogUser = thisBlogpost.user;
+                                var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                                    if (!err){
+                                        thisBlogpost.user = thisBlogUserInfo;
+                                        counter += 1;
+                                        allBlogposts.push(thisBlogpost);
+                                        if(counter == nBlogposts){
+                                            res.json(allBlogposts);   
+                                        }
+                                    }
+                                });
 
-                    });
+                            });
+                            
+                        });
+                        
+                    }
+                    
                 } else {throw err;}
             });
             

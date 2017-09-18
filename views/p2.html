@@ -1,66 +1,95 @@
 <style>
+    a:hover{
+        text-decoration: none;
+        color: white;
+    }
     #categoryLink:link, #categoryLink:hover, #categoryLink:visited{
       padding: 0px;
       color: white;
       text-decoration: none;
     }
     #pageHeader{
+        
+    }
+    #pageHeaderFont{
         color: rgba(0,0,0,0.8);
         letter-spacing: 4px;
         font-family: "Avenir";
-    }
-    #pageHeaderFont{
         border-bottom: solid 3px;
         border-color: #20C39A;
         letter-spacing: 4px;
     }
-    a:hover{
-        text-decoration: none;
-        color: white;
+    #streamPage{
+        min-height: 100vh;
     }
+    #streamPageContent{
+        min-height: 60vh;
+    }
+    #streamBox{
+        max-width: 220px;
+    }
+    
     #categoryPage{
         min-height: 100vh;
     }
     #categoryPageContent{
         min-height: 75vh;
     }
+     #otherCitiesFont{
+        color: rgba(0,0,0,0.8);
+        font-family: "Avenir";
+        letter-spacing: 4px;
+    }
+    #otherCitiesContainer{
+        padding-top: 40px;
+    }
+    #fixedbutton {
+        position: fixed;
+        bottom: 0px;
+        left:50%;
+        margin-left: -100px;
+    }
+    #otherCitiesButton{
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+    }
+    #otherCategoryLink{
+        color: #20C39A;
+        
+    }
+    #cityPageContent{
+        min-height: 75vh;
+    }
     
 </style>
 
-<div id="fullPage">
-<div class="container-fluid">
-    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12" id="categoryPage">
-        <div id="spacer">
-        </div>
-        
-        <div id="categoryPageContent" layout="column" layout-align="start center">
-        <div id="landingContainer" layout="column" class="width80">
-        <div id="breadcrumbContainer" hide-xs class="text-primary">
-            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 text-center editFont" id="breadcrumb">
-            
+<div layout="row" layout-align="center center" class="text-white mainContent width100" id="fullPage">
+    <div id="spacer2">
+    </div>
+    <div layout="column" layout-align="center center" flex-xs="90" flex-gt-xs="80" class="width100" id="landingPage" layout-wrap>
+        <div id="breadcrumbContainer" hide-xs class="width100 text-center editFont">
+            <div class="width100" id="breadcrumb">
             <span><a ui-sref="main">{{category.displayname | uppercase}}</a></span>
             <span class="inactiveBreadCrumb"> > <span class="activeSection">EXAM</span></span>
             <span class="inactiveBreadCrumb"> > CITY</span>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center marginT20" id="pageHeader">
-            <span class="text md-title" id="pageHeaderFont"><strong>SELECT YOUR EXAM</strong></span>
-
-        </div>
-        <div class="row marginT40" id="">
+        
+        <div layout="column" layout-align="start center" class="min50vh width100" id="landingContainer">
             
-            <div layout="row" layout-sm="column" layout-xs="column" layout-align="center center" id="">
-
-            <div ng-repeat="subcategory in exams | orderBy:'-rank'" ng-if="subcategory.active" >
-            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 ">
-                <!--hvr-bob-->
-                <div layout="row" layout-align="center center" id="categoryFont" class="text-center categoryToolTip" ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })" >
+        <div class="text text-center md-title margin20" id="pageHeaderFont">
+            SELECT YOUR EXAM
+        </div>
+        <div layout="row" layout-align="center center" layout-wrap class="width100">
+            <div layout="row" layout-align="center center" class="width100" flex-xs="100" flex-gt-sm="80" layout-wrap>
+                <div flex-xs="100" flex-sm="33" flex-gt-md="25" layout="row" layout-align="center center" layout-wrap ng-repeat="subcategory in exams | orderBy:'-rank'" ng-if="subcategory.active" class="paddingLR10">
+                    <div layout="row" layout-align="center center" id="categoryFont" class="text-center categoryToolTip" ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })" >
                     <!--tooltips tooltip-template="{{subcategory.briefDescription}}"-->
-                    <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })" id="categoryLink">{{subcategory.displayname | uppercase}}
-                    </a>
+                        <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })" id="categoryLink">{{subcategory.displayname | uppercase}}
+                        </a>
+                    </div>
                 </div>
-            </div>
-            </div>
+            
             </div>
         </div>
         <div flex layout="row" layout-align="center end" id="steps" class="width100">
@@ -72,11 +101,9 @@
             </div>
         </div>
             
-            
-            
         </div>
         
-        </div>
     </div>
+    
 </div>
-</div>
+

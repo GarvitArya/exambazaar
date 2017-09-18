@@ -6944,8 +6944,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
              '599fca5e4c74d419da60f1f1',
              '59a7eb973d71f10170dbb468'];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
-            //ABCD
-            var headerGreenStates = ["findCoaching", "showCoaching", "showGroup"];
+            
+            
+            //"findCoaching", "showCoaching", "showGroup"
+            var headerGreenStates = [];
+            
             var headerTransparentStates = ["landing", "main", "category", "city"];
             $scope.headerLogoCSS = function(){
                 var stateName = $state.current.name;
@@ -18066,7 +18069,6 @@ function getLatLng(thisData) {
                     institutes.push(saveProvider);
                 }
             });
-            console.log(institutes);
             targetStudyProviderService.bulkSaveProviders(institutes).success(function (data, status, headers) {
                 $scope.addedInstituteIds = data;
                 console.log("Done");

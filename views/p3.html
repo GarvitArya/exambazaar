@@ -5,12 +5,10 @@
       color: white;
       text-decoration: none;
     }
-    #pageHeader{
+    #pageHeaderFont{
         color: rgba(0,0,0,0.8);
         letter-spacing: 4px;
         font-family: "Avenir";
-    }
-    #pageHeaderFont{
         border-bottom: solid 3px;
         border-color: #20C39A;
         letter-spacing: 4px;
@@ -48,54 +46,42 @@
     }
 </style>
 
-<div id="fullPage">
-<div class="container-fluid">
-    <div class="column col-xs-12 col-sm-12 col-md-12 col-lg-12 " id="categoryPage">
-        <div id="spacer">
-        </div>
-        
-        <div id="cityPageContent" layout="column" layout-align="start center">
-        <div id="landingContainer" layout="column" class="width80">
-        <div id="breadcrumbContainer" hide-xs>
-            <div class="column hidden-xs col-sm-12 col-md-12 col-lg-12 text-center editFont" id="breadcrumb">
-            
+<div layout="row" layout-align="center center" class="text-white mainContent width100" id="fullPage">
+    <div id="spacer2">
+    </div>
+    <div layout="column" layout-align="center center" flex-xs="90" flex-gt-xs="80" class="width100" id="landingPage" layout-wrap>
+        <div id="breadcrumbContainer" hide-xs class="width100 text-center editFont">
+            <div class="width100" id="breadcrumb">
             <span><a ui-sref="main">{{category.displayname | uppercase}}</a></span>
             <span class="pastBreadCrumb"> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a></span>
             <span class="inactiveBreadCrumb"> > <span class="activeSection">CITY</span></span>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3 animated fadeIn text-center marginT20" id="pageHeader">
-            <span class="text md-title" id="pageHeaderFont"><strong>SELECT YOUR CITY</strong></span>
+        
+        <div layout="column" layout-align="start center" class="min50vh width100" id="landingContainer">
+            
+        <div class="text text-center md-title margin20" id="pageHeaderFont">
+            SELECT YOUR CITY
         </div>
-        <div class="row marginT40">
-            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1" id="">
-
-            <div ng-repeat="city in rankedCities" ng-if="$index<11">
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
-                <!--hvr-bob-->
-                <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">
-                    <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })" id="categoryLink">{{city | uppercase}}
-                    </a>
+        <div layout="row" layout-align="center center" layout-wrap class="width100">
+            <div layout="row" layout-align="center center" class="width100" flex-xs="100" flex-gt-sm="80" layout-wrap>
+                <div flex-xs="100" flex-sm="33" flex-gt-md="25" layout="row" layout-align="center center" layout-wrap ng-repeat="city in rankedCities" ng-if="$index<11" class="paddingLR10">
+                    <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">
+                        <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })" id="categoryLink">{{city | uppercase}}
+                        </a>
+                    </div>
                 </div>
-            </div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ng-click="showPrerenderedDialog($event)">
-                    OTHER
+                
+                <div flex-xs="100" flex-sm="33" flex-gt-md="25" layout="row" layout-align="center center" layout-wrap class="paddingLR10">
+                    <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ng-click="showPrerenderedDialog($event)">
+                        OTHER
+                    </div>
                 </div>
-            </div>
+                
+                
             
             </div>
-            <!--<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1 text-center" id="otherCitiesContainer">
-                <span class="text md-subhead" ng-click="showPrerenderedDialog($event)" id="otherCitiesFont"><strong>MORE</strong></span>
-                
-                <md-button class="md-raised" ng-click="showPrerenderedDialog($event)" id="otherCitiesButton">
-                  More
-                <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
-                </md-button>
-            </div>-->
         </div>
-        
         <div flex layout="row" layout-align="center end" id="steps" class="width100">
             <div id="stepActive">
             </div>
@@ -103,15 +89,14 @@
             </div>
             <div id="stepActive">
             </div>
-        </div>    
+        </div>
             
         </div>
         
-        </div>
-        
     </div>
+    
 </div>
-</div>
+
 
     
 <div style="visibility: hidden">    
@@ -134,17 +119,4 @@
     </p>
   </md-dialog>
 </div>    
-</div>       
-    
-<!--<div class="row" id="categoryFont2">
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
-    <span class="md-subhead"><strong>Other Cities</strong></span>
 </div>
-<div ng-repeat="city in rankedCities" ng-if="$index>=12" >
-    <div class="col-xs-4 col-sm-3 col-md-1 col-lg-1">
-        <a class="text-center hvr-sweep-to-right "  ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">
-            <small>{{city}}</small>
-        </a>
-    </div> 
-</div>
-</div>-->
