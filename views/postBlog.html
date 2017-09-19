@@ -21,6 +21,12 @@
     img{
         max-width: 100%;
     }
+    .activeBlog{
+        background-color: #dbf8ea;
+    }
+    .inactiveBlog{
+        background-color: #fff;
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -28,7 +34,7 @@
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 <div flex layout="row" layout-align="center center" class="whiteBackground">
-<div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="paddingTB20 width100 blogFont" ng-if="user">
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB20 width100 blogFont" ng-if="user">
     <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 ">
         <div layout="row" layout-align="center center" class="width100 font16">
             <div layout="column" layout-align="start start" class="paddingL20 editFont">
@@ -75,8 +81,8 @@
             </div>
         </div>
         <div layout="row" layout-align="center center" class="width100 font12 marginTB10" ng-if="masterUser">
-            <div ng-click="sanitizeblogposts()" class="danger">Sanitize All Blogs</div>
-            
+            <div ng-click="sanitizeblogposts()" class="danger marginR10">Sanitize All Blogs</div>
+            <div ng-click="markAllEdbites()" class="text-primary marginR10">Tag EdBites</div>
         </div>
     </div>
     <div layout="column" layout-align="center start" layout-wrap class="blogFont font12 width100 paddingTB20 paddingLR20 gainsboroBorder">
@@ -93,30 +99,30 @@
                 </md-button>
             </div>
         </div>
-        <div layout="row" layout-align="start center" class="width100 marginB10 bold gainsboroBottomBorder paddingTB5">
+        <div layout="row" layout-align="start center" class="width100 bold gainsboroBottomBorder paddingTB5">
             <div layout="row" layout-align="start center" flex="5">
                 S. No.
             </div>
-            <div layout="row" layout-align="start center" flex="30" class="paddingLR10">
+            <div layout="row" layout-align="start center" flex class="paddingLR10">
                 Blog Title
             </div>
             <div layout="row" layout-align="start center" flex="15">
                 Author
             </div>
-            <div layout="row" layout-align="start center" flex="10">
-                Created on
+            <div layout="row" layout-align="start center" flex="5">
+                Date
             </div>
-            <div layout="row" layout-align="start center" flex="10" >
-                Edit/Preview
+            <div layout="row" layout-align="start center" flex="5" >
+                Edit
             </div>
             <div layout="row" layout-align="start center" flex="5" >
                 Active
             </div>
+            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+                Upvotes
+            </div>
             <div layout="row" layout-align="start center" flex="5">
                 Clone
-            </div>
-            <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
-                Upvotes
             </div>
             <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
                 Save
@@ -124,13 +130,19 @@
             <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
                 Remove
             </div>
+            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+                EdBites
+            </div>
+            <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
+                Blog Series
+            </div>
         </div>
-        <div layout="row" layout-align="start center" ng-repeat="thisblog in userBlogs | orderBy: '-upvotes'" class="width100 greyDashedBottomBorder paddingTB5">
+        <div layout="row" layout-align="start center" ng-repeat="thisblog in userBlogs | orderBy: [ 'blogSeries','-_created', '-upvotes']" class="width100 greyDashedBottomBorder paddingTB2" ng-class="blogRowClass(thisblog)">
             <div layout="row" layout-align="start center" flex="5">
                 {{$index + 1}}.
             </div>
-            <div layout="row" layout-align="start center" flex="30" class=" paddingLR10">
-                <a class="text-primary" ng-click="previewBlogPost(thisblog)" id="copyLink">
+            <div flex layout="row" layout-align="start center" class=" paddingLR5">
+                <a class="" ng-click="previewBlogPost(thisblog)" id="copyLink">
                     {{thisblog.title}}
                 </a>
             </div>
@@ -139,18 +151,18 @@
             </div>
             <div layout="row" layout-align="start center" flex="15" ng-if="masterUser">
                 
-                <md-input-container class="width75 text-primary">
-                  <md-select ng-model="thisblog.user._id"  placeholder="Select Blogger">
-                    <md-option ng-value="blogger._id" ng-repeat="blogger in allBloggers | orderBy: 'basic.name'" class="text-primary">
+                <md-input-container class="margin0 width75">
+                  <md-select ng-model="thisblog.user._id"  placeholder="Select Blogger" class="">
+                    <md-option ng-value="blogger._id" ng-repeat="blogger in allBloggers | orderBy: 'basic.name'" class="">
                       {{blogger.basic.name}}
                     </md-option>
                   </md-select>
                 </md-input-container>
             </div>
-            <div layout="row" layout-align="start center" flex="10">
-                {{thisblog._created | date: "dd MMMM" }}
+            <div layout="row" layout-align="start center" flex="5">
+                {{thisblog._created | date: "dd MMM" }}
             </div>
-            <div layout="column" layout-align="center start" flex="10">
+            <div layout="column" layout-align="center start" flex="5">
                 <a class="danger" ng-click="editBlogPost(thisblog)" id="copyLink">
                     Edit
                 </a>
@@ -158,20 +170,27 @@
             <div layout="row" layout-align="start center" flex="5" >
                 {{thisblog.active}}
             </div>
-            <div layout="row" layout-align="start center" flex="5">
-                <i class="fa fa-clone" aria-hidden="true" ng-click="cloneConfirm(thisblog)"></i>
-            </div>
-            <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
+            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
                 {{thisblog.upvotes}}&nbsp;&nbsp;
                 <i class="fa fa-arrow-circle-up" aria-hidden="true" ng-click="randomUpvotes(thisblog)" ng-if="user.basic.name =='Gaurav Parashar'"></i>
             </div>
+            <div layout="row" layout-align="start center" flex="5">
+                <i class="fa fa-clone" aria-hidden="true" ng-click="cloneConfirm(thisblog)"></i>
+            </div>
+            
             <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
                 <i class="fa fa-floppy-o" aria-hidden="true" ng-click="updateConfirm(thisblog)"></i>
             </div>
             <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
                 <i class="fa fa-times-circle danger" aria-hidden="true" ng-click="removeConfirm(thisblog)"></i>
             </div>
+            <div layout="row" layout-align="start center" flex="5" ng-if="masterUser">
+                <i class="fa fa-newspaper-o" aria-hidden="true" ng-click="flipEdbites(thisblog)"></i>
+            </div>
             
+            <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
+                {{thisblog.blogSeries}}
+            </div>
             
         </div>
         

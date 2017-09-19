@@ -771,6 +771,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.removeblogpost = function(blogpostId){
             return $http.get('/api/blogposts/remove/'+blogpostId, {blogpostId: blogpostId});
         };
+        this.markEdbites = function(blogpostId){
+            return $http.get('/api/blogposts/markEdbites/'+blogpostId, {blogpostId: blogpostId});
+        };
+        this.unmarkEdbites = function(blogpostId){
+            return $http.get('/api/blogposts/unmarkEdbites/'+blogpostId, {blogpostId: blogpostId});
+        };
+        
         this.getUserBlogposts = function(userId) {
             return $http.get('/api/blogposts/userblogs/'+userId, {userId: userId});
         };
@@ -786,6 +793,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.sanitizeblogposts = function() {
             return $http.get('/api/blogposts/sanitizeblogposts');
         };
+        this.markAllEdbites = function() {
+            return $http.get('/api/blogposts/markAllEdbites');
+        };
+        
         this.getuserBlogposts = function(userId) {
             return $http.get('/api/blogposts/user/'+userId, {userId: userId});
         };
@@ -12590,7 +12601,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
          };
             //console.log($scope.user);
             
-            
+            $scope.blogRowClass = function(thisblog){
+                var className = "inactiveBlog";
+                if(thisblog.active){
+                    className = "activeBlog";
+                }
+                return className;
+            };
             
             $scope.allBloggers = allBloggers.data;
             //console.log($scope.allBloggers);
@@ -12809,9 +12826,35 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             
             $scope.updateBlogPost = function(thisblog){
-                console.log(thisblog);
-                blogpostService.saveblogpost(thisblog).success(function (data, status, headers) {
+                 blogpostService.saveblogpost(thisblog).success(function (data, status, headers) {
                     $scope.showSavedDialog();
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });    
+            };
+            $scope.flipEdbites = function(thisblog){
+                if(thisblog.blogSeries == 'EdBites'){
+                    $scope.unmarkEdbites(thisblog);
+                }else{
+                    $scope.markEdbites(thisblog);
+                }
+            };
+            $scope.markEdbites = function(thisblog){
+                 blogpostService.markEdbites(thisblog._id).success(function (data, status, headers) {
+                    
+                     $scope.showSavedDialog();
+                     $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });    
+            };
+            $scope.unmarkEdbites = function(thisblog){
+                 blogpostService.unmarkEdbites(thisblog._id).success(function (data, status, headers) {
+                    
+                     $scope.showSavedDialog();
+                     $state.reload();
                 })
                 .error(function (data, status, header, config) {
                     console.log("Error ");
@@ -12847,6 +12890,26 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             $scope.sanitizeblogposts = function(){
                 blogpostService.sanitizeblogposts().success(function (data, status, headers) {
+                    if(data){
+                        $scope.showSavedDialog();
+                        $state.reload();
+                    }else{
+                        
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+                
+            };
+            $scope.markAllEdbites = function(){
+                blogpostService.markAllEdbites().success(function (data, status, headers) {
+                    if(data){
+                        $scope.showSavedDialog();
+                        $state.reload();
+                    }else{
+                        
+                    }
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {

@@ -74,14 +74,24 @@
         </div>
     </div>
     <div layout="row" layout-align="center center" class="width100 marginT40">
-        <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="start start" class="font22 bold padding10">
-        Recommended Posts
+        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="font22 bold paddingLR10">
+            <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="70">
+                Recommended Posts
+            </div>
+            <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5">
+                
+            </div>
+            <div layout="row" layout-align="start start" hide-xs flex-gt-xs="25">
+                EdBites
+            </div>
         </div>
     </div>
     <div layout="row" layout-align="center center" class="width100 font14">
-        <div flex-xs="100" flex-gt-xs="80" layout="row" layout-align="start start" class="" layout-wrap>
+    <div layout="row" layout-xs="column"  layout-align="start start"  flex-xs="100" flex-gt-xs="90" class="">    
+    <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="70" >
+    <div layout="row" layout-align="start start" class="width100" layout-wrap>
         
-        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20" ng-repeat="blogpost in allBlogs | orderBy: '-_created'">
+        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20 " ng-repeat="blogpost in allBlogs | orderBy: '-_created'" ng-if="blogpost.blogSeries !='EdBites'">
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
             <div layout="column" layout-align="center center" class="blogpostImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
             <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
@@ -117,12 +127,12 @@
                 
                 <div layout="column" layout-align="start center" class="min20vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
                     <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
-                        <div flex layout="column" layout-align="start start" flex class="font20 bold wideLine2 marginR10" ng-click="goToBlog(blogpost)">
+                        <div flex layout="column" layout-align="start start" flex class="font18 bold wideLine2 marginR10 marginT10" ng-click="goToBlog(blogpost)">
                             {{blogpost.title}}
                         </div>
                         
                         
-                        <div layout="row" layout-align="end start" class="font12 paddingT5">
+                        <div layout="row" layout-align="end start" class="font12 paddingT5 marginT10">
                             <div hide-gt-xs class="marginR10 ">
                                 <a href="#"
                                 socialshare 
@@ -173,6 +183,108 @@
             </div>
         </div>
     </div>
+    </div>
+    <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5" class="">
+    </div>
+    <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="25">
+    <div layout="row" layout-align="start start" class="width100" layout-wrap>
+        
+        <div flex-xs="100" flex-gt-xs="100" layout="column" layout-align="center center"  class="paddingTB20 maringT20" ng-repeat="blogpost in allBlogs | orderBy: '-_created'" ng-if="blogpost.blogSeries =='EdBites'">
+            <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
+            <div layout="column" layout-align="center center" class="edBitesImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+            <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
+                <div flex layout="row" layout-align="start center">
+                    {{blogpost.readingTime.text}}
+                </div>
+                <!--<div flex layout="row" layout-align="end center" class="width100">
+                    <div class="">
+                        <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                </div>
+                            </div>
+                        </md-button>
+                        <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
+                            <div layout="row" layout-align="start center">
+                                <div>
+                                Upvote
+                                </div>
+                                <div>
+                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                </div>
+                            </div>
+                        </md-button>
+                    </div>
+                </div>-->
+            </div>
+            </div>
+                
+                <div layout="column" layout-align="start center" class="min10vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
+                    <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
+                        <div flex layout="column" layout-align="start start" flex class="font14 wideLine2 marginR10" ng-click="goToBlog(blogpost)">
+                            {{blogpost.title}}
+                        </div>
+                        
+                        
+                        <!--<div layout="row" layout-align="end start" class="font12 paddingT5">
+                            <div hide-gt-xs class="marginR10 ">
+                                <a href="#"
+                                socialshare 
+                                socialshare-provider="whatsapp"
+                                socialshare-text="{{shareBlogText(blogpost)}}" 
+                                socialshare-url="{{shareURL(blogpost)}}">
+                                <img src="icons/whatsapp.png" class="socialIconBlog"/>    
+                                </a>
+                            </div>
+                            <div hide-xs class="marginR10 ">
+                                <a ng-click="postFacebook(blogpost)">
+                                    <img src="icons/facebook.png" class="socialIconBlog"/>
+                                </a>
+                            </div>
+                            <div hide-gt-xs class="marginR10 ">
+                                <a href="#"
+                                socialshare
+                                socialshare-provider="facebook-messenger"
+                                socialshare-url="shareURL(blogpost)">
+                                    <img src="icons/facebook.png" class="socialIconBlog"/>
+                                </a>
+                            </div>
+                            <div class="marginR10 ">
+                                <a href="#"
+                                socialshare
+                                socialshare-provider="twitter"
+                                socialshare-text="{{shareBlogText(blogpost)}}"
+                                socialshare-hashtags="{{hashtags}}"
+                                socialshare-url="{{shareURL(blogpost)}}">
+                                <img src="icons/twitter.png" class="socialIconBlog"/>
+                                </a>
+                            </div>
+
+                        </div>-->
+                    </div>
+                    <div flex layout="row" layout-align="start center" class="width100 font12 textLightGrey">
+                        <div flex layout="column" layout-align="start start" class="">
+                            <div class="narrowLine">
+                                By {{blogpost.user.basic.name}}
+                            </div>
+                        </div>
+                        <div layout="column" layout-align="center start" class="">
+                            {{blogpost._created | date: "MMMM dd"}}
+                        </div>
+                    </div>
+                    
+                </div>    
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+        
+        
     </div>
     
     

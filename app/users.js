@@ -1103,14 +1103,13 @@ router.post('/markLogin', function(req, res) {
 router.get('/edit/:userId', function(req, res) {
     var userId = req.params.userId;
     //var mobile = req.params.mobile;
-    //console.log("User fetched is " + userId);
+    
     user
         .findOne({ '_id': userId },{logins:0})
         //.deepPopulate('partner')
         .exec(function (err, thisuser) {
         if (!err){
             
-            //console.log(thisuser);
             res.json(thisuser);
             //process.exit();
         } else {throw err;}
@@ -1120,7 +1119,7 @@ router.get('/edit/:userId', function(req, res) {
 router.get('/blogger/:userId', function(req, res) {
     var userId = req.params.userId;
     //var mobile = req.params.mobile;
-    //console.log("User fetched is " + userId);
+    
     user
         .findOne({ '_id': userId },{blogger:1})
         //.deepPopulate('partner')
@@ -1256,8 +1255,6 @@ function closeCreatedCI(userId, pastInternId, res){
 
 function closeCreatedQuestion(userId, pastInternId, res){
     console.log('Starting Question created by process:');
-    console.log('User is:' + userId);
-    console.log('Past intern is:' + pastInternId);
     var allElements = question
     .find({_createdBy: userId},{_createdBy:1})
     .exec(function (err, allElements) {
@@ -1466,7 +1463,7 @@ router.get('/activeUsers', function(req, res) {
 router.get('/emails/:userId', function(req, res) {
     var userId = req.params.userId;
     //var mobile = req.params.mobile;
-    //console.log("User fetched is " + userId);
+    
     email
         .find({ 'user': userId },{logins:0})
         .deepPopulate('institute')

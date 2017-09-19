@@ -18,11 +18,13 @@ var blogpostSchema = mongoose.Schema({
     subtitle:String,
     content: String,
     blogTags:[{ type: Schema.ObjectId, ref: 'blogTag' }],
+    blogSeries: String,
     
     exams: [{ type: Schema.ObjectId, ref: 'exam' }],
     coachingGroups: [String],
     active: { type: Boolean, default: false },
     _created: { type: Date, default: Date.now },
+    _published: { type: Date },
     
     seoKeywords: String,
     seoDescription: String,

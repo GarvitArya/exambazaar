@@ -21,7 +21,7 @@ const cheerio = require('cheerio');
 
 router.get('/remove/:blogpostId', function(req, res) {
     var blogpostId = req.params.blogpostId;
-    //console.log(blogpostId);
+    
     blogpost.remove({_id: new mongodb.ObjectID(blogpostId)}, function(err, result) {
         if (err) {
             console.log(err);
@@ -47,11 +47,9 @@ router.get('/suggestedblogs/:examName', function(req, res) {
         .exec(function (err, thisExam) {
         if (!err){
             
-            console.log(thisExam);
             
             if(thisExam){
                 var examId = thisExam._id.toString();
-            //console.log('Exam Id is: ' + examId);
                 var examblogposts = blogpost
                 .find({active: true, exams:examId})
                 .exec(function (err, examblogposts) {
@@ -59,7 +57,6 @@ router.get('/suggestedblogs/:examName', function(req, res) {
                         var nBlogs = examblogposts.length;
                         var examblogpostsIds = examblogposts .map(function(a) {return a._id;});
                         var required = 4 - nBlogs;
-                        //console.log("required are: " + required);
                         if(required > 0){
                             var additionalblogposts = blogpost
                             .find({_id: { $nin: examblogpostsIds }, active: true}).limit(required)
@@ -222,7 +219,6 @@ router.get('/userblogs/:userId', function(req, res) {
                 .find({})
                 .exec(function (err, blogposts) {
                     if (!err){
-                    //console.log(JSON.stringify(blogposts));
                     var allBlogposts = [];
                     var nBlogposts = blogposts.length;
                     var counter = 0;
@@ -237,7 +233,6 @@ router.get('/userblogs/:userId', function(req, res) {
                             thisBlogpost.user = thisBlogUserInfo;
                             counter += 1;
                             
-                            //console.log(thisBlogpost);
                             allBlogposts.push(thisBlogpost);
                             if(counter == nBlogposts){
                                 res.json(allBlogposts);   
@@ -285,7 +280,7 @@ router.get('/sanitizeblogposts', function(req, res) {
             var nBlogposts = blogposts.length;
             var counter = 0;
             if(nBlogposts == 0){
-                res.json([]);
+                res.json(false);
             }
             blogposts.forEach(function(thisBlogpost, rindex){
                 var thisTitle = thisBlogpost.title;
@@ -296,7 +291,6 @@ router.get('/sanitizeblogposts', function(req, res) {
                     /*xmlMode: true*/
                 });
                 $('a').attr('target', '_blank').html();
-                //console.log($.html());
                 
                 thisBlogpost.content = $.html();
                 
@@ -305,7 +299,7 @@ router.get('/sanitizeblogposts', function(req, res) {
                     if (err) return console.error(err);
                     counter += 1;
                     if(counter == nBlogposts){
-                        res.json(allBlogposts);   
+                        res.json(true);   
                     }
                 });
                 
@@ -315,10 +309,51 @@ router.get('/sanitizeblogposts', function(req, res) {
     });
 });
 
+router.get('/markAllEdbites', function(req, res) {
+    
+    var blogposts = blogpost
+    .find({}, {title: 1, _created: 1})
+    .exec(function (err, blogposts) {
+        if (!err){
+            var allBlogposts = [];
+            var nBlogposts = blogposts.length;
+            var counter = 0;
+            if(nBlogposts == 0){
+                res.json(false);
+            }
+            blogposts.forEach(function(thisBlogpost, rindex){
+                var thisTitle = thisBlogpost.title;
+                var find = "EdBites";
+                var fIndex = thisTitle.indexOf(find);
+                thisBlogpost._published = thisBlogpost._created;
+                if(fIndex != -1){
+                    thisBlogpost.blogSeries = "EdBites";
+                    thisBlogpost.save(function(err, thisBlogpost) {
+                        if (err) return console.error(err);
+                        counter += 1;
+                        if(counter == nBlogposts){
+                            res.json(true);   
+                        }
+                    });
+                }else{
+                    thisBlogpost.blogSeries = "";
+                    thisBlogpost.save(function(err, thisBlogpost) {
+                        if (err) return console.error(err);
+                        counter += 1;
+                        if(counter == nBlogposts){
+                            res.json(true);   
+                        }
+                    });
+                }
+                
+            });
+        } else {throw err;}
+    });
+});
+
 
 router.get('/slugExists/:query', function(req, res) {
     var query = req.params.query;
-    //console.log(query);
     blogpost.find({"urlslug":{'$regex' : query, '$options' : 'i'}}, {urlslug:1},function(err, docs) {
     if (!err){
         if(docs.length == 0){
@@ -335,7 +370,7 @@ router.get('/slugExists/:query', function(req, res) {
 //to get a particular blogpost with _id blogpostId
 router.get('/edit/:blogpostId', function(req, res) {
     var blogpostId = req.params.blogpostId;
-    //console.log(blogpostId);
+    
     var thisBlogpost = blogpost
         .findOne({ '_id': blogpostId })
         .deepPopulate('blogTags')
@@ -360,6 +395,48 @@ router.get('/edit/:blogpostId', function(req, res) {
     });
 });
 
+router.get('/markEdbites/:blogpostId', function(req, res) {
+    var blogpostId = req.params.blogpostId;
+    
+    var thisBlogpost = blogpost
+        .findOne({ '_id': blogpostId }, {blogSeries: 1})
+        .exec(function (err, thisBlogpost) {
+            
+        if (!err){
+            if(thisBlogpost){
+                thisBlogpost.blogSeries = "EdBites";
+                thisBlogpost.save(function(err, thisBlogpost) {
+                if (err) return console.error(err);
+                    res.json(thisBlogpost._id);
+                });
+            }else{
+                res.json(null);
+            }
+        } else {throw err;}
+    });
+});
+
+router.get('/unmarkEdbites/:blogpostId', function(req, res) {
+    var blogpostId = req.params.blogpostId;
+    
+    var thisBlogpost = blogpost
+        .findOne({ '_id': blogpostId }, {blogSeries: 1})
+        .exec(function (err, thisBlogpost) {
+            
+        if (!err){
+            if(thisBlogpost){
+                thisBlogpost.blogSeries = "";
+                thisBlogpost.save(function(err, thisBlogpost) {
+                if (err) return console.error(err);
+                    res.json(thisBlogpost._id);
+                });
+            }else{
+                res.json(null);
+            }
+        } else {throw err;}
+    });
+});
+
 router.get('/remove/:blogpostId', function(req, res) {
     var blogpostId = req.params.blogpostId;
     if(blogpostId){
@@ -376,15 +453,14 @@ router.get('/remove/:blogpostId', function(req, res) {
     }
 });
 
+
 router.get('/getblogpostFromSlug/:blogpostSlug', function(req, res) {
     var blogpostSlug = req.params.blogpostSlug;
     var thisBlogpost = blogpost
         .findOne({ 'urlslug': blogpostSlug })
         .deepPopulate('blogTags')
         .exec(function (err, thisBlogpost) {
-        //console.log(thisBlogpost);    
         if (!err){
-            //console.log(thisBlogpost);
             
             if(thisBlogpost){
                 var userId = thisBlogpost.user;
@@ -432,6 +508,8 @@ router.get('/enable/:blogpostId', function(req, res) {
             
         if (!err){
             thisBlogpost.active = true;
+            var timeNow = new Date();
+            thisBlogpost._published = timeNow;
             thisBlogpost.save(function(err, thisBlogpost) {
                 if (err) return console.error(err);
                 res.json(thisBlogpost._id);
@@ -500,7 +578,7 @@ router.get('/user/:userId', function(req, res) {
 //to get all blogposts for an institute
 router.post('/groupBlogposts', function(req, res) {
     var instituteIdArray = req.body;
-    //console.log(instituteIdArray);
+    
     var basicBlogposts = [];
     
     var blogposts = blogpost
@@ -553,7 +631,7 @@ router.post('/existingBlogpost', function(req, res) {
 
 router.post('/save', function(req, res) {
     var blogpostForm = req.body;
-    //console.log(blogpostForm);
+    
     var blogpostId = null;
     if(blogpostForm._id){
         blogpostId = blogpostForm._id.toString();
@@ -564,20 +642,18 @@ router.post('/save', function(req, res) {
         user = blogpostForm.user._id.toString();
     }
     
-    console.log(blogpostId + ' ' +user);
     if(blogpostId){
         var existingBlogpost = blogpost
         .findOne({_id: blogpostId})
         .exec(function (err, existingBlogpost) {
             if (!err){
-                console.log(existingBlogpost);
                 for (var property in blogpostForm) {
                     if(property != '_id' && property != 'upvotes'){
                         existingBlogpost[property] = blogpostForm[property];
                     }
                 }
                 var stats = readingTime(existingBlogpost.content);
-                //console.log(JSON.stringify(stats));
+                
                 if(stats)
                     existingBlogpost.readingTime = stats;
                 existingBlogpost.save(function(err, existingBlogpost) {
@@ -594,11 +670,9 @@ router.post('/save', function(req, res) {
         for (var property in blogpostForm) {
             newblogpost[property] = blogpostForm[property];
         }
-        //console.log(JSON.stringify(newblogpost));
         var stats = readingTime(newblogpost.content);
         if(stats)
             newblogpost.readingTime = stats;
-        //console.log(JSON.stringify(stats));
         newblogpost.save(function(err, newblogpost) {
             if (err) return console.error(err);
             res.json(newblogpost);
