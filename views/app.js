@@ -7685,7 +7685,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });
             
         }    
-        $rootScope.fblikeDialog = null;
+        /*$rootScope.fblikeDialog = null;
         $rootScope.fbpopupMode = false;
         $rootScope.showfblikeDialog = function(ev) {
             $rootScope.fbpopupMode = true;
@@ -7708,7 +7708,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
               $rootScope.fblikeDialog = null;
               $rootScope.fbpopupMode = false;
           }
-        }, 1000);
+        }, 1000);*/
         
         
     }]); 
@@ -11970,7 +11970,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 console.log();
             });
             
-            $document.on('mouseleave', leaveFromTop);
+            /*$document.on('mouseleave', leaveFromTop);
             function leaveFromTop(e){
                 if( e.clientY < 0 && !$rootScope.fblikeDialog && $scope.t.counts > 10){
                     //console.log($rootScope.fblikeDialog);
@@ -11978,7 +11978,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
                 //console.log($scope.t.counts);
             };
-            $scope.t = pageTimer(1000);
+            $scope.t = pageTimer(1000);*/
             
     }]);   
     
@@ -19733,7 +19733,7 @@ function getLatLng(thisData) {
                     });
                 }
             };
-            $document.on('mouseleave', leaveFromTop);
+            /*$document.on('mouseleave', leaveFromTop);
 
             function leaveFromTop(e){
                 if( e.clientY < 0 && !$rootScope.fblikeDialog && $scope.t.counts > 10){
@@ -19741,7 +19741,7 @@ function getLatLng(thisData) {
                     $rootScope.showfblikeDialog();
                 }
                 //console.log($scope.t.counts);
-            };
+            };*/
             $scope.t = pageTimer(1000);
     }]);
     exambazaar.controller("userSurveyController", 
