@@ -6956,7 +6956,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 '59085f0fc7289d0011d6ea8c',
                 '5995886d0f6bc61245d8464f',
                 '59a7eb973d71f10170dbb468',
-                '59bcd748b0cdd5440a424d03'
+                '59bcd748b0cdd5440a424d03',
+                '59bc02bed7dde1755d7112bf'
             ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
@@ -8208,7 +8209,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur'];
         
         if($cookies.getObject('sessionuser')){
             
