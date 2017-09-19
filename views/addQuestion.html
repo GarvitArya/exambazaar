@@ -70,6 +70,10 @@
         background-color: #FF5A5F;
         padding: 5px;
     }
+    #missingBadge{
+        background-color: #20C39A;
+        padding: 5px;
+    }
     .disabled{
         background-color: #FF5A5F;
     }
@@ -108,8 +112,13 @@
                 
             </div>
         </div>
-        <div layout="row" layout-align="start center" class="width100 marginTB5" ng-if="user.userType=='Master'" >
-            <a ng-click="markCreator()">Mark Creator</a>
+        <div layout="row" layout-align="start center" class="width100 marginTB5" ng-if="user.userType=='Master'"  layout-wrap>
+            <a ng-click="markCreator()" class="marginR10">Mark Creator</a>
+            <div ng-repeat="missingQuestion in missingQuestions" layout-wrap class="badge marginB5 marginR5" id="missingBadge">
+                <span>
+                    Q. {{missingQuestion}}
+                </span>
+            </div>
         </div>
         <div layout="column" layout-align="start start" class="width100 font14 marginTB10" >
             <div layout="row" layout-align="start center" class="width100 font16 bold marginT5" layout-wrap>
@@ -130,6 +139,10 @@
                     <md-switch ng-model="toAddQuestion._hascontext" aria-label="Write Up?" class="margin0">
                         Is there a paragraph for the set of questions?
                     </md-switch>
+                </div>
+                <div layout="row" layout-align="start center" class="marginR10" ng-if="user.userType=='Master'" >
+                    <a ng-click="splitQuestions()" class="marginR5" ng-if="toAddQuestion.questions.length > 1">Split Questions</a>
+                    <a ng-click="removeQuestionDialog()" class="marginR5">Delete Question</a>
                 </div>
                 <!--<div layout="row" layout-align="start center" class="marginR10">
                     <md-switch ng-model="toAddQuestion._multipleCorrect" aria-label="Multiple Correct Answers?" class="margin0">

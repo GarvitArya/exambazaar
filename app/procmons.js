@@ -127,7 +127,7 @@ function totalQuestionCount(res){
 function prevDayQuestionCount(res){
     var start = moment().subtract(1, 'day').startOf('day');
     var end = moment().subtract(1, 'day').endOf('day');
-    question.count({_date: {  $gte : start, $lte : end}}, function(err, docs) {
+    question.count({_created: {  $gte : start, $lte : end}}, function(err, docs) {
     if (!err){
         res.questions.prevDay = docs;
         totalBlogCount(res);
@@ -148,7 +148,7 @@ function totalBlogCount(res){
 function prevDayBlogCount(res){
     var start = moment().subtract(1, 'day').startOf('day');
     var end = moment().subtract(1, 'day').endOf('day');
-    blogpost.count({_date: {  $gte : start, $lte : end}, active: true}, function(err, docs) {
+    blogpost.count({_created: {  $gte : start, $lte : end}, active: true}, function(err, docs) {
     if (!err){
         res.blogs.prevDay = docs;
         router.procmon(res);

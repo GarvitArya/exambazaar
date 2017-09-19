@@ -9872,7 +9872,32 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }
                 });
             };
-            
+            $scope.generateExamSummary = function(){
+                $scope.examQCount = [];
+                var examQuestions = $scope.addedQuestions.map(function(a) {return a.exam._id;});
+               
+                
+                var counts = {};
+                for (var i = 0; i < examQuestions.length; i++) {
+                    counts[examQuestions[i]] = 1 + (counts[examQuestions[i]] || 0);
+                }
+                for(var i in counts){
+                    //console.log(i + " " + counts[i]);
+                    var newExamCount = {
+                        exam: null,
+                        count: null
+                    };
+                    
+                    var eIndex = examIds.indexOf(i);
+                    if(eIndex != -1){
+                        newExamCount.exam = exams[eIndex];
+                        newExamCount.count = counts[i];
+                    }
+                    $scope.examQCount.push(newExamCount);
+                }
+                console.log($scope.examQCount);
+            };
+            $scope.generateExamSummary();
     }]);
         
     exambazaar.controller("cityGroupExamQueryController", 
@@ -15419,6 +15444,45 @@ function getLatLng(thisData) {
             };
             $scope.sortQuestions();
             
+            $scope.missingQuestions = [];
+            $scope.findMissingQuestions = function(){
+                var startingNo = 10000;
+                var endingNo = 0;
+                var qnos = [];
+                $scope.thisTestQuestions.forEach(function(thisQuestion, index){
+                    if(thisQuestion._startnumber > endingNo){
+                        endingNo = thisQuestion._startnumber;
+                    }
+                    if(thisQuestion._endnumber > endingNo){
+                        endingNo = thisQuestion._endnumber;
+                    }
+                    if(thisQuestion._startnumber < startingNo){
+                        startingNo = thisQuestion._startnumber;
+                    }
+                });
+                for (var i = startingNo; i <= endingNo; i++) { 
+                    qnos.push(i);
+                }
+                
+                $scope.thisTestQuestions.forEach(function(thisQuestion, index){
+                    var start = thisQuestion._startnumber;
+                    var end = thisQuestion._endnumber;
+                    if(end && end != ''){
+                        for (var i = start; i <= end; i++) { 
+                            var qIndex = qnos.indexOf(i);
+                            qnos.splice(qIndex, 1);
+                        }
+                    }else{
+                        var qIndex = qnos.indexOf(start);
+                        qnos.splice(qIndex, 1);
+                    }
+                });
+                
+                $scope.missingQuestions = qnos;
+                
+            };
+            $scope.findMissingQuestions();
+            
             $scope.markCreator = function(){
                 if($scope.user.userType = 'Master'){
                      questionService.markCreator($scope.test._id).success(function (data, status, headers) {
@@ -15427,6 +15491,85 @@ function getLatLng(thisData) {
                     .error(function (data, status, header, config) {
                         console.log('Error ' + data + ' ' + status);
                     });
+                }
+            };
+            $scope.removeQuestionDialog = function(){
+                var questionSet = $scope.toAddQuestion;
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to delete this question?')
+                .textContent('You will not be able to recover them after this!')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.deleteQuestion(questionSet);
+                }, function() {
+                  //nothing
+                });   
+            };
+            $scope.deleteQuestion = function(questionSet){
+                if(questionSet._id){
+                    questionService.removeQuestion(questionSet._id).success(function (data, status, headers) {
+                        $scope.showSavedDialog();
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                }
+                
+            };
+            $scope.splitQuestions = function(){
+                var questionSet = $scope.toAddQuestion;
+                var nQuestions = questionSet.questions.length;
+                var allSplitQuestions = [];
+                if(nQuestions > 1){
+                    questionSet.questions.forEach(function(thisQuestion, index){
+                        var newQuestion = {
+                            _groupOfQuestions: false,
+                            //_multipleCorrect: false,
+                            _startnumber: questionSet._startnumber + index,
+                            _endnumber: '',
+                            _hascontext: false,
+                            context: '',
+                            images: null,
+                            questions:[],
+                            test: $scope.test._id,
+                            exam: $scope.test.exam,
+
+                        };
+                        newQuestion.questions = [];
+                        newQuestion.questions.push({
+                            question: questionSet.context + '\r\n\r\n' + thisQuestion.question,
+                            options: thisQuestion.options,
+                            solution: thisQuestion.solution,
+                            answer: thisQuestion.answer,
+                            images: thisQuestion.images,
+                        });
+                        newQuestion._createdBy = $scope.user._id;
+                        allSplitQuestions.push(newQuestion);
+                    });
+                    var addingQuestions = allSplitQuestions.length;
+                    var counter = 0;
+                    console.log(allSplitQuestions);
+                    allSplitQuestions.forEach(function(thisQuestion, index){
+                         questionService.saveQuestion(thisQuestion).success(function (data, status, headers) {
+                            counter += 1;
+                            if(counter == addingQuestions){
+                                $scope.showSavedDialog();
+                                $state.reload();
+                            }
+                            
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });
+                        
+                    });
+                    
+                    
                 }
             };
             
@@ -15455,7 +15598,7 @@ function getLatLng(thisData) {
                 };
                 if($scope.user){
                     $scope.toAddQuestion._createdBy = $scope.user._id;
-                    console.log($scope.toAddQuestion);
+                    //console.log($scope.toAddQuestion);
                 }
                 $scope.addNewQuestion();
                 
@@ -15555,7 +15698,6 @@ function getLatLng(thisData) {
                 });
             };
             $scope.setQuestion = function(question){
-                console.log('I am here');
                 $scope.toAddQuestion = question;
                 
                 $scope.toAddQuestion.questions.forEach(function(thisQuestion, index){
@@ -18184,6 +18326,13 @@ function getLatLng(thisData) {
                 if(thisinstitute.name && thisinstitute.name != ''){
                     thisinstitute.name = thisinstitute.name.trim();
                     thisinstitute.groupName = thisinstitute.name;
+                    
+                    var find ="http";
+                    var fIndex = thisinstitute.website.indexOf(find);
+                    if(fIndex == -1){
+                        thisinstitute.website = "http://" + thisinstitute.website;
+                    }
+                    
                     var saveProvider = {
                         targetStudyProvider:thisinstitute,
                         user: $scope.user._id,
