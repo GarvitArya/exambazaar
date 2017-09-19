@@ -2167,6 +2167,29 @@ router.get('/coaching/:coachingId', function(req, res) {
     });
 });
 
+router.get('/titleCaseName/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    //, type: 'Coaching'
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': coachingId}, {groupName: 1, name:1, website: 1, address:1, city:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            if(thisProvider){
+                thisProvider.name = titleCase(thisProvider.name);
+                thisProvider.groupName = thisProvider.name;
+
+                thisProvider.save(function(err, thisProvider) {
+                if (err) return console.error(err);
+                    console.log(thisProvider._id + " saved!");
+                    res.json(thisProvider);
+                });
+            }else{
+                res.json(false);
+            }
+        } else {throw err;}
+    });
+});
+
 router.get('/coachingreview/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     //console.log('Fetching coaching ' + coachingId);

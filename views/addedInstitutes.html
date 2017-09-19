@@ -70,15 +70,18 @@
             <div flex="10">
                 #Email | Websites
             </div>
+            
         </div>
+         <!--| orderBy:['-_created']-->
         <div flex layout="row" layout-align="start center" ng-repeat="institute in addedInstitutes | orderBy:['-_created']" class="width100 greyDashedBottomBorder font10">
             <div flex="5">
                 {{$index+1}}
             </div>
-            <div flex="30" class="font12">
-                <a ui-sref="claim({ coachingId:{{'institute._id'}} })" target="_blank" id="link">
+            <div layout="row" layout-align="start center" flex="30" class="font12">
+                <a ui-sref="claim({ coachingId:{{'institute._id'}} })" target="_blank" id="link" class="marginR10">
                 <strong>{{institute.name}}</strong>
                 </a>
+                <i class="fa fa-header danger" aria-hidden="true" ng-click="titleCaseName(institute, $index)"></i>
             </div>
             <div flex="10" class="font10">
                 <a ui-sref="targetStudyProviders({ city:{{'institute.city'}} })" target="_blank" id="link">
@@ -100,6 +103,7 @@
             <div flex="10" class="font10">
                 {{institute.email.length}} | {{institute.website.length}}
             </div>
+            
         </div>
         
         
@@ -110,4 +114,22 @@
     </div>
     <div id="spacer">
     </div>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="savedDialog">
+      <md-dialog>
+          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+              <div class="margin20 padding10">
+                <span class="text-primary md-headline">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </span>
+                <span class="md-title">
+                    Changes Saved!
+                </span>
+                
+              </div>
+          </div>
+      </md-dialog>
+    </div>    
 </div>

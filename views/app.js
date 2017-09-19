@@ -1271,6 +1271,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getProvider = function(coachingId) {
             return $http.get('/api/targetStudyProviders/coaching/'+coachingId, {coachingId: coachingId});
         };
+        this.titleCaseName = function(coachingId) {
+            return $http.get('/api/targetStudyProviders/titleCaseName/'+coachingId, {coachingId: coachingId});
+        };
         this.getClaimProvider = function(coachingId) {
             return $http.get('/api/targetStudyProviders/claimcoaching/'+coachingId, {coachingId: coachingId});
         };
@@ -9793,11 +9796,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("addedInstitutesController", 
-        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam){
+        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', '$mdDialog', '$timeout', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam, $mdDialog, $timeout){
             $scope.user = thisuser.data;
             
             if($scope.user && ($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development')){
                 $scope.authorized = true;
+            }
+            $scope.masterUser = null;
+            if($scope.user.userType == 'Master'){
+                $scope.masterUser = true;
             }
             $scope.allAddedInstitutes = addedInstitutes.data;
             $scope.addedInstitutes = addedInstitutes.data;
@@ -9822,14 +9829,50 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });
             $scope.updateAddedInstitutes = function(user){
                 
-                var userId = user._id;
-                $scope.addedInstitutes = [];
-                $scope.allAddedInstitutes.forEach(function(thisInstitute, index){
-                    var addedByUser = thisInstitute._createdBy;
-                    if(addedByUser._id == userId){
-                        $scope.addedInstitutes.push(thisInstitute);
-                    }
+                if(user && user._id){
+                    var userId = user._id;
+                    $scope.addedInstitutes = [];
+                    $scope.allAddedInstitutes.forEach(function(thisInstitute, index){
+                        var addedByUser = thisInstitute._createdBy;
+                        if(addedByUser._id == userId){
+                            $scope.addedInstitutes.push(thisInstitute);
+                        }
+                    });
+                }else{
+                    $scope.addedInstitutes = $scope.allAddedInstitutes;
+                }
+            };
+            $scope.showSavedDialog = function(ev) {
+                $mdDialog.show({
+                  contentElement: '#savedDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
                 });
+                $timeout(function(){
+                    $mdDialog.cancel();
+                },1000)
+            };
+            
+            $scope.titleCaseName = function(provider, index){
+                targetStudyProviderService.titleCaseName(provider._id).success(function (data, status, headers) {
+                    if(data){
+                        provider = data;
+                        console.log(provider.name);
+                        /*$scope.showSavedDialog();
+                        var addedByUser = provider._createdBy;
+                        
+                        var uIndex = ebteamIds.indexOf(addedByUser);
+                        provider._createdBy = ebteam[uIndex];
+                        
+                        $scope.updateAddedInstitutes(null);*/
+                    }else{
+                        console.log('Something went wrong');   
+                    }
+                })
+                .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+                });  
             };
             
     }]);
@@ -18391,11 +18434,15 @@ function getLatLng(thisData) {
                     thisinstitute.name = thisinstitute.name.trim();
                     thisinstitute.groupName = thisinstitute.name;
                     
-                    var find ="http";
-                    var fIndex = thisinstitute.website.indexOf(find);
-                    if(fIndex == -1){
-                        thisinstitute.website = "http://" + thisinstitute.website;
+                    if(thisinstitute.website && thisinstitute.website != ''){
+                        var find ="http";
+                        var fIndex = thisinstitute.website.indexOf(find);
+                        if(fIndex == -1){
+                            thisinstitute.website = "http://" + thisinstitute.website;
+                        }
+                        
                     }
+                    
                     
                     var saveProvider = {
                         targetStudyProvider:thisinstitute,
@@ -19076,7 +19123,11 @@ function getLatLng(thisData) {
             
             
             $scope.saveBlogPost = function(blogpost){
-                
+                var find = "EdBites";
+                var fIndex = $scope.blogpost.title.indexOf(find);
+                if(fIndex != -1){
+                    $scope.blogpost.blogSeries = "EdBites";
+                }
                 
                 $scope.blogpost.urlslug = slugify($scope.blogpost.title);
                 blogpostService.slugExists($scope.blogpost.urlslug).success(function (data, status, headers) {
