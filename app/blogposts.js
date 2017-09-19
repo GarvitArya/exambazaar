@@ -178,7 +178,7 @@ router.get('/getblogs', function(req, res) {
 
 router.get('/headerBlogs', function(req, res) {
     
-    var blogposts = blogpost.find({active: true},{title:1, user:1,urlslug:1, readingTime:1, _created:1},function(err, blogposts) {
+    var blogposts = blogpost.find({active: true, blogSeries: {$ne:'EdBites'}},{title:1, user:1,urlslug:1, readingTime:1, _created:1},function(err, blogposts) {
     if (!err){
         var allBlogposts = [];
         var nBlogposts = blogposts.length;
