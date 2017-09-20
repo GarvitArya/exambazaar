@@ -5,7 +5,8 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var socialMediaPostSchema = mongoose.Schema({
     socialMediaCredential: { type: Schema.ObjectId, ref: 'socialMediaCredential' },
     facebook:{
-        postid: {type: String, unique: true},
+        postid: {type: String},
+        photoid: {type: String},
     },
     question: { type: Schema.ObjectId, ref: 'question' },
     active:{type: Boolean, default: true},

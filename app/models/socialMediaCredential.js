@@ -14,8 +14,8 @@ var socialMediaCredentialSchema = mongoose.Schema({
     },
     exams: [{ type: Schema.ObjectId, ref: 'exam' }],
     active:{type: Boolean, default: true},
-    _created: { type: Date, default: Date.now }
-    
+    _created: { type: Date, default: Date.now },
+    hashtags: [{type: String}],
 });
 socialMediaCredentialSchema.plugin(deepPopulate);
 module.exports = mongoose.model('socialMediaCredential', socialMediaCredentialSchema);

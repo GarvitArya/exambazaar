@@ -409,6 +409,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.questionToPost = function(examArray) {
             return $http.post('/api/questions/questionToPost',examArray);
         };
+        this.buildPostSchedule = function(buildParams) {
+            return $http.post('/api/questions/buildPostSchedule',buildParams);
+        };
     }]);
     exambazaar.service('testService', ['$http', function($http) {
         this.saveTest = function(test) {
@@ -1306,6 +1309,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.saveProvider = function(provider) {
             return $http.post('/api/targetStudyProviders/savecoaching',provider);
+        };
+        this.removeProvider = function(coachingId) {
+            return $http.get('/api/targetStudyProviders/removecoaching/'+coachingId, {coachingId: coachingId});
         };
         this.bulkSaveProviders = function(providers) {
             return $http.post('/api/targetStudyProviders/bulksavecoaching',providers);
@@ -3370,6 +3376,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     exambazaar.controller("claimController", 
     [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService',  'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService,  thisGroupInfo, addContactInfoService, rateInstituteService){
+        $scope.provider = thisProvider.data;
+        $scope.thisGroupInfo = thisGroupInfo.data;
+        
+        if(!$scope.provider || !$scope.thisGroupInfo){
+            $state.go('error');
+        }
+        
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         $scope.videoTags = videoMediaTagList.data.mediaTypeTags;
@@ -3592,7 +3605,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         ];
         $scope.ebVerifyStates = ["Verified", "No Response", "Does not Exist", "Not Verified"];
         
-        $scope.provider = thisProvider.data;
         
         $scope.components = [
             /*'Overview',*/
@@ -3608,7 +3620,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         if($scope.provider && $scope.provider.type != 'Online Coaching'){
             $scope.components.push('Location');
         }
-        $scope.thisGroupInfo = thisGroupInfo.data;
+        
         //console.log($scope.thisGroupInfo);
         $scope.verifyClaim = function(){
             
@@ -3891,6 +3903,37 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.log("Error ");
                 });
             }
+        };
+        
+        $scope.removeProviderConfirm = function(provider){
+            console.log('I am here');
+            console.log(provider.name);
+            var confirm = $mdDialog.confirm()
+            .title('Would you like to remove coaching named ' + provider.name + ', located at ' +  provider.address + ', ' + provider.city + '?')
+            .textContent('You will not be able to revert it later')
+            .ariaLabel('Lucky day')
+            .targetEvent()
+            .clickOutsideToClose(true)
+            .ok('Confirm')
+            .cancel('Cancel');
+            $mdDialog.show(confirm).then(function() {
+                $scope.removeProvider(provider);
+            }, function() {
+              //nothing
+                $scope.showExamDialog();
+            });     
+        };
+        $scope.removeProvider = function(provider){
+             targetStudyProviderService.removeProvider(provider._id).success(function (data, status, headers) {
+                if(data){
+                    $scope.showSavedDialog();
+                }else{
+                    console.log('Something went wrong');   
+                }
+            })
+            .error(function (data, status, header, config) {
+            console.log('Error ' + data + ' ' + status);
+            });  
         };
         
         $scope.addExam = function(exam){
@@ -8212,7 +8255,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -9798,6 +9841,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     exambazaar.controller("addedInstitutesController", 
         [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', '$mdDialog', '$timeout', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam, $mdDialog, $timeout){
             $scope.user = thisuser.data;
+            $rootScope.title ='Report - Added Institutes';
             
             if($scope.user && ($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development')){
                 $scope.authorized = true;
@@ -9875,6 +9919,34 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });  
             };
             
+            $scope.removeProviderConfirm = function(provider){
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to remove coaching named ' + provider.name + ', located at ' +  provider.address + ', ' + provider.city + '?')
+                .textContent('You will not be able to revert it later')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.removeProvider(provider);
+                }, function() {
+                  //nothing
+                    $scope.showExamDialog();
+                });     
+            };
+            $scope.removeProvider = function(provider){
+                 targetStudyProviderService.removeProvider(provider._id).success(function (data, status, headers) {
+                    if(data){
+                        $scope.showSavedDialog();
+                    }else{
+                        console.log('Something went wrong');   
+                    }
+                })
+                .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+                });  
+            };
     }]);
         
     exambazaar.controller("addedQuestionsController", 
@@ -12081,16 +12153,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
             
         
-    exambazaar.controller("qadController", 
-        [ '$scope', 'thisuser', 'allPages', 'socialMediaCredentialService', '$mdDialog', '$timeout', 'examList', 'streamList', 'questionService', function($scope, thisuser, allPages, socialMediaCredentialService, $mdDialog, $timeout, examList, streamList, questionService){
+    exambazaar.controller("scheduleQADController", 
+        [ '$scope', '$rootScope', 'thisuser', 'allPages', 'socialMediaCredentialService', '$mdDialog', '$timeout', 'examList', 'streamList', 'questionService', function($scope, $rootScope, thisuser, allPages, socialMediaCredentialService, $mdDialog, $timeout, examList, streamList, questionService){
             $scope.user = thisuser.data;
             $scope.allExams = examList.data;
+            
             var examIds = $scope.allExams.map(function(a) {return a._id;});
             $scope.allStreams = streamList.data;
             
             if($scope.user._id =='59a7eb973d71f10170dbb468' || $scope.user.userType == 'Master'){
                 $scope.masterUser = true;
             }
+            
+            $rootScope.pageTitle = "Schedule QAD";
             
             $scope.examBadgeClass = function(thisExam){
                 var badgeClass = "examTagHolder";
@@ -12174,6 +12249,18 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             
             $scope.savePage = function(page){
+                if(!page.hashtags){
+                    page.hashtags = [];
+                }
+                page.hashtags.forEach(function(thisHashTag, index){
+                    if(thisHashTag == ''){
+                        page.hashtags.splice(index, 1);
+                    }else{
+                        if(thisHashTag.indexOf('#') != 0){
+                            page.hashtags[index] = "#" + thisHashTag;
+                        }
+                    }
+                });
                 socialMediaCredentialService.saveSocialMediaCredential(page).success(function (data, status, headers) {
                     socialMediaCredentialService.getSocialMediaCredentials().success(function (data, status, headers) {
                         $scope.allPages = data;
@@ -12384,7 +12471,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 
                 //publish_actions,
             };
-            
+            $scope.addHashtag = function(page){
+                if(!page.hashtags){
+                    page.hashtags = [];
+                }
+                page.hashtags.push('');
+            };
             $scope.questionToPost = function(page){
                 var examArray = page.exams.map(function(a) {return a._id;});
                 //console.log(examArray);
@@ -12402,7 +12494,29 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     console.log("Error ");
                 });  
             };
-            
+            $scope.buildPostSchedule = function(page){
+                var examArray = page.exams.map(function(a) {return a._id;});
+                var buildParams = {
+                    examArray: examArray,
+                    nQuestions: 10,
+                };
+                //console.log(examArray);
+                questionService.buildPostSchedule(examArray).success(function (data, status, headers) {
+                    var question = data;
+                    
+                    if(question){
+                        console.log(question);
+                        //$scope.postToFBPage(page, question);
+                        
+                    }else{
+                        alert('Found no question');
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });  
+            };
+            //main posting function
             $scope.postToFBPage = function(page, question){
                 console.log('FB Post Initiating');
             var thisPage = page.facebook;
@@ -12410,7 +12524,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 FB.api('/me/accounts', function(response){
                     
                     var nQuestions = question.questions.length;
+                    var nImages = 0;
+                    if(question.images){
+                        nImages = question.images.length;
+                    }
+                    console.log(question);
                     console.log(nQuestions);
+                    console.log(nImages);
+                    
                     var p_id = thisPage.id;
                     var string_id = '/' + p_id + '/feed';
                     var photos_id = '/' + p_id + '/photos';
@@ -12419,15 +12540,16 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     //console.log('The pagename is: '+ p_name + 'Page access token is: ' + p_accessToken);
                     var miniseparator = "\r\n";
                     var separator = "\r\n\r\n";
-                    var preQText = "As appeared in " + question.test.name + separator + " Exambazaar Question a Day of " + moment().format("DD MMM YY") + " is:" + separator;
+                    var preQText = "EQAD of " + moment().format("DD MMM") + " as appeared in " + question.test.name + " is:" + separator;
                     
                     var totalQtexts = [];
                     if(question.context && question.context.length > 10){
-                        totalQtexts.push(question.context);
+                        totalQtexts.push(question.context + separator);
                     }
                     question.questions.forEach(function(thisQuestion, index){
                         //var thisQuestion = question.questions[0];
-                        var Qtext = "Q. " + thisQuestion.question + separator;
+                        var qno = index + 1;
+                        var Qtext = "Q" + qno + ". " + thisQuestion.question + separator;
                         var optionPrefixes = ["A. ", "B. ", "C. ", "D. ", "E. ", "F. ", "G. "];
                         var optionString = [];
                         var options = thisQuestion.options;
@@ -12447,7 +12569,22 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     });
                     
                     var postOText = "For detailed answers and explanations, logon to www.exambazaar.com" + separator;
-                    var hashTags = "#eqad #exambazaar";
+                    var thisPageHashTags = page.hashtags;
+                    if(!thisPageHashTags){
+                        thisPageHashTags = [];
+                    }
+                    var hashTagsList = ['#eqad', '#exambazaar'];
+                    thisPageHashTags = thisPageHashTags.concat(hashTagsList);
+                    var hashTags = "";
+                    thisPageHashTags.forEach(function(thisHashTag, index){
+                        hashTags = hashTags + thisHashTag;
+                        if(index != thisPageHashTags.length - 1){
+                            hashTags = hashTags + " ";
+                        }
+                        
+                        
+                    });
+                    console.log(hashTags);
 
                     var postString = preQText + allQText + postOText + hashTags;
                     
@@ -12460,30 +12597,59 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     var scheduledTime = moment().add(60, "minutes").unix();
                     //schedule time should be from 10 minutes to 6 months from now
                     
-                    FB.api(
-                        string_id,
+                    if(nImages == 0){
+                        FB.api(
+                            string_id,
+                            "POST",
+                            {
+                                "message": postString,
+                                access_token : p_accessToken,
+                                //backdated_time : backdate,
+                                published : false,
+                                scheduled_publish_time : scheduledTime,
+
+                            },
+                            function (response) {
+                              if (response && !response.error) {
+                                  $scope.showPostedDialog();
+                                  console.log('Question Posted');
+                                  console.log(response);
+                              }else{
+                                  console.log(response);
+                              }
+                        });
+                    }else{
+                        FB.api(
+                        photos_id,
                         "POST",
                         {
-                            "message": postString,
+                            "url": question.images[0],
                             access_token : p_accessToken,
+                            caption: postString,
+                            //no_story:1,
                             //backdated_time : backdate,
                             published : false,
                             scheduled_publish_time : scheduledTime,
+                            //object_attachment
 
                         },
                         function (response) {
                           if (response && !response.error) {
                               $scope.showPostedDialog();
-                              console.log('Question Posted');
+                              console.log('Photo Posted');
                               console.log(response);
+                              var photoId = response.id;
+                              var photoPostId = response.post_id;
                           }else{
                               console.log(response);
                           }
                     });
+                    }
+                    
+                    
                     
                     //console.log(scheduledTime);
                     //The specified scheduled publish time is invalid
-
                     /*FB.api(
                         photos_id,
                         "POST",
@@ -18442,7 +18608,29 @@ function getLatLng(thisData) {
                         }
                         
                     }
-                    
+                    if(thisinstitute.city && thisinstitute.city != ''){
+                        thisinstitute.city = titleCase(thisinstitute.city);
+                    }
+                    if(thisinstitute.state && thisinstitute.state != ''){
+                        thisinstitute.state = titleCase(thisinstitute.state);
+                    }
+                    if(thisinstitute.email && thisinstitute.email != ''){
+                        thisinstitute.email = thisinstitute.email.replace(/\s+/g, '');
+                        thisinstitute.email = thisinstitute.email.toLowerCase();
+                    }
+                    if(thisinstitute.phone && thisinstitute.phone != ''){
+                        thisinstitute.phone = thisinstitute.phone.replace(/\s+/g, '');
+                    }
+                    if(thisinstitute.mobile && thisinstitute.mobile != ''){
+                        thisinstitute.mobile = thisinstitute.mobile.replace(/\s+/g, '');
+                    }
+                    if(thisinstitute.website && thisinstitute.website != ''){
+                        thisinstitute.website = thisinstitute.website.replace(/\s+/g, '');
+                        thisinstitute.email = thisinstitute.email.toLowerCase();
+                    }
+                    if(thisinstitute.pincode && thisinstitute.pincode != ''){
+                        thisinstitute.pincode = thisinstitute.pincode.replace(/\s+/g, '');
+                    }
                     
                     var saveProvider = {
                         targetStudyProvider:thisinstitute,
@@ -20545,16 +20733,16 @@ function getLatLng(thisData) {
                 }]
             }
         })
-        .state('qad', {
-            url: '/:userId/qad', //masterId?
+        .state('scheduleQAD', {
+            url: '/:userId/scheduleQAD', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
                     
                 },
                 'body':{
-                    templateUrl: 'qad.html',
-                    controller: 'qadController',
+                    templateUrl: 'scheduleQAD.html',
+                    controller: 'scheduleQADController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'

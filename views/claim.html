@@ -608,12 +608,16 @@
             <div flex layout="column" layout-align="end start" class="paddingL20 paddingB10">
                 <span class="hidden-xs text md-headline mainFont" id="coachingHeader">
                     {{provider.name | uppercase}}
-                    <span class="badge" ng-if="editable && !disabled && ebuser" ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })"><small>
+                    <span class="badge" ng-if="masteruser" ui-sref="editTargetStudyProvider({ coachingId:{{'provider._id'}} })"><small>
                             Edit
                     </small>
                     </span>
-                    <span class="badge darkGreyBackground text-white" ng-if="masteruser" ng-click="showDisableConfirm(provider)"><small>
+                    <span class="badge" ng-if="masteruser" ng-click="showDisableConfirm(provider)"><small>
                         Disable
+                    </small>
+                    </span>
+                    <span class="badge" ng-if="masteruser" ng-click="removeProviderConfirm(provider)"><small>
+                        Delete
                     </small>
                     </span>
                 </span>

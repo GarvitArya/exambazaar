@@ -4,7 +4,6 @@
         font-size: 13px;
         color: #333333;
         margin-bottom: 5px;
-        padding: 10px;
         border: solid 1px transparent;
         transition: box-shadow 0.3s, border 0.3s;
         box-shadow: 0 0 5px 1px white;
@@ -82,7 +81,25 @@
                         </div>
                     </div> 
                 </div>
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex="25">
+                        Hashtags
+                    </div>
+                    <div layout="row" layout-align="start start" layout-wrap flex>
+                        <div layout="row" layout-align="start start" ng-repeat="hashtag in page.hashtags" class="marginR5">
+                            <input type="text" class="" ng-model="page.hashtags[$index]"  placeholder="New Hashtag">
+                        </div>
+                        <div class="marginL5">
+                            <i class="fa fa-plus-circle" aria-hidden="true" ng-click="addHashtag(page)"></i>
+                        </div>
+                    </div> 
+                </div>
                 <div layout="row" layout-align="start center" class="width100 marginT20" layout-wrap>
+                    <div class="margin5">
+                        <md-button class="md-default md-cancel md-small font11 tolowercase margin0 padding0" ng-click="buildPostSchedule(page)">
+                            Build Post Schedule
+                        </md-button>
+                    </div>
                     <div class="margin5">
                         <md-button class="md-default md-cancel md-small font11 tolowercase margin0 padding0" ng-click="questionToPost(page)">
                             Schedule Post

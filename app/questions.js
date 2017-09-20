@@ -20,6 +20,22 @@ mongoose.Promise = require('bluebird');
 router.post('/questionToPost', function(req, res) {
     var examArray = req.body;
     console.log(examArray);
+    //, images: { $exists: true, $ne: null }
+    var thisQuestion = question
+        .findOne({exam: {$in: examArray}, images: { $exists: true, $eq: null }}) //, $where: "this.questions.length == 1"
+        .deepPopulate('exam test')
+        .exec(function (err, thisQuestion) {
+        if (!err){
+            console.log(thisQuestion);
+            res.json(thisQuestion);
+        } else {throw err;}
+    });
+});
+
+router.post('/buildPostSchedule', function(req, res) {
+    var buildParams = req.body;
+    var examArray = buildParams.examArray;
+    console.log(examArray);
     var thisQuestion = question
         .findOne({exam: {$in: examArray}, images: { $exists: true, $ne: null }}) //, $where: "this.questions.length == 1"
         .deepPopulate('exam test')
@@ -30,7 +46,6 @@ router.post('/questionToPost', function(req, res) {
         } else {throw err;}
     });
 });
-
 
 //to add an question
 router.post('/save', function(req, res) {

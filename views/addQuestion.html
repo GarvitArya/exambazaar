@@ -151,6 +151,37 @@
                 </div>-->
                 
             </div>
+            <div layout="row" layout-align="center center" class="textDarkGrey width100 paddingTB10" >
+                <div flex="20" layout="column" layout-align="start start" class="font14 bold width100" >
+                    Add Question Set Images
+                </div>
+                <div flex layout="column" layout-align="start start" class="font12" >
+                    <div layout="column" layout-align="center start" class=" textDarkGrey" ngf-select="uploadImage(images)" ng-model="images" multiple="multiple" >
+                        <div class="padding10" id="pageLogoHolder">
+                            <span>
+                            <i class="fa fa-file-text font32" aria-hidden="true"></i>
+                            </span>
+                            <span>
+                                Upload Images
+                            </span>
+                        </div>
+
+                    </div>
+                    <div flex layout="row" layout-align="start start" ng-if="toAddQuestion.images && toAddQuestion.images.length > 0" class="paddingL20 width100" layout-wrap>
+                        <div layout="column" layout-align="center center" ng-repeat="image in toAddQuestion.images" class="marginR10 marginT10">
+                            <div layout="row" layout-align="center center" class="marginB5">
+                                <a ng-href="{{image}}" target="_blank">
+                                    <!--<i class="fa fa-check-square-o text-primary marginR10" aria-hidden="true"></i> Image {{$index}}-->
+                                    <img ng-src="{{image}}" id="screenshot"/>
+                                </a>
+                            </div>
+                            <div layout="row" layout-align="center center" class="badge" id="removebadge" ng-click="removeImage(image)">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div layout="row" layout-align="start center" class="width100 marginT5" ng-if="toAddQuestion._hascontext">
                 <textarea class="width100 font14" ng-model="toAddQuestion.context" placeholder="Add question context here. Paragraph of RC, etc" rows="4"></textarea>
             </div>
@@ -172,34 +203,7 @@
                         <div layout="row" layout-align="start start" class="marginB10 width100">
                             <textarea class="width100 font14 margin0" ng-model="question.question" placeholder="Add question here" rows="3"></textarea>
                         </div>
-                        <div layout="column" layout-align="center center" class="textDarkGrey width100 paddingTB10" >
-                            <div layout="column" layout-align="start start" class="font12 width100" >
-                                <div layout="column" layout-align="center start" class=" textDarkGrey" ngf-select="uploadImage(images)" ng-model="images" multiple="multiple" >
-                                    <div class="padding10" id="pageLogoHolder">
-                                        <span>
-                                        <i class="fa fa-file-text font32" aria-hidden="true"></i>
-                                        </span>
-                                        <span>
-                                            Upload Images
-                                        </span>
-                                    </div>
-
-                                </div>
-                                <div flex layout="row" layout-align="start start" ng-if="toAddQuestion.images && toAddQuestion.images.length > 0" class="paddingL20 width100" layout-wrap>
-                                    <div layout="column" layout-align="center center" ng-repeat="image in toAddQuestion.images" class="marginR10 marginT10">
-                                        <div layout="row" layout-align="center center" class="marginB5">
-                                            <a ng-href="{{image}}" target="_blank">
-                                                <!--<i class="fa fa-check-square-o text-primary marginR10" aria-hidden="true"></i> Image {{$index}}-->
-                                                <img ng-src="{{image}}" id="screenshot"/>
-                                            </a>
-                                        </div>
-                                        <div layout="row" layout-align="center center" class="badge" id="removebadge" ng-click="removeImage(image)">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                         
                         <div layout="column" layout-align="start start" class="width100 marginB5" ng-repeat="option in question.options">
                             <div layout="row" layout-align="start center" class="width100">

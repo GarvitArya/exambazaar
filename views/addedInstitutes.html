@@ -78,10 +78,11 @@
                 {{$index+1}}
             </div>
             <div layout="row" layout-align="start center" flex="30" class="font12">
-                <a ui-sref="claim({ coachingId:{{'institute._id'}} })" target="_blank" id="link" class="marginR10">
+                <a ui-sref="claim({ coachingId:{{'institute._id'}} })" target="_blank" id="link" class="">
                 <strong>{{institute.name}}</strong>
                 </a>
-                <i class="fa fa-header danger" aria-hidden="true" ng-click="titleCaseName(institute, $index)"></i>
+                <i class="fa fa-header text-primary marginL10" aria-hidden="true" ng-click="titleCaseName(institute, $index)"></i>
+                <i class="fa fa-trash-o danger marginL10" aria-hidden="true" ng-click="removeProviderConfirm(institute)"></i>
             </div>
             <div flex="10" class="font10">
                 <a ui-sref="targetStudyProviders({ city:{{'institute.city'}} })" target="_blank" id="link">

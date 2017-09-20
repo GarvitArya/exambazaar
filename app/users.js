@@ -1688,7 +1688,7 @@ router.get('/addedInstitutes/:userId', function(req, res) {
     if (!err){
         if(thisUser){
             var fullUserScope = false;
-            if(thisUser.userType == 'Master' || thisUser._id == '59085f0fc7289d0011d6ea8c'){
+            if(thisUser.userType == 'Master' || thisUser._id == '59085f0fc7289d0011d6ea8c' || thisUser._id == '59899631a68cea0154b49502' ){
                fullUserScope = true; 
             }
             

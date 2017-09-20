@@ -1982,6 +1982,18 @@ router.post('/bulksavecoaching', function(req, res) {
     
 });
 
+router.get('/removecoaching/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    targetStudyProvider.remove({_id: coachingId}, function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log('Coaching removed!');
+            res.json(true);
+        }                              
+    });
+    
+});
 
 router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;
@@ -2086,6 +2098,7 @@ router.get('/getGroupInfo/:coachingId', function(req, res) {
         .findOne({'_id': coachingId},{groupName:1})
         .exec(function (err, thisProvider) {
         if (!err){
+        if (thisProvider){
             var groupName = thisProvider.groupName;
             var thisGroupProviders = targetStudyProvider
                 .find({'groupName': groupName},{name:1, description:1, address:1, email:1, website:1, facebookPage: 1, youtubeChannel:1, logo:1,photo:1, video:1})
@@ -2134,7 +2147,9 @@ router.get('/getGroupInfo/:coachingId', function(req, res) {
                 res.json(groupInfo);
                 } else {throw err;}
             });
-            
+        }else{
+            res.json(null);
+        }
         } else {throw err;}
     });
 });
