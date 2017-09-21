@@ -19000,7 +19000,7 @@ function getLatLng(thisData) {
     };
         
     exambazaar.controller("editblogController", 
-        [ '$scope','$http','$state','blogpostService', 'blogTagService', 'UserService', 'thisblog', '$rootScope','$mdDialog','$timeout', 'Upload', '$cookies', 'ImageService', 'examList', 'streamList', 'allTags', function($scope,$http, $state, blogpostService, blogTagService, UserService, thisblog, $rootScope, $mdDialog,$timeout, Upload, $cookies, ImageService, examList, streamList, allTags){
+        [ '$scope','$http','$state','blogpostService', 'blogTagService', 'UserService', 'thisblog', '$rootScope','$mdDialog','$timeout', 'Upload', '$cookies', 'ImageService', 'examList', 'streamList', 'allTags', 'Notification', function($scope,$http, $state, blogpostService, blogTagService, UserService, thisblog, $rootScope, $mdDialog,$timeout, Upload, $cookies, ImageService, examList, streamList, allTags, Notification){
             $scope.blogpost = thisblog.data;
             $scope.allTags = allTags.data;
             $scope.allExams = examList.data;
@@ -19012,7 +19012,7 @@ function getLatLng(thisData) {
             }else{
                 $scope.thisBlogCover = defaultBlogCover;
             }
-            console.log($scope.blogpost.coverPhoto);
+            //console.log($scope.blogpost.coverPhoto);
             
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser'); UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
@@ -19309,8 +19309,13 @@ function getLatLng(thisData) {
             }, true);
             
             
+            setInterval(function() {
+                console.log('Autosave starting: ' + moment().format('DD-MMM HH:mm:ss'));
+                $scope.saveBlogPost($scope.blogpost, 'Autosaved');
+            }, 120 * 1000);
             
-            $scope.saveBlogPost = function(blogpost){
+            $scope.saveBlogPost = function(blogpost, displayString){
+                
                 var find = "EdBites";
                 var fIndex = $scope.blogpost.title.indexOf(find);
                 if(fIndex != -1){
@@ -19328,9 +19333,16 @@ function getLatLng(thisData) {
                         }
                         //console.log(blogpostForm);
                         blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
-                            $scope.showSavedDialog();
+                            //$scope.showSavedDialog();
+                            if(displayString == 'Autosaved'){
+                                Notification.primary({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                            }else{
+                                Notification.success({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 3000});
+                            }
+                            
                         })
                         .error(function (data, status, header, config) {
+                            Notification.warning({message: "Something went wrong! Blog not "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 1000});
                             console.log("Error ");
                         });
                         
@@ -19349,9 +19361,15 @@ function getLatLng(thisData) {
                             }
                             //console.log(blogpostForm);
                             blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
-                                $scope.showSavedDialog();
+                                if(displayString == 'Autosaved'){
+                                    Notification.primary({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                                }else{
+                                    Notification.success({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 3000});
+                                }
                             })
                             .error(function (data, status, header, config) {
+                                Notification.warning({message: "Something went wrong! Blog not "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                                
                                 console.log("Error ");
                             });
                         }else{
