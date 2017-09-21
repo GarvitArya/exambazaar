@@ -391,13 +391,13 @@
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="blogGalleryDialog">
       <md-dialog class="offer-dialog whiteBackground">
-          <md-content flex layout="column">
+          <div layout="column" layout-align="center center">
             
-              <div layout="row" layout-align="center center" class="blogFont width100 marginB20 paddingTB10 gainsboroBottomBorder ">
+              <div layout="row" layout-align="center center" class="blogFont width100 paddingTB10 gainsboroBottomBorder ">
                   {{user.basic.name}}'s Blog Gallery
               </div>
-              <div layout="row" layout-wrap layout-align="center center" class="width100 marginTB20">
-                <div layout="column" layout-wrap layout-align="center center" ng-repeat="photo in blogGallery | orderBy:'-_created'" class="marginLR5 marginTB5">
+              <div layout="row" layout-wrap layout-align="center center" class="width100 galleryDiv">
+                <div layout="column" layout-align="start start" ng-repeat="photo in blogGallery | orderBy:'-_created'" class="margin5 galleryThumbnail">
                     <div>
                         <img ng-src="{{photo.image}}" id="galleryImage"/>
                     </div>
@@ -436,7 +436,7 @@
               
           
           
-        </md-content>  
+        </div>  
       </md-dialog>
     </div>    
 </div> 
