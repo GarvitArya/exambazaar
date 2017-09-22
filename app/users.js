@@ -1697,6 +1697,7 @@ router.get('/addedInstitutes/:userId', function(req, res) {
                 .find({_createdBy: {$exists: true}},{name:1, website: 1, address:1, city:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1})
                 .exec(function (err, addedInstitutes) {
                 if (!err){
+                    console.log(addedInstitutes.map(function(a) {return a._createdBy;}));
                     res.json(addedInstitutes);
                 } else {throw err;}
                 });

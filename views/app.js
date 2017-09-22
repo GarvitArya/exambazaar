@@ -9848,7 +9848,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', '$mdDialog', '$timeout', 'tofillciService', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam, $mdDialog, $timeout, tofillciService){
             $scope.user = thisuser.data;
             $rootScope.title ='Report - Added Institutes';
-            $scope.allAddedInstitutes = addedInstitutes.data;
             
             var ebteam = ebteam.data;
             var ebteamIds = ebteam.map(function(a) {return a._id;});
@@ -9862,7 +9861,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             if($scope.user.userType == 'Master'){
                 $scope.masterUser = true;
             }
-            
+            $scope.allAddedInstitutes = addedInstitutes.data;
+            console.log($scope.allAddedInstitutes.map(function(a) {return a._createdBy;}));
             $scope.$watch('allAddedInstitutes', function (newValue, oldValue, scope) {
                 if(newValue != null && newValue.length > 0){
                     var instituteIds = newValue.map(function(a) {return a._id;});
@@ -9881,11 +9881,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         $scope.addedInstitutes = $scope.allAddedInstitutes;
                         $scope.addedInstitutes.forEach(function(thisInstitute, index){
                             var addedByUser = thisInstitute._createdBy;
+                            console.log(thisInstitute);
                             if(listedUsers.indexOf(addedByUser) == -1){
                                 listedUsers.push(addedByUser);
                             }
                             var uIndex = ebteamIds.indexOf(addedByUser);
-                            thisInstitute._createdBy = ebteam[uIndex];
+                            if(uIndex != -1){
+                                thisInstitute._createdBy = ebteam[uIndex];
+                            }
+                            
                         });
                         $scope.listedUsers = [];
                         listedUsers.forEach(function(thisUser, index){
@@ -16221,7 +16225,14 @@ function getLatLng(thisData) {
                 title: 'Second heading',
                 content: 'More awesome content.'
             }];
-            
+            $scope.eventSide = function(index){
+                var side = 'right';
+                console.log(index % 2 == 0);
+                if(index % 2 == 0){
+                    side = 'left';
+                }
+                return(side);
+            };
             
             
     }]);

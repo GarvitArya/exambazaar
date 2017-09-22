@@ -195,11 +195,11 @@
             {{exam.displayname}} Exam
         </div>
     </div>
-    <div layout="row" layout-align="start start" class="width100 marginTB20" >
-        <div layout="column" layout-align="start start" class="paddingR20" id="pageLogoHolder2"  flex="15">
+    <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginTB20" >
+        <div layout="column" layout-align="center center" class="padding10" id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100">
             <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
         </div>
-        <div layout="column" layout-align="start start" flex class="paddingLR20">
+        <div layout="column" layout-align="start start"  class="padding10" flex flex-xs="100">
             <div layout="row" layout-align="start start" class="width100">
                 <div flex="25">Website</div>
                 <div flex>{{exam.website}}</div>
@@ -209,7 +209,7 @@
                 <div flex>{{exam.briefDescription}}</div>
             </div>
         </div>
-        <div layout="column" layout-align="start start" flex="25" class="paddingL20">
+        <div layout="column" layout-align="start start" class="padding10" flex="25" flex-xs="100">
             <div layout="row" layout-align="start start" class="width100">
                 <div flex>Frequncy</div>
                 <div flex>{{exam.frequency}}</div>
@@ -234,8 +234,8 @@
     </div>
     <div layout="row" layout-align="start start" class="width100 marginTB20">
         
-        <timeline class="width100">
-            <timeline-event ng-repeat="event in events" side="right">
+        <timeline class="width100 padding20">
+            <timeline-event ng-repeat="event in events" >
               <timeline-badge class="{{event.badgeClass}}">
                 <i class="glyphicon {{event.badgeIconClass}}"></i>
               </timeline-badge>
