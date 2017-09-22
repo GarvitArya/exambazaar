@@ -78,6 +78,28 @@ router.get('/exam/:examId', function(req, res) {
     
 });
 
+router.get('/examByName/:examName', function(req, res) {
+    var examName = req.params.examName;
+    var thisExam = exam
+        .findOne({'name': examName})
+        .exec(function (err, thisExam) {
+        if (!err){
+            //console.log(thisExam);
+            var examId = thisExam._id;
+            var allTests = test
+                .find({exam: examId})
+                .exec(function (err, allTests) {
+                if (!err){
+                    res.json(allTests);
+                } else {throw err;}
+            });
+        } else {throw err;}
+    });
+    
+    
+    
+});
+
 router.get('/test/:testId', function(req, res) {
     var testId = req.params.testId;
     var thisTest = test

@@ -193,6 +193,24 @@ router.post('/markDone', function(req, res) {
     
 });
 
+router.post('/findAssigned', function(req, res) {
+    var instituteIds = req.body;
+    var allTasks = tofillci
+        .find({ 'institute': instituteIds}, {institute: 1})
+        .exec(function (err, allTasks) {
+        if (!err){
+            if(allTasks){
+                
+                var instituteIds = allTasks.map(function(a) {return a.institute;});
+                //console.log(instituteIds);
+                res.json(instituteIds);
+            }
+            
+        } else {throw err;}
+    });
+    
+});
+
 //to get all tofillcis
 router.get('/sendEmails', function(req, res) {
     //console.log('I am here!');

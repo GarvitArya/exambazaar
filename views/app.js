@@ -26,7 +26,7 @@ function AppCtrl(SidebarJS) {
   }
 }
 
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'angular-google-gapi', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js', 'ngSidebarJS', 'ui-notification', 'ngMaterialDatePicker']);
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'angular-google-gapi', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js', 'ngSidebarJS', 'ui-notification', 'ngMaterialDatePicker', 'angular-timeline']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave'
     (function() {
     'use strict';
@@ -430,7 +430,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             return $http.get('/api/tests');
         };
         this.getExamTests = function(examId) {
-            return $http.get('/api/tests/exam/'+examId, {examName: examId});
+            return $http.get('/api/tests/exam/'+examId, {examId: examId});
+        };
+        this.getExamTestsByExamName = function(examName) {
+            return $http.get('/api/tests/examByName/'+examName, {examName: examName});
         };
     }]);
     
@@ -631,6 +634,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         this.markDone = function(tofillciForm) {
             return $http.post('/api/tofillcis/markDone', tofillciForm);
+        };
+        this.findAssigned = function(instituteIds) {
+            return $http.post('/api/tofillcis/findAssigned', instituteIds);
         };
         this.filledCount = function() {
             return $http.get('/api/tofillcis/filledCount');
@@ -8255,7 +8261,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -9839,9 +9845,15 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("addedInstitutesController", 
-        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', '$mdDialog', '$timeout', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam, $mdDialog, $timeout){
+        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', '$mdDialog', '$timeout', 'tofillciService', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam, $mdDialog, $timeout, tofillciService){
             $scope.user = thisuser.data;
             $rootScope.title ='Report - Added Institutes';
+            $scope.allAddedInstitutes = addedInstitutes.data;
+            
+            var ebteam = ebteam.data;
+            var ebteamIds = ebteam.map(function(a) {return a._id;});
+            
+            var listedUsers = [];
             
             if($scope.user && ($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development')){
                 $scope.authorized = true;
@@ -9850,27 +9862,49 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             if($scope.user.userType == 'Master'){
                 $scope.masterUser = true;
             }
-            $scope.allAddedInstitutes = addedInstitutes.data;
-            $scope.addedInstitutes = addedInstitutes.data;
-            var ebteam = ebteam.data;
-            var ebteamIds = ebteam.map(function(a) {return a._id;});
             
-            var listedUsers = [];
-            
-            $scope.addedInstitutes.forEach(function(thisInstitute, index){
-                var addedByUser = thisInstitute._createdBy;
-                if(listedUsers.indexOf(addedByUser) == -1){
-                    listedUsers.push(addedByUser);
+            $scope.$watch('allAddedInstitutes', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue.length > 0){
+                    var instituteIds = newValue.map(function(a) {return a._id;});
+                    //console.log(instituteIds);
+                    tofillciService.findAssigned(instituteIds).success(function (data, status, headers) {
+                        var response = data;
+                        if(response && response.length > 0){
+                            response.forEach(function(thisInstitute, index){
+                                var iIndex = instituteIds.indexOf(thisInstitute);
+                                if(iIndex != -1){
+                                    $scope.allAddedInstitutes[iIndex].cifilled = true;
+                                }
+                            });
+                        }
+                        
+                        $scope.addedInstitutes = $scope.allAddedInstitutes;
+                        $scope.addedInstitutes.forEach(function(thisInstitute, index){
+                            var addedByUser = thisInstitute._createdBy;
+                            if(listedUsers.indexOf(addedByUser) == -1){
+                                listedUsers.push(addedByUser);
+                            }
+                            var uIndex = ebteamIds.indexOf(addedByUser);
+                            thisInstitute._createdBy = ebteam[uIndex];
+                        });
+                        $scope.listedUsers = [];
+                        listedUsers.forEach(function(thisUser, index){
+                            var uIndex = ebteamIds.indexOf(thisUser);
+                            $scope.listedUsers.push(ebteam[uIndex]);
+
+                        });
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });  
                 }
-                var uIndex = ebteamIds.indexOf(addedByUser);
-                thisInstitute._createdBy = ebteam[uIndex];
-            });
-            $scope.listedUsers = [];
-            listedUsers.forEach(function(thisUser, index){
-                var uIndex = ebteamIds.indexOf(thisUser);
-                $scope.listedUsers.push(ebteam[uIndex]);
                 
-            });
+            }, true);
+            
+            
+            
+            
             $scope.updateAddedInstitutes = function(user){
                 
                 if(user && user._id){
@@ -16160,6 +16194,38 @@ function getLatLng(thisData) {
         return retVal;
     }
     
+    exambazaar.controller("examController", 
+        [ '$scope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', '$cookies', 'testList', function($scope, thisexam, ExamService, $http, $state, $mdDialog, Upload, $timeout, testService, Notification, $rootScope, $cookies, testList){
+            $scope.exam = thisexam.data;
+            $scope.exam.tests = testList.data;
+            
+            var examCycles = $scope.exam.cycle;
+            $scope.activeExamCylce = null;
+            
+            examCycles.forEach(function(thisCycle, index){
+                if(thisCycle.active){
+                    $scope.activeExamCylce = thisCycle;
+                }
+            });
+            console.log($scope.exam);
+            
+            
+            $scope.events = [{
+                badgeClass: 'info',
+                badgeIconClass: 'glyphicon-check',
+                title: 'First heading',
+                content: 'Some awesome content.'
+              }, {
+                badgeClass: 'warning',
+                badgeIconClass: 'glyphicon-credit-card',
+                title: 'Second heading',
+                content: 'More awesome content.'
+            }];
+            
+            
+            
+    }]);
+            
     exambazaar.controller("editExamController", 
         [ '$scope',  'thisexam', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', '$cookies', 'testList', function($scope, thisexam, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope, $cookies, testList){
         $scope.exam = thisexam.data;
@@ -18600,14 +18666,7 @@ function getLatLng(thisData) {
                     thisinstitute.name = thisinstitute.name.trim();
                     thisinstitute.groupName = thisinstitute.name;
                     
-                    if(thisinstitute.website && thisinstitute.website != ''){
-                        var find ="http";
-                        var fIndex = thisinstitute.website.indexOf(find);
-                        if(fIndex == -1){
-                            thisinstitute.website = "http://" + thisinstitute.website;
-                        }
-                        
-                    }
+                    
                     if(thisinstitute.city && thisinstitute.city != ''){
                         thisinstitute.city = titleCase(thisinstitute.city);
                     }
@@ -18627,6 +18686,12 @@ function getLatLng(thisData) {
                     if(thisinstitute.website && thisinstitute.website != ''){
                         thisinstitute.website = thisinstitute.website.replace(/\s+/g, '');
                         thisinstitute.email = thisinstitute.email.toLowerCase();
+                        
+                        var find ="http";
+                        var fIndex = thisinstitute.website.indexOf(find);
+                        if(fIndex == -1){
+                            thisinstitute.website = "http://" + thisinstitute.website;
+                        }
                     }
                     if(thisinstitute.pincode && thisinstitute.pincode != ''){
                         thisinstitute.pincode = thisinstitute.pincode.replace(/\s+/g, '');
@@ -20072,7 +20137,7 @@ function getLatLng(thisData) {
                 if(!thisUser.basic || !thisUser.basic.name){
                     console.log(thisUser._id);
                 }
-                if(thisUser.userType == 'Student' || thisUser.userType == 'Intern - Business Development'){
+                if(!(thisUser.userType == 'Student' || thisUser.userType == 'Intern - Business Development')){
                     $scope.allUsers.push(thisUser);
                 }
             });
@@ -23121,6 +23186,32 @@ function getLatLng(thisData) {
                 }]
             }
         })
+        .state('exam', {
+            url: '/exam/:examName',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'exam.html',
+                    controller: 'examController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisexam: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamByName($stateParams.examName);    
+                }],
+                testList: ['testService', '$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getExamTestsByExamName($stateParams.examName);
+                }]
+            }
+        })
         .state('addQuestion', {
             url: '/:testId/addQuestion',
             views: {
@@ -23501,36 +23592,6 @@ function getLatLng(thisData) {
                     return EvalService.getEvalAnalytics($stateParams.evalId);    
                 }],
                 eval: function() { return {}; }
-            }
-        })
-        .state('exam', {
-            url: '/exam/:examId',
-            views: {
-                'header':{
-                    templateUrl: 'header.html',
-                    
-                },
-                'body':{
-                    templateUrl: 'exam.html',
-                    controller: 'examController',
-                },
-                'footer': {
-                    templateUrl: 'footer.html'
-                }
-            },
-            resolve: {
-                thisexam: ['ExamService', '$stateParams',
-                    function(ExamService,$stateParams) {
-                    return ExamService.getExam($stateParams.examId);
-                        
-                }],
-                thisevals: ['EvalService', '$stateParams',
-                    function(EvalService,$stateParams) {
-                    return EvalService.getEvals($stateParams.examId);
-                        
-                }],
-                
-                exam: function() { return {}; }
             }
         })
         .state('batch', {

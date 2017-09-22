@@ -2076,11 +2076,11 @@ router.post('/userMarketing', function(req, res) {
                 }
 
 
-                //console.log("Sending Welcome SMS");
+                console.log("Sending Welcome SMS");
                 var message = "Hi " + sentName + "\nReview your coaching institute to get discounts on courses of " + partnerOffers[randomNumber] + " and many others. Get upto 80% off!\nwww.exambazaar.com";
 
-                //console.log(message.length + " " + message);
-                var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=Amplifier@9&mobile=";
+                console.log(message.length + " " + message);
+                var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=eb@2017&mobile=";
                 url += existingUser.mobile;
                 url += "&message=";
                 url += message;
@@ -2089,7 +2089,7 @@ router.post('/userMarketing', function(req, res) {
                         url: url,
                         json: true
                     }, function (error, response, body) {
-                        //console.log(response);
+                        console.log(response);
                         //console.log(body);
 
                         if (!error && response.statusCode === 200 && body.status == 'success' && body.mobilenumbers != '') {

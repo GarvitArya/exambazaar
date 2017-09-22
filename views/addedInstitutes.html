@@ -22,7 +22,10 @@
     #link:hover{
         color: #20C39A;
     }
-    
+    .cidone{
+        background-color: #F5ECCD;
+        color: black;
+    }
 </style>
 
 <div class="whiteBackground mainContent" id="filled">
@@ -73,7 +76,7 @@
             
         </div>
          <!--| orderBy:['-_created']-->
-        <div flex layout="row" layout-align="start center" ng-repeat="institute in addedInstitutes | orderBy:['-_created']" class="width100 greyDashedBottomBorder font10">
+        <div flex layout="row" layout-align="start center" ng-repeat="institute in addedInstitutes | orderBy:['-_created']" class="width100 greyDashedBottomBorder font10" ng-class="{ cidone: institute.cifilled }">
             <div flex="5">
                 {{$index+1}}
             </div>
@@ -83,6 +86,10 @@
                 </a>
                 <i class="fa fa-header text-primary marginL10" aria-hidden="true" ng-click="titleCaseName(institute, $index)"></i>
                 <i class="fa fa-trash-o danger marginL10" aria-hidden="true" ng-click="removeProviderConfirm(institute)"></i>
+                
+                <i class="fa fa-check-circle text-primary marginL10" aria-hidden="true" ng-if="institute.cifilled"></i>
+                
+                
             </div>
             <div flex="10" class="font10">
                 <a ui-sref="targetStudyProviders({ city:{{'institute.city'}} })" target="_blank" id="link">
