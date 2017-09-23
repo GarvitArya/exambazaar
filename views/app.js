@@ -8261,7 +8261,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -20160,7 +20160,7 @@ function getLatLng(thisData) {
                 if(!thisUser.basic || !thisUser.basic.name){
                     console.log(thisUser._id);
                 }
-                if(!(thisUser.userType == 'Student' || thisUser.userType == 'Intern - Business Development')){
+                if((thisUser.userType == 'Student' || thisUser.userType == 'Intern - Business Development')){
                     $scope.allUsers.push(thisUser);
                 }
             });
