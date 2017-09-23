@@ -201,11 +201,11 @@
         </div>
         <div layout="column" layout-align="start start"  class="padding10" flex flex-xs="100">
             <div layout="row" layout-align="start start" class="width100">
-                <div flex="25">Website</div>
+                <div flex="20">Website</div>
                 <div flex>{{exam.website}}</div>
             </div>
             <div layout="row" layout-align="start start" class="width100 ">
-                <div flex="25">Description</div>
+                <div flex="20">Description</div>
                 <div flex>{{exam.briefDescription}}</div>
             </div>
         </div>
@@ -235,15 +235,19 @@
     <div layout="row" layout-align="start start" class="width100 marginTB20">
         
         <timeline class="width100 padding20">
-            <timeline-event ng-repeat="event in events" >
+            <timeline-event ng-repeat="event in events" class="">
               <timeline-badge class="{{event.badgeClass}}">
                 <i class="glyphicon {{event.badgeIconClass}}"></i>
               </timeline-badge>
               <timeline-panel class="{{event.badgeClass}}">
                 <timeline-heading>
-                  <h4>{{event.title}}</h4>
+                    <div class="basicFont font20 paddingLR10 text-primary bold">
+                      {{event.title}}
+                    </div>
                 </timeline-heading>
-                <p>{{event.content}}</p>
+                    <div class="paddingLR10">
+                        {{event.content}}
+                    </div>
               </timeline-panel>
             </timeline-event>
           </timeline>

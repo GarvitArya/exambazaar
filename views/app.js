@@ -8962,7 +8962,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
             
         };
-            $rootScope.title ='Sandbox';
+            $rootScope.pageTitle ='Sandbox';
     }]);
          
       
@@ -9184,7 +9184,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
               return response.data.items;
             })*/
         };
-            $rootScope.title ='Sandbox';
+            $rootScope.pageTitle ='Sandbox';
     }]);    
     
     exambazaar.controller("blogCoachingGroupAutocompleteController", 
@@ -9422,7 +9422,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 }
                 
             };
-            $rootScope.title ='Sandbox 2';
+            $rootScope.pageTitle ='Sandbox 2';
     }]);
     
         
@@ -9847,7 +9847,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     exambazaar.controller("addedInstitutesController", 
         [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', '$mdDialog', '$timeout', 'tofillciService', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam, $mdDialog, $timeout, tofillciService){
             $scope.user = thisuser.data;
-            $rootScope.title ='Report - Added Institutes';
+            $rootScope.pageTitle ='Report - Added Institutes';
             
             var ebteam = ebteam.data;
             var ebteamIds = ebteam.map(function(a) {return a._id;});
@@ -10094,7 +10094,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
               return response.data.items;
             })*/
         };
-            $rootScope.title ='Sandbox';
+            $rootScope.pageTitle ='Sandbox';
     }]);  
         
         
@@ -10395,7 +10395,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 $scope.spreadsheetMode = true;
             }
             
-            $rootScope.title ='Coaching Group Editing';
+            $rootScope.pageTitle ='Coaching Group Editing';
             
             
             $scope.showRenameCoachingDialog = function(ev) {
@@ -14410,7 +14410,7 @@ function getLatLng(thisData) {
             }
         });
         //console.log($scope.assignedCount);
-        $rootScope.title =$scope.user.basic.name;
+        $rootScope.pageTitle =$scope.user.basic.name;
     }]);    
         
     exambazaar.controller("assignedToVerifyController", 
@@ -14429,7 +14429,7 @@ function getLatLng(thisData) {
             }
         });
         //console.log($scope.assignedCount);
-        $rootScope.title =$scope.user.basic.name;
+        $rootScope.pageTitle =$scope.user.basic.name;
     }]);  
       
     exambazaar.controller("assignedToRateController", 
@@ -14448,7 +14448,7 @@ function getLatLng(thisData) {
             }
         });
         //console.log($scope.assignedCount);
-        $rootScope.title =$scope.user.basic.name;
+        $rootScope.pageTitle =$scope.user.basic.name;
     }]);    
         
         
@@ -14468,7 +14468,7 @@ function getLatLng(thisData) {
             }
         });
         //console.log($scope.assignedCount);
-        $rootScope.title =$scope.user.basic.name;
+        $rootScope.pageTitle =$scope.user.basic.name;
     }]);  
     
     exambazaar.controller("filledCIController", 
@@ -14499,14 +14499,14 @@ function getLatLng(thisData) {
                 $scope.uniqueUsers.push(thisFill.userName);
             }
         });
-        $rootScope.title =$scope.user.basic.name;
+        $rootScope.pageTitle =$scope.user.basic.name;
     }]);    
     exambazaar.controller("shortlistedController", 
         [ '$scope', 'thisuser' , 'thisuserShortlisted',  '$http','$state','$rootScope', function($scope, thisuser, thisuserShortlisted, $http, $state, $rootScope){
         $scope.user = thisuser.data;
         $scope.shortlisted = thisuserShortlisted.data;
         
-        $rootScope.title =$scope.user.basic.name;
+        $rootScope.pageTitle =$scope.user.basic.name;
     }]);    
     exambazaar.controller("viewedController", 
         [ '$scope', 'thisuser' , 'thisuserViewed',  '$http','$state','$rootScope', function($scope, thisuser, thisuserViewed, $http, $state, $rootScope){
@@ -14514,7 +14514,7 @@ function getLatLng(thisData) {
         $scope.viewed = thisuserViewed.data;
         console.log($scope.viewed);    
             
-        $rootScope.title =$scope.user.basic.name;
+        $rootScope.pageTitle =$scope.user.basic.name;
     }]);     
         
     exambazaar.controller("checkLogoController", 
@@ -14548,7 +14548,7 @@ function getLatLng(thisData) {
         };
             
         if($scope.user.basic)
-            $rootScope.title =$scope.user.basic.name;
+            $rootScope.pageTitle =$scope.user.basic.name;
     }]);       
         
     exambazaar.controller("profileController", 
@@ -16199,9 +16199,11 @@ function getLatLng(thisData) {
     }
     
     exambazaar.controller("examController", 
-        [ '$scope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', '$cookies', 'testList', function($scope, thisexam, ExamService, $http, $state, $mdDialog, Upload, $timeout, testService, Notification, $rootScope, $cookies, testList){
+        [ '$scope', '$rootScope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', 'Upload', '$timeout', 'testService', 'Notification', '$cookies', 'testList', function($scope, $rootScope, thisexam, ExamService, $http, $state, $mdDialog, Upload, $timeout, testService, Notification, $cookies, testList){
             $scope.exam = thisexam.data;
             $scope.exam.tests = testList.data;
+            
+            
             
             var examCycles = $scope.exam.cycle;
             $scope.activeExamCylce = null;
@@ -16211,13 +16213,12 @@ function getLatLng(thisData) {
                     $scope.activeExamCylce = thisCycle;
                 }
             });
-            console.log($scope.exam);
             
             
             $scope.events = [{
                 badgeClass: 'info',
-                badgeIconClass: 'glyphicon-check',
-                title: 'First heading',
+                badgeIconClass: 'glyphicon-registration-mark',
+                title: 'Registration',
                 content: 'Some awesome content.'
               }, {
                 badgeClass: 'warning',
@@ -16235,6 +16236,7 @@ function getLatLng(thisData) {
             };
             
             
+            $rootScope.pageTitle = $scope.exam.displayname;
     }]);
             
     exambazaar.controller("editExamController", 
@@ -16266,7 +16268,7 @@ function getLatLng(thisData) {
             $scope.masterUser = true;
         }
             
-        $rootScope.title = $scope.exam.displayname;        
+        $rootScope.pageTitle = $scope.exam.displayname;        
         $scope.reload = function(){
             $state.reload();
         };
@@ -17442,7 +17444,7 @@ function getLatLng(thisData) {
             $scope.user = null;
         }
             
-        $rootScope.title = 'All Exams listed on EB';        
+        $rootScope.pageTitle = 'All Exams listed on EB';        
         $scope.exams = examList.data;
         $scope.streams = streamList.data;
         $scope.showAllExams = true;    
@@ -18619,7 +18621,7 @@ function getLatLng(thisData) {
     exambazaar.controller("addInstituteController", 
         [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', 'examList', 'streamList', '$rootScope', 'Notification', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService, examList, streamList,$rootScope, Notification){
             
-        $rootScope.title = 'Add Coaching in EB';    
+        $rootScope.pageTitle = 'Add Coaching in EB';    
         $scope.user = thisuser.data;
         $scope.exams = examList.data;
             console.log($scope.exams);
