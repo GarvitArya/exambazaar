@@ -93,13 +93,15 @@
             <div class="font16 bold">
                 {{stream.displayname}}
             </div>
-            <div layout="row" layout-align="start start" layout-wrap >
-                <div layout="row" layout-align="start start" class="font12 marginR5 marginB5 badge" id="examTagHolder" ng-repeat="existingExam in exams | orderBy: '-rank'" ng-if="existingExam.stream._id == stream._id" >
-                    <!--ng-click="setExam(existingExam)"-->
-                    
-                    <a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank">{{existingExam.displayname}}</a>
-                    <a ui-sref="exam({ examName:{{'existingExam.name'}} })" target="_blank">See</a>
+            <div layout="row" layout-align="start center" layout-wrap >
+                <div layout="column" layout-align="center center" ng-repeat="existingExam in exams | orderBy: '-rank'" ng-if="existingExam.stream._id == stream._id">
+                    <div layout="row" layout-align="start start" class="font12 marginR5 marginB5 badge" id="examTagHolder"  >
+                        <a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank">{{existingExam.displayname}}</a>
+                    </div>
+                    <a ui-sref="exam({ examName:{{'existingExam.name'}} })" target="_blank" class="font12 marginB5" ng-if="masteruser">See</a>
                 </div>
+                
+                
             </div>
         </div>
         

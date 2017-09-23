@@ -17430,7 +17430,17 @@ function getLatLng(thisData) {
         
         
     exambazaar.controller("addExamController", 
-        [ '$scope',  'examList', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', function($scope, examList, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope){
+        [ '$scope',  'examList', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', '$cookies', function($scope, examList, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope, $cookies){
+        $scope.masteruser = null;
+        if($cookies.getObject('sessionuser')){
+            $scope.user = $cookies.getObject('sessionuser');
+            if($scope.user.userType == 'Master'){
+                $scope.masteruser = true;
+            }
+
+        }else{
+            $scope.user = null;
+        }
             
         $rootScope.title = 'All Exams listed on EB';        
         $scope.exams = examList.data;
@@ -20148,7 +20158,7 @@ function getLatLng(thisData) {
                 if(!thisUser.basic || !thisUser.basic.name){
                     console.log(thisUser._id);
                 }
-                if(!(thisUser.userType == 'Student' || thisUser.userType == 'Intern - Business Development')){
+                if((thisUser.userType == 'Student' || thisUser.userType == 'Intern - Business Development')){
                     $scope.allUsers.push(thisUser);
                 }
             });
