@@ -38,12 +38,12 @@
         </div>
     </div>
     <div layout="row" layout-align="start center" layout-wrap class="width100">
-        <div flex="25" layout="column" layout-align="center center" ng-repeat="thisuser in allUsers | orderBy:'-_created'" flex="100" class="editFont font10 width100 padding10 gainsboroBorder min10vh" ng-class="{selected: selectedBackground(thisuser)}" ng-click="addUser(thisuser)">
-            
-            <div ng-if="thisuser.image">
-                <img ng-src="{{thisuser.image}}" id="userPicSmall" class="img-circle"/>
+        <div flex="25" layout="row" layout-align="start center" ng-repeat="thisuser in allUsers | orderBy:'-_created'" flex="100" class="editFont font10 width100 padding5">
+            <div layout="row" layout-align="start center" class="width100 lightGreyBorder min10vh padding10"  ng-class="{selected: selectedBackground(thisuser)}" ng-click="addUser(thisuser)">
+            <div flex="40" layout="column" layout-align="center center" ng-if="thisuser.image">
+                <img ng-src="{{thisuser.image}}" id="fullUserPic" class="img-circle"/>
             </div>
-            <div layout="column" layout-align="center center" >
+            <div flex layout="column" layout-align="center center" >
                 <div class="editFont font10 marginT10">
                     {{thisuser.basic.name}}
                 </div>
@@ -62,7 +62,7 @@
                 </div>
             </div>
         </div>
-        
+        </div>
     </div>
 </div>
 </div>
