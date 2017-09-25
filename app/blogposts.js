@@ -650,6 +650,8 @@ router.post('/save', function(req, res) {
         .deepPopulate('blogTags')
         .exec(function (err, existingBlogpost) {
             if (!err){
+                if(existingBlogpost){
+                
                 for (var property in blogpostForm) {
                     if(property != '_id' && property != 'upvotes'){
                         existingBlogpost[property] = blogpostForm[property];
@@ -681,14 +683,15 @@ router.post('/save', function(req, res) {
                        if(!existingBlogpost._saved){
                             existingBlogpost._saved = [];
                         }
+                        if(!existingBlogpost._autosaved._id){
+                            existingBlogpost._autosaved = newSaved;
+                            existingBlogpost._autosaved.autosave = true;
+                        }
                         var userIds = existingBlogpost._saved.map(function(a) {return a.user;});
                         userIds.forEach(function(thisUser, rindex){
                             userIds[rindex] = thisUser.toString();
                         });
                         var uIndex = userIds.indexOf(savedBy);
-                        console.log(savedBy);
-                        console.log(userIds);
-                        console.log(uIndex);
                         if(uIndex != -1){
                             existingBlogpost._saved[uIndex] = newSaved;
                         }else{
@@ -701,7 +704,9 @@ router.post('/save', function(req, res) {
                     if (err) return console.error(err);
                     res.json(existingBlogpost);
                 });
-
+                }else{
+                    res.json(null);
+                }
             } else {throw err;}
         });
         
@@ -714,38 +719,41 @@ router.post('/save', function(req, res) {
         var stats = readingTime(newblogpost.content);
         if(stats)
             newblogpost.readingTime = stats;
+        
         var timeNow = new Date();
         if(savedBy){
             var newSaved = {
                 autosave: autosave,
                 user: savedBy,
-                title: existingBlogpost.title,
-                content: existingBlogpost.content,
-                coverPhoto: existingBlogpost.coverPhoto,
-                blogTags: existingBlogpost.blogTags,
-                blogSeries: existingBlogpost.blogSeries,
-                exams: existingBlogpost.exams,
-                coachingGroups: existingBlogpost.coachingGroups,
-                active: existingBlogpost.active,
+                title: newblogpost.title,
+                content: newblogpost.content,
+                coverPhoto: newblogpost.coverPhoto,
+                blogTags: newblogpost.blogTags,
+                blogSeries: newblogpost.blogSeries,
+                exams: newblogpost.exams,
+                coachingGroups: newblogpost.coachingGroups,
+                active: newblogpost.active,
                 _date: timeNow
             }
             //console.log(newSaved);
             if(autosave){
-                existingBlogpost._autosaved = newSaved;
+                newblogpost._autosaved = newSaved;
             }else{
-               if(!existingBlogpost._saved){
-                    existingBlogpost._saved = [];
+               if(!newblogpost._saved){
+                    newblogpost._saved = [];
                 }
-                var userIds = existingBlogpost._saved.map(function(a) {return a.user;});
+                if(!newblogpost._autosaved._id){
+                    newblogpost._autosaved = newSaved;
+                }
+                var userIds = newblogpost._saved.map(function(a) {return a.user;});
                 userIds.forEach(function(thisUser, rindex){
                     userIds[rindex] = thisUser.toString();
                 });
                 var uIndex = userIds.indexOf(savedBy);
-                console.log(uIndex);
                 if(uIndex != -1){
-                    existingBlogpost._saved[uIndex] = newSaved;
+                    newblogpost._saved[uIndex] = newSaved;
                 }else{
-                    existingBlogpost._saved.push(newSaved);
+                    newblogpost._saved.push(newSaved);
                 }
             }
         }

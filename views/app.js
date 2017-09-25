@@ -12958,12 +12958,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $scope.newBlogPost = function(){
                 var blogpost = {
-                    title: $scope.user.basic.name + ' - This is your new blogpost title. Click and Edit! ' + moment().format("DD MMM YY HH:mm"),
-                    content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+                    title: $scope.user.basic.name + ' - new blogpost. Click and Edit! ' + moment().format("DD MMM YY HH:mm"),
+                    content: 'You should write your blog here'
                 };
                 
                 var blogpostForm = {
                     user: $scope.user._id,
+                    savedBy: $scope.user._id,
+                    autosave: false,
                     title: blogpost.title,
                     content: blogpost.content,
                     active: false,
@@ -13118,6 +13120,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     blogpostService.getUserBlogposts($stateParams.userId).success(function (data, status, headers) {
                         $scope.userBlogs = data;
                         $scope.refreshVoteCount();
+                        $scope.showSavedDialog();
                     })
                     .error(function (data, status, header, config) {
                         console.log("Error ");
@@ -19092,11 +19095,13 @@ function getLatLng(thisData) {
     };
         
     exambazaar.controller("editblogController", 
-        [ '$scope','$http','$state','blogpostService', 'blogTagService', 'UserService', 'thisblog', '$rootScope','$mdDialog','$timeout', 'Upload', '$cookies', 'ImageService', 'examList', 'streamList', 'allTags', 'Notification', function($scope,$http, $state, blogpostService, blogTagService, UserService, thisblog, $rootScope, $mdDialog,$timeout, Upload, $cookies, ImageService, examList, streamList, allTags, Notification){
+        [ '$scope','$http','$state','blogpostService', 'blogTagService', 'UserService', 'thisblog', '$rootScope','$mdDialog','$timeout', 'Upload', '$cookies', 'ImageService', 'examList', 'streamList', 'allTags', 'Notification', 'allBloggers', function($scope,$http, $state, blogpostService, blogTagService, UserService, thisblog, $rootScope, $mdDialog,$timeout, Upload, $cookies, ImageService, examList, streamList, allTags, Notification, allBloggers){
             $scope.blogpost = thisblog.data;
             $scope.allTags = allTags.data;
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
+            $scope.allBloggers = allBloggers.data;
+            var bloggerIds = $scope.allBloggers.map(function(a) {return a._id;});
             
             var defaultBlogCover = "https://exambazaar.com/images/background/examinfo.jpg";
             if($scope.blogpost.coverPhoto){
@@ -19326,6 +19331,16 @@ function getLatLng(thisData) {
                     //$scope.userReviewMode = true;
                 });
             };
+            $scope.showVersionDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#versionDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
             $scope.showHTMLDialog = function(ev) {
                 
             $scope.editHTML = $scope.blogpost.content;    
@@ -19408,7 +19423,7 @@ function getLatLng(thisData) {
             setInterval(function() {
                 console.log('Autosave starting: ' + moment().format('DD-MMM HH:mm:ss'));
                 $scope.saveBlogPost($scope.blogpost, 'Autosaved');
-            }, 300 * 1000);
+            }, 180 * 1000);
             
             $scope.saveBlogPost = function(blogpost, displayString){
                 if($scope.user && $scope.user._id){
@@ -19438,7 +19453,7 @@ function getLatLng(thisData) {
                         blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                             //$scope.showSavedDialog();
                             if(displayString == 'Autosaved'){
-                                Notification.primary({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                                Notification.primary({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 30000});
                             }else{
                                 Notification.success({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 3000});
                             }
@@ -19471,7 +19486,7 @@ function getLatLng(thisData) {
                             blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                                 $scope.blogpost = data;
                                 if(displayString == 'Autosaved'){
-                                    Notification.primary({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                                    Notification.primary({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 30000});
                                 }else{
                                     Notification.success({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 3000});
                                 }
@@ -19497,6 +19512,53 @@ function getLatLng(thisData) {
                     Notification.warning({message: "You need to login before you can save changes!",  positionY: 'top', positionX: 'right', delay: 5000});
                 }
                 
+            };
+            
+            $scope.blogPostVersions = function(blogpost){
+                $scope.versions = [];
+                if(blogpost._autosaved){
+                    $scope.versions.push(blogpost._autosaved);
+                }
+                if(blogpost._saved && blogpost._saved.length > 0){
+                    $scope.versions = $scope.versions.concat(blogpost._saved);
+                }
+                $scope.versions.forEach(function(thisVersion, vindex){
+                    var thisUser = thisVersion.user;
+                    if(thisUser){
+                        if(thisUser._id){
+                            thisUser = thisUser._id;
+                        }
+
+                        var bIndex = bloggerIds.indexOf(thisUser);
+                        //console.log(bIndex);
+                        if(bIndex != -1){
+                            $scope.versions[vindex].user = $scope.allBloggers[bIndex];
+                        }
+                    }
+                    
+                });
+                
+                
+                $scope.showVersionDialog();
+            };
+            $scope.setVersion = function(version){
+                var fields = [];
+                $scope.blogpost.title = version.title;
+                $scope.blogpost.content = version.content;
+                $scope.blogpost.coverPhoto = version.coverPhoto;
+                $scope.blogpost.blogTags = version.blogTags;
+                $scope.blogpost.blogSeries = version.blogSeries;
+                $scope.blogpost.exams = version.exams;
+                $scope.blogpost.coachingGroups = version.coachingGroups;
+                $scope.blogpost.active = version.active;
+                
+                if($scope.blogpost.coverPhoto){
+                    $scope.thisBlogCover = $scope.blogpost.coverPhoto;
+                }else{
+                    $scope.thisBlogCover = defaultBlogCover;
+                }
+                console.log($scope.thisBlogCover);
+                $mdDialog.hide();
             };
             
             $scope.previewblogpost = function(blogpost){
@@ -21395,6 +21457,10 @@ function getLatLng(thisData) {
                 thisblog: ['blogpostService', '$stateParams',
                     function(blogpostService,$stateParams){
                     return blogpostService.getblogpost($stateParams.blogpostId);
+                }],
+                allBloggers: ['UserService',
+                    function(UserService){
+                    return UserService.allBloggers();
                 }],
                 allTags: ['blogTagService',
                     function(blogTagService){

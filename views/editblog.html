@@ -334,12 +334,15 @@
 
 <div class="bottomBar">
     <div layout="row" layout-align="start center">
-        <div flex ="80">
+        <div flex ="60">
             <span>
             Do you want to save your changes to your blogpost? 
             </span>
         </div>
-        <div layout="row" flex = "20">
+        <div layout="row" layout-align="end center" flex = "40">
+            <md-button class="md-danger md-small  " ng-click="blogPostVersions(blogpost)">
+            Versions
+            </md-button>
             <md-button class="md-green2 md-small  " ng-click="saveBlogPost(blogpost, 'Saved')">
             Save
             </md-button>
@@ -432,6 +435,62 @@
                     </div>
                     <a class="textPrimary font10">Remove All</a>
                 </div>
+            </div>
+              
+          
+          
+        </div>  
+      </md-dialog>
+    </div>    
+</div> 
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="versionDialog">
+      <md-dialog class="offer-dialog2 whiteBackground">
+          <div layout="column" class="width100 paddingLR20">
+            
+            <div layout="row" layout-align="center center" class="blogFont marginB10 paddingTB10 gainsboroBottomBorder ">
+                <div layout="row" layout-align="center center" flex>
+                    Select the version of the blog to restore!
+                </div>
+                <div>
+                    <md-button class="md-danger md-small  tolowercase" ng-click="markExamsDone()">
+                        I am done
+                    </md-button>
+                </div>
+                
+            </div>
+            <div layout="row" layout-align="center center" class="width100 margin20 font12">
+                <div class="width100" ng-if="versions.length == 0">
+                    There are no saved versions of this blog!
+                </div>
+                <div flex="25" layout="row" layout-align="start start" ng-repeat="version in versions" class="padding10" layout-wrap>
+                    <div layout="column" layout-align="start start" class="greyBorder padding10 min30vh">
+                        <div layout="row" layout-align="center center" class="width100 font14 bold text-primary">
+                            <div layout="row" layout-align="center center" class="width100" ng-if="!version.autosave">  
+                                <i class="fa fa-user" aria-hidden="true"></i>&nbsp;{{version.user.basic.name}}
+                            </div>
+                            <div layout="row" layout-align="center center" class="width100" ng-if="version.autosave">  
+                                <i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;Autosaved Version
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="center center" class="width100 font12 bold">
+                            Saved on {{version._date | date: "dd-MMM-yy HH:mm"}}
+                        </div>
+                        <div layout="column" layout-align="center center" class="marginTB10 padding10 width100 italic">
+                            <div class="width100">
+                                Blog Title
+                            </div>
+                            <div class="width100 font10 textLightGrey ">
+                                {{version.title}}
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="center center" class="width100 editFont bold dangerBG marginT10 text-white" ng-click="setVersion(version)">
+                            Set to this version
+                        </div>
+                    </div>
+                </div>
+
             </div>
               
           
