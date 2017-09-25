@@ -7010,7 +7010,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 '59a7eb973d71f10170dbb468',
                 '59bcd748b0cdd5440a424d03',
                 '59c10639b2574f0f556f2722',
-                //'59c7ccdb0a239d4416c247a8'
+                '59c7ccdb0a239d4416c247a8'
             ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
