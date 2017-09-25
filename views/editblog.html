@@ -334,19 +334,20 @@
 
 <div class="bottomBar">
     <div layout="row" layout-align="start center">
-        <div flex ="60">
+        <div flex ="80">
             <span>
             Do you want to save your changes to your blogpost? 
             </span>
+            <span ng-click="blogPostVersions(blogpost)" class="danger">
+                See Versions
+            </span>
         </div>
         <div layout="row" layout-align="end center" flex = "40">
-            <md-button class="md-danger md-small  " ng-click="blogPostVersions(blogpost)">
-            Versions
-            </md-button>
+            
             <md-button class="md-green2 md-small  " ng-click="saveBlogPost(blogpost, 'Saved')">
             Save
             </md-button>
-            <md-button class="md-default md-cancel md-small  " ng-click="dontsaveChanges()">
+            <md-button class="md-default md-cancel md-small  " ng-click="dontsaveChanges(blogpost)">
                 Cancel
             </md-button>
         </div>

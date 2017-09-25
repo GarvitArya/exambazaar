@@ -809,6 +809,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.getuserBlogposts = function(userId) {
             return $http.get('/api/blogposts/user/'+userId, {userId: userId});
         };
+        this.setToLastSavedVersion = function(blogpostId) {
+            return $http.get('/api/blogposts/setToLastSavedVersion/'+blogpostId, {blogpostId: blogpostId});
+        };
     }]);
         
     exambazaar.service('reviewService', ['$http', function($http) {
@@ -8262,7 +8265,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur', 'Sonbhadra', 'Kochi', 'Belgaum'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur', 'Sonbhadra', 'Kochi', 'Belgaum', 'Davanagere', 'Udaipur'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -19423,7 +19426,7 @@ function getLatLng(thisData) {
             setInterval(function() {
                 console.log('Autosave starting: ' + moment().format('DD-MMM HH:mm:ss'));
                 $scope.saveBlogPost($scope.blogpost, 'Autosaved');
-            }, 180 * 1000);
+            }, 30 * 1000);
             
             $scope.saveBlogPost = function(blogpost, displayString){
                 if($scope.user && $scope.user._id){
@@ -19583,24 +19586,60 @@ function getLatLng(thisData) {
                     console.log("Error ");
                 });
             };
-            $scope.dontsaveChanges = function(ev){
+            $scope.dontsaveChanges = function(blogpost, ev){
                 var confirm = $mdDialog.confirm()
                 .title('Would you like to cancel all changes made?')
-                .textContent('You will not be able to recover them after this!')
+                .textContent('The blog will be set back to the latest save made by any user!')
                 .ariaLabel('Lucky day')
                 .targetEvent(ev)
                 .clickOutsideToClose(true)
                 .ok('Confirm')
                 .cancel('Cancel');
                 $mdDialog.show(confirm).then(function() {
-                  $state.reload();
+                  //$state.reload();
+                    $scope.setToLastSavedVersion(blogpost);
                 }, function() {
                   //nothing
                 });
                 
                 
             };
-            
+            $scope.setToLastSavedVersion = function(blogpost){
+                blogpostService.setToLastSavedVersion(blogpost._id).success(function (data, status, headers) {
+                    console.log(data);
+                    if(data && data._id){
+                        var lastSavedBlog = data;
+                        var savedBy = lastSavedBlog.user;
+                        var _date = moment(lastSavedBlog._date).format("DD-MMM-YYYY HH:mm");
+                        var bIndex = bloggerIds.indexOf(savedBy);
+                        console.log(bIndex);
+                        if(bIndex != -1){
+                            savedBy = $scope.allBloggers[bIndex];
+                        }
+                        
+                        $scope.blogpost.title = lastSavedBlog.title;
+                        $scope.blogpost.content = lastSavedBlog.content;
+                        $scope.blogpost.coverPhoto = lastSavedBlog.coverPhoto;
+                        $scope.blogpost.blogTags = lastSavedBlog.blogTags;
+                        $scope.blogpost.blogSeries = lastSavedBlog.blogSeries;
+                        $scope.blogpost.exams = lastSavedBlog.exams;
+                        $scope.blogpost.coachingGroups = lastSavedBlog.coachingGroups;
+                        $scope.blogpost.active = lastSavedBlog.active;
+
+                        if($scope.blogpost.coverPhoto){
+                            $scope.thisBlogCover = $scope.blogpost.coverPhoto;
+                        }else{
+                            $scope.thisBlogCover = defaultBlogCover;
+                        }
+                        
+                        
+                        Notification.success({message: "Blog restored to last user save by " + savedBy.basic.name + " on " + _date,  positionY: 'top', positionX: 'right', delay: 10000});
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+            };
            
             $rootScope.pageTitle = $scope.blogpost.title + " | Exambazaar.com";
             

@@ -7,6 +7,7 @@ var targetStudyProvider = require('../app/models/targetStudyProvider');
 var user = require('../app/models/user');
 var email = require('../app/models/email');
 var exam = require('../app/models/exam');
+var moment = require('moment');
 
 var mongoose = require('mongoose');
 var mongodb = require('mongodb');
@@ -626,8 +627,45 @@ router.post('/existingBlogpost', function(req, res) {
         } else {throw err;}
     });
 });
+function compareDates(dateTimeA, dateTimeB) {
+    //returns 1 if dateTimeA > dateTimeB
+    dateTimeA = new Date(dateTimeA);
+    var momentA = moment(dateTimeA,"DD/MM/YYYY");
+    var momentB = moment(dateTimeB,"DD/MM/YYYY");
+    if (momentA > momentB) return 1;
+    else if (momentA < momentB) return -1;
+    else return 0;
+};
+router.get('/setToLastSavedVersion/:blogpostId', function(req, res) {
+    var blogpostId = req.params.blogpostId;
+    var thisBlogpost = blogpost
+        .findOne({ '_id': blogpostId })
+        .deepPopulate('blogTags')
+        .exec(function (err, thisBlogpost) {
+        if (!err){
+            if(thisBlogpost && thisBlogpost._saved){
+                nsaves = thisBlogpost._saved.length;
+                var lastUserSavedBlog = null;
+                var lastUserSavedBlogDate = new Date("2016-01-01");
+                thisBlogpost._saved.forEach(function(thisBlog, sindex){
+                    var saveDate = thisBlog._date;
+                    var cDate = compareDates(saveDate, lastUserSavedBlogDate);
+                    if(cDate == 1){
+                        lastUserSavedBlogDate = saveDate;
+                        lastUserSavedBlog = thisBlog;
+                    }
+                });
+                console.log(lastUserSavedBlogDate);
+                console.log(lastUserSavedBlog);
+                res.json(lastUserSavedBlog);
+                
+            }else{
+                res.json(null);
+            }
 
-
+        } else {throw err;}
+    });
+});
 
 router.post('/save', function(req, res) {
     var blogpostForm = req.body;
