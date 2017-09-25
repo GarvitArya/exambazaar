@@ -7010,7 +7010,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 '59a7eb973d71f10170dbb468',
                 '59bcd748b0cdd5440a424d03',
                 '59c10639b2574f0f556f2722',
-                '59c7ccdb0a239d4416c247a8'
+                //'59c7ccdb0a239d4416c247a8'
             ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
@@ -8262,7 +8262,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur', 'Sonbhadra', 'Kochi'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur', 'Sonbhadra', 'Kochi', 'Belgaum'];
         
         if($cookies.getObject('sessionuser')){
             
