@@ -213,7 +213,7 @@ router.get('/userblogs/:userId', function(req, res) {
         if (!err){
             var thisUserType = thisUser.userType;
             var thisUserId = thisUser._id.toString();
-            var internIds = ['59369dea8a9d754dbd9ead2a'];
+            var internIds = ['59369dea8a9d754dbd9ead2a', '59c7c2dc0a239d4416c2473f', '59c67447930cdc36a00b0e0f'];
             if(thisUserType =='Master' || internIds.indexOf(thisUserId) != -1){
                 var blogposts = blogpost
                 .find({})
@@ -636,7 +636,9 @@ router.post('/save', function(req, res) {
     if(blogpostForm._id){
         blogpostId = blogpostForm._id.toString();
     }
-        
+    
+    var savedBy = blogpostForm.savedBy.toString();
+    var autosave = blogpostForm.autosave; 
     var user = blogpostForm.user;
     if(blogpostForm.user._id){
         user = blogpostForm.user._id.toString();
@@ -645,6 +647,7 @@ router.post('/save', function(req, res) {
     if(blogpostId){
         var existingBlogpost = blogpost
         .findOne({_id: blogpostId})
+        .deepPopulate('blogTags')
         .exec(function (err, existingBlogpost) {
             if (!err){
                 for (var property in blogpostForm) {
@@ -653,9 +656,47 @@ router.post('/save', function(req, res) {
                     }
                 }
                 var stats = readingTime(existingBlogpost.content);
-                
                 if(stats)
                     existingBlogpost.readingTime = stats;
+                
+                var timeNow = new Date();
+                if(savedBy){
+                    var newSaved = {
+                        autosave: autosave,
+                        user: savedBy,
+                        title: existingBlogpost.title,
+                        content: existingBlogpost.content,
+                        coverPhoto: existingBlogpost.coverPhoto,
+                        blogTags: existingBlogpost.blogTags,
+                        blogSeries: existingBlogpost.blogSeries,
+                        exams: existingBlogpost.exams,
+                        coachingGroups: existingBlogpost.coachingGroups,
+                        active: existingBlogpost.active,
+                        _date: timeNow
+                    }
+                    //console.log(newSaved);
+                    if(autosave){
+                        existingBlogpost._autosaved = newSaved;
+                    }else{
+                       if(!existingBlogpost._saved){
+                            existingBlogpost._saved = [];
+                        }
+                        var userIds = existingBlogpost._saved.map(function(a) {return a.user;});
+                        userIds.forEach(function(thisUser, rindex){
+                            userIds[rindex] = thisUser.toString();
+                        });
+                        var uIndex = userIds.indexOf(savedBy);
+                        console.log(savedBy);
+                        console.log(userIds);
+                        console.log(uIndex);
+                        if(uIndex != -1){
+                            existingBlogpost._saved[uIndex] = newSaved;
+                        }else{
+                            existingBlogpost._saved.push(newSaved);
+                        }
+                    }
+                }
+                
                 existingBlogpost.save(function(err, existingBlogpost) {
                     if (err) return console.error(err);
                     res.json(existingBlogpost);
@@ -673,6 +714,41 @@ router.post('/save', function(req, res) {
         var stats = readingTime(newblogpost.content);
         if(stats)
             newblogpost.readingTime = stats;
+        var timeNow = new Date();
+        if(savedBy){
+            var newSaved = {
+                autosave: autosave,
+                user: savedBy,
+                title: existingBlogpost.title,
+                content: existingBlogpost.content,
+                coverPhoto: existingBlogpost.coverPhoto,
+                blogTags: existingBlogpost.blogTags,
+                blogSeries: existingBlogpost.blogSeries,
+                exams: existingBlogpost.exams,
+                coachingGroups: existingBlogpost.coachingGroups,
+                active: existingBlogpost.active,
+                _date: timeNow
+            }
+            //console.log(newSaved);
+            if(autosave){
+                existingBlogpost._autosaved = newSaved;
+            }else{
+               if(!existingBlogpost._saved){
+                    existingBlogpost._saved = [];
+                }
+                var userIds = existingBlogpost._saved.map(function(a) {return a.user;});
+                userIds.forEach(function(thisUser, rindex){
+                    userIds[rindex] = thisUser.toString();
+                });
+                var uIndex = userIds.indexOf(savedBy);
+                console.log(uIndex);
+                if(uIndex != -1){
+                    existingBlogpost._saved[uIndex] = newSaved;
+                }else{
+                    existingBlogpost._saved.push(newSaved);
+                }
+            }
+        }
         newblogpost.save(function(err, newblogpost) {
             if (err) return console.error(err);
             res.json(newblogpost);

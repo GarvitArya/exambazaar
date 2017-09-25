@@ -13076,7 +13076,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             
             $scope.updateBlogPost = function(thisblog){
-                 blogpostService.saveblogpost(thisblog).success(function (data, status, headers) {
+                 thisblog.savedBy = $scope.user._id;
+                 thisblog.autosave = false;
+                blogpostService.saveblogpost(thisblog).success(function (data, status, headers) {
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
@@ -19406,9 +19408,11 @@ function getLatLng(thisData) {
             setInterval(function() {
                 console.log('Autosave starting: ' + moment().format('DD-MMM HH:mm:ss'));
                 $scope.saveBlogPost($scope.blogpost, 'Autosaved');
-            }, 120 * 1000);
+            }, 300 * 1000);
             
             $scope.saveBlogPost = function(blogpost, displayString){
+                if($scope.user && $scope.user._id){
+                    
                 
                 var find = "EdBites";
                 var fIndex = $scope.blogpost.title.indexOf(find);
@@ -19420,7 +19424,12 @@ function getLatLng(thisData) {
                 blogpostService.slugExists($scope.blogpost.urlslug).success(function (data, status, headers) {
                     if(data == false){
                         var blogpostForm = {
+                            savedBy: $scope.user._id,
+                            autosave: false
                         };
+                        if(displayString == 'Autosaved'){
+                            blogpostForm.autosave = true;
+                        }
 
                         for (var property in blogpost) {
                             blogpostForm[property] = blogpost[property];
@@ -19448,13 +19457,19 @@ function getLatLng(thisData) {
                             
                             
                             var blogpostForm = {
+                                savedBy: $scope.user._id,
+                                autosave: false
                             };
+                            if(displayString == 'Autosaved'){
+                                blogpostForm.autosave = true;
+                            }
 
                             for (var property in blogpost) {
                                 blogpostForm[property] = blogpost[property];
                             }
                             //console.log(blogpostForm);
                             blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
+                                $scope.blogpost = data;
                                 if(displayString == 'Autosaved'){
                                     Notification.primary({message: "Blog "+ displayString + "!",  positionY: 'top', positionX: 'right', delay: 1000});
                                 }else{
@@ -19478,7 +19493,9 @@ function getLatLng(thisData) {
                 .error(function (data, status, header, config) {
                     console.log("Error ");
                 });
-                
+                }else{
+                    Notification.warning({message: "You need to login before you can save changes!",  positionY: 'top', positionX: 'right', delay: 5000});
+                }
                 
             };
             

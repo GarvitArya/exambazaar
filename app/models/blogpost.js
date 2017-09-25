@@ -26,6 +26,7 @@ var blogpostSchema = mongoose.Schema({
     _created: { type: Date, default: Date.now },
     _published: { type: Date },
     _saved: [{
+        autosave: { type: Boolean, default: false },
         user: { type: Schema.ObjectId, required: true, ref: 'User' },
         title: String,
         content: String,
@@ -37,6 +38,19 @@ var blogpostSchema = mongoose.Schema({
         active: { type: Boolean, default: false },
         _date:{ type: Date, default: Date.now },
     }],
+    _autosaved: {
+        autosave: { type: Boolean, default: false },
+        user: { type: Schema.ObjectId, required: true, ref: 'User' },
+        title: String,
+        content: String,
+        coverPhoto: String,
+        blogTags:[{ type: Schema.ObjectId, ref: 'blogTag' }],
+        blogSeries: String,
+        exams: [{ type: Schema.ObjectId, ref: 'exam' }],
+        coachingGroups: [String],
+        active: { type: Boolean, default: false },
+        _date:{ type: Date, default: Date.now },
+    },
     seoKeywords: String,
     seoDescription: String,
     
