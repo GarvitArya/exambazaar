@@ -19426,7 +19426,7 @@ function getLatLng(thisData) {
             setInterval(function() {
                 console.log('Autosave starting: ' + moment().format('DD-MMM HH:mm:ss'));
                 $scope.saveBlogPost($scope.blogpost, 'Autosaved');
-            }, 30 * 1000);
+            }, 180 * 1000);
             
             $scope.saveBlogPost = function(blogpost, displayString){
                 if($scope.user && $scope.user._id){
