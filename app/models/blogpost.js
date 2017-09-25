@@ -33,7 +33,7 @@ var blogpostSchema = mongoose.Schema({
         blogTags:[{ type: Schema.ObjectId, ref: 'blogTag' }],
         blogSeries: String,
         exams: [{ type: Schema.ObjectId, ref: 'exam' }],
-        ;coachingGroups: [String],
+        coachingGroups: [String],
         active: { type: Boolean, default: false },
         _date:{ type: Date, default: Date.now },
     }],
