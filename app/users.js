@@ -1409,14 +1409,14 @@ router.get('/deactivateBlogger/:userId', function(req, res) {
 });
 
 router.get('/activeUsers', function(req, res) {
-     var start = moment().subtract(7, 'day').startOf('day');
-    var end = moment().endOf('day');
+     var start = moment().subtract(7, 'day').startOf('day').toDate();
+    var end = moment().endOf('day').toDate();
     
     //, _date: {  $gte : start, $lte : end} 
     //state:'claim',_date:{  $gte : start, $lte : end}
     var activeUsers = view.aggregate(
     [
-        {$match: { user: {$exists: true}} },
+        {$match: { user: {$exists: true}, _date: {  $gte : start, $lte : end}} },
         {"$group": { "_id": { user: "$user" }, count:{$sum:1}, institute: { $addToSet: "$institute" } } },
         {$sort:{"count":-1}}
 

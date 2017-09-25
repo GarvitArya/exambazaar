@@ -26,6 +26,10 @@
         background-color: #F5ECCD;
         color: black;
     }
+    .ciwebsite{
+        background-color: #85FFC7;
+        color: black;
+    }
 </style>
 
 <div class="whiteBackground mainContent" id="filled">
@@ -108,7 +112,7 @@
             <div flex="10" class="font10">
                 {{institute.phone.length}} | {{institute.mobile.length}}
             </div>
-            <div flex="10" class="font10">
+            <div flex="10" class="font10" ng-class="{ ciwebsite: websiteExists(institute) }">
                 {{institute.email.length}} | {{institute.website.length}}
             </div>
             
