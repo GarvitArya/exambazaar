@@ -19452,7 +19452,7 @@ function getLatLng(thisData) {
                         for (var property in blogpost) {
                             blogpostForm[property] = blogpost[property];
                         }
-                        //console.log(blogpostForm);
+                        
                         blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                             //$scope.showSavedDialog();
                             if(displayString == 'Autosaved'){
@@ -19485,7 +19485,7 @@ function getLatLng(thisData) {
                             for (var property in blogpost) {
                                 blogpostForm[property] = blogpost[property];
                             }
-                            //console.log(blogpostForm);
+                            console.log(blogpostForm);
                             blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                                 $scope.blogpost = data;
                                 if(displayString == 'Autosaved'){
