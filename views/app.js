@@ -248,8 +248,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.deactivateBlogger = function(userId) {
             return $http.get('/api/users/deactivateBlogger/'+userId, {userId: userId});
         };
-        this.activeUsers = function() {
-            return $http.get('/api/users/activeUsers');
+        this.activeUsers = function(nDays) {
+            return $http.get('/api/users/activeUsers/'+nDays, {nDays: nDays});
         };
         this.activateIntern = function(userId) {
             return $http.get('/api/users/activateIntern/'+userId, {userId: userId});
@@ -287,6 +287,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.getUsers = function() {
             return $http.get('/api/users');
+        };
+        this.properNames = function() {
+            return $http.get('/api/users/properNames');
         };
         this.allBloggers = function() {
             return $http.get('/api/users/allBloggers');
@@ -12147,14 +12150,30 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);   
     
     exambazaar.controller("activeUsersController", 
-        [ '$scope', 'thisuser','activeUsers', function($scope, thisuser, activeUsers){
+        [ '$scope', 'thisuser','activeUsers', 'UserService', 'Notification', function($scope, thisuser, activeUsers, UserService, Notification){
             $scope.user = thisuser.data;
             $scope.activeUsers = activeUsers.data;
+            
             console.log($scope.activeUsers);
             if($scope.user && $scope.user.userType=='Master'){
                 $scope.masterUser = true;
             }
+            $scope.nDays = 7;
+            $scope.daysArray = [1, 2, 3, 4, 5, 6, 7, 30, 60, 90];
             
+            $scope.setNDays = function(day){
+                $scope.nDays = day;
+                $scope.updateActiveUsers();
+            };
+            $scope.updateActiveUsers = function(){
+                UserService.activeUsers($scope.nDays).success(function (data, status, headers) {
+                    $scope.activeUsers = data;
+                    Notification.success("Great, we have found the active users of the last " + $scope.nDays + ' days!');
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });
+            };
     }]);
     
     exambazaar.controller("allTestsController", 
@@ -12367,7 +12386,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }
                     
                     socialMediaCredentialService.saveSocialMediaCredential(newSocialMediaCredential).success(function (data, status, headers) {
-                        console.log(data);
+                        //console.log(data);
                         counter += 1;
                         if(counter == nPages){
                         socialMediaCredentialService.getSocialMediaCredentials().success(function (data, status, headers) {
@@ -18441,6 +18460,18 @@ function getLatLng(thisData) {
     
     exambazaar.controller("manageUsersController", 
         [ '$scope', 'UserService', 'viewService','$http','$state', '$rootScope', '$mdDialog', '$timeout', function($scope, UserService, viewService, $http,$state, $rootScope, $mdDialog, $timeout){
+            $scope.properNames = function(){
+                UserService.properNames().success(function (data, status, headers) {
+                    if(data){
+                        console.log('Done');
+                    }else{
+                        console.log('Error');
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+            };
             
             $rootScope.pageTitle = "Manage users on EB";
             $rootScope.$on("setBloggerUser", function(event, data){
@@ -20933,7 +20964,7 @@ function getLatLng(thisData) {
                 }],
                 activeUsers: ['UserService',
                     function(UserService) {   
-                    return UserService.activeUsers();
+                    return UserService.activeUsers(7);
                 }],
                 provider: function() { return {}; }
                 

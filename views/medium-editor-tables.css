@@ -32,7 +32,8 @@
 
 .medium-editor-table,
 .medium-editor-table td {
-  border: 1px dashed #e3e3e3; }
+  border: 1px solid #f6f6f6;
+}
 
 .medium-editor-table-builder-toolbar {
   display: block;

@@ -27,6 +27,41 @@ mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 var bcrypt   = require('bcrypt-nodejs');
 
+function titleCase(str) {
+  str = str.toLowerCase();
+  str = str.split(' ');
+  for (var i = 0; i < str.length; i++) {
+    str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+  }
+  return str.join(' ');
+}
+
+router.get('/properNames', function(req, res) {
+    //_created: {  $gte : start, $lte : end}
+    console.log('Proper Names Process starting:');
+    var allUsers = user.find({}, {basic:1}, function(err, allUsers) {
+    if (!err){
+        allUsers.forEach(function(thisUser, index){
+            var thisName = thisUser.basic.name;
+            if(!thisName){
+                thisName = "EB User"
+            }
+            var properName = titleCase(thisName);
+            if(properName != thisName){
+                console.log(thisName + " -> " + properName + " " + thisUser._id);
+                thisUser.basic.name = properName;
+                thisUser.save(function(err, thisUser) {
+                if (err) return console.error(err);
+                    console.log('User saved: ' + thisUser._id);
+                });
+            }
+            
+        });
+        
+        res.json(true);
+    } else {throw err;}
+    });
+});
 
 function sendWelcome(user){
     console.log("User is: " + user);
@@ -495,6 +530,9 @@ router.post('/save', function(req, res) {
     if(thisUser && thisUser.email){
         userEmail = thisUser.email;
     }
+    if(thisUser && thisUser.basic.name){
+        thisUser.basic.name = titleCase(thisUser.basic.name);
+    }
     //console.log(mobileNumber);
     
     
@@ -567,7 +605,7 @@ router.post('/fbSave', function(req, res) {
                     existingUser.basic.gender = thisFbUser.gender;
                 }
                 if(thisFbUser.name){
-                    existingUser.basic.name = thisFbUser.name;
+                    existingUser.basic.name = titleCase(thisFbUser.name);
                 }
                 if(thisFbUser.image){
                     if(existingUser.image){
@@ -607,7 +645,7 @@ router.post('/fbSave', function(req, res) {
                     existingUser.basic.gender = thisFbUser.gender;
                 }
                 if(thisFbUser.name){
-                    existingUser.basic.name = thisFbUser.name;
+                    existingUser.basic.name = titleCase(thisFbUser.name);
                 }
                 if(thisFbUser.image){
                     if(existingUser.image){
@@ -656,7 +694,7 @@ router.post('/fbSave', function(req, res) {
                 existingUser.basic.gender = thisFbUser.gender;
             }
             if(thisFbUser.name){
-                existingUser.basic.name = thisFbUser.name;
+                existingUser.basic.name = titleCase(thisFbUser.name);
             }
             if(thisFbUser.image){
                 if(existingUser.image){
@@ -693,7 +731,7 @@ router.post('/fbSave', function(req, res) {
                 existingUser.basic.gender = thisFbUser.gender;
             }
             if(thisFbUser.name){
-                existingUser.basic.name = thisFbUser.name;
+                existingUser.basic.name = titleCase(thisFbUser.name);
             }
             if(thisFbUser.image){
                 if(existingUser.image){
@@ -1408,8 +1446,13 @@ router.get('/deactivateBlogger/:userId', function(req, res) {
     });
 });
 
-router.get('/activeUsers', function(req, res) {
-     var start = moment().subtract(7, 'day').startOf('day').toDate();
+router.get('/activeUsers/:nDays', function(req, res) {
+    var nDays = req.params.nDays;
+    console.log(nDays);
+    if(!nDays){
+        nDays = 7;
+    }
+    var start = moment().subtract(nDays, 'day').startOf('day').toDate();
     var end = moment().endOf('day').toDate();
     
     //, _date: {  $gte : start, $lte : end} 
@@ -1434,7 +1477,7 @@ router.get('/activeUsers', function(req, res) {
                 .exec(function (err, basicUser) {
                 if (!err){
                     counter += 1;
-                    if(thisUser.count > 10){
+                    if(thisUser.count > 5){
                        var newActiveUser = {
                             user: basicUser,   
                             count: thisUser.count,   

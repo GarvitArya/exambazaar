@@ -40,6 +40,11 @@
 <div layout="column" layout-align="center center" flex-xs="100" flex-gt-xs="80"  class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
+    <div layout="column" layout-align="center center" class="marginB20">
+        <a class="editFont" ng-click="properNames()">
+        Set Proper Names
+        </a>
+    </div>
     <div layout="column" ng-controller="userAutocompleteController as ctrl" class="width100">
         <md-autocomplete flex 
         md-selected-item="ctrl.selectedItem"

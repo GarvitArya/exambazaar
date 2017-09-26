@@ -22,12 +22,37 @@
     #profileSection{
         min-height: 20vh;
     }
+    .badge{
+        padding:5px;
+        font-size: 16px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    .badge:hover{
+        color: white;
+        
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    .existingBadge{
+        padding:5px;
+        font-size: 16px;
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
 </style>
-<div class="whiteBackground mainContent" >
+<div layout="column" layout-align="start start" class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
+    <div layout="row" layout-align="center center" class="width100 marginB20">
+        <div ng-repeat="day in daysArray" class="badge padding5 margin5" ng-class="{ existingBadge: day == nDays }" ng-click="setNDays(day)">
+            {{day}}
+        </div>
+    </div>
     <div layout="row" layout-align="start start" class="padded" ng-if="masterUser" layout-wrap>
-    <div flex="33" layout="row" layout-align="start start" ng-repeat="user in activeUsers | orderBy: '-count'">
+    <div flex="33" layout="row" layout-align="start start" ng-repeat="user in activeUsers track by user.user._id | orderBy: '-count'">
         {{user.user.basic.name}}&nbsp;{{user.count}}
     </div>
     </div>
