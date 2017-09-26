@@ -2077,7 +2077,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
         $scope.thisGroupR = thisGroupResults.data;
-        console.log($scope.thisGroupR);
         $scope.group = thisGroup.data;
         var groupDisabled = $scope.group.map(function(a) {return a.disabled;});
         var groupIds = $scope.group.map(function(a) {return a._id;});
@@ -2516,17 +2515,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 examNamesKeywords += ", ";
             }
         });
+        var thisCity = $scope.city;
+        $scope.cityCenters = [];
+        $scope.group.forEach(function(thisGroup, gindex){
+            if(thisGroup.city == thisCity){
+                $scope.cityCenters.push(thisGroup);
+            }
+        });
         
         $rootScope.pageTitle = $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName;
-        $rootScope.pageDescription = $stateParams.groupName + ", " +$scope.city +  " has " + $scope.group.length + " " +   $scope.subcategory.displayname + " Coaching Centers in " + $scope.city + ". | Exambazaar - results, fees, faculty, photos, vidoes, reviews of " + $stateParams.groupName;
+        $rootScope.pageDescription = $stateParams.groupName + ", " +$scope.city +  " has " + $scope.cityCenters.length + " " +   $scope.subcategory.displayname + " Coaching Centers in " + $scope.city + ". | Exambazaar - results, fees, faculty, photos, vidoes, reviews of " + $stateParams.groupName;
         
-        var groupKeywords = "Top " + $stateParams.subCategoryName + " Coaching in " + $stateParams.cityName + ", " + $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ", " + $scope.group.length + " " + $stateParams.groupName + " Centers in " + $scope.city + ", ";
+        var groupKeywords = $stateParams.groupName + ", Top " + $stateParams.subCategoryName + " Coaching in " + $stateParams.cityName + ", " + $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ", " + $scope.cityCenters.length + " " + $stateParams.groupName + " Centers in " + $scope.city + ", ";
         $rootScope.pageKeywords = groupKeywords + examNamesKeywords;
-        
-        
-        
-        
-        
         
         
         
@@ -8268,7 +8269,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur', 'Sonbhadra', 'Kochi', 'Belgaum', 'Davanagere', 'Udaipur','Durgapur'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur', 'Sonbhadra', 'Kochi', 'Belgaum', 'Davanagere', 'Udaipur','Durgapur', 'Aurangabad'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -16249,8 +16250,31 @@ function getLatLng(thisData) {
                 }
             });
             
+            var badgeIconClasses = ['glyphicon-modal-window', 'glyphicon-credit-card'];
+            var badgeClasses = ['info', 'warning'];
             
-            $scope.events = [{
+            $scope.events = [];
+            
+            if($scope.activeExamCylce){
+                var steps = $scope.activeExamCylce.examSteps;
+                 
+                
+                steps.forEach(function(thisStep, index){
+                    var random = Math.floor(Math.random() * badgeIconClasses.length); 
+                    
+                    var newEvent = {
+                        badgeClass: badgeIconClasses[random],
+                        badgeIconClass: badgeClasses[random],
+                        title: thisStep.stepType,
+                        content: 'Some awesome content.'
+                    };
+                    
+                });
+                
+                
+                
+            }
+            /*$scope.events = [{
                 badgeClass: 'info',
                 badgeIconClass: 'glyphicon-modal-window',
                 title: 'Registration',
@@ -16260,15 +16284,7 @@ function getLatLng(thisData) {
                 badgeIconClass: 'glyphicon-credit-card',
                 title: 'Second heading',
                 content: 'More awesome content.'
-            }];
-            $scope.eventSide = function(index){
-                var side = 'right';
-                console.log(index % 2 == 0);
-                if(index % 2 == 0){
-                    side = 'left';
-                }
-                return(side);
-            };
+            }];*/
             
             
             $rootScope.pageTitle = $scope.exam.displayname;

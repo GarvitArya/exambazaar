@@ -3,13 +3,7 @@
         padding: 10px;
         border: 1px solid #eaeaea; 
     }
-    a, a:visited{
-        color:#20C39A;
-    }
-    a:hover{
-        color: #20C39A;
-        text-decoration: none;
-    }
+    
     a:link:hover{
         color: #20C39A;
         text-decoration: none;
@@ -182,7 +176,13 @@
       vertical-align: middle;
     }
     
-    
+    a, a:visited{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
 </style>
 <div id="spacer3">
 </div>
@@ -202,7 +202,7 @@
         <div layout="column" layout-align="start start"  class="padding10" flex flex-xs="100">
             <div layout="row" layout-align="start start" class="width100">
                 <div flex="20">Website</div>
-                <div flex>{{exam.website}}</div>
+                <div flex><a ng-href="{{exam.website}}" target="_blank" class="bold">Official Website</a></div>
             </div>
             <div layout="row" layout-align="start start" class="width100 ">
                 <div flex="20">Description</div>
@@ -211,7 +211,7 @@
         </div>
         <div layout="column" layout-align="start start" class="padding10" flex="25" flex-xs="100">
             <div layout="row" layout-align="start start" class="width100">
-                <div flex>Frequncy</div>
+                <div flex>Frequency</div>
                 <div flex>{{exam.frequency}}</div>
             </div>
             <div layout="row" layout-align="start start" class="width100">
