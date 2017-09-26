@@ -67,7 +67,7 @@ require('./config/passport')(passport);
 
 app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted('^/claim'));
 
-app.use(compression());
+app.use(compression({threshold : 0}));
 app.get('/*', function (req, res, next) {
     /*req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0 || req.url.indexOf('.js') != -1 ||*/
     if ( req.url.indexOf('.css') != -1 || req.url.indexOf('.ttf') != -1 || req.url.indexOf('.jpg') != -1 || req.url.indexOf('.png') != -1 || req.url.indexOf('.jpeg') != -1) {
@@ -79,14 +79,14 @@ app.get('/*', function (req, res, next) {
 });
 
 
-app.get('*', function(req, res, next) {
+/*app.get('*', function(req, res, next) {
     if (req.get('x-forwarded-proto') != "https") {
         res.set('x-forwarded-proto', 'https');
         res.redirect('https://' + req.get('host') + req.url);
     } else {
         next();     
     }
-});
+});*/
 
 
 
