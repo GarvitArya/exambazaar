@@ -8269,7 +8269,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur', 'Sonbhadra', 'Kochi', 'Belgaum', 'Davanagere', 'Udaipur','Durgapur', 'Aurangabad'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur', 'Sonbhadra', 'Kochi', 'Belgaum', 'Davanagere', 'Udaipur','Durgapur', 'Aurangabad', 'Siliguri','Akola'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -16239,8 +16239,6 @@ function getLatLng(thisData) {
             $scope.exam = thisexam.data;
             $scope.exam.tests = testList.data;
             
-            
-            
             var examCycles = $scope.exam.cycle;
             $scope.activeExamCylce = null;
             
@@ -16260,15 +16258,47 @@ function getLatLng(thisData) {
                  
                 
                 steps.forEach(function(thisStep, index){
-                    var random = Math.floor(Math.random() * badgeIconClasses.length); 
+                    var random = Math.floor(Math.random() * badgeIconClasses.length);
                     
+                    var dateRange = thisStep.stepDate.dateRange;
+                    var timeRange = thisStep.stepDate.timeRange;
+                    var allDay = false;
+                    var dateString = '';
+                    var timeString = '';
+                    var fullString = '';
+                    if(timeRange && timeRange.startTime && timeRange.endTime){
+                        if(timeRange.startTime == "00:00" && timeRange.endTime == "23:00"){
+                            allDay = true;
+                        }
+                    }
+                    if(!timeRange || !timeRange.startTime && !dateRange.endTime){
+                        allDay = true;
+                    }
+                    if(dateRange && dateRange.startDate && dateRange.endDate){
+                        var startDate = moment(dateRange.startDate);
+                        var endDate = moment(dateRange.endDate);
+                        
+                        dateString = "" + moment(startDate).format('DD MMM YY');
+                        console.log(compareDates(startDate, endDate));
+                        if(compareDates(startDate, endDate) == -1){
+                            dateString += " to " + moment(dateRange.endDate).format('DD MMM YY');
+                        }
+                        
+                    }
+                    
+                    if(allDay){
+                        timeString = " - All Day ";
+                    }
+                    
+                    fullString = dateString + timeString;
                     var newEvent = {
-                        badgeClass: badgeIconClasses[random],
-                        badgeIconClass: badgeClasses[random],
+                        badgeClass: badgeClasses[random],
+                        badgeIconClass: badgeIconClasses[random],
                         title: thisStep.stepType,
-                        content: 'Some awesome content.'
+                        content: fullString,
                     };
-                    
+                    console.log(thisStep);
+                    $scope.events.push(newEvent);
                 });
                 
                 
