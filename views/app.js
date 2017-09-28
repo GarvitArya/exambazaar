@@ -19179,27 +19179,131 @@ function getLatLng(thisData) {
         .replace(/^-+/, "")
         .replace(/-+$/, "");
     };
-        
+    function getIndicesOf(searchStr, str, caseSensitive) {
+        var searchStrLen = searchStr.length;
+        if (searchStrLen == 0) {
+            return [];
+        }
+        var startIndex = 0, index, indices = [];
+        if (!caseSensitive) {
+            str = str.toLowerCase();
+            searchStr = searchStr.toLowerCase();
+        }
+        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+            indices.push(index);
+            startIndex = index + searchStrLen;
+        }
+        return indices;
+    }    
     exambazaar.controller("editblogController", 
         [ '$scope','$http','$state','blogpostService', 'blogTagService', 'UserService', 'ExamService', 'StreamService', 'thisblog', '$rootScope','$mdDialog','$timeout', 'Upload', '$cookies', 'ImageService', 'Notification', 'allBloggers', function($scope,$http, $state, blogpostService, blogTagService, UserService, ExamService, StreamService, thisblog, $rootScope, $mdDialog,$timeout, Upload, $cookies, ImageService, Notification, allBloggers){
             $scope.blogpost = thisblog.data;
             $scope.allBloggers = allBloggers.data;
             var bloggerIds = $scope.allBloggers.map(function(a) {return a._id;});
+            $scope.masteruser = null;
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser'); 
+                if($scope.user && $scope.user.userType == 'Master'){
+                    $scope.masteruser = true;
+                }
+                UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                    var userGallery = data.blogger.gallery;
+                    //console.log(userGallery);
+                    $scope.blogGallery = userGallery;
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+                
+            }else{
+                $scope.user = null;
+            }
             
-            var possibleBlocks = ["<p", "<div","<h3","<h2","<h1"];
+            //"<p","</p>",
+            var possibleBlocks = ["<h3","<h2","<h1"];
+            var possibleBlocksClose = ["</h3>","</h2>","</h1>"];
             $scope.showSelectedText = function() {
                 $scope.selectedText =  $scope.getSelectionText();
+                console.log($scope.selectedText);
+                var contentLength = $scope.blogpost.content.length;
+                
                 var startTextIndex = $scope.blogpost.content.indexOf($scope.selectedText);
+                //console.log(startTextIndex);
+                if($scope.selectedText.length > 5 && startTextIndex != -1){
+                    
+                
                 var stringBefore = $scope.blogpost.content.substr(0, startTextIndex);
                 var startingNumbers = [];    
                 possibleBlocks.forEach(function(thisBlock, bindex){
                     var thisIndex = stringBefore.lastIndexOf(thisBlock);
                     startingNumbers.push(thisIndex);
                 });
-               console.log(startingNumbers);
+                console.log(startingNumbers);
+                console.log(startTextIndex);
+                var innerMostBlockIndex = -1;
+                var innerMostBlockNumber = -1;
+                var innerMostBlock = '';
+                startingNumbers.forEach(function(thisStart, sindex){
+                    // && thisStart >= startTextIndex - thisBlockLen
+                    var thisBlockLen = possibleBlocks[sindex].length + 1;
+                    if(thisStart != -1 && thisStart >= innerMostBlockIndex && thisStart >= startTextIndex - thisBlockLen - 6){
+                        innerMostBlockIndex = sindex;
+                        innerMostBlockNumber = thisStart;
+                    }
+                });
+                console.log(innerMostBlockNumber);
+                if(innerMostBlockNumber != -1){
+                    var closestBlockOpen = possibleBlocks[innerMostBlockIndex];
+                    var closestBlockClose = possibleBlocksClose[innerMostBlockIndex];
+                    //console.log(closestBlockOpen + " " + closestBlockClose);
+                    var closestBlockFullText = $scope.blogpost.content.substring(innerMostBlockNumber, contentLength);
+                    var closestBlockTextIndex = closestBlockFullText.indexOf(closestBlockClose) + closestBlockClose.length;
+                    var closestBlockText = $scope.blogpost.content.substr(innerMostBlockNumber, closestBlockTextIndex);
+                    
+                    //console.log(closestBlockFullText);
+                    
+                    if(closestBlockText && closestBlockText.length > 0){
+                        var closestTag = closestBlockOpen.substring(1, closestBlockOpen.length);
+                        
+                        if($scope.masteruser){
+                            $scope.replaceTag(closestBlockText, closestTag);
+                        }
+                        
+                    }
+                } 
+                }
+                //console.log($scope.selectedText);
+            };
+            $scope.replaceTag = function(closestBlockText, tag){
+                var bIndex = $scope.blogpost.content.indexOf(closestBlockText);
+                
+                if(bIndex != -1){
+                    var preText = $scope.blogpost.content.substring(0, bIndex);
+                    var postText = $scope.blogpost.content.substring(bIndex + closestBlockText.length, $scope.blogpost.content.length);
+                    
+                }
+                var replace1From = "<"+tag;
+                var replace1To = "<p";
+                var replace2From = "</"+tag+">";
+                var replace2To = "</p>";
+                var newBlockText = closestBlockText.replace(replace1From, replace1To);
+                newBlockText = newBlockText.replace(replace2From, replace2To);
+                
+                var confirm = $mdDialog.confirm()
+                .title('Do you want to remove the header tag?')
+                .textContent("You are going replace from " + closestBlockText + " to " + newBlockText)
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.blogpost.content = preText + newBlockText + postText;
+                }, function() {
+                  //nothing
+                });
                 
                 
-                console.log($scope.selectedText);
             };
             
             $scope.getSelectionText = function() {
@@ -19219,19 +19323,7 @@ function getLatLng(thisData) {
             }
             //console.log($scope.blogpost.coverPhoto);
             
-            if($cookies.getObject('sessionuser')){
-                $scope.user = $cookies.getObject('sessionuser'); UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
-                    var userGallery = data.blogger.gallery;
-                    //console.log(userGallery);
-                    $scope.blogGallery = userGallery;
-                })
-                .error(function (data, status, header, config) {
-                    console.log("Error ");
-                });
-                
-            }else{
-                $scope.user = null;
-            }
+            
             $scope.urlslug = '';
             $scope.urlslugError = false;
             $scope.urlslugSet = false;
@@ -19552,8 +19644,20 @@ function getLatLng(thisData) {
                 }
 
             }, true);
-            
-            
+            var possibleBlocks = ["<h3","<h2","<h1"];
+            var possibleBlocksClose = ["</h3>","</h2>","</h1>"];
+            $scope.$watch('blogpost.content', function (newValue, oldValue, scope) {
+                if(newValue && newValue.length > 0){
+                    //console.log(newValue);
+                    possibleBlocks.forEach(function(thisBlock, bindex){
+                        var indices = getIndicesOf(thisBlock, newValue);
+                        //console.log(thisBlock);
+                        //console.log(indices);
+                    });
+                    
+                }
+
+            }, true);
             setInterval(function() {
                 console.log('Autosave starting: ' + moment().format('DD-MMM HH:mm:ss'));
                 $scope.saveBlogPost($scope.blogpost, 'Autosaved');
