@@ -19223,6 +19223,9 @@ function getLatLng(thisData) {
             var possibleBlocks = ["<h3","<h2","<h1"];
             var possibleBlocksClose = ["</h3>","</h2>","</h1>"];
             $scope.showSelectedText = function() {
+                $scope.closestBlockText = null;
+                $scope.closestTag = null;
+                
                 $scope.selectedText =  $scope.getSelectionText();
                 console.log($scope.selectedText);
                 var contentLength = $scope.blogpost.content.length;
@@ -19264,10 +19267,11 @@ function getLatLng(thisData) {
                     
                     if(closestBlockText && closestBlockText.length > 0){
                         var closestTag = closestBlockOpen.substring(1, closestBlockOpen.length);
-                        
-                        if($scope.masteruser){
+                        $scope.closestBlockText = closestBlockText;
+                        $scope.closestTag = closestTag;
+                        /*if($scope.masteruser){
                             $scope.replaceTag(closestBlockText, closestTag);
-                        }
+                        }*/
                         
                     }
                 } 

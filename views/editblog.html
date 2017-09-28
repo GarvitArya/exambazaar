@@ -329,7 +329,7 @@
     </div>
 </div>
 
-<div layout="column" layout-align="center end" class="width100 padding10 rightMidButton">         
+<div layout="column" layout-align="start end" class="width100 padding10 rightMidButton">         
     <div class="marginR10">
         <md-button class="md-black md-small  tolowercase" ng-click="showBlogExamDialog()">
             Mark Exams
@@ -350,11 +350,11 @@
             Edit HTML
         </md-button>
     </div>
-    <!--<div class="marginR10" ng-if="user.userType =='Master'">
-        <md-button class="md-danger md-small  tolowercase" ng-click="replaceTag()">
-            Edit HTML
+    <div class="marginR10" ng-if="closestBlockText && closestTag">
+        <md-button class="md-signup md-small  tolowercase" ng-click="replaceTag(closestBlockText, closestTag)">
+            <i class="fa fa-star" aria-hidden="true"></i> Remove {{closestTag}}
         </md-button>
-    </div>-->
+    </div>
 </div>
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="savedDialog">
