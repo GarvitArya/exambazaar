@@ -688,19 +688,19 @@ router.post('/save', function(req, res) {
         .deepPopulate('blogTags')
         .exec(function (err, existingBlogpost) {
             if (!err){
-                if(existingBlogpost){
+            if(existingBlogpost){
                 
-                for (var property in blogpostForm) {
-                    if(property != '_id' && property != 'upvotes'){
-                        existingBlogpost[property] = blogpostForm[property];
-                    }
-                }
-                var stats = readingTime(existingBlogpost.content);
-                if(stats)
-                    existingBlogpost.readingTime = stats;
-                
-                var timeNow = new Date();
                 if(savedBy){
+                    var timeNow = new Date();
+                    for (var property in blogpostForm) {
+                        if(property != '_id' && property != 'upvotes'){
+                            existingBlogpost[property] = blogpostForm[property];
+                        }
+                    }
+                    var stats = readingTime(existingBlogpost.content);
+                    if(stats)
+                        existingBlogpost.readingTime = stats;
+                    
                     var newSaved = {
                         autosave: autosave,
                         user: savedBy,
@@ -736,30 +736,37 @@ router.post('/save', function(req, res) {
                             existingBlogpost._saved.push(newSaved);
                         }
                     }
-                }
-                
-                existingBlogpost.save(function(err, existingBlogpost) {
-                    if (err) return console.error(err);
-                    res.json(existingBlogpost);
-                });
+                    
+                    existingBlogpost.save(function(err, existingBlogpost) {
+                        if (err) return console.error(err);
+                        res.json(existingBlogpost);
+                    });
                 }else{
                     res.json(null);
                 }
+                
+                
+            }else{
+                res.json(null);
+            }
             } else {throw err;}
         });
         
         
     }else{
-        var newblogpost = new blogpost({});
-        for (var property in blogpostForm) {
-            newblogpost[property] = blogpostForm[property];
-        }
-        var stats = readingTime(newblogpost.content);
-        if(stats)
-            newblogpost.readingTime = stats;
         
-        var timeNow = new Date();
+        
+        
         if(savedBy){
+            var timeNow = new Date();
+            var newblogpost = new blogpost({});
+            for (var property in blogpostForm) {
+                newblogpost[property] = blogpostForm[property];
+            }
+            var stats = readingTime(newblogpost.content);
+            if(stats)
+                newblogpost.readingTime = stats;
+            
             var newSaved = {
                 autosave: autosave,
                 user: savedBy,
@@ -794,11 +801,15 @@ router.post('/save', function(req, res) {
                     newblogpost._saved.push(newSaved);
                 }
             }
+            
+            newblogpost.save(function(err, newblogpost) {
+                if (err) return console.error(err);
+                res.json(newblogpost);
+            });
+        }else{
+            res.json(null);
         }
-        newblogpost.save(function(err, newblogpost) {
-            if (err) return console.error(err);
-            res.json(newblogpost);
-        });
+        
     }
     
     
