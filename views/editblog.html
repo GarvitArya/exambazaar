@@ -68,6 +68,8 @@
         border: 0px;
         width: 100%;
         vertical-align: middle;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
     td,th {
         font-size: 14px;
@@ -112,14 +114,24 @@
         border: 1px solid #02B875;
     }
     p{
-        margin: 5px;
+        padding-top: 0px;
+        padding-bottom: 10px;
+        margin-top: 0px;
+        margin-bottom: 0px;
     }
+    blockquote{
+        margin-bottom: 20px;
+    }
+    td p{
+        margin: 0px;
+    }
+    
 </style>
 
 <div id="spacerXS" class="whiteBackground">
 </div>
 <div flex layout="row" layout-align="center center" class="whiteBackground">
-<div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40">
+<div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40" ng-mouseup="showSelectedText()">
     <div layout="row" layout-align="center center" class="infoBar marginTB5" >
         <div class="font14">
             <span ng-if="blogpost.active">
@@ -200,6 +212,7 @@
                         Add Images to your blog post
                     </div>
                 </div>
+                
                 <p ng-model="blogpost.content" medium-editor bind-options="mediumBindOptions" class="width100 min20vh marginT40 marginB20 blogContent editable">
                 </p>    
                 

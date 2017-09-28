@@ -8269,7 +8269,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur', 'Sonbhadra', 'Kochi', 'Belgaum', 'Davanagere', 'Udaipur','Durgapur', 'Aurangabad', 'Siliguri','Akola', 'Faizabad'];
+        var allowedCities = ['New Delhi', 'Bangalore', 'Kanpur', 'Allahabad', 'Bhopal', 'Varanasi', 'Dehradun', 'Raipur', 'Noida', 'Ghaziabad', 'Dhanbad', 'Bhubaneshwar', 'Jammu', 'Amritsar', 'Gwalior', 'Indore', 'Gurgaon', 'Bathinda', 'Jalandhar', 'Faridabad', 'Bareilly', 'Aligarh', 'Moradabad', 'Saharanpur','Thrissur', 'Malappuram', 'Kannur', 'Vijayawada', 'Agartala', 'Faridabad','Bilaspur','Hubli', 'Jodhpur', 'Panipat', 'Korba', 'Srinagar', 'Kolhapur', 'Solapur', 'Dibrugarh', 'Warangal', 'Jabalpur', 'Ujjain', 'Jhansi', 'Pantnagar', 'Nainital', 'Kashipur', 'Rudrapur', 'Haldwani', 'Hosur', 'Kolar', 'Tumakuru', 'Chintamani', 'Tiptur', 'Gauribidanur', 'Sonbhadra', 'Kochi', 'Belgaum', 'Davanagere', 'Udaipur','Durgapur', 'Aurangabad', 'Siliguri','Akola', 'Faizabad', 'Asansol', 'Muzaffarpur'];
         
         if($cookies.getObject('sessionuser')){
             
@@ -12931,7 +12931,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.mediumBindOptions = {
                 buttonLabels: 'fontawesome',
                 toolbar: {
-                    buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'indent', 'outdent', 'quote', 'anchor', 'h1','h2', 'h3', 'image', 'removeFormat', 'table', 'orderedlist', 'unorderedlist','html']
+                    buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'indent', 'outdent', 'anchor', 'h1','h2', 'h3', 'image', 'removeFormat', 'table', 'orderedlist', 'unorderedlist']
                 },
                 extensions: {
                     table: new MediumEditorTable()
@@ -19186,6 +19186,31 @@ function getLatLng(thisData) {
             $scope.allBloggers = allBloggers.data;
             var bloggerIds = $scope.allBloggers.map(function(a) {return a._id;});
             
+            var possibleBlocks = ["<p", "<div","<h3","<h2","<h1"];
+            $scope.showSelectedText = function() {
+                $scope.selectedText =  $scope.getSelectionText();
+                var startTextIndex = $scope.blogpost.content.indexOf($scope.selectedText);
+                var stringBefore = $scope.blogpost.content.substr(0, startTextIndex);
+                var startingNumbers = [];    
+                possibleBlocks.forEach(function(thisBlock, bindex){
+                    var thisIndex = stringBefore.lastIndexOf(thisBlock);
+                    startingNumbers.push(thisIndex);
+                });
+               console.log(startingNumbers);
+                
+                
+                console.log($scope.selectedText);
+            };
+            
+            $scope.getSelectionText = function() {
+              var text = "";
+              if (window.getSelection) {
+                  text = window.getSelection().toString();
+              } else if (document.selection && document.selection.type != "Control") {
+                  text = document.selection.createRange().text;
+              }
+              return text;
+            };
             var defaultBlogCover = "https://exambazaar.com/images/background/examinfo.jpg";
             if($scope.blogpost.coverPhoto){
                 $scope.thisBlogCover = $scope.blogpost.coverPhoto;
@@ -19460,8 +19485,13 @@ function getLatLng(thisData) {
             };
             $scope.mediumBindOptions = {
                 toolbar: {
-                    buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'indent', 'outdent', 'quote', 'anchor', 'h1','h2', 'h3', 'image', 'removeFormat', 'table', 'orderedlist', 'unorderedlist','html']
+                    buttons: ['bold', 'italic', 'underline', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'indent', 'outdent', 'anchor', 'h1','h2', 'h3', 'image', 'removeFormat', 'table', 'orderedlist', 'unorderedlist']
                 },
+                targetBlank: true,
+                disableExtraSpaces: true,
+                spellcheck: true,
+                disableReturn: false,
+                disableDoubleReturn: true,
                 extensions: {
                     table: new MediumEditorTable()
                 },
@@ -19498,8 +19528,12 @@ function getLatLng(thisData) {
                     ],
                 },
                 paste: {
+                    
+                    forcePlainText: false,
                     cleanPastedHTML: true,
-                    forcePlainText: false
+                    cleanAttrs: ['class', 'style', 'dir'],
+                    cleanTags: ['br', 'meta', 'body', 'section', 'aside', 'article',
+                      'span', 'h1', 'h2','h3', 'font'],
                 }
             };
             $scope.titleBindOptions = {
@@ -23934,8 +23968,8 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
         
     });
     $transitions.onSuccess({}, function() {
-        //console.log("statechange success");
-        //document.body.scrollTop = document.documentElement.scrollTop = 0;
+        console.log("statechange success");
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
         //$mdDialog.hide();
         console.log("SEO Title: " + $rootScope.pageTitle);
         console.log("SEO Description: " + $rootScope.pageDescription);
