@@ -125,7 +125,6 @@ router.get('/allBlogsUpvotesCount', function(req, res) {
             };
             allUpvotes.push(bUpvote);
         });
-        console.log(allUpvotes);
         res.json(allUpvotes);
     } else {throw err;}
     });

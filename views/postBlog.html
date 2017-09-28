@@ -1,23 +1,4 @@
 <style>
-    #instituteHolder{
-        background: white;
-        border: 1px solid #ccc;
-        padding: 10px;
-    }
-    #logoHolder{
-        height: 50px;
-    }
-    
-    #link{
-        color: rgba(0,0,0,0.6);
-    }
-    #link:hover{
-        color: #20C39A;
-    }
-    
-    #badge{
-        background: #20C39A;
-    }
     img{
         max-width: 100%;
     }
@@ -137,7 +118,8 @@
                 Blog Series
             </div>
         </div>
-        <div layout="row" layout-align="start center" ng-repeat="thisblog in userBlogs | orderBy: [ 'blogSeries','-_created', '-upvotes']" class="width100 greyDashedBottomBorder paddingTB2" ng-class="blogRowClass(thisblog)">
+        <!--'-active','blogSeries','-_created', '-upvotes'-->
+        <div layout="row" layout-align="start center" ng-repeat="thisblog in userBlogs | orderBy: ['active','blogSeries','-_created', '-upvotes']" class="width100 greyDashedBottomBorder paddingTB2" ng-class="blogRowClass(thisblog)">
             <div layout="row" layout-align="start center" flex="5">
                 {{$index + 1}}.
             </div>

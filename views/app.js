@@ -12793,8 +12793,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
             if($scope.user.userType == 'Master'){
                 $scope.masterUser = true;
-                console.log($scope.masterUser);
-                console.log($scope.user);
             }
                    
             $scope.credentialsMode = false;
@@ -13041,7 +13039,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.cloneBlogPost = function(toCloneBlog){
                 var blogpost = {
                     title: toCloneBlog.title + ' - Clone ' + moment().format("DD MMM YY HH:mm"),
-                    content: toCloneBlog.content
+                    content: toCloneBlog.content,
+                    savedBy: $scope.user._id,
+                    autosave: false
                 };
                 
                 var blogpostForm = {
@@ -19181,11 +19181,8 @@ function getLatLng(thisData) {
     };
         
     exambazaar.controller("editblogController", 
-        [ '$scope','$http','$state','blogpostService', 'blogTagService', 'UserService', 'thisblog', '$rootScope','$mdDialog','$timeout', 'Upload', '$cookies', 'ImageService', 'examList', 'streamList', 'allTags', 'Notification', 'allBloggers', function($scope,$http, $state, blogpostService, blogTagService, UserService, thisblog, $rootScope, $mdDialog,$timeout, Upload, $cookies, ImageService, examList, streamList, allTags, Notification, allBloggers){
+        [ '$scope','$http','$state','blogpostService', 'blogTagService', 'UserService', 'ExamService', 'StreamService', 'thisblog', '$rootScope','$mdDialog','$timeout', 'Upload', '$cookies', 'ImageService', 'Notification', 'allBloggers', function($scope,$http, $state, blogpostService, blogTagService, UserService, ExamService, StreamService, thisblog, $rootScope, $mdDialog,$timeout, Upload, $cookies, ImageService, Notification, allBloggers){
             $scope.blogpost = thisblog.data;
-            $scope.allTags = allTags.data;
-            $scope.allExams = examList.data;
-            $scope.allStreams = streamList.data;
             $scope.allBloggers = allBloggers.data;
             var bloggerIds = $scope.allBloggers.map(function(a) {return a._id;});
             
@@ -19213,53 +19210,6 @@ function getLatLng(thisData) {
             $scope.urlslug = '';
             $scope.urlslugError = false;
             $scope.urlslugSet = false;
-            /*$scope.$watch('blogpost.title', function (newValue, oldValue, scope) {
-                //console.log($scope.blogpost.urlslug);
-                if(newValue && newValue.length > 0){
-                    $scope.urlslug = slugify(newValue);
-                    
-                    if(!$scope.urlslugSet){
-                        $scope.blogpost.urlslug = $scope.urlslug;
-                    }
-                    
-                }
-
-            }, true);
-            
-            $scope.$watch('blogpost.urlslug', function (newValue, oldValue, scope) {
-                //console.log(newValue);
-                if(newValue && newValue.length > 0){
-                    blogpostService.slugExists(newValue).success(function (data, status, headers) {
-                        if(data == false){
-                            $scope.urlslugError = false;
-                            $scope.blogpost.urlslug = $scope.urlslug;
-                            //console.log('Title is fine');
-                        }else{
-                            //slug error
-                            var blogId = data;
-                            
-                            if(blogId != $scope.blogpost._id){
-                                $scope.urlslugError = true;
-                                $scope.newUrlslug = $scope.blogpost.urlslug;
-                                $scope.showUrlslugDialog();
-                                //console.log('Title is not fine');
-                            }else{
-                                $scope.urlslugError = false;
-                                $scope.blogpost.urlslug = $scope.urlslug;
-                                //console.log('Title is fine');
-                            }
-                            
-                        }
-                        
-                    })
-                    .error(function (data, status, header, config) {
-                        console.log("Error ");
-                    });
-                    
-                    
-                }
-
-            }, true);*/
             
             $scope.addBlogExam = function(thisExam){
                 if(!$scope.blogpost.exams){
@@ -19335,10 +19285,18 @@ function getLatLng(thisData) {
                 });
             };
             
-            $scope.blogTagsList = [];
-            if($scope.blogpost.blogTags){
-                $scope.blogTagsList = $scope.blogpost.blogTags.map(function(a) {return a._id;});
-            }
+            /*allTags: ['blogTagService',
+                    function(blogTagService){
+                    return blogTagService.getblogTags();
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],*/
             
             $scope.setBlogTag = function(newTag){
                 var newTagId = newTag._id;
@@ -19387,18 +19345,49 @@ function getLatLng(thisData) {
                     //$scope.userReviewMode = true;
                 });
             };
+            $scope.allExams = null;
+            $scope.allStreams = null;
             $scope.showBlogExamDialog = function(ev) {
-            $mdDialog.show({
-                  contentElement: '#examDialog',
-                  parent: angular.element(document.body),
-                  targetEvent: ev,
-                  clickOutsideToClose: true
-                }).finally(function() {
-                    //$scope.userReviewMode = true;
-                });
+                if(!$scope.allExams || !$scope.allStreams){
+                    ExamService.getExams().success(function (examdata, status, headers) {
+                        console.log('Exams loaded!');
+                        $scope.allExams = examdata;
+                        StreamService.getStreams().success(function (streamdata, status, headers) {
+                            console.log('Streams loaded!');
+                            $scope.allStreams = streamdata;
+                            $mdDialog.show({
+                              contentElement: '#examDialog',
+                              parent: angular.element(document.body),
+                              targetEvent: ev,
+                              clickOutsideToClose: true
+                            }).finally(function() {
+                                //$scope.userReviewMode = true;
+                            });
+                        })
+                        .error(function (data, status, header, config) {
+                            Notification.warning({message: "Something went wrong! Streams not loaded!",  positionY: 'top', positionX: 'right', delay: 1000});
+                            console.log("Error ");
+                        });
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong! Exams not loaded!",  positionY: 'top', positionX: 'right', delay: 1000});
+                        console.log("Error ");
+                    });
+                   
+                }else{
+                    $mdDialog.show({
+                      contentElement: '#examDialog',
+                      parent: angular.element(document.body),
+                      targetEvent: ev,
+                      clickOutsideToClose: true
+                    }).finally(function() {
+                        //$scope.userReviewMode = true;
+                    });
+                }
             };
             $scope.showBlogCoachingDialog = function(ev) {
-            $mdDialog.show({
+                            
+                $mdDialog.show({
                   contentElement: '#coachingDialog',
                   parent: angular.element(document.body),
                   targetEvent: ev,
@@ -19408,14 +19397,39 @@ function getLatLng(thisData) {
                 });
             };
             $scope.showBlogTagDialog = function(ev) {
-            $mdDialog.show({
-                  contentElement: '#tagDialog',
-                  parent: angular.element(document.body),
-                  targetEvent: ev,
-                  clickOutsideToClose: true
-                }).finally(function() {
-                    //$scope.userReviewMode = true;
-                });
+                if(!$scope.allTags){
+                    blogTagService.getblogTags().success(function (data, status, headers) {
+                        console.log('Tags loaded!');
+                        $scope.allTags = data;
+                        $scope.blogTagsList = [];
+                        if($scope.blogpost.blogTags){
+                            $scope.blogTagsList = $scope.blogpost.blogTags.map(function(a) {return a._id;});
+                        }
+                        $mdDialog.show({
+                          contentElement: '#tagDialog',
+                          parent: angular.element(document.body),
+                          targetEvent: ev,
+                          clickOutsideToClose: true
+                        }).finally(function() {
+                            //$scope.userReviewMode = true;
+                        });
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong! Blog tags not loaded!",  positionY: 'top', positionX: 'right', delay: 1000});
+                        console.log("Error ");
+                    });
+                   
+                }else{
+                    $mdDialog.show({
+                      contentElement: '#tagDialog',
+                      parent: angular.element(document.body),
+                      targetEvent: ev,
+                      clickOutsideToClose: true
+                    }).finally(function() {
+                        //$scope.userReviewMode = true;
+                    });
+                }
+                
             };
             $scope.showVersionDialog = function(ev) {
             $mdDialog.show({
@@ -21584,10 +21598,7 @@ function getLatLng(thisData) {
                     function(UserService){
                     return UserService.allBloggers();
                 }],
-                allTags: ['blogTagService',
-                    function(blogTagService){
-                    return blogTagService.getblogTags();
-                }],
+                /*
                 examList: ['ExamService',
                     function(ExamService){
                     return ExamService.getExams();
@@ -21596,6 +21607,11 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
+                allTags: ['blogTagService',
+                    function(blogTagService){
+                    return blogTagService.getblogTags();
+                }],
+                */
                 provider: function() { return {}; }
                 
             }
@@ -23918,8 +23934,8 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
         
     });
     $transitions.onSuccess({}, function() {
-        console.log("statechange success");
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        //console.log("statechange success");
+        //document.body.scrollTop = document.documentElement.scrollTop = 0;
         //$mdDialog.hide();
         console.log("SEO Title: " + $rootScope.pageTitle);
         console.log("SEO Description: " + $rootScope.pageDescription);
