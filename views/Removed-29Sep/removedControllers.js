@@ -603,3 +603,18 @@ exambazaar.controller("rentvsbuyController",
                 $scope.showChartDialog();
             };
     }]);
+
+
+        
+        exambazaar.controller("userInfoController", 
+        [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'UserService', '$mdDialog', '$timeout', function($scope, thisuser,$http,$state,$rootScope, $cookies, UserService, $mdDialog, $timeout){
+            $scope.user = thisuser.data;
+            if($cookies.getObject('sessionuser')){
+                var sessionuser = $cookies.getObject( 'sessionuser');
+            }else{
+                $scope.showLoginForm();
+            }
+        
+            
+            
+    }]); 

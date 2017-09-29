@@ -14204,20 +14204,6 @@ function getLatLng(thisData) {
         //console.log('Profile Controller finished');    
     }]);    
         
-    
-        
-        exambazaar.controller("userInfoController", 
-        [ '$scope', 'thisuser' , '$http','$state', '$rootScope', '$cookies', 'UserService', '$mdDialog', '$timeout', function($scope, thisuser,$http,$state,$rootScope, $cookies, UserService, $mdDialog, $timeout){
-            $scope.user = thisuser.data;
-            if($cookies.getObject('sessionuser')){
-                var sessionuser = $cookies.getObject( 'sessionuser');
-            }else{
-                $scope.showLoginForm();
-            }
-        
-            
-            
-    }]);  
     exambazaar.controller("addSubscriberController", 
         [ '$scope',  'subscribersList','subscriberService','$http','$state', function($scope, subscribersList, subscriberService,$http,$state){
         
@@ -21887,29 +21873,6 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'profile.html',
                     controller: 'profileController',
-                },
-                'footer': {
-                    templateUrl: 'footer.html'
-                }
-            },
-            resolve: {
-                thisuser: ['UserService', '$stateParams',
-                    function(UserService,$stateParams){
-                    return UserService.getUser($stateParams.userId);
-                }],
-                user: function() { return {}; }
-            }
-        })
-        .state('userInfo', {
-            url: '/userInfo/:userId',
-            views: {
-                'header':{
-                    templateUrl: 'header.html',
-                    
-                },
-                'body':{
-                    templateUrl: 'userInfo.html',
-                    controller: 'userInfoController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'

@@ -948,3 +948,27 @@
                 }
             }
         })
+
+.state('userInfo', {
+            url: '/userInfo/:userId',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'userInfo.html',
+                    controller: 'userInfoController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                user: function() { return {}; }
+            }
+        })
