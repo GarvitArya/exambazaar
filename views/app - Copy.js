@@ -19979,7 +19979,7 @@ function getLatLng(thisData) {
         
         })
         .state('findCoaching', {
-            url: '/stream/:categoryName/:subCategoryName/:cityName',
+            url: '/stream/:categoryName/:subCategoryName/:cityName', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20027,7 +20027,7 @@ function getLatLng(thisData) {
             }
         })
         .state('showCoaching', {
-            url: '/stream/:categoryName/:subCategoryName/:cityName/:coachingId',
+            url: '/stream/:categoryName/:subCategoryName/:cityName/:coachingId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20059,7 +20059,7 @@ function getLatLng(thisData) {
             }
         })
         .state('showGroup', {
-            url: '/group/:categoryName/:subCategoryName/:cityName/:groupName',
+            url: '/group/:categoryName/:subCategoryName/:cityName/:groupName', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20115,7 +20115,7 @@ function getLatLng(thisData) {
             }
         })
         .state('claim', {
-            url: '/claim/:coachingId',
+            url: '/claim/:coachingId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20164,7 +20164,7 @@ function getLatLng(thisData) {
             }
         })
         .state('offers', {
-            url: '/ebinternal/partner/:coachingId/offers',
+            url: '/partner/:coachingId/offers', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20201,7 +20201,7 @@ function getLatLng(thisData) {
             }
         })
         .state('verifyClaim', {
-            url: '/verifyClaim/:coachingId',
+            url: '/verifyClaim/:coachingId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20225,7 +20225,7 @@ function getLatLng(thisData) {
             }
         })
         .state('socialLogin', {
-            url: '/ebinternal/socialLogin',
+            url: '/socialLogin', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20245,7 +20245,7 @@ function getLatLng(thisData) {
             }
         })
         .state('contacts', {
-            url: '/ebinternal/contacts',
+            url: '/contacts', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20269,7 +20269,7 @@ function getLatLng(thisData) {
             }
         })
         .state('charting', {
-            url: '/ebinternal/charting',
+            url: '/charting', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20313,7 +20313,7 @@ function getLatLng(thisData) {
             }
         })
         .state('activeUsers', {
-            url: '/ebinternal/activeUsers/:userId',
+            url: '/activeUsers/:userId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20341,7 +20341,7 @@ function getLatLng(thisData) {
             }
         })
         .state('allTests', {
-            url: '/ebinternal/allTests/:userId',
+            url: '/allTests/:userId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20371,7 +20371,7 @@ function getLatLng(thisData) {
             }
         })
         .state('scheduleQAD', {
-            url: '/ebinternal/scheduleQAD/:userId',
+            url: '/scheduleQAD/:userId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20406,7 +20406,7 @@ function getLatLng(thisData) {
             }
         })
         .state('aroundme', {
-            url: '/aroundme',
+            url: '/aroundme', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20435,7 +20435,7 @@ function getLatLng(thisData) {
             
         })
         .state('postBlog', {
-            url: '/ebinternal/postBlog/:userId',
+            url: '/postBlog/:userId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20472,7 +20472,7 @@ function getLatLng(thisData) {
             }
         })
         .state('allOffers', {
-            url: '/ebinternal/allOffers',
+            url: '/allOffers', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20496,7 +20496,7 @@ function getLatLng(thisData) {
             }
         })
         .state('allreviews', {
-            url: '/ebinternal/allreviews',
+            url: '/allreviews', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20520,7 +20520,7 @@ function getLatLng(thisData) {
             }
         })
         .state('extractEmails', {
-            url: '/ebinternal/extractEmails',
+            url: '/extractEmails', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20536,7 +20536,7 @@ function getLatLng(thisData) {
             }
         })
         .state('coachingGroupSummary', {
-            url: '/ebinternal/coachingGroupSummary',
+            url: '/coachingGroupSummary', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20566,7 +20566,7 @@ function getLatLng(thisData) {
             }
         })
         .state('rankerswall', {
-            url: '/rankerswall/:examName/:year',
+            url: '/rankerswall/:examName/:year', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20594,7 +20594,7 @@ function getLatLng(thisData) {
             }
         })
         .state('search', {
-            url: '/ebinternal/search',
+            url: '/search', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20618,7 +20618,7 @@ function getLatLng(thisData) {
             }
         })
         .state('suggestCoaching', {
-            url: '/ebinternal/user/:userId/suggestCoaching',
+            url: '/user/:userId/suggestCoaching', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20647,7 +20647,7 @@ function getLatLng(thisData) {
             }
         })
         .state('coachingGroup', {
-            url: '/ebinternal/user/:userId/coachingGroup',
+            url: '/user/:userId/coachingGroup', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20679,7 +20679,7 @@ function getLatLng(thisData) {
             }
         })
         .state('review', {
-            url: '/review',
+            url: '/review', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20711,7 +20711,7 @@ function getLatLng(thisData) {
             }
         })
         .state('reviewed', {
-            url: '/ebinternal/user/:userId/reviewed',
+            url: '/user/:userId/reviewed', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20744,7 +20744,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addedInstitutes', {
-            url: '/ebinternal/user/:userId/addedInstitutes',
+            url: '/user/:userId/addedInstitutes', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20775,7 +20775,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addedQuestions', {
-            url: '/ebinternal/user/:userId/addedQuestions',
+            url: '/user/:userId/addedQuestions', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20809,7 +20809,7 @@ function getLatLng(thisData) {
             }
         })
         .state('blog', {
-            url: '/blog',
+            url: '/blog', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20837,7 +20837,7 @@ function getLatLng(thisData) {
             }
         })
         .state('showblog', {
-            url: '/blogpost/:blogpostSlug',
+            url: '/blogpost/:blogpostSlug', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20869,7 +20869,7 @@ function getLatLng(thisData) {
             }
         })
         .state('editblog', {
-            url: '/ebinternal/editblog/:blogpostId',
+            url: '/editblog/:blogpostId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20911,7 +20911,7 @@ function getLatLng(thisData) {
             }
         })
         .state('availOffer', {
-            url: '/ebinternal/user/:userId/:reviewId/availoffer',
+            url: '/user/:userId/:reviewId/availoffer', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20947,7 +20947,7 @@ function getLatLng(thisData) {
             }
         })
         .state('thankyou', {
-            url: '/thankyou',
+            url: '/thankyou', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20963,7 +20963,7 @@ function getLatLng(thisData) {
             }
         })
         .state('error', {
-            url: '/ebinternal/error',
+            url: '/error', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -20978,7 +20978,7 @@ function getLatLng(thisData) {
             }
         })
         .state('sandbox2', {
-            url: '/ebinternal/master/:masterId/sandbox2/:cityName',
+            url: '/master/:masterId/sandbox2/:cityName', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21010,7 +21010,7 @@ function getLatLng(thisData) {
             }
         })
         .state('eligibility', {
-            url: '/ebinternal/user/:userId/eligibility',
+            url: '/user/:userId/eligibility', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21058,7 +21058,7 @@ function getLatLng(thisData) {
             }
         })
         .state('why', {
-            url: '/ebinternal/why',
+            url: '/why',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21074,7 +21074,7 @@ function getLatLng(thisData) {
             }
         })
         .state('about', {
-            url: '/ebinternal/about',
+            url: '/about',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21090,7 +21090,7 @@ function getLatLng(thisData) {
             }
         })
         .state('calendar', {
-            url: '/ebinternal/calendar',
+            url: '/calendar',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21106,7 +21106,7 @@ function getLatLng(thisData) {
             }
         })
         .state('sendEmail', {
-            url: '/ebinternal/user/:userId/sendEmail',
+            url: '/user/:userId/sendEmail',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21134,7 +21134,7 @@ function getLatLng(thisData) {
             }
         })
         .state('userMarketing', {
-            url: '/ebinternal/user/:userId/userMarketing',
+            url: '/user/:userId/userMarketing',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21162,7 +21162,7 @@ function getLatLng(thisData) {
             }
         })
         .state('userSurvey', {
-            url: '/ebinternal/user/:userId/userSurvey',
+            url: '/user/:userId/userSurvey',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21190,7 +21190,7 @@ function getLatLng(thisData) {
             }
         })
         .state('providers', {
-            url: '/ebinternal/coaching/database2/:city',
+            url: '/coaching/database2/:city', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21219,7 +21219,7 @@ function getLatLng(thisData) {
             }   
         })
         .state('editTargetStudyProvider', {
-            url: '/ebinternal/edit/database1/:coachingId',
+            url: '/edit/database1/:coachingId', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21247,7 +21247,7 @@ function getLatLng(thisData) {
             }
         })
         .state('providersWithAreas', {
-            url: '/ebinternal/coaching/providersWithAreas',
+            url: '/coaching/providersWithAreas', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21270,7 +21270,7 @@ function getLatLng(thisData) {
             }
         })
         .state('targetStudyProviders', {
-            url: '/ebinternal/coaching/database1/:city',
+            url: '/coaching/database1/:city', //masterId?
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21314,7 +21314,7 @@ function getLatLng(thisData) {
             }
         })
         .state('master-dashboard', {
-            url: '/ebinternal/master/:masterId/dashboard',
+            url: '/master/:masterId/dashboard',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21396,7 +21396,7 @@ function getLatLng(thisData) {
             }
         })
         .state('partner-dashboard', {
-            url: '/ebinternal/partner/:userId/dashboard',
+            url: '/partner/:userId/dashboard',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21420,7 +21420,7 @@ function getLatLng(thisData) {
             }
         })
         .state('shortlisted', {
-            url: '/ebinternal/user/:userId/shortlisted',
+            url: '/user/:userId/shortlisted',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21448,7 +21448,7 @@ function getLatLng(thisData) {
             }
         })
         .state('viewed', {
-            url: '/ebinternal/user/:userId/viewed',
+            url: '/user/:userId/viewed',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21477,7 +21477,7 @@ function getLatLng(thisData) {
             }
         })
         .state('filled', {
-            url: '/ebinternal/user/:userId/filled',
+            url: '/user/:userId/filled',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21505,7 +21505,7 @@ function getLatLng(thisData) {
             }
         })
         .state('assigned', {
-            url: '/ebinternal/user/:userId/assigned',
+            url: '/user/:userId/assigned',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21534,7 +21534,7 @@ function getLatLng(thisData) {
             }
         })
         .state('assignedToVerify', {
-            url: '/ebinternal/user/:userId/assignedToVerify',
+            url: '/user/:userId/assignedToVerify',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21563,7 +21563,7 @@ function getLatLng(thisData) {
             }
         })
         .state('assignedToRate', {
-            url: '/ebinternal/user/:userId/assignedToRate',
+            url: '/user/:userId/assignedToRate',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21592,7 +21592,7 @@ function getLatLng(thisData) {
             }
         })
         .state('assignedToAddContactInfo', {
-            url: '/ebinternal/user/:userId/assignedToAddContactInfo',
+            url: '/user/:userId/assignedToAddContactInfo',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21621,7 +21621,7 @@ function getLatLng(thisData) {
             }
         })
         .state('filledAll', {
-            url: '/ebinternal/user/:userId/filledAll',
+            url: '/user/:userId/filledAll',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21649,7 +21649,7 @@ function getLatLng(thisData) {
             }
         })
         .state('group', {
-            url: '/ebinternal/user/:userId/group',
+            url: '/user/:userId/group',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21672,7 +21672,7 @@ function getLatLng(thisData) {
             }
         })
         .state('profile', {
-            url: '/ebinternal/user/:userId/profile',
+            url: '/user/:userId/profile',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21695,7 +21695,7 @@ function getLatLng(thisData) {
             }
         })
         .state('checkLogo', {
-            url: '/ebinternal/user/:userId/checkLogo/:pageNumber/',
+            url: '/user/:userId/checkLogo/:pageNumber/',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21723,7 +21723,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addStream', {
-            url: '/ebinternal/addStream',
+            url: '/addStream',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21746,7 +21746,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addOffer', {
-            url: '/ebinternal/addOffer',
+            url: '/addOffer',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21769,7 +21769,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addLocation', {
-            url: '/ebinternal/addLocation',
+            url: '/addLocation',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21796,7 +21796,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addMediaTag', {
-            url: '/ebinternal/addMediaTag',
+            url: '/addMediaTag',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21823,7 +21823,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addGroup', {
-            url: '/ebinternal/addGroup',
+            url: '/addGroup',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21846,7 +21846,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addSendGridCredential', {
-            url: '/ebinternal/addSendGridCredential',
+            url: '/addSendGridCredential',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21869,7 +21869,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addAwsCredential', {
-            url: '/ebinternal/addAwsCredential',
+            url: '/addAwsCredential',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21892,7 +21892,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addSubscriber', {
-            url: '/ebinternal/addSubscriber',
+            url: '/addSubscriber',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21915,7 +21915,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addExam', {
-            url: '/ebinternal/addExam',
+            url: '/addExam',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21942,7 +21942,7 @@ function getLatLng(thisData) {
             }
         })
         .state('editExam', {
-            url: '/ebinternal/editExam/:examId',
+            url: '/editExam/:examId',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21972,7 +21972,7 @@ function getLatLng(thisData) {
             }
         })
         .state('exam', {
-            url: '/ebinternal/exam/:examName',
+            url: '/exam/:examName',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -21998,7 +21998,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addQuestion', {
-            url: '/ebinternal/addQuestion/:testId',
+            url: '/addQuestion/:testId',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22025,7 +22025,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addEligibility', {
-            url: '/ebinternal/addEligibility',
+            url: '/addEligibility',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22056,7 +22056,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addMaster', {
-            url: '/ebinternal/master/:masterId/addMaster',
+            url: '/master/:masterId/addMaster',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22074,7 +22074,7 @@ function getLatLng(thisData) {
             }
         })
         .state('manageUsers', {
-            url: '/ebinternal/master/:masterId/manageUsers',
+            url: '/master/:masterId/manageUsers',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22092,7 +22092,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addInstitute', {
-            url: '/ebinternal/master/:userId/addInstitute',
+            url: '/master/:userId/addInstitute',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22124,7 +22124,7 @@ function getLatLng(thisData) {
             }
         })
         .state('bulkDisable', {
-            url: '/ebinternal/master/:userId/bulkDisable',
+            url: '/master/:userId/bulkDisable',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22148,7 +22148,7 @@ function getLatLng(thisData) {
             }
         })
         .state('addIntern', {
-            url: '/ebinternal/user/:userId/addIntern',
+            url: '/user/:userId/addIntern',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22166,7 +22166,7 @@ function getLatLng(thisData) {
             }
         })
         .state('sitemap', {
-            url: '/ebinternal/sitemap',
+            url: '/sitemap',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22184,7 +22184,7 @@ function getLatLng(thisData) {
             }
         })
         .state('verify', {
-            url: '/ebinternal/verify/:userId/',
+            url: '/verify/:userId/',
             views: {
                 'header':{
                     templateUrl: 'header.html',

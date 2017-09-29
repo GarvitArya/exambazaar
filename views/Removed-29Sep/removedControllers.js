@@ -618,3 +618,199 @@ exambazaar.controller("rentvsbuyController",
             
             
     }]); 
+
+exambazaar.controller("internshipController", 
+        [ '$scope','$rootScope', 'MasterService',function($scope,$rootScope,MasterService){
+            $scope.submitted = 0;
+            $rootScope.pageTitle = 'Internships at Exam Bazaar'; 
+            
+            var uploader = $scope.uploader = new FileUploader({
+            url: 'https://file.io',
+            /*alias: 'image',
+            headers: {
+                Authorization: 'Client-ID a1dc6fb18b097c6',
+            },*/
+            autoUpload: true
+            });
+            uploader.onSuccessItem = function(fileItem, response, status, headers) {
+                //console.log('onSuccessItem', fileItem, response, status, headers);
+                var link = response.link;
+                console.log('Resume added');
+                if(link){
+                    $scope.applicant.resume = link;
+                }
+            };
+            
+            $scope.submit = function(){
+                if($scope.applicant.resume){
+                    console.log("Ready to add to database");
+                    MasterService.addIntern($scope.applicant).success(function (data, status, headers) {
+                        console.log("Done");
+                        $scope.submitted = 1;
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error!!!");
+                        alert("Something went wrong. Instead email you candidacy to gaurav@educhronicle.com");
+                    });
+                }else{
+                    alert('Add Resume or wait for it to upload before submitting');
+                }
+            };
+            
+            $scope.responsibilities = [
+                'Building partnerships & collating further information about education providers',
+                'Assisting in the preparation, distribution and delivery of marketing material',
+                'Growing the business through social media and traditional expansion means',
+                'Receiving feedback from users and developing techniques to improve the service consequently'
+            ];
+            $scope.requirements = [
+                'Excellent verbal and written communication skills, with extensive knowledge of social media',
+                'Proficient in Microsoft PowerPoint, Word and Excel',
+                'Good organizational and execution skills, focus on detail',
+                'Strong team player who can work independently'
+            ];
+    }]);
+
+exambazaar.controller("accountController", 
+        [ '$scope','$rootScope', 'Upload','ImageService',function($scope,$rootScope,Upload,ImageService){
+            
+        
+         $scope.uploadFiles = function () {
+            var files = $scope.files;
+            if (files && files.length) {
+                files.forEach(function(thisFile, index){
+                var fileInfo = {
+                    filename: thisFile.name,
+                    contentType: thisFile.type
+                };
+                console.log(fileInfo);
+                ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                var s3Request = {};
+                var allParams = data.params;
+                for (var key in allParams) {
+                  if (allParams.hasOwnProperty(key)) {
+                    s3Request[key] = allParams[key];
+                  }
+                }
+                s3Request.file = thisFile;
+                    
+                Upload.upload({
+                    url: data.endpoint_url,
+                    data: s3Request
+                }).then(function (resp) {
+                    console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                    thisFile.link = $(resp.data).find('Location').text();
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    thisFile.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                    //console.log('progress: ' + thisFile.uploadProgress + '% ' + thisFile.name);
+                });
+                
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error ");
+            });    
+                    
+            });
+            }
+         };
+            
+            
+        $scope.submit = function() {
+          if ($scope.form.file.$valid && $scope.file) {
+            var fileInfo = {
+                filename: $scope.file.name,
+                contentType: $scope.file.type
+            };
+            console.log(JSON.stringify(fileInfo));
+            ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+                //console.log(data);
+                var s3Request = {
+                };
+                var allParams = data.params;
+                for (var key in allParams) {
+                  if (allParams.hasOwnProperty(key)) {
+                    //console.log(key + " -> " + allParams[key]);
+                    s3Request[key] = allParams[key];
+                  }
+                }
+                s3Request.file = $scope.file;
+                
+                Upload.upload({
+                    url: data.endpoint_url,
+                    data: s3Request
+                }).then(function (resp) {
+                    console.log('Success ' + $scope.file.name + 'uploaded. Response: ' + resp.data);
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    $scope.file.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                    console.log('progress: ' + $scope.file.uploadProgress + '% ' + $scope.file.name);
+                });
+                
+                $scope.upload(s3Request,data.endpoint_url);
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error ");
+            });
+            
+          }else{
+              console.log('Error');
+          }
+        };
+
+        // upload on file select or drop
+        $scope.upload = function (s3Request,url) {
+            console.log(s3Request,url);
+            Upload.upload({
+                url: url,
+                data: s3Request
+            }).then(function (resp) {
+                console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+            }, function (resp) {
+                console.log('Error status: ' + resp.status);
+            }, function (evt) {
+                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                console.log('progress: ' + progressPercentage + '% ' + s3Request.file.name);
+            });
+        };
+        // for multiple files:
+        /*$scope.uploadFiles = function (files) {
+          if (files && files.length) {
+            for (var i = 0; i < files.length; i++) {
+              Upload.upload({..., data: {file: files[i]}, ...});
+            }
+            // or send them all together for HTML5 browsers:
+            Upload.upload({..., data: {file: files}, ...})...;
+          }
+        };*/
+            
+            
+
+    }]);
+    exambazaar.controller("masterController", 
+    [ '$scope', 'thismaster', function($scope, thismaster){
+        $scope.master = thismaster.data; 
+        $scope.filterText = '';
+        $scope.setFilter = function(text){
+            $scope.searchText = text;
+        };
+        $scope.clearFilter = function(text){
+            $scope.searchText = '';
+        };
+        var tempFilterText = '',
+            filterTextTimeout;
+        $scope.$watch('searchText', function (val) {
+            
+            if (filterTextTimeout) $timeout.cancel(filterTextTimeout);
+            console.log(val);
+            tempFilterText = val;
+            filterTextTimeout = $timeout(function() {
+                $scope.filterText = tempFilterText;
+            }, 250); // delay 250 ms
+        });
+        
+        
+    }]);
+    
