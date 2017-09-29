@@ -711,7 +711,7 @@ router.post('/save', function(req, res) {
                         blogSeries: existingBlogpost.blogSeries,
                         exams: existingBlogpost.exams,
                         coachingGroups: existingBlogpost.coachingGroups,
-                        active: existingBlogpost.active,
+                        //active: existingBlogpost.active,
                         _date: timeNow
                     }
                     //console.log(newSaved);
@@ -777,7 +777,7 @@ router.post('/save', function(req, res) {
                 blogSeries: newblogpost.blogSeries,
                 exams: newblogpost.exams,
                 coachingGroups: newblogpost.coachingGroups,
-                active: newblogpost.active,
+                //active: newblogpost.active,
                 _date: timeNow
             }
             //console.log(newSaved);
