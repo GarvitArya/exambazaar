@@ -25,8 +25,8 @@ function AppCtrl(SidebarJS) {
     SidebarJS.setPosition(newPosition);
   }
 }
-//'ngHandsontable',
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'angular-google-gapi', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js', 'ngSidebarJS', 'ui-notification', 'ngMaterialDatePicker', 'angular-timeline', 'oc.lazyLoad']);
+//'ngHandsontable','angular-medium-editor','angular-timeline'
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'angular-google-gapi', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', , 'chart.js', 'ngSidebarJS', 'ui-notification', 'ngMaterialDatePicker', , 'oc.lazyLoad']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave'
     (function() {
     'use strict';
@@ -58,6 +58,27 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     'handsontable.min.js',
                     'ngHandsontable.min.js',
                     'handsontable.full.css'
+              ]
+            },
+            {
+              name: 'mediumEditor',
+              files: [
+                    'https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/js/medium-editor.min.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/medium-editor.min.css',
+                    'https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/themes/tim.min.css',
+                    'angular-medium-editor.js',
+                    'medium-editor-tables.js',
+                    'medium-editor-tables.css',
+
+              ]
+            },
+            {
+              name: 'angularTimeline',
+              files: [
+                    'angular-timeline.js',
+                    'angular-timeline.css',
+                    'angular-timeline-animations.css',
+                    'angular-timeline-bootstrap.css',
               ]
             },
           ]
@@ -19858,8 +19879,6 @@ function getLatLng(thisData) {
     exambazaar.config(function($stateProvider, $urlRouterProvider,$locationProvider) {
     $urlRouterProvider.otherwise('/thankyou');
     $stateProvider
-        //landing page
-    
         .state('landing', {
             url: '/',
             views: {
@@ -20479,7 +20498,10 @@ function getLatLng(thisData) {
                 allBlogsUpvotesCount: ['upvoteService',
                     function(upvoteService) {
                     return upvoteService.allBlogsUpvotesCount();
-                }]
+                }],
+                mediumEditor: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['mediumEditor'], {serie: true});
+                }],
                 
             }
         })
@@ -20920,7 +20942,9 @@ function getLatLng(thisData) {
                     return blogTagService.getblogTags();
                 }],
                 */
-                
+                mediumEditor: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['mediumEditor'], {serie: true});
+                }],
                 
             }
         })
@@ -22015,7 +22039,10 @@ function getLatLng(thisData) {
                 testList: ['testService', '$stateParams',
                     function(testService, $stateParams){
                     return testService.getExamTestsByExamName($stateParams.examName);
-                }]
+                }],
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularTimeline'], {serie: true});
+                }],
             }
         })
         .state('addQuestion', {
