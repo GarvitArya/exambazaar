@@ -12564,9 +12564,6 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             
             $scope.allBloggers = allBloggers.data;
-            //console.log($scope.allBloggers);
-            
-            
             $scope.userBlogs = userBlogs.data;
             
             var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
@@ -18872,6 +18869,7 @@ function getLatLng(thisData) {
                 
                 $scope.blogpost.urlslug = slugify($scope.blogpost.title);
                 blogpostService.slugExists($scope.blogpost.urlslug).success(function (data, status, headers) {
+                    console.log(data);
                     if(data == false){
                         var blogpostForm = {
                             savedBy: $scope.user._id,
@@ -20465,9 +20463,7 @@ function getLatLng(thisData) {
                 allBlogsUpvotesCount: ['upvoteService',
                     function(upvoteService) {
                     return upvoteService.allBlogsUpvotesCount();
-                }],
-                
-                provider: function() { return {}; }
+                }]
                 
             }
         })

@@ -355,7 +355,8 @@ router.get('/markAllEdbites', function(req, res) {
 
 router.get('/slugExists/:query', function(req, res) {
     var query = req.params.query;
-    blogpost.find({"urlslug":{'$regex' : query, '$options' : 'i'}}, {urlslug:1},function(err, docs) {
+    //{'$regex' : query, '$options' : 'i'}
+    blogpost.find({"urlslug":query}, {urlslug:1},function(err, docs) {
     if (!err){
         if(docs.length == 0){
             res.json(false);
