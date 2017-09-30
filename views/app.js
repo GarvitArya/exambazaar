@@ -25,8 +25,8 @@ function AppCtrl(SidebarJS) {
     SidebarJS.setPosition(newPosition);
   }
 }
-//'ngHandsontable','angular-medium-editor','angular-timeline'
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'angular-google-gapi', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', , 'chart.js', 'ngSidebarJS', 'ui-notification', 'ngMaterialDatePicker', , 'oc.lazyLoad']);
+//'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', 
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','mgcrea.bootstrap.affix','angular-google-gapi','angular-loading-bar','angularMoment','duScroll','ngFileUpload','youtube-embed','material.svgAssetsCache','ngAnimate','ngAria','ngCookies','ngGeolocation','ngMap','ngMaterial','ngMaterialDatePicker','ngSanitize','ngSidebarJS','ngtweet','ngFacebook','oc.lazyLoad','ui.bootstrap','720kb.socialshare','ui.router','ui-notification']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave'
     (function() {
     'use strict';
@@ -79,6 +79,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     'angular-timeline.css',
                     'angular-timeline-animations.css',
                     'angular-timeline-bootstrap.css',
+              ]
+            },
+            {
+              name: 'charting',
+              files: [
+                    'Chart.min.js',
+                    'angular-chart.min.js'
               ]
             },
           ]
@@ -20191,7 +20198,6 @@ function getLatLng(thisData) {
                 loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
                 }],
-                
             }
         })
         .state('offers', {
@@ -20341,7 +20347,9 @@ function getLatLng(thisData) {
                     function(reviewService) {
                     return reviewService.dailySummary();
                 }],
-                
+                loadCharting: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['charting'], {serie: true});
+                }],
                 
             }
         })
