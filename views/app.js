@@ -25,14 +25,14 @@ function AppCtrl(SidebarJS) {
     SidebarJS.setPosition(newPosition);
   }
 }
-
-var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'ngHandsontable','duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'angular-google-gapi', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js', 'ngSidebarJS', 'ui-notification', 'ngMaterialDatePicker', 'angular-timeline']);
+//'ngHandsontable',
+var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAria', 'material.svgAssetsCache', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'angularMoment', 'ngSanitize', 'ngGeolocation', 'ngMap', 'duScroll','ngFileUpload','youtube-embed',  'ngtweet','ngFacebook', 'angular-google-gapi', 'ui.bootstrap','720kb.socialshare', 'angular-clipboard','mgcrea.bootstrap.affix', 'angular-medium-editor', 'chart.js', 'ngSidebarJS', 'ui-notification', 'ngMaterialDatePicker', 'angular-timeline', 'oc.lazyLoad']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave'
     (function() {
     'use strict';
     angular
     .module('exambazaar')
-    .config(function($mdThemingProvider, $facebookProvider, NotificationProvider) {
+    .config(function($mdThemingProvider, $facebookProvider, NotificationProvider, $ocLazyLoadProvider) {
         $mdThemingProvider
             .theme("default")
             .primaryPalette("teal");
@@ -48,6 +48,19 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             horizontalSpacing: 20,
             positionX: 'right',
             positionY: 'bottom'
+        });
+        
+        $ocLazyLoadProvider.config({
+          modules: [
+            {
+              name: 'ngHandsontable',
+              files: [
+                    'handsontable.min.js',
+                    'ngHandsontable.min.js',
+                    'handsontable.full.css'
+              ]
+            },
+          ]
         });
     })
     .controller('streamController', streamController);
@@ -17907,7 +17920,7 @@ function getLatLng(thisData) {
         $rootScope.pageTitle = 'Add Coaching in EB';    
         $scope.user = thisuser.data;
         $scope.exams = examList.data;
-            console.log($scope.exams);
+            //console.log($scope.exams);
         $scope.streams = streamList.data;
         
         if($scope.user.userType =='Master'){
@@ -20020,7 +20033,7 @@ function getLatLng(thisData) {
                     return blogpostService.suggestedblogs($stateParams.subCategoryName);
                 }],
                 
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20052,7 +20065,7 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getProvider($stateParams.coachingId);
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20108,7 +20121,7 @@ function getLatLng(thisData) {
                 }],
                 
                 
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20156,8 +20169,9 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.cisavedUsers($stateParams.coachingId);
                 }],
-                
-                provider: function() { return {}; }
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
                 
             }
         })
@@ -20193,8 +20207,10 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getGroupInfo($stateParams.coachingId);
                 }],
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
                 
-                provider: function() { return {}; }
                 
             }
         })
@@ -20218,7 +20234,7 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getProvider($stateParams.coachingId);
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20238,7 +20254,7 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20262,7 +20278,7 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService) {
                     return targetStudyProviderService.contacts();
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20306,7 +20322,7 @@ function getLatLng(thisData) {
                     function(reviewService) {
                     return reviewService.dailySummary();
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20334,7 +20350,7 @@ function getLatLng(thisData) {
                     function(UserService) {   
                     return UserService.activeUsers(7);
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20487,7 +20503,7 @@ function getLatLng(thisData) {
                     function(offerService,$stateParams){
                     return offerService.getOffers();
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20511,7 +20527,7 @@ function getLatLng(thisData) {
                     function(allreviews) {   
                     return allreviews.getreviews();
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20585,7 +20601,7 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService, $stateParams) {   
                     return targetStudyProviderService.allResults($stateParams.examName);
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20609,7 +20625,7 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService) {   
                     return targetStudyProviderService.coachingAddressService();
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20638,7 +20654,7 @@ function getLatLng(thisData) {
                     function(suggestCoachingService) {   
                     return suggestCoachingService.getsuggestCoachings();
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20670,7 +20686,9 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
-                provider: function() { return {}; }
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
                 
             }
         })
@@ -20702,7 +20720,7 @@ function getLatLng(thisData) {
                     function(ExamService){
                     return ExamService.getExams();
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20735,7 +20753,7 @@ function getLatLng(thisData) {
                     function(reviewService, $stateParams){
                     return reviewService.getuserReviews($stateParams.userId);
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20828,7 +20846,7 @@ function getLatLng(thisData) {
                     function(upvoteService) {
                     return upvoteService.allBlogsUpvotesCount();
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20860,7 +20878,7 @@ function getLatLng(thisData) {
                     function(upvoteService,$stateParams) {
                     return upvoteService.blogpostUpvoteCount($stateParams.blogpostSlug);
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20902,7 +20920,7 @@ function getLatLng(thisData) {
                     return blogTagService.getblogTags();
                 }],
                 */
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -20938,7 +20956,7 @@ function getLatLng(thisData) {
                     function(reviewService, $stateParams){
                     return reviewService.getreview($stateParams.reviewId);
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -21001,7 +21019,7 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService) {
                     return targetStudyProviderService.getCities();
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -21211,7 +21229,7 @@ function getLatLng(thisData) {
                     function(ProviderService,$stateParams) {
                     return ProviderService.getProviders($stateParams.city);
                 }],
-                provider: function() { return {}; }
+                
             }   
         })
         .state('editTargetStudyProvider', {
@@ -21238,7 +21256,7 @@ function getLatLng(thisData) {
                     function(MediaTagService) {  
                     return MediaTagService.getMediaTagByType('Image');
                 }],
-                provider: function() { return {}; }
+                
                 
             }
         })
@@ -21262,7 +21280,7 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService,$stateParams) {
                     return targetStudyProviderService.getProvidersWithAreas();
                 }],
-                provider: function() { return {}; }
+                
             }
         })
         .state('targetStudyProviders', {
@@ -21301,7 +21319,6 @@ function getLatLng(thisData) {
                     function(EmailService) {   
                     return EmailService.getEmails();
                 }],
-                provider: function() { return {}; },
                 targetStudyCities: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService) {
                     return targetStudyProviderService.getCities();
@@ -21412,7 +21429,7 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams) {  
                     return UserService.getPartner($stateParams.userId);
                 }],
-                provider: function() { return {}; }
+                
             }
         })
         .state('shortlisted', {
@@ -21788,7 +21805,9 @@ function getLatLng(thisData) {
                     function(LocationService){
                     return LocationService.getCities();
                 }],
-                exam: function() { return {}; }
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
             }
         })
         .state('addMediaTag', {
@@ -21815,7 +21834,9 @@ function getLatLng(thisData) {
                     function(MediaTagService){
                     return MediaTagService.getMediaTypes();
                 }],
-                mediaTag: function() { return {}; }
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
             }
         })
         .state('addGroup', {
@@ -21838,7 +21859,9 @@ function getLatLng(thisData) {
                     function(GroupService){
                     return GroupService.getGroups();
                 }],
-                group: function() { return {}; }
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
             }
         })
         .state('addSendGridCredential', {
@@ -21907,7 +21930,9 @@ function getLatLng(thisData) {
                     function(subscriberService){
                     return subscriberService.getSubscribers();
                 }],
-                subscriber: function() { return {}; }
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
             }
         })
         .state('addExam', {
@@ -22048,7 +22073,9 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
-                exam: function() { return {}; }
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
             }
         })
         .state('addMaster', {
@@ -22116,7 +22143,10 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
-                user: function() { return {}; }
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
+                
             }
         })
         .state('bulkDisable', {
