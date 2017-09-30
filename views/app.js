@@ -68,7 +68,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','mgcrea.boots
                     'https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/themes/tim.min.css',
                     'angular-medium-editor.js',
                     'medium-editor-tables.js',
-                    'medium-editor-tables.css',
+                    'css/medium-editor-tables.css',
 
               ]
             },
@@ -76,9 +76,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','mgcrea.boots
               name: 'angularTimeline',
               files: [
                     'angular-timeline.js',
-                    'angular-timeline.css',
-                    'angular-timeline-animations.css',
-                    'angular-timeline-bootstrap.css',
+                    'css/angular-timeline.css',
+                    'css/angular-timeline-animations.css',
+                    'css/angular-timeline-bootstrap.css',
               ]
             },
             {
