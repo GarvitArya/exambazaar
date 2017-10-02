@@ -25,9 +25,9 @@ function AppCtrl(SidebarJS) {
     SidebarJS.setPosition(newPosition);
   }
 }
-//'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', 
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','mgcrea.bootstrap.affix','angular-google-gapi','angular-loading-bar','angularMoment','duScroll','ngFileUpload','youtube-embed','material.svgAssetsCache','ngAnimate','ngAria','ngCookies','ngGeolocation','ngMap','ngMaterial','ngMaterialDatePicker','ngSanitize','ngSidebarJS','ngtweet','ngFacebook','oc.lazyLoad','ui.bootstrap','720kb.socialshare','ui.router','ui-notification']);
-//,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave'
+//'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification']);
+//,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
     angular
@@ -63,6 +63,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','mgcrea.boots
             {
               name: 'mediumEditor',
               files: [
+                    'jquery.min.js',
                     'https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/js/medium-editor.min.js',
                     'https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/medium-editor.min.css',
                     'https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/themes/tim.min.css',
@@ -88,6 +89,27 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','mgcrea.boots
                     'angular-chart.min.js'
               ]
             },
+            {
+              name: 'angularClipboard',
+              files: [
+                    'angular-clipboard.js',
+              ]
+            },
+            {
+              name: 'ngFileUpload',
+              files: [
+                    'jquery.min.js',
+                    'ng-file-upload-shim.min.js',
+                    'ng-file-upload.min.js',
+              ]
+            },
+            {
+              name: 'bootstrapAffix',
+              files: [
+                    'jquery.min.js',
+                    'angular-bootstrap-affix.js',
+              ]
+            }
           ]
         });
     })
@@ -20145,7 +20167,9 @@ function getLatLng(thisData) {
                     };
                     return resultService.groupResults(groupCity);
                 }],
-                
+                bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
+                }],
                 
                 
                 
@@ -20198,6 +20222,14 @@ function getLatLng(thisData) {
                 loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
                 }],
+                    
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
+                bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
+                }],
+                
             }
         })
         .state('offers', {
@@ -20235,6 +20267,7 @@ function getLatLng(thisData) {
                 loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
                 }],
+                
                 
                 
             }
@@ -20509,6 +20542,9 @@ function getLatLng(thisData) {
                 }],
                 mediumEditor: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['mediumEditor'], {serie: true});
+                }],
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
                 }],
                 
             }
@@ -20953,7 +20989,9 @@ function getLatLng(thisData) {
                 mediumEditor: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['mediumEditor'], {serie: true});
                 }],
-                
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
             }
         })
         .state('availOffer', {
@@ -21288,7 +21326,9 @@ function getLatLng(thisData) {
                     function(MediaTagService) {  
                     return MediaTagService.getMediaTagByType('Image');
                 }],
-                
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
                 
             }
         })
@@ -21736,7 +21776,9 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
                 }],
-                user: function() { return {}; }
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
             }
         })
         .state('checkLogo', {
@@ -21991,7 +22033,9 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
-                exam: function() { return {}; }
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
             }
         })
         .state('editExam', {
@@ -22021,7 +22065,10 @@ function getLatLng(thisData) {
                 testList: ['testService', '$stateParams',
                     function(testService, $stateParams){
                     return testService.getExamTests($stateParams.examId);
-                }]
+                }],
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
             }
         })
         .state('exam', {
@@ -22051,6 +22098,9 @@ function getLatLng(thisData) {
                 loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularTimeline'], {serie: true});
                 }],
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
             }
         })
         .state('addQuestion', {
@@ -22077,7 +22127,9 @@ function getLatLng(thisData) {
                     function(questionService, $stateParams){
                     return questionService.getTestQuestions($stateParams.testId);
                 }],
-                exam: function() { return {}; }
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
             }
         })
         .state('addEligibility', {
