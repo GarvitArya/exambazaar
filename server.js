@@ -12,23 +12,23 @@ var childProcess = require( "child_process" );
 var phantomjs = require( "phantomjs" );
 var binPath = phantomjs.path;
 */
-var app      = express();
+var app = express();
 
 
 var mongoose = require('mongoose');
 var Moment = require('moment');
 require('mongoose-moment')(mongoose);
 var passport = require('passport');
-var flash        = require('req-flash');
+var flash   = require('req-flash');
 
 
-var morgan       = require('morgan');
+var morgan  = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 
 
 
-var session      = require('express-session');
+var session = require('express-session');
 var cors = require('cors');
 var unirest = require('unirest');
 app.use(cors());
@@ -59,7 +59,7 @@ app.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
 //mongoose.connect(configDB.url);
 mongoose.connect(configDB.url,  { server: { socketOptions: { connectTimeoutMS: 10000 }}}, function(err) {
     if(err){
-        console.log('Mongo DB Error: ' + err);
+   console.log('Mongo DB Error: ' + err);
     }
 });
 require('./config/passport')(passport);
@@ -70,23 +70,23 @@ app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.pr
 app.use(compression({threshold : 0}));
 app.get('/*', function (req, res, next) {
     /*req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0 || req.url.indexOf('.js') != -1 ||*/
-    if ( req.url.indexOf('.css') != -1 || req.url.indexOf('.ttf') != -1 || req.url.indexOf('.jpg') != -1 || req.url.indexOf('.png') != -1 || req.url.indexOf('.jpeg') != -1) {
-        //console.log('Request is: ' + req.url);
-        res.setHeader("Cache-Control", "max-age=864000000, public");
-        res.setHeader("Expires", new Date(Date.now() + 864000000).toUTCString());
+    if ( req.url.indexOf('.css') != -1 || req.url.indexOf('.ttf') != -1 || req.url.indexOf('.jpg') != -1 || req.url.indexOf('.png') != -1 || req.url.indexOf('.jpeg') != -1 || req.url.indexOf('.js') != -1 && req.url.indexOf('app.js') == -1 ) {
+   //console.log('Request is: ' + req.url);
+   res.setHeader("Cache-Control", "max-age=691200000, public");
+   res.setHeader("Expires", new Date(Date.now() + 691200000).toUTCString());
     }
-        next();
+   next();
 });
 
 var productionMode = true;
 if(productionMode){
     app.get('*', function(req, res, next) {
-        if (req.get('x-forwarded-proto') != "https") {
-            res.set('x-forwarded-proto', 'https');
-            res.redirect('https://' + req.get('host') + req.url);
-        } else {
-            next();     
-        }
+   if (req.get('x-forwarded-proto') != "https") {
+  res.set('x-forwarded-proto', 'https');
+  res.redirect('https://' + req.get('host') + req.url);
+   } else {
+  next();     
+   }
     });
 }
 
@@ -321,7 +321,7 @@ app.use(function(req, res, next) {
 //https://service.prerender.io/
 allStates.forEach(function(thisState) {
   app.get(thisState, function(req, res){
-      res.sendFile(__dirname + '/views/index.html');
+ res.sendFile(__dirname + '/views/index.html');
     });
 });
 /*app.get('/', function(req, res){
@@ -334,21 +334,21 @@ app.get('/getStarted', function(req, res){
 
 /*app.use(function(err, req, res, next) {
   if (req.accepts('html')) {
-        // Respond with html page.
-        fs.readFile(__dirname + '/views/landing.html', 'utf-8', function(err, page) {
-            console.log(res);
-            res.writeHead(404, {'Content-Type': 'text/html'});
-            res.write(page);
-            res.end();
-        });
+   // Respond with html page.
+   fs.readFile(__dirname + '/views/landing.html', 'utf-8', function(err, page) {
+  console.log(res);
+  res.writeHead(404, {'Content-Type': 'text/html'});
+  res.write(page);
+  res.end();
+   });
     }
     else if (req.accepts('json')) {
-        // Respond with json.
-        res.status(404).send({ error: 'Not found' });
+   // Respond with json.
+   res.status(404).send({ error: 'Not found' });
     }
     else {
-        // Default to plain-text. send()
-        res.status(404).type('txt').send('Not found');
+   // Default to plain-text. send()
+   res.status(404).type('txt').send('Not found');
     }
 });*/
 
@@ -359,7 +359,7 @@ app.use(function(req, res, next) {
     //console.log('I am here');
     
     res.render(__dirname + '/views/error.html', { locals: { 
-      title : '404 - Not Found'
+ title : '404 - Not Found'
      ,description: ''
      ,author: 'Gaurav Parashar'
     },status: 404 });
