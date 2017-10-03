@@ -1,30 +1,4 @@
-function AppCtrl(SidebarJS) {
-  this.toggleSidebarJS = toggleSidebarJS;
-  this.sidebarIsVisible = isVisibleSidebarJS;
-  this.onSidebarOpen = onSidebarOpen;
-  this.onSidebarClose = onSidebarClose;
-  this.changePosition = changePosition;
 
-  function toggleSidebarJS(sidebarName) {
-    SidebarJS.toggle(sidebarName);
-  }
-
-  function isVisibleSidebarJS(sidebarName) {
-    return SidebarJS.isVisible(sidebarName);
-  }
-
-  function onSidebarOpen() {
-    console.log('is open!');
-  }
-
-  function onSidebarClose() {
-    console.log('is close!');
-  }
-
-  function changePosition(newPosition) {
-    SidebarJS.setPosition(newPosition);
-  }
-}
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
 var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
@@ -1670,7 +1644,101 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("cityController", 
         [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog','thisStream','thisExam',  function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog,thisStream,thisExam){
         $scope.hideLoginDialog();
-        $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Sonbhadra","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
+        $scope.rankedCities = [
+            "Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur",
+            "Agartala", 
+            "Agra", 
+            "Ajmer", 
+            "Aligarh", 
+            "Allahabad", 
+            "Alwar", 
+            "Ambala", 
+            "Amritsar", 
+            "Bareilly", 
+            "Belgaum", 
+            "Bhilwara", 
+            "Bhopal", 
+            "Bhubaneshwar", 
+            "Bhubaneswar", 
+            "Bikaner", 
+            "Bilaspur", 
+            "Coimbatore", 
+            "Davanagere", 
+            "Dehradun", 
+            "Dhanbad", 
+            "Dibrugarh", 
+            "Faridabad", 
+            "Ganganagar", 
+            "Ghaziabad", 
+            "Gorakhpur", 
+            "Guntur", 
+            "Gurgaon", 
+            "Guwahati", 
+            "Gwalior", 
+            "Hosur", 
+            "Hubli", 
+            "Indore", 
+            "Jabalpur", 
+            "Jalandhar", 
+            "Jammu", 
+            "Jamshedpur", 
+            "Jhansi", 
+            "Jodhpur", 
+            "Kannur", 
+            "Kanpur", 
+            "Kochi", 
+            "Kolar", 
+            "Kolhapur", 
+            "Kota", 
+            "Kozhikode", 
+            "Kurukshetra", 
+            "Lucknow", 
+            "Ludhiana", 
+            "Madurai", 
+            "Malappuram", 
+            "Mangalore", 
+            "Mathura", 
+            "Meerut", 
+            "Mohali", 
+            "Moradabad", 
+            "Mysore", 
+            "Nagpur", 
+            "Nainital", 
+            "Nashik", 
+            "Noida", 
+            "Panipat", 
+            "Patiala", 
+            "Patna", 
+            "Pondicherry", 
+            "Raipur", 
+            "Rajkot", 
+            "Ranchi", 
+            "Rohtak", 
+            "Roorkee", 
+            "Saharanpur", 
+            "Secunderabad", 
+            "Shimla", 
+            "Sikar", 
+            "Solapur", 
+            "Srinagar", 
+            "Surat", 
+            "Thrissur", 
+            "Tiruvananthapuram", 
+            "Trichy", 
+            "Trissur", 
+            "Trivandrum", 
+            "Tumakuru", 
+            "Udaipur", 
+            "Ujjain", 
+            "Vadodara", 
+            "Varanasi", 
+            "Vellore", 
+            "Vijayawada", 
+            "Vijaywada", 
+            "Visakhapatnam", 
+            "Vishakhapatnam", 
+            "Warangal", 
+        ];
         
         $scope.cities = cities;
         $scope.exam = thisExam.data;
@@ -1955,7 +2023,28 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
     }]); 
     
-    
+    function AppCtrl(SidebarJS) {
+      this.toggleSidebarJS = toggleSidebarJS;
+      this.sidebarIsVisible = isVisibleSidebarJS;
+      this.onSidebarOpen = onSidebarOpen;
+      this.onSidebarClose = onSidebarClose;
+      this.changePosition = changePosition;
+      function toggleSidebarJS(sidebarName) {
+        SidebarJS.toggle(sidebarName);
+      }
+      function isVisibleSidebarJS(sidebarName) {
+        return SidebarJS.isVisible(sidebarName);
+      }
+      function onSidebarOpen() {
+        console.log('is open!');
+      }
+      function onSidebarClose() {
+        console.log('is close!');
+      }
+      function changePosition(newPosition) {
+        SidebarJS.setPosition(newPosition);
+      }
+    }
     
     
     
@@ -6510,7 +6599,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             
             $scope.rankedCities = ["Jaipur", "Delhi", "Mumbai", "New Delhi", "Gurgaon", "Kota"];
-            /*"Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"*/
             
             $scope.ciVerifyDeadline = new Date();
             $scope.ciVerifyDeadline.setDate( $scope.ciVerifyDeadline.getDate() + 1);
@@ -9860,7 +9948,101 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.exams = examList.data;
             
             $scope.cities = allcities.data;
-            $scope.rankedCities = ["Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bilaspur","Bhubaneswar","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mangalore","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Sonbhadra","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
+            $scope.rankedCities = [
+            "Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur",
+                "Agartala", 
+                "Agra", 
+                "Ajmer", 
+                "Aligarh", 
+                "Allahabad", 
+                "Alwar", 
+                "Ambala", 
+                "Amritsar", 
+                "Bareilly", 
+                "Belgaum", 
+                "Bhilwara", 
+                "Bhopal", 
+                "Bhubaneshwar", 
+                "Bhubaneswar", 
+                "Bikaner", 
+                "Bilaspur", 
+                "Coimbatore", 
+                "Davanagere", 
+                "Dehradun", 
+                "Dhanbad", 
+                "Dibrugarh", 
+                "Faridabad", 
+                "Ganganagar", 
+                "Ghaziabad", 
+                "Gorakhpur", 
+                "Guntur", 
+                "Gurgaon", 
+                "Guwahati", 
+                "Gwalior", 
+                "Hosur", 
+                "Hubli", 
+                "Indore", 
+                "Jabalpur", 
+                "Jalandhar", 
+                "Jammu", 
+                "Jamshedpur", 
+                "Jhansi", 
+                "Jodhpur", 
+                "Kannur", 
+                "Kanpur", 
+                "Kochi", 
+                "Kolar", 
+                "Kolhapur", 
+                "Kota", 
+                "Kozhikode", 
+                "Kurukshetra", 
+                "Lucknow", 
+                "Ludhiana", 
+                "Madurai", 
+                "Malappuram", 
+                "Mangalore", 
+                "Mathura", 
+                "Meerut", 
+                "Mohali", 
+                "Moradabad", 
+                "Mysore", 
+                "Nagpur", 
+                "Nainital", 
+                "Nashik", 
+                "Noida", 
+                "Panipat", 
+                "Patiala", 
+                "Patna", 
+                "Pondicherry", 
+                "Raipur", 
+                "Rajkot", 
+                "Ranchi", 
+                "Rohtak", 
+                "Roorkee", 
+                "Saharanpur", 
+                "Secunderabad", 
+                "Shimla", 
+                "Sikar", 
+                "Solapur", 
+                "Srinagar", 
+                "Surat", 
+                "Thrissur", 
+                "Tiruvananthapuram", 
+                "Trichy", 
+                "Trissur", 
+                "Trivandrum", 
+                "Tumakuru", 
+                "Udaipur", 
+                "Ujjain", 
+                "Vadodara", 
+                "Varanasi", 
+                "Vellore", 
+                "Vijayawada", 
+                "Vijaywada", 
+                "Visakhapatnam", 
+                "Vishakhapatnam", 
+                "Warangal", 
+            ];
             //$scope.rankedCities = ["Jaipur","Kota"];
             
             $scope.reviewPolicy = "I certify that this review is based on my own experience and is my genuine opinion of this coaching institute, and that I have no personal or business relationship with this establishment, and have not been offered any incentive or payment originating from the establishment to write this review. I understand that Exambazaar has a zero-tolerance policy on fake reviews.";
