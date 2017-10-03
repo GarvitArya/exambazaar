@@ -20,8 +20,29 @@ gulp.task('css', function() {
 });
 
 
+gulp.task('momentscripts', function() {
+  return gulp.src(['views/moment.min.js', 'views/moment-timezone-with-data-2010-2020.js', 'views/moment-timezone-utils.js'])
+    .pipe(concat('gulp-moment.js'))
+    .pipe(gulp.dest('views/'));
+});
 
+gulp.task('mapscripts', function() {
+  return gulp.src(['views/ng-map.min.js', 'views/ngGeolocation.min.js', 'views/gmaps.min.js', 'views/angular-google-gapi.min.js'])
+    .pipe(concat('gulp-map.js'))
+    .pipe(gulp.dest('views/'));
+});
 
+gulp.task('socialscripts', function() {
+  return gulp.src(['views/ngtweet.min.js', 'views/ngFacebook.js'])
+    .pipe(concat('gulp-social.js'))
+    .pipe(gulp.dest('views/'));
+});
+
+gulp.task('momentmapsocialmerge', function() {
+  return gulp.src(['views/gulp-moment.js', 'views/gulp-map.js', 'views/gulp-social.js'])
+    .pipe(concat('gulp-moment-map-social.js'))
+    .pipe(gulp.dest('views/'));
+});
 
 gulp.task('dependenttask', ['scripts'], function() {
   return gutil.log('Scripting finished!')
