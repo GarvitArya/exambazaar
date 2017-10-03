@@ -18673,28 +18673,33 @@ function getLatLng(thisData) {
                 }],*/
             
             $scope.setBlogTag = function(newTag){
-                var newTagId = newTag._id;
                 if(!$scope.blogpost.blogTags){
                     $scope.blogpost.blogTags = [];
                 }
-                var tIndex = $scope.blogpost.blogTags.indexOf(newTagId);
+                var newTagId = newTag._id;
+                
+                var tIndex = $scope.blogTagsList.indexOf(newTagId);
                 if(tIndex == -1){
-                    $scope.blogpost.blogTags.push(newTagId);
+                    $scope.blogpost.blogTags.push(newTag);
+                    $scope.blogTagsList = $scope.blogpost.blogTags.map(function(a) {return a._id;});
                 }else{
                     //do nothing
                 }
             };
             
             $scope.unsetBlogTag = function(newTag){
-                var newTagId = newTag._id;
                 if(!$scope.blogpost.blogTags){
                     $scope.blogpost.blogTags = [];
                 }
-                var tIndex = $scope.blogpost.blogTags.indexOf(newTagId);
+                var newTagId = newTag._id;
+                
+                
+                var tIndex = $scope.blogTagsList.indexOf(newTagId);
                 if(tIndex == -1){
                     //do nothing
                 }else{
                     $scope.blogpost.blogTags.splice(tIndex,1);
+                    $scope.blogTagsList = $scope.blogpost.blogTags.map(function(a) {return a._id;});
                     
                 }
             };
@@ -18771,6 +18776,7 @@ function getLatLng(thisData) {
                 });
             };
             $scope.showBlogTagDialog = function(ev) {
+                
                 if(!$scope.allTags){
                     blogTagService.getblogTags().success(function (data, status, headers) {
                         console.log('Tags loaded!');
