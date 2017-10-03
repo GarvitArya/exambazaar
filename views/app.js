@@ -11996,7 +11996,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             };
             
-            var defaultBlogCovers = ["images/blog/blog-cover-7.jpg","images/blog/background.jpg"];
+            var defaultBlogCovers = ["images/blog/eb-blog-cover.jpeg"];
+            //"images/blog/blog-cover-7.jpg","images/blog/background.jpg"
             var rIndex = getRandomInt(0, defaultBlogCovers.length);
             var defaultBlogCover = defaultBlogCovers[rIndex];
             $scope.thisBlogCover = defaultBlogCover;
