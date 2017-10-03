@@ -552,10 +552,10 @@ router.post('/save', function(req, res) {
                     email: userEmail,
                     verified: thisUser.verified
                 });
-                if(thisUser.name){
+                if(thisUser && thisUser.name){
                     console.log('Adding Name ' +thisUser.name );
                     this_user.basic ={
-                        name: thisUser.name
+                        name: titleCase(thisUser.name)
                     }
                 }
                 if(thisUser.partner){

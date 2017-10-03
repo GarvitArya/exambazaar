@@ -903,7 +903,7 @@
         
         [ng-click],
         [data-ng-click],
-        [x-ng-click],[ui-sref],[ngf-select] {
+        [x-ng-click],[ui-sref],[ngf-select], [sidebarjs-toggle] {
             cursor: pointer;
         }
         #greyBackground{
@@ -2122,8 +2122,8 @@
     <!-- End of Google Analytics Code -->
     
     </head>
-    
-    <body twitter-widget-initialize ng-cloak>
+    <!--twitter-widget-initialize-->
+    <body ng-cloak>
     
         
         
@@ -2721,9 +2721,9 @@
                 <a id="sideBarLink" ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
             </div>
             <div flex layout="row" layout-align="center center" class="width100 marginT10">
-                <twitter-timeline class="exact100h">
+                <!--<twitter-timeline class="exact100h">
                     <a class="twitter-timeline" data-height="100%" data-chrome="nofooter" href="https://twitter.com/exambazaar"> Tweets by @exambazaar</a>
-                </twitter-timeline>
+                </twitter-timeline>-->
                 
             </div>
 

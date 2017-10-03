@@ -19925,9 +19925,9 @@ function getLatLng(thisData) {
                     templateUrl: 'p0.html',
                     controller: 'landingController'
                 },
-                'footer': {
+                /*'footer': {
                     templateUrl: 'footer.html'
-                }
+                }*/
             },
             resolve: {
                  data: function($rootScope) {
