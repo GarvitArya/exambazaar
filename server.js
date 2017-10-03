@@ -81,12 +81,23 @@ app.get('/*', function (req, res, next) {
 var productionMode = true;
 if(productionMode){
     app.get('*', function(req, res, next) {
-   if (req.get('x-forwarded-proto') != "https") {
-  res.set('x-forwarded-proto', 'https');
-  res.redirect('https://' + req.get('host') + req.url);
-   } else {
-  next();     
-   }
+        var host = req.get('host');
+        if (req.get('x-forwarded-proto') != "https") {
+            if(host.match(/^www\..*/i)){
+                res.set('x-forwarded-proto', 'https');
+                res.redirect(301, 'https://' + req.get('host') + req.url);
+            }else{
+                res.set('x-forwarded-proto', 'https');
+                res.redirect(301, 'https://www.' + req.get('host') + req.url);
+            }
+        }else{
+            if(host.match(/^www\..*/i)) {
+                next();
+            }else{
+                res.set('x-forwarded-proto', 'https');
+                res.redirect(301, 'https://www.' + req.get('host') + req.url);
+            }
+        }
     });
 }
 
