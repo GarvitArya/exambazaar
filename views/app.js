@@ -15260,7 +15260,6 @@ function getLatLng(thisData) {
                         qnos.splice(qIndex, 1);
                     }
                 });
-                
                 $scope.missingQuestions = qnos;
                 
             };

@@ -65,6 +65,9 @@
     "google-auth-library": "^0.10.0",
     "google-places": "0.0.2",
     "googleapis": "^19.0.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-concat-util": "^0.5.5",
     "handsontable": "^0.32.0-beta1",
     "headroom.js": "^0.9.3",
     "hover.css": "^2.0.2",
@@ -113,5 +116,8 @@
     "tesseract.js": "^1.0.10",
     "unirest": "^0.5.1",
     "xoauth2": "^1.2.0"
+  },
+  "devDependencies": {
+    "gulp-util": "^3.0.8"
   }
 }
