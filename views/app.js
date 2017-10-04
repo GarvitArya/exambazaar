@@ -15687,7 +15687,7 @@ function getLatLng(thisData) {
                 }
             });
             
-            var badgeIconClasses = ['fa fa-user-plus', 'glyphicon-credit-card'];
+            var badgeIconClasses = ['fa fa-user-plus', 'fa fa-bath'];
             var badgeClasses = ['info', 'warning'];
             
             $scope.events = [];

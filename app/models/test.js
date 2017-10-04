@@ -19,6 +19,7 @@ var testSchema = mongoose.Schema({
     solved: {type: Boolean},
     questionWithAnswer: {type: Boolean},
     
+    downloadable : { type: Boolean, default: false},
     verified : { type: Boolean, default: false},
     active : { type: Boolean, default: true},
     _created: { type: Date, default: Date.now },

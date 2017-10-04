@@ -214,7 +214,7 @@ router.get('/userblogs/:userId', function(req, res) {
         if (!err){
             var thisUserType = thisUser.userType;
             var thisUserId = thisUser._id.toString();
-            var internIds = ['59369dea8a9d754dbd9ead2a', '59c7c2dc0a239d4416c2473f', '59c67447930cdc36a00b0e0f'];
+            var internIds = ['59369dea8a9d754dbd9ead2a', '59c7c2dc0a239d4416c2473f', '59c67447930cdc36a00b0e0f', '59085f0fc7289d0011d6ea8c'];
             if(thisUserType =='Master' || internIds.indexOf(thisUserId) != -1){
                 var blogposts = blogpost
                 .find({})

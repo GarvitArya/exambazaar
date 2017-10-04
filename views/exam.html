@@ -197,7 +197,7 @@
             <timeline-event ng-repeat="event in events" class="">
               <timeline-badge class="{{event.badgeClass}}">
                   <!--glyphicon {{event.badgeIconClass}}-->
-                <i class=""></i>
+                <i class="{{event.badgeIconClass}}"></i>
               </timeline-badge>
               <timeline-panel class="{{event.badgeClass}}">
                 <timeline-heading>
@@ -213,6 +213,10 @@
           </timeline>
         
     </div>
+    <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR20 font20 bold">
+        Previous Papers
+    </div>
+    
     </div>
 
 </div>

@@ -80,6 +80,7 @@ app.get('/*', function (req, res, next) {
 
 var productionMode = true;
 if(productionMode){
+    console.log('I am here');
     app.get('*', function(req, res, next) {
         var host = req.get('host');
         if (req.get('x-forwarded-proto') != "https") {
@@ -327,9 +328,6 @@ app.use(function(req, res, next) {
 });
 
 
-
-//https://ebprerender.herokuapp.com/
-//https://service.prerender.io/
 allStates.forEach(function(thisState) {
   app.get(thisState, function(req, res){
  res.sendFile(__dirname + '/views/index.html');
