@@ -216,7 +216,43 @@
     <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR20 font20 bold">
         Previous Papers
     </div>
-    
+    <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR20 editFont" layout-wrap>
+        <div flex="50" class="paddingR10 paddingTB5" ng-repeat="test in exam.tests | orderBy:'-year'">
+            <div layout="row" layout-align="start center" class="width100 padding5 greyBorder min20vh">
+                <div flex="25" class="">
+                    <div layout="row" layout-align="center center" class="min20vh greyBorder">
+                    Screenshot
+                    </div>
+                </div>
+                <div flex layout="column" layout-align="start start" class="width100 padding20">
+                    <div layout="row" layout-align="start start" class="width100">
+                        <div flex="25">
+                        Name
+                        </div>
+                        <div flex>
+                        {{test.name}}
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start start" class="width100">
+                        <div flex="25">
+                        Description
+                        </div>
+                        <div flex>
+                        {{test.description}}
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start start" class="width100 marginT20 paddingLR20">
+                        <md-button class="md-danger md-small tolowercase font14" ng-href="{{test.url.question}}" target="_blank">
+                            Download
+                        </md-button>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
     </div>
 
 </div>
