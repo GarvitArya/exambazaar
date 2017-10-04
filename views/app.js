@@ -51,6 +51,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               name: 'angularTimeline',
               files: [
                     'angular-timeline.js',
+                   /* '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css',*/
                     'css/angular-timeline.css',
                     'css/angular-timeline-animations.css',
                     'css/angular-timeline-bootstrap.css',
@@ -12809,6 +12810,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 return className;
             };
             
+            $scope.markFlipboardPublish = function(thisblog){
+                $mdDialog.hide();
+                var timeNow = moment();
+                if(!thisblog.flipboard){
+                    thisblog.flipboard = {};
+                }
+                thisblog.flipboard = {
+                    published: true,
+                    _date: timeNow,
+                };
+                $scope.updateConfirm(thisblog);
+            };
+            
             $scope.allBloggers = allBloggers.data;
             $scope.userBlogs = userBlogs.data;
             
@@ -12816,6 +12830,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
             $scope.userBlogs.forEach(function(thisBlog, index){
                 var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+                thisBlog.fullurl = "https://www.exambazaar.com/blogpost/" + thisBlog.urlslug;
                 
                 if(bIndex == -1){
                     thisBlog.upvotes = 0;
@@ -13231,6 +13246,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $mdDialog.cancel();
                 },500)
             };
+            $scope.showFlipboardDialog = function(thisblog, ev) {
+                $scope.flipboardBlog = thisblog;
+                $mdDialog.show({
+                  contentElement: '#flipboardDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
             $scope.seeDescription = function(){
                 
                 /*var remove = "<div class=";
@@ -13501,26 +13525,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);       
     
     
-    
-    function intersect_safe(a, b)
-        {
-          var ai=0, bi=0;
-          var result = [];
-
-          while( ai < a.length && bi < b.length )
-          {
-             if      (a[ai] < b[bi] ){ ai++; }
-             else if (a[ai] > b[bi] ){ bi++; }
-             else /* they're equal */
-             {
-               result.push(a[ai]);
-               ai++;
-               bi++;
-             }
-          }
-
-          return result;
-        }
     exambazaar.controller("coachingGroupSummaryController", 
         [ '$scope', '$http', '$rootScope','$state', '$mdDialog', 'MasterService','groupSummary', 'examList', 'streamList', function($scope, $http, $rootScope, $state, $mdDialog, MasterService, groupSummary, examList, streamList){
             
@@ -15683,7 +15687,7 @@ function getLatLng(thisData) {
                 }
             });
             
-            var badgeIconClasses = ['glyphicon-modal-window', 'glyphicon-credit-card'];
+            var badgeIconClasses = ['fa fa-user-plus', 'glyphicon-credit-card'];
             var badgeClasses = ['info', 'warning'];
             
             $scope.events = [];
@@ -22283,7 +22287,7 @@ function getLatLng(thisData) {
                     function(testService, $stateParams){
                     return testService.getExamTestsByExamName($stateParams.examName);
                 }],
-                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                loadAngularTimeline: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularTimeline'], {serie: true});
                 }],
                 ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {

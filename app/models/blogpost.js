@@ -51,6 +51,10 @@ var blogpostSchema = mongoose.Schema({
         active: { type: Boolean, default: false },
         _date:{ type: Date, default: Date.now },
     },
+    flipboard:{
+        published: { type: Boolean, default: false },
+        _date:{ type: Date },
+    },
     seoKeywords: String,
     seoDescription: String,
     

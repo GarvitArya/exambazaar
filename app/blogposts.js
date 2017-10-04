@@ -694,7 +694,7 @@ router.post('/save', function(req, res) {
                 if(savedBy){
                     var timeNow = new Date();
                     for (var property in blogpostForm) {
-                        if(property != '_id' && property != 'upvotes'){
+                        if(property != '_id' && property != 'upvotes' && property != '_v'){
                             existingBlogpost[property] = blogpostForm[property];
                         }
                     }

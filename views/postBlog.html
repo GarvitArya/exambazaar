@@ -117,6 +117,9 @@
             <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
                 Blog Series
             </div>
+            <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
+                Flipboard
+            </div>
         </div>
         <!--'-active','blogSeries','-_created', '-upvotes'-->
         <div layout="row" layout-align="start center" ng-repeat="thisblog in userBlogs | orderBy: ['active','blogSeries','-_created', '-upvotes']" class="width100 greyDashedBottomBorder paddingTB2" ng-class="blogRowClass(thisblog)">
@@ -173,7 +176,10 @@
             <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
                 {{thisblog.blogSeries}}
             </div>
-            
+            <div layout="row" layout-align="center center" flex="10" ng-if="masterUser">
+                <div ng-click="showFlipboardDialog(thisblog)" ng-if="!thisblog.flipboard.published">Flipboard</div>
+                <div ng-click="showFlipboardDialog(thisblog)" ng-if="thisblog.flipboard.published"><i class="fa fa-check-square font16 text-primary" aria-hidden="true"></i></div>
+            </div>
         </div>
         
     </div>
@@ -199,6 +205,41 @@
         </div>
     </div>
     
+</div>
+</div>
+
+<div style="visibility: hidden">    
+<div class="md-dialog-container" id="flipboardDialog">
+  <md-dialog>
+      <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
+        <div layout="column" layout-align="center center" class="margin10 padding5">
+            <div layout="row" layout-align="center center" class="margin10 padding5 secondFont">    
+                {{flipboardBlog.title}}
+            </div>
+            <div layout="row" layout-align="center center" class="margin10 padding5 editFont">    
+                <div flex class="margin5">
+                {{flipboardBlog.fullurl}}
+                </div>
+                <div class="margin5">
+                    <a clipboard supported="supported" text="flipboardBlog.fullurl" on-copied="" on-error="fail(err)" id="copyLink" class="danger">Copy Me</a>
+                </div>
+            </div>
+            <div layout="row" layout-align="center center" class="margin10 padding5 editFont">    
+                <div flex class="margin5">
+                {{flipboardBlog.seoDescription}}
+                </div>
+                <div class="margin5">
+                    <a clipboard supported="supported" text="flipboardBlog.seoDescription" on-copied="" on-error="fail(err)" id="copyLink" class="danger">Copy Me</a>
+                </div>
+            </div>
+            <div layout="row" layout-align="center center" class="margin10 padding5 secondFont">    
+                <md-button class="md-black md-small font10 tolowercase" ng-click="markFlipboardPublish(flipboardBlog)">
+                    Mark Flipped
+                </md-button>
+            </div>
+        </div>
+      </div>
+  </md-dialog>
 </div>
 </div>
 
