@@ -80,7 +80,6 @@ app.get('/*', function (req, res, next) {
 
 var productionMode = true;
 if(productionMode){
-    console.log('I am here');
     app.get('*', function(req, res, next) {
         var host = req.get('host');
         if (req.get('x-forwarded-proto') != "https") {
