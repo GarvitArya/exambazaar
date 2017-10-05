@@ -6,6 +6,7 @@ var result = require('../app/models/result');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
 var user = require('../app/models/user');
 var email = require('../app/models/email');
+var exam = require('../app/models/exam');
 
 
 var mongoose = require('mongoose');
@@ -163,38 +164,49 @@ router.post('/groupResults', function(req, res) {
     var groupCity = req.body;
     var groupName = groupCity.groupName;
     var cityName = groupCity.cityName;
+    var examName = groupCity.examName;
     
-    var allGroupInstitutes = targetStudyProvider.find({ 'groupName': groupName },{_id:1},function (err, allGroupInstitutes) {
+    
+    var thisExam = exam
+        .findOne({'name': examName}, {_id:1})
+        .exec(function (err, thisExam){
         if (!err){
-            allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
-            var basicResults = [];
-    
-            var groupResults = result
-                .find({provider: { $in : allGroupInstitutes }, active: true})
-                .exec(function(err, groupResults) {
-                if (!err){
+            console.log(thisExam);
+            var examId = thisExam._id.toString();
+            
+            var allGroupInstitutes = targetStudyProvider.find({ 'groupName': groupName },{_id:1},function (err, allGroupInstitutes) {
+            if (!err){
+                allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
+                var basicResults = [];
 
-                    var counter = 0;
-                    var nLength = groupResults.length;
-                    console.log("No of results are: " + nLength);
-                    groupResults.forEach(function(thisResult, index){
-                        counter = counter + 1;
-                        basicResults.push(thisResult);
-                        if(counter == nLength){
-                            res.json(basicResults);
+                var groupResults = result
+                    .find({provider: { $in : allGroupInstitutes }, active: true, exam: examId})
+                    .exec(function(err, groupResults) {
+                    if (!err){
+
+                        var counter = 0;
+                        var nLength = groupResults.length;
+                        console.log("No of results are: " + nLength);
+                        groupResults.forEach(function(thisResult, index){
+                            counter = counter + 1;
+                            basicResults.push(thisResult);
+                            if(counter == nLength){
+                                res.json(basicResults);
+                            }
+                        });
+
+                        if(nLength == 0){
+                            res.json([]);
                         }
-                    });
+                    } else {throw err;}
+                });
 
-                    if(nLength == 0){
-                        res.json([]);
-                    }
-                } else {throw err;}
-            });
+
+            }else {throw err;}
+        });
             
-            
-        }else {throw err;}
+        } else {throw err;}
     });
-    
     
 });
 

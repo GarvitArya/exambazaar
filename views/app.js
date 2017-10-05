@@ -2177,11 +2177,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
         $scope.thisGroupR = thisGroupResults.data;
+        if(!$scope.thisGroupR){
+            $scope.thisGroupR = [];
+        }
         $scope.group = thisGroup.data;
         var groupDisabled = $scope.group.map(function(a) {return a.disabled;});
         var groupIds = $scope.group.map(function(a) {return a._id;});
         
         $scope.exam = thisExam.data;
+        $scope.thisExam = $scope.exam;
         $scope.category = thisStream.data;
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
@@ -2381,7 +2385,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             });
             var thisGroupPhoto = thisGroup.photo;
-            var thisGroupResults = thisGroup.results;
+            //var thisGroupResults = thisGroup.results;
+            var thisGroupResults = $scope.thisGroupR;
             var thisGroupVideo = thisGroup.video;
             var thisGroupFaculty = thisGroup.faculty;
             var thisGroupCourse = thisGroup.course;
@@ -2622,9 +2627,26 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.cityCenters.push(thisGroup);
             }
         });
+        var instituteDefinerLower = ["coaching", "classes"];
+        var instituteDefiner = [];//"Coaching", "Classes"
+        var groupNameLowerCase = $stateParams.groupName.toLowerCase();
+        if(groupNameLowerCase.indexOf('coaching') == -1){
+            instituteDefiner.push("Coaching");
+        }
+        if(groupNameLowerCase.indexOf('class') == -1 && groupNameLowerCase.indexOf('classes') == -1){
+            instituteDefiner.push("Classes");
+        }
+        var instituteDefinerString = '';
+        instituteDefiner.forEach(function(thisDefiner, dindex){
+            if(dindex == 0){
+                instituteDefinerString += " ";
+            }
+            instituteDefinerString += thisDefiner + " ";
+        });
+        console.log(instituteDefinerString);
         
-        $rootScope.pageTitle = $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName;
-        $rootScope.pageDescription = $stateParams.groupName + ", " +$scope.city +  " has " + $scope.cityCenters.length + " " +   $scope.subcategory.displayname + " Coaching Centers in " + $scope.city + ". | Exambazaar - results, fees, faculty, photos, vidoes, reviews of " + $stateParams.groupName;
+        $rootScope.pageTitle = $stateParams.groupName + instituteDefinerString + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + " Exam";
+        $rootScope.pageDescription = $stateParams.groupName + ", " +$scope.city +  " has " + $scope.cityCenters.length + " " +   $scope.subcategory.displayname + " Coaching Centers in " + $scope.city + ". | Find fees, photos and reviews of " + $stateParams.groupName;
         
         var groupKeywords = $stateParams.groupName + ", Top " + $stateParams.subCategoryName + " Coaching in " + $stateParams.cityName + ", " + $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ", " + $scope.cityCenters.length + " " + $stateParams.groupName + " Centers in " + $scope.city + ", ";
         $rootScope.pageKeywords = groupKeywords + examNamesKeywords;
@@ -2874,8 +2896,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.reviewCentreError = false;
             $mdDialog.hide();
         };
-        
-        
         $scope.submitReview = function(){
             if(!$scope.userReview.institute){
                 $scope.reviewCentreError = true;
@@ -2900,13 +2920,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             
         };
-        
-        
-        
         $scope.checkReview = function(reviewParam, rateVal) {   
             if($scope.userReview[reviewParam.name] >=rateVal){return true;}else{return false;}
         }
-        
         $scope.setReview = function(param, value, userReview){
             //console.log(userReview);
             if(userReview){
@@ -3562,22 +3578,22 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         $scope.$watch('[provider.address, provider.city]', function (newValue, oldValue, scope) {
             if(newValue != null && newValue[0] != '' && newValue[1] != ''){
-                //console.log(newValue);
                 var address = newValue[0];
                 var city = newValue[0];
+                var state = $scope.provider.state;
                 
                 $timeout(function() {
                     
                     GMaps.geocode({
-                    address: address + ", " + city,
+                    address: address + ", " + city + " " + state,
                     callback: function(results, status) {
-
                         if (status == 'OK') {
                            
                             var latlng = {
                                 lat: results[0].geometry.location.lat(),
                                 lng: results[0].geometry.location.lng()
                             };
+                            
                             
                             if(!$scope.provider.latlng || $scope.provider.latlng.lat != latlng.lat || $scope.provider.latlng.lng != latlng.lng){
                                 $scope.editLocation = true; 
@@ -3631,44 +3647,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
         };
         
-        /*$scope.createUser = function(){
-            $scope.newUser = {
-                userType: 'Partner',
-                verified: true,
-                contact: {
-                    mobile: $scope.verificationMobile,
-                    email: $scope.claimemail
-                },
-                basic: {
-                    name: $scope.claimName,
-                },
-                password: $scope.password
-            };
-            $scope.newUser.userType = 'Partner';
-            $scope.newUser.verified = true;
-            var saveUser = UserService.saveUser($scope.newUser).success(function (data, status, headers) {
-                var fulluser = data;
-
-                var sessionuser = {
-                    userId: fulluser._id,
-                    masterId: fulluser._id,
-                    userType: fulluser.userType,
-                    basic: fulluser.basic,
-                    image: fulluser.image,
-                    mobile: fulluser.mobile,
-                    email: fulluser.email,
-                    
-                };
-                $cookies.putObject('sessionuser', sessionuser);
-
-                $state.go('main');
-
-            })
-            .error(function (data, status, header, config) {
-                console.log('Error ' + data + ' ' + status);
-            });
-            
-        };*/
         $scope.overviewIcons = [
             {
                 icon:'images/icons/centre.png',
@@ -5336,6 +5314,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' + $scope.provider.city;   
             }
         }
+        console.log($scope.provider.mapAddress);
         /*if($scope.provider.pincode){
             $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' +
             $scope.provider.city + ' ' +
@@ -20345,8 +20324,7 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService,$stateParams) {
                     var groupCity = {
                         groupName: $stateParams.groupName,
-                        cityName: $stateParams.cityName
-                        
+                        cityName: $stateParams.cityName,
                     };
                     return targetStudyProviderService.getGroupCity(groupCity);
                 }],
@@ -20354,8 +20332,8 @@ function getLatLng(thisData) {
                     function(resultService,$stateParams) {
                     var groupCity = {
                         groupName: $stateParams.groupName,
-                        cityName: $stateParams.cityName
-                        
+                        cityName: $stateParams.cityName,
+                        examName: $stateParams.subCategoryName
                     };
                     return resultService.groupResults(groupCity);
                 }],
