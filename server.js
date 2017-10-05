@@ -179,6 +179,7 @@ var suggestCoachings = require('./app/suggestCoachings.js',suggestCoachings);
 var addContactInfos = require('./app/addContactInfos.js',addContactInfos); 
 var images = require('./app/images.js',images); 
 var awsCredentials = require('./app/awsCredentials.js',awsCredentials); 
+var s3Utils = require('./app/s3Utils.js',s3Utils); 
 var socialMediaCredentials = require('./app/socialMediaCredentials.js',socialMediaCredentials); 
 var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredentials); 
 
@@ -221,6 +222,7 @@ app.use('/api/suggestCoachings', suggestCoachings);
 app.use('/api/addContactInfos', addContactInfos);
 app.use('/api/images', images);
 app.use('/api/awsCredentials', awsCredentials);
+app.use('/api/s3Utils', s3Utils);
 app.use('/api/socialMediaCredentials', socialMediaCredentials);
 app.use('/api/sendGridCredentials', sendGridCredentials);
 

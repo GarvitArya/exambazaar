@@ -1081,6 +1081,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         
     }]);
+    exambazaar.service('s3UtilsService', ['$http', function($http) {   
+        this.download = function(fileInfo) {
+            return $http.post('/api/s3Utils/download', fileInfo);
+        };
+    }]);
         
     exambazaar.service('couponService', ['$http', function($http) {
         this.saveCoupon = function(coupon) {
@@ -12085,7 +12090,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     exambazaar.controller("allTestsController", 
-        [ '$scope', 'thisuser','examList','testList', 'testService', function($scope, thisuser, examList, testList, testService){
+        [ '$scope', 'thisuser','examList','testList', 'testService', 's3UtilsService', function($scope, thisuser, examList, testList, testService, s3UtilsService){
             $scope.user = thisuser.data;
             $scope.allTests = testList.data;
             var allExams = examList.data;
@@ -12124,6 +12129,48 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log("Error ");
                 });    
             };
+            
+            $scope.download = function(test){
+                if(!test.exam._id){
+                    var eIndex = examIds.indexOf(test.exam);
+                    if(eIndex != -1){
+                        var examStream = {
+                            exam:{
+                                name: allExams[eIndex].name,
+                                displayname: allExams[eIndex].displayname,
+                            },
+                            stream:{
+                                name: allExams[eIndex].stream.name,
+                                displayname: allExams[eIndex].stream.displayname,
+                            },
+                            test:{
+                                name: test.name,
+                                description: test.description,
+                            }
+                        };
+                        test.examStream = examStream;
+                    }
+                    
+                    
+                }
+                console.log(test);
+                var fileInfo = {
+                    test: test,
+                };
+                /*console.log(test.exam);
+                
+                if(test.url.answer){
+                    fileInfo.answer = test.url.answer;
+                }
+                console.log(fileInfo);*/
+                s3UtilsService.download(fileInfo).success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });    
+            };
+            
     }]);    
         
             
