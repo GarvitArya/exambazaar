@@ -494,6 +494,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExamByName = function(examName) {
             return $http.get('/api/exams/exam/'+examName, {examName: examName});
         };
+        this.getExamPatternByName = function(examName) {
+            return $http.get('/api/exams/pattern/'+examName, {examName: examName});
+        };
         this.addLogo = function(newLogoForm) {
             return $http.post('/api/exams/addLogo',newLogoForm);
         };
@@ -15653,10 +15656,14 @@ function getLatLng(thisData) {
     }
     
     exambazaar.controller("examController", 
-        [ '$scope', '$rootScope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', 'Upload', '$timeout', 'testService', 'Notification', '$cookies', 'testList', function($scope, $rootScope, thisexam, ExamService, $http, $state, $mdDialog, Upload, $timeout, testService, Notification, $cookies, testList){
+        [ '$scope', '$rootScope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', '$cookies', 'testList', 'thisExamPattern', 'suggestedblogs', function($scope, $rootScope, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, $cookies, testList, thisExamPattern, suggestedblogs){
             $scope.exam = thisexam.data;
+            $scope.suggestedblogs = suggestedblogs.data;
+            var thisExamPattern = thisExamPattern.data;
             $scope.exam.tests = testList.data;
-            
+            if(thisExamPattern){
+                $scope.exam.pattern = thisExamPattern;
+            }
             var examCycles = $scope.exam.cycle;
             $scope.activeExamCylce = null;
             
@@ -15874,7 +15881,14 @@ function getLatLng(thisData) {
             return thisClass;
             
         };
+        
+        $scope.$watch('exam.exampattern', function (newValue, oldValue, scope) {
+            //Do anything with $scope.letters
+            if(newValue != null){
+                $scope.verifyOTP();
+            }
             
+        }, true);
         //start of functions for tests
         $scope.toAddTest = null;
         $scope.removeTestConfirm = function(test){
@@ -22261,15 +22275,24 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams) {
                     return ExamService.getExamByName($stateParams.examName);    
                 }],
+                thisExamPattern: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamPatternByName($stateParams.examName);    
+                }],
+                
                 testList: ['testService', '$stateParams',
                     function(testService, $stateParams){
                     return testService.getExamTestsByExamName($stateParams.examName);
                 }],
                 loadAngularTimeline: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularTimeline'], {serie: true});
-                }],
+                }],/*
                 ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],*/
+                suggestedblogs: ['blogpostService','$stateParams',
+                    function(blogpostService,$stateParams){
+                    return blogpostService.suggestedblogs($stateParams.examName);
                 }],
             }
         })

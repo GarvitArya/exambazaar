@@ -467,7 +467,7 @@
     #pageLogoHolder{
         /*border: 1px solid rgba(0,0,0,0.8);
         border-radius: 4px;*/
-        background: transparent;
+        background: white;
         height: 90px;
         width: 90px;
         
@@ -629,7 +629,7 @@
     </div>
     <div layout="row" id="heroHeader">
         <div hide-xs flex="15" layout="column" layout-align="end end" class="paddingB10">
-            <div layout="column" layout-align="center center" class="padding5" id="pageLogoHolder">
+            <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
                 <img  ng-if="provider.logo" ng-src="{{provider.logo}}" class="pageLogo" alt="{{provider.name}} Logo" />
                 <img  ng-if="!provider.logo || provider.logo==''" ng-src="{{defaultCoachingLogo}}" class="pageLogo" alt="{{provider.name}} Logo" />
                 
@@ -897,7 +897,7 @@
                     </div>
                 </div>
                     <!--&& thisGroup.phone.length == 0-->
-                <div layout="row" ng-show="thisGroup.mobile.length > 0" class="">
+                <div layout="row" ng-show="thisGroup.mobile.length > 0 && thisGroup.phone.length == 0" class="">
                     <div flex="10">
                         <i class="md-title fa fa-mobile" aria-hidden="true"></i>
                     </div>
@@ -908,6 +908,20 @@
                             </a>&nbsp;
                         </span>
                     </div>
+                </div>
+                <div id="mobilephoneRow" class="">
+                    <div layout="row" ng-show="thisGroup.phone.length > 0" class="">
+                    <div flex="10">
+                        <i class="md-title fa fa-link" aria-hidden="true"></i>
+                    </div>
+                    <div flex="90">
+                        <span ng-repeat="website in thisGroup.website track by $index" ng-if="$index<1">
+                            <a ng-href="{{website}}" target="_blank">
+                                {{website}}
+                            </a>
+                        </span>
+                    </div>
+                </div>
                 </div>
             </div>
                 <!--<div layout="row" ng-show="thisGroup.email" class="marginB5">

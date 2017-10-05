@@ -1111,6 +1111,21 @@
             </div>
         </div>
     </div>
+
+    <div layout="column" layout-align="start start" class="  textBlack width100 paddingB20 subhheadingBottomBorder2">
+        <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
+            Exam Pattern
+        </div>
+        <div layout="row" layout-align="start center" flex class="width100 marginB10">
+            <div flex="50">
+                <input type="text" class="width100" ng-model="exam.exampattern"  placeholder="Exam Pattern">
+            </div>
+            <div layout="row" layout-align="start center" ng-if="exam.exampattern && exam.exampattern != ''">
+                <i class="fa fa-check-square marginLR10 text-primary" aria-hidden="true"></i>
+                <a ui-sref="showblog({ blogpostSlug:{{'exam.exampattern'}} })" class="marginLR10">Go to Pattern</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 </div>

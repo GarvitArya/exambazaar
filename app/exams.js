@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var exam = require('../app/models/exam');
+var blogpost = require('../app/models/blogpost');
 var mongoose = require('mongoose');
 
 var moment = require('moment');
@@ -116,7 +117,21 @@ router.get('/exam/:examName', function(req, res) {
             res.json(thisExam);
         } else {throw err;}
     });
-    
+});
+router.get('/pattern/:examName', function(req, res) {
+    var examName = req.params.examName;
+    var thisExam = exam
+        .findOne({'name': examName},{exampattern:1})
+        .deepPopulate('exampattern')
+        .exec(function (err, thisExam) {
+        if (!err){
+            var exampattern = null;
+            if(thisExam.exampattern){
+                exampattern = thisExam.exampattern;
+            }
+            res.json(exampattern);
+        } else {throw err;}
+    });
 });
 
 router.get('/count', function(req, res) {

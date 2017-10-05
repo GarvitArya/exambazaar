@@ -32,6 +32,31 @@ router.get('/remove/:blogpostId', function(req, res) {
         }                              
     });
 });
+
+router.get('/verify/:blogpostId', function(req, res) {
+    var blogpostId = req.params.blogpostId;
+    var thisBlogpost = blogpost.find({"_id":blogpostId}, {urlslug:1},function(err, docs) {
+    if (!err){
+        if(docs.length == 0){
+            res.json(false);
+        }else{
+            var blogId = docs[0]._id;
+            res.json(blogId);
+        }
+        
+    } else {throw err;}
+    });
+    
+    
+    blogpost.remove({_id: new mongodb.ObjectID(blogpostId)}, function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(blogpostId + ' removed!');
+            res.json("Done");
+        }                              
+    });
+});
 router.get('/blogpostsCount', function(req, res) {
     blogpost.count({active: true}, function(err, docs) {
         if (!err){
