@@ -334,6 +334,19 @@ allStates.forEach(function(thisState) {
  res.sendFile(__dirname + '/views/index.html');
     });
 });
+
+app.use(function(req, res, next) {
+    //console.log('I am here');
+    
+    res.render(__dirname + '/views/error.html', { locals: { 
+ title : '404 - Not Found'
+     ,description: ''
+     ,author: 'Gaurav Parashar'
+    },status: 404 });
+    
+    //next(err);
+});
+
 /*app.get('/', function(req, res){
   res.sendFile(__dirname + '/views/index.html');
 });
@@ -362,20 +375,7 @@ app.get('/getStarted', function(req, res){
     }
 });*/
 
-app.use(function(req, res, next) {
-    //var err = new Error('Not Found');
-    //console.log(req);
-    //err.status = 404;
-    //console.log('I am here');
-    
-    res.render(__dirname + '/views/error.html', { locals: { 
- title : '404 - Not Found'
-     ,description: ''
-     ,author: 'Gaurav Parashar'
-    },status: 404 });
-    
-    //next(err);
-});
+
 
 //app.use(require('prerender-node').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm'));
 
