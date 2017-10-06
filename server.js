@@ -350,7 +350,7 @@ app.use(function(req, res, next){
   res.status(404);
   // respond with html page
   if (req.accepts('html')) {
-    res.render('404', __dirname + '/views/error.html');
+    res.render('404', { url: req.url });
     return;
   }
   // respond with json
