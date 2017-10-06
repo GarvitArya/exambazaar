@@ -335,7 +335,7 @@ allStates.forEach(function(thisState) {
     });
 });
 
-app.use(function(req, res, next) {
+/*app.use(function(req, res, next) {
     //console.log('I am here');
     
     res.render(__dirname + '/views/error.html', { locals: { 
@@ -345,6 +345,21 @@ app.use(function(req, res, next) {
     },status: 404 });
     
     //next(err);
+});*/
+app.use(function(req, res, next){
+  res.status(404);
+  // respond with html page
+  if (req.accepts('html')) {
+    res.render('404', __dirname + '/views/error.html');
+    return;
+  }
+  // respond with json
+  if (req.accepts('json')) {
+    res.send({ error: 'Not found' });
+    return;
+  }
+  // default to plain-text. send()
+  res.type('txt').send('Not found');
 });
 
 /*app.get('/', function(req, res){
