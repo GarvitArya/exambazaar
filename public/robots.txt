@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /ebinternal/
+Disallow: /claim/
+Disallow: /verifyClaim/

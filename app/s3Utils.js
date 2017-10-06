@@ -83,7 +83,7 @@ router.post('/download', function(req, res) {
                                 var fileName = splits[splits.length - 1];
                                 var localFileName = thisTest.name + "#" + thisTest.description + "#" + fileName;
 
-                                var localFile = "downloads-5Oct/tests/" + examStream.stream + "/" + examStream.exam + "/" + localFileName;
+                                var localFile = "downloads-6Oct/tests/" + examStream.stream + "/" + examStream.exam + "/" + localFileName;
                                 //console.log("Downloading " + fileName + " to " + localFile);    
                                 
                                     
@@ -114,7 +114,14 @@ router.post('/download', function(req, res) {
 
                                 });
                                 downloader.on('end', function() {
-                                    console.log("Done downloading: " + fileName + " to " + localFile);
+                                    tCounter += 1;
+                                    console.log("Test number " + index + " done downloading: " + fileName + " to " + localFile + " " + tCounter + "/" + nTests + " done!");
+                                    
+                                    if(tCounter == nTests){
+                                        console.log("------------");
+                                        console.log("All downloaded");
+                                        console.log("------------");
+                                    }
                                 });    
                                     
                                     
@@ -127,7 +134,7 @@ router.post('/download', function(req, res) {
                             });
 
                             } else {throw err;}
-                        });//.limit(10);
+                        }).limit(100).skip(100);
                             
                             
                             
