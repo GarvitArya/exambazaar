@@ -17,6 +17,7 @@
     <meta property="og:title" content="{{pageTitle}}" />
     <meta property="og:description" content="{{pageDescription}}" />
     <meta property="og:image" content="{{pageImage}}" />
+    <script> window.prerenderReady = false; </script>
     <!--<title ng-bind="pageTitle"></title>
     <meta name="description" content="Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching institutes in your city. Our easy-to-use website shows you all the coaching institutes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching institutes to succeed" />-->    
     <meta name="google-site-verification" content="RdnJwXl2LG_A6UgOCrtR7Jv8KV5gOmnslKdO9dbpdGk" />
@@ -851,8 +852,6 @@
         }
         #reviewSearchRow:hover {
         }
-        
-        
         #examinfo{
             height: 15vh;
             margin: 0px;
@@ -2123,7 +2122,7 @@
     </head>
     <!--twitter-widget-initialize-->
     <body id="exambazaar" ng-cloak>
-    <script> window.prerenderReady = false; </script> 
+     
     <div  layout="column" ng-controller="headerController">
         <div ui-view="header"></div>
         <div ui-view="body" class="min90vh" ></div>
