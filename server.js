@@ -78,7 +78,7 @@ app.get('/*', function (req, res, next) {
    next();
 });
 
-var productionMode = true;
+var productionMode = false;
 if(productionMode){
     app.get('*', function(req, res, next) {
         var host = req.get('host');
@@ -342,7 +342,7 @@ errorStates.forEach(function(thisState) {
         res.status(404);
         // respond with html page
         if (req.accepts('html')) {
-            res.render('404', { url: req.url });
+            res.render('error', { url: req.url });
             return;
         }
         // respond with json
@@ -369,7 +369,8 @@ app.use(function(req, res, next){
   res.status(404);
   // respond with html page
   if (req.accepts('html')) {
-    res.render('404', { url: req.url });
+      console.log("req is " + req);
+    res.render('error', { url: req.url });
     return;
   }
   // respond with json

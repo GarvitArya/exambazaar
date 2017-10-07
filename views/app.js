@@ -12073,7 +12073,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             $scope.t = pageTimer(1000);*/
             
-            window.prerenderReady = true;
+            
     }]);   
     
     exambazaar.controller("activeUsersController", 
@@ -22614,10 +22614,12 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
         console.log("FB Page URL: " +  $rootScope.pageURL);
         console.log("FB Page Image: " +  $rootScope.pageImage);
         
-        window.prerenderReady = true;
-        $window.prerenderReady = true;
+        
         
     });
+    
+    
+    //window.prerenderReady = true;
     
     var currURL = $location.absUrl();
     $rootScope.pageURL = currURL;
@@ -22648,9 +22650,6 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
 
      // Insert the Facebook JS SDK into the DOM
      firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
-    
-    
-    
     
     
     
@@ -22698,6 +22697,21 @@ exambazaar.directive('focusMe', ['$timeout', '$parse', function ($timeout, $pars
         }
     };
 }]);
+
+/*var ngCloakDirective = ngDirective({
+  compile: function(element, attr) {
+    attr.$set('ngCloak', undefined);
+    element.removeClass('ng-cloak');
+      console.log('ng-cloak removed');
+  }
+});
+exambazaar.config(['$provide', function ($provide) {
+  $provide.decorator('ngCloakDirective', ['$delegate', function ($delegate) {
+      console.log($delegate);
+    //$delegate[0].priority = -1000;
+    return $delegate;
+  }]);
+}]);*/
 
 
 
