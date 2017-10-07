@@ -1822,7 +1822,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         $scope.providersList = targetStudyProvidersList.data;
         
-        if($scope.providersList){
+        if(!$scope.providersList || $scope.providersList.length == 0){
             $state.go('error',{reload:true});
         }
         $scope.hideLoginDialog();
@@ -22600,19 +22600,26 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
       //$rootScope.message = 'Logged out.';
       $http.post('/logout');
     };*/
-    $rootScope.$on('$stateChangeStart', function() {
-        window.prerenderReady = false;  
+    /*$rootScope.$on('$stateChangeStart', function() {
+         
     });
     $rootScope.$on('$stateChangeSuccess', function() {
+        console.log('I have ended');
         window.prerenderReady = true;  
     });
     $rootScope.$on('$stateChangeError', function(event) {
         console.log('I am here');
         $state.go('error');
+    });*/
+    $transitions.onStart({}, function($transition){
+        //console.log('I have started');
+        window.prerenderReady = false; 
     });
+                                                   
     $transitions.onSuccess({}, function() {
-        console.log("statechange success");
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        //console.log("statechange success");
+        window.prerenderReady = true; 
+        //document.body.scrollTop = document.documentElement.scrollTop = 0;
         //$mdDialog.hide();
         console.log("SEO Title: " + $rootScope.pageTitle);
         console.log("SEO Description: " + $rootScope.pageDescription);
