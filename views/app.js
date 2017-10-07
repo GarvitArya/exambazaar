@@ -1625,9 +1625,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     exambazaar.controller("landingController", 
-        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','metaService', '$mdDialog', function($scope,$stateParams,$cookies,$state,categories,$rootScope,metaService, $mdDialog){
+        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','metaService', '$mdDialog', '$window', function($scope,$stateParams,$cookies,$state,categories,$rootScope,metaService, $mdDialog, $window){
         
-          
+        window.prerenderReady = false;  
+        $window.prerenderReady = false;  
             
         $scope.hideLoginDialog();
         $scope.number = 24;
@@ -1652,7 +1653,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
             
-           
+        window.prerenderReady = true;  
+        $window.prerenderReady = true;     
             
     }]); 
     exambazaar.controller("cityController", 
@@ -7098,8 +7100,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS','$timeout', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS,$timeout){
+        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS','$timeout', '$window', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS,$timeout, $window){
             window.prerenderReady = false;
+            $window.prerenderReady = false;
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
@@ -22615,11 +22618,13 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
     $transitions.onStart({}, function($transition){
         //console.log('I have started');
         window.prerenderReady = false; 
+        $window.prerenderReady = false; 
     });
                                                    
     $transitions.onSuccess({}, function() {
         //console.log("statechange success");
         window.prerenderReady = true; 
+        $window.prerenderReady = true; 
         //document.body.scrollTop = document.documentElement.scrollTop = 0;
         //$mdDialog.hide();
         console.log("SEO Title: " + $rootScope.pageTitle);
