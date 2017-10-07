@@ -311,7 +311,9 @@ router.get('/sanitizeblogposts', function(req, res) {
             blogposts.forEach(function(thisBlogpost, rindex){
                 var thisTitle = thisBlogpost.title;
                 var thisContent = thisBlogpost.content;
+                //var find = "EXAM PATTERN";
                 
+                //thisBlogpost.title = thisTitle.replace("EXAM PATTERN", "Exam Pattern");
                 const $ = cheerio.load(thisContent, {
                     normalizeWhitespace: true,
                     /*xmlMode: true*/
@@ -362,6 +364,7 @@ router.get('/markAllEdbites', function(req, res) {
                         }
                     });
                 }else{
+                    
                     thisBlogpost.blogSeries = "";
                     thisBlogpost.save(function(err, thisBlogpost) {
                         if (err) return console.error(err);

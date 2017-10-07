@@ -259,7 +259,7 @@ var allStates = [
 '/ebinternal/edit/database1/:coachingId',
 '/ebinternal/editblog/:blogpostId',
 '/ebinternal/editExam/:examId',
-'/ebinternal/error',
+/*'/ebinternal/error',*/
 '/ebinternal/exam/:examName',
 '/ebinternal/extractEmails',
 '/ebinternal/master/:masterId/addMaster',
@@ -314,7 +314,7 @@ var allStates = [
 '/verifyClaim/:coachingId',
 ];
 
-
+var errorStates =['/ebinternal/error'];
 //app.redirect("/?_escaped_fragment_=", "/start?_escaped_fragment_=", 301);
 //app.redirect("/?_escaped_fragment_=", "/stream", 301);
 //app.redirect("/start", "/stream", 301);
@@ -335,6 +335,25 @@ allStates.forEach(function(thisState) {
     });
 });
 
+errorStates.forEach(function(thisState) {
+    
+    app.get(thisState, function(req, res){
+        console.log('State is: ' + thisState);
+        res.status(404);
+        // respond with html page
+        if (req.accepts('html')) {
+            res.render('404', { url: req.url });
+            return;
+        }
+        // respond with json
+        if (req.accepts('json')) {
+            res.send({ error: 'Not found' });
+            return;
+        }
+        // default to plain-text. send()
+        res.type('txt').send('Not found');
+    });
+});
 /*app.use(function(req, res, next) {
     //console.log('I am here');
     

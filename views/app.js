@@ -1806,6 +1806,23 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("p4Controller", 
     [ '$scope','$rootScope', 'targetStudyProviderService', 'targetStudyProvidersList','cities','$state','$stateParams', '$cookies', 'thisStream', 'thisExam','streamExams', '$mdDialog', '$geolocation', 'suggestedblogs', function($scope,$rootScope, targetStudyProviderService, targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams,  $mdDialog, $geolocation, suggestedblogs){
        
+        $scope.categoryName = $stateParams.categoryName;
+        $scope.subCategoryName = $stateParams.subCategoryName;
+        $scope.city = $stateParams.cityName;
+        
+        $scope.suggestedblogs = suggestedblogs.data;
+        $scope.category = thisStream.data;
+        $scope.subcategory = thisExam.data;
+        //console.log($scope.subcategory);
+        var streamExamsData = streamExams.data;
+        var streamExamsIds = streamExamsData.map(function(a) {return a._id;});
+        $scope.streamExams = streamExams.data.map(function(a) {return a.name;});
+        
+        $scope.providersList = targetStudyProvidersList.data;
+        
+        if($scope.providersList){
+            $state.go('error',{reload:true});
+        }
         $scope.hideLoginDialog();
         $scope.editable = false;
         if($cookies.getObject('sessionuser')){
@@ -1865,19 +1882,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             window.open(url,'_blank');  
         };
         
-        $scope.categoryName = $stateParams.categoryName;
-        $scope.subCategoryName = $stateParams.subCategoryName;
-        $scope.city = $stateParams.cityName;
         
-        $scope.suggestedblogs = suggestedblogs.data;
-        $scope.category = thisStream.data;
-        $scope.subcategory = thisExam.data;
-        //console.log($scope.subcategory);
-        var streamExamsData = streamExams.data;
-        var streamExamsIds = streamExamsData.map(function(a) {return a._id;});
-        $scope.streamExams = streamExams.data.map(function(a) {return a.name;});
-        
-        $scope.providersList = targetStudyProvidersList.data;
         $scope.uniqueProviders = [];
         $scope.uniqueInstitutes = [];
         var origins = [];
@@ -22595,6 +22600,10 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
     };*/
     $rootScope.$on('$stateChangeSuccess', function() {
         
+    });
+    $rootScope.$on('$stateChangeError', function(event) {
+        console.log('I am here');
+        $state.go('error');
     });
     $transitions.onSuccess({}, function() {
         console.log("statechange success");
