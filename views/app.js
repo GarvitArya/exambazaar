@@ -1626,6 +1626,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
     exambazaar.controller("landingController", 
         [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','metaService', '$mdDialog', function($scope,$stateParams,$cookies,$state,categories,$rootScope,metaService, $mdDialog){
+        
+        window.prerenderReady = false;    
+            
         $scope.hideLoginDialog();
         $scope.number = 24;
         $scope.getNumber = function(num) {
@@ -1650,7 +1653,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
             
            
-        
+        window.prerenderReady = true;
             
     }]); 
     exambazaar.controller("cityController", 
