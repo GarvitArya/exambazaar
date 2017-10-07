@@ -1627,8 +1627,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("landingController", 
         [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','metaService', '$mdDialog', '$window', function($scope,$stateParams,$cookies,$state,categories,$rootScope,metaService, $mdDialog, $window){
         
-        window.prerenderReady = false;  
-        $window.prerenderReady = false;  
+          
             
         $scope.hideLoginDialog();
         $scope.number = 24;
@@ -22598,22 +22597,7 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
     $rootScope.today = moment().toDate();
     moment.tz.add("Asia/Calcutta|HMT BURT IST IST|-5R.k -6u -5u -6u|01232|-18LFR.k 1unn.k HB0 7zX0");
     moment.tz.link("Asia/Calcutta|Asia/Kolkata");
-    // Logout function is available in any pages
-    /*$rootScope.logout = function(){
-      //$rootScope.message = 'Logged out.';
-      $http.post('/logout');
-    };*/
-    /*$rootScope.$on('$stateChangeStart', function() {
-         
-    });
-    $rootScope.$on('$stateChangeSuccess', function() {
-        console.log('I have ended');
-        window.prerenderReady = true;  
-    });
-    $rootScope.$on('$stateChangeError', function(event) {
-        console.log('I am here');
-        $state.go('error');
-    });*/
+    
     
                                                    
     $transitions.onSuccess({}, function() {
@@ -22627,7 +22611,7 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
         console.log("SEO Keywords: " +  $rootScope.pageKeywords);
         console.log("FB Page URL: " +  $rootScope.pageURL);
         console.log("FB Page Image: " +  $rootScope.pageImage);
-        window.prerenderReady = true;
+        //window.prerenderReady = true;
         
     });
     
