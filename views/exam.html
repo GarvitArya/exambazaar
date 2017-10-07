@@ -175,53 +175,98 @@
 </style>
 <div id="spacer3">
 </div>
-<div layout="row" layout-align="start center" class="width100 headingBottomBorder2" >
-    <div layout="row" layout-align="center center" class="width100 thirdFont font32 bold">
-        {{exam.displayname}} Exam
-    </div>
-</div>
 <div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
-<div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start" class="width100 marginB80 secondFont font14" ng-if="exam">
-    <div layout="row" layout-align="start start" class="width100">
-        <div layout="column" layout-align="start start" flex-xs="100" flex-gt-xs="70" class="paddingLR20">
-            <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginTB10" >
-                <div layout="column" layout-align="start start"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="padding10">
-                    <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="width100 marginB80 secondFont font14" ng-if="exam">
+    <div layout="row" layout-align="start start" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30">
+        <div layout="column" layout-align="start start"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="padding10">
+            <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
+        </div>
+        <div layout="column" layout-align="start start" flex class="paddingTB10 paddingLR20 textBlack">
+            <div class="width100 font48 bold narrowLine marginTB10 ">
+                {{exam.displayname}} Exam
+            </div>
+            <div layout="column" layout-align="start start" flex flex-xs="100">
+                <div layout="row" layout-align="start start" class="width100 textDarkGrey">
+                    <a ng-href="{{exam.website}}" target="_blank" class="bold">{{exam.website}}</a>
                 </div>
-                <div layout="column" layout-align="start start"  class="padding10" flex flex-xs="100">
-                    <div layout="row" layout-align="start start" class="width100">
-                        <div flex="20">Website</div>
-                        <div flex><a ng-href="{{exam.website}}" target="_blank" class="bold">Official Website</a></div>
-                    </div>
-                    <div layout="row" layout-align="start start" class="width100 ">
-                        <div flex="20">Description</div>
-                        <div flex>{{exam.briefDescription}}</div>
-                    </div>
-                    <div layout="row" layout-align="start start" class="width100">
-                        <div flex="20">Frequency</div>
-                        <div flex>{{exam.frequency}}</div>
-                    </div>
-                    <div layout="row" layout-align="start start" class="width100">
-                        <div flex="20">Mode</div>
-                        <div flex>
-                            <div ng-if="activeExamCylce.examMode">
-                                Online Only
-                            </div>
-                            <div ng-if="!activeExamCylce.examMode">
-                                Online & Offline
-                            </div>
+                <div layout="row" layout-align="start start" class="width100">
+                    {{exam.briefDescription}}
+                </div>
+            </div>
+        </div>
+        <div layout="column" layout-align="start start" flex-gt-xs="25" flex-xs="100" class="padding20">
+            <div layout="column" layout-align="start start" class="greyBorder width100 padding10">
+                <div layout="row" layout-align="center start" class="width100">
+                    <div flex>Frequency</div>
+                    <div flex>{{exam.frequency}}</div>
+                </div>
+                <div layout="row" layout-align="center start" class="width100">
+                    <div flex>Mode</div>
+                    <div flex>
+                        <div ng-if="activeExamCylce.examMode">
+                            Online Only
+                        </div>
+                        <div ng-if="!activeExamCylce.examMode">
+                            Online & Offline
                         </div>
                     </div>
                 </div>
-
             </div>
-            <div layout="column" layout-align="start start" class="  text-primary width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="exam.pattern && exam.pattern._id">
-                {{exam.displayname}} Pattern
+        </div>
+    </div>
+    
+    <div layout="row" layout-align="start start" class="width100">
+        <div layout="column" layout-align="start start" flex-xs="100" flex-gt-xs="70" class="paddingLR20">
+            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
+                {{exam.displayname}} Registration
             </div>
-            <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.pattern.content" class="marginTB20 paddingLR40">
+            <div layout="column" layout-align="start start" class="width100 paddingLR20 marginTB10">
+                <div layout="row" layout-align="start start" class="width100" ng-if="exam.registration.website">
+                    <div flex="40">Website</div>
+                    <div flex>
+                        <a ng-href="{{exam.registration.website}}" target="_blank">{{exam.registration.website}}</a>
+                        
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex="40">Mode of Registration</div>
+                    <div flex>{{exam.registration.mode}}</div>
+                </div>
+                <div layout="row" layout-align="start start" class="width100">
+                    <div flex="40">Payment Modes</div>
+                    <div flex layout="row" layout-align="start start">
+                        <div class="marginR5" ng-repeat="paymentMode in exam.registration.fee.paymentModes">
+                        {{paymentMode}}
+                        </div>    
+                        
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" class="width100" ng-if="exam.registration.fee">
+                    <div flex="40">Fee</div>
+                    <div flex layout="row" layout-align="start start">
+                        <div layout="column" layout-align="center center" flex>
+                            <div class="width100">General / OBC</div>
+                            <div class="width100">{{exam.registration.fee.general_obc}}</div>
+                        </div>
+                        <div layout="column" layout-align="center center" flex>
+                            <div class="width100">SC / ST / PH</div>
+                            <div class="width100">{{exam.registration.fee.sc_st_ph}}</div>
+                        </div>
+                        <div layout="column" layout-align="center center" flex>
+                            <div class="width100">Female</div>
+                            <div class="width100">{{exam.registration.fee.females}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" class="width100" ng-if="exam.registration.otherInformation && exam.registration.otherInformation != ''">
+                    <div flex="40">Note</div>
+                    <div flex>{{exam.registration.otherInformation}}</div>
+                </div>
+                
             </div>
-            <div layout="column" layout-align="start start" class="  text-primary width100 marginTB10 subhheadingBottomBorder2 font20 bold">
-                Exam Dates
+            
+            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
+                {{exam.displayname}} Dates
             </div>
             <div layout="row" layout-align="start start" class="width100 marginTB10">
 
@@ -233,7 +278,7 @@
                       </timeline-badge>
                       <timeline-panel class="{{event.badgeClass}}">
                         <timeline-heading>
-                            <div class="basicFont font16 paddingLR10 text-primary bold">
+                            <div class="basicFont font16 paddingLR10 textBlack bold">
                               {{event.title}}
                             </div>
                         </timeline-heading>
@@ -245,8 +290,32 @@
                   </timeline>
 
             </div>
-            <div layout="column" layout-align="start start" class="  text-primary width100 marginTB10 subhheadingBottomBorder2 font20 bold">
-                Previous Papers
+            
+            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="exam.pattern && exam.pattern._id">
+                {{exam.displayname}} Pattern
+            </div>
+            
+            <!--<div layout="column" layout-align="center center" class="examPatternImage" ng-style="{'background-image':'url({{exam.pattern.coverPhoto}})'}">
+                
+            </div>-->
+            <div class="width100 paddingLR40 marginT40">
+                <img ng-src="{{exam.pattern.coverPhoto}}" class="width100"/>
+            </div>
+            <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.pattern.content" class="marginTB20 paddingLR40">
+            </div>
+            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="exam.pattern && exam.pattern._id">
+                Recommended {{exam.stream.displayname}} Preparation Books
+                <!--{{exam.displayname}}-->
+            </div>
+            
+            <div class="width100 paddingLR40 marginT40">
+                <img ng-src="{{exam.books.coverPhoto}}" class="width100"/>
+            </div>
+            <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.books.content" class="marginTB20 paddingLR40">
+            </div>
+            
+            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
+                {{exam.displayname}} Previous Papers
             </div>
             <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR20 editFont" layout-wrap>
                 <div flex="50" flex-xs="100" class="paddingR10 paddingTB5" ng-repeat="test in exam.tests | orderBy:'-year'">
@@ -295,20 +364,22 @@
             <div>
                 <div flex-xs="100" flex-gt-xs="100" layout="column" layout-align="center center"  class="paddingTB20 maringT20" ng-repeat="blogpost in suggestedblogs | orderBy: '-_created'">
                     <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
-            <div layout="column" layout-align="center center" class="edBitesImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
-            <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
-                <div flex layout="row" layout-align="start center">
-                    {{blogpost.readingTime.text}}
-                </div>
-            </div>
-            </div>
+                    <div layout="column" layout-align="center center" class="edBitesImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+                    <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
+                        <div flex layout="row" layout-align="start center">
+                            {{blogpost.readingTime.text}}
+                        </div>
+                    </div>
+                    </div>
                 
                 <div layout="column" layout-align="start center" class="min10vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
                     <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
-                        <div flex layout="column" layout-align="start start" flex class="font14 wideLine2 marginR10" ng-click="goToBlog(blogpost)">
-                            {{blogpost.title}}
+                        <div flex layout="column" layout-align="start start" flex class="font14 wideLine2 marginR10">
+                            <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
+                                {{blogpost.title}}
+                            </a>
+                            
                         </div>
-                        
                     </div>
                     <div flex layout="row" layout-align="start center" class="width100 font12 textLightGrey">
                         <div flex layout="column" layout-align="start start" class="">

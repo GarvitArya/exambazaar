@@ -133,6 +133,17 @@
             background-position: center center;
             background-repeat: no-repeat;
         }
+        .examPatternImage{
+            /*min-height: 70vh;
+            max-height: 70vh;*/
+            
+            width:100%;
+            height: auto;
+            position: relative;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
         .blogpostBorder2{
             border-top: none;
             border-right: 0.5px solid #CFCFCD;
@@ -2109,12 +2120,12 @@
     <!-- End of Google Analytics Code -->
     
     </head>
-    <!--twitter-widget-initialize-->
-    <body ng-cloak>
+    <!--twitter-widget-initialize ng-cloak-->
+    <body>
     
         
-        
-    <div  layout="column" ng-controller="headerController" ng-cloak>
+     <!--ng-cloak-->    
+    <div  layout="column" ng-controller="headerController">
         <div ui-view="header"></div>
         <div ui-view="body" class="min90vh" ></div>
         <div ui-view="footer"></div>

@@ -134,6 +134,22 @@ router.get('/pattern/:examName', function(req, res) {
     });
 });
 
+router.get('/books/:examName', function(req, res) {
+    var examName = req.params.examName;
+    var thisExam = exam
+        .findOne({'name': examName},{exambooks:1})
+        .deepPopulate('exambooks')
+        .exec(function (err, thisExam) {
+        if (!err){
+            var exambooks = null;
+            if(thisExam.exambooks){
+                exambooks = thisExam.exambooks;
+            }
+            res.json(exambooks);
+        } else {throw err;}
+    });
+});
+
 router.get('/count', function(req, res) {
     exam.count({}, function(err, docs) {
     if (!err){ 

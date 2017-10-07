@@ -497,6 +497,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExamPatternByName = function(examName) {
             return $http.get('/api/exams/pattern/'+examName, {examName: examName});
         };
+        this.getExamBooksByName = function(examName) {
+            return $http.get('/api/exams/books/'+examName, {examName: examName});
+        };
         this.addLogo = function(newLogoForm) {
             return $http.post('/api/exams/addLogo',newLogoForm);
         };
@@ -15703,14 +15706,19 @@ function getLatLng(thisData) {
     }
     
     exambazaar.controller("examController", 
-        [ '$scope', '$rootScope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', '$cookies', 'testList', 'thisExamPattern', 'suggestedblogs', function($scope, $rootScope, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, $cookies, testList, thisExamPattern, suggestedblogs){
+        [ '$scope', '$rootScope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', '$cookies', 'testList', 'thisExamPattern', 'thisExamBooks', 'suggestedblogs', function($scope, $rootScope, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, $cookies, testList, thisExamPattern, thisExamBooks, suggestedblogs){
             $scope.exam = thisexam.data;
             $scope.suggestedblogs = suggestedblogs.data;
             var thisExamPattern = thisExamPattern.data;
+            var thisExamBooks = thisExamBooks.data;
             $scope.exam.tests = testList.data;
             if(thisExamPattern){
                 $scope.exam.pattern = thisExamPattern;
             }
+            if(thisExamBooks){
+                $scope.exam.books = thisExamBooks;
+            }
+            console.log($scope.exam.stream);
             var examCycles = $scope.exam.cycle;
             $scope.activeExamCylce = null;
             
@@ -22326,6 +22334,11 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams) {
                     return ExamService.getExamPatternByName($stateParams.examName);    
                 }],
+                thisExamBooks: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamBooksByName($stateParams.examName);    
+                }],
+                
                 
                 testList: ['testService', '$stateParams',
                     function(testService, $stateParams){
