@@ -1627,7 +1627,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("landingController", 
         [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','metaService', '$mdDialog', function($scope,$stateParams,$cookies,$state,categories,$rootScope,metaService, $mdDialog){
         
-        window.prerenderReady = false;    
+          
             
         $scope.hideLoginDialog();
         $scope.number = 24;
@@ -1653,7 +1653,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
             
            
-        window.prerenderReady = true;
             
     }]); 
     exambazaar.controller("cityController", 
@@ -22601,8 +22600,11 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
       //$rootScope.message = 'Logged out.';
       $http.post('/logout');
     };*/
+    $rootScope.$on('$stateChangeStart', function() {
+        window.prerenderReady = false;  
+    });
     $rootScope.$on('$stateChangeSuccess', function() {
-        
+        window.prerenderReady = true;  
     });
     $rootScope.$on('$stateChangeError', function(event) {
         console.log('I am here');
