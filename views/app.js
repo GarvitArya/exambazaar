@@ -6977,7 +6977,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);    */
         
     exambazaar.controller("seocontroller", ['$rootScope', function($rootScope){
-        window.prerenderReady = false;
         $rootScope.pageTitle = "Exambazaar: Exclusive Deals and Videos for test preparation";
     }]);
     
@@ -22615,7 +22614,7 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
         console.log("FB Page Image: " +  $rootScope.pageImage);
         
         
-        
+        window.prerenderReady = true;
     });
     
     
