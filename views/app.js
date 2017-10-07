@@ -1653,8 +1653,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
             
-        window.prerenderReady = true;  
-        $window.prerenderReady = true;     
+          
             
     }]); 
     exambazaar.controller("cityController", 
@@ -7101,8 +7100,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS','$timeout', '$window', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS,$timeout, $window){
-            window.prerenderReady = false;
-            $window.prerenderReady = false;
+            
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
@@ -7871,7 +7869,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
           }
         }, 1000);*/
         
-        window.prerenderReady = true;
+        
+            
     }]); 
     
       
@@ -22615,16 +22614,11 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
         console.log('I am here');
         $state.go('error');
     });*/
-    $transitions.onStart({}, function($transition){
-        //console.log('I have started');
-        window.prerenderReady = false; 
-        $window.prerenderReady = false; 
-    });
+    
                                                    
     $transitions.onSuccess({}, function() {
         //console.log("statechange success");
-        window.prerenderReady = true; 
-        $window.prerenderReady = true; 
+        
         //document.body.scrollTop = document.documentElement.scrollTop = 0;
         //$mdDialog.hide();
         console.log("SEO Title: " + $rootScope.pageTitle);
@@ -22633,6 +22627,7 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
         console.log("SEO Keywords: " +  $rootScope.pageKeywords);
         console.log("FB Page URL: " +  $rootScope.pageURL);
         console.log("FB Page Image: " +  $rootScope.pageImage);
+        window.prerenderReady = true;
         
     });
     
