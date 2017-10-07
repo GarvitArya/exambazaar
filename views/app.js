@@ -7099,6 +7099,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS','$timeout', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS,$timeout){
+            window.prerenderReady = false;
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
@@ -7867,7 +7868,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
           }
         }, 1000);*/
         
-        
+        window.prerenderReady = true;
     }]); 
     
       
