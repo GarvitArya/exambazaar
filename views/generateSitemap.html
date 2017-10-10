@@ -3,7 +3,14 @@
     <div id="spacer1">
     </div>
     <h1>{{urls.length}}</h1>
-    <div ng-repeat ="url in urls">
-        {{url}}
+    <div layout="row" layout-align="start start" ng-repeat ="url in urls" class="width100">
+        <div flex class="font10" layout-wrap>
+            <a ng-href="{{url.url}}" target="_blank">{{url.url}}</a>
+        </div>
+        <div flex="10">
+            {{url.count}}
+        </div>
+        <div flex="10"><a ng-href="{{url}}?_escaped_fragment_=" target="_blank">Prerender</a></div>
+        
     </div>
 </div>

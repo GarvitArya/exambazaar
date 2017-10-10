@@ -1502,6 +1502,27 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             return $http.post('/api/smss/send', sms);
         };
     }]);
+    exambazaar.service('sitemapService', ['$http', function($http) {
+        this.getp0 = function() {
+            return $http.post('/api/sitemaps/p0');
+        };
+        this.getp1 = function() {
+            return $http.post('/api/sitemaps/p1');
+        };
+        this.getp2 = function() {
+            return $http.post('/api/sitemaps/p2');
+        };
+        this.getp3 = function() {
+            return $http.post('/api/sitemaps/p3');
+        };
+        this.getp3Aggregate = function() {
+            return $http.post('/api/sitemaps/p3Aggregate');
+        };
+        this.getp5 = function() {
+            return $http.post('/api/sitemaps/p5');
+        };
+        
+    }]);
     exambazaar.service('OTPService', ['$http', function($http) {
         this.generateOTP= function(otp) {
             return $http.post('/api/otps/generate', otp);
@@ -1823,7 +1844,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.providersList = targetStudyProvidersList.data;
         
         if(!$scope.providersList || $scope.providersList.length == 0){
-            $state.go('error',{reload:true});
+            //$state.go('error',{reload:true});
         }
         $scope.hideLoginDialog();
         $scope.editable = false;
@@ -8175,7 +8196,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margaon", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi"];
+        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margao", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi"];
         
         if($cookies.getObject('sessionuser')){
             
@@ -18341,77 +18362,102 @@ function getLatLng(thisData) {
         
         
     exambazaar.controller("sitemapController", 
-        [ '$scope','$http','$state','cities', function($scope,$http,$state,cities){
-        /*$scope.urlpart1 = 'https://www.exambazaar.com/stream/';
-        $scope.urlpart2 = [
-            'engineering/jee/',
-            'engineering/bitsat/',
-            'engineering/nata/',
-            'engineering/gate/',
-            'medical/aipmt/',
-            'medical/aiims/',
-            'medical/afmc/',
-            'cacs/ca%20cpt/',
-            'cacs/cs%20foundation%20exam/',
-            'school/ntse/',
-            'mba/cat/',
-            'mba/xat/',
-            'mba/snap/',
-            'law/clat/',
-            'law/ailet/',
-            'law/lsat/',
-            'foreigneducation/sat/',
-            'foreigneducation/gmat/',
-            'foreigneducation/gre/',
-            'foreigneducation/ielts/',
-            'foreigneducation/toefl/',
-            'ssc/ssc%20cpo/',
-            'ssc/ssc%20cgle/',
-            'ssc/ssc%20je/',
-            'ssc/ssc%20chsl/',
-            'ssc/ssc%20cmle/',
-            'bank/Bank%20Clerical%20Exam/',
-            'bank/Bank%20PO%20Exam/',
-            'bank/RBI%20Exam/',
-            'bank/SBI%20PO%20Exam/',
-            'bank/IBPS%20Clerk%20CWE/',
-            'defense/cds%20exam/',
-            'defense/nda%20exam/',
-            'defense/afcat/',
-            'defense/i.a.f.%20exam/',
-            'defense/i.n.a%20exam/',
-            'insurance/IRDA%20Exam/',
-            'insurance/G.I.C%20Exam/',
-            'insurance/LIC/',
-            'insurance/L.I.C%20D.O/'
-        ];
-        $scope.urls = [];
-        
-        $scope.urlpart2.forEach(function(thisurl, urlIndex){
-            var newUrl = '<url><loc>' + $scope.urlpart1 + thisurl+'</loc><changefreq>daily</changefreq><priority>1.0</priority></url>';
-            $scope.urls.push(newUrl);
-        });
-        cities.forEach(function(thisCity, cityIndex){
-            $scope.urlpart2.forEach(function(thisurl, urlIndex){
-                var newUrl = '<url><loc>' + $scope.urlpart1 + thisurl + thisCity+'</loc><changefreq>daily</changefreq><priority>0.7</priority></url>';
-                $scope.urls.push(newUrl);
+        [ '$scope', '$rootScope','$http','$state','cities', 'p0', 'p1', 'p2', 'p3', 'p3Aggregate', 'p5', function($scope, $rootScope, $http, $state, cities, p0, p1, p2, p3, p3Aggregate, p5){
+            var p0 = p0.data;
+            var p1 = p1.data;
+            var p2 = p2.data;
+            var p3 = p3.data;
+            var p5 = p5.data;
+            //console.log(p5);
+            
+            var p0Curated = [];
+            var p1Curated = [];
+            var p2Curated = [];
+            var p3Curated = [];
+            var p5Curated = [];
+            
+            var p3Aggregate = p3Aggregate.data;
+            var urls = [];
+            var newCurated = {};
+            p0.forEach(function(thisURL, uIndex){
+                newCurated = {
+                    url: thisURL,
+                    count: "10000"
+                };
+                p0Curated.push(newCurated);
             });
-            
-        });*/
-            
-        
-        var part1 = ["https://www.exambazaar.com/stream/engineering/JEE%20Advanced/","https://www.exambazaar.com/stream/engineering/BITSAT/","https://www.exambazaar.com/stream/engineering/GATE/","https://www.exambazaar.com/stream/engineering/NATA/","https://www.exambazaar.com/stream/medical/AIPMT/","https://www.exambazaar.com/stream/medical/AIIMS/","https://www.exambazaar.com/stream/medical/AFMC/","https://www.exambazaar.com/stream/cacs/CA%20CPT/","https://www.exambazaar.com/stream/cacs/CS%20Foundation%20Exam/","https://www.exambazaar.com/stream/school/NTSE%20Exam/","https://www.exambazaar.com/stream/school/KVPY/","https://www.exambazaar.com/stream/mba/CAT/","https://www.exambazaar.com/stream/mba/XAT/","https://www.exambazaar.com/stream/mba/SNAP/","https://www.exambazaar.com/stream/law/CLAT/","https://www.exambazaar.com/stream/law/LSAT/","https://www.exambazaar.com/stream/law/AILET/","https://www.exambazaar.com/stream/foreigneducation/SAT/","https://www.exambazaar.com/stream/foreigneducation/GMAT/","https://www.exambazaar.com/stream/foreigneducation/GRE/","https://www.exambazaar.com/stream/foreigneducation/IELTS/","https://www.exambazaar.com/stream/foreigneducation/TOEFL/","https://www.exambazaar.com/stream/civilservices/Civil%20Services%20Exam/","https://www.exambazaar.com/stream/civilservices/IFS%20Exam/","https://www.exambazaar.com/stream/civilservices/IES~2FISS%20Exam/","https://www.exambazaar.com/stream/ssc/SSC%20CGLE/","https://www.exambazaar.com/stream/ssc/SSC%20CHSL%20Exam/","https://www.exambazaar.com/stream/ssc/SSC%20CMLE/","https://www.exambazaar.com/stream/ssc/SSC%20CPO%20(S.I)%20Exam/","https://www.exambazaar.com/stream/ssc/SSC%20JE/","https://www.exambazaar.com/stream/bank/SBI%20PO%20Exam/","https://www.exambazaar.com/stream/bank/IBPS%20PO%20CWE/","https://www.exambazaar.com/stream/bank/IBPS%20Clerk%20CWE/","https://www.exambazaar.com/stream/bank/RBI%20Assistant%20Exam/","https://www.exambazaar.com/stream/defence/NDA%20Exam/","https://www.exambazaar.com/stream/defence/CDS%20Exam/","https://www.exambazaar.com/stream/defence/I.A.F.%20Exam/","https://www.exambazaar.com/stream/defence/I.N.A%20Exam/","https://www.exambazaar.com/stream/defence/AFCAT/","https://www.exambazaar.com/stream/insurance/IRDA%20Exam/","https://www.exambazaar.com/stream/insurance/LIC%20AAO%20Exam/","https://www.exambazaar.com/stream/insurance/L.I.C%20D.O/","https://www.exambazaar.com/stream/insurance/G.I.C%20Exam/"];    
-        var part2 = ["Delhi","Mumbai","New%20Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur","Agra","Ajmer","Allahabad","Alwar","Ambala","Amritsar","Bhilwara","Bhopal","Bikaner","Coimbatore","Dehradun","Ganganagar","Ghaziabad","Guwahati","Gwalior","Indore","Juhnjhunu","Kanpur","Kota","Kurukshetra","Lucknow","Ludhiana","Mathura","Meerut","Mohali","Mysore","Nasik","Noida","Patiala","Patna","Rajkot","Rohtak","Roorkee","Shimla","Sikar","Surat","Thrissur","Trivandrum","Vadodara","Vellore","Vishakhapatnam"];
-        var urls = [];
-        $scope.urls = [];
-        part1.forEach(function(thispart1, p1Index){
-            part2.forEach(function(thispart2, p2Index){
-                var newUrl = '<url><loc>' + thispart1 + thispart2+'</loc><changefreq>daily</changefreq><priority>1.0</priority></url>';
-                urls.push(newUrl);
+            p1.forEach(function(thisURL, uIndex){
+                newCurated = {
+                    url: thisURL,
+                    count: "10000"
+                };
+                p1Curated.push(newCurated);
             });
-        });
-        $scope.urls = urls;
+            p2.forEach(function(thisURL, uIndex){
+                newCurated = {
+                    url: thisURL,
+                    count: "10000"
+                };
+                p2Curated.push(newCurated);
+            });
+            p5.forEach(function(thisURL, uIndex){
+                newCurated = {
+                    url: thisURL,
+                    count: "0"
+                };
+                p5Curated.push(newCurated);
+            });
+            urls = urls.concat(p0Curated);
+            urls = urls.concat(p1Curated);
+            urls = urls.concat(p2Curated);
             
+            
+            p3Aggregate.forEach(function(thisPair, pIndex){
+                p3Aggregate[pIndex].examCity = thisPair.exam +"#"+ thisPair.city;
+            });
+            var p3AggregateExamCity = p3Aggregate.map(function(a) {return a.examCity;});
+            
+            p3.forEach(function(thisURL, uIndex){
+                var prefix ="https://www.exambazaar.com/stream/";
+                var remainingURL = thisURL.replace(prefix,'');
+                var p3Arrays = remainingURL.split("/");
+                var streamName = p3Arrays[0];
+                var examName = p3Arrays[1];
+                var cityName = p3Arrays[2];
+                
+                var examCity = examName +"#"+ cityName;
+                var ecIndex = p3AggregateExamCity.indexOf(examCity);
+                if(ecIndex != -1){
+                    var examCityCount = p3Aggregate[ecIndex];
+                    if(examCityCount.count >= 2){
+                        newCurated = {
+                            url: thisURL,
+                            count: examCityCount.count
+                        };
+                        p3Curated.push(newCurated);
+                    }
+                    
+                    //console.log(examName + " " + cityName + " " + examCityCount.count);
+                }
+                
+            });
+            urls = urls.concat(p3Curated);
+            urls = urls.concat(p5Curated);
+            
+            /*urls.forEach(function(thisURL, uIndex){
+                //urls[uIndex] = slugify(thisURL);
+                //urls[uIndex] = encodeURIComponent(thisURL.trim());
+            });*/
+            
+            
+            /*part1.forEach(function(thispart1, p1Index){
+                part2.forEach(function(thispart2, p2Index){
+                    var newUrl = '<url><loc>' + thispart1 + thispart2+'</loc><changefreq>daily</changefreq><priority>1.0</priority></url>';
+                    urls.push(newUrl);
+                });
+            });*/
+            $scope.urls = urls;
+            $rootScope.pageTitle = "Sitemap of Exambazaar";
     }]);       
         
         
@@ -22557,6 +22603,30 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
+                p0: ['sitemapService',
+                    function(sitemapService){
+                    return sitemapService.getp0();
+                }],
+                p1: ['sitemapService',
+                    function(sitemapService){
+                    return sitemapService.getp1();
+                }],
+                p2: ['sitemapService',
+                    function(sitemapService){
+                    return sitemapService.getp2();
+                }],
+                p3: ['sitemapService',
+                    function(sitemapService){
+                    return sitemapService.getp3();
+                }],
+                p3Aggregate: ['sitemapService',
+                    function(sitemapService){
+                    return sitemapService.getp3Aggregate();
+                }],
+                p5: ['sitemapService',
+                    function(sitemapService){
+                    return sitemapService.getp5();
+                }],
             }
         })
         .state('verify', {

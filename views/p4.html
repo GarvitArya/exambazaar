@@ -185,8 +185,11 @@
         <div layout="row" layout-align="start start"  class="width100 marginB20 animated fadeIn font14 narrowLine spacedLetter1 textDarkGrey">
             <div hide-xs flex="5">
             </div>
-            <div flex class="paddingLR10">
+            <div flex class="paddingLR10" ng-if="uniqueInstitutes.length > 0">
                 Great! We found {{uniqueInstitutes.length}} coaching classes around you!
+            </div>
+            <div flex class="paddingLR10" ng-if="uniqueInstitutes.length == 0">
+                Sorry! We found NO coaching classes in {{city}} for {{subcategory.displayname}}!
             </div>
             <div hide-xs layout="column" layout-align="start start" flex="25" class="paddingLR30">
                 Recommended Reading
