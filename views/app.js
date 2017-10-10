@@ -20259,7 +20259,7 @@ function getLatLng(thisData) {
             }
         })
         .state('city', {
-            url: '/stream/:categoryName/:subCategoryName/',
+            url: '/stream/:categoryName/:subCategoryName',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22612,7 +22612,6 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
         console.log("SEO Keywords: " +  $rootScope.pageKeywords);
         console.log("FB Page URL: " +  $rootScope.pageURL);
         console.log("FB Page Image: " +  $rootScope.pageImage);
-        
         
         window.prerenderReady = true;
     });

@@ -1,73 +1,36 @@
 var express  = require('express');
-//var redirect = require("express-redirect");
 var compression = require('compression');
-
 var port     = process.env.PORT || 8000;
 var path = require('path');
-
-
-//redirect(app); 
-/*
-var childProcess = require( "child_process" );
-var phantomjs = require( "phantomjs" );
-var binPath = phantomjs.path;
-*/
-var app = express();
-
-
 var mongoose = require('mongoose');
 var Moment = require('moment');
 require('mongoose-moment')(mongoose);
 var passport = require('passport');
 var flash   = require('req-flash');
-
-
 var morgan  = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
-
-
-
 var session = require('express-session');
 var cors = require('cors');
 var unirest = require('unirest');
-app.use(cors());
-
 var favicon = require('serve-favicon');
-app.use(favicon('./public/images/logo/favicon.ico'));
-
 var configDB = require('./config/mydatabase.js');
 
-
-
-/*var Tesseract = require('tesseract.js')
-var filename = 'pic.png'
-
-Tesseract.recognize(filename)
-    .progress(function  (p) { console.log('progress', p)  })
-    .catch(err => console.error(err))
-    .then(function (result) {
-    console.log(result.text);
-    process.exit(0);
-});*/
-
-//app.use(bodyParser.json());
+var app = express();
+app.use(compression({threshold : 0}));
+app.use(cors());
+app.use(favicon('./public/images/logo/favicon.ico'));
 app.use(bodyParser.json({limit: '100mb'}));
 app.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
 
-
-//mongoose.connect(configDB.url);
 mongoose.connect(configDB.url,  { server: { socketOptions: { connectTimeoutMS: 10000 }}}, function(err) {
     if(err){
-   console.log('Mongo DB Error: ' + err);
+        console.log('Mongo DB Error: ' + err);
     }
 });
 require('./config/passport')(passport);
-
 app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted(['^/ebinternal', '^/claim', '^/verifyClaim']));
-//'^/claim'
 
-app.use(compression({threshold : 0}));
 app.get('/*', function (req, res, next) {
     /*req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0 || req.url.indexOf('.js') != -1 ||*/
     if ( req.url.indexOf('.css') != -1 || req.url.indexOf('.ttf') != -1 || req.url.indexOf('.jpg') != -1 || req.url.indexOf('.png') != -1 || req.url.indexOf('.jpeg') != -1 || req.url.indexOf('.js') != -1 && req.url.indexOf('app.js') == -1 ) {
@@ -115,8 +78,6 @@ app.get('/auth/facebook/callback',
 
 
 app.use(morgan('dev'));
-
-
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/views'));
 
@@ -137,8 +98,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-var routes = require('./app/routes.js')(app, passport); 
-//var institutes = require('./app/institutes.js',institutes); 
+var routes = require('./app/routes.js')(app, passport);
 var providers = require('./app/providers.js',providers); 
 var targetStudyProviders = require('./app/targetStudyProviders.js',targetStudyProviders); 
 var results = require('./app/results.js',results); 
@@ -151,14 +111,10 @@ var blogTags = require('./app/blogTags.js',blogTags);
 var comments = require('./app/comments.js',comments); 
 var groups = require('./app/groups.js',groups); 
 var logourls = require('./app/logourls.js',logourls); 
-var masters = require('./app/masters.js',masters); 
-//var admins = require('./app/admins.js',admins); 
-//var students = require('./app/students.js',students); 
-
+var masters = require('./app/masters.js',masters);
 var users = require('./app/users.js',users); 
 var procmons = require('./app/procmons.js',procmons); 
 var subscribers = require('./app/subscribers.js',subscribers); 
-
 var notifications = require('./app/notifications.js',notifications); 
 var emails = require('./app/emails.js',emails); 
 var smss = require('./app/smss.js',smss);
@@ -196,9 +152,7 @@ app.use('/api/blogTags', blogTags);
 app.use('/api/comments', comments);
 app.use('/api/groups', groups);
 app.use('/api/logourls', logourls);
-//app.use('/api/admins', admins);
 app.use('/api/masters', masters);
-//app.use('/api/students', students);
 app.use('/api/users', users);
 app.use('/api/procmons', procmons);
 app.use('/api/subscribers', subscribers);
@@ -315,19 +269,11 @@ var allStates = [
 ];
 
 var errorStates =['/ebinternal/error'];
-//app.redirect("/?_escaped_fragment_=", "/start?_escaped_fragment_=", 301);
-//app.redirect("/?_escaped_fragment_=", "/stream", 301);
-//app.redirect("/start", "/stream", 301);
-
-
-
 app.use(function(req, res, next) {
-    //console.log("Req is: " + req);
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-
 
 allStates.forEach(function(thisState) {
   app.get(thisState, function(req, res){
@@ -336,7 +282,6 @@ allStates.forEach(function(thisState) {
 });
 
 errorStates.forEach(function(thisState) {
-    
     app.get(thisState, function(req, res){
         console.log('State is: ' + thisState);
         res.status(404);
@@ -354,17 +299,6 @@ errorStates.forEach(function(thisState) {
         res.type('txt').send('Not found');
     });
 });
-/*app.use(function(req, res, next) {
-    //console.log('I am here');
-    
-    res.render(__dirname + '/views/error.html', { locals: { 
- title : '404 - Not Found'
-     ,description: ''
-     ,author: 'Gaurav Parashar'
-    },status: 404 });
-    
-    //next(err);
-});*/
 app.use(function(req, res, next){
   res.status(404);
   // respond with html page
@@ -382,51 +316,6 @@ app.use(function(req, res, next){
   res.type('txt').send('Not found');
 });
 
-/*app.get('/', function(req, res){
-  res.sendFile(__dirname + '/views/index.html');
-});
-app.get('/getStarted', function(req, res){
-  res.sendFile(__dirname + '/views/index.html');
-});*/
-
-
-/*app.use(function(err, req, res, next) {
-  if (req.accepts('html')) {
-   // Respond with html page.
-   fs.readFile(__dirname + '/views/landing.html', 'utf-8', function(err, page) {
-  console.log(res);
-  res.writeHead(404, {'Content-Type': 'text/html'});
-  res.write(page);
-  res.end();
-   });
-    }
-    else if (req.accepts('json')) {
-   // Respond with json.
-   res.status(404).send({ error: 'Not found' });
-    }
-    else {
-   // Default to plain-text. send()
-   res.status(404).type('txt').send('Not found');
-    }
-});*/
-
-
-
-//app.use(require('prerender-node').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm'));
-
-
-/*function fn60sec() {
-    // runs every 60 sec and runs on init.
-    console.log(Moment().format('LLLL'));
-    procmons.helper();
-    //console.log('Process');
-}
-fn60sec();
-setInterval(fn60sec, 60*1000);*/
-
-
-
-
 var now = new Date();
 var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 05, 0, 0) - now;
 if (millisTill10 < 0) {
@@ -441,20 +330,4 @@ setTimeout(function(){
 
 var server = app.listen(port);
 
-console.log('The magic happens on port ' + port);
-
-
-
-
-/*
-var SitemapGenerator = require('sitemap-generator');
-var generator = new SitemapGenerator('http://www.exambazaar.com/', {
-  restrictToBasepath: false,
-  stripQuerystring: true,
-});
-var generator = new SitemapGenerator('http://www.exambazaar.com');
-
-generator.on('done', function (sitemap) {
-  console.log(sitemap); // => prints xml sitemap
-});
-generator.start();*/
+console.log('Exambazaar loaded on port ' + port);
