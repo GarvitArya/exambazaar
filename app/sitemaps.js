@@ -4,6 +4,7 @@ var request = require("request");
 var config = require('../config/mydatabase.js');
 var stream = require('../app/models/stream');
 var exam = require('../app/models/exam');
+var blogpost = require('../app/models/blogpost');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
 
 router.post('/p0', function(req, res) {
@@ -31,22 +32,22 @@ router.post('/p1', function(req, res) {
     });
 });
 
-router.post('/blog', function(req, res) {
-    var mainblog = "https://www.exambazaar.com/blog";
-    var prefix = "https://www.exambazaar.com/blog";
+router.post('/blogurls', function(req, res) {
+    //var mainblog = "https://www.exambazaar.com/blog";
+    var prefix = "https://www.exambazaar.com/blogpost";
     var separator = "/";
     var urls = [];
-    urls.push(mainblog);
+    //urls.push(mainblog);
     //urls.push(prefix);
-    var allStreams = stream.find({active: {$ne: false}}, {name:1}, function(err, allStreams) {
+    var allBlogs = blogpost.find({active: true}, {urlslug:1}, function(err, allBlogs) {
     if (!err){
-        var nStreams = allStreams.length;
+        var nBlogs = allBlogs.length;
         var counter = 0;
-        allStreams.forEach(function(thisStream, index){
-            var thisURL = prefix + separator + encodeURIComponent(thisStream.name);
+        allBlogs.forEach(function(thisBlog, index){
+            var thisURL = prefix + separator + thisBlog.urlslug;
             urls.push(thisURL);
             counter+= 1;
-            if(counter == nStreams){
+            if(counter == nBlogs){
                 res.json(urls);
             }
         });

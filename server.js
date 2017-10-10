@@ -29,7 +29,9 @@ mongoose.connect(configDB.url,  { server: { socketOptions: { connectTimeoutMS: 1
     }
 });
 require('./config/passport')(passport);
-app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted(['^/ebinternal', '^/claim', '^/verifyClaim']));
+var prerender = app.use(require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted(['^/ebinternal', '^/claim', '^/verifyClaim']));
+prerender.crawlerUserAgents.push('dotbot');
+app.use(prerender);
 
 app.get('/*', function (req, res, next) {
     /*req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0 || req.url.indexOf('.js') != -1 ||*/

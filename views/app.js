@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'ngFileSaver']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -1088,6 +1088,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.download = function(fileInfo) {
             return $http.post('/api/s3Utils/download', fileInfo);
         };
+        this.downloadFromURLS = function(fileInfo) {
+            return $http.post('/api/s3Utils/downloadFromURLS');
+        };
     }]);
         
     exambazaar.service('couponService', ['$http', function($http) {
@@ -1521,6 +1524,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getp5 = function() {
             return $http.post('/api/sitemaps/p5');
         };
+        this.getblogurls = function() {
+            return $http.post('/api/sitemaps/blogurls');
+        };
+        
         
     }]);
     exambazaar.service('OTPService', ['$http', function($http) {
@@ -12761,7 +12768,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         
     exambazaar.controller("postBlogController", 
-        [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService','userBlogs', 'thisuser', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, userBlogs, thisuser, upvoteService, allBlogsUpvotesCount, allBloggers){
+        [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService','userBlogs', 'thisuser', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', 's3UtilsService', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, userBlogs, thisuser, upvoteService, allBlogsUpvotesCount, allBloggers, s3UtilsService){
             $scope.user = thisuser.data;
             if(!$scope.user){
                 if($cookies.getObject('sessionuser')){
@@ -12782,7 +12789,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if($scope.user.userType == 'Master'){
                 $scope.masterUser = true;
             }
-                   
+            
+            $scope.downloadCoverPhotos = function(){
+                s3UtilsService.downloadFromURLS().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });     
+            };
+            
             $scope.credentialsMode = false;
             $scope.setCredentials = function(){
                 $scope.credentialsMode = true;
@@ -18362,19 +18378,46 @@ function getLatLng(thisData) {
         
         
     exambazaar.controller("sitemapController", 
-        [ '$scope', '$rootScope','$http','$state','cities', 'p0', 'p1', 'p2', 'p3', 'p3Aggregate', 'p5', function($scope, $rootScope, $http, $state, cities, p0, p1, p2, p3, p3Aggregate, p5){
+        [ '$scope', '$rootScope','$http','$state','cities', 'p0', 'p1', 'p2', 'p3', 'p3Aggregate', 'p5', 'blogurls', 'FileSaver', 'Blob', function($scope, $rootScope, $http, $state, cities, p0, p1, p2, p3, p3Aggregate, p5, blogurls, FileSaver, Blob){
+            
+            $scope.xmlStart = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+            $scope.urlsetStart = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
+            var xmlStart = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+            var urlsetStart = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
+            $scope.urlStart = "<url>";
+            $scope.urlEnd = "</url>";
+            $scope.locStart = "<loc>";
+            $scope.locEnd = "</loc>";
+            $scope.changefreqStart = "<changefreq>";
+            $scope.changefreqEnd = "</changefreq>";
+            $scope.priorityStart = "<priority>";
+            $scope.priorityEnd = "</priority>";
+            $scope.urlsetEnd = "</urlset>";
+            var urlStart = "<url>";
+            var urlEnd = "</url>";
+            var locStart = "<loc>";
+            var locEnd = "</loc>";
+            var changefreqStart = "<changefreq>";
+            var changefreqEnd = "</changefreq>";
+            var priorityStart = "<priority>";
+            var priorityEnd = "</priority>";
+            var urlsetEnd = "</urlset>";
+            
+            
             var p0 = p0.data;
             var p1 = p1.data;
             var p2 = p2.data;
             var p3 = p3.data;
-            var p5 = p5.data;
+            
+            var blogurls = blogurls.data;
             //console.log(p5);
             
             var p0Curated = [];
             var p1Curated = [];
             var p2Curated = [];
             var p3Curated = [];
-            var p5Curated = [];
+            
+            var blogurlsCurated = [];
             
             var p3Aggregate = p3Aggregate.data;
             var urls = [];
@@ -18382,33 +18425,51 @@ function getLatLng(thisData) {
             p0.forEach(function(thisURL, uIndex){
                 newCurated = {
                     url: thisURL,
-                    count: "10000"
+                    count: "10000",
+                    changefreq: 'daily',
+                    priority: 1,
                 };
                 p0Curated.push(newCurated);
             });
             p1.forEach(function(thisURL, uIndex){
                 newCurated = {
                     url: thisURL,
-                    count: "10000"
+                    count: "10000",
+                    changefreq: 'weekly',
+                    priority: 0.8,
                 };
                 p1Curated.push(newCurated);
             });
             p2.forEach(function(thisURL, uIndex){
                 newCurated = {
                     url: thisURL,
-                    count: "10000"
+                    count: "10000",
+                    changefreq: 'weekly',
+                    priority: 0.6,
                 };
                 p2Curated.push(newCurated);
             });
-            p5.forEach(function(thisURL, uIndex){
+            
+            
+            blogurls.forEach(function(thisURL, uIndex){
                 newCurated = {
                     url: thisURL,
-                    count: "0"
+                    count: "10000",
+                    changefreq: 'weekly',
+                    priority: 0.8,
                 };
-                p5Curated.push(newCurated);
+                blogurlsCurated.push(newCurated);
             });
             urls = urls.concat(p0Curated);
             urls = urls.concat(p1Curated);
+            var newCurated = {
+                url: "https://www.exambazaar.com/blog",
+                count: "10000",
+                changefreq: 'daily',
+                priority: 1,
+            };
+            urls.push(newCurated);
+            urls = urls.concat(blogurlsCurated);
             urls = urls.concat(p2Curated);
             
             
@@ -18432,7 +18493,9 @@ function getLatLng(thisData) {
                     if(examCityCount.count >= 2){
                         newCurated = {
                             url: thisURL,
-                            count: examCityCount.count
+                            count: examCityCount.count,
+                            changefreq: 'weekly',
+                            priority: 0.6,
                         };
                         p3Curated.push(newCurated);
                     }
@@ -18442,22 +18505,52 @@ function getLatLng(thisData) {
                 
             });
             urls = urls.concat(p3Curated);
+            
+            var p5 = p5.data;
+            var p5Curated = [];
+            p5.forEach(function(thisURL, uIndex){
+                newCurated = {
+                    url: thisURL,
+                    count: "0",
+                    changefreq: 'daily',
+                    priority: 0.4,
+                };
+                p5Curated.push(newCurated);
+            });
             urls = urls.concat(p5Curated);
             
-            /*urls.forEach(function(thisURL, uIndex){
-                //urls[uIndex] = slugify(thisURL);
-                //urls[uIndex] = encodeURIComponent(thisURL.trim());
-            });*/
+            var sitemapText = "";
+            var thisURLText = "";
+            sitemapText += xmlStart;
+            sitemapText += urlsetStart;
+            urls.forEach(function(thisURL, uIndex){
+                thisURLText = "";
+                thisURLText += urlStart;
+                thisURLText += locStart;
+                thisURLText += thisURL.url;
+                thisURLText += locEnd;
+                if(thisURL.changefreq){
+                   thisURLText += changefreqStart;
+                   thisURLText += thisURL.changefreq;
+                   thisURLText += changefreqEnd;
+                }
+                if(thisURL.priority){
+                   thisURLText += priorityStart;
+                   thisURLText += thisURL.priority;
+                   thisURLText += priorityEnd;
+                }
+                thisURLText += urlEnd;
+                sitemapText += thisURLText;
+            });
+            sitemapText += urlsetEnd;
             
             
-            /*part1.forEach(function(thispart1, p1Index){
-                part2.forEach(function(thispart2, p2Index){
-                    var newUrl = '<url><loc>' + thispart1 + thispart2+'</loc><changefreq>daily</changefreq><priority>1.0</priority></url>';
-                    urls.push(newUrl);
-                });
-            });*/
-            $scope.urls = urls;
-            $rootScope.pageTitle = "Sitemap of Exambazaar";
+            var data = new Blob([sitemapText], { type: "application/xhtml+xml;charset=utf-8" });
+            FileSaver.saveAs(data, 'sitemap.xml');
+            
+            //console.log(sitemapText);
+            //$scope.urls = urls;
+            $rootScope.pageTitle = "Exambazaar Sitemap";
     }]);       
         
         
@@ -22626,6 +22719,10 @@ function getLatLng(thisData) {
                 p5: ['sitemapService',
                     function(sitemapService){
                     return sitemapService.getp5();
+                }],
+                blogurls: ['sitemapService',
+                    function(sitemapService){
+                    return sitemapService.getblogurls();
                 }],
             }
         })
