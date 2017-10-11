@@ -79,7 +79,7 @@ var examSchema = mongoose.Schema({
             name: {type: String},
             otherName: {type: String},
             description: {type: String},
-            stepType: {type: String}, //Written, Counselling, Interview
+            stepType: {type: String}, //"Registration", "Admit Card", "Written", "Counselling", "Interview"
             stepDate:{
                 dateRangeBool: {type: Boolean, default:'false'},
                 timeRangeBool: {type: Boolean, default:'false'}, //true is full day

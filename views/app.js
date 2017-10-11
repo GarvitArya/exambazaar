@@ -15788,25 +15788,36 @@ function getLatLng(thisData) {
                     var random = Math.floor(Math.random() * badgeIconClasses.length);
                     
                     var dateRange = thisStep.stepDate.dateRange;
-                    var timeRange = thisStep.stepDate.timeRange;
+                    var timeRanges = thisStep.stepDate.timeRange;
+                    var dateRanges = thisStep.stepDate.dates;
+                    console.log(dateRanges);
                     var allDay = false;
                     var dateString = '';
                     var timeString = '';
                     var fullString = '';
-                    if(timeRange && timeRange.startTime && timeRange.endTime){
-                        if(timeRange.startTime == "00:00" && timeRange.endTime == "23:00"){
+                    
+                    
+                    timeRanges.forEach(function(timeRange, index){
+                        if(timeRange && timeRange.startTime && timeRange.endTime){
+                            if(timeRange.startTime == "00:00" && timeRange.endTime == "23:00"){
+                                allDay = true;
+                            }else{
+                                console.log(timeRange);
+                                timeString += " " + dateRanges[index].name + " (" + timeRange.startTime + " to " + timeRange.endTime + ")";
+                            }
+                        }
+                        if(!timeRange || !timeRange.startTime && !dateRange.endTime){
                             allDay = true;
                         }
-                    }
-                    if(!timeRange || !timeRange.startTime && !dateRange.endTime){
-                        allDay = true;
-                    }
+                    });
+                    
+                    
                     if(dateRange && dateRange.startDate && dateRange.endDate){
                         var startDate = moment(dateRange.startDate);
                         var endDate = moment(dateRange.endDate);
                         
                         dateString = "" + moment(startDate).format('DD MMM YY');
-                        console.log(compareDates(startDate, endDate));
+                        //console.log(compareDates(startDate, endDate));
                         if(compareDates(startDate, endDate) == -1){
                             dateString += " to " + moment(dateRange.endDate).format('DD MMM YY');
                         }
@@ -15823,6 +15834,7 @@ function getLatLng(thisData) {
                         badgeIconClass: badgeIconClasses[random],
                         title: thisStep.stepType,
                         content: fullString,
+                        timeString: fullString,
                     };
                     console.log(thisStep);
                     $scope.events.push(newEvent);
@@ -15915,7 +15927,7 @@ function getLatLng(thisData) {
             "Cash",
         ];
         $scope.cycleYears = ["2016","2017","2018","2019","2020"];
-        $scope.timeSlots = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "00:00", "01:00", "02:00", "03:00", "04:00", "05:00"];
+        $scope.timeSlots = ["06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30", "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30"];
         $scope.cycleNumbers = ["1","2","3","4","5","6","7","8","9","10","11","12"];
         
         $scope.newOfficialLink = null;   
