@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'ngFileSaver']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -84,7 +84,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     'jquery.min.js',
                     'angular-bootstrap-affix.js',
               ]
-            }
+            },
+            {
+              name: 'angularFileSaver',
+              files: [
+                    'angular-file-saver.bundle.js'
+              ]
+            },
           ]
         });
     })
@@ -4402,7 +4408,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
         $scope.removeAllExams = function(){
-            alert('I am here');
+            
             if($scope.editable){
                 
                 var confirm = $mdDialog.confirm()
@@ -15754,6 +15760,19 @@ function getLatLng(thisData) {
     
     exambazaar.controller("examController", 
         [ '$scope', '$rootScope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', '$cookies', 'testList', 'thisExamPattern', 'thisExamBooks', 'suggestedblogs', function($scope, $rootScope, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, $cookies, testList, thisExamPattern, thisExamBooks, suggestedblogs){
+            
+            $scope.components = [
+                /*'Overview',*/
+                'Contact',
+                'Exams',
+                'Results',
+                'Courses',
+                'Photos',
+                'Videos',
+                'Faculty',
+                'Location',
+                'Reviews'
+            ];
             $scope.exam = thisexam.data;
             $scope.suggestedblogs = suggestedblogs.data;
             var thisExamPattern = thisExamPattern.data;
@@ -15765,96 +15784,91 @@ function getLatLng(thisData) {
             if(thisExamBooks){
                 $scope.exam.books = thisExamBooks;
             }
-            console.log($scope.exam.stream);
-            var examCycles = $scope.exam.cycle;
-            $scope.activeExamCylce = null;
             
-            examCycles.forEach(function(thisCycle, index){
-                if(thisCycle.active){
-                    $scope.activeExamCylce = thisCycle;
-                }
-            });
             
             var badgeIconClasses = ['fa fa-user-plus', 'fa fa-bath'];
             var badgeClasses = ['info', 'warning'];
-            
+            var badgeIcons = {
+                "Registration": "fa fa-user-circle",
+                "Admit Card": "fa fa-id-card",
+                "Written": "fa fa-pencil",
+                "Counselling": "fa fa-users",
+                "Interview": "fa fa-black-tie",
+            };
+            var badgeBackgrounds = {
+                "Registration": "warning",
+                "Admit Card": "warning",
+                "Written": "primary",
+                "Counselling": "info",
+                "Interview": "primary",
+            };
             $scope.events = [];
             
-            if($scope.activeExamCylce){
-                var steps = $scope.activeExamCylce.examSteps;
-                 
-                
-                steps.forEach(function(thisStep, index){
-                    var random = Math.floor(Math.random() * badgeIconClasses.length);
-                    
-                    var dateRange = thisStep.stepDate.dateRange;
-                    var timeRanges = thisStep.stepDate.timeRange;
-                    var dateRanges = thisStep.stepDate.dates;
-                    console.log(dateRanges);
-                    var allDay = false;
-                    var dateString = '';
-                    var timeString = '';
-                    var fullString = '';
-                    
-                    
-                    timeRanges.forEach(function(timeRange, index){
-                        if(timeRange && timeRange.startTime && timeRange.endTime){
-                            if(timeRange.startTime == "00:00" && timeRange.endTime == "23:00"){
+            
+            $scope.activeExamCycle = null;
+            $scope.exam.cycle.forEach(function(thisCycle, index){
+                if(thisCycle.active){
+                    $scope.activeExamCycle = thisCycle;
+                }
+            });
+            
+            $scope.setCycle = function(examCycle){
+                $scope.activeExamCycle = examCycle;
+                if($scope.activeExamCycle){
+                    var steps = $scope.activeExamCycle.examSteps;
+                    console.log($scope.activeExamCycle); 
+                    steps.forEach(function(thisStep, index){
+                        var random = Math.floor(Math.random() * badgeIconClasses.length);
+                        var dateRange = thisStep.stepDate.dateRange;
+                        var timeRanges = thisStep.stepDate.timeRange;
+                        var dateRanges = thisStep.stepDate.dates;
+                        //console.log(dateRanges);
+                        var allDay = false;
+                        var dateString = '';
+                        var timeString = '';
+                        var fullString = '';
+                        timeRanges.forEach(function(timeRange, index){
+                            if(timeRange && timeRange.startTime && timeRange.endTime){
+                                if(timeRange.startTime == "00:00" && timeRange.endTime == "23:00"){
+                                    allDay = true;
+                                }else{
+                                    //console.log(timeRange);
+                                    if(index > 0){
+                                        timeString += " & "
+                                    }
+                                    timeString += dateRanges[index].name + " (" + timeRange.startTime + " to " + timeRange.endTime + ")";
+                                }
+                            }
+                            if(!timeRange || !timeRange.startTime && !dateRange.endTime){
                                 allDay = true;
-                            }else{
-                                console.log(timeRange);
-                                timeString += " " + dateRanges[index].name + " (" + timeRange.startTime + " to " + timeRange.endTime + ")";
+                            }
+                        });
+                        if(dateRange && dateRange.startDate && dateRange.endDate){
+                            var startDate = moment(dateRange.startDate);
+                            var endDate = moment(dateRange.endDate);
+                            dateString = "" + moment(startDate).format('DD MMM YY');
+                            //console.log(compareDates(startDate, endDate));
+                            if(compareDates(startDate, endDate) == -1){
+                                dateString += " to " + moment(dateRange.endDate).format('DD MMM YY');
                             }
                         }
-                        if(!timeRange || !timeRange.startTime && !dateRange.endTime){
-                            allDay = true;
+                        if(allDay){
+                            timeString = "All Day ";
                         }
-                    });
-                    
-                    
-                    if(dateRange && dateRange.startDate && dateRange.endDate){
-                        var startDate = moment(dateRange.startDate);
-                        var endDate = moment(dateRange.endDate);
-                        
-                        dateString = "" + moment(startDate).format('DD MMM YY');
-                        //console.log(compareDates(startDate, endDate));
-                        if(compareDates(startDate, endDate) == -1){
-                            dateString += " to " + moment(dateRange.endDate).format('DD MMM YY');
-                        }
-                        
-                    }
-                    
-                    if(allDay){
-                        timeString = " - All Day ";
-                    }
-                    
-                    fullString = dateString + timeString;
-                    var newEvent = {
-                        badgeClass: badgeClasses[random],
-                        badgeIconClass: badgeIconClasses[random],
-                        title: thisStep.stepType,
-                        content: fullString,
-                        timeString: fullString,
-                    };
-                    console.log(thisStep);
-                    $scope.events.push(newEvent);
-                });
-                
-                
-                
-            }
-            /*$scope.events = [{
-                badgeClass: 'info',
-                badgeIconClass: 'glyphicon-modal-window',
-                title: 'Registration',
-                content: 'Some awesome content.'
-              }, {
-                badgeClass: 'warning',
-                badgeIconClass: 'glyphicon-credit-card',
-                title: 'Second heading',
-                content: 'More awesome content.'
-            }];*/
-            
+                        fullString = dateString + timeString;
+                        var newEvent = {
+                            badgeClass: badgeBackgrounds[thisStep.stepType],
+                            badgeIconClass: badgeIcons[thisStep.stepType],
+                            title: thisStep.stepType,
+                            dateString: dateString,
+                            timeString: timeString,
+                        };
+                        //console.log(thisStep);
+                        $scope.events.push(newEvent);
+                    });   
+                }
+            };
+            $scope.setCycle($scope.activeExamCycle);
             
             $rootScope.pageTitle = $scope.exam.displayname;
     }]);
@@ -22499,21 +22513,24 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams) {
                     return ExamService.getExamBooksByName($stateParams.examName);    
                 }],
-                
-                
                 testList: ['testService', '$stateParams',
                     function(testService, $stateParams){
                     return testService.getExamTestsByExamName($stateParams.examName);
                 }],
                 loadAngularTimeline: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularTimeline'], {serie: true});
-                }],/*
+                }],
+                
+                /*
                 ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
                 }],*/
                 suggestedblogs: ['blogpostService','$stateParams',
                     function(blogpostService,$stateParams){
                     return blogpostService.suggestedblogs($stateParams.examName);
+                }],
+                bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
                 }],
             }
         })
@@ -22735,6 +22752,9 @@ function getLatLng(thisData) {
                 blogurls: ['sitemapService',
                     function(sitemapService){
                     return sitemapService.getblogurls();
+                }],
+                loadAngularFileSaver: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularFileSaver'], {serie: true});
                 }],
             }
         })

@@ -173,10 +173,20 @@
         margin: 0px;
     }
 </style>
-<div id="spacer3">
+<div id="spacer1">
 </div>
+<!--<div layout="column" layout-align="start start" class="whiteBackground mainContent" ng-cloak>
+    
+    <div bs-affix data-offset-top="200" data-offset-bottom="300" hide-xs layout="row" class="affixBar whiteBackground bottomBorder width100" layout-align="center center" id="affixBar"> 
+        <a ng-repeat="component in components" href="#{{component}}" du-smooth-scroll du-scrollspy offset="200" class="component secondFont textDarkGrey" >
+            <span>
+                {{component}}
+            </span>        
+        </a>
+    </div>
+</div>-->
 <div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
-<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="width100 marginB80 secondFont font14" ng-if="exam">
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="width100 marginT40 marginB120 secondFont font14" ng-if="exam">
     <div layout="row" layout-align="start start" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30">
         <div layout="column" layout-align="start start"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="padding10">
             <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
@@ -203,10 +213,10 @@
                 <div layout="row" layout-align="center start" class="width100">
                     <div flex>Mode</div>
                     <div flex>
-                        <div ng-if="activeExamCylce.examMode">
+                        <div ng-if="activeExamCycle.examMode">
                             Online Only
                         </div>
-                        <div ng-if="!activeExamCylce.examMode">
+                        <div ng-if="!activeExamCycle.examMode">
                             Online & Offline
                         </div>
                     </div>
@@ -214,7 +224,6 @@
             </div>
         </div>
     </div>
-    
     <div layout="row" layout-align="start start" class="width100">
         <div layout="column" layout-align="start start" flex-xs="100" flex-gt-xs="70" class="paddingLR20">
             <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
@@ -265,8 +274,31 @@
                 
             </div>
             
+            
+            <div layout="column" layout-align="start start" class="width100" ng-if="activeExamCycle">
+            
+            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 paddingB20 subhheadingBottomBorder2 font20 bold">
+                {{activeExamCycle.name}} Syllabus & Brochure
+            </div>
+            <div layout="row" layout-align="start center" class="width100 paddingLR20 marginTB10">
+                <div layout="column" layout-align="center center" flex="25" ng-if="activeExamCycle.syllabus && activeExamCycle.syllabus.length > 0">
+                    <div class="font16 bold">Syllabus</div>
+                    <div class="marginTB10"><img src="icons/syllabus.png"/></div>
+                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-href="{{activeExamCycle.syllabus[0].url}}" target="_blank"> 
+                        Download <i class="fa fa-download font14" aria-hidden="true"></i>
+                    </md-button>
+                </div>
+                <div layout="column" layout-align="center center" flex="25" ng-if="activeExamCycle.brochure && activeExamCycle.brochure.length > 0">
+                    <div class="font16 bold">Brochure</div>
+                    <div class="marginTB10"><img src="icons/brochure.png"/></div>
+                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-href="{{activeExamCycle.brochure[0].url}}" target="_blank"> 
+                        Download <i class="fa fa-download font14" aria-hidden="true"></i>
+                    </md-button>
+                </div>
+                
+            </div>
             <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
-                {{exam.displayname}} Dates
+                {{activeExamCycle.name}} Dates
             </div>
             <div layout="row" layout-align="start start" class="width100 marginTB10">
 
@@ -283,10 +315,10 @@
                             </div>
                         </timeline-heading>
                             <div class="marginTB10 paddingLR10">
-                                {{event.content}}
+                                {{event.dateString}}
                             </div>
                             <div class="marginTB10 paddingLR10">
-                                {{event.content}}
+                                {{event.timeString}}
                             </div>
                       </timeline-panel>
                     </timeline-event>
@@ -297,66 +329,60 @@
             <div layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold" ng-if="exam.pattern && exam.pattern._id">
                 {{exam.displayname}} Pattern
             </div>
-            
-            <!--<div layout="column" layout-align="center center" class="examPatternImage" ng-style="{'background-image':'url({{exam.pattern.coverPhoto}})'}">
-                
-            </div>-->
-            <div class="width100 paddingLR40 marginT40">
-                <img ng-src="{{exam.pattern.coverPhoto}}" class="width100"/>
-            </div>
-            <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.pattern.content" class="marginTB20 paddingLR40">
-            </div>
-            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="exam.books && exam.books._id">
-                Recommended {{exam.stream.displayname}} Preparation Books
-                <!--{{exam.displayname}}-->
             </div>
             
-            <div class="width100 paddingLR40 marginT40">
-                <img ng-src="{{exam.books.coverPhoto}}" class="width100"/>
-            </div>
-            <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.books.content" class="marginTB20 paddingLR40">
+            <div layout="column" layout-align="start start" ng-if="exam.pattern">
+                <div class="width100 paddingLR40 marginT40">
+                    <img ng-src="{{exam.pattern.coverPhoto}}" class="width100"/>
+                </div>
+                <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.pattern.content" class="marginTB20 paddingLR40">
+                </div>
             </div>
             
-            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
-                {{exam.displayname}} Previous Papers
-            </div>
-            <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR20 editFont" layout-wrap>
-                <div flex="50" flex-xs="100" class="paddingR10 paddingTB5" ng-repeat="test in exam.tests | orderBy:'-year'">
-                    <div layout="row" layout-align="start center" class="width100 padding5 greyBorder min20vh width100">
-                        <div flex="25" class="">
-                            <div layout="row" layout-align="center center" class="min20vh greyBorder">
-                            Screenshot
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start start" class="width100 padding20">
-                            <div layout="row" layout-align="start start" class="width100">
-                                <div flex="40">
-                                Name
-                                </div>
-                                <div flex>
-                                {{test.name}}
-                                </div>
-                            </div>
-                            <div layout="row" layout-align="start start" class="width100">
-                                <div flex="40">
-                                Description
-                                </div>
-                                <div flex>
-                                {{test.description}}
-                                </div>
-                            </div>
-                            <div layout="row" layout-align="start start" class="width100 marginT20 paddingLR20">
-                                <md-button class="md-danger md-small tolowercase font14" ng-href="{{test.url.question}}" target="_blank">
-                                    Download
-                                </md-button>
-                            </div>
-
-
-                        </div>
-                    </div>
+            <div layout="column" layout-align="start start" ng-if="exam.books">
+                <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="exam.books && exam.books._id">
+                    Recommended {{exam.stream.displayname}} Preparation Books
                 </div>
 
+                <div class="width100 paddingLR40 marginT40">
+                    <img ng-src="{{exam.books.coverPhoto}}" class="width100"/>
+                </div>
+                <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.books.content" class="marginTB20 paddingLR40">
+                </div>
             </div>
+            
+            
+            <div layout="column" layout-align="start start" ng-if="exam.tests && exam.tests.length > 0" class="width100">
+                <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
+                    {{exam.displayname}} Previous Papers
+                </div>
+                <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR20 editFont" layout-wrap>
+                    <div flex="50" flex-xs="100" class="paddingR10 paddingTB5" ng-repeat="test in exam.tests | orderBy:'-year'">
+                        <div layout="row" layout-align="start center" class="width100 padding10 greyBorder min20vh width100">
+                            <div flex="40" class="">
+                                <div layout="row" layout-align="center center" class="min20vh greyBorder">
+                                Screenshot
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="center center" class="width100 padding20">
+                                <div layout="row" layout-align="center center" class="width100 font14">
+                                    {{test.name}}
+                                </div>
+                                <div layout="row" layout-align="center center" class="width100">
+                                    {{test.description}}
+                                </div>
+                                <div layout="row" layout-align="center center" class="width100 marginT20">
+                                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-href="{{test.url.question}}" target="_blank">
+                                        Download <i class="fa fa-download font14" aria-hidden="true"></i>
+                                    </md-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
         </div>
         <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5">
         </div>

@@ -1,12 +1,6 @@
 <style>
-    .whiteBackground{
-        background: white;
-    }
-    .bottomBorder{
-        border-bottom: solid;
-        border-width: 1px;
-        border-color: lightgray;
-    }
+    
+    
     .badge{
         font-family: 'Fira Sans', sans-serif;
         color: #333333;
@@ -76,18 +70,7 @@
     #tableHolder{
         
     }
-    .component{
-        padding-top: 5px;
-        padding-bottom: 5px;
-        padding-left: 20px;
-        padding-right: 20px;
-        z-index: 100;
-        /*letter-spacing: 2px;*/
-    }
-    .component:hover{
-        background: #FF5A5F;
-        color: white;
-    }
+    
     .mainContent{
         min-height: 200vh;
     }
@@ -126,11 +109,7 @@
         margin-top: 10px;
         margin-bottom: 20px;
     }
-    .affixBar{
-        min-height: 5vh;
-        background: #f7f7f7;
-        z-index: 1;
-    }
+    
     .coachingNavBar{
         padding-left: 40px;
     }
@@ -638,13 +617,12 @@
         
     </div>
     
-    <div bs-affix data-offset-top="200" data-offset-bottom="300" hide-xs layout="row" class="affixBar whiteBackground bottomBorder width100 " layout-align="center center">
-            
-            <a ng-repeat="component in components" href="#{{component}}" du-smooth-scroll du-scrollspy offset="200" class="component secondFont textDarkGrey" >
-                <span>
-                    {{component}}
-                </span>        
-            </a>
+    <div bs-affix data-offset-top="200" data-offset-bottom="300" hide-xs layout="row" class="affixBar whiteBackground bottomBorder width100 " layout-align="center center"> 
+        <a ng-repeat="component in components" href="#{{component}}" du-smooth-scroll du-scrollspy offset="200" class="component secondFont textDarkGrey" >
+            <span>
+                {{component}}
+            </span>        
+        </a>
     </div>
     
     

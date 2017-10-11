@@ -60,20 +60,20 @@ img {
     margin: 0; }
 
 timeline-badge.primary {
-  background-color: #2e6da4 !important; }
+  background-color: #20C39A !important; }
 
 timeline-badge.success {
-  background-color: #3f903f !important; }
+  background-color: #20C39A !important; }
 
 timeline-badge.warning {
   background-color: #f0ad4e !important; }
 
 timeline-badge.danger {
-  background-color: #d9534f !important; }
-
+  background-color: #FF5A5F !important; }
+/*#d9534f*/
 timeline-badge.info {
-  background-color: #5bc0de !important; }
-
+  background-color: black !important; }
+/*#5bc0de*/
 .timeline-title {
   margin-top: 0; }
 
