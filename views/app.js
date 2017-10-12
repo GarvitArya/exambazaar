@@ -2043,8 +2043,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         var coachingGroupNames = '';
         var coachingGroupNamesCity = '';
-        var howmany = 25;
-        var howmany2 = 10;
+        var howmany = 5;
+        var howmany2 = 5;
         $scope.uniqueProviders.forEach(function(thisProvider, pIndex){
             if(pIndex < howmany){
                 coachingGroupNames += thisProvider;
@@ -2066,14 +2066,61 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.clearFilter = function(text){
             $scope.searchText = '';
         };
+        var seoExamName = $scope.subcategory.seoname;
         
+        /*
+        Title: Best <Exam Name> Coaching in <City> for <Exam Name> Preparation
         
+        Description: Find best <Exam Name> Coaching in <City> | Explore Courses, Fees, Reviews, Past Results, Faculty, Photos and Videos for <Exam Name> Preparation
+        
+        Keywords:   <Exam Name> Coaching in <City>
+                    <Exam Name> Coaching Classes in <City>
+                    <Exam Name> Coaching Institutes in <City>
+                    <Exam Name> Classes in <City>
+                    <Exam Name> Courses in <City>
+                    <Exam Name> Online Coaching
+                    <Exam Name> Exam
+                    How to prepare for <Exam Name>
+                    <Exam Name> Preparation
+                    <Exam Name> Tests
+                    <First 5 Coaching Class names>
+        */
+        
+        /*
         $rootScope.pageTitle = $scope.subcategory.displayname + " Coaching in " + $scope.city;
         $rootScope.pageDescription = "Select from top " + $scope.uniqueInstitutes.length + " " +   $scope.subcategory.displayname + " Coaching Classes in " + $scope.city + ". Choose from "+ coachingGroupNames + " and " + " many more!" + " | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Classes in India";
-        
         var coachingKeywords = "Best " + $scope.subcategory.displayname + " Coaching Classes in " + $scope.city + ", " + "Top " + $scope.uniqueInstitutes.length + " " + $scope.subcategory.displayname + " Coaching Centres in " +$scope.city + ", ";
         $rootScope.pageKeywords = coachingKeywords + coachingGroupNamesCity;
+        */
         
+        $rootScope.pageTitle = "Best " + seoExamName + " Coaching in " + $scope.city + " for " + seoExamName + " Preparation";
+        
+        $rootScope.pageDescription = "Find best " + seoExamName + " Coaching in " + $scope.city + " | Explore Courses, Fees, Reviews, Past Results, Faculty, Photos and Videos for " + seoExamName + " Preparation";
+        
+        var coachingKeywordArray = [];
+        coachingKeywordArray.push(seoExamName + " Coaching in " + $scope.city);
+        coachingKeywordArray.push("Best " + seoExamName + " Coaching in " + $scope.city);
+        coachingKeywordArray.push("Top " + seoExamName + " Coaching in " + $scope.city);
+        coachingKeywordArray.push(seoExamName + " Coaching Classes in " + $scope.city);
+        coachingKeywordArray.push(seoExamName + " Coaching Institutes in " + $scope.city);
+        coachingKeywordArray.push(seoExamName + " Classes in " + $scope.city);
+        coachingKeywordArray.push(seoExamName + " Courses in " + $scope.city);
+        coachingKeywordArray.push(seoExamName + " Online Coaching");
+        coachingKeywordArray.push(seoExamName + " Exam");
+        coachingKeywordArray.push("How to prepare for " + seoExamName);
+        coachingKeywordArray.push(seoExamName + " Preparation");
+        coachingKeywordArray.push(seoExamName + " Tests");
+        coachingKeywordArray.push(coachingGroupNamesCity);
+        
+        var coachingKeywords = "";
+        coachingKeywordArray.forEach(function(thisKeyword, kindex){
+            coachingKeywords += thisKeyword;
+            if(kindex < coachingKeywordArray.length - 1){
+                coachingKeywords += ", ";
+            }
+        });
+        console.log(coachingKeywords);
+        $rootScope.pageKeywords = coachingKeywords;
     }]); 
     
     function AppCtrl(SidebarJS) {
@@ -2216,7 +2263,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);  
     
    
-    exambazaar.controller("showGroupController", 
+    exambazaar.controller("p5Controller", 
     [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
         $rootScope.reviewStream = null;
         $rootScope.reviewExam = null;
@@ -2329,7 +2376,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         if(!$scope.user || !$scope.user.userId){
             $scope.showLoginForm();
-            //console.log('It has been shown');
         }
         
         $scope.overviewIcons = [
@@ -2390,10 +2436,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             '2003'    
         ];
         
-        
-        
-        
-        //console.log(groupDisabled);
         $scope.provider = {
             name: $stateParams.groupName,
             city: $stateParams.cityName
@@ -2637,8 +2679,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 instituteIds.push(thisGroup._id);
             }
         });
-        
-        //console.log(instituteIds);
         $scope.user = $cookies.getObject('sessionuser');
         var viewForm = {
             institutes: instituteIds,
@@ -2649,7 +2689,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         if($scope.user && $scope.user.userId){
             viewForm.user = $scope.user.userId
         }
-        //console.log(JSON.stringify(viewForm));
         if($cookies.getObject('ip')){
             var ip = $cookies.getObject('ip');
             viewForm.ip = ip;
@@ -2661,12 +2700,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             console.log();
         });
         
-        
-        
         var examNamesKeywords = "";
         
         $scope.groupExams.forEach(function(thisExam, index){
-            
             examNamesKeywords += $stateParams.groupName + " " + $stateParams.cityName + " for " + thisExam.exam.displayname;
             if(index < $scope.groupExams.length - 1){
                 examNamesKeywords += ", ";
@@ -2695,14 +2731,129 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
             instituteDefinerString += thisDefiner + " ";
         });
-        console.log(instituteDefinerString);
+        //console.log(instituteDefinerString);
         
+        /*
         $rootScope.pageTitle = $stateParams.groupName + instituteDefinerString + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + " Exam";
         $rootScope.pageDescription = $stateParams.groupName + ", " +$scope.city +  " has " + $scope.cityCenters.length + " " +   $scope.subcategory.displayname + " Coaching Centers in " + $scope.city + ". | Find fees, photos and reviews of " + $stateParams.groupName;
         
         var groupKeywords = $stateParams.groupName + ", Top " + $stateParams.subCategoryName + " Coaching in " + $stateParams.cityName + ", " + $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ", " + $scope.cityCenters.length + " " + $stateParams.groupName + " Centers in " + $scope.city + ", ";
         $rootScope.pageKeywords = groupKeywords + examNamesKeywords;
+        */
         
+        /*
+        Title: <CI Name> | <Exam Name> Coaching in <City> for <Exam Name> Preparation
+        Description: <CI Name> <Exam Name> Coaching in <City> for <Exam Name> Preparation | <ncenter> centers | <CI Name> Courses, Fees, Reviews, Results, Faculty, Photos and <Exam Name> Tests
+        Keywords
+        <CI Name> Coaching in <City>
+        <CI Name> Coaching for <Exam Name>
+        <CI Name> <City>
+        <CI Name> <City> Reviews
+        <CI Name> <City> Tests
+        <CI Name> <City> Courses
+        <CI Name> Photos
+        <CI Name> Videos
+        <CI Name> How to prepare for <Exam Name>
+        <CI Name> Online Coaching
+        <CI Name> <Exam Name> Preparation
+        <CI Name> Online Test Series
+        <CI Name> Coaching in <Locality>
+        <Exam Name> Coaching Classes in <City>
+
+        */
+        var nCentersCity = $scope.cityCenters.length;
+        var nCentersTotal = $scope.group.length;
+        var centerText = " Centre";
+        if(nCentersCity > 1){
+            centerText = " Centres"
+        }
+        var nCentersCityText = nCentersCity + " " + $stateParams.groupName + " " + centerText + " in " + $stateParams.cityName;
+        var nCentersCityKeyword = nCentersCity + " " + $stateParams.groupName + centerText + " in " + $stateParams.cityName;    
+        
+        $rootScope.pageTitle = $stateParams.groupName + " | " + $scope.subcategory.seoname + ' Coaching in ' + $stateParams.cityName + " | " + nCentersCityText;
+        //+ " for " + $scope.subcategory.seoname + " Preparation"
+        
+        
+        
+        $rootScope.pageDescription = $stateParams.groupName + " " + $scope.subcategory.seoname + " Coaching in " + $stateParams.cityName + " for " + $scope.subcategory.seoname + " | " + nCentersCityText + " | " + $stateParams.groupName + " Courses, Fees, Reviews, Results, Faculty, Photos and " + $scope.subcategory.seoname + " Tests";
+        
+        /*<CI Name> Coaching in <City>
+        <CI Name> Coaching for <Exam Name>
+        <CI Name> <City>
+        <CI Name> <City> Reviews
+        <CI Name> <City> Tests
+        <CI Name> <City> Courses
+        <CI Name> <City> Photos
+        <CI Name> <City> Videos
+        <CI Name> How to prepare for <Exam Name>
+        <CI Name> Online Coaching
+        <CI Name> <Exam Name> Preparation
+        <CI Name> Online Test Series
+        <CI Name> Coaching in <Locality>
+        <Exam Name> Coaching Classes in <City>*/
+
+        
+        var coachingKeywordArray = [];
+        coachingKeywordArray.push($stateParams.groupName + " Coaching in " + $scope.city);
+        coachingKeywordArray.push($stateParams.groupName + " Coaching for " + $scope.subcategory.seoname);
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName);
+        coachingKeywordArray.push(nCentersCityKeyword);
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Reviews");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " " + $scope.subcategory.seoname +  " Reviews");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Tests");
+        coachingKeywordArray.push($stateParams.groupName + " " + $scope.subcategory.seoname + " Tests");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Courses");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Photos");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Videos");
+        var thisKeyword1 = "";
+        var thisKeyword2 = "";
+        var thisKeyword3 = "";
+        var thisKeyword4 = "";
+        $scope.cityCenters.forEach(function(thisCenter, cindex){
+            thisKeyword1 = $stateParams.groupName + " Coaching in ";
+            thisKeyword2 = $scope.subcategory.seoname + " Coaching in ";
+            thisKeyword3 = $stateParams.groupName + " Coaching in ";
+            thisKeyword4 = $scope.subcategory.seoname + " Coaching in ";
+            if(thisCenter.location && thisCenter.location.area){
+                thisKeyword1 = thisKeyword1 + thisCenter.location.area;
+                thisKeyword2 = thisKeyword2 + thisCenter.location.area;
+                thisKeyword3 = thisKeyword3 + thisCenter.location.area + ", " + $stateParams.cityName;
+                thisKeyword4 = thisKeyword4 + thisCenter.location.area + ", " + $stateParams.cityName;
+            }else{
+                thisKeyword1 = thisKeyword1 + thisCenter.address;
+                thisKeyword2 = thisKeyword2 + thisCenter.address;
+                thisKeyword3 = thisKeyword3 + thisCenter.address + " " + $stateParams.cityName;
+                thisKeyword4 = thisKeyword4 + thisCenter.address + " " + $stateParams.cityName;
+            }
+            //coachingKeywordArray.push(thisKeyword1);
+            //coachingKeywordArray.push(thisKeyword2);
+            coachingKeywordArray.push(thisKeyword3);
+            coachingKeywordArray.push(thisKeyword4);
+        });
+        //console.log(coachingKeywordArray.length);
+        if(coachingKeywordArray.length < 20){
+            coachingKeywordArray.push($stateParams.groupName + " How to prepare for " + $scope.subcategory.seoname);
+            coachingKeywordArray.push($stateParams.groupName + " Online Coaching");
+            coachingKeywordArray.push($stateParams.groupName + " " + $scope.subcategory.seoname + " Preparation");
+            coachingKeywordArray.push($stateParams.groupName + " Online Test Series");
+            coachingKeywordArray.push($scope.subcategory.seoname + " Coaching in " + $stateParams.cityName);
+        }
+        
+        
+        //console.log($scope.cityCenters);
+        
+        //thisGroup.location
+        
+        
+        var coachingKeywords = "";
+        coachingKeywordArray.forEach(function(thisKeyword, kindex){
+            coachingKeywords += thisKeyword;
+            if(kindex < coachingKeywordArray.length - 1){
+                coachingKeywords += ", ";
+            }
+        });
+        //console.log(coachingKeywords);
+        $rootScope.pageKeywords = coachingKeywords;
         
         
         
@@ -13735,8 +13886,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 targetStudyProviderService.showGroupHelper(cityCoachingForm).success(function (data, status, headers) {
                     var examStream = data;
                     console.log(examStream);
-
-                    $state.go('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: $rootScope.newReviewCity, groupName: $rootScope.newReviewCoaching.name,'#': 'Reviews'});
+                    
+                    var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: review.institute.city, groupName: review.institute.name,'#': 'Reviews'});
+                    window.open(url,'_blank');
+                    
+                    
                 })
                 .error(function (data, status, header, config) {
                     console.log('Error ' + data + ' ' + status);
@@ -20541,7 +20695,7 @@ function getLatLng(thisData) {
                 },
                 'body':{
                     templateUrl: 'p5.html',
-                    controller: 'showGroupController',
+                    controller: 'p5Controller',
                 },
                 'footer': {
                     templateUrl: 'footer.html'

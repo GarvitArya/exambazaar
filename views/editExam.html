@@ -180,7 +180,7 @@
                     Website of {{exam.displayname}}
                 </div>
                 <div layout="row" layout-align="start center" flex class="">
-                    <input type="text" class="width100" ng-model="exam.website"  placeholder="Exam Name">
+                    <input type="text" class="width100" ng-model="exam.website"  placeholder="Exam Website">
                 </div>
 
             </div>
@@ -254,10 +254,17 @@
                 Exam Display Rank (1-100)
             </div>
             <div flex>
-                <input type="text" class="width100" ng-model="exam.rank"  placeholder="Exam Display Name">
+                <input type="text" class="width100" ng-model="exam.rank"  placeholder="Exam Display Rank">
             </div>
         </div>
-            
+        <div layout="row" layout-align="start center" class="width100 padding5">
+            <div flex="20">
+                Exam SEO Name
+            </div>
+            <div flex>
+                <input type="text" class="width100" ng-model="exam.seoname"  placeholder="Exam SEO Optimized Name">
+            </div>
+        </div>    
         
         
         </div>

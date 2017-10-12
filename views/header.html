@@ -72,8 +72,8 @@
             <li class="dropdown">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog</a>
               <ul class="dropdown-menu" >
-              <li ui-sref="blog">
-                    <a>
+              <li >
+                    <a ui-sref="blog">
                     <div flex layout="row" layout-align="start center">
                         <div layout="row" layout-align="start center" class="paddingR10">
                             <img src="icons/eb.png" id="userPic" class="img-circle"/>
@@ -87,15 +87,15 @@
                     </div>
                     </a>
                 </li>
-              <li ui-sref="blog">
-                <a>
+              <li >
+                <a ui-sref="blog">
                 <div flex layout="row" layout-align="start center" class="paddingT20">
                     Recommended Reading
                 </div>
                 </a>
                 </li> 
-              <li ng-repeat="blog in blogs" ui-sref="showblog({ blogpostSlug:{{'blog.urlslug'}} })" ng-if="blogs && blogs.length > 0">
-                    <a>
+              <li ng-repeat="blog in blogs"  ng-if="blogs && blogs.length > 0">
+                    <a ui-sref="showblog({ blogpostSlug:{{'blog.urlslug'}} })">
                     <div flex layout="row" layout-align="start center">
                         <div layout="row" layout-align="start center" class="paddingR10">
                             <img ng-src="{{blog.user.image}}" id="userPic" class="img-circle"/>
