@@ -22798,7 +22798,10 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
     moment.tz.add("Asia/Calcutta|HMT BURT IST IST|-5R.k -6u -5u -6u|01232|-18LFR.k 1unn.k HB0 7zX0");
     moment.tz.link("Asia/Calcutta|Asia/Kolkata");
     
-    
+    $transitions.onStart({}, function() {
+        window._atrk_fired = false;
+        //atrk();
+    });
                                                    
     $transitions.onSuccess({}, function() {
         //console.log("statechange success");
