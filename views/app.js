@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'ui.carousel']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -7299,7 +7299,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 '59a7eb973d71f10170dbb468',
                 '59bcd748b0cdd5440a424d03',
                 '59c10639b2574f0f556f2722',
-                '59bfa3660a814b248710137b'
+                '59bfa3660a814b248710137b',
+                '59dd145e04c18e302c59cfca',
+                '59dde339f4960e14c67a26af'
             ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
@@ -8360,7 +8362,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margao", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi", "Udupi", "Belgaum"];
+        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margao", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi", "Udupi", "Belgaum", "Mangalore", "Jalandhar","Bathinda"];
         
         if($cookies.getObject('sessionuser')){
             
@@ -15913,7 +15915,7 @@ function getLatLng(thisData) {
     }
     
     exambazaar.controller("examController", 
-        [ '$scope', '$rootScope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', '$cookies', 'testList', 'thisExamPattern', 'thisExamBooks', 'suggestedblogs', function($scope, $rootScope, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, $cookies, testList, thisExamPattern, thisExamBooks, suggestedblogs){
+        [ '$scope', '$rootScope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', '$cookies', 'testList', 'thisExamPattern', 'thisExamBooks', 'suggestedblogs', 'Carousel', function($scope, $rootScope, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, $cookies, testList, thisExamPattern, thisExamBooks, suggestedblogs, Carousel){
             
             $scope.components = [
                 /*'Overview',*/
@@ -19545,7 +19547,9 @@ function getLatLng(thisData) {
                             }
 
                             for (var property in blogpost) {
-                                blogpostForm[property] = blogpost[property];
+                                if(property != "_v"){
+                                    blogpostForm[property] = blogpost[property];
+                                }
                             }
                             //console.log(blogpostForm);
                             blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
@@ -22943,7 +22947,7 @@ function getLatLng(thisData) {
         
     })();
 
-exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $window, $transitions) {
+exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $window, $transitions, Carousel) {
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
     $rootScope.imageUrl = '';
@@ -23006,7 +23010,22 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
      firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
     
     
-    
+    Carousel.setOptions({
+        arrows: true,
+        autoplay: false,
+        autoplaySpeed: 3000,
+        cssEase: 'ease',
+        dots: false,
+
+        easing: 'linear',
+        fade: false,
+        infinite: true,
+        initialSlide: 0,
+
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        speed: 500,
+    });
     
 });
 

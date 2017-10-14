@@ -109,8 +109,8 @@
             </div>
             <div layout="row" layout-align="center center" class="width100 darkTranslucentBackground marginTB20">
                 <div flex-xs="90" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite padding10">
-                    <div class="spacedLetter1 blogHeaderFont text-center wideLine bold marginB20" ng-bind-html="blogpost.title" >
-                    </div>
+                    <h1 class="spacedLetter1 blogHeaderFont text-center wideLine bold marginB20 textWhite" ng-bind-html="blogpost.title" >
+                    </h1>
                     <div layout="row" layout-align="center center" class="font14 narrowLine">
                         <div>
                             {{blogpost._created | date: "dd MMMM yyyy" | uppercase}}

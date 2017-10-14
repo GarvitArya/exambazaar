@@ -3449,4 +3449,55 @@ router.get('/citySummaryService', function(req, res) {
     } else {throw err;}
     })
 });
+
+router.post('/suggestedcoachings', function(req, res) {
+    var examUserinfo = req.body;
+    var exam = examUserinfo.exam;
+    var userinfo = examUserinfo.userinfo;
+    var userId = null;
+    if(userinfo.user){
+        userId = userinfo.user;
+    }
+    var city = null;
+    if(userinfo.city){
+        city = userinfo.city;
+    }
+    var latlng = null;
+    if(userinfo.latlng){
+        latlng = userinfo.latlng;
+    }
+    //, type: 'Coaching'
+    var thisProvider = targetStudyProvider
+        .findOne({'_id': provider}, {ebVerifyState:1, ebVerify: 1})
+        .exec(function (err, thisProvider) {
+        if (!err){
+            var newVerify = {
+                state: state,
+                user: user
+            };
+            if(!thisProvider.ebVerify || thisProvider.ebVerify.length == 0){
+                thisProvider.ebVerify = [];
+            }
+            thisProvider.ebVerifyState = state;
+            thisProvider.ebVerify.push(newVerify);
+            thisProvider.save(function(err, thisProvider) {
+                if (err) return console.error(err);
+                res.json('Done');
+                console.log(thisProvider._id + " saved!");
+            });
+            
+            /*if(thisProvider.ebVerify && thisProvider.ebVerify.length > 0){
+                thisProvider.ebVerifyState = state;
+                thisProvider.ebVerify.push(newVerify);
+            }else{
+                thisProvider.ebVerify = [];
+                thisProvider.ebVerifyState = state;
+                thisProvider.ebVerify.push(newVerify);
+            }*/
+        } else {throw err;}
+    });
+});
+
+
+
 module.exports = router;

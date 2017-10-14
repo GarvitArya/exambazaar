@@ -187,7 +187,7 @@
 </div>-->
 <div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
 <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="width100 marginT40 marginB120 secondFont font14" ng-if="exam">
-    <div layout="row" layout-align="start start" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30">
+    <div layout="row" layout-xs="column" layout-align="start start" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30">
         <div layout="column" layout-align="start start"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="padding10">
             <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
         </div>
@@ -277,7 +277,7 @@
             
             <div layout="column" layout-align="start start" class="width100" ng-if="activeExamCycle">
             
-            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 paddingB20 subhheadingBottomBorder2 font20 bold">
+            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 paddingB20 subhheadingBottomBorder2 font20 bold" ng-if="activeExamCycle">
                 {{activeExamCycle.name}} Syllabus & Brochure
             </div>
             <div layout="row" layout-align="start center" class="width100 paddingLR20 marginTB10">
@@ -325,14 +325,12 @@
                   </timeline>
 
             </div>
-            
+            </div>
             <div layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold" ng-if="exam.pattern && exam.pattern._id">
                 {{exam.displayname}} Pattern
             </div>
-            </div>
-            
             <div layout="column" layout-align="start start" ng-if="exam.pattern">
-                <div class="width100 paddingLR40 marginT40">
+                <div class="width100 paddingLR40 marginT40" ng-if="exam.pattern.coverPhoto">
                     <img ng-src="{{exam.pattern.coverPhoto}}" class="width100"/>
                 </div>
                 <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.pattern.content" class="marginTB20 paddingLR40">
@@ -351,27 +349,82 @@
                 </div>
             </div>
             
-            
-            <div layout="column" layout-align="start start" ng-if="exam.tests && exam.tests.length > 0" class="width100">
-                <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
-                    {{exam.displayname}} Previous Papers
-                </div>
-                <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR20 editFont" layout-wrap>
-                    <div flex="50" flex-xs="100" class="paddingR10 paddingTB5" ng-repeat="test in exam.tests | orderBy:'-year'">
-                        <div layout="row" layout-align="start center" class="width100 padding10 greyBorder min20vh width100">
-                            <div flex="40" class="">
-                                <div layout="row" layout-align="center center" class="min20vh greyBorder">
-                                Screenshot
+            <div layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold">
+                {{exam.displayname}} Recommend Reading
+            </div>
+            <div class="width100 marginT20 paddingLR20">
+                <ui-carousel slides="suggestedblogs" slides-to-show="2" slides-to-scroll="2" dots="true">
+                  <carousel-item>
+                    <div class="width100 padding10">
+                    <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
+                        <div layout="column" layout-align="center center" class="edBitesImage width100 rounderBorderTop" ng-style="{'background-image':'url({{item.coverPhoto}})'}">
+                        <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
+                            <div flex layout="row" layout-align="start center">
+                                {{item.readingTime.text}}
+                            </div>
+                        </div>
+                        </div>
+
+                        <div layout="column" layout-align="start center" class="min15vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
+                            <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
+                                <div flex layout="column" layout-align="start start" flex class="font14 wideLine2 marginR10">
+                                    <a ui-sref="showblog({ blogpostSlug:{{'item.urlslug'}} })" target="_blank">
+                                        {{item.title}}
+                                    </a>
+
                                 </div>
                             </div>
+                            <div flex layout="row" layout-align="start center" class="width100 font12 textLightGrey">
+                                <div flex layout="column" layout-align="start start" class="">
+                                    <div class="narrowLine">
+                                        By {{item.user.basic.name}}
+                                    </div>
+                                </div>
+                                <div layout="column" layout-align="center start" class="">
+                                    {{item._created | date: "MMMM dd"}}
+                                </div>
+                            </div>
+
+                        </div>    
+                    </div>  
+                    </div>
+                      
+                      
+                    <!--<div layout="column" layout-align="center center" class="width100 min20vh font12 showBorder">
+                        <a ui-sref="showblog({ blogpostSlug:{{'item.urlslug'}} })" target="_blank">
+                            {{item.title}}
+                        </a>
+                    </div>-->
+                  </carousel-item>
+                </ui-carousel>
+            </div>
+            
+            <div layout="column" layout-align="start start" ng-if="exam.tests && exam.tests.length > 0" class="width100">
+                <div layout="column" layout-align="start start" class="  textBlack width100 paddingB10 marginTB10 subhheadingBottomBorder2">
+                    <div class=" font20 bold">
+                        {{exam.displayname}} Previous Papers
+                    </div>
+                    <div class="font14">
+                        Download from {{exam.tests.length}} {{exam.seoname}} papers brought to you by Exambazaar.com&nbsp;&nbsp;<i class="fa fa-download" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR20 editFont marginTB20" layout-wrap>
+                    <div flex="50" flex-xs="100" class="paddingR10 paddingTB5" ng-repeat="test in exam.tests | orderBy:'-year'">
+                        <div layout="row" layout-align="start center" class="width100 paddingLR20 paddingTB10 boxShadow min20vh width100">
+                            <div flex="25" class="">
+                                <img src="icons/download.png" class="width100"/>
+                                <!--<div layout="row" layout-align="center center" class="min20vh greyBorder">
+                                Screenshot
+                                </div>-->
+                            </div>
                             <div flex layout="column" layout-align="center center" class="width100 padding20">
-                                <div layout="row" layout-align="center center" class="width100 font14">
+                                <div layout="row" layout-align="start center" class="width100 font14 textBlack">
                                     {{test.name}}
                                 </div>
-                                <div layout="row" layout-align="center center" class="width100">
+                                <div layout="row" layout-align="start center" class="width100 text-center font10 textDarkGrey">
                                     {{test.description}}
                                 </div>
-                                <div layout="row" layout-align="center center" class="width100 marginT20">
+                                <div layout="row" layout-align="start center" class="width100 marginT20">
                                     <md-button class="md-danger md-small tolowercase font12 margin0" ng-href="{{test.url.question}}" target="_blank">
                                         Download <i class="fa fa-download font14" aria-hidden="true"></i>
                                     </md-button>
@@ -386,8 +439,8 @@
         </div>
         <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5">
         </div>
-        <div layout="column" layout-align="start center" hide-xs flex-gt-xs="25" class="min50vh">
-            <div class="marginTB10 font20 bold paddingLR10">
+        <div layout="column" layout-align="start start" hide-xs flex-gt-xs="25" class="min50vh">
+            <!--<div class="marginTB10 font20 bold paddingLR10">
             Recommended Reading
             </div>
             <div>
@@ -425,7 +478,7 @@
             </div>
                 </div>
             
-            </div>
+            </div>-->
             
         </div>
     </div>
@@ -434,6 +487,6 @@
     
     
     </div>
-    
+   
     
 </div>
