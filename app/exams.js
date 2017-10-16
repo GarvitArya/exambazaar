@@ -202,6 +202,40 @@ router.get('/books/:examName', function(req, res) {
     });
 });
 
+router.get('/degrees/:examName', function(req, res) {
+    var examName = req.params.examName;
+    var thisExam = exam
+        .findOne({'name': examName},{examdegrees:1})
+        //.deepPopulate('examdegrees')
+        .exec(function (err, thisExam) {
+        if (!err){
+            var examdegrees = null;
+            if(thisExam.examdegrees){
+                examdegrees = thisExam.examdegrees;
+            }
+            var fullexamdegrees = [];
+            if(!examdegrees){
+                examdegrees = [];
+                res.json(null);
+            }else{
+                
+                examdegrees.forEach(function(thisBlogId, index){
+                    examdegrees[index] = thisBlogId.toString();
+                });
+                var blogposts = blogpost
+                    .find({_id: { $in : examdegrees }, active: true}, {title:1, coverPhoto: 1, urlslug: 1, readingTime: 1, seoDescription: 1})
+                    .exec(function(err, blogposts) {
+                    if (!err){
+                        res.json(blogposts);
+                    } else {throw err;}
+                });
+            }
+            
+            
+        } else {throw err;}
+    });
+});
+
 router.get('/count', function(req, res) {
     exam.count({}, function(err, docs) {
     if (!err){ 

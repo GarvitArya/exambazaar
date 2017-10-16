@@ -13,6 +13,7 @@ var examSchema = mongoose.Schema({
     active2: {type: Boolean, default:false},
     rank: {type: Number},
     stream: { type: Schema.ObjectId, ref: 'stream' },
+    examdegrees: [{ type: Schema.ObjectId, ref: 'blogpost' }],
     exampattern: { type: Schema.ObjectId, ref: 'blogpost' },
     exambooks: { type: Schema.ObjectId, ref: 'blogpost' },
     resultFormat: {type: String},

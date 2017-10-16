@@ -509,6 +509,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExamBooksByName = function(examName) {
             return $http.get('/api/exams/books/'+examName, {examName: examName});
         };
+        this.getDegreesByName = function(examName) {
+            return $http.get('/api/exams/degrees/'+examName, {examName: examName});
+        };
         this.addLogo = function(newLogoForm) {
             return $http.post('/api/exams/addLogo',newLogoForm);
         };
@@ -15928,7 +15931,7 @@ function getLatLng(thisData) {
     }
     
     exambazaar.controller("examController", 
-        [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'suggestedblogs', 'Carousel', 'targetStudyProviderService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, suggestedblogs, Carousel, targetStudyProviderService, viewService, $location, screenSize){
+        [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'thisExamDegrees', 'suggestedblogs', 'Carousel', 'targetStudyProviderService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, thisExamDegrees, suggestedblogs, Carousel, targetStudyProviderService, viewService, $location, screenSize){
             $scope.slideCount = 2;
             if (screenSize.is('xs, sm')){
                 console.log('Mobile or tablet');
@@ -15953,6 +15956,7 @@ function getLatLng(thisData) {
             $scope.suggestedblogs = suggestedblogs.data;
             var thisExamPattern = thisExamPattern.data;
             var thisExamBooks = thisExamBooks.data;
+            var thisExamDegrees = thisExamDegrees.data;
             $scope.exam.tests = testList.data;
             if(thisExamPattern){
                 $scope.exam.pattern = thisExamPattern;
@@ -15960,8 +15964,13 @@ function getLatLng(thisData) {
             if(thisExamBooks){
                 $scope.exam.books = thisExamBooks;
             }
+            if(thisExamDegrees && thisExamDegrees.length > 0){
+                $scope.exam.examdegrees = thisExamDegrees;
+                $scope.examdegrees = thisExamDegrees;
+            }
             
-            
+            console.log($scope.suggestedblogs);
+            console.log($scope.exam.examdegrees);
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
             }else{
@@ -16056,7 +16065,7 @@ function getLatLng(thisData) {
                         }
                         targetStudyProviderService.suggestedcoachings(examUserinfo).success(function (data, status, headers) {
                             $scope.suggestedcoachings = data;
-                            console.log(data);
+                            //console.log(data);
                         })
                         .error(function (data, status, header, config) {
                             console.log("Error ");
@@ -16281,6 +16290,16 @@ function getLatLng(thisData) {
         };
         $scope.saveExam = function () {
             //console.log($scope.exam);
+            if($scope.exam.examdegrees){
+                var degrees = [];
+                $scope.exam.examdegrees.forEach(function(thisDegree, index){
+                    if(thisDegree != ''){
+                        degrees.push(thisDegree);
+                    }
+                });
+                $scope.exam.examdegrees = degrees;
+            }
+            
             var saveExam = ExamService.saveExam($scope.exam).success(function (data, status, headers) {
                 $scope.showSavedDialog();
             })
@@ -16422,8 +16441,17 @@ function getLatLng(thisData) {
         };    
             
         //end of functions for tests
-            
-            
+        $scope.addDegree = function(){
+            if(!$scope.exam.examdegrees){
+                $scope.exam.examdegrees = [];
+            }
+            $scope.exam.examdegrees.push('');
+        };
+        $scope.removeLastDegree = function(){
+            if($scope.exam.examdegrees){
+                $scope.exam.examdegrees.pop();
+            }
+        };    
         
         //start of upload functions
         //upload helper functions for test papers
@@ -18889,7 +18917,7 @@ function getLatLng(thisData) {
     }]);       
         
     exambazaar.controller("blogsitemapController", 
-        [ '$scope', '$rootScope','$http','$state', 'blogurls', 'FileSaver', 'Blob', 'exams', function($scope, $rootScope, $http, $state, blogurls, FileSaver, Blob, exams){
+        [ '$scope', '$rootScope','$http','$state', 'blogurls', 'FileSaver', 'Blob', function($scope, $rootScope, $http, $state, blogurls, FileSaver, Blob){
             
             $scope.xmlStart = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
             $scope.urlsetStart = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
@@ -18934,19 +18962,9 @@ function getLatLng(thisData) {
                 changefreq: 'daily',
                 priority: 1,
             };
-            //urls.push(newCurated);
-            //urls = urls.concat(blogurlsCurated);
+            urls.push(newCurated);
+            urls = urls.concat(blogurlsCurated);
             
-            exams.forEach(function(thisURL, uIndex){
-                newCurated = {
-                    url: thisURL,
-                    count: "10000",
-                    changefreq: 'weekly',
-                    priority: 0.8,
-                };
-                examsCurated.push(newCurated);
-            });
-            urls = urls.concat(examsCurated);
             
             var sitemapText = "";
             var thisURLText = "";
@@ -22921,6 +22939,10 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams) {
                     return ExamService.getExamBooksByName($stateParams.examName);    
                 }],
+                thisExamDegrees: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getDegreesByName($stateParams.examName);    
+                }],
                 testList: ['testService', '$stateParams',
                     function(testService, $stateParams){
                     return testService.getExamTestsByExamName($stateParams.examName);
@@ -23189,10 +23211,6 @@ function getLatLng(thisData) {
                 blogurls: ['sitemapService',
                     function(sitemapService){
                     return sitemapService.getblogurls();
-                }],
-                exams: ['sitemapService',
-                    function(sitemapService){
-                    return sitemapService.getexams();
                 }],
                 loadAngularFileSaver: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularFileSaver'], {serie: true});

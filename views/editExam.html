@@ -1147,6 +1147,23 @@
             </div>
         </div>
     </div>
+    
+    <div layout="column" layout-align="start start" class="  textBlack width100 paddingB20 subhheadingBottomBorder2">
+        <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
+            Exam Degree
+        </div>
+        <div layout="row" layout-align="start center" flex class="width100 marginB10">
+            <div layout="row" layout-align="start center" flex>
+                <input type="text" class="width25 marginR5" ng-model="exam.examdegrees[$index]" placeholder="Exam Degrees" ng-repeat="degree in exam.examdegrees">
+                <i class="md-title fa fa-plus-circle marginR5" aria-hidden="true" ng-click="addDegree()"></i>
+                <i class="md-title fa fa-minus-circle marginR5" aria-hidden="true" ng-click="removeLastDegree()"></i>
+            </div>
+            <!--<div layout="row" layout-align="start center" ng-if="exam.examdegrees && exam.examdegrees.length > 0">
+                <i class="fa fa-check-square marginLR5 text-primary" aria-hidden="true"></i>
+                <a ui-sref="editblog({ blogpostId:{{'exam.exambooks'}} })" target="_blank" class="marginLR5">Go to Pattern</a>
+            </div>-->
+        </div>
+    </div>
 </div>
 
 </div>
