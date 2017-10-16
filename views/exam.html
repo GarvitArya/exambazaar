@@ -26,6 +26,10 @@
         min-height: 150px;
         width: 150px;
     }
+    #pageLogoHolder3{
+        max-height: 75px;
+        max-width: 75px;
+    }
     .pageLogo{
         max-height: 100%;
         max-width: 100%;
@@ -187,13 +191,13 @@
 </div>-->
 <div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
 <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="width100 marginT40 marginB120 secondFont font14" ng-if="exam">
-    <div layout="row" layout-xs="column" layout-align="start start" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30">
-        <div layout="column" layout-align="start start"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="padding10">
+    <div layout="row" layout-xs="column" layout-align="start start" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30 paddingLR20">
+        <div layout="column" layout-align="center start"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="padding10" hide-xs>
             <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
         </div>
-        <div layout="column" layout-align="start start" flex class="paddingTB10 paddingLR20 textBlack">
+        <div layout="column" layout-align="start start" flex class="paddingTB10  textBlack">
             <div class="width100 font48 bold narrowLine marginTB10 ">
-                {{exam.displayname}} Exam
+                {{exam.seoname}} Exam
             </div>
             <div layout="column" layout-align="start start" flex flex-xs="100">
                 <div layout="row" layout-align="start start" class="width100 textDarkGrey">
@@ -204,8 +208,8 @@
                 </div>
             </div>
         </div>
-        <div layout="column" layout-align="start start" flex-gt-xs="25" flex-xs="100" class="padding20">
-            <div layout="column" layout-align="start start" class="greyBorder width100 padding10">
+        <div layout="column" layout-align="start start" flex-gt-xs="25" flex-xs="100" class="paddingTB20 width100">
+            <div layout="column" layout-align="start start" class="width100">
                 <div layout="row" layout-align="center start" class="width100">
                     <div flex>Frequency</div>
                     <div flex>{{exam.frequency}}</div>
@@ -224,12 +228,12 @@
             </div>
         </div>
     </div>
-    <div layout="row" layout-align="start start" class="width100">
+    <div layout="row" layout-xs="column" layout-align="start start" class="width100">
         <div layout="column" layout-align="start start" flex-xs="100" flex-gt-xs="70" class="paddingLR20">
             <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
-                {{exam.displayname}} Registration
+                {{exam.seoname}} Registration
             </div>
-            <div layout="column" layout-align="start start" class="width100 paddingLR20 marginTB10">
+            <div layout="column" layout-align="start start" class="width100  marginTB10">
                 <div layout="row" layout-align="start start" class="width100" ng-if="exam.registration.website">
                     <div flex="40">Website</div>
                     <div flex>
@@ -238,12 +242,12 @@
                     </div>
                 </div>
                 <div layout="row" layout-align="start start" class="width100">
-                    <div flex="40">Mode of Registration</div>
+                    <div flex="40">Registration Mode</div>
                     <div flex>{{exam.registration.mode}}</div>
                 </div>
                 <div layout="row" layout-align="start start" class="width100">
                     <div flex="40">Payment Modes</div>
-                    <div flex layout="row" layout-align="start start">
+                    <div flex layout="row" layout-align="start start" layout-wrap>
                         <div class="marginR5" ng-repeat="paymentMode in exam.registration.fee.paymentModes">
                         {{paymentMode}}
                         </div>    
@@ -252,7 +256,7 @@
                 </div>
                 <div layout="row" layout-align="start start" class="width100" ng-if="exam.registration.fee">
                     <div flex="40">Fee</div>
-                    <div flex layout="row" layout-align="start start">
+                    <div flex layout="row" layout-align="start start" layout-wrap>
                         <div layout="column" layout-align="center center" flex>
                             <div class="width100">General / OBC</div>
                             <div class="width100">{{exam.registration.fee.general_obc}}</div>
@@ -277,21 +281,27 @@
             
             <div layout="column" layout-align="start start" class="width100" ng-if="activeExamCycle">
             
-            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 paddingB20 subhheadingBottomBorder2 font20 bold" ng-if="activeExamCycle">
+            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="activeExamCycle">
                 {{activeExamCycle.name}} Syllabus & Brochure
             </div>
-            <div layout="row" layout-align="start center" class="width100 paddingLR20 marginTB10">
-                <div layout="column" layout-align="center center" flex="25" ng-if="activeExamCycle.syllabus && activeExamCycle.syllabus.length > 0">
+            <div layout="row" layout-align="start center" class="width100  marginTB10">
+                <div layout="column" layout-align="center center" flex ng-if="activeExamCycle.syllabus && activeExamCycle.syllabus.length > 0">
                     <div class="font16 bold">Syllabus</div>
                     <div class="marginTB10"><img src="icons/syllabus.png"/></div>
-                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-href="{{activeExamCycle.syllabus[0].url}}" target="_blank"> 
+                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-href="{{activeExamCycle.syllabus[0].url}}" target="_blank" ng-if="user && user.userId"> 
+                        Download <i class="fa fa-download font14" aria-hidden="true"></i>
+                    </md-button>
+                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-click="noUserDownload()" ng-if="!user || !user.userId"> 
                         Download <i class="fa fa-download font14" aria-hidden="true"></i>
                     </md-button>
                 </div>
-                <div layout="column" layout-align="center center" flex="25" ng-if="activeExamCycle.brochure && activeExamCycle.brochure.length > 0">
+                <div layout="column" layout-align="center center" flex ng-if="activeExamCycle.brochure && activeExamCycle.brochure.length > 0">
                     <div class="font16 bold">Brochure</div>
                     <div class="marginTB10"><img src="icons/brochure.png"/></div>
-                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-href="{{activeExamCycle.brochure[0].url}}" target="_blank"> 
+                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-href="{{activeExamCycle.brochure[0].url}}" target="_blank"  ng-if="user && user.userId"> 
+                        Download <i class="fa fa-download font14" aria-hidden="true"></i>
+                    </md-button>
+                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-click="noUserDownload()" ng-if="!user || !user.userId"> 
                         Download <i class="fa fa-download font14" aria-hidden="true"></i>
                     </md-button>
                 </div>
@@ -327,13 +337,13 @@
             </div>
             </div>
             <div layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold" ng-if="exam.pattern && exam.pattern._id">
-                {{exam.displayname}} Pattern
+                {{exam.seoname}} Pattern
             </div>
             <div layout="column" layout-align="start start" ng-if="exam.pattern">
-                <div class="width100 paddingLR40 marginT40" ng-if="exam.pattern.coverPhoto">
+                <div class="width100  marginT40" ng-if="exam.pattern.coverPhoto">
                     <img ng-src="{{exam.pattern.coverPhoto}}" class="width100"/>
                 </div>
-                <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.pattern.content" class="marginTB20 paddingLR40">
+                <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.pattern.content" class="marginTB20 ">
                 </div>
             </div>
             
@@ -342,18 +352,18 @@
                     Recommended {{exam.stream.displayname}} Preparation Books
                 </div>
 
-                <div class="width100 paddingLR40 marginT40">
+                <div class="width100  marginT40">
                     <img ng-src="{{exam.books.coverPhoto}}" class="width100"/>
                 </div>
-                <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.books.content" class="marginTB20 paddingLR40">
+                <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.books.content" class="marginTB20 ">
                 </div>
             </div>
             
             <div layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold">
-                {{exam.displayname}} Recommend Reading
+                {{exam.seoname}} Recommend Reading
             </div>
-            <div class="width100 marginT20 paddingLR20">
-                <ui-carousel slides="suggestedblogs" slides-to-show="2" slides-to-scroll="2" dots="true">
+            <div class="width100 marginT20 ">
+                <ui-carousel slides="suggestedblogs" slides-to-show="slideCount" slides-to-scroll="slideCount" dots="true">
                   <carousel-item>
                     <div class="width100 padding10">
                     <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
@@ -365,7 +375,7 @@
                         </div>
                         </div>
 
-                        <div layout="column" layout-align="start center" class="min15vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
+                        <div layout="column" layout-align="start center" class="min15vh  padding10 width100 blogpostBorder rounderBorderBottom">
                             <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
                                 <div flex layout="column" layout-align="start start" flex class="font14 wideLine2 marginR10">
                                     <a ui-sref="showblog({ blogpostSlug:{{'item.urlslug'}} })" target="_blank">
@@ -402,20 +412,17 @@
             <div layout="column" layout-align="start start" ng-if="exam.tests && exam.tests.length > 0" class="width100">
                 <div layout="column" layout-align="start start" class="  textBlack width100 paddingB10 marginTB10 subhheadingBottomBorder2">
                     <div class=" font20 bold">
-                        {{exam.displayname}} Previous Papers
+                        {{exam.seoname}} Previous Papers
                     </div>
                     <div class="font14">
                         Download from {{exam.tests.length}} {{exam.seoname}} papers brought to you by Exambazaar.com&nbsp;&nbsp;<i class="fa fa-download" aria-hidden="true"></i>
                     </div>
                 </div>
-                <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR20 editFont marginTB20" layout-wrap>
+                <div layout="row" layout-xs="column" layout-align="start start" class="width100  editFont marginTB20" layout-wrap>
                     <div flex="50" flex-xs="100" class="paddingR10 paddingTB5" ng-repeat="test in exam.tests | orderBy:'-year'">
-                        <div layout="row" layout-align="start center" class="width100 paddingLR20 paddingTB10 boxShadow min20vh width100">
+                        <div layout="row" layout-align="start center" class="width100  padding10 boxShadow min20vh width100">
                             <div flex="25" class="">
                                 <img src="icons/download.png" class="width100"/>
-                                <!--<div layout="row" layout-align="center center" class="min20vh greyBorder">
-                                Screenshot
-                                </div>-->
                             </div>
                             <div flex layout="column" layout-align="center center" class="width100 padding20">
                                 <div layout="row" layout-align="start center" class="width100 font14 textBlack">
@@ -425,7 +432,10 @@
                                     {{test.description}}
                                 </div>
                                 <div layout="row" layout-align="start center" class="width100 marginT20">
-                                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-href="{{test.url.question}}" target="_blank">
+                                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-href="{{test.url.question}}" target="_blank"  ng-if="user && user.userId">
+                                        Download <i class="fa fa-download font14" aria-hidden="true"></i>
+                                    </md-button>
+                                    <md-button class="md-danger md-small tolowercase font12 margin0" ng-click="noUserDownload()" ng-if="!user || !user.userId">
                                         Download <i class="fa fa-download font14" aria-hidden="true"></i>
                                     </md-button>
                                 </div>
@@ -439,46 +449,29 @@
         </div>
         <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5">
         </div>
-        <div layout="column" layout-align="start start" hide-xs flex-gt-xs="25" class="min50vh">
-            <!--<div class="marginTB10 font20 bold paddingLR10">
-            Recommended Reading
+        <div layout="column" layout-align="start start" flex-gt-xs="25" class="min50vh paddingLR10" ng-if="suggestedcoachings.length > 0">
+            <div class="marginTB10 font20 bold textBlack subhheadingBottomBorder2 width100">
+            {{exam.seoname}} Coaching Around You
             </div>
-            <div>
-                <div flex-xs="100" flex-gt-xs="100" layout="column" layout-align="center center"  class="paddingTB20 maringT20" ng-repeat="blogpost in suggestedblogs | orderBy: '-_created'">
-                    <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
-                    <div layout="column" layout-align="center center" class="edBitesImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
-                    <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
-                        <div flex layout="row" layout-align="start center">
-                            {{blogpost.readingTime.text}}
+            <div layout="column" layout-align="center center" ng-repeat="coachingGroup in suggestedcoachings " class="min20vh fourthFont width100 marginB20 padding10" ng-click="goToCoaching(coachingGroup)">
+                <div layout="column" layout-align="center center" class="width100 padding10 boxShadow">
+                    <div layout="row" layout-align="center center" id="pageLogoHolder3">
+                        <img ng-src="{{coachingGroup.logo}}" class="pageLogo" ng-if="coachingGroup.logo"/>
+                        <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup.logo"/>
+                    </div>
+                    <div flex layout="column" layout-align="center center" class="width100 marginT20">
+                        <h2 class=" text-primary thirdFont font18 bold text-center">
+                        <a id="coachingHeader">
+                            {{coachingGroup.groupName}}
+                        </a>
+                        </h2>
+
+                        <div class="width100 font10 marginT10 text-center">
+                            {{coachingGroup.address}}, {{coachingGroup.city}}
                         </div>
                     </div>
-                    </div>
-                
-                <div layout="column" layout-align="start center" class="min10vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
-                    <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
-                        <div flex layout="column" layout-align="start start" flex class="font14 wideLine2 marginR10">
-                            <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
-                                {{blogpost.title}}
-                            </a>
-                            
-                        </div>
-                    </div>
-                    <div flex layout="row" layout-align="start center" class="width100 font12 textLightGrey">
-                        <div flex layout="column" layout-align="start start" class="">
-                            <div class="narrowLine">
-                                By {{blogpost.user.basic.name}}
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="center start" class="">
-                            {{blogpost._created | date: "MMMM dd"}}
-                        </div>
-                    </div>
-                    
-                </div>    
-            </div>
                 </div>
-            
-            </div>-->
+            </div>
             
         </div>
     </div>

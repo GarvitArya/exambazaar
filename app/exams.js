@@ -84,6 +84,58 @@ router.get('/', function(req, res) {
     
 });
 
+router.get('/markTrueFalse', function(req, res) {
+    //console.log('Here');
+    exam
+        .find({}, {active: 1, active2:1})
+        .exec(function (err, allExams) {
+        if (!err){
+            console.log(allExams.length);
+            var nExams = allExams.length;
+            var counter = 0;
+            var trues = 0;
+            var falses = 0;
+            allExams.forEach(function(thisExam, index){
+                console.log(typeof thisExam.active);
+                if(thisExam.active == 'true'){
+                    thisExam.active = true;
+                    thisExam.save(function(err, thisExam) {
+                    if (err) return console.error(err);
+                        console.log("Exam saved " + thisExam._id);
+                        //res.json('Done');
+                    });
+                }
+                if(thisExam.active2){
+                    trues += 1;
+                    //thisExam.active2 = true;
+                    thisExam.active = thisExam.active2;
+                    thisExam.save(function(err, thisExam) {
+                    if (err) return console.error(err);
+                        console.log("Exam saved " + thisExam._id);
+                        //res.json('Done');
+                    });
+                }else{
+                    falses += 1;
+                    thisExam.active = thisExam.active2;
+                    thisExam.save(function(err, thisExam) {
+                    if (err) return console.error(err);
+                        console.log("Exam saved " + thisExam._id);
+                        //res.json('Done');
+                    });
+                }
+                counter += 1;
+                if(counter == nExams){
+                    console.log("Trues " + trues);
+                    console.log("Falses " + falses);
+                }
+            });
+            res.json(true);
+            
+        } else {throw err;}
+    });
+    
+});
+
 router.get('/stream/:streamName', function(req, res) {
     var streamName = req.params.streamName;
     var allExams = exam

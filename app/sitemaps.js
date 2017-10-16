@@ -55,6 +55,28 @@ router.post('/blogurls', function(req, res) {
     });
 });
 
+router.post('/exams', function(req, res) {
+    //var mainblog = "https://www.exambazaar.com/blog";
+    var prefix = "https://www.exambazaar.com/exam";
+    var separator = "/";
+    var urls = [];
+    var allExams = exam.find({active: true}, {name:1}, function(err, allExams) {
+    if (!err){
+        var nExams = allExams.length;
+        var counter = 0;
+        allExams.forEach(function(thisExam, index){
+            var examName = encodeURIComponent(thisExam.name);
+            var thisURL = prefix + separator + examName;
+            urls.push(thisURL);
+            counter+= 1;
+            if(counter == nExams){
+                res.json(urls);
+            }
+        });
+    } else {throw err;}
+    });
+});
+
 router.post('/p2', function(req, res) {
     var prefix = "https://www.exambazaar.com/stream";
     var separator = "/";
@@ -251,10 +273,6 @@ router.post('/p5', function(req, res) {
         });
     } else {throw err;}
     });
-    
-    
-    
-    
     
     
 });

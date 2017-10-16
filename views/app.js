@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'ui.carousel']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'ui.carousel', 'matchMedia']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -493,6 +493,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.getExams = function() {
             return $http.get('/api/exams');
+        };
+        this.markTrueFalse = function() {
+            return $http.get('/api/exams/markTrueFalse');
         };
         this.getStreamExams = function(streamName) {
             return $http.get('/api/exams/stream/'+streamName, {streamName: streamName});
@@ -1318,7 +1321,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.bulkAddResult = function(bulkResult) {
             return $http.post('/api/targetStudyProviders/bulkAddResult',bulkResult);
         };
-        
+        this.suggestedcoachings = function(examUserinfo) {
+            return $http.post('/api/targetStudyProviders/suggestedcoachings', examUserinfo);
+        };
         
         
         this.addPhoto = function(newPhotoForm) {
@@ -1532,6 +1537,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.getblogurls = function() {
             return $http.post('/api/sitemaps/blogurls');
+        };
+        this.getexams = function() {
+            return $http.post('/api/sitemaps/exams');
         };
         
         
@@ -3824,18 +3832,20 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }, true);
         
         $scope.markLatlng = function(){
+            var address = $scope.provider.address + ", " + $scope.provider.city;
+            console.log(address);
             GMaps.geocode({
-                address: $scope.provider.address + ", " + $scope.provider.city ,
+                address: address,
                 callback: function(results, status) {
                     
                     if (status == 'OK') {
-                        console.log(results[0].geometry.location.lat() + ", " + results[0].geometry.location.lng());
+                        //console.log(results[0].geometry.location.lat() + ", " + results[0].geometry.location.lng());
                         $scope.provider.latlng = {
                             lat: results[0].geometry.location.lat(),
                             lng: results[0].geometry.location.lng()
                         };
                         $scope.showLatLngDialog();
-                        //console.log($scope.provider.latlng);
+                        console.log($scope.provider.latlng);
                     }else{
                         console.log(status + ' ' + $scope.provider._id);
                         $scope.showNoLatLngDialog();
@@ -5517,7 +5527,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' + $scope.provider.city;   
             }
         }
-        console.log($scope.provider.mapAddress);
+        //console.log($scope.provider.mapAddress);
         /*if($scope.provider.pincode){
             $scope.provider.mapAddress = $scope.provider.name + ', ' + $scope.provider.address + ' ' +
             $scope.provider.city + ' ' +
@@ -7795,6 +7805,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $state.go('partner-dashboard', {userId: $scope.sessionuser.userId});
                 }
             }else{
+                if($state.current.name == 'exam'){
+                    $state.reload();
+                }
                 //$state.reload();
             }
         };
@@ -11637,45 +11650,45 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             }, true);
             if (navigator.geolocation) {
-                  var timeoutVal = 10 * 1000 * 1000;
-                  navigator.geolocation.getCurrentPosition(
-                    displayPosition, 
-                    displayError,
-                    { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
-                  );
-                }
-                else {
-                  alert("Geolocation is not supported by your browser");
-                    //use ip info
-                }
+              var timeoutVal = 10 * 1000 * 1000;
+              navigator.geolocation.getCurrentPosition(
+                displayPosition, 
+                displayError,
+                { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
+              );
+            }
+            else {
+              alert("Geolocation is not supported by your browser");
+                //use ip info
+            }
 
-                function displayPosition(position) {
-                    $scope.currLocation = [position.coords.latitude, position.coords.longitude];
-                    //$scope.currLocation = [13.029595, 77.569381];
-                    //$scope.currLocation = [18.935322, 72.825932];
-                    //$scope.currLocation = [31.633979, 74.872264];
-                    //$scope.currLocation = [28.515623, 77.250452];
-                    //$scope.currLocation = [28.576849, 77.161944];
-                    //$scope.currLocation = [19.056719, 72.828877];
-                    //$scope.currLocation = [28.917227, 77.064013];
-                    //$scope.currLocation = [28.486915, 77.507298];
-                    //$scope.currLocation = [12.823035, 80.043792];
-                    //$scope.currLocation = [28.688274, 77.205712];
-                    //$scope.currLocation = [26.277995, 73.011094];
-                    //$scope.currLocation = [17.413502, 78.528736];
-                    //$scope.currLocation = [24.434886, 77.161200];
-                    //$scope.currLocation = [17.318687, 78.543050];
-                }
-                function displayError(error) {
-                  var errors = { 
-                    1: 'Permission denied',
-                    2: 'Position unavailable',
-                    3: 'Request timeout'
-                  };
-                  console.log("Error: " + errors[error.code]);
-                    //use ip info
-                    latlngfromIP();
-                }
+            function displayPosition(position) {
+                $scope.currLocation = [position.coords.latitude, position.coords.longitude];
+                //$scope.currLocation = [13.029595, 77.569381];
+                //$scope.currLocation = [18.935322, 72.825932];
+                //$scope.currLocation = [31.633979, 74.872264];
+                //$scope.currLocation = [28.515623, 77.250452];
+                //$scope.currLocation = [28.576849, 77.161944];
+                //$scope.currLocation = [19.056719, 72.828877];
+                //$scope.currLocation = [28.917227, 77.064013];
+                //$scope.currLocation = [28.486915, 77.507298];
+                //$scope.currLocation = [12.823035, 80.043792];
+                //$scope.currLocation = [28.688274, 77.205712];
+                //$scope.currLocation = [26.277995, 73.011094];
+                //$scope.currLocation = [17.413502, 78.528736];
+                //$scope.currLocation = [24.434886, 77.161200];
+                //$scope.currLocation = [17.318687, 78.543050];
+            }
+            function displayError(error) {
+              var errors = { 
+                1: 'Permission denied',
+                2: 'Position unavailable',
+                3: 'Request timeout'
+              };
+              console.log("Error: " + errors[error.code]);
+                //use ip info
+                latlngfromIP();
+            }
             
             $scope.showProvider = function(event, provider){
                 $scope.activeProvider = provider;
@@ -15915,8 +15928,15 @@ function getLatLng(thisData) {
     }
     
     exambazaar.controller("examController", 
-        [ '$scope', '$rootScope',  'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', '$cookies', 'testList', 'thisExamPattern', 'thisExamBooks', 'suggestedblogs', 'Carousel', function($scope, $rootScope, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, $cookies, testList, thisExamPattern, thisExamBooks, suggestedblogs, Carousel){
-            
+        [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'suggestedblogs', 'Carousel', 'targetStudyProviderService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, suggestedblogs, Carousel, targetStudyProviderService, viewService, $location, screenSize){
+            $scope.slideCount = 2;
+            if (screenSize.is('xs, sm')){
+                console.log('Mobile or tablet');
+                $scope.slideCount = 1;
+            }else{
+                console.log('Laptop');
+                $scope.slideCount = 2;
+            }
             $scope.components = [
                 /*'Overview',*/
                 'Contact',
@@ -15942,6 +15962,112 @@ function getLatLng(thisData) {
             }
             
             
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+            }else{
+                //$scope.signupNeeded = true;
+            }
+            var viewForm = {
+                state: $state.current.name,
+                claim: false,
+                url: $location.url()
+            };
+            if($scope.user && $scope.user.userId){
+                viewForm.user = $scope.user.userId
+            }
+            //console.log(JSON.stringify(viewForm));
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                //console.log('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.log();
+            });
+            
+            $scope.currCity = null;
+            $scope.currCountry = null;
+            
+            function latlngfromIP(){
+                if($cookies.getObject('ip')){
+                    var thisIP = $cookies.getObject('ip');
+                    //console.log("Using IP to geolocate user");
+                    //console.log(thisIP);
+                    $scope.currLocation = [thisIP.lat, thisIP.long];
+                    $scope.currCity = thisIP.city;
+                    $scope.currCountry = thisIP.country;
+                    Notification.warning("Exambazaar couldn't locate you with accuracy");
+                }
+            };
+            if (navigator.geolocation) {
+              var timeoutVal = 10 * 1000 * 1000;
+              navigator.geolocation.getCurrentPosition(
+                displayPosition, 
+                displayError,
+                { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
+              );
+            }
+            else {
+                alert("Geolocation is not supported by your browser");
+                latlngfromIP();
+                //use ip info
+            }
+            
+            
+
+            function displayPosition(position) {
+                $scope.currLocation = [position.coords.latitude, position.coords.longitude];
+                //console.log($scope.currLocation);
+            }
+            function displayError(error) {
+              var errors = { 
+                1: 'Permission denied',
+                2: 'Position unavailable',
+                3: 'Request timeout'
+              };
+              console.log("Error: " + errors[error.code]);
+                //use ip info
+                latlngfromIP();
+            }
+            //suggestedcoachings
+            
+            $scope.$watch('currLocation', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue != ''){
+                    
+                    if(newValue && newValue.length == 2){
+                        $scope.currLatLng = {
+                            lat: newValue[0],
+                            lng: newValue[1],
+                        }
+                        
+                        var examUserinfo = {
+                            exam: $scope.exam._id,
+                            userinfo: {
+                                user: null,
+                                latlng: $scope.currLatLng,
+                                city: $scope.currCity,
+                                country: $scope.currCountry,
+                            },
+                        };
+                        if($scope.user && $scope.user._id){
+                            examUserinfo.userinfo.user = $scope.user._id;
+                        }
+                        targetStudyProviderService.suggestedcoachings(examUserinfo).success(function (data, status, headers) {
+                            $scope.suggestedcoachings = data;
+                            console.log(data);
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log("Error ");
+                        });
+                    }
+                    
+                    
+                    
+                }
+            }, true);
+            
             var badgeIconClasses = ['fa fa-user-plus', 'fa fa-bath'];
             var badgeClasses = ['info', 'warning'];
             var badgeIcons = {
@@ -15959,7 +16085,17 @@ function getLatLng(thisData) {
                 "Interview": "primary",
             };
             $scope.events = [];
-            
+            //console.log($scope.user);
+            $scope.noUserDownload = function(){
+                if(!$scope.user || !$scope.user.userId){
+                    $rootScope.$emit("CallShowLogin", {});
+                    if($cookies.getObject('sessionuser')){
+                        $scope.user = $cookies.getObject('sessionuser');
+                    }else{
+                        $scope.signupNeeded = true;
+                    }
+                }
+            }
             
             $scope.activeExamCycle = null;
             $scope.exam.cycle.forEach(function(thisCycle, index){
@@ -15972,7 +16108,7 @@ function getLatLng(thisData) {
                 $scope.activeExamCycle = examCycle;
                 if($scope.activeExamCycle){
                     var steps = $scope.activeExamCycle.examSteps;
-                    console.log($scope.activeExamCycle); 
+                    //console.log($scope.activeExamCycle); 
                     steps.forEach(function(thisStep, index){
                         var random = Math.floor(Math.random() * badgeIconClasses.length);
                         var dateRange = thisStep.stepDate.dateRange;
@@ -16025,6 +16161,23 @@ function getLatLng(thisData) {
                 }
             };
             $scope.setCycle($scope.activeExamCycle);
+            
+            
+            $scope.goToCoaching = function(provider){
+                var coachingForm = {
+                    _id: provider._id 
+                };
+                targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+                        var examStream = data;
+                        
+                        var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
+                        window.open(url,'_blank');
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+            };
+            
             
             $rootScope.pageTitle = $scope.exam.displayname;
     }]);
@@ -18735,6 +18888,99 @@ function getLatLng(thisData) {
             $rootScope.pageTitle = "Exambazaar Sitemap";
     }]);       
         
+    exambazaar.controller("blogsitemapController", 
+        [ '$scope', '$rootScope','$http','$state', 'blogurls', 'FileSaver', 'Blob', 'exams', function($scope, $rootScope, $http, $state, blogurls, FileSaver, Blob, exams){
+            
+            $scope.xmlStart = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+            $scope.urlsetStart = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
+            var xmlStart = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+            var urlsetStart = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
+            $scope.urlStart = "<url>";
+            $scope.urlEnd = "</url>";
+            $scope.locStart = "<loc>";
+            $scope.locEnd = "</loc>";
+            $scope.changefreqStart = "<changefreq>";
+            $scope.changefreqEnd = "</changefreq>";
+            $scope.priorityStart = "<priority>";
+            $scope.priorityEnd = "</priority>";
+            $scope.urlsetEnd = "</urlset>";
+            var urlStart = "<url>";
+            var urlEnd = "</url>";
+            var locStart = "<loc>";
+            var locEnd = "</loc>";
+            var changefreqStart = "<changefreq>";
+            var changefreqEnd = "</changefreq>";
+            var priorityStart = "<priority>";
+            var priorityEnd = "</priority>";
+            var urlsetEnd = "</urlset>";
+            
+            var blogurls = blogurls.data;
+            var exams = exams.data;
+            var urls = [];
+            var blogurlsCurated = [];
+            var examsCurated = [];
+            blogurls.forEach(function(thisURL, uIndex){
+                newCurated = {
+                    url: thisURL,
+                    count: "10000",
+                    changefreq: 'weekly',
+                    priority: 0.8,
+                };
+                blogurlsCurated.push(newCurated);
+            });
+            var newCurated = {
+                url: "https://www.exambazaar.com/blog",
+                count: "10000",
+                changefreq: 'daily',
+                priority: 1,
+            };
+            //urls.push(newCurated);
+            //urls = urls.concat(blogurlsCurated);
+            
+            exams.forEach(function(thisURL, uIndex){
+                newCurated = {
+                    url: thisURL,
+                    count: "10000",
+                    changefreq: 'weekly',
+                    priority: 0.8,
+                };
+                examsCurated.push(newCurated);
+            });
+            urls = urls.concat(examsCurated);
+            
+            var sitemapText = "";
+            var thisURLText = "";
+            sitemapText += xmlStart;
+            sitemapText += urlsetStart;
+            urls.forEach(function(thisURL, uIndex){
+                thisURLText = "";
+                thisURLText += urlStart;
+                thisURLText += locStart;
+                thisURLText += thisURL.url;
+                thisURLText += locEnd;
+                if(thisURL.changefreq){
+                   thisURLText += changefreqStart;
+                   thisURLText += thisURL.changefreq;
+                   thisURLText += changefreqEnd;
+                }
+                if(thisURL.priority){
+                   thisURLText += priorityStart;
+                   thisURLText += thisURL.priority;
+                   thisURLText += priorityEnd;
+                }
+                thisURLText += urlEnd;
+                sitemapText += thisURLText;
+            });
+            sitemapText += urlsetEnd;
+            
+            
+            var data = new Blob([sitemapText], { type: "application/xhtml+xml;charset=utf-8" });
+            FileSaver.saveAs(data, 'blogsitemap.xml');
+            
+            //console.log(sitemapText);
+            $scope.urls = urls;
+            $rootScope.pageTitle = "Exambazaar Blog Sitemap";
+    }]);
         
     exambazaar.controller("sendEmailController", 
         [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'UserService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', function($scope,$http,$state,EmailService, targetStudyProviderService, UserService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope){
@@ -22605,6 +22851,10 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
+                /*markTrueFalse: ['ExamService',
+                    function(ExamService){
+                    return ExamService.markTrueFalse();
+                }],*/
                 ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
                 }],
@@ -22644,7 +22894,7 @@ function getLatLng(thisData) {
             }
         })
         .state('exam', {
-            url: '/ebinternal/exam/:examName',
+            url: '/exam/:examName',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22910,6 +23160,39 @@ function getLatLng(thisData) {
                 blogurls: ['sitemapService',
                     function(sitemapService){
                     return sitemapService.getblogurls();
+                }],
+                exams: ['sitemapService',
+                    function(sitemapService){
+                    return sitemapService.getexams();
+                }],
+                loadAngularFileSaver: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularFileSaver'], {serie: true});
+                }],
+            }
+        })
+        .state('blogsitemap', {
+            url: '/ebinternal/blogsitemap',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'blogsitemap.html',
+                    controller: 'blogsitemapController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                blogurls: ['sitemapService',
+                    function(sitemapService){
+                    return sitemapService.getblogurls();
+                }],
+                exams: ['sitemapService',
+                    function(sitemapService){
+                    return sitemapService.getexams();
                 }],
                 loadAngularFileSaver: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularFileSaver'], {serie: true});

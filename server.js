@@ -219,7 +219,7 @@ var allStates = [
 '/ebinternal/editblog/:blogpostId',
 '/ebinternal/editExam/:examId',
 /*'/ebinternal/error',*/
-'/ebinternal/exam/:examName',
+'/exam/:examName',
 '/ebinternal/extractEmails',
 '/ebinternal/master/:masterId/addMaster',
 '/ebinternal/master/:masterId/dashboard',
@@ -233,6 +233,7 @@ var allStates = [
 '/ebinternal/scheduleQAD/:userId',
 '/ebinternal/search',
 '/ebinternal/sitemap',
+'/ebinternal/blogsitemap',
 '/ebinternal/socialLogin',
 '/ebinternal/user/:userId/:reviewId/availoffer',
 '/ebinternal/user/:userId/addedInstitutes',

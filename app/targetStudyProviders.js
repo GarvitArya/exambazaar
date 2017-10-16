@@ -3451,10 +3451,12 @@ router.get('/citySummaryService', function(req, res) {
 });
 
 router.post('/suggestedcoachings', function(req, res) {
+    console.log("Suggesting coachings: ");
     var examUserinfo = req.body;
-    var exam = examUserinfo.exam;
+    var thisExam = examUserinfo.exam;
     var userinfo = examUserinfo.userinfo;
     var userId = null;
+    var howmany = 15;
     if(userinfo.user){
         userId = userinfo.user;
     }
@@ -3466,36 +3468,93 @@ router.post('/suggestedcoachings', function(req, res) {
     if(userinfo.latlng){
         latlng = userinfo.latlng;
     }
-    //, type: 'Coaching'
-    var thisProvider = targetStudyProvider
-        .findOne({'_id': provider}, {ebVerifyState:1, ebVerify: 1})
-        .exec(function (err, thisProvider) {
+    
+    if(thisExam){
+        if(latlng){
+        var kmsToRadian = function(kms){
+            var earthRadiusInKms = 6371;
+            return kms / earthRadiusInKms;
+        };
+        var thisLng = Number(latlng.lng);
+        var thisLat = Number(latlng.lat);
+        var kms = 50;//Number(queryForm.distanceinKm);
+        var examArray = [thisExam];
+
+        var coordinates = [thisLng, thisLat];
+        console.log(coordinates);
+        var query = {
+            "loc" : {
+                $geoWithin : {
+                    $centerSphere : [coordinates, kmsToRadian(kms)]
+                }
+            },
+            disabled: false,
+            exams: thisExam, 
+            //exams: {$exists: true}, 
+            //$where:'this.exams.length>0'
+        };
+        
+        console.log("Finding institutes based on latlng, within: " + kms + " km");
+        var allProviders = targetStudyProvider.find(query, {name:1, groupName:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1, city:1, state:1},function(err, allProviders) {
         if (!err){
-            var newVerify = {
-                state: state,
-                user: user
-            };
-            if(!thisProvider.ebVerify || thisProvider.ebVerify.length == 0){
-                thisProvider.ebVerify = [];
-            }
-            thisProvider.ebVerifyState = state;
-            thisProvider.ebVerify.push(newVerify);
-            thisProvider.save(function(err, thisProvider) {
-                if (err) return console.error(err);
-                res.json('Done');
-                console.log(thisProvider._id + " saved!");
-            });
-            
-            /*if(thisProvider.ebVerify && thisProvider.ebVerify.length > 0){
-                thisProvider.ebVerifyState = state;
-                thisProvider.ebVerify.push(newVerify);
+            /*var sLength = examArray.length;
+            var nLength = allProviders.length;
+            if(sLength > 0){
+                var filteredProviders = [];
+                allProviders.forEach(function(thisprovider, index){
+                    var thisExams = thisprovider.exams;
+                    var shouldInclude = containsAny(examArray, thisExams);
+                    //console.log(shouldInclude);
+                    if(shouldInclude){
+                        filteredProviders.push(thisprovider);
+                    }
+                });
+
+                var nLength2 = filteredProviders.length; 
+                //console.log(nLength + " -> " + nLength2);
+                res.json(filteredProviders);
             }else{
-                thisProvider.ebVerify = [];
-                thisProvider.ebVerifyState = state;
-                thisProvider.ebVerify.push(newVerify);
+                console.log(nLength);
+                res.json(allProviders);
             }*/
+            console.log(allProviders.length);
+            res.json(allProviders);
+
         } else {throw err;}
-    });
+        }).limit(howmany);
+        
+    }else if(city && country == "India"){
+        console.log("Finding institutes based on city: " + city);
+        var allProviders = targetStudyProvider
+            .find({'city': city, exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1, city:1, state:1})
+            .exec(function (err, allProviders) {
+            if (!err){
+                res.json(allProviders);
+            } else {throw err;}
+        }).limit(howmany);
+        
+        
+    }else{
+        console.log("Finding institutes on no basis!");
+        var allProviders = targetStudyProvider
+            .find({exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1, city:1, state:1})
+            .exec(function (err, allProviders) {
+            if (!err){
+                res.json(allProviders);
+            } else {throw err;}
+        }).limit(howmany);
+    }    
+    }else{
+        console.log("Finding institutes on no basis!");
+        var allProviders = targetStudyProvider
+            .find({exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1, city:1, state:1})
+            .exec(function (err, allProviders) {
+            if (!err){
+                res.json(allProviders);
+            } else {throw err;}
+        }).limit(howmany);
+    }
+    
 });
 
 
