@@ -716,9 +716,8 @@
             min-height: 100vh;
             margin: 0px;
             padding-top: 10vh;
-            padding-bottom: 40px;
             background-image: url("images/background/background-min.jpg");
-            background-size:     cover;
+            background-size: cover;
             background-position: center center;
         }
         #fbpopup{
@@ -2164,641 +2163,637 @@
     
     </head>
     <!--twitter-widget-initialize-->
-    <body id="exambazaar" ng-cloak class="abc">
+    <body id="exambazaar" ng-cloak>
      
-    <div  layout="column" ng-controller="headerController">
+    <div  layout="column" ng-controller="headerController" class="min100vh">
         <div ui-view="header"></div>
-        <div ui-view="body" class="min90vh" ></div>
+        <div flex ui-view="body"  ></div>
         <div ui-view="footer"></div>
         
-        
-            
-<div style="visibility: hidden">    
-<div class="md-dialog-container" id="loginDialog" >
-  <md-dialog class="login-dialog"> 
-     <!--<div layout="row" layout-align="center center" ng-if="stateName == 'showGroup'" class="paddingLR30 paddingTB10 font10 gainsboroBottomBorder">
-            Looking for {{coachingGroupName}} in {{coachingGroupCity}}?
-     </div>-->
-     <div layout="column"  flex-gt-sm="100" class="padding30" >
-        
-        <div layout="row" layout-align="center center" class="mainFont textBlack paddingB10 gainsboroBottomBorder">
-            <span ng-if="!signupMode">
-            <span ng-if="!resetMode">
-                <span class="md-title" hide-xs>
-                    Log into Exambazaar
-                </span>
-                <span class="font16" hide-gt-xs>
-                    Log into Exambazaar
-                </span>
-            </span>
-            <span ng-if="resetMode">
-                <span class="md-title" hide-xs>
-                    Reset Password
-                </span>
-                <span class="font16" hide-gt-xs>
-                    Reset Password
-                </span>
-            </span>
-                
-            </span>
-            <span ng-if="signupMode">
-            <span class="md-title" hide-xs>
-                Create an account
-            </span>
-            <span class="font16" hide-gt-xs>
-                Create an account
-            </span>
-            </span>
-        </div>
-        <div layout="column" layout-align="center center" class="marginT20 marginB10" >
-            <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase">
-                <span class="font14" hide-xs>
-                    <span ng-if="!signupMode">Log in </span>
-                    <span ng-if="signupMode">Sign up </span>
-                    with Facebook
-                </span>
-                <span class="font12" hide-gt-xs>
-                    Log in with Facebook
-                </span>
-            </md-button>
-            <!--<md-button href="/auth/google" class="width100 tolowercase">
-                <span class="font14" hide-xs>
-                    <span ng-if="!signupMode">Log in </span>
-                    <span ng-if="signupMode">Sign up </span>
-                    with Google
-                </span>
-                <span class="font12" hide-gt-xs>
-                    Log in with Google
-                </span>
-            </md-button>-->
-        </div>
+        <div style="visibility: hidden">    
+        <div class="md-dialog-container" id="loginDialog" >
+          <md-dialog class="login-dialog"> 
+             <!--<div layout="row" layout-align="center center" ng-if="stateName == 'showGroup'" class="paddingLR30 paddingTB10 font10 gainsboroBottomBorder">
+                    Looking for {{coachingGroupName}} in {{coachingGroupCity}}?
+             </div>-->
+             <div layout="column"  flex-gt-sm="100" class="padding30" >
 
-        <div style="width: 100%; height: 16px; border-bottom: 1px solid #ccc; text-align: center" class="secondFont">
-          <span hide-xs style="font-size: 15px; background-color: #FFF; color: #ccc;padding: 0 10px;">
-            or
-          </span>
-        </div>
-
-
-        <div class="marginT20  " ng-if="!signupMode">
-        <form  ng-submit="login()" name="loginForm" ng-if="!resetMode">
-        <div layout="column" class="">
-            <div class="paddingTB5 ">
-            <input type="text" placeholder="Mobile" class="width100" ng-model="userlogin.mobile"  ng-minlength="10" ng-maxlength="10" only-digits id="loginInput">
-            </div>
-            <div class="paddingB5">
-            <input type="password" placeholder="Password" class="width100" ng-model="userlogin.password" id="loginInput">
-            </div>
-            <div class="text-center" ng-if="loginErrorMessage">
-                <span class="danger font10" >{{loginErrorMessage}}</span>
-            </div>
-            <div class="text-right">
-                <span class="danger font10" ng-click="resetToggle()">Forgot Password?</span>
-            </div>
-            
-        </div>
-            
-        
-        <div layout="row" class="marginT20">
-        <div flex class="paddingR5">
-            <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="loginForm.$invalid">
-                Log in
-            </md-button>
-        </div>
-        <div flex class="paddingL5">
-            <md-button ng-click="signupToggle()" class="md-small md-cancel width100 tolowercase" >
-                Sign up
-            </md-button>
-        </div>
-        </div>
-        </form>
-        <form  ng-submit="reset()" name="resetForm" ng-if="resetMode">
-        <div layout="column" class="">
-            <div layout="row" layout-align="start center" class="paddingTB5 ">
-            <div layout="column" flex>
-                <input type="text" placeholder="Enter your login Mobile" class="width100" ng-model="reset.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput" required>
-            </div>
-            <div layout="row" layout-align="end center" flex-gt-xs="50" flex-xs="40" ng-if="showResetVerifyOTP">
-                <md-button class="md-green2 md-small font10 width80" ng-click="resetPhone()" ng-if="!ResetOTPsent">Verify by OTP</md-button>
-                
-                <input ng-if="ResetOTPsent && !ResetOTPVerified" type="text" placeholder="4 digit OTP" class="width80" ng-model="reset.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits id="loginInput" required >
-                
-                
-                <div ng-if="ResetOTPsent && ResetOTPVerified" class="text-primary font20 bold">
-                    <i class="fa fa-check-circle" aria-hidden="true"></i>
-                </div>
-            </div>
-            </div>
-            <span ng-if="userResetExistMessage" class="danger font8 text-right">{{userResetExistMessage}}</span>
-            <span ng-if="ResetOTPmessage" class="danger font8 text-right">{{ResetOTPmessage}}</span>
-            <span ng-if="ResetOTPsent && !ResetOTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="resetPhone()" id="dangerLink">Resend it</a></span>
-            
-            <div class="paddingB5">
-            <input type="password" placeholder="Enter your new Password" class="width100" ng-model="reset.password" id="loginInput" ng-if="ResetOTPVerified">
-            </div>
-            <!--<div class="paddingB5">
-            <input type="password" placeholder="Verify your new Password" class="width100" ng-model="reset.verifypassword" id="loginInput" ng-if="ResetOTPVerified">
-            </div>-->
-            <div ng-messages="resetForm.reset.password.$error" class="danger font8 text-right" ng-if="ResetOTPVerified">
-                Password should be at least 6 characters long
-            </div>
-        </div>
-            
-        
-        <div layout="row" class="marginT20" ng-if="!resetMode">
-        <div flex class="paddingR5">
-            <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="loginForm.$invalid">
-                Log in
-            </md-button>
-        </div>
-        <div flex class="paddingL5">
-            <md-button ng-click="signupToggle()" class="md-small md-cancel width100 tolowercase" >
-                Sign up
-            </md-button>
-        </div>
-        </div>
-        <div layout="row" class="marginT20" ng-if="resetMode">
-        <div flex class="paddingR5">
-            <md-button ng-click="resetPassword()" class="md-small md-green2 width100 tolowercase" ng-disabled="checkResetForm()">
-                Reset Password
-            </md-button>
-        </div>
-        <div flex class="paddingL5">
-            <md-button type="submit" class="md-small md-cancel width100 tolowercase" ng-click="resetToggle()">
-                Back to Log in
-            </md-button>
-        </div>
-        </div>
-        </form>
-        </div>
-        
-        <div class="marginT20  " ng-if="signupMode">
-        <form  ng-submit="signupUser()" name="signupForm">
-        <div layout="column" class="">
-            <div class="paddingTB5 ">
-            <input type="text" placeholder="Name" class="width100" ng-model="signup.name" id="loginInput" required>
-            </div>
-            <div class="paddingTB5 ">
-            <input type="email" placeholder="Email" class="width100" ng-model="signup.email" id="loginInput" required>
-            </div>
-            <div layout="row"  class="paddingTB5 ">
-            <div layout="column" flex>
-                <input type="text" placeholder="Mobile" class="width100" ng-model="signup.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput" required>
-                
-            </div>
-            <div layout="row" layout-align="end center" flex-gt-xs="50" flex-xs="40" ng-if="showVerifyOTP">
-                <md-button class="md-green2 md-small font10 width80" ng-click="verifyPhone()" ng-if="!OTPsent">Verify by OTP</md-button>
-                
-                <input ng-if="OTPsent && !OTPVerified" type="text" placeholder="4 digit OTP" class="width80" ng-model="signup.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits id="loginInput" required >
-                
-                
-                <div ng-if="OTPsent && OTPVerified" class="text-primary font20 bold">
-                    <i class="fa fa-check-circle" aria-hidden="true"></i>
-                </div>
-            </div>
-            </div>
-            <span ng-if="userExistMessage" class="danger font8 text-right">{{userExistMessage}}</span>
-            <span ng-if="OTPmessage" class="danger font8 text-right">{{OTPmessage}}</span>
-            <span ng-if="OTPsent && !OTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="verifyPhone()" id="dangerLink">Resend it</a></span>
-            
-            <div class="paddingTB5">
-            <input type="password" placeholder="Password" class="width100" ng-model="signup.password" id="loginInput" ng-minlength="6" required>
-            <div ng-messages="signupForm.signup.password.$error" class="danger font8 text-right">
-                Password should be at least 6 characters long
-            </div>
-            </div>
-            <!--<div class="paddingB5">
-            <input type="password" placeholder="Password" class="width100" ng-model="signup.verifypassword" id="loginInput">
-            </div>-->
-        </div>
-            
-        
-        <div layout="row" class="marginT20">
-        <div flex class="paddingR5">
-            <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="checkSignupForm()" >
-                Sign up
-            </md-button>
-        </div>
-        <div flex class="paddingL5">
-            <md-button class="md-small md-cancel  width100 tolowercase" ng-click="signupToggle()">
-                Log in
-            </md-button>
-            
-        </div>
-        </div>
-        </form>
-        </div> 
-         
-        
-        </div>
-        
-        
-      
-  </md-dialog>
-</div>    
-</div>    
-
-
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="userReviewSearchDialog">
-      <md-dialog class="offer-dialog whiteBackground">
-          <md-content flex layout="column" ng-controller="reviewRedirectController">
-          
-              <div hide-xs layout="row" layout-align="center center" id="reviewHeaderRow" class="" >
-                <div layout="column" layout-align="center center" class=" text-center textWhite   translucentBackground width100" id="iOSFix">
-                    <div layout-wrap class="width75 offerPopupFont font32 textShadow narrowLine2">
-                        We want to help!
-                    </div>
-                    <div layout-wrap class="width75 offerPopupFont font24 textShadow narrowLine2">
-                        You’ll love our discounts on the best-selling exam prep material*
-                    </div>
-                    <div layout-wrap class="width75 editFont textWhite font12">
-                        *Limited coupons only
-                    </div>
-                </div>
-              </div>
-              <div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="">
-              </div>
-              <div  class="secondFont font16 marginT10 width100 text-center">
-                  Review your coaching <i class="fa fa-arrow-right marginLR5" aria-hidden="true"></i> Receive exclusive Exambazaar coupon <i class="fa fa-arrow-right marginLR5" aria-hidden="true"></i> Get upto 50% OFF on courses from
-              </div>
-              <div hide-xs class="secondFont font10 width100 text-center marginB10" ng-if="offers.length>0">
-                  (hover to find out discounts for each provider)
-              </div>
-              <div hide-gt-xs class="secondFont font10 width100 text-center marginB10" ng-if="offers.length>0">
-                  (tap to find out discounts for each provider)
-              </div>
-              <div hide-gt-xs layout="row" layout-align="center center" id="iOSFix" class="">
-                <div layout-wrap layout="row" layout-align="center center" class="text-center width100" >
-                <div flex-xs="30" ng-repeat="offer in offers" class="padding5">
-                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                    
-                    
-                </div>
-                
-                </div>
-              </div>
-              <div hide-xs layout-wrap layout="row" layout-align="center center" class="text-center width100 min10vh" >
-                <div flex-xs="33" ng-repeat="offer in offers" class="padding5  marginLR10">
-                    <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                    <md-tooltip>{{offer.tooltip}}</md-tooltip>
-                </div>
-                
-              </div>
-              
-              
-              <div flex layout-fill layout="row" layout-xs="column" layout-align="center center" layout-align-xs="space-around center" class="secondFont paddingTB10 paddingLR20 width100" id="reviewSearchRow">
-                 
-              <div layout="row" layout-align="center center" flex-gt-xs="30" flex-xs="100" ng-controller="citySearchController as ctrl" class="paddingLR10 min10vh width100 autocompletedemoCustomTemplate">
-                    <md-autocomplete flex 
-                    md-selected-item="ctrl.selectedItem"
-                    md-selected-item-change= "ctrl.selectedItemChange(item)"
-                    md-search-text="ctrl.searchText"
-                    md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
-                    md-items="item in ctrl.querySearch(ctrl.searchText)"
-                    md-item-text="item"
-                    md-delay="300"
-                    md-min-length="0"
-                    md-menu-class="autocomplete"
-                    placeholder="City"
-                    class="width100 font16" ng-class="{ dangerBorder: newReviewError }">
-                        <md-item-template >
-                          <span class="item-title font12">
-                              <span class="font14 bold">{{item}}</span>
-                          </span>
-                          
-                        </md-item-template>
-
-                    </md-autocomplete>
-                </div>
-                  
-                  
-                <div layout="row" layout-align="center center" flex-gt-xs="40" flex-xs="100" ng-controller="coachingSearchController as ctrl" class="paddingLR10 min10vh width100 autocompletedemoCustomTemplate" >
-                    <md-autocomplete flex 
-                    md-selected-item="ctrl.selectedItem"
-                    md-selected-item-change= "ctrl.selectedItemChange(item)"
-                    md-search-text="ctrl.searchText"
-                    md-items="item in ctrl.querySearch(ctrl.searchText)"
-                    md-no-cache ="true"
-                    md-item-text="item.name"
-                    md-min-length="0"
-                    focus-me="newReviewCity && newReviewCity!=''"
-                    md-delay="300"
-                    md-menu-class="autocomplete"
-                    placeholder="Coaching Institute"
-                    class="width100">
-                        <md-item-template >
-                          <div layout="row" layout-align="start center" class="item-title font12">
-                              <div class="secondFont font14 textBlack">
-                                  {{item.name}}
-                              </div>
-                              
-                              <div hide-xs>
-                                <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo2" class="marginT10"/>
-                              </div>
-                              
-                          </div>
-                        </md-item-template>
-
-                    </md-autocomplete>
-                </div>
-                
-              </div>
-              
-              <div layout="row" layout-align="center center" class="paddingLR10 min10vh width100">
-                    <md-button class="md-small md-green2 width100 tolowercase" ng-click="redirectToReview()">
-                        Review
-                    </md-button>
-              </div>
-          
-          
-        </md-content>  
-      </md-dialog>
-    </div>    
-</div>        
-        
-
-<!--<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="whyReviewDialog">
-      <md-dialog class="offer-dialog" ng-controller="whyReviewController">
-          
-          <div layout="column" layout-align="center center" class="text-center height100" >
-              <div hide-xs layout="row" layout-align="center center" class="text-center width100" id="whyReviewPage2" >
-              </div>
-              <div hide-gt-xs layout="row" layout-align="center center" class="text-center width100" id="whyReviewPage3" >
-              </div>
-            <div hide-gt-xs layout="column" layout-align="center center" class="thirdFont marginT40 marginB10 paddingLR15 width100">
-                <div class="min5vh font24 textBlack narrowLine">
-                        {{currentQuestion.text}}
-                </div>
-                <div class="editFont font12 marginT10">
-                    {{currentQuestion.subtext}}
-                </div>
-            </div>
-            <div hide-xs layout="column" layout-align="center center" class="thirdFont marginT40 marginB10 paddingLR10 width80">
-                <div class="min5vh font32 textBlack narrowLine">
-                        {{currentQuestion.text}}
-                </div>
-                <div class="editFont font16 marginT10">
-                    {{currentQuestion.subtext}}
-                </div>
-            </div>
-            <div flex layout="row" layout-align="center center " class="paddingLR10 width100" >
-                <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="start center" class="width100 thirdFont spacedLetter025 ">
-
-                    <div flex layout-gt-xs="row" layout-xs="column" layout-align="center center" class="width100 ">
-                        <div flex-gt-xs="50" ng-repeat="option in currentQuestion.options" class="padding10 width100">
-                            <div hide-xs layout="column" layout-align="center center" class="min25vh padding20 optionClass width100 " ng-click="updateState(option)">
-                                <div class="font20 bold">
-                                    {{option.title}}
-                                </div>
-                                <div class="editFont font16">
-                                    {{option.subtitle}}
-                                </div>
-                            </div>
-                            <div hide-gt-xs layout="column" layout-align="center center" class="min15vh padding10 optionClass width100 " ng-click="updateState(option)">
-                                <div class="font18 bold">
-                                    {{option.title}}
-                                </div>
-                                <div class="editFont font14">
-                                    {{option.subtitle}}
-                                </div>
-                            </div>
-                        </div>
-                        <div  layout="column" layout-align="center center" class="min25vh padding10 width100" ng-if="showReviewButton" ng-click="showUserReviewSearchDialog()" ng-controller="offerController">
-                            <md-button class="md-danger md-small font14 width50 primaryFont spacedLetter1 padding10">
-                            Review
-                            </md-button>   
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-            <div layout="row" layout-align="center center" class="font12 textBlack width100 paddingB10" ng-if="currState != '1'" ng-click="previousState()">
-                Back
-            </div>
-        </div>
-          
-      </md-dialog>
-    </div>    
-</div>   -->     
-   
-
-<!--<div style="visibility: hidden">    
-    <div hide-xs class="md-dialog-container" id="fblikeDialog">
-      <md-dialog class="fbpopup-dialog">
-          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="fbpopup" >
-              <div class="margin20 padding10">
-                <div ng-click="hideLoginDialog()" id="closebutton">
-                    <i class="fa fa-times font24 textWhite" aria-hidden="true"></i>  
-                </div>
-                <div ng-show="fbpopupMode" class="fb-like" data-href="https://www.facebook.com/exambazaar/" data-width="250" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true" id="fblikebutton"></div>
-              </div>
-          </div>
-      </md-dialog>
-    </div>    
-</div>-->        
-        
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="partnerDialog">
-      <md-dialog class="offer-dialog">
-        <md-content flex layout="column" ng-controller="offerController2">
-        <div class="width100" id="examinfo">
-
-        </div>
-        <div flex class="paddingTB20 paddingLR40" layout="column" layout-align="start center" layout-fill>
-            <div flex layout="row" id="min15vh" class="width100 greyBottomBorder paddingTB10">
-                <div flex ="25" layout="column" layout-align="start center" class="paddingT5">
-                    <img ng-src="{{partnerOffer.image}}" id="logo"/>
-                </div>
-                <div flex ="75" layout="column" class="">
-                    <div layout="column" layout-align="start start" class="editFont">
-                        <div class="fifthFont textBlack marginB5" id="lineHeight2">
-                        {{partnerOffer.displayname}}
-                        </div>
-
-                        <div id="lineHeight" class="">
-                            {{partnerOffer}}
-                        </div>
-                        <div id="lineHeight" class="marginT10">
-                            <span class="font12 textDarkGrey">
-                                {{activeExamEligibility.exam.briefDescription}}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>    
-
-
-
-            <div layout-wrap layout="row" layout-align="center center" class="text-center width100">
-                <div flex-xs="33" ng-repeat="offer in offers" class="padding5">
-                <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                </div>
-            </div>
-
-
-            <div layout="row" layout-align="center center" class="paddingLR10 min10vh width100">
-                <md-button class="md-small md-green2 width100 tolowercase" ng-click="redirectToReview()">
-                Review
-                </md-button>
-            </div>
-        </div>  
-          
-        </md-content>  
-      </md-dialog>
-    </div>    
-</div>
-        <!---->
-<div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController">
-    <div layout="row"  layout-align="start center" >
-        <div hide-xs layout="row" layout-align="center center" flex>
-            <div flex layout="row" layout-align="center center" >
-                <div hide-sm class="text-center thirdFont font14 spacedLetter1 textWhite">Review your coaching institute <span class="font24 marginLR20">|</span> Avail upto&nbsp;<span class="textWhite bold">50% discount</span>&nbsp;on the best exam resources
-                </div>
-                
-                <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
-                    <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5" ng-click="showUserReviewSearchDialog()">
-                        <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
-                    </div>
-                    <!--showPartnerDialog(offer)-->
-                </div>
-                </div>
-            </div>
-            
-            <div hide-xs layout="row" layout-align="end center" class="">
-                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
-                Review
-                </md-button>    
-            </div>
-            <!--
-            bottomBarOfferImage
-            -->
-        </div>
-        <div hide-gt-xs layout="row" layout-align="start center" flex>
-            <div layout="column" layout-align="center center" class="textWhite">
-                <div class="text-center">
-                Review your coaching | Avail upto&nbsp;<span class="textWhite bold">50% off</span>
-                </div>
-            </div>
-            <div flex layout="row" layout-align="center center" class="width100">
-                <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
-                Go
-            </md-button>
-            
-            </div>
-        </div>
-        
-        
-</div>
-        
-        
-<div class="sideBarButton paddingTB5">
-    <div hide-xs layout="row"  layout-align="start center" sidebarjs-toggle id="sideBarIcon">
-        <i class="fa fa-angle-double-right font40 paddingR10 paddingTB20" aria-hidden="true"></i>
-    </div>
-    <sidebarjs class="sideBar font16">
-        <div sidebarjs-toggle id="sideBarIcon2" class="paddingR5">
-            <i class="fa fa-angle-double-left font40" aria-hidden="true"></i>
-        </div>
-        
-        <div layout="column" layout-align="start center" layout-fill class="width100">
-            <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder marginB10">
-                <div layout="row" layout-align="center center" flex>
-                    <a class="navbar-brand" href="/">
-                        <span class="" id="sidebarLogo">
-                            EXAMBAZAAR
+                <div layout="row" layout-align="center center" class="mainFont textBlack paddingB10 gainsboroBottomBorder">
+                    <span ng-if="!signupMode">
+                    <span ng-if="!resetMode">
+                        <span class="md-title" hide-xs>
+                            Log into Exambazaar
                         </span>
-                    </a>
-                </div>
-                <div sidebarjs-toggle layout="row" layout-align="center center" class="padding5 marginR10">
-                    <i class="fa fa-times-circle-o font24" aria-hidden="true"></i>
-                </div>
-                
-                
-            </div>
-            <div flex layout="column" layout-align="center center" class="width100">
-
-            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder paddingLR10">
-                <div layout="column" layout-align="center center" class="marginT5">
-                    <div layout="column" layout-align="center center" class="width100">
-                        Top Rankers
-                    </div>
-                    <div layout="row" layout-align="center center" class="font12 danger width100">
-                        <div class="marginLR5">
-                            <a id="sideBarLink" ui-sref="rankerswall({ examName:'NEET UG', year:'2017'} )">NEET 2017</a>
-                        </div>
-                        <div class="marginLR5">
-                            <a id="sideBarLink" ui-sref="rankerswall({ examName:'JEE Advanced', year:'2017'} )">JEE 2017</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="marginTB5">
-                    <a id="sideBarLink" ui-sref="blog">Blog</a>
-                </div>
-            </div>
-
-            <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder paddingLR10" ng-if="sessionuser && sessionuser.basic">
-                <div class="marginT5">
-                    Welcome {{sessionuser.basic.name}}!
-                </div>
-                <div class="marginTB10">
-                    <span ng-if="sessionuser.image">
-                        <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle"/>
+                        <span class="font16" hide-gt-xs>
+                            Log into Exambazaar
+                        </span>
                     </span>
-                    <!--<a id="sideBarLink" ui-sref="profile({ userId:{{'sessionuser.userId'}} })" class="marginR10">Profile</a>-->
+                    <span ng-if="resetMode">
+                        <span class="md-title" hide-xs>
+                            Reset Password
+                        </span>
+                        <span class="font16" hide-gt-xs>
+                            Reset Password
+                        </span>
+                    </span>
+
+                    </span>
+                    <span ng-if="signupMode">
+                    <span class="md-title" hide-xs>
+                        Create an account
+                    </span>
+                    <span class="font16" hide-gt-xs>
+                        Create an account
+                    </span>
+                    </span>
                 </div>
-                <div class="">
-                    <a id="sideBarLink" ui-sref="reviewed({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Reviews</a>
+                <div layout="column" layout-align="center center" class="marginT20 marginB10" >
+                    <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase">
+                        <span class="font14" hide-xs>
+                            <span ng-if="!signupMode">Log in </span>
+                            <span ng-if="signupMode">Sign up </span>
+                            with Facebook
+                        </span>
+                        <span class="font12" hide-gt-xs>
+                            Log in with Facebook
+                        </span>
+                    </md-button>
+                    <!--<md-button href="/auth/google" class="width100 tolowercase">
+                        <span class="font14" hide-xs>
+                            <span ng-if="!signupMode">Log in </span>
+                            <span ng-if="signupMode">Sign up </span>
+                            with Google
+                        </span>
+                        <span class="font12" hide-gt-xs>
+                            Log in with Google
+                        </span>
+                    </md-button>-->
                 </div>
-                <div class="marginTB5">
-                    <a id="sideBarLink" ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Shortlisted Institutes</a>
+
+                <div style="width: 100%; height: 16px; border-bottom: 1px solid #ccc; text-align: center" class="secondFont">
+                  <span hide-xs style="font-size: 15px; background-color: #FFF; color: #ccc;padding: 0 10px;">
+                    or
+                  </span>
                 </div>
 
-            </div>
-            <div layout="row" layout-align="center center" class="paddingLR10 width100">
-                <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-green2 width50" ng-click = "showLoginForm()">Log in</md-button>
-                <a id="sideBarLink" ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
-            </div>
-            <div flex layout="row" layout-align="center center" class="width100 marginT10">
-                <!--<twitter-timeline class="exact100h">
-                    <a class="twitter-timeline" data-height="100%" data-chrome="nofooter" href="https://twitter.com/exambazaar"> Tweets by @exambazaar</a>
-                </twitter-timeline>-->
-                
-            </div>
+
+                <div class="marginT20  " ng-if="!signupMode">
+                <form  ng-submit="login()" name="loginForm" ng-if="!resetMode">
+                <div layout="column" class="">
+                    <div class="paddingTB5 ">
+                    <input type="text" placeholder="Mobile" class="width100" ng-model="userlogin.mobile"  ng-minlength="10" ng-maxlength="10" only-digits id="loginInput">
+                    </div>
+                    <div class="paddingB5">
+                    <input type="password" placeholder="Password" class="width100" ng-model="userlogin.password" id="loginInput">
+                    </div>
+                    <div class="text-center" ng-if="loginErrorMessage">
+                        <span class="danger font10" >{{loginErrorMessage}}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="danger font10" ng-click="resetToggle()">Forgot Password?</span>
+                    </div>
+
+                </div>
+
+
+                <div layout="row" class="marginT20">
+                <div flex class="paddingR5">
+                    <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="loginForm.$invalid">
+                        Log in
+                    </md-button>
+                </div>
+                <div flex class="paddingL5">
+                    <md-button ng-click="signupToggle()" class="md-small md-cancel width100 tolowercase" >
+                        Sign up
+                    </md-button>
+                </div>
+                </div>
+                </form>
+                <form  ng-submit="reset()" name="resetForm" ng-if="resetMode">
+                <div layout="column" class="">
+                    <div layout="row" layout-align="start center" class="paddingTB5 ">
+                    <div layout="column" flex>
+                        <input type="text" placeholder="Enter your login Mobile" class="width100" ng-model="reset.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput" required>
+                    </div>
+                    <div layout="row" layout-align="end center" flex-gt-xs="50" flex-xs="40" ng-if="showResetVerifyOTP">
+                        <md-button class="md-green2 md-small font10 width80" ng-click="resetPhone()" ng-if="!ResetOTPsent">Verify by OTP</md-button>
+
+                        <input ng-if="ResetOTPsent && !ResetOTPVerified" type="text" placeholder="4 digit OTP" class="width80" ng-model="reset.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits id="loginInput" required >
+
+
+                        <div ng-if="ResetOTPsent && ResetOTPVerified" class="text-primary font20 bold">
+                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    </div>
+                    <span ng-if="userResetExistMessage" class="danger font8 text-right">{{userResetExistMessage}}</span>
+                    <span ng-if="ResetOTPmessage" class="danger font8 text-right">{{ResetOTPmessage}}</span>
+                    <span ng-if="ResetOTPsent && !ResetOTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="resetPhone()" id="dangerLink">Resend it</a></span>
+
+                    <div class="paddingB5">
+                    <input type="password" placeholder="Enter your new Password" class="width100" ng-model="reset.password" id="loginInput" ng-if="ResetOTPVerified">
+                    </div>
+                    <!--<div class="paddingB5">
+                    <input type="password" placeholder="Verify your new Password" class="width100" ng-model="reset.verifypassword" id="loginInput" ng-if="ResetOTPVerified">
+                    </div>-->
+                    <div ng-messages="resetForm.reset.password.$error" class="danger font8 text-right" ng-if="ResetOTPVerified">
+                        Password should be at least 6 characters long
+                    </div>
+                </div>
+
+
+                <div layout="row" class="marginT20" ng-if="!resetMode">
+                <div flex class="paddingR5">
+                    <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="loginForm.$invalid">
+                        Log in
+                    </md-button>
+                </div>
+                <div flex class="paddingL5">
+                    <md-button ng-click="signupToggle()" class="md-small md-cancel width100 tolowercase" >
+                        Sign up
+                    </md-button>
+                </div>
+                </div>
+                <div layout="row" class="marginT20" ng-if="resetMode">
+                <div flex class="paddingR5">
+                    <md-button ng-click="resetPassword()" class="md-small md-green2 width100 tolowercase" ng-disabled="checkResetForm()">
+                        Reset Password
+                    </md-button>
+                </div>
+                <div flex class="paddingL5">
+                    <md-button type="submit" class="md-small md-cancel width100 tolowercase" ng-click="resetToggle()">
+                        Back to Log in
+                    </md-button>
+                </div>
+                </div>
+                </form>
+                </div>
+
+                <div class="marginT20  " ng-if="signupMode">
+                <form  ng-submit="signupUser()" name="signupForm">
+                <div layout="column" class="">
+                    <div class="paddingTB5 ">
+                    <input type="text" placeholder="Name" class="width100" ng-model="signup.name" id="loginInput" required>
+                    </div>
+                    <div class="paddingTB5 ">
+                    <input type="email" placeholder="Email" class="width100" ng-model="signup.email" id="loginInput" required>
+                    </div>
+                    <div layout="row"  class="paddingTB5 ">
+                    <div layout="column" flex>
+                        <input type="text" placeholder="Mobile" class="width100" ng-model="signup.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput" required>
+
+                    </div>
+                    <div layout="row" layout-align="end center" flex-gt-xs="50" flex-xs="40" ng-if="showVerifyOTP">
+                        <md-button class="md-green2 md-small font10 width80" ng-click="verifyPhone()" ng-if="!OTPsent">Verify by OTP</md-button>
+
+                        <input ng-if="OTPsent && !OTPVerified" type="text" placeholder="4 digit OTP" class="width80" ng-model="signup.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits id="loginInput" required >
+
+
+                        <div ng-if="OTPsent && OTPVerified" class="text-primary font20 bold">
+                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    </div>
+                    <span ng-if="userExistMessage" class="danger font8 text-right">{{userExistMessage}}</span>
+                    <span ng-if="OTPmessage" class="danger font8 text-right">{{OTPmessage}}</span>
+                    <span ng-if="OTPsent && !OTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="verifyPhone()" id="dangerLink">Resend it</a></span>
+
+                    <div class="paddingTB5">
+                    <input type="password" placeholder="Password" class="width100" ng-model="signup.password" id="loginInput" ng-minlength="6" required>
+                    <div ng-messages="signupForm.signup.password.$error" class="danger font8 text-right">
+                        Password should be at least 6 characters long
+                    </div>
+                    </div>
+                    <!--<div class="paddingB5">
+                    <input type="password" placeholder="Password" class="width100" ng-model="signup.verifypassword" id="loginInput">
+                    </div>-->
+                </div>
+
+
+                <div layout="row" class="marginT20">
+                <div flex class="paddingR5">
+                    <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="checkSignupForm()" >
+                        Sign up
+                    </md-button>
+                </div>
+                <div flex class="paddingL5">
+                    <md-button class="md-small md-cancel  width100 tolowercase" ng-click="signupToggle()">
+                        Log in
+                    </md-button>
+
+                </div>
+                </div>
+                </form>
+                </div> 
+
+
+                </div>
 
 
 
-            </div>
-            <!--<div flex layout="row" layout-align="center end" class="padding10">
-                <a id="sideBarLink" sidebarjs-toggle><i class="fa fa-times-circle" aria-hidden="true"></i>&nbsp;&nbsp;Close</a>
-            </div>-->
+          </md-dialog>
+        </div>    
+        </div>    
+
+
+        <div style="visibility: hidden">    
+            <div class="md-dialog-container" id="userReviewSearchDialog">
+              <md-dialog class="offer-dialog whiteBackground">
+                  <md-content flex layout="column" ng-controller="reviewRedirectController">
+
+                      <div hide-xs layout="row" layout-align="center center" id="reviewHeaderRow" class="" >
+                        <div layout="column" layout-align="center center" class=" text-center textWhite   translucentBackground width100" id="iOSFix">
+                            <div layout-wrap class="width75 offerPopupFont font32 textShadow narrowLine2">
+                                We want to help!
+                            </div>
+                            <div layout-wrap class="width75 offerPopupFont font24 textShadow narrowLine2">
+                                You’ll love our discounts on the best-selling exam prep material*
+                            </div>
+                            <div layout-wrap class="width75 editFont textWhite font12">
+                                *Limited coupons only
+                            </div>
+                        </div>
+                      </div>
+                      <div hide-gt-xs layout="row" layout-align="center center" id="reviewHeaderRow2" class="">
+                      </div>
+                      <div  class="secondFont font16 marginT10 width100 text-center">
+                          Review your coaching <i class="fa fa-arrow-right marginLR5" aria-hidden="true"></i> Receive exclusive Exambazaar coupon <i class="fa fa-arrow-right marginLR5" aria-hidden="true"></i> Get upto 50% OFF on courses from
+                      </div>
+                      <div hide-xs class="secondFont font10 width100 text-center marginB10" ng-if="offers.length>0">
+                          (hover to find out discounts for each provider)
+                      </div>
+                      <div hide-gt-xs class="secondFont font10 width100 text-center marginB10" ng-if="offers.length>0">
+                          (tap to find out discounts for each provider)
+                      </div>
+                      <div hide-gt-xs layout="row" layout-align="center center" id="iOSFix" class="">
+                        <div layout-wrap layout="row" layout-align="center center" class="text-center width100" >
+                        <div flex-xs="30" ng-repeat="offer in offers" class="padding5">
+                            <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+
+
+                        </div>
+
+                        </div>
+                      </div>
+                      <div hide-xs layout-wrap layout="row" layout-align="center center" class="text-center width100 min10vh" >
+                        <div flex-xs="33" ng-repeat="offer in offers" class="padding5  marginLR10">
+                            <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                            <md-tooltip>{{offer.tooltip}}</md-tooltip>
+                        </div>
+
+                      </div>
+
+
+                      <div flex layout-fill layout="row" layout-xs="column" layout-align="center center" layout-align-xs="space-around center" class="secondFont paddingTB10 paddingLR20 width100" id="reviewSearchRow">
+
+                      <div layout="row" layout-align="center center" flex-gt-xs="30" flex-xs="100" ng-controller="citySearchController as ctrl" class="paddingLR10 min10vh width100 autocompletedemoCustomTemplate">
+                            <md-autocomplete flex 
+                            md-selected-item="ctrl.selectedItem"
+                            md-selected-item-change= "ctrl.selectedItemChange(item)"
+                            md-search-text="ctrl.searchText"
+                            md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                            md-items="item in ctrl.querySearch(ctrl.searchText)"
+                            md-item-text="item"
+                            md-delay="300"
+                            md-min-length="0"
+                            md-menu-class="autocomplete"
+                            placeholder="City"
+                            class="width100 font16" ng-class="{ dangerBorder: newReviewError }">
+                                <md-item-template >
+                                  <span class="item-title font12">
+                                      <span class="font14 bold">{{item}}</span>
+                                  </span>
+
+                                </md-item-template>
+
+                            </md-autocomplete>
+                        </div>
+
+
+                        <div layout="row" layout-align="center center" flex-gt-xs="40" flex-xs="100" ng-controller="coachingSearchController as ctrl" class="paddingLR10 min10vh width100 autocompletedemoCustomTemplate" >
+                            <md-autocomplete flex 
+                            md-selected-item="ctrl.selectedItem"
+                            md-selected-item-change= "ctrl.selectedItemChange(item)"
+                            md-search-text="ctrl.searchText"
+                            md-items="item in ctrl.querySearch(ctrl.searchText)"
+                            md-no-cache ="true"
+                            md-item-text="item.name"
+                            md-min-length="0"
+                            focus-me="newReviewCity && newReviewCity!=''"
+                            md-delay="300"
+                            md-menu-class="autocomplete"
+                            placeholder="Coaching Institute"
+                            class="width100">
+                                <md-item-template >
+                                  <div layout="row" layout-align="start center" class="item-title font12">
+                                      <div class="secondFont font14 textBlack">
+                                          {{item.name}}
+                                      </div>
+
+                                      <div hide-xs>
+                                        <img ng-if="item.logo" ng-src="{{item.logo}}" id="autocompleteLogo2" class="marginT10"/>
+                                      </div>
+
+                                  </div>
+                                </md-item-template>
+
+                            </md-autocomplete>
+                        </div>
+
+                      </div>
+
+                      <div layout="row" layout-align="center center" class="paddingLR10 min10vh width100">
+                            <md-button class="md-small md-green2 width100 tolowercase" ng-click="redirectToReview()">
+                                Review
+                            </md-button>
+                      </div>
+
+
+                </md-content>  
+              </md-dialog>
+            </div>    
+        </div>        
+
+
+        <!--<div style="visibility: hidden">    
+            <div class="md-dialog-container" id="whyReviewDialog">
+              <md-dialog class="offer-dialog" ng-controller="whyReviewController">
+
+                  <div layout="column" layout-align="center center" class="text-center height100" >
+                      <div hide-xs layout="row" layout-align="center center" class="text-center width100" id="whyReviewPage2" >
+                      </div>
+                      <div hide-gt-xs layout="row" layout-align="center center" class="text-center width100" id="whyReviewPage3" >
+                      </div>
+                    <div hide-gt-xs layout="column" layout-align="center center" class="thirdFont marginT40 marginB10 paddingLR15 width100">
+                        <div class="min5vh font24 textBlack narrowLine">
+                                {{currentQuestion.text}}
+                        </div>
+                        <div class="editFont font12 marginT10">
+                            {{currentQuestion.subtext}}
+                        </div>
+                    </div>
+                    <div hide-xs layout="column" layout-align="center center" class="thirdFont marginT40 marginB10 paddingLR10 width80">
+                        <div class="min5vh font32 textBlack narrowLine">
+                                {{currentQuestion.text}}
+                        </div>
+                        <div class="editFont font16 marginT10">
+                            {{currentQuestion.subtext}}
+                        </div>
+                    </div>
+                    <div flex layout="row" layout-align="center center " class="paddingLR10 width100" >
+                        <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="start center" class="width100 thirdFont spacedLetter025 ">
+
+                            <div flex layout-gt-xs="row" layout-xs="column" layout-align="center center" class="width100 ">
+                                <div flex-gt-xs="50" ng-repeat="option in currentQuestion.options" class="padding10 width100">
+                                    <div hide-xs layout="column" layout-align="center center" class="min25vh padding20 optionClass width100 " ng-click="updateState(option)">
+                                        <div class="font20 bold">
+                                            {{option.title}}
+                                        </div>
+                                        <div class="editFont font16">
+                                            {{option.subtitle}}
+                                        </div>
+                                    </div>
+                                    <div hide-gt-xs layout="column" layout-align="center center" class="min15vh padding10 optionClass width100 " ng-click="updateState(option)">
+                                        <div class="font18 bold">
+                                            {{option.title}}
+                                        </div>
+                                        <div class="editFont font14">
+                                            {{option.subtitle}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div  layout="column" layout-align="center center" class="min25vh padding10 width100" ng-if="showReviewButton" ng-click="showUserReviewSearchDialog()" ng-controller="offerController">
+                                    <md-button class="md-danger md-small font14 width50 primaryFont spacedLetter1 padding10">
+                                    Review
+                                    </md-button>   
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="center center" class="font12 textBlack width100 paddingB10" ng-if="currState != '1'" ng-click="previousState()">
+                        Back
+                    </div>
+                </div>
+
+              </md-dialog>
+            </div>    
+        </div>   -->     
+
+
+        <!--<div style="visibility: hidden">    
+            <div hide-xs class="md-dialog-container" id="fblikeDialog">
+              <md-dialog class="fbpopup-dialog">
+                  <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="fbpopup" >
+                      <div class="margin20 padding10">
+                        <div ng-click="hideLoginDialog()" id="closebutton">
+                            <i class="fa fa-times font24 textWhite" aria-hidden="true"></i>  
+                        </div>
+                        <div ng-show="fbpopupMode" class="fb-like" data-href="https://www.facebook.com/exambazaar/" data-width="250" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true" id="fblikebutton"></div>
+                      </div>
+                  </div>
+              </md-dialog>
+            </div>    
+        </div>-->        
+        <!--        
+        <div style="visibility: hidden">    
+            <div class="md-dialog-container" id="partnerDialog">
+              <md-dialog class="offer-dialog">
+                <md-content flex layout="column" ng-controller="offerController2">
+                <div class="width100" id="examinfo">
+
+                </div>
+                <div flex class="paddingTB20 paddingLR40" layout="column" layout-align="start center" layout-fill>
+                    <div flex layout="row" id="min15vh" class="width100 greyBottomBorder paddingTB10">
+                        <div flex ="25" layout="column" layout-align="start center" class="paddingT5">
+                            <img ng-src="{{partnerOffer.image}}" id="logo"/>
+                        </div>
+                        <div flex ="75" layout="column" class="">
+                            <div layout="column" layout-align="start start" class="editFont">
+                                <div class="fifthFont textBlack marginB5" id="lineHeight2">
+                                {{partnerOffer.displayname}}
+                                </div>
+
+                                <div id="lineHeight" class="">
+                                    {{partnerOffer}}
+                                </div>
+                                <div id="lineHeight" class="marginT10">
+                                    <span class="font12 textDarkGrey">
+                                        {{activeExamEligibility.exam.briefDescription}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+
+
+
+                    <div layout-wrap layout="row" layout-align="center center" class="text-center width100">
+                        <div flex-xs="33" ng-repeat="offer in offers" class="padding5">
+                        <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                        </div>
+                    </div>
+
+
+                    <div layout="row" layout-align="center center" class="paddingLR10 min10vh width100">
+                        <md-button class="md-small md-green2 width100 tolowercase" ng-click="redirectToReview()">
+                        Review
+                        </md-button>
+                    </div>
+                </div>  
+
+                </md-content>  
+              </md-dialog>
+            </div>    
         </div>
 
-    </sidebarjs>
-</div>  
-<!--<div class="rightSideBarButton paddingTB5">
-    <div layout="row"  layout-align="end center" class="">
-        <div sidebarjs-toggle id="sideBarIcon" class="">
-            <i class="fa fa-angle-double-left font40 paddingL20 paddingTB20" aria-hidden="true"></i>
-        </div>
-    </div>
-    <sidebarjs class="sideBar font16">
-        <div sidebarjs-toggle id="sideBarIcon2" class="paddingR5">
-            <i class="fa fa-angle-double-left font40" aria-hidden="true"></i>
-        </div>
-        <div layout="column" layout-align="start center" layout-fill class="width100">
-            <div layout="column" layout-align="center center" class="width100">
-                
 
+        <div class="bottomOfferBar paddingTB5" ng-show="showBottomOfferBar()" ng-controller="offerController">
+            <div layout="row"  layout-align="start center" >
+                <div hide-xs layout="row" layout-align="center center" flex>
+                    <div flex layout="row" layout-align="center center" >
+                        <div hide-sm class="text-center thirdFont font14 spacedLetter1 textWhite">Review your coaching institute <span class="font24 marginLR20">|</span> Avail upto&nbsp;<span class="textWhite bold">50% discount</span>&nbsp;on the best exam resources
+                        </div>
+
+                        <div layout="row" layout-align="start center" class="marginL10 whiteBackground roundedBorder paddingTB5">
+                            <div layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5" ng-click="showUserReviewSearchDialog()">
+                                <img ng-src="{{offer.image}}" id="bottomBarOfferImage"/>
+                            </div>
+                            showPartnerDialog(offer)
+                        </div>
+                        </div>
+                    </div>
+
+                    <div hide-xs layout="row" layout-align="end center" class="">
+                        <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
+                        Review
+                        </md-button>    
+                    </div>
+                </div>
+                <div hide-gt-xs layout="row" layout-align="start center" flex>
+                    <div layout="column" layout-align="center center" class="textWhite">
+                        <div class="text-center">
+                        Review your coaching | Avail upto&nbsp;<span class="textWhite bold">50% off</span>
+                        </div>
+                    </div>
+                    <div flex layout="row" layout-align="center center" class="width100">
+                        <md-button class="md-review md-small font14 width8 primaryFont spacedLetter1" ng-click="showUserReviewSearchDialog()">
+                        Go
+                    </md-button>
+
+                    </div>
+                </div>
+
+
+        </div>
+             -->     
+
+        <div class="sideBarButton paddingTB5">
+            <div hide-xs layout="row"  layout-align="start center" sidebarjs-toggle id="sideBarIcon">
+                <i class="fa fa-angle-double-right font40 paddingR10 paddingTB20" aria-hidden="true"></i>
             </div>
-        </div>
+            <sidebarjs class="sideBar font16">
+                <div sidebarjs-toggle id="sideBarIcon2" class="paddingR5">
+                    <i class="fa fa-angle-double-left font40" aria-hidden="true"></i>
+                </div>
 
-    </sidebarjs>
-</div>  -->      
-        
-        
-        
+                <div layout="column" layout-align="start center" layout-fill class="width100">
+                    <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder marginB10">
+                        <div layout="row" layout-align="center center" flex>
+                            <a class="navbar-brand" href="/">
+                                <span class="" id="sidebarLogo">
+                                    EXAMBAZAAR
+                                </span>
+                            </a>
+                        </div>
+                        <div sidebarjs-toggle layout="row" layout-align="center center" class="padding5 marginR10">
+                            <i class="fa fa-times-circle-o font24" aria-hidden="true"></i>
+                        </div>
+
+
+                    </div>
+                    <div flex layout="column" layout-align="center center" class="width100">
+
+                    <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder paddingLR10">
+                        <div layout="column" layout-align="center center" class="marginT5">
+                            <div layout="column" layout-align="center center" class="width100">
+                                Top Rankers
+                            </div>
+                            <div layout="row" layout-align="center center" class="font12 danger width100">
+                                <div class="marginLR5">
+                                    <a id="sideBarLink" ui-sref="rankerswall({ examName:'NEET UG', year:'2017'} )">NEET 2017</a>
+                                </div>
+                                <div class="marginLR5">
+                                    <a id="sideBarLink" ui-sref="rankerswall({ examName:'JEE Advanced', year:'2017'} )">JEE 2017</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="marginTB5">
+                            <a id="sideBarLink" ui-sref="blog">Blog</a>
+                        </div>
+                    </div>
+
+                    <div layout="column" layout-align="center center" class="width100 gainsboroBottomBorder paddingLR10" ng-if="sessionuser && sessionuser.basic">
+                        <div class="marginT5">
+                            Welcome {{sessionuser.basic.name}}!
+                        </div>
+                        <div class="marginTB10">
+                            <span ng-if="sessionuser.image">
+                                <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle"/>
+                            </span>
+                            <!--<a id="sideBarLink" ui-sref="profile({ userId:{{'sessionuser.userId'}} })" class="marginR10">Profile</a>-->
+                        </div>
+                        <div class="">
+                            <a id="sideBarLink" ui-sref="reviewed({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Reviews</a>
+                        </div>
+                        <div class="marginTB5">
+                            <a id="sideBarLink" ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })" class="marginR10">Your Shortlisted Institutes</a>
+                        </div>
+
+                    </div>
+                    <div layout="row" layout-align="center center" class="paddingLR10 width100">
+                        <md-button ng-if="!sessionuser || !sessionuser.userId" class="md-large md-green2 width50" ng-click = "showLoginForm()">Log in</md-button>
+                        <a id="sideBarLink" ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
+                    </div>
+                    <div flex layout="row" layout-align="center center" class="width100 marginT10">
+                        <!--<twitter-timeline class="exact100h">
+                            <a class="twitter-timeline" data-height="100%" data-chrome="nofooter" href="https://twitter.com/exambazaar"> Tweets by @exambazaar</a>
+                        </twitter-timeline>-->
+
+                    </div>
+
+
+
+                    </div>
+                    <!--<div flex layout="row" layout-align="center end" class="padding10">
+                        <a id="sideBarLink" sidebarjs-toggle><i class="fa fa-times-circle" aria-hidden="true"></i>&nbsp;&nbsp;Close</a>
+                    </div>-->
+                </div>
+
+            </sidebarjs>
+        </div>  
+        <!--<div class="rightSideBarButton paddingTB5">
+            <div layout="row"  layout-align="end center" class="">
+                <div sidebarjs-toggle id="sideBarIcon" class="">
+                    <i class="fa fa-angle-double-left font40 paddingL20 paddingTB20" aria-hidden="true"></i>
+                </div>
+            </div>
+            <sidebarjs class="sideBar font16">
+                <div sidebarjs-toggle id="sideBarIcon2" class="paddingR5">
+                    <i class="fa fa-angle-double-left font40" aria-hidden="true"></i>
+                </div>
+                <div layout="column" layout-align="start center" layout-fill class="width100">
+                    <div layout="column" layout-align="center center" class="width100">
+
+
+                    </div>
+                </div>
+
+            </sidebarjs>
+        </div>  -->      
+
+
+
         
         
         

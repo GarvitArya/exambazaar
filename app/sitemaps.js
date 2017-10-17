@@ -55,6 +55,30 @@ router.post('/blogurls', function(req, res) {
     });
 });
 
+router.post('/blogrss', function(req, res) {
+    //var mainblog = "https://www.exambazaar.com/blog";
+    var prefix = "https://www.exambazaar.com/blogpost";
+    var separator = "/";
+    var urls = [];
+    //urls.push(mainblog);
+    //urls.push(prefix);
+    var allBlogs = blogpost.find({active: true}, {title:1, seoDescription:1, _published:1, urlslug:1}, function(err, allBlogs) {
+    if (!err){
+        var nBlogs = allBlogs.length;
+        var counter = 0;
+        allBlogs.forEach(function(thisBlog, index){
+            var thisURL = prefix + separator + thisBlog.urlslug;
+            thisBlog.urlslug = thisURL;
+            urls.push(thisBlog);
+            counter+= 1;
+            if(counter == nBlogs){
+                res.json(urls);
+            }
+        });
+    } else {throw err;}
+    });
+});
+
 router.post('/exams', function(req, res) {
     //var mainblog = "https://www.exambazaar.com/blog";
     var prefix = "https://www.exambazaar.com/exam";

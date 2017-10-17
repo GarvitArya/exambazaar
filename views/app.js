@@ -1541,6 +1541,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getblogurls = function() {
             return $http.post('/api/sitemaps/blogurls');
         };
+        this.getblogrss = function() {
+            return $http.post('/api/sitemaps/blogrss');
+        };
         this.getexams = function() {
             return $http.post('/api/sitemaps/exams');
         };
@@ -1669,7 +1672,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $rootScope.pageKeywords = "Exambazaar, " + streamKeywords + examNamesCoaching;
             
     }]); 
-    exambazaar.controller("landingController", 
+    exambazaar.controller("p0Controller", 
         [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','metaService', '$mdDialog', '$window', function($scope,$stateParams,$cookies,$state,categories,$rootScope,metaService, $mdDialog, $window){
         
           
@@ -9097,7 +9100,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
             });
         };
-    }]);    
+    }]);
+        
     exambazaar.controller("offerController2", 
         [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document, offerService){
             $scope.offers = [];
@@ -18915,14 +18919,80 @@ function getLatLng(thisData) {
             //$scope.urls = urls;
             $rootScope.pageTitle = "Exambazaar Sitemap";
     }]);       
+    
+    String.prototype.EncodeXMLEscapeChars = function () {
+        var OutPut = this;
+        if (OutPut.trim() != "") {
+            OutPut = OutPut.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+            OutPut = OutPut.replace(/&(?!(amp;)|(lt;)|(gt;)|(quot;)|(#39;)|(apos;))/g, "&amp;");
+            OutPut = OutPut.replace(/([^\\])((\\\\)*)\\(?![\\/{])/g, "$1\\\\$2");  //replaces odd backslash(\\) with even.
+        }
+        else {
+            OutPut = "";
+        }
+        return OutPut;
+    };    
         
     exambazaar.controller("blogsitemapController", 
         [ '$scope', '$rootScope','$http','$state', 'blogurls', 'FileSaver', 'Blob', function($scope, $rootScope, $http, $state, blogurls, FileSaver, Blob){
+            var blogurls = blogurls.data;
+            console.log(blogurls);
+            //var exams = exams.data;
+            var urls = [];
+            var blogurlsCurated = [];
+            //var examsCurated = [];
             
             $scope.xmlStart = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
             $scope.urlsetStart = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
             var xmlStart = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
             var urlsetStart = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
+            
+            var rssxmlStart = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>";
+            var rssStart = "<rss version=\"2.0\">";
+            var channelStart = "<channel>";
+            var channelInfoStrings = [];
+            var channelInfo = "";
+            var itemsInfo = "";
+            var channelEnd = "</channel>";
+            var rssEnd = "</rss>";
+            
+            channelInfoStrings.push("<title>Exambazaar Blog</title>");
+            channelInfoStrings.push("<link>https://www.exambazaar.com/blog</link>");
+            channelInfoStrings.push("<description>Exambazaar Resources, tips and material to help you ace your exam preparation</description>");
+            channelInfoStrings.push("<language>en-us</language>");
+            channelInfoStrings.push("<pubDate>" + moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ') + "</pubDate>");
+            channelInfoStrings.push("<lastBuildDate>" + moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ') + "</lastBuildDate>");
+            channelInfoStrings.push("<docs>http://www.rssboard.org/rss-specification</docs>");
+            channelInfoStrings.push("<managingEditor>always@exambazaar.com</managingEditor>");
+            channelInfoStrings.push("<webMaster>always@exambazaar.com</webMaster>");
+            channelInfoStrings.forEach(function(thisString, uIndex){
+                channelInfo += thisString;
+            });
+            
+            var itemStart = "<item>";
+            var titleStart = "<title>";
+            var linkStart = "<link>";
+            var descriptionStart = "<description>";
+            var pubDateStart = "<pubDate>";
+            var guidStart = "<guid>";
+            var itemEnd = "</item>";
+            var titleEnd = "</title>";
+            var linkEnd = "</link>";
+            var descriptionEnd = "</description>";
+            var pubDateEnd = "</pubDate>";
+            var guidEnd = "</guid>";
+            
+            blogurls.forEach(function(thisBlog, uIndex){
+                var thisItemString = itemStart + titleStart + thisBlog.title.EncodeXMLEscapeChars() + titleEnd + linkStart + thisBlog.urlslug + linkEnd + descriptionStart + thisBlog.seoDescription.EncodeXMLEscapeChars() + descriptionEnd + pubDateStart + moment(thisBlog._published).format('ddd, DD MMM YYYY HH:mm:ss ZZ') + pubDateEnd + guidStart + thisBlog.urlslug + guidEnd + itemEnd;
+                itemsInfo += thisItemString;
+            });
+            var rssText = "";
+            rssText = rssStart + channelStart + channelInfo + itemsInfo + channelEnd + rssEnd;
+            var data = new Blob([rssText], { type: "application/xhtml+xml;ISO-8859-1" });
+            FileSaver.saveAs(data, 'blogrss.xml');
+            
+            
+            
             $scope.urlStart = "<url>";
             $scope.urlEnd = "</url>";
             $scope.locStart = "<loc>";
@@ -18942,11 +19012,7 @@ function getLatLng(thisData) {
             var priorityEnd = "</priority>";
             var urlsetEnd = "</urlset>";
             
-            var blogurls = blogurls.data;
-            var exams = exams.data;
-            var urls = [];
-            var blogurlsCurated = [];
-            var examsCurated = [];
+            
             blogurls.forEach(function(thisURL, uIndex){
                 newCurated = {
                     url: thisURL,
@@ -18965,7 +19031,7 @@ function getLatLng(thisData) {
             urls.push(newCurated);
             urls = urls.concat(blogurlsCurated);
             
-            
+            /*
             var sitemapText = "";
             var thisURLText = "";
             sitemapText += xmlStart;
@@ -18990,12 +19056,11 @@ function getLatLng(thisData) {
                 sitemapText += thisURLText;
             });
             sitemapText += urlsetEnd;
-            
-            
             var data = new Blob([sitemapText], { type: "application/xhtml+xml;charset=utf-8" });
             FileSaver.saveAs(data, 'blogsitemap.xml');
+            */
             
-            //console.log(sitemapText);
+            
             $scope.urls = urls;
             $rootScope.pageTitle = "Exambazaar Blog Sitemap";
     }]);
@@ -20754,11 +20819,11 @@ function getLatLng(thisData) {
                 },
                 'body':{
                     templateUrl: 'p0.html',
-                    controller: 'landingController'
+                    controller: 'p0Controller'
                 },
-                /*'footer': {
+                'footer': {
                     templateUrl: 'footer.html'
-                }*/
+                }
             },
             resolve: {
                  data: function($rootScope) {
@@ -23210,7 +23275,7 @@ function getLatLng(thisData) {
             resolve: {
                 blogurls: ['sitemapService',
                     function(sitemapService){
-                    return sitemapService.getblogurls();
+                    return sitemapService.getblogrss();
                 }],
                 loadAngularFileSaver: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularFileSaver'], {serie: true});
@@ -23282,7 +23347,7 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
     
     var currURL = $location.absUrl();
     $rootScope.pageURL = currURL;
-    $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
+    $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/eb.jpg';
     
     (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
