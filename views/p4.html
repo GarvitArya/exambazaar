@@ -145,14 +145,62 @@
         color: #6A6968;
     }
 </style>
-
+<div id="spacer1" hide-xs>
+</div>
+<div id="spacerXS" hide-gt-xs>
+</div>
 <div class="whiteBackground mainContent" >
-    <div id="spacer3">
-    </div>
+    
     <div layout="row" layout-align="start start" class="width100">
     
     <div layout="column" layout-align="start start" class="width100">
-        <div layout="row" layout-align="start start"  hide-xs class="editFont text-primary font11 width100 min5vh" id="breadcrumb">
+        
+        <div layout="row" layout-xs="column" layout-align="start center" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30 paddingLR20">
+            <div layout="column" layout-align="center center"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="" hide-xs>
+                <img  ng-src="{{subcategory.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
+            </div>
+            <div layout="column" layout-align="start start" flex class="paddingTB10  textBlack">
+                <div class="width100 font48 bold narrowLine marginTB10 ">
+                    {{subcategory.seoname}} Exam
+                </div>
+                <div layout="column" layout-align="start start" flex flex-xs="100">
+                    <div layout="row" layout-align="start start" class="width100 textDarkGrey">
+                        <a ng-href="{{subcategory.website}}" target="_blank" class="bold">{{subcategory.website}}</a>
+                    </div>
+                    <div layout="row" layout-align="start start" class="width100">
+                        {{subcategory.briefDescription}}
+                    </div>
+                </div>
+            </div>
+            <div layout="column" layout-align="start start" flex-gt-xs="25" flex-xs="100" class="paddingTB20 width100">
+                <div layout="column" layout-align="start start" class="width100">
+                    <div layout="row" layout-align="center start" class="width100">
+                        <div flex>Frequency</div>
+                        <div flex>{{subcategory.frequency}}</div>
+                    </div>
+                    <div layout="row" layout-align="center start" class="width100">
+                        <div flex>Mode</div>
+                        <div flex>
+                            <div ng-if="activeExamCycle.examMode">
+                                Online Only
+                            </div>
+                            <div ng-if="!activeExamCycle.examMode">
+                                Online & Offline
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div layout="column" layout-align="start start" class="width100 marginTB20">
+                    <md-button class="md-danger md-small tolowercase font12 width80 margin0" ui-sref="exam({ examName:{{'subcategory.name'}} })" target="_blank"> 
+                        Read More
+                    </md-button>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div layout="row" layout-align="start start"  hide-xs class="editFont text-primary font11 width100 marginTB5 min5vh" id="breadcrumb">
             <div hide-xs flex="5">
             </div>
             <div layout="row" layout-align="start start" flex class="paddingLR10">

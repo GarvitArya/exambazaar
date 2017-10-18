@@ -149,12 +149,15 @@
     a{
         color: #333333;
         text-decoration: none;
+        text-decoration: none;
     }
     a.link{
         color: #333333;
+        text-decoration: none;
     }
     a.visted{
         color: #333333;
+        text-decoration: none;
     }
     a:hover{
         text-decoration: none;
@@ -200,7 +203,6 @@
         color:#333333;
     }
     #breadcrumb{
-        letter-spacing: 0px;
         color: #20C39A;
         
     }
@@ -605,8 +607,8 @@
 <div id="spacerXS" class="hide-gt-xs whiteBackground">
 </div>
 <!-- Claim the page section -->
-<div layout="column" layout-xs="column" class="whiteBackground mainContent" ng-cloak>
-    <div layout="row" layout-align="start center" id="breadcrumb" class="marginTB5" hide-xs>
+<div layout="column" layout-xs="column" class="whiteBackground mainContent">
+    <!--<div layout="row" layout-align="start center" id="breadcrumb" class="marginTB5" hide-xs>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
         <h3 class="col-xs-12 col-sm-8 col-md-8 col-lg-8  editFont text-primary" id="paneLeft">
@@ -626,7 +628,36 @@
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
+    </div>-->
+    <div layout="row" layout-align="start start"  hide-xs class="editFont text-primary font11 width100 marginTB5 min5vh" id="breadcrumb">
+        <div hide-xs flex="5">
+        </div>
+        <div layout="row" layout-align="start start" flex class="paddingLR10">
+        <div layout="row" layout-align="start start" class="marginR5">
+            <a ui-sref="main">{{category.displayname | uppercase}}</a>
+        </div>
+        <div layout="row" layout-align="start start" class="marginR5">
+        >
+        </div>
+        <div layout="row" layout-align="start start" class="marginR5">
+            <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a>
+        </div>
+        <div layout="row" layout-align="start start" class="marginR5">
+        >
+        </div>
+        <div layout="row" layout-align="start start" class="marginR5">
+            <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{city | uppercase}}</a>
+        </div>
+        <div layout="row" layout-align="start start" class="marginR5">
+        >
+        </div>
+        <div layout="row" layout-align="start start" class="marginR5">
+            <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{provider.name | uppercase}}</a>
+        </div>
+            
+        </div>
     </div>
+    
     <div layout="row" id="heroHeader">
         <div hide-xs flex="15" layout="column" layout-align="end end" class="paddingB10">
             <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
