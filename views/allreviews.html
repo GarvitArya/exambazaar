@@ -93,11 +93,13 @@
             </div>
             <div layout="column" layout-align="start start" flex="10" class="paddingR10 font10">
                 <div ng-click="openReview(review)">{{review.institute.name}}, {{review.institute.city}}</div>
-                
-                <div><img ng-src="{{review.institute.logo}}" id="logo"/></div>
+                <!--ng-src="{{review.institute.logo}}"-->
+                <div><img lazy-img="{{review.institute.logo}}" id="logo"/></div>
             
             </div>
-            <div flex="40" class="paddingR10 font10">{{review.text}}</div>
+            <div flex="40" class="paddingR10 font10" layout-wrap>   
+                {{review.text}}
+            </div>
             <div flex="10" class="paddingR10 font10">{{review._created | date}}</div>
             <div flex="10" class="paddingR10 font10">
                 <md-button class="md-danger md-small font10 tolowercase" ng-click="disablereview(review)" ng-if="review.active">

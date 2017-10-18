@@ -93,37 +93,40 @@
         
         <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20 " ng-repeat="blogpost in allBlogs | orderBy: '-_created'" ng-if="blogpost.blogSeries !='EdBites'">
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
-            <div layout="column" layout-align="center center" class="blogpostImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
-            <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
-                <div flex layout="row" layout-align="start center">
-                    {{blogpost.readingTime.text}}
-                </div>
-                <div flex layout="row" layout-align="end center" class="width100">
-                    <div class="">
-                        <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
-                            <div layout="row" layout-align="start center">
-                                <div>
-                                Upvote
+                <div layout="column" layout-align="center center" class="blogpostImage2 width100 ">
+                    <!--ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}"-->
+                <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">
+                    
+                <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
+                    <div flex layout="row" layout-align="start center">
+                        {{blogpost.readingTime.text}}
+                    </div>
+                    <div flex layout="row" layout-align="end center" class="width100">
+                        <div class="">
+                            <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
+                                <div layout="row" layout-align="start center">
+                                    <div>
+                                    Upvote
+                                    </div>
+                                    <div>
+                                    &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                    </div>
                                 </div>
-                                <div>
-                                &nbsp;|&nbsp;{{blogpost.upvotes}}
+                            </md-button>
+                            <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
+                                <div layout="row" layout-align="start center">
+                                    <div>
+                                    Upvote
+                                    </div>
+                                    <div>
+                                    &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                    </div>
                                 </div>
-                            </div>
-                        </md-button>
-                        <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
-                            <div layout="row" layout-align="start center">
-                                <div>
-                                Upvote
-                                </div>
-                                <div>
-                                &nbsp;|&nbsp;{{blogpost.upvotes}}
-                                </div>
-                            </div>
-                        </md-button>
+                            </md-button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            </div>
+                </div>
                 
                 <div layout="column" layout-align="start center" class="min30vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
                     <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
@@ -194,36 +197,38 @@
         
         <div flex-xs="100" flex-gt-xs="100" layout="column" layout-align="center center"  class="paddingTB20 maringT20" ng-repeat="blogpost in allBlogs | orderBy: '-_created'" ng-if="blogpost.blogSeries =='EdBites'">
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
-            <div layout="column" layout-align="center center" class="edBitesImage width100 rounderBorderTop" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
-            <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
-                <div flex layout="row" layout-align="start center">
-                    {{blogpost.readingTime.text}}
-                </div>
-                <!--<div flex layout="row" layout-align="end center" class="width100">
-                    <div class="">
-                        <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
-                            <div layout="row" layout-align="start center">
-                                <div>
-                                Upvote
-                                </div>
-                                <div>
-                                &nbsp;|&nbsp;{{blogpost.upvotes}}
-                                </div>
-                            </div>
-                        </md-button>
-                        <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
-                            <div layout="row" layout-align="start center">
-                                <div>
-                                Upvote
-                                </div>
-                                <div>
-                                &nbsp;|&nbsp;{{blogpost.upvotes}}
-                                </div>
-                            </div>
-                        </md-button>
+            <div layout="column" layout-align="center center" class="edBitesImage2 width100">
+                <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">
+                <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
+
+                    <div flex layout="row" layout-align="start center">
+                        {{blogpost.readingTime.text}}
                     </div>
-                </div>-->
-            </div>
+                    <!--<div flex layout="row" layout-align="end center" class="width100">
+                        <div class="">
+                            <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
+                                <div layout="row" layout-align="start center">
+                                    <div>
+                                    Upvote
+                                    </div>
+                                    <div>
+                                    &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                    </div>
+                                </div>
+                            </md-button>
+                            <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
+                                <div layout="row" layout-align="start center">
+                                    <div>
+                                    Upvote
+                                    </div>
+                                    <div>
+                                    &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                    </div>
+                                </div>
+                            </md-button>
+                        </div>
+                    </div>-->
+                </div>
             </div>
                 
                 <div layout="column" layout-align="start center" class="min10vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">

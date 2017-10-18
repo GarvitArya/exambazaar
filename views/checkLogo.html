@@ -99,10 +99,10 @@
         text-decoration: none;
     }
     #logoContainer{
-        min-height: 40px;
+        min-height: 60px;
     }
     #logo{
-        max-height: 30px;
+        max-height: 50px;
     }
     #pageHeaderFont{
         border-bottom: solid 3px;
@@ -175,7 +175,7 @@
                 <img ng-src="{{logo.logoBackup}}" id="logo" />
             </div>
             <div flex="25">
-                <img ng-src="{{logo.newlogo}}" id="logo" />
+                <img src='ebloader2.gif' lazy-img="{{logo.logo}}" id="logo" />
             </div>
             <div flex="15" class="font10">
                 <md-switch ng-model="logo.mark" aria-label="Switch 1">
