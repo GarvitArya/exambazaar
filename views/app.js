@@ -3185,7 +3185,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     function onlyUnique(value, index, self) { 
         return self.indexOf(value) === index;
     }       
-    exambazaar.controller("offersController", 
+    /*exambazaar.controller("offersController", 
     [ '$scope', '$rootScope', 'targetStudyProviderService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', 'offersList', 'couponsList', 'offerService', 'couponService', 'UserService', function($scope,$rootScope, targetStudyProviderService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo, offersList, couponsList, offerService, couponService, UserService){
         $scope.provider = thisProvider.data;
         $scope.provideroffers = offersList.data;
@@ -3469,20 +3469,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         function correctCode(code){
             var ALPHABET = '23456789ABDEGJKMNPQRVWXYZ';
             var conforms = true;
-            /*
-            if(code.length != 8){
-                conforms = false;
-            }
-            if(code[0] != 'E' && code[0] != 'B'){
-                conforms = false;
-            }
             
-            for (var i = 0, len = code.length; i < len; i++) {
-                if(ALPHABET.indexOf(code[i]) == -1){
-                    conforms = false;
-                    console.log(code);
-                }
-            }*/
             return conforms;
         };
         
@@ -3497,14 +3484,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             excelCodesArray.forEach(function(thisCode, cIndex){
                 if(thisCode ){//&& thisCode!= ''
                     codesArray.push(thisCode);
-                    /*if(correctCode(thisCode)){
-                        codesArray.push(thisCode);
-                    }else{
-                        if(!$scope.uploadErrorMessages){
-                            $scope.uploadErrorMessages = [];
-                        }
-                        $scope.uploadErrorMessages.push('Incorrect Code: ' + thisCode);
-                    }*/
+                    
                 }else{
                     if(cIndex < excelSocialCodesArray.length-1){
                         codesArray.push(thisCode);
@@ -3714,7 +3694,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }, true);
         
     }]);  
-    
+    */
     
     
     
