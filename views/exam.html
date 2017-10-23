@@ -182,6 +182,18 @@
     td p{
         margin: 0px;
     }
+    #examTagHolder{
+        padding:5px;
+        font-size: 16px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    #examTagHolder:hover{
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
 </style>
 <div id="spacer1">
 </div>
@@ -202,7 +214,7 @@
             <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
         </div>
         <div layout="column" layout-align="start start" flex class="paddingTB10  textBlack">
-            <div class="width100 font48 bold narrowLine marginTB10 ">
+            <div class="width100 font36 bold narrowLine marginTB10 ">
                 {{exam.seoname}} Exam
             </div>
             <div layout="column" layout-align="start start" flex flex-xs="100">
@@ -285,9 +297,14 @@
             </div>
             
             
+            <div layout="row" layout-align="start start" class="width100 marginT40">
+                <div class="badge marginR10" id="examTagHolder" ng-repeat="thisCycle in exam.cycle" ng-click="setCycle(thisCycle)">
+                    {{thisCycle.name}}
+                </div>
+            </div>
             <div layout="column" layout-align="start start" class="width100" ng-if="activeExamCycle">
             
-            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="activeExamCycle">
+            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="activeExamCycle && (activeExamCycle.syllabus && activeExamCycle.syllabus.length > 0 || activeExamCycle.brochure && activeExamCycle.brochure.length > 0)">
                 {{activeExamCycle.name}} Syllabus & Brochure
             </div>
             <div layout="row" layout-align="start center" class="width100  marginTB10">

@@ -154,7 +154,27 @@
     <div layout="row" layout-align="start start" class="width100">
     
     <div layout="column" layout-align="start start" class="width100">
-        
+        <div layout="row" layout-align="start start"  hide-xs class="editFont text-primary font11 width100 marginT20 marginB5 min5vh" id="breadcrumb">
+            <div hide-xs flex="5">
+            </div>
+            <div layout="row" layout-align="start start" flex class="paddingLR10">
+            <div layout="row" layout-align="start start" class="marginR5">
+                <a ui-sref="main">{{category.displayname | uppercase}}</a>
+            </div>
+            <div layout="row" layout-align="start start" class="marginR5">
+            >
+            </div>
+            <div layout="row" layout-align="start start" class="marginR5">
+                <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a>
+            </div>
+            <div layout="row" layout-align="start start" class="marginR5">
+            >
+            </div>
+            <div layout="row" layout-align="start start" class="marginR5">
+                <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{city | uppercase}}</a>
+            </div>
+            </div>
+        </div>
         <div layout="row" layout-xs="column" layout-align="start center" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30 paddingLR20">
             <div layout="column" layout-align="center center"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="" hide-xs>
                 <img  ng-src="{{subcategory.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
@@ -190,8 +210,8 @@
                         </div>
                     </div>
                 </div>
-                <div layout="column" layout-align="start start" class="width100 marginTB20">
-                    <md-button class="md-danger md-small tolowercase font12 width80 margin0" ui-sref="exam({ examName:{{'subcategory.name'}} })" target="_blank"> 
+                <div layout="row" layout-align="start start" class="width100 marginLR20 marginT40">
+                    <md-button class="md-danger md-small tolowercase font12 width50 margin0" ui-sref="exam({ examName:{{'subcategory.name'}} })" target="_blank"> 
                         Read More
                     </md-button>
                 </div>
@@ -200,27 +220,7 @@
         
         
         
-        <div layout="row" layout-align="start start"  hide-xs class="editFont text-primary font11 width100 marginTB5 min5vh" id="breadcrumb">
-            <div hide-xs flex="5">
-            </div>
-            <div layout="row" layout-align="start start" flex class="paddingLR10">
-            <div layout="row" layout-align="start start" class="marginR5">
-                <a ui-sref="main">{{category.displayname | uppercase}}</a>
-            </div>
-            <div layout="row" layout-align="start start" class="marginR5">
-            >
-            </div>
-            <div layout="row" layout-align="start start" class="marginR5">
-                <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a>
-            </div>
-            <div layout="row" layout-align="start start" class="marginR5">
-            >
-            </div>
-            <div layout="row" layout-align="start start" class="marginR5">
-                <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{city | uppercase}}</a>
-            </div>
-            </div>
-        </div>
+        
         <div layout="row" layout-align="start start" class="width100">
             <div hide-xs flex="5">
             </div>

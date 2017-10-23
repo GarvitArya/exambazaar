@@ -494,6 +494,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExams = function() {
             return $http.get('/api/exams');
         };
+        this.getExamsBasic = function() {
+            return $http.get('/api/exams/basic');
+        };
         this.markTrueFalse = function() {
             return $http.get('/api/exams/markTrueFalse');
         };
@@ -1673,31 +1676,34 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     exambazaar.controller("p0Controller", 
-        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','metaService', '$mdDialog', '$window', function($scope,$stateParams,$cookies,$state,categories,$rootScope,metaService, $mdDialog, $window){
-        
-          
+        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', 'examList', function($scope, $cookies, $state, $rootScope, $mdDialog, examList){
+            var allExams = examList.data;
+            var streamExams = [];
             
-        $scope.hideLoginDialog();
-        $scope.number = 24;
-        $scope.getNumber = function(num) {
-            return new Array(num);   
-        }
-        
-        $scope.categoryName = $stateParams.categoryName;
-        $scope.category = {};
-        $scope.subcategory = [];
-            
-        
-        $rootScope.pageTitle = 'Exambazaar: Find best coaching classes in your city for more than 50 exams';
-        $rootScope.pageDescription = "Search and apply to the best coaching classes and get the education that you deserve. Browse through courses, photos, videos and results for 26000+ institutes in 90+ cities";
-        $rootScope.pageKeywords = "Exambazaar, Best Coaching Classes, Top Coaching Centre, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
-        
-        
-            
-        $scope.goToCity = function(subcategory){ 
-            $cookies.putObject('subcategory', subcategory);
-            $state.go('city');
-        };
+            allExams.forEach(function(thisExam, eIndex){
+                var thisStream = thisExam.stream.displayname;
+                if(!streamExams[thisStream]){
+                    streamExams[thisStream] = [];
+                }
+                streamExams[thisStream].push(thisExam);
+            });
+            //$scope.streamExams = streamExams;
+            streamExams.forEach(function(thisStreamExam, sIndex){
+                console.log(thisStreamExam);
+            });
+            //console.log(streamExams);
+            $scope.hideLoginDialog();
+
+            $rootScope.pageTitle = 'Best Coaching Classes in India for more than 50 exams | Exambazaar.com';
+            $rootScope.pageDescription = "Search and apply to the best coaching classes and get the education that you deserve. Browse through courses, photos, videos and results for 26000+ institutes in 90+ cities";
+            $rootScope.pageKeywords = "Exambazaar, Exambazaar.com, Best Coaching Classes, Best Coaching, Top Coaching Classes, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT Coaching, GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
+
+
+
+            /*$scope.goToCity = function(subcategory){ 
+                $cookies.putObject('subcategory', subcategory);
+                $state.go('city');
+            };*/
         
             
           
@@ -15953,8 +15959,8 @@ function getLatLng(thisData) {
                 $scope.examdegrees = thisExamDegrees;
             }
             
-            console.log($scope.suggestedblogs);
-            console.log($scope.exam.examdegrees);
+            //console.log($scope.suggestedblogs);
+            //console.log($scope.exam.examdegrees);
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
             }else{
@@ -16077,7 +16083,7 @@ function getLatLng(thisData) {
                 "Counselling": "info",
                 "Interview": "primary",
             };
-            $scope.events = [];
+            
             //console.log($scope.user);
             $scope.noUserDownload = function(){
                 if(!$scope.user || !$scope.user.userId){
@@ -16092,12 +16098,14 @@ function getLatLng(thisData) {
             
             $scope.activeExamCycle = null;
             $scope.exam.cycle.forEach(function(thisCycle, index){
+                console.log(thisCycle);
                 if(thisCycle.active){
                     $scope.activeExamCycle = thisCycle;
                 }
             });
             
             $scope.setCycle = function(examCycle){
+                $scope.events = [];
                 $scope.activeExamCycle = examCycle;
                 if($scope.activeExamCycle){
                     var steps = $scope.activeExamCycle.examSteps;
@@ -20726,7 +20734,7 @@ function getLatLng(thisData) {
         };
      });
         
-    exambazaar.factory('metaService', function () {
+    /*exambazaar.factory('metaService', function () {
         var title = 'Exambazaar: Select the stream you want to study',
         description = 'Exambazaar is India’s biggest and largest education discovery platform and is the fastest way to discover best coaching classes in your city. Our easy-to-use website shows you all the coaching classes based on study streams, along with courses, photos, vidoes and results. Exambazaar also provides comprehensive information for test prep for entrance exams in India, colleges, courses, universities and career options. You can find information about more than 50 exams and coaching classes to succeed',
         service = {
@@ -20750,7 +20758,7 @@ function getLatLng(thisData) {
             description = newDescription;
         }
     });  
-    
+    */
     exambazaar.config(function ($httpProvider) {
         $httpProvider.interceptors.push(function($q, $location) {
           return {
@@ -20806,10 +20814,10 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                 data: function($rootScope) {
-                    $rootScope.pageTitle = 'Exambazaar: Find best coaching classes in your city for 50+ Indian exams';
-                    $rootScope.pageDescription = "Exambazaar:find best coaching classes in your city. Browse courses, photos, vidoes and results for over 50 entrance exams in India";
-                 }
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExamsBasic();
+                }],
             }
         })
         .state('login', {
