@@ -15923,11 +15923,14 @@ function getLatLng(thisData) {
     exambazaar.controller("examController", 
         [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'thisExamDegrees', 'suggestedblogs', 'Carousel', 'targetStudyProviderService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, thisExamDegrees, suggestedblogs, Carousel, targetStudyProviderService, viewService, $location, screenSize){
             $scope.slideCount = 2;
+            $scope.mobileDevice = false;
             if (screenSize.is('xs, sm')){
-                console.log('Mobile or tablet');
+                //console.log('Mobile or tablet');
+                $scope.mobileDevice = true;
                 $scope.slideCount = 1;
             }else{
-                console.log('Laptop');
+                //console.log('Laptop');
+                $scope.mobileDevice = false;
                 $scope.slideCount = 2;
             }
             $scope.components = [
@@ -16098,7 +16101,7 @@ function getLatLng(thisData) {
             
             $scope.activeExamCycle = null;
             $scope.exam.cycle.forEach(function(thisCycle, index){
-                console.log(thisCycle);
+                //console.log(thisCycle);
                 if(thisCycle.active){
                     $scope.activeExamCycle = thisCycle;
                 }

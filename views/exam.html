@@ -65,9 +65,14 @@
     }
     #examTagHolder:hover{
         color: white;
-        
         background: #FF5A5F;
         border: 1px solid #fff;
+    }
+    #tagHolder{
+        padding:5px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
     }
     #removebadge{
         background: #FF5A5F;
@@ -197,6 +202,53 @@
 </style>
 <div id="spacer1">
 </div>
+<div layout="row" layout-xs="column" layout-align="center center" class="width100 thirdFont font14" id="examinfo2">
+    <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkTranslucentBackground">
+    <div layout="row" layout-xs="column" layout-align="start start" class="width100 textWhite" flex-xs="100" flex-gt-xs="90" >
+    <div layout="column" layout-align="start start" flex-gt-xs="15" flex-xs="100" class="min40vh paddingLR10 " hide-xs>
+        <div class="min8vh"></div>
+        <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
+    </div>
+    <div layout="column" layout-align="start start" flex class="paddingLR10 min40vh">
+        <div class="min8vh"></div>
+        <div class="width100 font36 bold narrowLine marginB10">
+            {{exam.seoname}} Exam
+        </div>
+        <div layout="column" layout-align="start start" flex flex-xs="100">
+            <div layout="row" layout-align="start start" class="width100">
+                <a ng-href="{{exam.website}}" target="_blank" class="bold">{{exam.website}}</a>
+            </div>
+            <div layout="row" layout-align="start start" class="width100">
+                {{exam.briefDescription}}
+            </div>
+        </div>
+    </div>
+    <div layout="column" layout-align="start start" flex-gt-xs="20" flex-xs="100" class="paddingLR10 width100" ng-class="{ min40vh: !mobileDevice }">
+        <div class="min8vh"></div>
+        <div layout="column" layout-align="start start" class="width100 padding10 lightBorder textGainsboro">
+            <div layout="row" layout-align="center start" class="width100">
+                <div flex>Frequency</div>
+                <div flex class="text-white">
+                    {{exam.frequency}}
+                </div>
+            </div>
+            <div layout="row" layout-align="center start" class="width100">
+                <div flex>Mode</div>
+                <div flex class="text-white">
+                    <div ng-if="activeExamCycle.examMode">
+                        Online Only
+                    </div>
+                    <div ng-if="!activeExamCycle.examMode">
+                        Online & Offline
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+    
 <!--<div layout="column" layout-align="start start" class="whiteBackground mainContent" ng-cloak>
     
     <div bs-affix data-offset-top="200" data-offset-bottom="300" hide-xs layout="row" class="affixBar whiteBackground bottomBorder width100" layout-align="center center" id="affixBar"> 
@@ -208,44 +260,9 @@
     </div>
 </div>-->
 <div flex layout="row" layout-align="center start" class="whiteBackground blogFont" id="fullHeightPage">
-<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="width100 marginT40 marginB120 secondFont font14" ng-if="exam">
-    <div layout="row" layout-xs="column" layout-align="start start" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30 paddingLR20">
-        <div layout="column" layout-align="center start"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="" hide-xs>
-            <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
-        </div>
-        <div layout="column" layout-align="start start" flex class="paddingTB10  textBlack">
-            <div class="width100 font36 bold narrowLine marginTB10 ">
-                {{exam.seoname}} Exam
-            </div>
-            <div layout="column" layout-align="start start" flex flex-xs="100">
-                <div layout="row" layout-align="start start" class="width100 textDarkGrey">
-                    <a ng-href="{{exam.website}}" target="_blank" class="bold">{{exam.website}}</a>
-                </div>
-                <div layout="row" layout-align="start start" class="width100">
-                    {{exam.briefDescription}}
-                </div>
-            </div>
-        </div>
-        <div layout="column" layout-align="start start" flex-gt-xs="25" flex-xs="100" class="paddingTB20 width100">
-            <div layout="column" layout-align="start start" class="width100">
-                <div layout="row" layout-align="center start" class="width100">
-                    <div flex>Frequency</div>
-                    <div flex>{{exam.frequency}}</div>
-                </div>
-                <div layout="row" layout-align="center start" class="width100">
-                    <div flex>Mode</div>
-                    <div flex>
-                        <div ng-if="activeExamCycle.examMode">
-                            Online Only
-                        </div>
-                        <div ng-if="!activeExamCycle.examMode">
-                            Online & Offline
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="width100 marginT40 marginB120 secondFont font14">
+     <!--id="examinfo2"-->
+    
     <div layout="row" layout-xs="column" layout-align="start start" class="width100">
         <div layout="column" layout-align="start start" flex-xs="100" flex-gt-xs="70" class="paddingLR20">
             <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
@@ -456,7 +473,7 @@
                     </div>
                       
                       
-                    <!--<div layout="column" layout-align="center center" class="width100 min20vh font12 showBorder">
+                    <!--<div layout="column" layout-align="center center" class="width100 min20vh font12 ">
                         <a ui-sref="showblog({ blogpostSlug:{{'item.urlslug'}} })" target="_blank">
                             {{item.title}}
                         </a>
