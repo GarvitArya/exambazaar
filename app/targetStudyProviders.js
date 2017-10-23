@@ -2003,7 +2003,7 @@ router.get('/removecoaching/:coachingId', function(req, res) {
 router.post('/savecoaching', function(req, res) {
     var thisProvider = req.body.targetStudyProvider;
     var userId = req.body.user;
-    console.log(req.body);
+    console.log(thisProvider.rating);
     //console.log("Other listings are: " + thisProvider.otherlistings);
     //console.log(thisProvider.rating);
     var coachingId = thisProvider._id;
@@ -2013,7 +2013,7 @@ router.post('/savecoaching', function(req, res) {
         
         //oldProvider = thisProvider;
         if(oldProvider){
-            console.log("New Coaching is: " + JSON.stringify(thisProvider));
+            //console.log("New Coaching is: " + JSON.stringify(thisProvider));
             for (var property in thisProvider) {
                 oldProvider[property] = thisProvider[property];
                 if(property=='latlng'){
