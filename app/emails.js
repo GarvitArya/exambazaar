@@ -309,16 +309,27 @@ router.post('/contactEmail', function(req, res) {
                     templateId = thisEmailTemplate.templateKey;
                     var from_email = new helper.Email(fromEmail);
                     var to_email = new helper.Email(to);
+                    var to_email2 = new helper.Email('team@exambazaar.com');
                     var html = ' ';
                     var subject = ' ';
                     var content = new helper.Content('text/html', html);
                     var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    var mail2 = new helper.Mail(fromEmail, subject, to_email2, content);
+                    
                     mail.setTemplateId(templateId);
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-contactName-', contactName));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-contactEmail-', to));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-contactMobile-', contactMobile));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-contactAbout-', contactAbout));
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-contactMessage-', contactMessage));
+                    
+                    mail2.setTemplateId(templateId);
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-contactName-', contactName));
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-contactEmail-', to));
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-contactMobile-', contactMobile));
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-contactAbout-', contactAbout));
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-contactMessage-', contactMessage));
+                    
                     var request = sg.emptyRequest({
                       method: 'POST',
                       path: '/v3/mail/send',
@@ -328,7 +339,22 @@ router.post('/contactEmail', function(req, res) {
                         if(error){
                             res.json('Could not send email! ' + error);
                         }else{
-                            res.json(response);
+                            
+                            var request = sg.emptyRequest({
+                              method: 'POST',
+                              path: '/v3/mail/send',
+                              body: mail2.toJSON(),
+                            });
+                            sg.API(request, function(error, response) {
+                                if(error){
+                                    res.json('Could not send email! ' + error);
+                                }else{
+                                    res.json(response);
+                                }
+                            });
+                            
+                            
+                            //res.json(response);
                         }
                     });
                 }
