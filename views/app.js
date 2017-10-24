@@ -460,6 +460,20 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             return $http.post('/api/questions/buildPostSchedule',buildParams);
         };
     }]);
+    exambazaar.service('contactService', ['$http', function($http) {
+        this.saveContact = function(contact) {
+            return $http.post('/api/contacts/save', contact);
+        };
+        this.getContact = function(contactId) {
+            return $http.get('/api/contacts/edit/'+contactId, {contactId: contactId});
+        };
+        this.removeContact = function(contactId) {
+            return $http.get('/api/contacts/remove/'+contactId, {contactId: contactId});
+        };
+        this.getContacts = function() {
+            return $http.get('/api/contacts');
+        };
+    }]);
     exambazaar.service('testService', ['$http', function($http) {
         this.saveTest = function(test) {
             return $http.post('/api/tests/save', test);
@@ -14657,6 +14671,81 @@ function getLatLng(thisData) {
                 console.log();
             });
     }]);    
+    exambazaar.controller("aboutController", 
+        [ '$scope','$http','$state','$rootScope', function($scope, $http, $state, $rootScope){
+            $rootScope.pageTitle = "About | Exambazaar";
+    }]);
+    function validateEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    };
+    function validateMobile(mobile) {
+        var re = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/;
+        return re.test(mobile);
+    };  
+    exambazaar.controller("contactController", 
+        [ '$scope','$http','$state','$rootScope', 'screenSize', 'contactService', 'Notification', function($scope, $http, $state, $rootScope, screenSize, contactService, Notification){
+            $rootScope.pageTitle = "Contact Us | Exambazaar";
+            if (screenSize.is('xs, sm')){
+                $scope.mobileDevice = true;
+            }else{
+                //console.log('Laptop');
+                $scope.mobileDevice = false;
+            }
+            
+            $scope.contactoptions = [
+                "I found incorrect/outdated information on a page",
+                "There is a photo/review that is bothering me and I would like to report it",
+                "The website is not working the way it should",
+                "I would like to give feedback/suggestions",
+                "Other",
+             ];
+            $scope.messageSent = false;
+            $scope.contactForm = {
+                name: '',
+                email: '',
+                mobile: '',
+                about: null,
+                message: '',
+            };
+            $scope.validate = function(){
+                var valid = true;
+                if($scope.contactForm.name.length < 3){
+                    valid = false;
+                }
+                if(!validateEmail($scope.contactForm.email)){
+                    valid = false;
+                }
+                if(!validateMobile($scope.contactForm.mobile)){
+                    valid = false;
+                }
+                if(!$scope.contactForm.about){
+                    valid = false;
+                }
+                if($scope.contactForm.message.length < 3){
+                    valid = false;
+                }
+                return valid;
+            };
+            
+            $scope.submitMessage = function(){
+                //console.log($scope.contactForm);
+                var valid = $scope.validate();
+                //console.log(valid);
+                if(valid){
+                    contactService.saveContact($scope.contactForm).success(function (data, status, headers) {
+                        $scope.messageSent = true;
+                        Notification.success("Your message has been sent. We will get back to you shortly!");
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                }else{
+                    Notification.warning("Please fill all form details correctly before submitting!");
+                }
+                
+            };
+    }]);    
     exambazaar.controller("addMediaTagController", 
         [ '$scope',  'mediaTagList','mediaTypeList','MediaTagService','$http','$state', function($scope, mediaTagList,mediaTypeList, MediaTagService,$http,$state){
             
@@ -22050,7 +22139,7 @@ function getLatLng(thisData) {
             }
         })
         .state('about', {
-            url: '/ebinternal/about',
+            url: '/about',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22058,7 +22147,23 @@ function getLatLng(thisData) {
                 },
                 'body':{
                     templateUrl: 'aboutus.html',
+                    controller: 'aboutController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
+        .state('contact', {
+            url: '/contact',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
                     
+                },
+                'body':{
+                    templateUrl: 'contact.html',
+                    controller: 'contactController'
                 },
                 'footer': {
                     templateUrl: 'footer.html'

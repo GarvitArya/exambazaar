@@ -1,0 +1,126 @@
+<style>
+    input[type="text"]
+    {
+        color: #333333;
+        padding: 5px;
+        border: 1px solid transparent;
+        
+        box-sizing: border-box;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #FF5A5F;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #FF5A5F;
+    }
+    input[type="email"]
+    {
+        color: #333333;
+        padding: 5px;
+        border: 1px solid transparent;
+        
+        box-sizing: border-box;
+    }
+    
+    input[type="email"]:hover {
+        border: solid 1px #FF5A5F;
+    }
+    input[type="email"]:focus {
+        border: solid 1px #FF5A5F;
+    }
+    
+    textarea{
+        width:100%;
+        padding: 5px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        
+        box-sizing: border-box;
+    }
+    textarea:hover {
+        border: 1px solid #FF5A5F;
+    }
+    textarea:focus {
+        border: 1px solid #FF5A5F;
+    }
+    a, a:visited{
+        color:#20C39A;
+    }
+    a:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a:link:hover{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    
+</style>
+<div id="spacer1">
+</div>
+<div layout="row" layout-xs="column" layout-align="center center" class="width100 thirdFont font14" id="contactinfo">
+    <div layout="row" layout-align="center center" class="width100 translucentBackground">
+        <div layout="row" layout-align="center center" class="width80 font32 min50vh text-white text-center textShadow">
+            We would love to hear from you!
+        </div>
+    </div>
+</div>
+<div flex layout="row" layout-align="center start" class="whiteBackground blogFont" id="fullHeightPage">
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="width100 marginT20 marginB120 secondFont font14">
+    
+    <div layout="column" layout-align="center center" class="width100 paddingLR20 text-center">
+        <div layout="column" layout-align="center center" class="textBlack width80 marginT20 subhheadingBottomBorder2 font24 bold">
+            Reach to us faster
+        </div>    
+        <div layout="column" layout-align="center center" class="min50vh width80 marginTB20 font20 textDarkGrey" ng-if="!messageSent">
+            <div layout="row" layout-xs="column" layout-sm="column" layout-align="center center" class=" width100">
+                <div flex class="width100 paddingR10 marginTB10"><input type="text" class="text-center width100" ng-model="contactForm.name"  placeholder="Name"></div>
+                <div flex class="width100 paddingR10 marginTB10"><input type="email" class=" text-center width100" ng-model="contactForm.email"  placeholder="Email"></div>
+                <div flex class="width100 marginTB10"><input type="text" class=" text-center width100" ng-model="contactForm.mobile"  placeholder="Mobile Number"></div>
+                
+            </div>
+            <div class="marginTB10 width100 text-center">
+                <select ng-model="contactForm.about" placeholder="How can we help you?" class="margin0 font16 width100 text-center">
+                    <option class="text-center" value="" disabled selected>How can we help you?</option>
+                    <option ng-value="contactoption" ng-repeat="contactoption in contactoptions" class="text-primary text-center">{{contactoption}}</option>
+                </select>
+                
+                
+            </div>
+            <div class="marginTB10 width100">
+                <textarea class="width100 text-center" ng-model="contactForm.message" placeholder="Message" rows="4"></textarea>
+            </div>
+            <div class="marginTB10 width100">
+                <md-button class="md-green md-small width100 editFont margin0 tolowercase" ng-click="submitMessage()">
+                    Send Message
+                </md-button>
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" class="min50vh width80 marginB20 font20 textDarkGrey  bold" ng-if="messageSent">
+            <i class="fa fa-check-circle font32 text-primary" aria-hidden="true"></i>
+            <div>Message Sent</div>
+        </div>
+        
+        
+        <div layout="column" layout-align="center center" class="textBlack width80 marginTB20 subhheadingBottomBorder2 font24 bold">
+            Contact Us
+        </div>    
+        <div layout="column" layout-align="center center" class="marginT20 width80 font16 textDarkGrey text-left">
+            <div layout="row" layout-align="center center" class="width100">
+                <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;always@exambazaar.com
+            </div>
+            <div layout="row" layout-align="center center" class="width100">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;RIICO Software Complex, IT Park, Sitapura Industrial Area, Jaipur, Rajasthan 302022
+            </div>
+            
+        </div>
+    </div>
+    
+    
+    
+    
+    </div>
+   
+    
+</div>

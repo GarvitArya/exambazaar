@@ -112,6 +112,7 @@ var upvotes = require('./app/upvotes.js',upvotes);
 var blogposts = require('./app/blogposts.js',blogposts); 
 var blogTags = require('./app/blogTags.js',blogTags); 
 var comments = require('./app/comments.js',comments); 
+var contacts = require('./app/contacts.js',contacts); 
 var groups = require('./app/groups.js',groups); 
 var logourls = require('./app/logourls.js',logourls); 
 var masters = require('./app/masters.js',masters);
@@ -154,6 +155,7 @@ app.use('/api/upvotes', upvotes);
 app.use('/api/blogposts', blogposts);
 app.use('/api/blogTags', blogTags);
 app.use('/api/comments', comments);
+app.use('/api/contacts', contacts);
 app.use('/api/groups', groups);
 app.use('/api/logourls', logourls);
 app.use('/api/masters', masters);
@@ -192,7 +194,8 @@ var allStates = [
 '/blog',
 '/blogpost/:blogpostSlug',
 '/claim/:coachingId',
-'/ebinternal/about',
+'/about',
+'/contact',
 '/ebinternal/activeUsers/:userId',
 '/ebinternal/addAwsCredential',
 '/ebinternal/addEligibility',
