@@ -139,7 +139,7 @@
         background: #FF5A5F;
     }
     
-    a, a:visited{
+    a, a:visited, a:link{
         color:#20C39A;
     }
     a:hover{
@@ -199,13 +199,18 @@
         background: #FF5A5F;
         border: 1px solid #fff;
     }
+    #distanceBadge{
+        border: 1px solid #6A6968;
+        background: transparent;
+        color: #6A6968;
+    }
 </style>
 <div id="spacer1">
 </div>
 <div layout="row" layout-xs="column" layout-align="center center" class="width100 thirdFont font14" id="examinfo2">
     <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkTranslucentBackground">
     <div layout="row" layout-xs="column" layout-align="start start" class="width100 textWhite" flex-xs="100" flex-gt-xs="90" >
-    <div layout="column" layout-align="start start" flex-gt-xs="15" flex-xs="100" class="min40vh paddingLR10 " hide-xs>
+    <div layout="column" layout-align="start start" flex-gt-xs="15" flex-xs="100" class="min40vh paddingLR10 " hide-xs  ng-if="exam.logo && exam.logo != ''">
         <div class="min8vh"></div>
         <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
     </div>
@@ -524,10 +529,12 @@
         </div>
         <div layout="column" layout-align="start start" flex-gt-xs="25" class="min50vh paddingLR10" ng-if="suggestedcoachings.length > 0">
             <h3 class="marginTB10 font20 bold textBlack subhheadingBottomBorder2 width100">
-            {{exam.seoname}} Coaching around you
+            {{exam.seoname}} Coaching<!-- around you-->
             </h3>
-            <div layout="column" layout-align="center center" ng-repeat="coachingGroup in suggestedcoachings " class="min10vh fourthFont width100 marginB20 padding10" ng-click="goToCoaching(coachingGroup)">
+            <div layout="column" layout-align="center center" ng-repeat="coachingGroup in suggestedcoachings | orderBy:'distance'" class="min10vh fourthFont width100 marginB20 padding10" ng-click="goToCoaching(coachingGroup)">
+                
                 <div layout="column" layout-align="center center" class="width100 padding20 boxShadow">
+                    
                     <div layout="row" layout-align="center center" id="pageLogoHolder3">
                         <img ng-src="{{coachingGroup.logo}}" class="pageLogo" ng-if="coachingGroup.logo"/>
                         <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup.logo"/>
@@ -542,6 +549,11 @@
                         <div class="width100 font10 marginT10 text-center">
                             {{coachingGroup.address}}, {{coachingGroup.city}}
                         </div>
+                    </div>
+                    <div layout="row" layout-align="center center" class="width100 marginT10">
+                        <span class="badge font12" id="distanceBadge">
+                            {{coachingGroup.distance}} km
+                        </span>
                     </div>
                 </div>
             </div>

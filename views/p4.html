@@ -144,7 +144,7 @@
         background: transparent;
         color: #6A6968;
     }
-    a, a:visited{
+    a, a:visited, a:link{
         color:#20C39A;
     }
     a:hover{
@@ -184,7 +184,7 @@
 <div layout="row" layout-xs="column" layout-align="center center" class="width100 thirdFont font14 marginB30" id="examinfo2">
     <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkTranslucentBackground">
     <div layout="row" layout-xs="column" layout-align="start start" class="width100 textWhite" flex-xs="100" flex-gt-xs="90" >
-    <div layout="column" layout-align="start start" flex-gt-xs="15" flex-xs="100" class="min40vh paddingLR10 " hide-xs>
+    <div layout="column" layout-align="start start" flex-gt-xs="15" flex-xs="100" class="min40vh paddingLR10 " hide-xs ng-if="subcategory.logo && subcategory.logo != ''">
         <div class="min8vh"></div>
         <img  ng-src="{{subcategory.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
     </div>

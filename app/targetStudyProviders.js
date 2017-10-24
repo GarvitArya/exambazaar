@@ -3450,8 +3450,25 @@ router.get('/citySummaryService', function(req, res) {
     })
 });
 
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
 router.post('/suggestedcoachings', function(req, res) {
-    console.log("Suggesting coachings: ");
     var examUserinfo = req.body;
     var thisExam = examUserinfo.exam;
     var userinfo = examUserinfo.userinfo;
@@ -3477,11 +3494,10 @@ router.post('/suggestedcoachings', function(req, res) {
         };
         var thisLng = Number(latlng.lng);
         var thisLat = Number(latlng.lat);
-        var kms = 50;//Number(queryForm.distanceinKm);
+        var kms = 50;
         var examArray = [thisExam];
 
         var coordinates = [thisLng, thisLat];
-        console.log(coordinates);
         var query = {
             "loc" : {
                 $geoWithin : {
@@ -3494,31 +3510,26 @@ router.post('/suggestedcoachings', function(req, res) {
             //$where:'this.exams.length>0'
         };
         
-        console.log("Finding institutes based on latlng, within: " + kms + " km");
-        var allProviders = targetStudyProvider.find(query, {name:1, groupName:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1, city:1, state:1},function(err, allProviders) {
+        var allProviders = targetStudyProvider.find(query, {name:1, groupName:1, logo:1, loc:1, address: 1, city:1},function(err, allProviders) {
         if (!err){
-            /*var sLength = examArray.length;
-            var nLength = allProviders.length;
-            if(sLength > 0){
-                var filteredProviders = [];
-                allProviders.forEach(function(thisprovider, index){
-                    var thisExams = thisprovider.exams;
-                    var shouldInclude = containsAny(examArray, thisExams);
-                    //console.log(shouldInclude);
-                    if(shouldInclude){
-                        filteredProviders.push(thisprovider);
-                    }
-                });
-
-                var nLength2 = filteredProviders.length; 
-                //console.log(nLength + " -> " + nLength2);
-                res.json(filteredProviders);
-            }else{
-                console.log(nLength);
-                res.json(allProviders);
-            }*/
-            console.log(allProviders.length);
-            res.json(allProviders);
+            var allProviderswithDistance = [];
+            allProviders.forEach(function(thisProvider, pindex){
+                var pCoordinates = thisProvider.loc.coordinates;
+                var thisDistance = getDistanceFromLatLonInKm(pCoordinates[1],pCoordinates[0],coordinates[1],coordinates[0]);
+                thisDistance = Math.round(thisDistance * 10) / 10;
+                var newProvider = {
+                    _id: thisProvider._id,
+                    name: thisProvider.name,
+                    address: thisProvider.address,
+                    city: thisProvider.city,
+                    logo: thisProvider.logo,
+                    groupName: thisProvider.groupName,
+                    distance: thisDistance,
+                };
+                
+                allProviderswithDistance.push(newProvider);
+            });
+            res.json(allProviderswithDistance);
 
         } else {throw err;}
         }).limit(howmany);
@@ -3526,7 +3537,7 @@ router.post('/suggestedcoachings', function(req, res) {
     }else if(city && country == "India"){
         console.log("Finding institutes based on city: " + city);
         var allProviders = targetStudyProvider
-            .find({'city': city, exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1, city:1, state:1})
+            .find({'city': city, exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, city:1})
             .exec(function (err, allProviders) {
             if (!err){
                 res.json(allProviders);
@@ -3537,7 +3548,7 @@ router.post('/suggestedcoachings', function(req, res) {
     }else{
         console.log("Finding institutes on no basis!");
         var allProviders = targetStudyProvider
-            .find({exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1, city:1, state:1})
+            .find({exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, city:1})
             .exec(function (err, allProviders) {
             if (!err){
                 res.json(allProviders);
@@ -3547,7 +3558,7 @@ router.post('/suggestedcoachings', function(req, res) {
     }else{
         console.log("Finding institutes on no basis!");
         var allProviders = targetStudyProvider
-            .find({exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1, city:1, state:1})
+            .find({exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, city:1})
             .exec(function (err, allProviders) {
             if (!err){
                 res.json(allProviders);

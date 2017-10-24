@@ -417,6 +417,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.welcomeEmail = function(email) {
             return $http.post('/api/emails/welcomeEmail', email);
         };
+        this.contactEmail = function(email) {
+            return $http.post('/api/emails/contactEmail', email);
+        };
     }]);    
     
     exambazaar.service('EligibilityService', ['$http', function($http) {
@@ -14684,7 +14687,7 @@ function getLatLng(thisData) {
         return re.test(mobile);
     };  
     exambazaar.controller("contactController", 
-        [ '$scope','$http','$state','$rootScope', 'screenSize', 'contactService', 'Notification', function($scope, $http, $state, $rootScope, screenSize, contactService, Notification){
+        [ '$scope','$http','$state','$rootScope', 'screenSize', 'contactService', 'EmailService', 'Notification', function($scope, $http, $state, $rootScope, screenSize, contactService, EmailService, Notification){
             $rootScope.pageTitle = "Contact Us | Exambazaar";
             if (screenSize.is('xs, sm')){
                 $scope.mobileDevice = true;
@@ -14734,8 +14737,26 @@ function getLatLng(thisData) {
                 //console.log(valid);
                 if(valid){
                     contactService.saveContact($scope.contactForm).success(function (data, status, headers) {
-                        $scope.messageSent = true;
-                        Notification.success("Your message has been sent. We will get back to you shortly!");
+                        
+                        
+                        var emailForm = {
+                            templateName: 'Contact Receipt',
+                            to: $scope.contactForm.email,
+                            contactName: $scope.contactForm.name,
+                            contactMobile: $scope.contactForm.mobile,
+                            contactAbout: $scope.contactForm.about,
+                            contactMessage: $scope.contactForm.message,
+                        };
+                        
+                         EmailService.contactEmail(emailForm).success(function (thisData, status, headers) {
+                            console.log(thisData);
+                            $scope.messageSent = true;
+                            Notification.success("Your message has been received. We will get back to you shortly!");
+
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });
                     })
                     .error(function (data, status, header, config) {
                         console.log('Error ' + data + ' ' + status);
@@ -16147,7 +16168,7 @@ function getLatLng(thisData) {
                         }
                         targetStudyProviderService.suggestedcoachings(examUserinfo).success(function (data, status, headers) {
                             $scope.suggestedcoachings = data;
-                            //console.log(data);
+                            console.log(data);
                         })
                         .error(function (data, status, header, config) {
                             console.log("Error ");
