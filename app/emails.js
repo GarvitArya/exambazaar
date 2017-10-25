@@ -377,6 +377,89 @@ router.post('/contactEmail', function(req, res) {
     
 });
 
+router.post('/recruitmentEmail', function(req, res) {
+    var thisEmail = req.body;
+    
+    var fromEmail = {
+        email: 'team@exambazaar.com',
+        name: 'Team Exambazaar'
+    };
+    
+    var templateName = thisEmail.templateName;
+    var to = thisEmail.to;
+    var collegename = thisEmail.collegename;
+    
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+                if(thisEmailTemplate.name == templateName){
+                    templateFound = true;
+                    templateId = thisEmailTemplate.templateKey;
+                    var from_email = new helper.Email(fromEmail);
+                    var to_email = new helper.Email(to);
+                    var to_email2 = new helper.Email('gaurav@exambazaar.com');
+                    var html = ' ';
+                    var subject = ' ';
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    var mail2 = new helper.Mail(fromEmail, subject, to_email2, content);
+                    
+                    mail.setTemplateId(templateId);
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-collegename-', collegename));
+                    
+                    mail2.setTemplateId(templateId);
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-collegename-', collegename));
+                    
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+                    sg.API(request, function(error, response) {
+                        if(error){
+                            res.json('Could not send email! ' + error);
+                        }else{
+                            
+                            var request = sg.emptyRequest({
+                              method: 'POST',
+                              path: '/v3/mail/send',
+                              body: mail2.toJSON(),
+                            });
+                            sg.API(request, function(error, response) {
+                                if(error){
+                                    res.json('Could not send email! ' + error);
+                                }else{
+                                    res.json(response);
+                                }
+                            });
+                        }
+                    });
+                }
+                if(counter == nLength){
+                    if(!templateFound){
+                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    }
+                }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+});
+
 router.get('/', function(req, res) {
     email
         .find({ })

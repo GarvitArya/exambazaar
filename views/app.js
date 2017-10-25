@@ -420,6 +420,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.contactEmail = function(email) {
             return $http.post('/api/emails/contactEmail', email);
         };
+        this.recruitmentEmail = function(email) {
+            return $http.post('/api/emails/recruitmentEmail', email);
+        };
     }]);    
     
     exambazaar.service('EligibilityService', ['$http', function($http) {
@@ -8384,7 +8387,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margao", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi", "Udupi", "Belgaum", "Mangalore", "Jalandhar","Bathinda", "Murshidabad"];
+        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margao", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi", "Udupi", "Belgaum", "Mangalore", "Jalandhar","Bathinda", "Murshidabad", "Sultanpur"];
         
         if($cookies.getObject('sessionuser')){
             
@@ -14765,6 +14768,27 @@ function getLatLng(thisData) {
                     Notification.warning("Please fill all form details correctly before submitting!");
                 }
                 
+            };
+            
+            
+            $scope.recruitmentEmail = function(){
+                var emailForm = {
+                    templateName: 'College Receipt',
+                    to: $scope.contactForm.email,
+                    contactName: $scope.contactForm.name,
+                    contactMobile: $scope.contactForm.mobile,
+                    contactAbout: $scope.contactForm.about,
+                    contactMessage: $scope.contactForm.message,
+                };
+                EmailService.recruitmentEmail(emailForm).success(function (thisData, status, headers) {
+                    console.log(thisData);
+                    $scope.messageSent = true;
+                    Notification.success("Your message has been received. We will get back to you shortly!");
+
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });    
             };
     }]);    
     exambazaar.controller("addMediaTagController", 
