@@ -106,7 +106,7 @@
         <div layout="column" layout-align="center center" class="textBlack width80 marginTB20 subhheadingBottomBorder2 font24 bold">
             Contact Us
         </div>    
-        <div layout="column" layout-align="center center" class="marginT20 width80 font16 textDarkGrey text-left">
+        <div layout="column" layout-align="center center" class="marginTB20 width80 font16 textDarkGrey text-left">
             <div layout="row" layout-align="center center" class="width100">
                 <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;always@exambazaar.com
             </div>
@@ -114,6 +114,23 @@
                 <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;RIICO Software Complex, IT Park, Sitapura Industrial Area, Jaipur, Rajasthan 302022
             </div>
             
+        </div>
+        
+        <div layout="column" layout-align="center center" class="textBlack width80 marginT40 subhheadingBottomBorder2 font24 bold">
+            Send Email to Colleges
+        </div>    
+        <div layout="column" layout-align="center center" class="min50vh width80 marginTB20 font20 textDarkGrey" ng-if="!collegeMessageSent">
+            <div class="width100 paddingR10 marginTB10"><input type="text" class="text-center width100" ng-model="collegeForm.collegename"  placeholder="College Name"></div>
+            <div class="width100 paddingR10 marginTB10"><input type="email" class=" text-center width100" ng-model="collegeForm.email"  placeholder="College Email"></div>
+            <div class="marginTB10 width100">
+                <md-button class="md-green md-small width100 editFont margin0 tolowercase" ng-click="recruitmentEmail()">
+                    Send Recruitment Email
+                </md-button>
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" class="min50vh width80 marginB20 font20 textDarkGrey  bold" ng-if="collegeMessageSent">
+            <i class="fa fa-check-circle font32 text-primary" aria-hidden="true"></i>
+            <div>Recruitment Message Sent</div>
         </div>
     </div>
     

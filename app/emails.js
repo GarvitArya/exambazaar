@@ -405,7 +405,7 @@ router.post('/recruitmentEmail', function(req, res) {
                     templateId = thisEmailTemplate.templateKey;
                     var from_email = new helper.Email(fromEmail);
                     var to_email = new helper.Email(to);
-                    var to_email2 = new helper.Email('gaurav@exambazaar.com');
+                    var to_email2 = new helper.Email('team@exambazaar.com');
                     var html = ' ';
                     var subject = ' ';
                     var content = new helper.Content('text/html', html);

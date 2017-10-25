@@ -8387,7 +8387,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margao", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi", "Udupi", "Belgaum", "Mangalore", "Jalandhar","Bathinda", "Murshidabad", "Sultanpur"];
+        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margao", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi", "Udupi", "Belgaum", "Mangalore", "Jalandhar","Bathinda", "Murshidabad", "Sultanpur", "Mughalsarai", "Fatehpur"];
         
         if($cookies.getObject('sessionuser')){
             
@@ -14690,13 +14690,21 @@ function getLatLng(thisData) {
         return re.test(mobile);
     };  
     exambazaar.controller("contactController", 
-        [ '$scope','$http','$state','$rootScope', 'screenSize', 'contactService', 'EmailService', 'Notification', function($scope, $http, $state, $rootScope, screenSize, contactService, EmailService, Notification){
+        [ '$scope','$http','$state','$rootScope', '$cookies', 'screenSize', 'contactService', 'EmailService', 'Notification', function($scope, $http, $state, $rootScope, $cookies, screenSize, contactService, EmailService, Notification){
             $rootScope.pageTitle = "Contact Us | Exambazaar";
             if (screenSize.is('xs, sm')){
                 $scope.mobileDevice = true;
             }else{
                 //console.log('Laptop');
                 $scope.mobileDevice = false;
+            }
+            $scope.masterUser = false;
+            if($cookies.getObject('sessionuser')){
+            
+                $scope.user = $cookies.getObject('sessionuser');
+                if($scope.user.userType=='Master'){
+                    $scope.masterUser = true;
+                }
             }
             
             $scope.contactoptions = [
@@ -14707,12 +14715,18 @@ function getLatLng(thisData) {
                 "Other",
              ];
             $scope.messageSent = false;
+            $scope.collegeMessageSent = false;
             $scope.contactForm = {
                 name: '',
                 email: '',
                 mobile: '',
                 about: null,
                 message: '',
+            };
+            $scope.collegeForm = {
+                collegename: '',
+                email: '',
+                mobile: '',
             };
             $scope.validate = function(){
                 var valid = true;
@@ -14773,18 +14787,14 @@ function getLatLng(thisData) {
             
             $scope.recruitmentEmail = function(){
                 var emailForm = {
-                    templateName: 'College Receipt',
-                    to: $scope.contactForm.email,
-                    contactName: $scope.contactForm.name,
-                    contactMobile: $scope.contactForm.mobile,
-                    contactAbout: $scope.contactForm.about,
-                    contactMessage: $scope.contactForm.message,
+                    templateName: 'College Recruitment',
+                    to: $scope.collegeForm.email,
+                    collegename: $scope.collegeForm.collegename,
                 };
                 EmailService.recruitmentEmail(emailForm).success(function (thisData, status, headers) {
                     console.log(thisData);
-                    $scope.messageSent = true;
-                    Notification.success("Your message has been received. We will get back to you shortly!");
-
+                    //$scope.collegeMessageSent = true;
+                    Notification.success("Email sent to college " + $scope.collegeForm.collegename + " at " + $scope.collegeForm.email + "!");
                 })
                 .error(function (data, status, header, config) {
                     console.log('Error ' + data + ' ' + status);
