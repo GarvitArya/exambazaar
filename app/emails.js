@@ -461,7 +461,7 @@ router.post('/recruitmentEmail', function(req, res) {
 });
 
 
-router.post('/recruitmentEmail', function(req, res) {
+router.post('/hundredblogEmail', function(req, res) {
     var thisEmail = req.body;
     
     var fromEmail = {
@@ -469,9 +469,9 @@ router.post('/recruitmentEmail', function(req, res) {
         name: 'Team Exambazaar'
     };
     
-    var templateName = thisEmail.templateName;
+    var templateName = '100 Blogs';
     var to = thisEmail.to;
-    var collegename = thisEmail.collegename;
+    var username = thisEmail.username;
     
     var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
         if (err) return handleError(err);
@@ -497,10 +497,8 @@ router.post('/recruitmentEmail', function(req, res) {
                     var mail2 = new helper.Mail(fromEmail, subject, to_email2, content);
                     
                     mail.setTemplateId(templateId);
-                    mail.personalizations[0].addSubstitution(new helper.Substitution('-collegename-', collegename));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
                     
-                    mail2.setTemplateId(templateId);
-                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-collegename-', collegename));
                     
                     var request = sg.emptyRequest({
                       method: 'POST',
@@ -511,19 +509,7 @@ router.post('/recruitmentEmail', function(req, res) {
                         if(error){
                             res.json('Could not send email! ' + error);
                         }else{
-                            
-                            var request = sg.emptyRequest({
-                              method: 'POST',
-                              path: '/v3/mail/send',
-                              body: mail2.toJSON(),
-                            });
-                            sg.API(request, function(error, response) {
-                                if(error){
-                                    res.json('Could not send email! ' + error);
-                                }else{
-                                    res.json(response);
-                                }
-                            });
+                            res.json(response);
                         }
                     });
                 }

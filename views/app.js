@@ -423,6 +423,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.recruitmentEmail = function(email) {
             return $http.post('/api/emails/recruitmentEmail', email);
         };
+        this.hundredblogEmail = function(email) {
+            return $http.post('/api/emails/hundredblogEmail', email);
+        };
     }]);    
     
     exambazaar.service('EligibilityService', ['$http', function($http) {
@@ -18535,7 +18538,7 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("manageUsersController", 
-        [ '$scope', 'UserService', 'viewService','$http','$state', '$rootScope', '$mdDialog', '$timeout', function($scope, UserService, viewService, $http,$state, $rootScope, $mdDialog, $timeout){
+        [ '$scope', 'UserService', 'viewService', 'EmailService','$http','$state', '$rootScope', '$mdDialog', '$timeout', 'Notification', function($scope, UserService, viewService, EmailService, $http,$state, $rootScope, $mdDialog, $timeout, Notification){
             $scope.properNames = function(){
                 UserService.properNames().success(function (data, status, headers) {
                     if(data){
@@ -18548,6 +18551,7 @@ function getLatLng(thisData) {
                     console.log("Error ");
                 });
             };
+            
             
             $rootScope.pageTitle = "Manage users on EB";
             $rootScope.$on("setBloggerUser", function(event, data){
@@ -18613,6 +18617,38 @@ function getLatLng(thisData) {
                 }
                 
             };
+            
+            $scope.hundredblogEmail = function(userId){
+                
+                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                    var marketingUser = data;
+                    console.log(marketingUser);
+                    if(marketingUser.email){
+                        var emailForm = {
+                            to: marketingUser.email,
+                            username: marketingUser.basic.name,
+                        };
+                        EmailService.hundredblogEmail(emailForm).success(function (thisData, status, headers) {
+                            console.log(thisData);
+                            //$scope.collegeMessageSent = true;
+                            Notification.success("Email sent to user " + marketingUser.basic.name + " at " + marketingUser.email + "!");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });
+                        
+                        
+                    }
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                    
+            };
+            
             $scope.unmakePartner = function(){
                 if($scope.thisuser.partner && $scope.thisuser.partner.length > 0 && $scope.thisuser._id){
                     $scope.partnerUser = {
