@@ -9011,7 +9011,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
             
         };
-            $rootScope.pageTitle ='Sandbox';
+            //$rootScope.pageTitle ='Sandbox';
     }]);
          
       
@@ -9234,7 +9234,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               return response.data.items;
             })*/
         };
-            $rootScope.pageTitle ='Sandbox';
+            //$rootScope.pageTitle ='Sandbox';
     }]);    
     
     exambazaar.controller("blogCoachingGroupAutocompleteController", 
@@ -9472,7 +9472,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
                 
             };
-            $rootScope.pageTitle ='Sandbox 2';
+            //$rootScope.pageTitle ='Sandbox 2';
     }]);
     
         
@@ -10150,7 +10150,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               return response.data.items;
             })*/
         };
-            $rootScope.pageTitle ='Sandbox';
+            //$rootScope.pageTitle ='Sandbox';
     }]);  
         
         
@@ -10339,15 +10339,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var city = $rootScope.reviewCity;
                 var institute = $rootScope.reviewInstitute;
                 
-                
-                ///group/:categoryName/:subCategoryName/:cityName/:groupName
-                console.log(stream.name);
-                console.log(exam.name);
-                console.log(city);
-                console.log(institute.groupName);
                 $state.go('showGroup', {categoryName: stream.name, subCategoryName: exam.name, cityName: city, groupName: institute.groupName});
             };
-            $rootScope.pageTitle ='Write a Review - Exambazaar';
+            $rootScope.pageTitle ='Write a Review | Exambazaar';
             
             var currURL = $location.absUrl();
             $rootScope.pageURL = currURL;

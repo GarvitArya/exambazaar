@@ -133,6 +133,7 @@
               </ul>
             </li>
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="aroundme">Around Me</a></li>
+            <li ng-if="sessionuser.userType=='Student'"><a ui-sref="review">Review a Coaching</a></li>
             
         </ul>
         
@@ -236,6 +237,7 @@
                 <li><a ui-sref="postBlog({ userId:{{'sessionuser.userId'}} })">Post Blog</a></li>
                 <li><a ui-sref="eligibility({ userId:{{'sessionuser.userId'}}} )">Eligibility</a></li>
                 <li><a ui-sref="aroundme">Around Me</a></li>
+                
               </ul>
             </li>
             <li class="dropdown">

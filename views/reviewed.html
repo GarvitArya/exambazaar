@@ -155,10 +155,10 @@
                     {{userReview.text}}
                 </div>
                 <div layout="row" layout-xs="column" layout-align="start center" class="width100  marginT10 paddingTB10">
-                    <div flex layout="row" layout-align="center center" class="bold">
-                        Thank you for reviewing {{userReview.institute.name}}, unlock exclusive discounts brought to you by Exambazaar!
+                    <div flex layout="row" layout-align="start center" class="bold">
+                        Thank you for reviewing {{userReview.institute.name}}! We will share your feedback with our community!
                     </div>
-                    <div  layout="row" layout-align="end center" class="">
+                    <!--<div  layout="row" layout-align="end center" class="">
                         
                         <md-button class="md-danger md-small font10 width8" ng-click="flipShowCoupon(userReview)" class="marginL10" ng-if="!userReview.coupon && userReview.active">
                             Avail Discount
@@ -171,7 +171,7 @@
                         <div ng-if="!userReview.active" class="danger bold">
                         Review Disabled by Admin
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <div layout="column" layout-align="start center" class="width100  marginTB10 paddingTB10 gainsboroTBBorder" ng-if="!userReview.coupon && userReview.showCouponOptions">
                     <div layout="row" layout-align="start center" class="paddingB10 secondFont">

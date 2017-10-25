@@ -39,12 +39,25 @@
     #submitSection{
         min-height: 10vh;
     }
-    
+    #pageHeaderFont{
+        color: rgba(0,0,0,0.8);
+        letter-spacing: 4px;
+        font-family: "Avenir";
+        border-bottom: solid 3px;
+        border-color: #20C39A;
+        letter-spacing: 4px;
+    }
+    #otherCategoryLink{
+        color: #20C39A;
+        
+    }
 </style>
 
-
-<div class="whiteBackground mainContent" >
-    <div id="spacer">
+<div layout="row" layout-align="center center" class="width100 whiteBackground">
+<div layout="column" layout-align="center center" flex-xs="100" flex-gt-xs="60" class="" >
+    <div id="spacer1" hide-xs>
+    </div>
+    <div id="spacerXS" hide-gt-xs>
     </div>
     
     <!--<div layout="column" layout-align="start center" id="Reviews" class="textBlack padding20 min40vh">
@@ -59,28 +72,23 @@
             
         </div>
         
-    </div>-->
+    </div>
     
     <div layout="row" id="offerRow" ng-controller="offerController">
 
       <div layout="column" layout-align="center center" class=" width100 secondFont ">
-          <!-- href="#userReview" du-smooth-scroll du-scrollspy offset="200"-->
         <div layout="column" layout-align="center center" class="translucentBackground width100 padding10">
 
         <div layout="column" layout-align="center center" class="secondFont marginTB10" style="display:inline-block" >
+            
             <div layout="row" layout-align="center center" class="marginB10 offerFont spacedLetter1">
                 <span hide-xs class="text-center font20">
-                <!--
-                Review your coaching institute at Exambazaar to unlock amazing discounts and offers from
-                -->
                     You’d love our discounts on the most popular exam prep courses!
                 </span>
                 <span hide-gt-xs class="font12 text-center">
                     You’d love our discounts on the most popular exam prep courses!
                 </span>
             </div>
-
-
             <div layout="row" layout-align="center center" class="translucentWhiteBackground textBlack spacedLetter1 paddingT10">
                 <span hide-xs class="font14 text-center">
                     Unlock discounts from 20% - 50% on
@@ -119,11 +127,8 @@
                 </span>
 
             </div>
+            
         </div>
-
-        <!--<div hide-gt-xs layout="row" layout-align="center center" class="paddingB10 secondFont ">
-        <md-button class="md-small md-green2  font12 tolowercase width50"  ng-click="">Review Now</md-button>
-        </div>-->
 
         </div>
 
@@ -132,12 +137,16 @@
 
 
     </div>
-            
+     -->       
     
     
-    <div layout="column" layout-align="start center" id="Reviews" class="greyBorder textBlack margin10 marginB80 padding10">
-        <div layout="row" layout-align="center center" class="width100 secondFont bold">
-            Find your Coaching Institute to review
+    <div layout="column" layout-align="start center" id="Reviews" class="textBlack paddingB40 width100">
+        <div layout="column" layout-align="start center" class="width100 marginB20">
+            <img src="images/background/review.jpg" class="width100"/>
+        </div>
+        
+        <div layout="row" layout-align="center center" class="textDarkGrey width100 editFont font20 marginTB20 subhheadingBottomBorder2">
+            Find your coaching institute to review
         </div>
         
         <div layout="row" layout-align="center start" id="questionSection" ng-if="selectStream" class="width100">
@@ -147,7 +156,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 paddingLR10" ng-repeat="stream in streams | orderBy:'-rank'" ng-if="stream.name !='other'" ng-click="updateStream(stream)">
-                    <div id="categoryFont" class="text-center">
+                    <div layout="row" layout-align="center center" id="categoryFont" class="text-center">
                     {{stream.displayname}}
                     </div>
                 </div>
@@ -161,7 +170,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 paddingLR10" ng-repeat="exam in exams | orderBy:'-rank'" ng-if="exam.stream._id == reviewStream._id" ng-click="updateExam(exam)">
-                    <div id="categoryFont" class="text-center">
+                    <div layout="row" layout-align="center center" id="categoryFont" class="text-center">
                     {{exam.displayname}}
                     </div>
                 </div>
@@ -175,13 +184,13 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 width100" >
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 paddingLR10" ng-if="$index<11" ng-repeat="city in rankedCities" ng-click="updateCity(city)">
-                    <div id="categoryFont" class="text-center">
+                    <div layout="row" layout-align="center center" id="categoryFont" class="text-center">
                     {{city | uppercase}}
                     </div>
                 </div>
                 
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 paddingLR10" ng-click="showOtherCityDialog()">
-                    <div id="categoryFont" class="text-center">
+                    <div layout="row" layout-align="center center" id="categoryFont" class="text-center">
                     OTHER
                     </div>
                 </div>  
@@ -237,7 +246,7 @@
         </div>
         
         
-        <div layout="row" layout-align="center center" class="width100 secondFont bold font10" id="submitSection">
+        <div layout="row" layout-align="center center" class="marginTB10 width100 secondFont bold font10" id="submitSection">
             <div layout="column" layout-align="center center" ng-if="reviewStream" class="greyBorder marginLR10" ng-click="clearAll()">
                 <div layout="row" layout-align="center center" class="primaryBackground textWhite width100 paddingLR5">
                     Stream
@@ -288,7 +297,7 @@
     
     
 </div>
-
+</div>
 <div style="visibility: hidden">    
 <div class="md-dialog-container" id="cityDialog">
   <md-dialog layout-padding>
@@ -299,7 +308,7 @@
 
     <p class="text-center">
       <span  ng-repeat="city in rankedCities" ng-if="$index>=11">
-          <span class="text md-subhead">
+          <span class="text-primary md-subhead">
             <a ng-click="updateCity(city)"  id="otherCategoryLink">{{city | uppercase}}
             </a>
             <span ng-if="!$last">&nbsp;&#8226;&nbsp;</span>
