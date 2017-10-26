@@ -1699,21 +1699,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     exambazaar.controller("p0Controller", 
-        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', 'examList', function($scope, $cookies, $state, $rootScope, $mdDialog, examList){
-            var allExams = examList.data;
-            var streamExams = [];
+        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', function($scope, $cookies, $state, $rootScope, $mdDialog){
+            //var allExams = examList.data;
             
-            allExams.forEach(function(thisExam, eIndex){
-                var thisStream = thisExam.stream.displayname;
-                if(!streamExams[thisStream]){
-                    streamExams[thisStream] = [];
-                }
-                streamExams[thisStream].push(thisExam);
-            });
-            //$scope.streamExams = streamExams;
-            streamExams.forEach(function(thisStreamExam, sIndex){
-                console.log(thisStreamExam);
-            });
             //console.log(streamExams);
             $scope.hideLoginDialog();
 
@@ -7306,7 +7294,43 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);
     
-    
+    exambazaar.controller("footerController", 
+        [ '$scope', '$rootScope', 'ExamService', function($scope, $rootScope, ExamService){
+            
+        if(!$rootScope.streamExams || $rootScope.streamExams.length == 0){
+            ExamService.getExamsBasic().success(function (data, status, headers) {
+                var doNotShow = ['Other', 'Insurance'];
+                var streamNames = [];
+                var streamExams = [];
+                var allExams = data;
+                allExams.forEach(function(thisExam, eIndex){
+                    var thisStream = thisExam.stream.displayname;
+                    var dIndex = doNotShow.indexOf(thisStream);
+                    if(thisExam.active && dIndex == -1){
+                        var sIndex = streamNames.indexOf(thisStream);
+                        if(sIndex == -1){
+                            streamNames.push(thisStream);
+                            var streamExamObj = {
+                                stream: thisStream,
+                                active: thisExam.stream.active,
+                                rank: thisExam.stream.rank,
+                                exams: []
+                            };
+                            streamExamObj.exams.push(thisExam);
+                            streamExams.push(streamExamObj);
+                        }else{
+                            streamExams[sIndex].exams.push(thisExam);
+                        }
+                    }            
+                });
+                $rootScope.streamExams = streamExams;
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });   
+        }
+            
+    }]);     
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS','$timeout', '$window', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS,$timeout, $window){
             
@@ -18623,13 +18647,13 @@ function getLatLng(thisData) {
                 
                 UserService.getUserBasic(userId).success(function (data, status, headers) {
                     var marketingUser = data;
-                    //console.log(marketingUser);
-                    if(marketingUser.userType == 'Master'){
+                    console.log(marketingUser);
+                    if(marketingUser.mobile == '9829685919'){
                         /*var emailForm = {
                             to: marketingUser.email,
                             username: marketingUser.basic.name,
                         };*/
-                        EmailService.hundredblogEmail(emailForm).success(function (thisData, status, headers) {
+                        EmailService.hundredblogEmail().success(function (thisData, status, headers) {
                             console.log(thisData);
                             //$scope.collegeMessageSent = true;
                             Notification.success("Email sent to user " + marketingUser.basic.name + " at " + marketingUser.email + "!");
@@ -20990,14 +21014,9 @@ function getLatLng(thisData) {
                 'footer': {
                     templateUrl: 'footer.html'
                 }
-            },
-            resolve: {
-                examList: ['ExamService',
-                    function(ExamService){
-                    return ExamService.getExamsBasic();
-                }],
             }
         })
+        
         .state('login', {
             url: '/login',
             views: {

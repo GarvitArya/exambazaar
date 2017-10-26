@@ -86,7 +86,7 @@ router.get('/', function(req, res) {
 router.get('/basic', function(req, res) {
     //console.log('Here');
     exam
-        .find({active: true}, {name:1, displayname: 1, stream:1, rank: 1})
+        .find({active: true}, {name:1, displayname: 1, stream:1, rank: 1, seoname: 1, active:1})
         .deepPopulate('stream')
         .exec(function (err, docs) {
         if (!err){

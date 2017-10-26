@@ -464,7 +464,7 @@ router.post('/recruitmentEmail', function(req, res) {
 
 router.post('/hundredblogEmail', function(req, res) {
     //var thisEmail = req.body;
-    
+    console.log('Starting 100 blogs Email');
     var fromEmail = {
         email: 'team@exambazaar.com',
         name: 'Team Exambazaar'
@@ -490,11 +490,12 @@ router.post('/hundredblogEmail', function(req, res) {
                     templateId = thisEmailTemplate.templateKey;
                     var from_email = new helper.Email(fromEmail);
                     
-                    var allUsers = user.find({email: {$exists: true}}, {basic: 1, email: 1}, function(err, allUsers) {
+                    var allUsers = user.find({email: {$exists: true}}, {basic: 1, email: 1, _id: 1}, function(err, allUsers) {
                     if (!err){
+                        var emailcounter = 0;
                         var counter = 0;
                         var nUsers = allUsers.length;
-                        res.json(nUsers);
+                        console.log("Total " + nUsers + " users!");
                         allUsers.forEach(function(thisUser, index){
                             var to = thisUser.email;
                             var username = "User";
@@ -514,18 +515,32 @@ router.post('/hundredblogEmail', function(req, res) {
                               path: '/v3/mail/send',
                               body: mail.toJSON(),
                             });
-                            console.log("Sending Email to: " + username + " at " + to);
-                            counter += 1;
-                            if(counter == nUsers){
-                                res.json(true);
-                            }
-                            /*sg.API(request, function(error, response) {
-                                if(error){
-                                    res.json('Could not send email! ' + error);
-                                }else{
-                                    res.json(response);
+                            //console.log("Sending Email to: " + username + " at " + to);
+                            
+                            
+                            if(thisUser.email && thisUser.email != ''){
+                                /*sg.API(request, function(error, response) {
+                                    if(error){
+                                        counter += 1;
+                                        console.log('Could not send email! to: ' + thisUser.email);
+                                    }else{
+                                        counter += 1;
+                                        emailcounter += 1;
+                                        console.log(counter + " Email sent to: " + username + " at " + to);
+                                        if(counter == nUsers){
+                                            console.log("Total emails sent are: " + emailcounter);
+                                            res.json(true);
+                                        }
+                                        //res.json(response);
+                                    }
+                                });*/
+                            }else{
+                                counter += 1;
+                                if(counter == nUsers){
+                                    res.json(true);
                                 }
-                            });*/
+                            }
+                            /**/
                         });
                         
                         
