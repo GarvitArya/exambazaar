@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var helper = require('sendgrid').mail;
 var email = require('../app/models/email');
+var user = require('../app/models/user');
 var sendGridCredential = require('../app/models/sendGridCredential');
 
 
@@ -462,7 +463,7 @@ router.post('/recruitmentEmail', function(req, res) {
 
 
 router.post('/hundredblogEmail', function(req, res) {
-    var thisEmail = req.body;
+    //var thisEmail = req.body;
     
     var fromEmail = {
         email: 'team@exambazaar.com',
@@ -470,8 +471,8 @@ router.post('/hundredblogEmail', function(req, res) {
     };
     
     var templateName = '100 Blogs';
-    var to = thisEmail.to;
-    var username = thisEmail.username;
+    //var to = thisEmail.to;
+    //var username = thisEmail.username;
     
     var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
         if (err) return handleError(err);
@@ -488,30 +489,51 @@ router.post('/hundredblogEmail', function(req, res) {
                     templateFound = true;
                     templateId = thisEmailTemplate.templateKey;
                     var from_email = new helper.Email(fromEmail);
-                    var to_email = new helper.Email(to);
-                    var to_email2 = new helper.Email('team@exambazaar.com');
-                    var html = ' ';
-                    var subject = ' ';
-                    var content = new helper.Content('text/html', html);
-                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
-                    var mail2 = new helper.Mail(fromEmail, subject, to_email2, content);
                     
-                    mail.setTemplateId(templateId);
-                    mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
-                    
-                    
-                    var request = sg.emptyRequest({
-                      method: 'POST',
-                      path: '/v3/mail/send',
-                      body: mail.toJSON(),
+                    var allUsers = user.find({email: {$exists: true}}, {basic: 1, email: 1}, function(err, allUsers) {
+                    if (!err){
+                        var counter = 0;
+                        var nUsers = allUsers.length;
+                        res.json(nUsers);
+                        allUsers.forEach(function(thisUser, index){
+                            var to = thisUser.email;
+                            var username = "User";
+                            if(thisUser.basic && thisUser.basic.name){
+                                username = thisUser.basic.name;
+                            }
+                            
+                            var to_email = new helper.Email(to);
+                            var html = ' ';
+                            var subject = ' ';
+                            var content = new helper.Content('text/html', html);
+                            var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                            mail.setTemplateId(templateId);
+                            mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                            var request = sg.emptyRequest({
+                              method: 'POST',
+                              path: '/v3/mail/send',
+                              body: mail.toJSON(),
+                            });
+                            console.log("Sending Email to: " + username + " at " + to);
+                            counter += 1;
+                            if(counter == nUsers){
+                                res.json(true);
+                            }
+                            /*sg.API(request, function(error, response) {
+                                if(error){
+                                    res.json('Could not send email! ' + error);
+                                }else{
+                                    res.json(response);
+                                }
+                            });*/
+                        });
+                        
+                        
+    
+                    } else {throw err;}
                     });
-                    sg.API(request, function(error, response) {
-                        if(error){
-                            res.json('Could not send email! ' + error);
-                        }else{
-                            res.json(response);
-                        }
-                    });
+                    
+                    
                 }
                 if(counter == nLength){
                     if(!templateFound){
