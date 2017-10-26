@@ -1472,6 +1472,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.citySummaryService = function() {
             return $http.get('/api/targetStudyProviders/citySummaryService');
         };
+        this.cacsService = function() {
+            return $http.get('/api/targetStudyProviders/cacsService');
+        };
         this.sandbox2Service = function(city) {
             return $http.get('/api/targetStudyProviders/sandbox2Service/'+city, {city: city});
         };
@@ -7299,7 +7302,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
         if(!$rootScope.streamExams || $rootScope.streamExams.length == 0){
             ExamService.getExamsBasic().success(function (data, status, headers) {
-                var doNotShow = ['Other', 'Insurance'];
+                var doNotShow = ['Other', 'Insurance', 'School'];
                 var streamNames = [];
                 var streamExams = [];
                 var allExams = data;
@@ -19564,7 +19567,7 @@ function getLatLng(thisData) {
                 $scope.closestTag = null;
                 
                 $scope.selectedText =  $scope.getSelectionText();
-                console.log($scope.selectedText);
+                //console.log($scope.selectedText);
                 var contentLength = $scope.blogpost.content.length;
                 
                 var startTextIndex = $scope.blogpost.content.indexOf($scope.selectedText);
@@ -20011,6 +20014,7 @@ function getLatLng(thisData) {
             }, 180 * 1000);
             
             $scope.saveBlogPost = function(blogpost, displayString){
+                var doNotSend = ["__v", "_saved", "_autosaved"];
                 if($scope.user && $scope.user._id){
                     
                 
@@ -20022,7 +20026,7 @@ function getLatLng(thisData) {
                 
                 $scope.blogpost.urlslug = slugify($scope.blogpost.title);
                 blogpostService.slugExists($scope.blogpost.urlslug).success(function (data, status, headers) {
-                    console.log(data);
+                    //console.log(data);
                     if(data == false){
                         var blogpostForm = {
                             savedBy: $scope.user._id,
@@ -20034,6 +20038,7 @@ function getLatLng(thisData) {
 
                         for (var property in blogpost) {
                             blogpostForm[property] = blogpost[property];
+                            
                         }
                         
                         blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
@@ -20053,9 +20058,6 @@ function getLatLng(thisData) {
                         
                     }else{
                         if($scope.blogpost._id == data){
-                            //do nothing
-                            //console.log(data);
-                            
                             
                             var blogpostForm = {
                                 savedBy: $scope.user._id,
@@ -20066,11 +20068,13 @@ function getLatLng(thisData) {
                             }
 
                             for (var property in blogpost) {
-                                if(property != "_v"){
+                                var dIndex = doNotSend.indexOf(property);
+                                if(dIndex == -1){
                                     blogpostForm[property] = blogpost[property];
+                                }else{
+                                    console.log('Ignored ' + property);
                                 }
                             }
-                            //console.log(blogpostForm);
                             blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                                 $scope.blogpost = data;
                                 if(displayString == 'Autosaved'){

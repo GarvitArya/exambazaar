@@ -3450,6 +3450,35 @@ router.get('/citySummaryService', function(req, res) {
     })
 });
 
+
+router.get('/cacsService', function(req, res) {
+    console.log("CA & CS Summary Service Starting now");
+    var examId = '58ac2811b9ae260088289993';
+    var allCoachings = targetStudyProvider.find({exams: ObjectId(examId)}, {name:1 , exams:1, _saved: 1, contactInfoState:1, addContactInfoDone:1, ebVerifyState:1},function(err, allCoachings) {
+    if (!err){
+        var toSet = false;
+        var toSetCoachings = [];
+        allCoachings.forEach(function(thisProvider, pindex){
+            var saved = thisProvider._saved;
+            var ebVerifyState = thisProvider.ebVerifyState;
+            var contactInfoState = thisProvider.contactInfoState;
+            var addContactInfoDone = thisProvider.addContactInfoDone;
+            toSet = true;
+            if(saved && saved.length > 0){
+                toSet = false;
+            }
+            if(ebVerifyState && ebVerifyState != ''){
+                toSet = true;
+            }
+            if(contactInfoState && contactInfoState != ''){
+                toSet = true;
+            }
+        });
+        res.json(true);
+    } else {throw err;}
+    }).sort( { city: 1 } );
+});
+
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below

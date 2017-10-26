@@ -707,7 +707,7 @@ router.post('/save', function(req, res) {
     var savedBy = blogpostForm.savedBy.toString();
     var autosave = blogpostForm.autosave; 
     var user = blogpostForm.user;
-    if(blogpostForm.user._id){
+    if(blogpostForm.user && blogpostForm.user._id){
         user = blogpostForm.user._id.toString();
     }
     

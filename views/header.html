@@ -119,6 +119,30 @@
                 
               </ul>
             </li>
+           
+            <!--
+            <li class="dropdown" ng-if="streamExams">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Exam</a>
+              <ul class="dropdown-menu">
+              <li ng-repeat="streamExam in streamExams" class="dropdown-submenu" >
+                  <a tabindex="-1" href="#">
+                    {{streamExam.stream}}
+                  </a>
+                  <ul class="dropdown-menu">
+                      
+                      <li ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
+                        <a ui-sref="exam({ examName:{{'exam.name'}} })">
+                            {{exam.seoname}}
+                        </a>
+                      </li>
+                  </ul>
+                    
+                </li>
+                
+              </ul>
+            </li>
+            -->
+            
             <li class="dropdown">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Top Rankers<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
