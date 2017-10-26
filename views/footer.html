@@ -6,7 +6,26 @@
 </style>
 <div layout="row" layout-align="center center" class="font12 width100 footer" ng-controller="footerController">
     <div flex="90" layout="column" layout-align="start start" class="paddingT10 paddingB5 marginB5 textWhite">
-        <div layout="row" layout-align="start center" class=" width100 marginT5">
+        
+        
+        <!--<div class="width100 marginT20">
+            Popular Exams in India
+        </div>-->
+        <div layout="row" layout-align="start start" class=" width100 marginT5" hide-xs>
+            <div layout="column" layout-align="start center" flex ng-repeat="streamExam in streamExams | orderBy: '-rank'" class="">
+                
+                <div layout="row" layout-align="start center" class="width100 bold">
+                    {{streamExam.stream}}
+                </div>
+                <div layout="row" layout-align="start center" class="width100" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
+                    <a ui-sref="exam({ examName:{{'exam.name'}} })" target="_blank" id="footerLink">
+                        {{exam.seoname}}
+                    </a>
+                
+                </div>
+            </div>
+        </div>
+        <div layout="row" layout-align="start center" class=" width100 marginT20">
             <div flex layout="row" layout-align="start center" class="footer-brand narrowLine font22 height100">
                 <a href="https://www.exambazaar.com/" class="" id="headerLogo">
                     EXAMBAZAAR
@@ -84,25 +103,6 @@
                 </div>
             </div>
         </div>
-        
-        <!--<div class="width100 marginT20">
-            Popular Exams in India
-        </div>-->
-        <div layout="row" layout-align="start start" class=" width100 marginT30" hide-xs>
-            <div layout="column" layout-align="start center" flex ng-repeat="streamExam in streamExams | orderBy: '-rank'" class="">
-                
-                <div layout="row" layout-align="start center" class="width100 bold">
-                    {{streamExam.stream}}
-                </div>
-                <div layout="row" layout-align="start center" class="width100" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
-                    <a ui-sref="exam({ examName:{{'exam.name'}} })" target="_blank" id="footerLink">
-                        {{exam.seoname}}
-                    </a>
-                
-                </div>
-            </div>
-        </div>
-        
     </div>
     
     

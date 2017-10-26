@@ -204,6 +204,9 @@
         background: transparent;
         color: #6A6968;
     }
+    img{
+        max-width: 100%;
+    }
 </style>
 <div id="spacer1">
 </div>
@@ -425,7 +428,7 @@
                 
             </div>
             
-            <div layout="column" layout-align="start start" ng-if="exam.books">
+            <div layout="column" layout-align="start start" ng-if="exam.books" class="width100">
                 <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="exam.books && exam.books._id">
                     Recommended {{exam.stream.displayname}} Preparation Books
                 </div>
@@ -433,7 +436,7 @@
                 <div class="width100 marginT20">
                     <img ng-src="{{exam.books.coverPhoto}}" class="width100"/>
                 </div>
-                <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.books.content" class="marginTB20 ">
+                <div ng-if="exam.pattern && exam.pattern._id" ng-bind-html="exam.books.content" class="width100 marginTB20 ">
                 </div>
             </div>
             
