@@ -1886,6 +1886,7 @@
             max-width: 100%;
             width: 30%;
             /*height: 70%;*/
+            min-height: 70%;
             max-height: 80%;
             border-radius: 10px;
             background:white;
@@ -2229,9 +2230,7 @@
         <div style="visibility: hidden">    
         <div class="md-dialog-container" id="loginDialog" >
           <md-dialog class="login-dialog"> 
-             <!--<div layout="row" layout-align="center center" ng-if="stateName == 'showGroup'" class="paddingLR30 paddingTB10 font10 gainsboroBottomBorder">
-                    Looking for {{coachingGroupName}} in {{coachingGroupCity}}?
-             </div>-->
+             
              <div layout="column"  flex-gt-sm="100" class="padding30" >
 
                 <div layout="row" layout-align="center center" class="mainFont textBlack paddingB10 gainsboroBottomBorder">
@@ -2274,16 +2273,6 @@
                             Log in with Facebook
                         </span>
                     </md-button>
-                    <!--<md-button href="/auth/google" class="width100 tolowercase">
-                        <span class="font14" hide-xs>
-                            <span ng-if="!signupMode">Log in </span>
-                            <span ng-if="signupMode">Sign up </span>
-                            with Google
-                        </span>
-                        <span class="font12" hide-gt-xs>
-                            Log in with Google
-                        </span>
-                    </md-button>-->
                 </div>
 
                 <div style="width: 100%; height: 16px; border-bottom: 1px solid #ccc; text-align: center" class="secondFont">
@@ -2315,12 +2304,12 @@
                 <div layout="row" class="marginT20">
                 <div flex class="paddingR5">
                     <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="loginForm.$invalid">
-                        Log in
+                        <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;&nbsp;Log in
                     </md-button>
                 </div>
                 <div flex class="paddingL5">
                     <md-button ng-click="signupToggle()" class="md-small md-cancel width100 tolowercase" >
-                        Sign up
+                        <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;Sign up
                     </md-button>
                 </div>
                 </div>
@@ -2361,12 +2350,12 @@
                 <div layout="row" class="marginT20" ng-if="!resetMode">
                 <div flex class="paddingR5">
                     <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="loginForm.$invalid">
-                        Log in
+                        <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;&nbsp;Log in
                     </md-button>
                 </div>
                 <div flex class="paddingL5">
                     <md-button ng-click="signupToggle()" class="md-small md-cancel width100 tolowercase" >
-                        Sign up
+                        <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;Sign up
                     </md-button>
                 </div>
                 </div>
@@ -2429,12 +2418,12 @@
                 <div layout="row" class="marginT20">
                 <div flex class="paddingR5">
                     <md-button type="submit" class="md-small md-green2 width100 tolowercase" ng-disabled="checkSignupForm()" >
-                        Sign up
+                        <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;Sign up
                     </md-button>
                 </div>
                 <div flex class="paddingL5">
                     <md-button class="md-small md-cancel  width100 tolowercase" ng-click="signupToggle()">
-                        Log in
+                        <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;&nbsp;Log in
                     </md-button>
 
                 </div>
