@@ -3450,10 +3450,12 @@ router.get('/citySummaryService', function(req, res) {
     })
 });
 
-
+var ObjectId = require('mongodb').ObjectID;
 router.get('/cacsService', function(req, res) {
+    //58ac2811b9ae260088289993 - CA CPT
+    //58ac2824b9ae260088289994 - CS Foundation
     console.log("CA & CS Summary Service Starting now");
-    var examId = '58ac2811b9ae260088289993';
+    var examId = '58ac2824b9ae260088289994';
     var allCoachings = targetStudyProvider.find({exams: ObjectId(examId)}, {name:1 , exams:1, _saved: 1, contactInfoState:1, addContactInfoDone:1, ebVerifyState:1},function(err, allCoachings) {
     if (!err){
         var toSet = false;
@@ -3469,11 +3471,26 @@ router.get('/cacsService', function(req, res) {
             }
             if(ebVerifyState && ebVerifyState != ''){
                 toSet = true;
+            }else{
+                toSet = true;
             }
             if(contactInfoState && contactInfoState != ''){
                 toSet = true;
+            }else{
+                toSet = true;
             }
+            if(addContactInfoDone){
+                toSet = true;
+            }else{
+                toSet = true;
+            }
+            if(toSet){
+                toSetCoachings.push(thisProvider);
+            }
+            
         });
+        
+        console.log(toSetCoachings.length + " to be changed out of " + allCoachings.length);
         res.json(true);
     } else {throw err;}
     }).sort( { city: 1 } );

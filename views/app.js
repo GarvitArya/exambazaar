@@ -8578,6 +8578,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 console.log("Error ");
             });
         };
+        $scope.cacsService = function(){
+             targetStudyProviderService.cacsService().success(function (data, status, headers) {
+                
+                console.log("Done");
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error ");
+            });
+        };
+        
         $scope.citySummary = null;
         $scope.citySummaryService = function(){
             //alert('Starting');
