@@ -7645,12 +7645,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 UserService.getUser(user._id).success(function (data, status, headers) {
                     $scope.hideLoginDialog();
                     var fulluser = data;
-                    console.log(fulluser);
                     var sessionuser;
-                    //user.verified="true";
-                    //console.log(user.verified);
                     if(user.verified===true){
-                        
                         sessionuser = {
                             _id: fulluser._id,
                             userId: fulluser._id,
@@ -7849,6 +7845,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             }else{
                 if($state.current.name == 'exam'){
+                    $state.reload();
+                }
+                if($state.current.name == 'showblog'){
                     $state.reload();
                 }
                 //$state.reload();
@@ -8578,7 +8577,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 console.log("Error ");
             });
         };
-        $scope.cacsService = function(){
+        /*$scope.cacsService = function(){
              targetStudyProviderService.cacsService().success(function (data, status, headers) {
                 
                 console.log("Done");
@@ -8586,7 +8585,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             .error(function (data, status, header, config) {
                 console.log("Error ");
             });
-        };
+        };*/
         
         $scope.citySummary = null;
         $scope.citySummaryService = function(){
@@ -20572,6 +20571,14 @@ function getLatLng(thisData) {
                 
                 
             }else{
+                var nContent = $scope.blogpost.content.length;
+                var cutoff = Math.round(nContent/2);
+                $scope.blogpost.lockedcontent = $scope.blogpost.content.substring(cutoff, nContent);
+                
+                $scope.blogpost.content = $scope.blogpost.content.substring(0, cutoff);
+                
+                console.log($scope.blogpost.lockedcontent);
+                
                 if(!$scope.thisUserComment){
                     $scope.thisUserComment = $scope.newComment;
                 }
@@ -20652,6 +20659,9 @@ function getLatLng(thisData) {
                 });
             };
            
+            $scope.continueReading = function(){
+                $rootScope.$emit("CallBlogLogin", {});    
+            };
             $scope.upvoteExists = function(blogpost){
                 var uIndex = $scope.userUpvotes.indexOf(blogpost._id);
                 if(uIndex == -1){
@@ -23752,6 +23762,9 @@ exambazaar.directive('www.exambazaar.com', function(){
         scope: {},
         link:function(scope,element){
             element.on('copy', function (event) {
+              event.preventDefault();
+            });
+            element.on('select', function (event) {
               event.preventDefault();
             });
         }

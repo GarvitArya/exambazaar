@@ -3450,51 +3450,72 @@ router.get('/citySummaryService', function(req, res) {
     })
 });
 
+/*
+
 var ObjectId = require('mongodb').ObjectID;
 router.get('/cacsService', function(req, res) {
-    //58ac2811b9ae260088289993 - CA CPT
-    //58ac2824b9ae260088289994 - CS Foundation
+    //58ac2811b9ae260088289993, 58e337f7ceefed001156cebb, 58e33815ceefed001156cebc - CA CPT
+    //58ac2824b9ae260088289994, 58e33887ceefed001156cec0, 58e338b2ceefed001156cec2 - CS Foundation
     console.log("CA & CS Summary Service Starting now");
     var examId = '58ac2824b9ae260088289994';
+    var toAddExam1 = '58e33887ceefed001156cec0';
+    var toAddExam2 = '58e338b2ceefed001156cec2';
+    
     var allCoachings = targetStudyProvider.find({exams: ObjectId(examId)}, {name:1 , exams:1, _saved: 1, contactInfoState:1, addContactInfoDone:1, ebVerifyState:1},function(err, allCoachings) {
     if (!err){
         var toSet = false;
+        var toEdit = false;
+        var toEditCoachings = [];
         var toSetCoachings = [];
         allCoachings.forEach(function(thisProvider, pindex){
+            var thisExams = thisProvider.exams;
             var saved = thisProvider._saved;
             var ebVerifyState = thisProvider.ebVerifyState;
             var contactInfoState = thisProvider.contactInfoState;
             var addContactInfoDone = thisProvider.addContactInfoDone;
             toSet = true;
+            toEdit = false;
             if(saved && saved.length > 0){
                 toSet = false;
             }
             if(ebVerifyState && ebVerifyState != ''){
                 toSet = true;
-            }else{
-                toSet = true;
             }
             if(contactInfoState && contactInfoState != ''){
-                toSet = true;
-            }else{
                 toSet = true;
             }
             if(addContactInfoDone){
                 toSet = true;
-            }else{
-                toSet = true;
             }
             if(toSet){
                 toSetCoachings.push(thisProvider);
+                if(thisExams.indexOf(toAddExam1) == -1){
+                    thisProvider.exams.push(toAddExam1);
+                    toEdit = true;
+                }
+                if(thisExams.indexOf(toAddExam2) == -1){
+                    thisProvider.exams.push(toAddExam2);
+                    toEdit = true;
+                }
+                if(toEdit){
+                    toEditCoachings.push(thisProvider);
+                    thisProvider.save(function(err, thisProvider) {
+                    if (err) return console.error(err);
+                        console.log("Coaching saved: "+ thisProvider._id);
+                    });
+                    
+                }
             }
-            
         });
         
         console.log(toSetCoachings.length + " to be changed out of " + allCoachings.length);
+        console.log(toEditCoachings.length + " to be edited out of " + allCoachings.length);
         res.json(true);
     } else {throw err;}
-    }).sort( { city: 1 } );
+    });
 });
+
+*/
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km

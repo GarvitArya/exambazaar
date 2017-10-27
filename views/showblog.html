@@ -93,6 +93,13 @@
     td p{
         margin: 0px;
     }
+    
+    
+    .blur {
+       color: transparent;
+       text-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+    
 </style>
 
 <div id="spacerXS" class="whiteBackground">
@@ -210,8 +217,22 @@
                 
                 
                 
-                <div class="width100 marginT20 blogContent blogSeparator" ng-bind-html="blogpost.content" >
+                <div class="width100 marginT20 blogContent" ng-bind-html="blogpost.content" >
                 </div>
+                
+                <div layout="column" layout-align="center center" ng-if="!user" class="marginTB20 width100 dangerBorder padding20">
+                    <div layout="column" layout-align="center center" class="marginTB20 width100">
+                    <md-button class="md-danger md-small tolowercase" ng-click="continueReading()">
+                        <i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;Continue Reading
+                    </md-button>
+                    <div class="blogFont textLightGrey font12">Login/signup into Exambazaar to read the rest of this blog. Remember, our blog is always free!</div>
+                    </div>    
+                    <div class="width100 marginTB20 blogContent blur disable-text-selection" ng-bind-html="blogpost.lockedcontent" ng-if="!user" www.exambazaar.com>
+                     </div>
+                </div>
+                
+                
+                <div class="width100 blogSeparator"></div>
                 <div layout="column" layout-align="start start" class="blogSeparator width100">
                     
                 <div layout="row" layout-align="start center" class="width100">
@@ -410,8 +431,11 @@
     <div layout-fill  layout="column" layout-align="start center" class="">
         <div layout="row" layout-align="start center" class="width100">
             
-            <md-button class="md-black md-small font14 tolowercase" layout="row" layout-align="start center" ui-sref="blog">
+            <md-button class="md-black md-small font14 tolowercase" ui-sref="blog">
+                <div layout="row" layout-align="center center" >
                 Back to Blog
+                </div>
+                
             </md-button>
         </div>
         
