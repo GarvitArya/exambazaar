@@ -125,7 +125,9 @@
     td p{
         margin: 0px;
     }
-    
+    #blogTags:{
+        overflow-y: auto;
+    }
 </style>
 
 <div id="spacerXS" class="whiteBackground">
@@ -395,15 +397,36 @@
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="blogGalleryDialog">
-      <md-dialog class="offer-dialog whiteBackground">
-          <div layout="column" layout-align="center center">
+      <md-dialog class="blog-dialog whiteBackground">
+          <div layout="column" layout-align="center center" class="width100 galleryDiv">
             
-              <div layout="row" layout-align="center center" class="blogFont width100 paddingTB10 gainsboroBottomBorder ">
+              <div layout="row" layout-align="center center" class="blogFont width100 paddingTB10 subhheadingBottomBorder2 ">
+                  <div layout="row" layout-align="center center" flex>
                   {{user.basic.name}}'s Blog Gallery
+                  </div>
+                  
+                  
+                  <div layout="row" layout-align="end center" flex="20" class="font10">
+                    <div layout="column" layout-align="center center" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" class="marginR10">
+                        <!--multiple="multiple" -->
+                        <div layout="column" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
+                            <i class="fa fa-plus-circle font20" aria-hidden="true"></i>&nbsp;Add Image
+                        </div>
+                        <!--<a class="textPrimary font10">Add Image</a>-->
+                    </div>
+                    <div layout="column" layout-align="center center" ng-click="removeAllBlogGallery()" class="danger marginR10">
+                        <!--multiple="multiple" -->
+                        <div layout="column" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
+                            <i class="fa fa-minus-circle font20" aria-hidden="true"></i>&nbsp;Remove All
+                        </div>
+                        <!--<a class="textPrimary font10">Remove All</a>-->
+                    </div>
+                    </div>
               </div>
-              <div layout="row" layout-wrap layout-align="center center" class="width100 galleryDiv">
-                <div layout="column" layout-align="start start" ng-repeat="photo in blogGallery | orderBy:'-_created'" class="margin5 galleryThumbnail">
-                    <div>
+              
+              <div layout="row" layout-wrap layout-align="center start" class="width100 galleryDiv exact40vh paddingTB10">
+                <div layout="column" layout-align="start start" ng-repeat="photo in blogGallery | orderBy:'-_created'" class="margin5 padding5 greyBorder">
+                    <div layout="row" layout-align="center center" class="width100">
                         <img ng-src="{{photo.image}}" id="galleryImage"/>
                     </div>
                     <div layout="row" layout-wrap layout-align="center center" class="font10 width100">
@@ -423,22 +446,9 @@
                     </div>
                     
                 </div>
-                <div layout="column" layout-align="center center" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'">
-                    <!--multiple="multiple" -->
-                    <div layout="column" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
-                        <i class="fa fa-plus-circle font20" aria-hidden="true"></i>&nbsp;Add Image
-                    </div>
-                    <a class="textPrimary font10">Add Image</a>
-                </div>
-                <div layout="column" layout-align="center center" ng-click="removeAllBlogGallery()" class="danger">
-                    <!--multiple="multiple" -->
-                    <div layout="column" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
-                        <i class="fa fa-minus-circle font20" aria-hidden="true"></i>&nbsp;Remove All
-                    </div>
-                    <a class="textPrimary font10">Remove All</a>
-                </div>
+                
             </div>
-              
+            
           
           
         </div>  
@@ -612,50 +622,47 @@
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="tagDialog">
-      <md-dialog class="edit-dialog whiteBackground">
-          <md-content flex layout="column" class="width100 paddingLR20">
+      <md-dialog class="blog-dialog whiteBackground">
+          <div layout="column" layout-align="start start"  class="width100 padding20">
             
-            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
-                <div layout="row" layout-align="center center" flex>
+            <div layout="row" layout-align="center center" class="blogFont width100 paddingB10 subhheadingBottomBorder2">
+                <div layout="row" layout-align="start center" flex>
                     Mark Tags relevant to this blog post!
+                </div>
+                <div layout="row" layout-align="start center" flex="40">
+                    <input type="text" class="font11 width50 marginR20" ng-model="newTagText"  placeholder="new tag" >
+                    <md-button class="md-black md-small tolowercase font10 margin0" ng-click="addGlobalBlogTag()">
+                        Add Tag
+                    </md-button>
                 </div>
                 <div>
                     <md-button class="md-danger md-small  tolowercase" ng-click="markExamsDone()">
-                        Marking Tags Done
+                        Marking Tags Done ({{blogpost.blogTags.length}})
                     </md-button>
                 </div>
                 
             </div>
-            <div layout="row" layout-align="start center" layout-wrap class="marginB20 marginLR20 font12">
-                <div layout="column" layout-align="center center" ng-repeat="blogTag in allTags | orderBy:'tag'" class="font10 margin2" >
+            
+            <div layout="row" layout-align="start start" layout-wrap class="exact40h marginTB20" id="blogTags">
+                <div layout="row" layout-align="center center" ng-repeat="blogTag in allTags | orderBy:'tag'" class="font10 margin2" layout-wrap>
                     <div layout="column" layout-align="center center" ng-if="blogTagsList.indexOf(blogTag._id) != -1">
-                        <div layout="row" layout-align="start center" id="markedTagHolder" ng-click="unsetBlogTag(blogTag)" class="bold">
+                        <div layout="row" layout-align="start center" id="markedTagHolder" ng-click="unsetBlogTag(blogTag)" class="bold padding2">
                             <i class="fa fa-check-square text-primary" aria-hidden="true"></i>&nbsp;&nbsp;{{blogTag.tag}}
                         </div>
                     </div>
                     <div layout="column" layout-align="center center" ng-if="blogTagsList.indexOf(blogTag._id) == -1">
-                        <div layout="row" layout-align="start center" id="unmarkedTagHolder" class="bold" ng-click="setBlogTag(blogTag)" >
+                        <div layout="row" layout-align="start center" id="unmarkedTagHolder" class="bold padding2" ng-click="setBlogTag(blogTag)" >
                             <i class="fa fa-plus-circle" aria-hidden="true"></i>
                             &nbsp;&nbsp;{{blogTag.tag}}
                         </div>
                     </div>
-                    
-                    
-                    <!--<div layout="row" layout-align="start center">
-                        <a ng-click="removeBlogTag(blogTag)" id="copyLink" class="textPrimary font10 danger">Remove</a>
-                    </div>-->
                 </div>
             </div>
-            <div flex layout="row" layout-align="start center" class="marginB20 marginLR20 font12">
-                <input type="text" class="font12 width25 marginR10" ng-model="newTagText"  placeholder="new tag" >
-                <md-button class="md-black md-small " ng-click="addGlobalBlogTag()">
-                    Add New Tag
-                </md-button>
-            </div>
+            
             
           
           
-        </md-content>  
+        </div>  
       </md-dialog>
     </div>    
 </div>

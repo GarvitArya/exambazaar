@@ -36,10 +36,15 @@ app.use(prerender);
 
 app.get('/*', function (req, res, next) {
     /*req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0 || req.url.indexOf('.js') != -1 ||*/
-    if ( req.url.indexOf('.css') != -1 || req.url.indexOf('.ttf') != -1 || req.url.indexOf('.jpg') != -1 || req.url.indexOf('.png') != -1 || req.url.indexOf('.jpeg') != -1 || req.url.indexOf('.js') != -1 && req.url.indexOf('app.js') == -1 ) {
-   //console.log('Request is: ' + req.url);
-   res.setHeader("Cache-Control", "max-age=691200000, public");
-   res.setHeader("Expires", new Date(Date.now() + 691200000).toUTCString());
+    
+    if ( req.url.indexOf('.css') != -1 || req.url.indexOf('.ttf') != -1 || req.url.indexOf('.jpg') != -1 || req.url.indexOf('.png') != -1 || req.url.indexOf('.jpeg') != -1 || req.url.indexOf('.js') != -1 && req.url.indexOf('app.js') == -1 ) 
+    {
+        
+        if(req.url.indexOf('exambazaar.s3.amazonaws.com')){
+            //console.log('-------- Request is: ' + req.url);   
+        }
+       res.setHeader("Cache-Control", "max-age=691200000, public");
+       res.setHeader("Expires", new Date(Date.now() + 691200000).toUTCString());
     }
    next();
 });
