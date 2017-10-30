@@ -8435,7 +8435,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margao", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi", "Udupi", "Belgaum", "Mangalore", "Jalandhar","Bathinda", "Murshidabad", "Sultanpur", "Mughalsarai", "Fatehpur", "Bhilai", "Ambikapur", "Korba", "Durg", "Ratlam", "Mathura"];
+        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margao", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi", "Udupi", "Belgaum", "Mangalore", "Jalandhar","Bathinda", "Murshidabad", "Sultanpur", "Mughalsarai", "Fatehpur", "Bhilai", "Ambikapur", "Korba", "Durg", "Ratlam", "Mathura", "Najibabad"];
         
         if($cookies.getObject('sessionuser')){
             
