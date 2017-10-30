@@ -332,6 +332,7 @@ app.use(function(req, res, next){
 });
 
 var now = new Date();
+
 var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 05, 0, 0) - now;
 if (millisTill10 < 0) {
      millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
