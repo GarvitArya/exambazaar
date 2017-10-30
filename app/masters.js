@@ -125,7 +125,7 @@ router.post('/extractEmails/', function(req, res) {
     var validEmail = true;
     //_id:{$in: providerIds}
     //{website: {$exists: true}, $where:"this.website.length>0 && this.website[0] !=''"}
-    var allGroupProviders = targetStudyProvider.find({website: {$exists: true}, $where:"this.website.length>0 && this.website[0] !=''"}, {website:1, email: 1},function(err, allGroupProviders) {
+    var allGroupProviders = targetStudyProvider.find({website: {$exists: true}, $where:"this.website.length>0 && this.website[0] !=''"}, {website:1, email: 1, name:1},function(err, allGroupProviders) {
     if (!err){
         var nProviders = allGroupProviders.length;
         console.log('Fetching emails for: ' + nProviders + ' coachings');
@@ -136,7 +136,7 @@ router.post('/extractEmails/', function(req, res) {
             }
             var thisWebsites = thisGroup.website;
             var thisGroupEmail = thisGroup.email;
-            if(Array.isArray(thisGroupEmail)){
+            /*if(Array.isArray(thisGroupEmail)){
                 
             }else{
                 console.log('Converting Email from string to array: ' + thisGroup._id);
@@ -146,14 +146,14 @@ router.post('/extractEmails/', function(req, res) {
                 }else{
                     thisGroupEmail = [thisGroupEmail];
                 }
-            }
+            }*/
             var nWebsites = thisWebsites.length;
             var counter2 = 0;
             
             thisWebsites.forEach(function(newWebsite, windex){
                 var url = newWebsite;
                 if(newWebsite){
-                    nWebsites += 1;
+                    //nWebsites += 1;
                     var Request = unirest.get(url);
                     Request.headers({
                       'Accept': 'application/json',
@@ -163,9 +163,8 @@ router.post('/extractEmails/', function(req, res) {
 
                     Request.timeout(1000000).end(function (response) {
                         if (response.error) {
-                            //console.log('GET error', response.error);
                             listingNo = listingNo + 1;
-                            console.log(JSON.stringify(listingNo + '. ' + thisGroup._id));
+                            console.log(JSON.stringify("Error: " + listingNo + '. ' + thisGroup.name));
                         }else{
                             nWorkingWebsites += 1;
                             var sourceCode = response.body;
@@ -214,7 +213,7 @@ router.post('/extractEmails/', function(req, res) {
                                 if(nEmailUpdates > 0){
                                    thisGroup.save(function(err, thisGroup) {
                                         if (err) return console.error(err);
-                                        console.log(thisGroup._id + " saved!");
+                                        console.log(thisGroup.name + " saved!");
                                         console.log("Total emails added are: " + nTotalUpdates);
                                     });
                                 }
@@ -222,9 +221,6 @@ router.post('/extractEmails/', function(req, res) {
                                 
                             }
                             }    
-                        
-
-
                       }  
                     });
                 }

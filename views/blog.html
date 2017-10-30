@@ -91,7 +91,7 @@
     <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="70" >
     <div layout="row" layout-align="start start" class="width100" layout-wrap>
         
-        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20 " ng-repeat="blogpost in allBlogs | orderBy: '-_created'" ng-if="blogpost.blogSeries !='EdBites'">
+        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20 " ng-repeat="blogpost in allBlogs | orderBy: '-_created'" ng-if="blogpost.blogSeries !='EdBites' && blogpost.blogSeries !='Expert Reviews'">
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
                 <div layout="column" layout-align="center center" class="blogpostImage2 width100 ">
                     <!--ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}"-->

@@ -8,6 +8,9 @@
     .inactiveBlog{
         background-color: #fff;
     }
+    #seriesName{
+        font: 12px;
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -64,6 +67,8 @@
         <div layout="row" layout-align="center center" class="width100 font12 marginTB10" ng-if="masterUser">
             <div ng-click="sanitizeblogposts()" class="danger marginR10">Sanitize All Blogs</div>
             <div ng-click="markAllEdbites()" class="text-primary marginR10">Tag EdBites</div>
+            <div ng-click="markAllExpertReviews()" class="text-primary marginR10">Tag Expert Reviews</div>
+            <div ng-click="markAllExamPatterns()" class="text-primary marginR10">Tag Exam Pattern</div>
             <div ng-click="downloadCoverPhotos()" class="text-primary marginR10">Download Cover Photos</div>
         </div>
         
@@ -176,7 +181,7 @@
             </div>
             
             <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
-                {{thisblog.blogSeries}}
+                <input type="text" class="editFont width100" ng-model="thisblog.blogSeries"  placeholder="Blog Series" id="seriesName">
             </div>
             <div layout="row" layout-align="center center" flex="10" ng-if="masterUser || user._id == '59085f0fc7289d0011d6ea8c'">
                 <div ng-click="showFlipboardDialog(thisblog)" ng-if="!thisblog.flipboard.published">Flipboard</div>

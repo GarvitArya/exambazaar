@@ -215,6 +215,7 @@ var allStates = [
 '/ebinternal/addSubscriber',
 '/ebinternal/allOffers',
 '/ebinternal/allreviews',
+'/ebinternal/allblogtags',
 '/ebinternal/allTests/:userId',
 '/ebinternal/calendar',
 '/ebinternal/charting',

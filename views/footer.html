@@ -5,44 +5,46 @@
     
 </style>
 <div layout="row" layout-align="center center" class="font12 width100 footer" ng-controller="footerController">
-    <div flex="90" layout="column" layout-align="start start" class="textWhite marginTB10">
+    <div flex="90" layout="column" layout-align="start start" class="textWhite">
         
-        
+        <div  layout="column" layout-align="center center" class="width100 marginTB10" hide-xs>
         <div  layout="row" layout-align="center center"  class="font14 width100 marginT20 bold spacedLetter2">
             POPULAR EXAMS IN INDIA
         </div>
         <div layout="column" layout-align="start start" class="width100 paddingTB20 footerBottomBorder">
-        <div layout="row" layout-align="start start" class=" width100 marginT10" hide-xs>
-            <div layout="column" layout-align="center center" flex ng-repeat="streamExam in streamExams | orderBy: '-rank'" ng-if="$index < 5">
-                
-                <div layout="row" layout-align="center center" class="width100 bold spacedLetter2">
-                    {{streamExam.stream | uppercase}}
+            <div layout="row" layout-align="start start" class=" width100 marginT10" >
+                <div layout="column" layout-align="center center" flex ng-repeat="streamExam in streamExams | orderBy: '-rank'" ng-if="$index < 5">
+
+                    <div layout="row" layout-align="center center" class="width100 bold spacedLetter2">
+                        {{streamExam.stream | uppercase}}
+                    </div>
+                    <div layout="row" layout-align="center center" class="width100 spacedLetter1" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
+                        <a ui-sref="exam({ examName:{{'exam.name'}} })" target="_blank" id="footerLink">
+                            {{exam.seoname}}
+                        </a>
+
+                    </div>
                 </div>
-                <div layout="row" layout-align="center center" class="width100 spacedLetter1" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
-                    <a ui-sref="exam({ examName:{{'exam.name'}} })" target="_blank" id="footerLink">
-                        {{exam.seoname}}
-                    </a>
-                
+            </div>
+            <div layout="row" layout-align="start start" class=" width100 marginT30 marginB20" >
+                <div layout="column" layout-align="center center" flex ng-repeat="streamExam in streamExams | orderBy: '-rank'" ng-if="$index >= 5">
+
+                    <div layout="row" layout-align="center center" class="width100 bold spacedLetter2">
+                        {{streamExam.stream | uppercase}}
+                    </div>
+                    <div layout="row" layout-align="center center" class="width100 spacedLetter1" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
+                        <a ui-sref="exam({ examName:{{'exam.name'}} })" target="_blank" id="footerLink">
+                            {{exam.seoname}}
+                        </a>
+
+                    </div>
                 </div>
             </div>
         </div>
-        <div layout="row" layout-align="start start" class=" width100 marginT30 marginB20" hide-xs>
-            <div layout="column" layout-align="center center" flex ng-repeat="streamExam in streamExams | orderBy: '-rank'" ng-if="$index >= 5">
-                
-                <div layout="row" layout-align="center center" class="width100 bold spacedLetter2">
-                    {{streamExam.stream | uppercase}}
-                </div>
-                <div layout="row" layout-align="center center" class="width100 spacedLetter1" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
-                    <a ui-sref="exam({ examName:{{'exam.name'}} })" target="_blank" id="footerLink">
-                        {{exam.seoname}}
-                    </a>
-                
-                </div>
-            </div>
         </div>
-        </div>
-        
-        <div layout="column" layout-align="start start" class="width100 paddingTB20">
+            
+            
+        <div layout="column" layout-align="start start" class="width100 paddingB20">
         <div layout="row" layout-align="start center" class=" width100 marginT20">
             <div flex layout="row" layout-align="start center" class="footer-brand narrowLine font22 height100">
                 <a href="https://www.exambazaar.com/" class="" id="headerLogo">

@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var blogTag = require('../app/models/blogTag');
+var blogpost = require('../app/models/blogpost');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
 var user = require('../app/models/user');
 var email = require('../app/models/email');
@@ -19,17 +20,57 @@ var readingTime = require('reading-time');
 const cheerio = require('cheerio');
 
 router.get('/remove/:blogTagId', function(req, res) {
-    var blogTagId = req.params.blogTagId;
-    //console.log(blogTagId);
-    blogTag.remove({_id: new mongodb.ObjectID(blogTagId)}, function(err, result) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(blogTagId + ' removed!');
-            res.json("Done");
-        }                              
-    });
+    var blogTagId = req.params.blogTagId.toString();
+    
+    var allBlogposts = blogpost
+        .find({blogTags: blogTagId}, {blogTags: 1, title:1 })
+        .exec(function (err, allBlogposts) {
+            var nBlogposts = allBlogposts.length;
+            var counter = 0;
+            allBlogposts.forEach(function(thisBlogpost, bindex){
+                thisTag = thisBlogpost.blogTags;
+                var tagIndex = thisTag.indexOf(blogTagId);
+                if(tagIndex != -1){
+                    thisBlogpost.blogTags.splice(tagIndex, 1);
+                    console.log('Removed from blog: ' + thisBlogpost.title);
+                    thisBlogpost.save(function(err, thisBlogpost) {
+                        if (err) return console.error(err);
+                        counter += 1;
+                        if(counter == nBlogposts){
+                            blogTag.remove({_id: new mongodb.ObjectID(blogTagId)}, function(err, result) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log(blogTagId + ' removed!');
+                                    res.json(true);
+                                }                              
+                            });
+                            
+                            
+                            
+                            
+                        }
+                    });
+                }
+            });
+
+        });
+    
 });
+
+router.get('/usedinBlogs/:blogTagId', function(req, res) {
+    var blogTagId = req.params.blogTagId.toString();
+    
+    var allBlogposts = blogpost
+        .find({blogTags: blogTagId}, {blogTags: 1, title:1, urlslug:1 })
+        .exec(function (err, allBlogposts) {
+            
+            res.json(allBlogposts);
+
+        });
+    
+});
+
 router.get('/blogTagsCount', function(req, res) {
     blogTag.count({active: true}, function(err, docs) {
         if (!err){
@@ -37,6 +78,44 @@ router.get('/blogTagsCount', function(req, res) {
         } else {throw err;}
     });
 });
+
+router.get('/blogTagsSummary', function(req, res) {
+    
+    var allBlogs = blogpost
+    .find({}, {blogTags: 1})
+    .exec(function (err, allBlogs) {
+        if (!err){
+            var allBlogTagsId = [];
+            var allBlogTags = [];
+            var thisBlogTag = null;
+            var addBlogTag = null;
+            allBlogs.forEach(function(thisBlog, bindex){
+                if(thisBlog.blogTags){
+                    thisBlogTag = thisBlog.blogTags;
+                }   
+                if(thisBlogTag && thisBlogTag.length > 0){
+                    thisBlogTag.forEach(function(thisTag, tindex){
+                        var tagIndex = allBlogTagsId.indexOf(thisTag.toString());
+                        if(tagIndex == -1){
+                            allBlogTagsId.push(thisTag.toString());
+                            addBlogTag = {
+                                _id: thisTag,
+                                count: 1
+                            };
+                            allBlogTags.push(addBlogTag);
+                        }else{
+                            allBlogTags[tagIndex].count += 1;
+                        }
+                        
+                    });
+                }
+                
+            });
+            res.json(allBlogTags);
+        } else {throw err;}
+    });
+});
+
 
 router.get('/', function(req, res) {
     var blogTags = blogTag
@@ -131,7 +210,7 @@ router.post('/save', function(req, res) {
     var user = blogTagForm.user;
     if(blogTagId){
         var existingBlogTag = blogTag
-        .findOne({user: user, _id: blogTagId})
+        .findOne({_id: blogTagId})
         .exec(function (err, existingBlogTag) {
             if (!err){
                 for (var property in blogTagForm) {

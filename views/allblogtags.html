@@ -1,0 +1,140 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #upload2{
+        background: white;
+        color: black;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    #upload2:hover {
+        background: #ccc;
+        cursor: pointer;
+    }
+    #copyLink{
+        cursor: pointer;
+    }
+    #fullHeightPage{
+        min-height: 90vh;
+    }
+    #instituteSection{
+        min-height: 30vh;
+    }
+    .min30vh{
+        min-height: 30vh;
+    }
+    .min50vh{
+        min-height: 50vh;
+    }
+    #partner{
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
+    }
+    #loginInput{
+        border: 0;
+        outline: 0;
+        background: transparent;
+        padding: 5px;
+        margin-bottom: 2px;
+        text-align: left;
+        font-family: "Open Sans";
+        color: black;
+        border: 1px solid gainsboro;
+        font-size:12px;
+    }
+    
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
+    
+    
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 width100" ng-if="user">
+    <div layout="row" layout-align="center center" class="marginT20 secondFont font20 textBlack bold paddingB10">
+        All Blog Tags&nbsp;<span class="badge" id="badge">{{allblogtags.length}}</span>
+    </div>
+    <div layout="row" layout-align="center center" class="marginTB10">
+        <md-button class="md-danger md-small font10 tolowercase marginLR10" ng-click="sortTags('tag', true)">
+            Sort by Tag
+        </md-button>
+        <md-button class="md-danger md-small font10 tolowercase marginLR10" ng-click="sortTags('count', false)">
+            Sort by Count
+        </md-button>
+    </div>
+    <div layout="column" layout-align="start start" class="marginTB20 width100">
+        <div layout="row" layout-align="start start" class="width100 paddingTB5 gainsboroBottomBorder">
+            <div flex="5" class="paddingLR10">
+                S. No.
+            </div>
+            <div flex="30" class="paddingLR10">
+                Tag
+            </div>
+            <div flex="10" class="paddingLR10">
+                Count in Blogs
+            </div>
+            <div flex="30" class="paddingLR10">
+                Created By
+            </div>
+            
+        </div>
+        <div layout="row" layout-align="start start" ng-repeat="blogtag in allblogtags" class="width100 paddingTB5 gainsboroBottomBorder">
+            
+            <div flex="5" class="paddingLR10">
+                {{$index + 1}}
+            </div>
+            <div flex="20" class="paddingLR10">
+                <input type="text" class="width100 font12" ng-model="allblogtags[$index].tag"  placeholder="Tag Name">
+            </div>
+            <div flex="10" class="paddingLR10">
+                {{blogtag.count}}
+            </div>
+            <div flex="20" class="paddingLR10">
+                {{blogtag.user.basic.name}}
+            </div>
+            <div flex="5">
+                <i class="fa fa-floppy-o font20" aria-hidden="true" ng-click="editBlogTag(blogtag)"></i>
+            </div>
+            <div flex="5">
+                <i class="fa fa-trash font20 danger" aria-hidden="true" ng-click="removeBlogTag(blogtag)"></i>
+            </div>
+            <div flex="5">
+                <i class="fa fa-th font20 text-primary" aria-hidden="true" ng-click="usedinBlogs(blogtag)"></i>
+            </div>
+            <div layout="column" layout-align="start start" flex="30" class="font10">
+                <div ng-repeat="blog in blogtag.blogs">
+                    <a ui-sref="showblog({ blogpostSlug:{{'blog.urlslug'}} })" target="_blank">{{$index+1}}. {{blog.title}}</a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+</div>
+    
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 width100 marginT40" ng-if="!user">    
+    <h1 class="danger">
+        You do not have access to view this information. Login above to try again.
+    </h1>
+</div>
+</div>

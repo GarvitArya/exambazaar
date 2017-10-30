@@ -812,11 +812,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.blogTagsCount = function() {
             return $http.get('/api/blogTags/blogTagsCount');
         };
+        this.blogTagsSummary = function() {
+            return $http.get('/api/blogTags/blogTagsSummary');
+        };
         this.getblogTag = function(blogTagId) {
             return $http.get('/api/blogTags/edit/'+blogTagId, {blogTagId: blogTagId});
         };
         this.removeblogTag = function(blogTagId){
-            $http.get('/api/blogTags/remove/'+blogTagId, {blogTagId: blogTagId});
+            return $http.get('/api/blogTags/remove/'+blogTagId, {blogTagId: blogTagId});
+        };
+        this.usedinBlogs = function(blogTagId){
+            return $http.get('/api/blogTags/usedinBlogs/'+blogTagId, {blogTagId: blogTagId});
         };
         this.disableblogTag = function(blogTagId) {
             return $http.get('/api/blogTags/disable/'+blogTagId, {blogTagId: blogTagId});
@@ -890,7 +896,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.markAllEdbites = function() {
             return $http.get('/api/blogposts/markAllEdbites');
         };
-        
+        this.markAllExpertReviews = function() {
+            return $http.get('/api/blogposts/markAllExpertReviews');
+        };
+        this.markAllExamPatterns = function() {
+            return $http.get('/api/blogposts/markAllExamPatterns');
+        };
         this.getuserBlogposts = function(userId) {
             return $http.get('/api/blogposts/user/'+userId, {userId: userId});
         };
@@ -13435,6 +13446,36 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });
                 
             };
+            $scope.markAllExpertReviews = function(){
+                blogpostService.markAllExpertReviews().success(function (data, status, headers) {
+                    if(data){
+                        $scope.showSavedDialog();
+                        $state.reload();
+                    }else{
+                        
+                    }
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+                
+            };
+            $scope.markAllExamPatterns = function(){
+                blogpostService.markAllExamPatterns().success(function (data, status, headers) {
+                    if(data){
+                        $scope.showSavedDialog();
+                        $state.reload();
+                    }else{
+                        
+                    }
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+                
+            };
             
             $scope.removePic = function(image){
                 
@@ -13914,7 +13955,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             //$scope.text = 'sdabhikagathara@rediffmail.com, "assdsdf" <dsfassdfhsdfarkal@gmail.com>, "rodnsdfald ferdfnson" <rfernsdfson@gmal.com>, "Affdmdol Gondfgale" <gyfanamosl@gmail.com>, "truform techno" <pidfpinfg@truformdftechnoproducts.com>, "NiTsdfeSh ThIdfsKaRe" <nthfsskare@ysahoo.in>, "akasdfsh kasdfstla" <akashkatsdfsa@yahsdfsfoo.in>, "Bisdsdfamal Prakaasdsh" <bimsdaalprakash@live.com>,; "milisdfsfnd ansdfasdfnsftwar" <dfdmilifsd.ensfdfcogndfdfatia@gmail.com>';
             $scope.text = '';
-            $scope.limit = 1000;
+            $scope.limit = 500;
             $scope.skip = 0;
             $scope.extractEmailfromIds = function(){
                 var params = {
@@ -13933,7 +13974,103 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             
     }]); 
-        
+    
+    exambazaar.controller("allblogtagsController", 
+        [ '$scope', '$http', '$rootScope','blogTagService','allblogtags', 'blogTagsSummary', '$state', '$mdDialog', '$cookies', 'Notification', function($scope, $http, $rootScope, blogTagService, allblogtags, blogTagsSummary, $state, $mdDialog, $cookies, Notification){
+            $scope.allblogtags = allblogtags.data;
+            $scope.blogTagsSummary = blogTagsSummary.data;
+            var blogTagIds = $scope.blogTagsSummary.map(function(a) {return a._id;});
+            var thisTagId = null;
+            var tagIndex = null;
+            
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+            }else{
+                $scope.user = null;
+            }
+            
+            var reloadBlog = function(){
+                blogTagService.getblogTags().success(function (data, status, headers) {
+                     $scope.allblogtags = data;
+                     blogTagService.blogTagsSummary().success(function (btdata, status, headers) {
+                         $scope.blogTagsSummary = btdata;
+                         setCounts();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+            };
+            $scope.sortTags = function(property, ascending){
+                if(ascending){
+                    $scope.allblogtags.sort(function(a,b) {return (a[property] > b[property]) ? 1 : ((b[property] > a[property]) ? -1 : 0);});
+                }else{
+                    $scope.allblogtags.sort(function(a,b) {return (b[property] > a[property]) ? 1 : ((a[property] > b[property]) ? -1 : 0);});
+                }  
+            };
+            var setCounts = function(){
+                $scope.allblogtags.forEach(function(thisTag, tindex){
+                    thisTagId = thisTag._id.toString();
+                    tagIndex = blogTagIds.indexOf(thisTagId);
+                    if(tagIndex != -1){
+                        $scope.allblogtags[tindex].count = $scope.blogTagsSummary[tagIndex].count;
+                    }else{
+                        $scope.allblogtags[tindex].count = 0;
+                    }
+                });
+                $scope.sortTags('count', false);
+            };
+            setCounts();
+            
+            
+            
+            $scope.editBlogTag = function(blogtag){
+                var blogTagForm = {
+                    _id: blogtag._id, 
+                    user: $scope.user._id,
+                    tag: blogtag.tag,
+                };
+                 blogTagService.saveblogTag(blogTagForm).success(function (data, status, headers) {
+                     Notification.success("Your blog tag has been saved!");
+                     reloadBlog();
+                     
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+            };
+            
+            $scope.removeBlogTag = function(blogtag){
+                var blogTagId = blogtag._id;
+                
+                 blogTagService.removeblogTag(blogTagId).success(function (data, status, headers) {
+                     Notification.primary("Your blog tag has been removed!");
+                     reloadBlog();
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+            };
+            
+            $scope.usedinBlogs = function(blogtag){
+                var blogTagId = blogtag._id;
+                
+                 blogTagService.usedinBlogs(blogTagId).success(function (data, status, headers) {
+                     blogtag.blogs = data;
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+            };
+            $rootScope.pageTitle = 'All Blog Tags';
+            
+           
+            
+    }]); 
+    
     exambazaar.controller("allreviewsController", 
         [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'targetStudyProviderService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, targetStudyProviderService, $state, $mdDialog){
             $scope.allReviews = allReviews.data;
@@ -14593,7 +14730,7 @@ function getLatLng(thisData) {
                 
             };
             
-            $scope.subscribersList.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );  
+            $scope.subscribersList.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});  
             
             
             $scope.selectedUser = [];
@@ -21700,11 +21837,37 @@ function getLatLng(thisData) {
             },
             resolve: {
                 allReviews: ['reviewService',
-                    function(allreviews) {   
-                    return allreviews.getreviews();
+                    function(reviewService) {   
+                    return reviewService.getreviews();
                 }],
                 
                 
+            }
+        })
+        .state('allblogtags', {
+            url: '/ebinternal/allblogtags',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'allblogtags.html',
+                    controller: 'allblogtagsController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                allblogtags: ['blogTagService',
+                    function(blogTagService) {   
+                    return blogTagService.getblogTags();
+                }],
+                blogTagsSummary: ['blogTagService',
+                    function(blogTagService) {   
+                    return blogTagService.blogTagsSummary();
+                }],
             }
         })
         .state('extractEmails', {

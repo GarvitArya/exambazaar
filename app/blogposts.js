@@ -338,7 +338,6 @@ router.get('/sanitizeblogposts', function(req, res) {
 });
 
 router.get('/markAllEdbites', function(req, res) {
-    
     var blogposts = blogpost
     .find({}, {title: 1, _created: 1})
     .exec(function (err, blogposts) {
@@ -364,6 +363,12 @@ router.get('/markAllEdbites', function(req, res) {
                         }
                     });
                 }else{
+                    counter += 1;
+                    if(counter == nBlogposts){
+                        res.json(true);   
+                    }
+                }
+                /*else{
                     
                     thisBlogpost.blogSeries = "";
                     thisBlogpost.save(function(err, thisBlogpost) {
@@ -373,13 +378,89 @@ router.get('/markAllEdbites', function(req, res) {
                             res.json(true);   
                         }
                     });
-                }
-                
+                }*/ 
             });
         } else {throw err;}
     });
 });
-
+router.get('/markAllExpertReviews', function(req, res) {
+    var blogposts = blogpost
+    .find({}, {title: 1, _created: 1})
+    .exec(function (err, blogposts) {
+        if (!err){
+            var allBlogposts = [];
+            var nBlogposts = blogposts.length;
+            var counter = 0;
+            if(nBlogposts == 0){
+                res.json(false);
+            }
+            blogposts.forEach(function(thisBlogpost, rindex){
+                var thisTitle = thisBlogpost.title;
+                var find = "Expert Reviews |";
+                var fIndex = thisTitle.indexOf(find);
+                thisBlogpost._published = thisBlogpost._created;
+                if(fIndex != -1){
+                    thisBlogpost.blogSeries = "Expert Reviews";
+                    thisBlogpost.save(function(err, thisBlogpost) {
+                        if (err) return console.error(err);
+                        counter += 1;
+                        console.log(thisBlogpost.title + " saved!");
+                        if(counter == nBlogposts){
+                            res.json(true);   
+                        }
+                    });
+                }else{
+                    counter += 1;
+                    if(counter == nBlogposts){
+                        res.json(true);   
+                    }
+                }
+            });
+        } else {throw err;}
+    });
+});
+router.get('/markAllExamPatterns', function(req, res) {
+    var blogposts = blogpost
+    .find({}, {title: 1, _created: 1})
+    .exec(function (err, blogposts) {
+        if (!err){
+            var allBlogposts = [];
+            var nBlogposts = blogposts.length;
+            var counter = 0;
+            if(nBlogposts == 0){
+                res.json(false);
+            }
+            blogposts.forEach(function(thisBlogpost, rindex){
+                var thisTitle = thisBlogpost.title;
+                var find = "exam pattern";
+                var find2 = "EXAM PATTERN";
+                var fIndex = thisTitle.toLowerCase().indexOf(find);
+                thisBlogpost._published = thisBlogpost._created;
+                if(fIndex != -1){
+                    thisBlogpost.blogSeries = "Exam Pattern";
+                    
+                    var fIndex2 = thisTitle.indexOf(find2);
+                    if(fIndex2 != -1){
+                        thisBlogpost.title = thisBlogpost.title.replace(find2, "Exam Pattern");
+                    }
+                    thisBlogpost.save(function(err, thisBlogpost) {
+                        if (err) return console.error(err);
+                        counter += 1;
+                        console.log(thisBlogpost.title + " saved!");
+                        if(counter == nBlogposts){
+                            res.json(true);   
+                        }
+                    });
+                }else{
+                    counter += 1;
+                    if(counter == nBlogposts){
+                        res.json(true);   
+                    }
+                }
+            });
+        } else {throw err;}
+    });
+});
 
 router.get('/slugExists/:query', function(req, res) {
     var query = req.params.query;
