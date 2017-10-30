@@ -363,6 +363,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             return $http.post('/api/users/markLatLng',positionForm);
         };
+        this.saveEligibility = function(eligibilityForm) {
+            
+            return $http.post('/api/users/saveEligibility',eligibilityForm);
+        };
+        this.getEligibility = function(userId) {
+            return $http.get('/api/users/getEligibility/'+userId, {userId: userId});
+        };
         this.shortlistInstitute = function(shortListForm) {
             return $http.post('/api/users/shortlistInstitute', shortListForm);
         };
@@ -15103,10 +15110,32 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("eligibilityController", 
-        [ '$scope',  'examList','streamList','EligibilityService','$http','$state', 'eligibilityList', '$mdDialog', function($scope, examList,streamList, EligibilityService,$http,$state, eligibilityList, $mdDialog){
+        [ '$scope', '$rootScope',  'examList', 'streamList', 'EligibilityService', 'UserService', '$http', '$state', 'eligibilityList', '$mdDialog', '$cookies', 'Notification', function($scope, $rootScope, examList, streamList, EligibilityService, UserService, $http, $state, eligibilityList, $mdDialog, $cookies, Notification){
         $scope.examNames = '';    
         $scope.exams = examList.data;
         
+        if($cookies.getObject('sessionuser')){
+            $scope.user = $cookies.getObject('sessionuser');
+            
+            UserService.getEligibility($scope.user._id).success(function (data, status, headers) {
+                if(data && data.eligibility){
+                    $scope.user.eligibility = data.eligibility;
+                    Notification.primary("Hurray! We have loaded your qualifications!");
+                    $scope.elgInput = $scope.user.eligibility;
+                    $scope.checkEligibility();
+                }
+                
+                
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });
+            
+            
+        }else{
+            $scope.user = null;
+        }
+            
         $scope.eligibilityList = eligibilityList.data;
         $scope.elgVerified = false;
         $scope.activeExamEligibility = null;
@@ -15445,7 +15474,7 @@ function getLatLng(thisData) {
             document.body.scrollTop = document.documentElement.scrollTop = 0;
         };
         $scope.checkEligibility = function(){
-            console.log($scope.elgInput);
+            //console.log($scope.elgInput);
             
             $scope.error = false;
             var error = false;
@@ -15528,6 +15557,20 @@ function getLatLng(thisData) {
                 $scope.error = true;
                 $scope.errorMessages = errorMessages;
             }else{
+                
+            if($scope.user && $scope.user._id){
+                var eligibilityForm = {
+                    user: $scope.user._id,
+                    eligibility: $scope.elgInput
+                };
+                UserService.saveEligibility(eligibilityForm).success(function (data, status, headers) {
+                    //Notification.success("Eligibilty saved!");
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            } 
+              
             
             $scope.elgVerified = true;    
             $scope.validEligibilities = [];    
@@ -15697,8 +15740,9 @@ function getLatLng(thisData) {
                 }
             });
                 
-            console.log($scope.validStreamExams);
+            //console.log($scope.validStreamExams);
             $scope.scrollTop();    
+            
             /*var uniqueValidExamIds = [];
             $scope.validEligibilities.forEach(function(thisEligibility, examIndex){
                 //console.log(thisEligibility);
@@ -15717,7 +15761,9 @@ function getLatLng(thisData) {
             }
             
         };
+        
             
+        $rootScope.pageTitle = "Exam Eligibility - Find all exam options for you | Exambazaar";    
     }]); 
     exambazaar.controller("addEligibilityController", 
         [ '$scope',  'examList','streamList','EligibilityService','$http','$state', 'eligibilityList', function($scope, examList,streamList, EligibilityService,$http,$state, eligibilityList){
@@ -22367,7 +22413,7 @@ function getLatLng(thisData) {
             }
         })
         .state('eligibility', {
-            url: '/ebinternal/user/:userId/eligibility',
+            url: '/exam-eligibility',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -22394,7 +22440,6 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
-                exam: function() { return {}; }
                 
             }
         })

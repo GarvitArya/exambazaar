@@ -254,7 +254,7 @@ var allStates = [
 '/ebinternal/user/:userId/assignedToVerify',
 '/ebinternal/user/:userId/checkLogo/:pageNumber/',
 '/ebinternal/user/:userId/coachingGroup',
-'/ebinternal/user/:userId/eligibility',
+'/exam-eligibility',
 '/ebinternal/user/:userId/filled',
 '/ebinternal/user/:userId/filledAll',
 '/ebinternal/user/:userId/group',

@@ -29,7 +29,59 @@ var userSchema = mongoose.Schema({
         link: { type: String},
         accessToken: { type: String},
     },
-    
+    eligibility:{
+        category: {
+            general: { type: Boolean},
+            sc: { type: Boolean},
+            st: { type: Boolean},
+            obc: { type: Boolean},
+            pwd: { type: Boolean},
+        },
+        age: { type: String},
+        educationLevel:{
+            level: { type: String},
+            name: { type: String}
+        },
+        class12Subjects:{
+            biology: { type: Boolean},
+            chemistry: { type: Boolean},
+            biotechnology: { type: Boolean},
+            physics: { type: Boolean},
+            mathematics: { type: Boolean},
+            english: { type: Boolean},
+            others: { type: Boolean}
+        },
+        class12Percentage: { type: String},
+        undergradMajor:{
+            mbbs: { type: Boolean},
+            bds: { type: Boolean},
+            bsc: { type: Boolean},
+            bftech: { type: Boolean},
+            be: { type: Boolean},
+            btech: { type: Boolean},
+            bcom: { type: Boolean},
+            ba: { type: Boolean},
+            barch: { type: Boolean},
+            llb: { type: Boolean},
+            fiveyearintegratedllb: { type: Boolean},
+            fiveyearballb: { type: Boolean},
+            lawdegreeequivalenttollb: { type: Boolean},
+            others: { type: Boolean},
+        },
+        undergradPercentage: { type: String},
+        postgradMajor:{
+            mcom: { type: Boolean},
+            msc: { type: Boolean},
+            ma: { type: Boolean},
+            mca: { type: Boolean},
+            mtech: { type: Boolean},
+            mba: { type: Boolean},
+            ms: { type: Boolean},
+            llm: { type: Boolean},
+            others: { type: Boolean},
+        },
+        postgradPercentage: { type: String},
+    },
     
     partner: [{ type: Schema.ObjectId, ref: 'targetStudyProvider' }],
     shortlisted: [{

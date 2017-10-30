@@ -1068,6 +1068,46 @@ router.get('/referexists/:mobile', function(req, res) {
     }); 
 });
 
+router.post('/saveEligibility', function(req, res) {
+    var eligibilityForm = req.body;
+    var userId = eligibilityForm.user;
+    var eligibility = eligibilityForm.eligibility;
+    var thisUser = user
+        .findOne({ '_id': userId },{eligibility:1, basic:1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            if(thisUser){
+                if(!thisUser.eligibility){
+                    thisUser.eligibility = {};
+                }
+                thisUser.eligibility = eligibility;
+                thisUser.save(function(err, thisUser) {
+                    if (err) return console.error(err);
+                    console.log('User saved: ' + thisUser.basic.name);
+                    res.json(true);
+                });
+            }else{
+                res.json(null);    
+            }
+        } else {throw err;}
+    });
+    
+});
+router.get('/getEligibility/:userId', function(req, res) {
+    var userId = req.params.userId;
+    var thisUser = user
+        .findOne({ '_id': userId },{eligibility:1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            if(thisUser){
+                res.json(thisUser);
+            }else{
+                res.json(null);    
+            }
+        } else {throw err;}
+    });
+    
+});
 router.post('/markLatLng', function(req, res) {
     //console.log('Here');
     var positionForm = req.body;
