@@ -50,7 +50,7 @@
     }
 </style>
 
-<nav class="navbar navbar-default navbar-fixed-top nav-justified secondFont font14 spacedLetter09" role="navigation" id="mainNav" ng-class="headerBackgroundCSS()">
+<nav class="navbar navbar-default navbar-fixed-top nav-justified secondFont font14 spacedLetter09" role="navigation" id="mainNav" ng-class="headerBackgroundCSS()" ng-if="!maintenance">
     
     <div layout="row" layout-align="start center" class="" >
         <div hide-gt-sm ng-if="!showMobileSearch" layout="row" layout-align="start center" class="paddingL20" sidebarjs-toggle>
