@@ -7317,7 +7317,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("footerController", 
         [ '$scope', '$rootScope', 'ExamService', function($scope, $rootScope, ExamService){
-        $scope.maintenance = true;    
+        $scope.maintenance = false;    
         if(!$rootScope.streamExams || $rootScope.streamExams.length == 0){
             ExamService.getExamsBasic().success(function (data, status, headers) {
                 var doNotShow = ['Other', 'Insurance', 'School'];
@@ -21215,7 +21215,7 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'maintenance.html',
+                    templateUrl: 'p0.html',
                     controller: 'p0Controller'
                 },
                 'footer': {
