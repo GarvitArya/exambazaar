@@ -8299,7 +8299,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
     
     exambazaar.controller("getTargetStudyCoachingController", 
-    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', 'emailList', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList, emailList){
+    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', 'emailList', 'FileSaver', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList, emailList, FileSaver){
         $scope.providersList = targetStudyProvidersList.data;
         $scope.emailsList = emailList.data;
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
@@ -8435,7 +8435,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }
         
         $scope.showLevel = 0;
-        var allowedCities = ['Muzaffarpur', 'Azamgarh', 'Jaunpur', 'Gaya', 'Lakhimpur', 'Ballia', 'Bhagalpur', 'Faizabad', 'Satna', 'Bokaro', 'Thane', 'Nashik', 'Katni', 'Yamunanagar', 'Jabalpur', 'Mandi', 'Salem', 'Amaravati', 'Durgapur', 'Asansol', 'Jammu', 'Korba', 'Karnal', 'Imphal', 'Erode', 'Sonipat', 'Bhilai', "Bhuj", "Gurdaspur", "Kapurthala", "Panchkula", "Sagar", "Mirzapur", "Pratapgarh", "Hamirpur", "Hardoi", "Palakkad", "Raebarelli", "Sasaram", "Saharanpur", "Trichy", "Panel", "Mysooru", "Margao", "Manipal", "Madhurai", "Mainpuri", "Unnao", "Kutch", "Bhadohi", "Udupi", "Belgaum", "Mangalore", "Jalandhar","Bathinda", "Murshidabad", "Sultanpur", "Mughalsarai", "Fatehpur", "Bhilai", "Ambikapur", "Korba", "Durg", "Ratlam", "Mathura", "Najibabad", "Rampur"];
+        var allowedCities = [
+            "Bharatpur",
+            "Churu",
+            "Sawai Madhopur",
+            "Jaisalmer",
+            "Kapurthala",
+            "Bhavnagar",
+            "Jamnagar",
+            "Junagadh",
+            "Bharuch",
+        ];
         
         if($cookies.getObject('sessionuser')){
             
@@ -8579,10 +8589,24 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             //alert('Starting');
             targetStudyProviderService.getWebsites().success(function (data, status, headers) {
                 console.log("Done");
-            })
-            .error(function (data, status, header, config) {
-                console.log("Error ");
-            });
+                var allWebsites = data;
+                var separator = "\n";
+                var websiteText = "";
+                allWebsites.forEach(function(thisWebsites, index){
+                    if(thisWebsites != ''){
+                        console.log(thisWebsites);
+                        websiteText += thisWebsites + separator;
+                    }
+                    
+                    
+                });
+                
+                var data = new Blob([websiteText], { type: "application/xhtml+xml;ISO-8859-1" });
+                    FileSaver.saveAs(data, 'allwebsites.txt');
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
         };
         
         $scope.cityStateService = function(){
@@ -22728,7 +22752,10 @@ function getLatLng(thisData) {
                 targetStudyCities: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService) {
                     return targetStudyProviderService.getCities();
-                }]
+                }],
+                loadAngularFileSaver: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularFileSaver'], {serie: true});
+                }],
                 
             }
         })

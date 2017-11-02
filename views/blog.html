@@ -130,7 +130,7 @@
                 
                 <div layout="column" layout-align="start center" class="min30vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
                     <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
-                        <div flex-gt-xs layout="column" layout-align="start start" class="font18 bold wideLine2 marginR10 marginT10" ng-click="goToBlog(blogpost)">
+                        <div flex-gt-xs layout="column" layout-align="start start" class="font18 bold wideLine2 marginR10 marginT10" ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })">
                             {{blogpost.title}}
                         </div>
                         
@@ -233,7 +233,7 @@
                 
                 <div layout="column" layout-align="start center" class="min10vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
                     <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
-                        <div flex layout="column" layout-align="start start" flex class="font14 wideLine2 marginR10" ng-click="goToBlog(blogpost)">
+                        <div flex layout="column" layout-align="start start" flex class="font14 wideLine2 marginR10" ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })">
                             {{blogpost.title}}
                         </div>
                         
