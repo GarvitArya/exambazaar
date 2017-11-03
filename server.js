@@ -292,7 +292,7 @@ app.use(function(req, res, next) {
 
 allStates.forEach(function(thisState) {
   app.get(thisState, function(req, res){
-    res.sendFile(__dirname + '/views/maintenance.html');
+    res.sendFile(__dirname + '/views/index.html');
     });
 });
 
