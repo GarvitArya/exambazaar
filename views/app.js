@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'ui.carousel', 'matchMedia', 'angularLazyImg']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -91,6 +91,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     'angular-file-saver.bundle.js'
               ]
             },
+            {
+              name: 'UICarousel',
+              files: [
+                    'ui-carousel.min.css',
+                    'ui-carousel.min.js',
+              ]
+            },  
+              
+              
           ]
         });
     })
@@ -7317,7 +7326,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("footerController", 
         [ '$scope', '$rootScope', 'ExamService', function($scope, $rootScope, ExamService){
-        $scope.maintenance = false;    
+        $scope.maintenance = true;    
         if(!$rootScope.streamExams || $rootScope.streamExams.length == 0){
             ExamService.getExamsBasic().success(function (data, status, headers) {
                 var doNotShow = ['Other', 'Insurance', 'School'];
@@ -7354,7 +7363,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);     
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS','$timeout', '$window', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS,$timeout, $window){
-            $scope.maintenance = false;
+            $scope.maintenance = true;
+            
+            
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
@@ -7914,6 +7925,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.OTPsent = false;
         $scope.ResetOTPsent = false;
         
+         
         
         $scope.$watch('signup.mobile', function (newValue, oldValue, scope) {
             if(newValue)
@@ -21239,7 +21251,7 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'p0.html',
+                    templateUrl: 'maintenance.html',
                     controller: 'p0Controller'
                 },
                 'footer': {
@@ -23475,7 +23487,9 @@ function getLatLng(thisData) {
                 loadAngularTimeline: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularTimeline'], {serie: true});
                 }],
-                
+                loadUICarousel: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['UICarousel'], {serie: true});
+                }],
                 /*
                 ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
@@ -23773,7 +23787,7 @@ function getLatLng(thisData) {
         
     })();
 
-exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $window, $transitions, Carousel) {
+exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $window, $transitions) {
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
     $rootScope.imageUrl = '';
@@ -23836,7 +23850,7 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
      firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
     
     
-    Carousel.setOptions({
+    /*Carousel.setOptions({
         arrows: true,
         autoplay: false,
         autoplaySpeed: 3000,
@@ -23851,7 +23865,7 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
         slidesToShow: 1,
         slidesToScroll: 1,
         speed: 500,
-    });
+    });*/
     
 });
 
