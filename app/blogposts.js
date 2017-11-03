@@ -202,6 +202,85 @@ router.get('/getblogs', function(req, res) {
     });
 });
 
+router.post('/blogstream', function(req, res) {
+    var streamInfo = req.body;
+    var skip = 0;
+    var limit = 10;
+    if(streamInfo && streamInfo.skip){
+        skip = streamInfo.skip;
+    }
+    
+    var blogposts = blogpost
+    .find({active: true, $nor: [{blogSeries: 'EdBites'}, {blogSeries: 'Expert Reviews'}]}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
+    .sort({_published: -1})
+    .limit(limit)
+    .skip(skip)
+    .exec(function (err, blogposts) {
+        if (!err){
+            var allBlogposts = [];
+            var nBlogposts = blogposts.length;
+            var counter = 0;
+            if(nBlogposts == 0){
+                res.json([]);
+            }
+            
+            
+            blogposts.forEach(function(thisBlogpost, rindex){
+                var thisBlogUser = thisBlogpost.user;
+                var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                    if (!err){
+                        thisBlogpost.user = thisBlogUserInfo;
+                        counter += 1;
+                        allBlogposts.push(thisBlogpost);
+                        if(counter == nBlogposts){
+                            res.json(blogposts);   
+                        }
+                    }
+                });
+            });
+        } else {throw err;}
+    });
+});
+
+router.post('/EdBitesstream', function(req, res) {
+    var streamInfo = req.body;
+    var skip = 0;
+    var limit = 10;
+    if(streamInfo && streamInfo.skip){
+        skip = streamInfo.skip;
+    }
+    
+    var blogposts = blogpost
+    .find({active: true, blogSeries: 'EdBites'}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
+    .sort({_published: -1})
+    .limit(limit)
+    .skip(skip)
+    .exec(function (err, blogposts) {
+        if (!err){
+            var allBlogposts = [];
+            var nBlogposts = blogposts.length;
+            var counter = 0;
+            if(nBlogposts == 0){
+                res.json([]);
+            }
+            
+            blogposts.forEach(function(thisBlogpost, rindex){
+                var thisBlogUser = thisBlogpost.user;
+                var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                    if (!err){
+                        thisBlogpost.user = thisBlogUserInfo;
+                        counter += 1;
+                        allBlogposts.push(thisBlogpost);
+                        if(counter == nBlogposts){
+                            res.json(blogposts);   
+                        }
+                    }
+                });
+            });
+        } else {throw err;}
+    });
+});
+
 router.get('/headerBlogs', function(req, res) {
     
     var blogposts = blogpost.find({active: true, blogSeries: {$ne:'EdBites'}},{title:1, user:1,urlslug:1, readingTime:1, _created:1},function(err, blogposts) {

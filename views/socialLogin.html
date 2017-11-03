@@ -91,3 +91,22 @@
     
     
 </div>
+<div layout="column" layout-align="center center" class="paddingLR40">
+
+    <div infinite-scroll='reddit.nextPage()' infinite-scroll-disabled='reddit.busy' infinite-scroll-distance='1' class="width100">
+        <div ng-repeat='item in reddit.items'>
+          <span class='score'>{{item._publish | date: "MMMM dd"}}</span>
+          <span class='title'>
+            <a ui-sref="showblog({ blogpostSlug:{{'item.urlslug'}} })" target='_blank'>{{item.title}}</a>
+          </span>
+          <small>by {{item.user.basic.name}}
+          </small>
+          <div style='clear: both;'></div>
+        </div>
+        <div layout="column" layout-align="center center" class="width100" ng-show='reddit.busy'>
+            <img src='ebloader2.gif' />
+            <div>Loading data...</div>
+        
+        </div>
+      </div>
+</div>

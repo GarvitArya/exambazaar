@@ -37,7 +37,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             {
               name: 'mediumEditor',
               files: [
-                    'jquery.min.js',
+                    /*'jquery.min.js',*/
                     'https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/js/medium-editor.min.js',
                     'https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/medium-editor.min.css',
                     'https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.1/css/themes/tim.min.css',
@@ -97,8 +97,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     'ui-carousel.min.css',
                     'ui-carousel.min.js',
               ]
+            },
+            {
+              name: 'infiniteScroll',
+              files: [
+                    /*'jquery.min.js',
+                    'angular.min.js',*/
+                    'ng-infinite-scroll.min.js',
+
+              ]
             },  
-              
               
           ]
         });
@@ -897,8 +905,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getUserBlogposts = function(userId) {
             return $http.get('/api/blogposts/userblogs/'+userId, {userId: userId});
         };
-        this.getblogs = function(userId) {
+        this.getblogs = function() {
             return $http.get('/api/blogposts/getblogs');
+        };
+        this.blogstream = function(streamInfo) {
+            return $http.post('/api/blogposts/blogstream', streamInfo);
+        };
+        this.EdBitesstream = function(streamInfo) {
+            return $http.post('/api/blogposts/EdBitesstream', streamInfo);
         };
         this.suggestedblogs = function(examName) {
             return $http.get('/api/blogposts/suggestedblogs/'+examName, {examName: examName});
@@ -11330,39 +11344,69 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     
+    exambazaar.factory('EdBitesStream', function(blogpostService) {
+      var EdBitesStream = function() {
+        this.items = [];
+        this.busy = false;
+        this.skip = 0;
+      };
+
+      EdBitesStream.prototype.nextPage = function() {
+        if (this.busy) return;
+        this.busy = true;
+        var streamInfo = {
+            skip: this.skip
+        };
+        blogpostService.EdBitesstream(streamInfo).success(function (data, status, headers) {
+            var items = data;
+            this.items = this.items.concat(items);
+            this.skip += items.length;
+            this.busy = false;
+        }.bind(this))
+        .error(function (data, status, header, config) {
+            console.log("Error ");
+        });  
+      };
+
+      return EdBitesStream;
+    });
+        
+        
+    exambazaar.factory('BlogStream', function(blogpostService) {
+      var BlogStream = function() {
+        this.items = [];
+        this.busy = false;
+        this.skip = 0;
+      };
+
+      BlogStream.prototype.nextPage = function() {
+        if (this.busy) return;
+        this.busy = true;
+        var streamInfo = {
+            skip: this.skip
+        };
+        blogpostService.blogstream(streamInfo).success(function (data, status, headers) {
+            var items = data;
+            console.log(items);
+            this.items = this.items.concat(items);
+            this.skip += items.length;
+            this.busy = false;
+        }.bind(this))
+        .error(function (data, status, header, config) {
+            console.log("Error ");
+        });  
+      };
+
+      return BlogStream;
+    });
+        
+        
     exambazaar.controller("socialLoginController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService){
-            $scope.description = "";
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'BlogStream', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, BlogStream){
+            $scope.reddit = new BlogStream();
             
-            $scope.seeDescription = function(){
-                
-                var remove = "<div class=";
-                var rIndex = $scope.description.indexOf(remove);
-                $scope.description = $scope.description.substring(0, rIndex);
-                console.log($scope.description );
-            };
             
-            var editor = new MediumEditor('.editable');
-            $(function () {
-                $('.editable').mediumInsert({
-                    editor: editor
-                });
-            });
-            
-            /*$(function () {
-                $('.editable').mediumInsert({
-                    editor: editor,
-                    addons: {
-                        images: {
-                            fileUploadOptions: {
-                                url: 'upload.php'
-                            }
-                        }
-                    }
-                });
-            });*/
-            
-            $rootScope.pageTitle ='Search & Review Coaching Classes';
+            $rootScope.pageTitle ='Social Login Controller';
             
             $scope.fbLoginStatus = {};
             $scope.user = $cookies.getObject( 'sessionuser');
@@ -11566,6 +11610,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);
     
+        
+     
+        
     exambazaar.controller("contactsController", 
         [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'targetStudyProviderService', 'contactsSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, targetStudyProviderService, contactsSummary){
             $scope.contacts = contactsSummary.data;
@@ -12209,20 +12256,35 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
     exambazaar.controller("blogController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService','allBlogs', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, allBlogs, Socialshare, viewService, upvoteService, allBlogsUpvotesCount){
-            $scope.allBlogs = allBlogs.data;
-            
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', 'BlogStream', 'EdBitesStream', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, Socialshare, viewService, upvoteService, allBlogsUpvotesCount, BlogStream, EdBitesStream){
+            //$scope.allBlogs = allBlogs.data;
+            $scope.allBlogs = new BlogStream();
+            $scope.allEdbites = new EdBitesStream();
+            console.log($scope.allEdbites);
             var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
             var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
-            $scope.allBlogs.forEach(function(thisBlog, index){
-                var bIndex = blogUpvotesId.indexOf(thisBlog._id);
-                
-                if(bIndex == -1){
-                    thisBlog.upvotes = 0;
-                }else{
-                    thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+            
+            $scope.$watch('allBlogs.items', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue.length > 0){
+                    $scope.allBlogs.items.forEach(function(thisBlog, index){
+                        var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+                        //console.log(bIndex);
+
+                        if(!thisBlog.upvotes){
+                            if(bIndex == -1){
+                                thisBlog.upvotes = 0;
+                            }else{
+                                thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+                            }
+                        }
+
+                    });
+                    
                 }
-            });
+
+            }, true);
+            
+            
             
             $scope.addedUpvoteIds = [];
             $scope.userUpvotes = [];
@@ -12297,7 +12359,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             };
             
-            var defaultBlogCovers = ["images/blog/eb-blog-cover.jpeg"];
+            var defaultBlogCovers = ["images/blog/eb-blog-cover-1.jpg"];
             //"images/blog/blog-cover-7.jpg","images/blog/background.jpg"
             var rIndex = getRandomInt(0, defaultBlogCovers.length);
             var defaultBlogCover = defaultBlogCovers[rIndex];
@@ -21641,8 +21703,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                
-                
+                loadInfiniteScroll: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['infiniteScroll'], {serie: true});
+                }],
             }
         })
         .state('contacts', {
@@ -22259,9 +22322,12 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                allBlogs: ['blogpostService',
+                /*allBlogs: ['blogpostService',
                     function(blogpostService) {   
-                    return blogpostService.getblogs();
+                    return blogpostService.blogstream({skip:0});
+                }],*/
+                loadInfiniteScroll: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['infiniteScroll'], {serie: true});
                 }],
                 allBlogsUpvotesCount: ['upvoteService',
                     function(upvoteService) {
@@ -23490,6 +23556,7 @@ function getLatLng(thisData) {
                 loadUICarousel: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['UICarousel'], {serie: true});
                 }],
+                
                 /*
                 ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngFileUpload'], {serie: true});

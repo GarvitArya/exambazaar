@@ -89,12 +89,12 @@
     <div layout="row" layout-align="center center" class="width100 font14">
     <div layout="row" layout-xs="column"  layout-align="start start"  flex-xs="100" flex-gt-xs="90" class="">    
     <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="70" >
-    <div layout="row" layout-align="start start" class="width100" layout-wrap>
+    <div infinite-scroll='allBlogs.nextPage()' infinite-scroll-disabled='allBlogs.busy' infinite-scroll-distance='1' layout="row" layout-align="start start" class="width100" layout-wrap>
         
-        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20 " ng-repeat="blogpost in allBlogs | orderBy: '-_created'" ng-if="blogpost.blogSeries !='EdBites' && blogpost.blogSeries !='Expert Reviews'">
+        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20 " ng-repeat='blogpost in allBlogs.items'>
+          
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
                 <div layout="column" layout-align="center center" class="blogpostImage2 width100 ">
-                    <!--ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}"-->
                 <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">
                     
                 <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
@@ -178,7 +178,7 @@
                             </div>
                         </div>
                         <div layout="column" layout-align="center start" class="">
-                            {{blogpost._created | date: "MMMM dd"}}
+                            {{blogpost._published | date: "MMMM dd"}}
                         </div>
                     </div>
                     <div flex layout="row" layout-align="start center" class="width100 sixthFont font14 textBlack marginTB15 wideLine textDarkGrey">
@@ -187,15 +187,25 @@
                     </div>
                 </div>    
             </div>
+            
         </div>
+        <div layout="column" layout-align="center center" class="width100 marginTB20" ng-show='allBlogs.busy'>
+            <img src='ebloader2.gif' />
+            <div>Loading data...</div>
+        
+        </div>
+        
+        
+        
+        
+        
     </div>
     </div>
     <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5" class="">
     </div>
     <div layout="row" layout-align="start start" hide-xs flex-gt-xs="25">
-    <div layout="row" layout-align="start start" class="width100" layout-wrap>
-        
-        <div flex-xs="100" flex-gt-xs="100" layout="column" layout-align="center center"  class="paddingTB20 maringT20" ng-repeat="blogpost in allBlogs | orderBy: '-_created'" ng-if="blogpost.blogSeries =='EdBites'">
+    <div infinite-scroll='allEdbites.nextPage()' infinite-scroll-disabled='allEdbites.busy' infinite-scroll-distance='1' layout="row" layout-align="start start" class="width100" layout-wrap>
+        <div layout="column" layout-align="center center"  class="width100 paddingTB20 maringT20" ng-repeat="blogpost in allEdbites.items">
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
             <div layout="column" layout-align="center center" class="edBitesImage2 width100">
                 <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">
@@ -281,12 +291,17 @@
                             </div>
                         </div>
                         <div layout="column" layout-align="center start" class="">
-                            {{blogpost._created | date: "MMMM dd"}}
+                            {{blogpost._published | date: "MMMM dd"}}
                         </div>
                     </div>
                     
                 </div>    
             </div>
+        </div>
+        <div layout="column" layout-align="center center" class="width100 marginTB20" ng-show='allBlogs.busy'>
+            <img src='ebloader2.gif' />
+            <div>Loading data...</div>
+        
         </div>
     </div>
     </div>
