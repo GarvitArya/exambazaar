@@ -1820,7 +1820,7 @@ router.post('/CoachingStream', function(req, res) {
     var examName = streamInfo.subCategoryName;
     var city = streamInfo.cityName;
     var skip = 0;
-    var limit = 10;
+    var limit = 25;
     if(streamInfo && streamInfo.skip){
         skip = streamInfo.skip;
     }
