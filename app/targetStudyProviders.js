@@ -1814,6 +1814,143 @@ router.get('/changeProvidersStartingWith/:startsWith', function(req, res) {
     }); //.limit(500)
 });
 
+router.post('/CoachingStream', function(req, res) {
+    var streamInfo = req.body;
+    var streamName = streamInfo.categoryName;
+    var examName = streamInfo.subCategoryName;
+    var city = streamInfo.cityName;
+    var skip = 0;
+    var limit = 10;
+    if(streamInfo && streamInfo.skip){
+        skip = streamInfo.skip;
+    }
+    
+    var thisExam = exam
+        .findOne({'name': examName}, {_id: 1})
+        //.deepPopulate('stream')
+        .exec(function (err, thisExam) {
+        if (!err){
+            if(thisExam){
+                
+            /*targetStudyProvider.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}, type: 'Coaching'}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1, rank:1, city:1, pincode:1, exams:1, groupName:1, logo:1, results:1, latlng:1},{sort: '-rank'},function(err, providerList) {
+                    if (!err){
+                        //console.log(providerList);
+                        res.json(providerList);
+                    } else {throw err;}
+                });*/
+                    
+            var allCoachings = targetStudyProvider.aggregate(
+            [
+                {$match: {disabled: false, "city" : city,"exams" : thisExam._id} },
+                /*{$unwind:"$exams"},*/
+                {"$group": { 
+                    "_id": { groupName: "$groupName"}, 
+                    count:{$sum:1}, 
+                    _ids: { $addToSet: "$_id" },
+                    exams: { $addToSet: "$exams" },
+                    logo: { $addToSet: "$logo" },
+                    latlng: { $addToSet: "$latlng" },
+                }},
+                {$sort:{"count":-1}},
+                {$limit: skip + limit},
+                {$skip: skip},
+
+            ],function(err, allCoachings) {
+            if (!err){
+                var allProviders = [];
+                var nCoachings = allCoachings.length;
+                var counter = 0;
+                allCoachings.forEach(function(thisProvider, pIndex){
+                    var newProvider = {
+                        groupName: thisProvider._id.groupName,
+                        exams: [],
+                        latlngs: [],
+                        count: thisProvider.count,
+                    };
+                    var thisExams = [];
+                    thisProvider.exams.forEach(function(thisExamString, eIndex){
+                        var setofExams = thisExamString.toString().split(',');
+                        
+                        setofExams.forEach(function(thisExam, eIndex){
+                            thisExam = thisExam.trim();
+                            var examIndex = thisExams.indexOf(thisExam.toString());
+                            if(examIndex == -1){
+                                thisExams.push(thisExam.toString());
+                            }
+                        });  
+                    });
+                    thisProvider.logo.forEach(function(thisLogo, lIndex){
+                        if(thisLogo && thisLogo != '' && !newProvider.logo){
+                            newProvider.logo = thisLogo;
+                        }
+                    });
+                    thisProvider.latlng.forEach(function(thisLatlng, lIndex){
+                        newProvider.latlngs.push(thisLatlng);
+                    });
+                    var thisProviderId = thisProvider._ids[0];
+                    
+                    newProvider.exams = thisExams;
+                    
+                    
+                    
+                    var allGroupInstitutes = targetStudyProvider.find({ 'groupName': newProvider.groupName },{_id:1},function (err, allGroupInstitutes) {
+                    if (!err){
+                        allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
+                        
+                        var groupResults = result
+                            .find({provider: { $in : allGroupInstitutes }, active: true, exam: thisExam._id, image: {$exists: true}})
+                            .limit(20)
+                            .exec(function(err, groupResults) {
+                            if (!err){
+                                newProvider.groupResults = groupResults;
+                                allProviders.push(newProvider);
+                                counter += 1;
+                                if(counter == nCoachings){
+                                    
+                                    allProviders.sort(function(a,b){
+                                      return new Date(b.count) - new Date(a.count);
+                                    });
+                                   res.json(allProviders);
+                                }
+                            } else {throw err;}
+                        });
+
+
+                        }else {throw err;}
+                    });
+                    
+                    
+                    
+                });
+                
+                
+            } else {throw err;}
+            });
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+            }else{
+                res.json(null);
+            }
+            
+        } else {throw err;}
+    });
+    
+    
+    /*targetStudyProvider.find({"city" : city,"coursesOffered" : { $elemMatch : { $regex : course, $options : 'i' } }}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, providerList) {
+    if (!err){
+        res.json(providerList);
+    } else {throw err;}
+    });*/
+});
+
 router.post('/cityCourse', function(req, res) {
     var cityCourse = req.body;
     //console.log("cityCourse is : "+JSON.stringify(cityCourse));

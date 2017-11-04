@@ -151,7 +151,7 @@ router.get('/markTrueFalse', function(req, res) {
 router.get('/stream/:streamName', function(req, res) {
     var streamName = req.params.streamName;
     var allExams = exam
-        .find({ })
+        .find({})
         .deepPopulate('stream')
         .exec(function (err, allExams) {
         if (!err){
@@ -159,7 +159,7 @@ router.get('/stream/:streamName', function(req, res) {
             //console.log(allExams);
             allExams.forEach(function(thisExam, index){
                 //console.log(thisExam);
-                if(thisExam.stream.name == streamName){
+                if(thisExam.stream && thisExam.stream.name == streamName){
                     streamExams.push(thisExam);
                 }
             });

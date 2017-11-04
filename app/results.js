@@ -171,7 +171,6 @@ router.post('/groupResults', function(req, res) {
         .findOne({'name': examName}, {_id:1})
         .exec(function (err, thisExam){
         if (!err){
-            console.log(thisExam);
             var examId = thisExam._id.toString();
             
             var allGroupInstitutes = targetStudyProvider.find({ 'groupName': groupName },{_id:1},function (err, allGroupInstitutes) {
@@ -202,8 +201,8 @@ router.post('/groupResults', function(req, res) {
                 });
 
 
-            }else {throw err;}
-        });
+                }else {throw err;}
+            });
             
         } else {throw err;}
     });

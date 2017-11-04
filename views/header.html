@@ -94,7 +94,7 @@
                 </div>
                 </a>
                 </li> 
-              <li ng-repeat="blog in blogs"  ng-if="blogs && blogs.length > 0">
+              <li ng-repeat="blog in headerBlogs"  ng-if="headerBlogs && headerBlogs.length > 0">
                     <a ui-sref="showblog({ blogpostSlug:{{'blog.urlslug'}} })">
                     <div flex layout="row" layout-align="start center">
                         <div layout="row" layout-align="start center" class="paddingR10">
@@ -109,6 +109,9 @@
                                 </div>
                                 <div layout="row" layout-align="start center" class="paddingR10">
                                     {{blog.readingTime.text}}
+                                </div>
+                                <div layout="row" layout-align="start center" class="paddingR10">
+                                    {{blog._published | date: "MMMM dd"}}
                                 </div>
                             </div>
                         </div>
@@ -207,7 +210,7 @@
                     <li><a ui-sref="addSubscriber">Add Subscriber</a></li>
                     <li><a ui-sref="providersWithAreas">Provider Name Change</a></li>
                     <li><a ui-sref="sitemap">Generate Sitemap</a></li>
-                    <li><a ui-sref="blogsitemap">Blog Sitemap</a></li>
+                    <li><a ui-sref="headerBlogsitemap">Blog Sitemap</a></li>
                     <li><a ui-sref="checkLogo({ userId:{{'sessionuser.userId'}}, pageNumber:'1' } )">Check Logos</a></li>
                   </ul>
                 </li>
