@@ -601,6 +601,14 @@
         margin: 0px;
         padding: 5px;
     }
+    a{
+        color: #20C39A;
+        text-decoration: none;
+    }
+    a, a:hover, a:link, a:active, a:visited, a:focus, a:visited:hover, a:link:hover{
+        color: #20C39A;
+        text-decoration:none;
+    }
 </style>
 <div id="spacer1" class="hidden-xs whiteBackground">
 </div>
@@ -723,7 +731,15 @@
                 </h3>        
             </a>
     </div>
-    
+    <div layout="row" layout-align="center center" class="width100 marginT20 marginB10">
+        <div layout="row" layout-align="center center" ng-repeat="thisExam in currStreamExams" class="editFont font14" >
+            <a ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'thisExam.name'}}, cityName:{{'city'}}, groupName:{{'provider.name'}} })" target="_blank">{{thisExam.name}}
+            </a>
+            <div ng-if="!$last" class="textBlack">
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+            </div>
+        </div>
+    </div>
     
     <!--start of Overview
     <div layout="row " layout-align="center center" class="componentRow" id="Overview">
@@ -1000,65 +1016,6 @@
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement height100" id="paneRight">
             
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div>
-    
-    <div layout="row" layout-xs="column" class="componentRow" id="Exams">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft">
-            <h1 class="componentRowElement" layout="column" layout-align="start start">
-                <span>
-                    Exams
-                    <!--<span class="badge" id="leftBadge">
-                        {{groupExams.length}}
-                        <md-tooltip>Provider teaches for  {{groupExams.length}} exams in {{city}}</md-tooltip>
-                    </span>-->
-                </span>
-            </h1>
-        </div>
-        <h1 class="col-xs-12 hide-gt-xs bottomBorder secondFont textLightGrey" id="paneLeft">
-            <span>
-                Exams
-                <!--<span class="badge" id="leftBadge">
-                    {{groupExams.length}}
-                    <md-tooltip>Provider teaches for  {{groupExams.length}} exams in {{city}}</md-tooltip>
-                </span>-->
-            </span>
-        </h1>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement thirdFont textDarkGrey" id="paneMiddle">
-            <div layout="row" class="marginB10 secondFont  bold">
-                <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
-                    Stream
-                </div>
-                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
-                    Exams
-                </div>
-            </div>
-            
-            <div layout="row" layout-align="center center" ng-repeat="thisStream in groupStreams" ng-if="thisStream.active" class="marginTB5">
-                <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
-                    <h1 id="paneLeft">
-                        {{thisStream.displayname}}&nbsp;
-                    </h1>
-                </div>
-                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
-                    <span ng-repeat="thisExam in groupExams" ng-if="thisExam.exam.stream._id == thisStream._id">
-                        <span class="badge" id="existingExamTagHolder">
-                            <h1 id="paneLeft" class="textWhite margin0" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'thisExam.exam.displayname'}}, cityName:{{'city'}}, groupName:{{'provider.name'}} })">{{thisExam.exam.displayname}}
-                            </h1>
-                            <!--<md-tooltip>Taught at   {{thisExam.centre.length}} centre<span ng-if="thisExam.centre.length>1">s</span> in {{city}}</md-tooltip>-->
-                            
-                        </span>
-                    </span>
-                    
-                </div>
-            </div>
-        </div> 
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
         </div>
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>

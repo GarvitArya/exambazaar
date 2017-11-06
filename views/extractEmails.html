@@ -87,7 +87,15 @@
                 Extract Emails from Ids
             </md-button>
         </div>
-        
+        <md-button class="md-black md-small secondFont tolowercase" ng-click="extractknowyourcollege()">
+            Extract College
+        </md-button>
+        <md-button class="md-black md-small secondFont tolowercase" ng-click="extractEmailsfromId()">
+            Extract Emails
+        </md-button>
+        <md-button class="md-review md-small secondFont tolowercase" ng-click="extractAllEmails()">
+            Extract All Emails
+        </md-button>
     </div>
     <div layout="column" layout-align="start start" class="width100 marginT20 secondFont font20 textBlack bold paddingB10">
         <div layout="row" layout-align="start start" class="font10" ng-repeat="email in emails track by $index">

@@ -5,6 +5,7 @@ var config = require('../config/mydatabase.js');
 var master = require('../app/models/master');
 var intern = require('../app/models/intern');
 var address = require('../app/models/address');
+var college = require('../app/models/college');
 var sourceUrl = require('../app/models/sourceUrl');
 var clusterUrl = require('../app/models/clusterUrl');
 var user = require('../app/models/user');
@@ -398,6 +399,220 @@ router.post('/urls/', function(req, res) {
     });
     res.send("Done");
 });
+
+
+router.post('/knowyourcollege/', function(req, res) {
+    var collegesInfo = req.body;
+    //console.log(collegesInfo);
+    var collegeIds = collegesInfo.collegeIds;
+    var thisPage = collegesInfo.page;
+    res.send(true);
+    
+    var totalIds = collegeIds.length;
+    var idCounter = 0;
+    
+    var prefix = 'http://www.knowyourcollege-gov.in/';
+    var filler = '?insti_id=';
+    
+    
+    collegeIds.forEach(function(thisCollege, index){
+        //var insti_id = '1-467477641';
+        var insti_id = thisCollege.toString();
+        var collegeurls = [
+            {sectionName: 'Institute', url: 'instituteDetails.php', section: null}, 
+            {sectionName: 'Course', url: 'courseDetails.php', section: null}, 
+            {sectionName: 'Laboratory', url: 'labDetails.php', section: null}, 
+            {sectionName: 'Faculty', url: 'facultyDetails.php', section: null}, 
+            {sectionName: 'Library', url: 'libraryDetails.php', section: null}, 
+            {sectionName: 'Hostel', url: 'hostelDetails.php', section: null}, 
+            {sectionName: 'Ombudsman', url: 'ombudsmanDetails.php', section: null}, 
+            {sectionName: 'Anti Ragging', url: 'antiraggingDetails.php', section: null}, 
+            {sectionName: 'Student Count', url: 'StudentCountDetails.php', section: null}, 
+
+        ];
+        collegeurls.forEach(function(thisSection, index){
+            thisSection.url = prefix + thisSection.url + filler + insti_id;
+        });
+        //Institute,Faculty
+        var allowedSectionNames = [thisPage];
+        var nAllowed = allowedSectionNames.length;
+        var nCounter = 0;
+        var urlCounter = 0;
+
+        var thisCollege = college.findOne({'insti_id':insti_id}, function(err, thisCollege) {
+        if (!err){ 
+            if(!thisCollege){
+                thisCollege = {};
+            }
+
+            collegeurls.forEach(function(thisSection, index){
+                if(allowedSectionNames.indexOf(thisSection.sectionName) != -1){
+                    url = thisSection.url;
+                    thisSectionName = thisSection.sectionName;
+                    var Request = unirest.get(url);
+
+                    Request.headers({
+                      'Accept': 'application/json',
+                      'Accept-Language': 'en-us',
+                      'User-Agent': 'Unirest Node.js'
+                    });
+                    Request.timeout(600000).end(function (response) {
+                        if (response.error) {
+                            console.log(url);
+                            console.log('GET error', response.error)
+                        }else{
+
+
+                        var sourceCode = response.body;
+                        var $ = cheerio.load(sourceCode, {
+                            normalizeWhitespace: true,
+                            xmlMode: true
+                        });
+
+
+
+
+                        thisCollege[thisSectionName] = {};
+                        if(thisSectionName == 'Institute'){
+                            var subtotal = $('li.active').length;
+                            $('li.active').each(function(k, elem) {
+                            var sectionName = $(this).find('h3').text().replace(':', '').trim();
+                            var thisSection = {};
+                            if(sectionName){
+                                    $(this).find('#shift').find('table').find('tbody').find('tr').each(function(i, elem) {
+                                        var row = $(this).text();
+                                        var results = row.split(':');
+                                        var key = null;
+                                        var value = null;
+                                        if(results[0]){
+                                            key = results[0].trim().replace('.', '');
+                                        }
+                                        if(results[1]){
+                                            value = results[1].trim();
+                                        }    
+                                        if(key){
+                                            thisSection[key] = value;    
+                                        }
+                                    });
+                                    thisCollege[thisSectionName][sectionName] = thisSection;
+                                    if(k == subtotal - 1){
+                                        if(thisCollege['Institute']['Institute Details']['Permanent Institute ID']){
+                                            thisCollege.insti_id = thisCollege['Institute']['Institute Details']['Permanent Institute ID'];
+                                            thisCollege.inst_name = thisCollege['Institute']['Institute Details']['Name of Institute'];
+
+                                        }
+                                        urlCounter += 1;
+                                        if(urlCounter == collegeurls.length){
+                                            //console.log(thisCollege);
+                                            var newCollege = new college({});
+
+                                            for (var property in thisCollege) {
+                                                newCollege[property] = thisCollege[property];
+                                            }
+                                            newCollege.save(function(err, newCollege) {
+                                                if (err) return console.error(err);
+                                                idCounter += 1;
+                                                console.log(idCounter + '/' + totalIds + ' College saved with id: ' + newCollege._id);
+                                                //res.json('Done');
+                                            });
+                                        }
+                                    }
+                                }
+
+
+
+
+                            });
+                        }
+                        if(thisSectionName == 'Faculty'){
+                            $('#institute-detail').each(function(i, elem) {
+                            var sectionName = $(this).find('i').text().replace(':', '').trim();
+
+                            if(sectionName){
+                                    var counter = 0;
+                                    var headerArray = [];
+                                    var total = $('div.CSSTableGenerator table tbody tr').length;
+                                
+                                    if(total > 0){
+                                        
+                                    var thisSection = new Array(total - 1);
+                                    $(this).find('div.CSSTableGenerator').find('table').find('tbody').find('tr').each(function(i, elem) {
+                                        var subSection = {};
+
+                                        if(i == 0){
+                                            $(this).find('th').each(function(j, thisElem) {
+                                                var subSectionVal = $(this).text().trim().replace('.', '');
+                                                headerArray.push(subSectionVal);
+                                            });
+                                        }else{
+                                            $(this).find('td').each(function(j, thisElem) {
+                                                if(!thisSection[i-1]){
+                                                    thisSection[i-1] = {};
+                                                }
+                                                var subSectionVal = $(this).text().trim();
+                                                thisSection[i-1][headerArray[j]] = subSectionVal;
+
+                                            });
+                                        }
+
+
+                                    });
+                                    thisCollege[thisSectionName][sectionName] = thisSection;
+                                    urlCounter += 1;
+                                    if(urlCounter == collegeurls.length){
+                                        //console.log(thisCollege);
+                                        var newCollege = new college({});
+
+                                        for (var property in thisCollege) {
+                                            newCollege[property] = thisCollege[property];
+                                        }
+                                        newCollege.save(function(err, newCollege) {
+                                            if (err) return console.error(err);
+                                            idCounter += 1;
+                                            console.log(idCounter + '/' + totalIds + ' College saved with id: ' + newCollege._id);
+                                            //res.json('Done');
+                                        });
+                                    }    
+                                        
+                                    }
+                                
+                                    
+                                }
+                            });
+                        }    
+
+                      } 
+                    });
+
+
+                }else{
+                    urlCounter += 1;
+                }
+
+
+            });
+
+
+        } else {throw err;}
+        });
+        
+        
+        
+        
+        
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+});
+
 
 //to get all masters
 router.get('/clusterUrls', function(req, res) {
