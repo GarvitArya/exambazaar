@@ -2292,7 +2292,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
         $scope.thisGroupR = thisGroupResults.data;
-        console.log($scope.thisGroupR);
         if(!$scope.thisGroupR){
             $scope.thisGroupR = [];
         }
