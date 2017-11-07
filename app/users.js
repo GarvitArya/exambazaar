@@ -539,7 +539,7 @@ router.post('/save', function(req, res) {
     if(mobileNumber){
         var existingUser = user.findOne({ 'mobile': mobileNumber },function (err, existingUser) {
             if(existingUser){
-                console.log('I am existing');
+                //console.log('I am existing');
                 res.json(existingUser);
             }else{
                 //console.log('I do not exist');

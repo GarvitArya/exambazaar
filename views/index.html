@@ -64,6 +64,28 @@
             color:#20C39A;
         }
         
+        md-slider .md-track-ticks canvas {
+          height: 10px;
+        }
+        .md-slider-tick-container, .md-slider-last-tick-container {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 100%;
+        }
+        md-slider .md-track canvas {
+          height: 5px;
+        }
+        md-slider[md-discrete] .md-sign,
+        md-slider[md-discrete] .md-sign:after {
+          opacity: 1;
+          -webkit-transform: translate3d(0, 0, 0) scale(1);
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        md-slider .md-track-ticks canvas {
+          height: 6px;
+        }
+        
         #headerLogo{
             color:white;
         }
@@ -399,7 +421,9 @@
         #userPic{
             max-height: 40px;
         }
-        
+        #userPicProfile{
+            max-height: 100px;
+        }
         #userPicSmall{
             max-height: 30px;
         }
@@ -685,6 +709,9 @@
         }
         .greyBottomBorder{
             border-bottom: 1px solid #ccc;
+        }
+        .greyRightBorder{
+            border-right: 1px solid #ccc;
         }
         .footerBottomBorder{
             border-bottom: 1px solid #8e8e8e;

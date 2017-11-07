@@ -1,134 +1,496 @@
 <style>
     input[type="text"]
     {
-        font-size: 13px;
+        font-size: 14px;
         color: #333333;
-        margin-bottom: 5px;
         padding: 10px;
-        border: solid 1px transparent;
+        border: solid 1px #ccc;
         transition: box-shadow 0.3s, border 0.3s;
         box-shadow: 0 0 5px 1px white;
     }
     
     input[type="text"]:hover {
-        border: solid 1px #707070;
+        border: solid 1px #333333;
         box-shadow: 0 0 5px 1px #969696;
     }
     input[type="text"]:focus {
-        border: solid 1px #707070;
+        border: solid 1px #333333;
         box-shadow: 0 0 5px 1px #969696;
     }
-    
     #profileSection{
         min-height: 20vh;
     }
+    .profileBar{
+        background-color: salmon;
+        color: white;
+    }
+    .profileBar a{
+        color: white;
+        text-decoration: none;
+        min-width: 15%;
+    }
+    .active{
+        text-decoration: underline;
+    }
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #ccc;
+    }
+    .fieldRow{
+        font: 16px;
+        min-height: 5vh;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .fieldRow div.col1{
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: #333333;
+    }
+    .fieldRow div.col2{
+        color: black;
+    }
+    .emptyTag{
+        padding:10px;
+        font-size: 16px;
+        color: black;
+        background: white;
+        border: 1px solid #333333;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+    }
+    .filledTag{
+        padding:10px;
+        font-size: 16px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+    }
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
 </style>
-<div class="whiteBackground mainContent" >
-    <div id="spacer">
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+
+<div class="textBlack whiteBackground" ng-if="user">
+    
+    <div bs-affix data-offset-top="200" data-offset-bottom="300" hide-xs layout="row" class="affixBar bottomBorder width100 profileBar" layout-align="center center"> 
+        <a layout="row" layout-align="center center" ng-repeat="component in components" href="#{{component}}" du-smooth-scroll du-scrollspy offset="200" class="blogFont paddingTB5 paddingLR20">
+            <span ng-class="{ active: component.active }">
+                {{component.name}}
+            </span>        
+        </a>
     </div>
-    <div class="padded" ng-if="user">
-    <div flex layout="column" layout-xs="column" layout-align="start start" >
-        <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100" id="profileSection">
-            <div layout="row" layout-align="start center" ng-if="user.basic" class="width100">
-                <div>
-                    Welcome, {{user.basic.name}}
+    <div layout="row" layout-align="center start" class="width100">
+    <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
+        <div layout="column" layout-align="start center" flex="25" class="min100vh paddingLR20 greyRightBorder">
+            <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 marginB10 blogFont min10vh greyBottomBorder width100" ng-click="setActiveSubcategory(subcategory.name)">
+                {{subcategory.name}}
+            </div>
+        </div>
+        <div flex layout="row" layout-align="center center">
+            <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
+            <div layout="column" layout-align="start start" class="width100 paddingLR40 min100vh" flex>
+                <div layout="column" layout-align="center start" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20">
+                    {{activeSubcategory.name}} Information
                 </div>
-                <div layout="column" layout-align="start start" class="paddingL20 editFont">
-                    <div layout="column" layout-align="center center" ng-if="user.image">
-                        <img id="userPic" ng-src="{{user.image}}" class="img-circle" />
-                        <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.8, centerCrop: true}">Change</span>
+                <div layout="column" layout-align="center start" class="width100">
+                     
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Personal'">
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Name</div>
+                            <div flex class="col2">
+                                <input type="text" class="width100" ng-model="user.basic.name"  placeholder="Name">
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Profile Picture</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingTB10">
+                                
+                                <div layout="column" layout-align="start start" class="editFont">
+                                <div layout="column" layout-align="center center" ng-if="user.image">
+                                    <img id="userPicProfile" ng-src="{{user.image}}" class="img-circle" />
+                                    <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.8, centerCrop: true}">Change</span>
+                                </div>
+                                <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.7, centerCrop: true}">
+                                    <div layout="row" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
+                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Image
+                                    </div>
+
+                                </div>
+
+                                </div>
+                                
+                                
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Gender</div>
+                            <div layout="row" layout-align="start center" flex class="col2">
+                                <div ng-repeat="gender in userVariables.genders" class="marginR10">
+                                    <span class="badge emptyTag" ng-class="{ filledTag: user.basic.gender=='{{gender}}' }" ng-click="setGender(gender)">
+                                        {{gender}}
+                                    </span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Category</div>
+                            <div layout="row" layout-align="start center" flex class="col2">
+                                <div ng-repeat="caste in userVariables.categories" class="marginR10">
+                                    <span class="badge emptyTag" ng-class="{ filledTag: user.basic.category=='{{caste}}' }" ng-click="setCategory(caste)">
+                                        {{caste}}
+                                    </span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Person with Disability (PwD)</div>
+                            <div layout="row" layout-align="start center" flex class="col2">
+                                <span class="badge emptyTag marginR10" ng-class="{ filledTag: user.basic.PwD==true }" ng-click="setPwD(true)">
+                                    Yes
+                                </span>
+                                <span class="badge emptyTag marginR10" ng-class="{ filledTag: user.basic.PwD==false }" ng-click="setPwD(false)">
+                                    No
+                                </span>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Date of Birth</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingTB10">
+                                <md-datepicker ng-model="user.basic.dob" md-placeholder="Date of Birth" class="margin0"></md-datepicker>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">
+                                <md-button class="md-green2 md-large tolowercase margin0" ng-click="setActiveSubcategory('Contact')">
+                                    Next
+                                </md-button>
+                            </div>
+                        </div>
                     </div>
-                    <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.7, centerCrop: true}">
-                        <div layout="row" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
-                            <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Image
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Contact'">
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Mobile</div>
+                            <div flex class="col2">
+                                <input type="text" class="width100" ng-model="user.mobile"  placeholder="Mobile">
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Email</div>
+                            <div flex class="col2">
+                                <input type="email" class="width100" ng-model="user.email"  placeholder="Email Address">
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">
+                                <md-button class="md-green2 md-large tolowercase margin0" ng-click="setActiveSubcategory('Academic')">
+                                    Next
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Academic'">
+                        <div layout="column" layout-align="start start" class="academicRow">
+                        
+                            <div layout="row" layout-align="start center" class="font16 marginB10 width100">
+                                Choose your Education Level
+                            </div>
+                            <div layout="row" layout-align="start center" class="fieldRow" layout-wrap>
+                                <div flex="50" ng-repeat="educationLevel in educationLevels" class="padding10">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.educationLevel.name=='{{educationLevel.name}}' }" ng-click="setEducationLevel(educationLevel)">
+                                        {{educationLevel.name}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 1">
+                            
+                        <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16">
+                            School Class XII
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Subjects</div>
+                            <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
+                                <div flex="25" ng-repeat="class12Subject in class12Subjects" class="padding10">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.class12Subjects[class12Subject.name] }" ng-click="setClass12Subjects(class12Subject.name)">
+                                        {{class12Subject.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow paddingTB20">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Class XII Percentage</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
+                                <span class="marginR10">40</span>
+                                <md-slider class="width100" md-discrete ng-model="user.eligibility.class12Percentage" step="1" min="40" max="100" aria-label="Class 12th Percentage">
+                                </md-slider>
+                                <span class="marginL10">100</span>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 3">
+                            
+                        <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16">
+                            Undergraduate
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
+                            <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
+                                <div flex="50" ng-repeat="undergradMajor in undergradMajors" class="padding10">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                        {{undergradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow paddingTB20">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Equivalent Percentage</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
+                                <span class="marginR10">40</span>
+                                <md-slider class="width100" md-discrete ng-model="user.eligibility.undergradPercentage" step="1" min="40" max="100" aria-label="Undergrad Percentage">
+                                </md-slider>
+                                <span class="marginL10">100</span>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 5">
+                            
+                        <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16">
+                            Postgraduate
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
+                            <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
+                                <div flex="50" ng-repeat="postgradMajor in postgradMajors" class="padding10">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.postgradMajor[postgradMajor.name] }" ng-click="setPostgradMajor(postgradMajor.name)" layout-wrap>
+                                        {{postgradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow paddingTB20">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Equivalent Percentage</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
+                                <span class="marginR10">40</span>
+                                <md-slider class="width100" md-discrete ng-model="user.eligibility.postgradPercentage" step="1" min="40" max="100" aria-label="Postgrad Percentage">
+                                </md-slider>
+                                <span class="marginL10">100</span>
+                            </div>
+                        </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">
+                                <md-button class="md-green2 md-large tolowercase margin0" ng-click="setActiveSubcategory('Social')">
+                                    Next
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Social'">
+                        <span ng-if="!user.facebookId" class="editFont marginB20">
+                            You can link Facebook to your existing account to enable seamless logging in.
+                        </span>
+
+                        <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase" ng-show="!user.facebookId">
+                            <span class="font14" hide-xs>
+                                Link with Facebook
+                            </span>
+                            <span class="font12" hide-gt-xs>
+                                Link with Facebook
+                            </span>
+                        </md-button>
+
+
+                        <div layout="column" ng-if="user.facebookId" class="marginT10">
+                            <div>
+                                Facebook Linked&nbsp;&nbsp;<i class="fa fa-facebook-official" aria-hidden="true"></i>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 marginTB20">
+                                <div layout="row" layout-align="start center"  flex="20">
+                                <i class="fa fa-check font24 text-primary bold" aria-hidden="true"></i>
+                                </div>
+                                    <!--(id: {{user.facebookId}})-->
+                                <div layout="row" layout-align="start center"  class="editFont">
+                                    You are already linked to your Facebook account. Enjoy seamless logging in with Facebook to your Exambazaar account.
+                                </div>
+                            </div>
+
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">
+                                <md-button class="md-green2 md-large tolowercase margin0" ng-click="setActiveSubcategory('Blogging')">
+                                    Next
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Blogging'">
+                        <div layout="row" layout-align="start center" class="fieldRow" ng-if="user.blogger.active">
+                            <div flex="{{col1Width}}" class="col1">
+                                <div>
+                                    Add profile credential
+                                </div>
+                                <div class="editFont font10 ">
+                                    Credentials also appear on blogs you write
+                                </div>
+                            </div>
+                            <div flex class="col2">
+                                <input type="text" class="width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
+                                
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow" ng-if="!user.blogger.active">
+                            <div layout="column" layout-align="start start" class="width100 font14">
+                                <div class="marginB20 font20">
+                                Would you like to contribute to <a ui-sref="blog" target="_blank" id="link">Exambazaar Blog</a>?
+                                </div>
+                                
+                                
+                                <span>
+                                    {{user.basic.name}}, blogging on Exambazaar has not been activated for you.<br/>
+                                    <a href="mailto:team@exambazaar.com?Subject=Blogging%20Request" target="_top" id="link">
+                                        Write to us at team@exambazaar.com
+                                    </a>
+                                    &nbsp;with your blogging experience and we will enable it for you!
+                                </span>
+                            
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">
+                                <md-button class="md-green2 md-large tolowercase margin0" ng-click="setActiveSubcategory('Preferences')">
+                                    Next
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Preferences'">
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div layout="column" layout-align="start start" class="width100 font14">
+                                <div class="marginB20 font20">
+                                This section is coming up soon!
+                                </div>    
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    
+                    
+                   </div>    
+            </div>
+        
+            </div>
+        </div>
+        <!--<div layout="column" layout-align="start start" class="width100 paddingLR20 min100vh" flex>
+            <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100" id="profileSection">
+                <div layout="row" layout-align="start center" ng-if="user.basic" class="width100">
+                    <div>
+                        Welcome, {{user.basic.name}}
+                    </div>
+                    <div layout="column" layout-align="start start" class="paddingL20 editFont">
+                        <div layout="column" layout-align="center center" ng-if="user.image">
+                            <img id="userPic" ng-src="{{user.image}}" class="img-circle" />
+                            <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.8, centerCrop: true}">Change</span>
+                        </div>
+                        <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.7, centerCrop: true}">
+                            <div layout="row" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Image
+                            </div>
+
                         </div>
 
                     </div>
 
                 </div>
-                
-            </div>
-            <!--<span>User Type: {{user.userType}}</span>-->
-            <!--<span ng-if="user.basic">Last Login: {{user.logins[user.logins.length-1] | date: 'dd-MMM-yyyy HH:mm'}}</span>-->
-            <span ng-if="!user.facebookId" class="editFont marginB20">
-                You can link Facebook to your existing account to enable seamless logging in.
-            </span>
-            
-            <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase" ng-show="!user.facebookId">
-                <span class="font14" hide-xs>
-                    Link with Facebook
+                <span ng-if="!user.facebookId" class="editFont marginB20">
+                    You can link Facebook to your existing account to enable seamless logging in.
                 </span>
-                <span class="font12" hide-gt-xs>
-                    Link with Facebook
-                </span>
-            </md-button>
-            
-            
-            <div layout="column" ng-if="user.facebookId" class="marginT10">
-                <div>
-                    Facebook Linked <i class="fa fa-facebook-official" aria-hidden="true"></i>
-                </div>
-                <div>
-                <span>
-                <i class="fa fa-check font20 text-primary bold" aria-hidden="true"></i>
-                </span>
-                <span class="editFont marginB20">
-                    You are already linked to your Facebook account (id: {{user.facebookId}}). Enjoy seamless logging in with Facebook to your Exambazaar account.
-                </span>
-                </div>
-                
-            </div>
-            <span ng-if="!user.basic">
-            Name: 
-            </span>
-            
-            
-        </div>
-        <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100 marginT20" id="profileSection" ng-if="user.blogger.active">
-            
-            <div layout="row" layout-align="start start" class="width100">
-                Credentials & Highlights
-            </div>
-            <div layout="row" layout-align="start center" class="width100 marginT20">
-                <div flex="25" layout="column" layout-align="start start">
-                    <div>
-                        Add profile credential
-                    </div>
-                    <div class="editFont font10 ">
-                        Credentials also appear on blogs you write
-                    </div>
-                </div>
-                <div flex>
-                    <input type="text" class="font12 width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
-                </div>
-            </div>
-            <div layout="row" layout-align="end center" class="width100">
-                <md-button class="md-raised md-primary" ng-click="saveBlogger()">
-                     Save
-                </md-button>
-            </div>
-        </div>
-        
-    </div>
-    <!--<div>
-        <div flex layout="column" layout-align="start start" class="">
-            <span>Tell us where you live</span>
-            <div ng-if="userlatlng" class="width50">
-                <ng-map center="{{userlatlng}}"  zoom="14">
 
-                    <marker position="{{userPosition}}"
-                      title="ABC"
-                      animation="Animation.DROP"
-                      centered="true"></marker>
-                  </ng-map>
+                <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase" ng-show="!user.facebookId">
+                    <span class="font14" hide-xs>
+                        Link with Facebook
+                    </span>
+                    <span class="font12" hide-gt-xs>
+                        Link with Facebook
+                    </span>
+                </md-button>
+
+
+                <div layout="column" ng-if="user.facebookId" class="marginT10">
+                    <div>
+                        Facebook Linked <i class="fa fa-facebook-official" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                    <span>
+                    <i class="fa fa-check font20 text-primary bold" aria-hidden="true"></i>
+                    </span>
+                    <span class="editFont marginB20">
+                        You are already linked to your Facebook account (id: {{user.facebookId}}). Enjoy seamless logging in with Facebook to your Exambazaar account.
+                    </span>
+                    </div>
+
+                </div>
+                <span ng-if="!user.basic">
+                Name: 
+                </span>
+
+
             </div>
-            <span>{{userPosition}}</span>
-        </div>
-    </div>-->
+            <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100 marginT20" id="profileSection" ng-if="user.blogger.active">
+
+                <div layout="row" layout-align="start start" class="width100">
+                    Credentials & Highlights
+                </div>
+                <div layout="row" layout-align="start center" class="width100 marginT20">
+                    <div flex="25" layout="column" layout-align="start start">
+                        <div>
+                            Add profile credential
+                        </div>
+                        <div class="editFont font10 ">
+                            Credentials also appear on blogs you write
+                        </div>
+                    </div>
+                    <div flex>
+                        <input type="text" class="font12 width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="width100">
+                    <md-button class="md-raised md-primary" ng-click="saveBlogger()">
+                         Save
+                    </md-button>
+                </div>
+            </div>
+
+        </div>-->
+    </div>
     </div>
 </div>
 
-<div style="visibility: hidden">    
+<!--<div style="visibility: hidden">    
     <div class="md-dialog-container" id="savedDialog">
       <md-dialog>
           <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
@@ -144,4 +506,25 @@
           </div>
       </md-dialog>
     </div>    
+</div>-->
+
+<div class="bottomBar">
+    <div layout="row" layout-align="start center">
+        <div flex ="80">
+            <span>
+            Do you want to save changes to your profile? 
+            </span>
+        </div>
+        <div layout="row" layout-align="end center" flex = "20">
+            <md-button class="md-green2 md-small font10 width8" ng-click="saveUser()">
+                Save
+            </md-button>
+            <!--
+            <md-button class="md-default md-cancel md-small font10 width8" ng-click="dontsaveChanges()">
+                Cancel
+            </md-button>
+            -->
+        </div>
+        
+    </div>
 </div>
