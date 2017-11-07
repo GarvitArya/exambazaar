@@ -25495,7 +25495,7 @@ function getLatLng(thisData) {
                 $scope.currentSubcategories = thisCategory.subcategories;
             }
         });
-        $scope.activeSubcategory = $scope.activeCategory.subcategories[2];
+        $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
         
         $scope.setActiveSubcategory = function(subcategoryName){
             $scope.activeCategory.subcategories.forEach(function(thisSubcategory, index){
