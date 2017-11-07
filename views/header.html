@@ -161,7 +161,7 @@
             </li>
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="aroundme">Around Me</a></li>
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="review">Review a Coaching</a></li>
-            
+            <li><a ui-sref="postBlog({ userId:{{'sessionuser.userId'}} })" ng-if="sessionuser.userType=='Student' && sessionuser._id == '5a00a7081cef026af8f68dc8'">Post Blog</a></li>
         </ul>
         
         <div hide-sm hide-xs layout="row" layout-align="start center" ng-if="!searchMode && headerShowOptions()">

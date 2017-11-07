@@ -25041,7 +25041,7 @@ function getLatLng(thisData) {
                     
                 ],
             },
-            {
+            /*{
                 name: 'Reviews',
                 active: false,
                 href: 'reviewed',
@@ -25050,7 +25050,7 @@ function getLatLng(thisData) {
                 name: 'Institutes',
                 active: false,
                 href: '',
-            },
+            },*/
         ];
         $scope.educationLevels = [
             {
@@ -30540,7 +30540,7 @@ function getLatLng(thisData) {
             };
             $scope.email = {
                 to: '',
-                templateName: 'Claim CI Email - 5thApril2017',
+                templateName: 'Claim CI Email - 7thNov2017',
                 sender: '',
                 senderId: '',
                 from: '',
@@ -30552,34 +30552,6 @@ function getLatLng(thisData) {
                 instituteId:'',
                 logo:''
             };
-            $scope.instituteIds =[
-                "5870d1271a807f0011545809",
-                "587139ba5f53bc1f94b0210a",
-                "5870f6dab2a1c11da8740271",
-                "5870f236b2a1c11da8740236",
-                "5870ff60b2a1c11da87402df",
-                "5870f7cdb2a1c11da874027d",
-                "5870f7d5b2a1c11da874027e",
-                "5870fcadb2a1c11da87402be",
-                "58e3707a76035205d401c22f",
-                "587138cf5f53bc1f94b020ff",
-                "5870d1271a807f001154580b",
-                "58713a045f53bc1f94b0210c",
-                "5870ce8d1131e4320865fc81",
-                "5870ef6280ea0e069889091c",
-                "5870f328b2a1c11da8740242",
-                "5870f6efb2a1c11da8740273",
-                "5870f787b2a1c11da874027c",
-                "587138b25f53bc1f94b020fc",
-                "587139275f53bc1f94b02101",
-                "587139495f53bc1f94b02103",
-                "5870d1271a807f0011545806",
-                "5870f86bb2a1c11da8740287",
-                "587126eb72dbba182cb4a644",
-                "587137ad5f53bc1f94b020ee",
-                "5870d1271a807f0011545807",
-                "58f5ed043d592300f42b5c72"
-            ];
             $scope.update = function(instituteId){
                 $scope.email.instituteId = instituteId;
             };
@@ -30612,6 +30584,7 @@ function getLatLng(thisData) {
             };
             $scope.templateNames = [
                 /*'Survey Email - 11March2017',*/
+                'Claim CI Email - 7thNov2017',
                 'Claim CI Email - 5thApril2017',
                 'Follow Up 1 to CIs',
             ];
@@ -30690,7 +30663,7 @@ function getLatLng(thisData) {
                     
                     $scope.email.instituteId = $scope.provider._id;
                     $scope.email.logo = $scope.provider.logo;
-                    $scope.email.subject = $scope.provider.name + " - Don't Wait! Claim Your Free Exambazaar Listing Now";
+                    $scope.email.subject = $scope.provider.name + " - welcome to Exambazaar!";
                 }
                 }).error(function (data, status, header, config) {
                     console.log("Error ");
