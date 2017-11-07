@@ -2292,6 +2292,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
         $scope.thisGroupR = thisGroupResults.data;
+        console.log($scope.thisGroupR);
         if(!$scope.thisGroupR){
             $scope.thisGroupR = [];
         }
@@ -34136,7 +34137,7 @@ function getLatLng(thisData) {
             }
         })
         .state('profile', {
-            url: '/ebinternal/user/:userId/profile',
+            url: '/ebinternal/profile',
             views: {
                 'header':{
                     templateUrl: 'header.html',

@@ -260,7 +260,7 @@ var allStates = [
 '/ebinternal/user/:userId/filled',
 '/ebinternal/user/:userId/filledAll',
 '/ebinternal/user/:userId/group',
-'/ebinternal/user/:userId/profile',
+'/ebinternal/profile',
 '/ebinternal/user/:userId/reviewed',
 '/ebinternal/user/:userId/sendEmail',
 '/ebinternal/user/:userId/shortlisted',
