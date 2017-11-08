@@ -450,6 +450,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.hundredblogEmail = function() {
             return $http.post('/api/emails/hundredblogEmail');
         };
+        this.CATEmail = function() {
+            return $http.post('/api/emails/CATEmail');
+        };
     }]);    
     
     exambazaar.service('EligibilityService', ['$http', function($http) {
@@ -476,6 +479,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.getQuestion = function(questionId) {
             return $http.get('/api/questions/edit/'+questionId, {questionId: questionId});
+        };
+        this.randomQuestion = function(examId) {
+            return $http.get('/api/questions/exam/randomQuestion/'+examId, {examId: examId});
         };
         this.removeQuestion = function(questionId) {
             return $http.get('/api/questions/remove/'+questionId, {questionId: questionId});
@@ -7462,9 +7468,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
+            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'profile', 'eqad'];
             
             SidebarJS.close();
-            if($state.current.name == 'showGroup' || $state.current.name == 'claim' || $state.current.name == 'rankerswall'){
+            if(forceLoginStates.indexOf($state.current.name) != -1){
                 //console.log('I am here');
                 $mdDialog.show({
                   contentElement: '#loginDialog',
@@ -12583,7 +12590,83 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);    
         
+    exambazaar.controller("eqadController", 
+        [ '$scope', '$rootScope', '$cookies', '$mdDialog', '$timeout', 'questionService', 'UserService', 'thisexam', 'Notification', function($scope, $rootScope, $cookies, $mdDialog, $timeout, questionService, UserService, thisexam, Notification){
+            if($cookies.getObject('sessionuser')){
+                var sessionuser = $cookies.getObject( 'sessionuser');
+                $scope.exam = thisexam.data;
+                $rootScope.pageTitle = $scope.exam.seoname + " Exam Question A Day"
+                UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    //Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }else{
+                $scope.showLoginForm();
+            }
+            var optionsPrefix = [
+                'a) ',
+                'b) ',
+                'c) ',
+                'd) ',
+                'e) ',
+                'f) ',
+            ];
             
+            var sanitizeQuestion = function(question){
+                if(question && question.context){
+                    question.context = question.context.replace(/\n/ig, '<br/>');
+                }
+                if(question && question.questions){
+                    question.questions.forEach(function(thisQuestion, index){
+                        thisQuestion.question = thisQuestion.question.replace(/\n/ig, '<br/>');
+                        
+                        thisQuestion.options.forEach(function(thisOption, oindex){
+                            thisOption.option = thisOption.option.replace(/\n/ig, '<br/>');
+                            thisOption.option = optionsPrefix[oindex] + thisOption.option;
+                        });
+                    });
+                    
+                }
+                return question;
+            };
+            $scope.getQuestion = function(questionId){
+                questionService.getQuestion(questionId).success(function (data, status, headers) {
+                    console.log(data);
+                    if(data){
+                        $scope.question = data;
+                        $scope.question = sanitizeQuestion($scope.question);
+                        Notification.primary({message: "Question loaded successfully!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    }else{
+                        Notification.warning({message: "Question not loaded!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    }
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });    
+            };
+            
+            var randomQuestion = function(){
+                questionService.randomQuestion($scope.exam._id).success(function (data, status, headers) {
+                    //return(data);
+                    var questionId = data;
+                    $scope.getQuestion(questionId);
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+            };
+            
+            
+            randomQuestion();
+            
+            
+    }]);           
         
     exambazaar.controller("scheduleQADController", 
         [ '$scope', '$rootScope', 'thisuser', 'allPages', 'socialMediaCredentialService', '$mdDialog', '$timeout', 'examList', 'streamList', 'questionService', function($scope, $rootScope, thisuser, allPages, socialMediaCredentialService, $mdDialog, $timeout, examList, streamList, questionService){
@@ -25296,7 +25379,7 @@ function getLatLng(thisData) {
                 console.log('Error ' + data + ' ' + status);
             });
         }else{
-            $scope.showLoginForm();
+            $rootScope.$emit("CallBlogLogin", {});
         }
         
         $scope.uploadPic = function (newPic) {
@@ -29813,8 +29896,7 @@ function getLatLng(thisData) {
             $rootScope.$on("setBloggerUser", function(event, data){
                 if(data && data.user){
                     $scope.thisuser = data.user;
-                    console.log($scope.thisuser);
-                    viewService.getuserviews($scope.thisuser._id).success(function (data2, status, headers) {
+                     viewService.getuserviews($scope.thisuser._id).success(function (data2, status, headers) {
                         $scope.thisuserViewed = data2;
                     })
                     .error(function (data, status, header, config) {
@@ -29885,6 +29967,41 @@ function getLatLng(thisData) {
                             username: marketingUser.basic.name,
                         };*/
                         EmailService.hundredblogEmail().success(function (thisData, status, headers) {
+                            console.log(thisData);
+                            //$scope.collegeMessageSent = true;
+                            Notification.success("Email sent to user " + marketingUser.basic.name + " at " + marketingUser.email + "!");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });
+                        
+                        
+                    }
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                    
+            };
+            
+            $scope.CATEmail = function(userId){
+                
+                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                    var marketingUser = data;
+                    //console.log(marketingUser);
+                    if(marketingUser.mobile == '9829685919'){
+                        /*var emailForm = {
+                            to: marketingUser.email,
+                            username: marketingUser.basic.name,
+                        };*/
+                        var thisUser = {
+                            _id: marketingUser._id//'58932d3ac419333af4aadfb4'
+                        };
+                        //console.log(thisUser);
+                        EmailService.CATEmail().success(function (thisData, status, headers) {
                             console.log(thisData);
                             //$scope.collegeMessageSent = true;
                             Notification.success("Email sent to user " + marketingUser.basic.name + " at " + marketingUser.email + "!");
@@ -32782,6 +32899,44 @@ function getLatLng(thisData) {
                     return StreamService.getStreams();
                 }],
                 
+            }
+        })
+        .state('eqad', {
+            url: '/ebinternal/eqad/:examName',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'eqad.html',
+                    controller: 'eqadController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                /*thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                allPages: ['socialMediaCredentialService',
+                    function(socialMediaCredentialService){
+                    return socialMediaCredentialService.getSocialMediaCredentials();
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],*/
+                thisexam: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamByName($stateParams.examName);    
+                }],
             }
         })
         .state('aroundme', {

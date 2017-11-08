@@ -1048,7 +1048,7 @@ router.get('/referexists/:mobile', function(req, res) {
         .findOne({ 'mobile': mobile },{mobile:1})
         .exec(function (err, thisUser) {
         if (!err){
-            console.log(thisUser);
+            //console.log(thisUser);
             if(!thisUser || thisUser.length==0){
                 var thisUserRefer = userrefer
                 .findOne({ 'mobile': mobile },{mobile:1})
@@ -1113,7 +1113,7 @@ router.post('/markLatLng', function(req, res) {
     var positionForm = req.body;
     var userId = positionForm.userId;
     var latlng = positionForm.latlng;
-    console.log('Here');
+    //console.log('Here');
     //console.log('Position form is: ' + positionForm);
     var thisUser = user
         .findOne({ '_id': userId },{latlng:1})
@@ -1664,13 +1664,12 @@ router.get('/editPartnerBasic/:userId', function(req, res) {
 router.get('/editBasic/:userId', function(req, res) {
     var userId = req.params.userId;
     //var mobile = req.params.mobile;
-    console.log("User is " + userId);
+    //console.log("User is " + userId);
     user
         .findOne({ '_id': userId },{basic:1, mobile:1, email:1})
         //.deepPopulate('_master.contact')
         .exec(function (err, docs) {
         if (!err){ 
-            console.log(docs);
             res.json(docs);
             //process.exit();
         } else {throw err;}

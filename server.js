@@ -261,6 +261,7 @@ var allStates = [
 '/ebinternal/user/:userId/filledAll',
 '/ebinternal/user/:userId/group',
 '/ebinternal/profile',
+'/ebinternal/eqad/:examName',
 '/ebinternal/user/:userId/reviewed',
 '/ebinternal/user/:userId/sendEmail',
 '/ebinternal/user/:userId/shortlisted',

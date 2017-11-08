@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var exam = require('../app/models/exam');
+var test = require('../app/models/test');
 var question = require('../app/models/question');
 var mongoose = require('mongoose');
 
@@ -112,14 +113,29 @@ router.get('/exam/:examId', function(req, res) {
     
 });
 
-
+router.get('/exam/randomQuestion/:examId', function(req, res) {
+    var examId = req.params.examId.toString();
+    var allQuestions = question
+        .find({exam: examId}, {_id: 1})
+        .limit(100)
+        .exec(function (err, allQuestions) {
+        if (!err){
+            var nQuestions = allQuestions.length;
+            var rIndex = Math.floor(Math.random() * (nQuestions - 1 - 0) + 0);
+            console.log(nQuestions + " " + rIndex);
+            thisQuestion = allQuestions[rIndex];
+            res.json(thisQuestion._id);
+        } else {throw err;}
+    });
+    
+});
 
 
 router.get('/testQuestions/:testId', function(req, res) {
     var testId = req.params.testId;
     var allQuestions = question
         .find({test: testId})
-        .exec(function (err, allQuestions) {
+        .exec(function (err, allQuestions, mockPaper, official) {
         if (!err){
             res.json(allQuestions);
         } else {throw err;}
@@ -131,12 +147,28 @@ router.get('/question/:questionId', function(req, res) {
     var questionId = req.params.questionId;
     var thisQuestion = question
         .findOne({'_id': questionId})
-        .deepPopulate('exam')
+        //.deepPopulate('test')
         .exec(function (err, thisQuestion) {
         if (!err){
+            var testId = thisQuestion.test;
             
-            //console.log(thisQuestion);
-            res.json(thisQuestion);
+            var thisTest = test
+                .findOne({ '_id': testId },{name: 1, description: 1})
+                //.deepPopulate('_master.contact')
+                .exec(function (err, thisTest) {
+                if (!err){
+                    if(thisTest){
+                        thisQuestion.test = thisTest;
+                        //console.log(thisQuestion.test);
+                        res.json(thisQuestion);
+                    }else{
+                        res.json(null);
+                    }
+                    
+                    
+                } else {throw err;}
+            });
+            
         } else {throw err;}
     });
     
@@ -212,16 +244,29 @@ router.get('/count', function(req, res) {
 
 //to get a particular user with _id userId
 router.get('/edit/:questionId', function(req, res) {
-    var questionId = req.params.questionId;
-    //console.log("Question is " + questionId);
-    question
-        .findOne({ '_id': questionId },{})
-        //.deepPopulate('_master.contact')
-        .exec(function (err, docs) {
-        if (!err){ 
-            //console.log(docs);
-            res.json(docs);
-            //process.exit();
+    var questionId = req.params.questionId.toString();
+    var thisQuestion = question
+        .findOne({'_id': questionId})
+        .exec(function (err, thisQuestion) {
+        if (!err){
+            var testId = thisQuestion.test.toString();
+            console.log(testId);
+            var thisTest = test
+                .findOne({ '_id': testId },{name: 1, description: 1})
+                .exec(function (err, thisTest) {
+                if (!err){
+                    console.log(thisTest);
+                    if(thisTest){
+                        thisQuestion.test = thisTest;
+                        res.json(thisQuestion);
+                    }else{
+                        res.json(null);
+                    }
+
+
+                } else {throw err;}
+            });
+
         } else {throw err;}
     });
 });

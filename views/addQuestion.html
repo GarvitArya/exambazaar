@@ -188,8 +188,8 @@
             
             <div layout="column" layout-align="start start" class="font12 width100 marginT20" ng-repeat="question in toAddQuestion.questions">
                 <div layout="row" layout-align="start center" class="width100 marginB10">
-                    <div layout="row" layout-align="start center" class="font16 bold">
-                    Question {{$index + 1}}
+                    <div layout="row" layout-align="start center" class="font16">
+                    Question {{$index + 1}} <span class="marginL20 font10">{{toAddQuestion._id}}</span>
                     </div>
                                     
                     <div flex layout="row" layout-align="start center" ng-click="removeQuestionFromSet(question, $index)" class="marginL20" ng-if="$index > 0">

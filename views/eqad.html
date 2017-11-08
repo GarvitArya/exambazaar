@@ -1,0 +1,170 @@
+<style>
+    input[type="text"]
+    {
+        font-size: 14px;
+        color: #333333;
+        padding: 10px;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    #profileSection{
+        min-height: 20vh;
+    }
+    .profileBar{
+        background-color: salmon;
+        color: white;
+    }
+    .profileBar a{
+        color: white;
+        text-decoration: none;
+        min-width: 15%;
+    }
+    .active{
+        text-decoration: underline;
+    }
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #ccc;
+    }
+    .fieldRow{
+        font: 16px;
+        min-height: 5vh;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .fieldRow div.col1{
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: #333333;
+    }
+    .fieldRow div.col2{
+        color: black;
+    }
+    .emptyTag{
+        padding:10px;
+        font-size: 16px;
+        color: black;
+        background: white;
+        border: 1px solid #333333;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+    }
+    .filledTag{
+        padding:10px;
+        font-size: 16px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+    }
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    .questionRow{
+        width: 100%;
+        background: #ccc;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+
+<div class="textBlack whiteBackground" ng-if="user">
+    
+    <div layout="column" layout-align="center center" class="font32 marginTB20">
+        <div class="marginR10">{{exam.name}} - Exam Question a Day</div>
+        <div class="font10">Exam: {{exam._id}}</div>
+        <div class="font10"><a ui-sref="addQuestion({ testId:{{'question.test._id'}} })" target="_blank">Test: {{question.test._id}}</a></div>
+    </div>
+    <div layout="row" layout-align="center start" class="width100">
+    <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginT20 marginB40">
+        <div layout="column" layout-align="start center" flex="20" class="min100vh paddingLR20 greyRightBorder">
+            Dates go here
+        </div>
+        <div flex layout="row" layout-align="center center">
+            <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
+            <div layout="column" layout-align="start start" class="width100 paddingLR40 min100vh" flex>
+                <div layout="column" layout-align="start start" class="width100" ng-if="question">
+                    <div class="width100">
+                        As appeared in <span ng-if="question.test.name">Official</span> {{question.test.name}}
+                    </div>
+                    <div class="width100" ng-if="question.questions.length > 1">
+                        Today's EQAD has {{question.questions.length}} subquestions
+                    </div>
+                    <div  class="width100 greyBorder padding10 marginTB10" ng-if="question._hascontext || question.images && question.images.length > 0">
+                        <div class="width100  blogContent" ng-bind-html="question.context" ng-if="question._hascontext">
+                        </div>
+                        <div layout="column" layout-align="center center" class="width100 marginTB10" ng-if="question.images && question.images.length > 0">
+                        <img ng-repeat="image in question.images" ng-src="{{image}}" class="marginTB5"/>
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="start start" class="width100" ng-if="question.questions">
+                        <div layout="column" layout-align="start start" class="width100 blogContent greyBorder padding10 marginTB10"  ng-repeat="thisQuestion in question.questions">
+                            <div layout="column" layout-align="start start" class="width100">
+                                <div layout="row" layout-align="start start" class="questionRow">
+                                    <div class="marginR10">Question:</div>
+                                    <div class="marginR10">{{thisQuestion._id}}</div>
+                                
+                                </div>
+                                <div ng-bind-html="thisQuestion.question" class="marginB10">
+                                </div>
+                            </div>
+                            <div ng-repeat="option in thisQuestion.options" ng-bind-html="option.option" class="marginTB5">
+                            
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    
+</div>
+
+<!--
+<div class="bottomBar">
+    <div layout="row" layout-align="start center">
+        <div flex ="80">
+            <span>
+            Do you want to save changes to your profile? 
+            </span>
+        </div>
+        <div layout="row" layout-align="end center" flex = "20">
+            <md-button class="md-green2 md-small font10 width8" ng-click="saveUser()">
+                Save
+            </md-button>
+            <md-button class="md-default md-cancel md-small font10 width8" ng-click="dontsaveChanges()">
+                Cancel
+            </md-button>
+        </div>
+        
+    </div>
+</div>
+-->
