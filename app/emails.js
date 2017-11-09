@@ -717,6 +717,67 @@ router.post('/CATEmail', function(req, res) {
                     } else {throw err;}
                     });
                     
+                    
+                    
+                    var allColleges = college.find({email: {$exists: true}}, {name: 1, email: 1, _id: 1}, function(err, allSubscribers) {
+                    if (!err){
+                        var emailcounter = 0;
+                        var counter = 0;
+                        var nUsers = allSubscribers.length;
+                        console.log("Total " + allSubscribers + " users!");
+                        allSubscribers.forEach(function(thisUser, index){
+                            
+                            var to = thisUser.email;
+                            var username = "Sir/Madam";
+                            var subject = "Are your students ready for CAT 2017? We've got some goodies for them!";
+                            if(thisUser.name){
+                                username = thisUser.name;
+                                subject = username + ", ready for CAT 2017? We've got some goodies for you!";
+                            }
+                            
+                            
+                            var to_email = new helper.Email(to);
+                            var html = ' ';
+                            
+                            var content = new helper.Content('text/html', html);
+                            var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                            mail.setTemplateId(templateId);
+                             mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                            var request = sg.emptyRequest({
+                              method: 'POST',
+                              path: '/v3/mail/send',
+                              body: mail.toJSON(),
+                            });
+                            
+                            
+                            if(thisUser.email && thisUser.email != ''){
+                                console.log('Sending email to ' + username + ' at ' + to);
+                                sg.API(request, function(error, response) {
+                                if(error){
+                                    console.log('Could not send email! ' + error);
+                                }else{
+                                    counter += 1;
+                                    console.log(counter + "/" + nUsers + " done!");
+                                    if(counter == nUsers){
+                                        console.log('All Done');
+                                    }
+                                }
+                            });
+                                
+                                
+                            }else{
+                                counter += 1;
+                                if(counter == nUsers){
+                                    console.log('All Done');
+                                }
+                            }
+                        });
+                        
+                        
+    
+                    } else {throw err;}
+                    });
+                    
                 }
                 if(counter == nLength){
                     if(!templateFound){

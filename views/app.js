@@ -25118,9 +25118,9 @@ function getLatLng(thisData) {
                     {
                         name: 'Blogging',
                     },
-                    {
+                    /*{
                         name: 'Preferences',
-                    },
+                    },*/
                     
                 ],
             },
@@ -25130,7 +25130,7 @@ function getLatLng(thisData) {
                 href: 'reviewed',
             },
             {
-                name: 'Institutes',
+                name: 'Your Institutes',
                 active: false,
                 href: '',
             },*/
@@ -25196,16 +25196,16 @@ function getLatLng(thisData) {
                 name: "btech",
                 displayname: "B.Tech.",
                 stream:{
-                    name: "engineernig",
-                    displayname: "Engineernig",
+                    name: "engineering",
+                    displayname: "Engineering",
                 },
             },
             {
                 name: "be",
                 displayname: "B.E.",
                 stream:{
-                    name: "engineernig",
-                    displayname: "Engineernig",
+                    name: "engineering",
+                    displayname: "Engineering",
                 },
             },
             {
@@ -25260,8 +25260,8 @@ function getLatLng(thisData) {
                 name: "barch",
                 displayname: "B. Arch.",
                 stream:{
-                    name: "engineernig",
-                    displayname: "Engineernig",
+                    name: "engineering",
+                    displayname: "Engineering",
                 },
             },
             {
@@ -25736,7 +25736,7 @@ function getLatLng(thisData) {
         };
             
         $scope.setClass12Subjects = function(subjectName){
-            console.log($scope.user.eligibility.class12Subjects);
+            //console.log($scope.user.eligibility.class12Subjects);
             if(!$scope.user.eligibility){
                 $scope.user.eligibility = {};
             }
@@ -25751,6 +25751,7 @@ function getLatLng(thisData) {
             }
         };     
         $scope.setUndergradMajor = function(degreeName){
+            
             if(!$scope.user.eligibility){
                 $scope.user.eligibility = {};
             }
@@ -25772,7 +25773,7 @@ function getLatLng(thisData) {
             
         };  
             
-        $scope.setUndergradMajor = function(degreeName){
+        $scope.setPostgradMajor = function(degreeName){
             if(!$scope.user.eligibility){
                 $scope.user.eligibility = {};
             }
