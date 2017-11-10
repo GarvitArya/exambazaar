@@ -5,6 +5,7 @@ var config = require('../config/mydatabase.js');
 var exam = require('../app/models/exam');
 var test = require('../app/models/test');
 var question = require('../app/models/question');
+var cisaved = require('../app/models/cisaved');
 var mongoose = require('mongoose');
 
 var moment = require('moment');
@@ -16,7 +17,25 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
-
+router.get('/changeUser', function(req, res) {
+    var userId = '58900bd8fc519c0a04be52e8';
+    var allQuestions = cisaved
+        .find({user: userId},{user: 1})
+        .exec(function (err, allQuestions) {
+        if (!err){
+            allQuestions.forEach(function(thisQuestion, qIndex){
+                thisQuestion.user = '5a04512a63c45b592385f27b';
+                thisQuestion.save(function(err, thisQuestion) {
+                    if (err) return console.error(err);
+                    console.log('Object saved: ' + thisQuestion._id);
+                });
+            });
+            
+            res.json(allQuestions);
+        } else {throw err;}
+    });
+    
+});
 
 router.post('/questionToPost', function(req, res) {
     var examArray = req.body;
@@ -143,6 +162,8 @@ router.get('/testQuestions/:testId', function(req, res) {
     
 });
 
+
+
 router.get('/question/:questionId', function(req, res) {
     var questionId = req.params.questionId;
     var thisQuestion = question
@@ -250,7 +271,6 @@ router.get('/edit/:questionId', function(req, res) {
         .exec(function (err, thisQuestion) {
         if (!err){
             var testId = thisQuestion.test.toString();
-            console.log(testId);
             var thisTest = test
                 .findOne({ '_id': testId },{name: 1, description: 1})
                 .exec(function (err, thisTest) {

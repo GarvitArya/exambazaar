@@ -4,6 +4,7 @@ var router = express.Router();
 var helper = require('sendgrid').mail;
 var email = require('../app/models/email');
 var user = require('../app/models/user');
+var college = require('../app/models/college');
 var subscriber = require('../app/models/subscriber');
 var sendGridCredential = require('../app/models/sendGridCredential');
 
@@ -658,7 +659,7 @@ router.post('/CATEmail', function(req, res) {
                     } else {throw err;}
                     });*/
                     
-                    var allSubscribers = subscriber.find({email: {$exists: true}}, {name: 1, email: 1, _id: 1}, function(err, allSubscribers) {
+                    /*var allSubscribers = subscriber.find({email: {$exists: true}}, {name: 1, email: 1, _id: 1}, function(err, allSubscribers) {
                     if (!err){
                         var emailcounter = 0;
                         var counter = 0;
@@ -716,33 +717,51 @@ router.post('/CATEmail', function(req, res) {
     
                     } else {throw err;}
                     });
+                    */
                     
-                    
-                    
-                    var allColleges = college.find({email: {$exists: true}}, {name: 1, email: 1, _id: 1}, function(err, allSubscribers) {
+                    /*email: {$exists: true}*/
+                    var allColleges = college.find({_id: '5a00345da13aa00d18c989a4'}, {}, function(err, allColleges) {
                     if (!err){
                         var emailcounter = 0;
                         var counter = 0;
-                        var nUsers = allSubscribers.length;
-                        console.log("Total " + allSubscribers + " users!");
-                        allSubscribers.forEach(function(thisUser, index){
+                        var nUsers = allColleges.length;
+                        console.log("Total " + allColleges.length + " colleges!");
+                        allColleges.forEach(function(thisCollege, index){
                             
-                            var to = thisUser.email;
+                            
+                            var contactEmails = [];
+                            var facultyEmails = [];
+                            if(thisCollege['Institute'] && thisCollege['Institute']['Correspondence Details'] && thisCollege['Institute']['Correspondence Details']['Email']){
+                                contactEmails.push(thisCollege['Institute']['Correspondence Details']['Email']);
+                            }
+                            if(thisCollege['Institute'] && thisCollege['Institute']['Contact Person'] && thisCollege['Institute']['Contact Person']['Email']){
+                                contactEmails.push(thisCollege['Institute']['Contact Person']['Email']);
+                            }
+
+                            if(thisCollege['Faculty'] && thisCollege['Faculty']['Faculty Details']){
+                                var allFaculties = thisCollege['Faculty']['Faculty Details'];
+                                allFaculties.forEach(function(thisFaculty, index){
+                                    if(thisFaculty.Email){
+                                        facultyEmails.push(thisFaculty.Email);
+                                    }
+                                });
+                            }
+                            console.log(contactEmails);
+                            
+                            var to = 'saloni@exambazaar.com';
+                            //thisCollege.email;
                             var username = "Sir/Madam";
                             var subject = "Are your students ready for CAT 2017? We've got some goodies for them!";
-                            if(thisUser.name){
-                                username = thisUser.name;
-                                subject = username + ", ready for CAT 2017? We've got some goodies for you!";
-                            }
-                            
+                            var collegename = thisCollege.inst_name;
                             
                             var to_email = new helper.Email(to);
-                            var html = ' ';
+                            var html = 'Please forward this email to your students who will be writing CAT2017! 4 Free CAT Mock Tests inside brought to them exclusively by Exambazaar!';
                             
                             var content = new helper.Content('text/html', html);
                             var mail = new helper.Mail(fromEmail, subject, to_email, content);
                             mail.setTemplateId(templateId);
                              mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                             mail.personalizations[0].addSubstitution(new helper.Substitution('-collegename-', collegename));
                             var request = sg.emptyRequest({
                               method: 'POST',
                               path: '/v3/mail/send',
@@ -750,19 +769,20 @@ router.post('/CATEmail', function(req, res) {
                             });
                             
                             
-                            if(thisUser.email && thisUser.email != ''){
+                            if(to && to != ''){
                                 console.log('Sending email to ' + username + ' at ' + to);
                                 sg.API(request, function(error, response) {
-                                if(error){
-                                    console.log('Could not send email! ' + error);
-                                }else{
-                                    counter += 1;
-                                    console.log(counter + "/" + nUsers + " done!");
-                                    if(counter == nUsers){
-                                        console.log('All Done');
+                                    if(error){
+                                        console.log('Could not send email! ' + error);
+                                    }else{
+                                        //console.log(response);
+                                        counter += 1;
+                                        console.log(counter + "/" + nUsers + " done!");
+                                        if(counter == nUsers){
+                                            console.log('All Done');
+                                        }
                                     }
-                                }
-                            });
+                                });
                                 
                                 
                             }else{

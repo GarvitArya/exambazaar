@@ -197,8 +197,9 @@
                                     <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.8, centerCrop: true}">Change</span>
                                 </div>
                                 <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.7, centerCrop: true}">
-                                    <div layout="column" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
-                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Image
+                                    <div layout="column" layout-align="center center" class="lightGreyBackground width100"  id="picHolder" >
+                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                        <div class="font10 text-center width100">Add Image</div>
                                     </div>
 
                                 </div>
@@ -277,6 +278,28 @@
                             <div flex="{{col1Width}}" class="col1">Email</div>
                             <div flex class="col2">
                                 <input type="email" class="width100" ng-model="user.email"  placeholder="Email Address">
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start" class="fieldRow">
+                            <div layout="column" layout-align="start start" flex="{{col1Width}}" class="col1">
+                                <div>Location</div>
+                                <div class="font10 textLightGrey">
+                                    We use your location to improve your experience in the website.
+                                </div>
+                            
+                            </div>
+                            <div flex class="col2" >
+                                <md-button class="md-black md-large tolowercase margin0" ng-click="locateUser()" ng-if="!user.location">
+                                    Locate me
+                                </md-button>
+                                <div layout="column" layout-align="start start" ng-if="user.location && user.location.length == 1" class="width100">
+                                    <div class="width100">
+                                        {{user.location[0].sublocality}}, {{user.location[0].city}}, {{user.location[0].country}}
+                                    </div>
+                                    <div ng-click="locateUser()" class="text-primary font12 width100">
+                                        Incorrect? Find new location!
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div layout="row" layout-align="start start" class="fieldRow">

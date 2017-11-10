@@ -19,7 +19,13 @@ var userSchema = mongoose.Schema({
     },
     location: [{
         lat:{type: String},
-        long:{type: String}
+        lng:{type: String},
+        sublocality_level_2: {type: String},    
+        sublocality: {type: String},    
+        city: {type: String},    
+        state: {type: String},    
+        country: {type: String},
+        _date: { type: Date, default: Date.now }
     }],
     interest:{
        category: [{type: String}],

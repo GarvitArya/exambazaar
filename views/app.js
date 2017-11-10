@@ -86,6 +86,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               ]
             },
             {
+              name: 'ngSticky',
+              files: [
+                    'sticky.min.js',
+              ]
+            },
+            {
               name: 'angularFileSaver',
               files: [
                     'angular-file-saver.bundle.js'
@@ -414,8 +420,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.updatePassword = function(userPassword) {
             return $http.post('/api/users/updatePassword',userPassword);
         };
+        this.saveUserLocation = function(locationForm) {
+            return $http.post('/api/users/saveUserLocation', locationForm);
+        };
         this.makePartner = function(partnerUser) {
-            return $http.post('/api/users/makePartner',partnerUser);
+            return $http.post('/api/users/makePartner',locationForm);
         };
         this.unmakePartner = function(partnerUser) {
             return $http.post('/api/users/unmakePartner',partnerUser);
@@ -470,6 +479,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.service('questionService', ['$http', function($http) {
         this.saveQuestion = function(question) {
             return $http.post('/api/questions/save', question);
+        };
+        this.changeUser = function(testId) {
+            return $http.get('/api/questions/changeUser');
         };
         this.getTestQuestions = function(testId) {
             return $http.get('/api/questions/testQuestions/'+testId, {testId: testId});
@@ -7588,7 +7600,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
                 
              });
-        } 
+        }
         
             
         $scope.showLoginForm = function(){
@@ -7844,6 +7856,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $state.reload();
                 }
                 if($state.current.name == 'showblog'){
+                    $state.reload();
+                }
+                if($state.current.name == 'profile'){
                     $state.reload();
                 }
                 //$state.reload();
@@ -12591,11 +12606,46 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);    
         
     exambazaar.controller("eqadController", 
-        [ '$scope', '$rootScope', '$cookies', '$mdDialog', '$timeout', 'questionService', 'UserService', 'thisexam', 'Notification', function($scope, $rootScope, $cookies, $mdDialog, $timeout, questionService, UserService, thisexam, Notification){
+        [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'UserService', 'thisexam', 'Notification', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, UserService, thisexam, Notification){
             if($cookies.getObject('sessionuser')){
                 var sessionuser = $cookies.getObject( 'sessionuser');
                 $scope.exam = thisexam.data;
-                $rootScope.pageTitle = $scope.exam.seoname + " Exam Question A Day"
+                $rootScope.pageTitle = $scope.exam.seoname + " Exam Question A Day";
+                $scope.thiseqadDate = moment($stateParams.eqadDate);
+                $scope.thiseqadDateFormat = moment($stateParams.eqadDate).format("DD-MMM-YY");
+                $scope.eqadDates = [];
+                
+                $scope.newEQADDate = $scope.thiseqadDate;
+                
+                
+                /*$scope.$watch('newEQADDate', function (newValue, oldValue, scope) {
+                    console.log(newValue);
+                    if(newValue){
+                        var thisDate = moment($scope.newEQADDate).format("DD-MMM-YY");
+                        console.log(thisDate);
+                    }
+
+                }, true);*/
+                
+                $scope.setEQADDate = function(newEQADDate){
+                    if(newEQADDate){
+                        var thisDate = moment(newEQADDate).format("DD-MMM-YY");
+                    }
+                };
+                $scope.goToEQADDate = function(newEQADDate){
+                    if(newEQADDate){
+                        var thisDate = moment(newEQADDate).format("DD-MMM-YY");
+                        //console.log(thisDate);
+                        $state.go('eqad', { 'examName':$scope.exam.name, 'eqadDate':thisDate });
+                    }
+                };
+                $scope.eqadDates.push($scope.thiseqadDate.format("DD-MMM-YY"));
+                for (var i = 0; i < 3; i++) { 
+                    $scope.eqadDates.push($scope.thiseqadDate.subtract(1, 'days').format("DD-MMM-YY"));
+                }
+                
+                
+                
                 UserService.getUser(sessionuser._id).success(function (data, status, headers) {
                     $scope.user = data;
                     //Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
@@ -12608,12 +12658,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.showLoginForm();
             }
             var optionsPrefix = [
-                'a) ',
-                'b) ',
-                'c) ',
-                'd) ',
-                'e) ',
-                'f) ',
+                'A) ',
+                'B) ',
+                'C) ',
+                'D) ',
+                'E) ',
+                'F) ',
             ];
             
             var sanitizeQuestion = function(question){
@@ -12626,7 +12676,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         
                         thisQuestion.options.forEach(function(thisOption, oindex){
                             thisOption.option = thisOption.option.replace(/\n/ig, '<br/>');
-                            thisOption.option = optionsPrefix[oindex] + thisOption.option;
+                            //thisOption.option = optionsPrefix[oindex] + thisOption.option;
                         });
                     });
                     
@@ -12635,7 +12685,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             $scope.getQuestion = function(questionId){
                 questionService.getQuestion(questionId).success(function (data, status, headers) {
-                    console.log(data);
                     if(data){
                         $scope.question = data;
                         $scope.question = sanitizeQuestion($scope.question);
@@ -12652,14 +12701,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
             var randomQuestion = function(){
-                questionService.randomQuestion($scope.exam._id).success(function (data, status, headers) {
-                    //return(data);
-                    var questionId = data;
-                    $scope.getQuestion(questionId);
-                })
-                .error(function (data, status, header, config) {
-                    console.log("Error ");
-                });
+                if($scope.exam && $scope.exam._id){
+                    questionService.randomQuestion($scope.exam._id).success(function (data, status, headers) {
+                        //return(data);
+                        var questionId = data;
+                        $scope.getQuestion(questionId);
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                }
+                
             };
             
             
@@ -25094,7 +25146,7 @@ function getLatLng(thisData) {
     }]);       
         
     exambazaar.controller("profileController", 
-        [ '$scope', '$http','$state', '$rootScope', '$cookies', 'Upload', 'ImageService', 'UserService', '$facebook', '$mdDialog', '$timeout', 'Notification', function($scope,$http,$state,$rootScope, $cookies, Upload, ImageService, UserService, $facebook, $mdDialog, $timeout, Notification){
+        [ '$scope', '$http','$state', '$rootScope', '$cookies', '$geolocation', 'Upload', 'ImageService', 'UserService', '$facebook', '$mdDialog', '$timeout', 'Notification', function($scope,$http,$state,$rootScope, $cookies, $geolocation, Upload, ImageService, UserService, $facebook, $mdDialog, $timeout, Notification){
         $scope.col1Width = 40;
         $scope.col1WidthAcademic = 20;
         $scope.components = [
@@ -25107,9 +25159,6 @@ function getLatLng(thisData) {
                         name: 'Personal',
                     },
                     {
-                        name: 'Contact',
-                    },
-                    {
                         name: 'Academic',
                     },
                     {
@@ -25117,6 +25166,9 @@ function getLatLng(thisData) {
                     },
                     {
                         name: 'Blogging',
+                    },
+                    {
+                        name: 'Contact',
                     },
                     /*{
                         name: 'Preferences',
@@ -25368,17 +25420,25 @@ function getLatLng(thisData) {
         };    
         if($cookies.getObject('sessionuser')){
             var sessionuser = $cookies.getObject( 'sessionuser');
-            UserService.getUser(sessionuser._id).success(function (data, status, headers) {
-                $scope.user = data;
-                $scope.sanitizeEligibility();
-                Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
-                if($scope.user.basic)
-                    $rootScope.pageTitle =$scope.user.basic.name;
-            })
-            .error(function (data, status, header, config) {
-                console.log('Error ' + data + ' ' + status);
-            });
+            if(sessionuser && sessionuser._id){
+                UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    console.log($scope.user);
+                    $scope.sanitizeEligibility();
+                    Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    if($scope.user.basic)
+                        $rootScope.pageTitle =$scope.user.basic.name;
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }else{
+                $cookies.remove("sessionuser");
+                $rootScope.$emit("CallBlogLogin", {});
+            }
+            
         }else{
+            $cookies.remove("sessionuser");
             $rootScope.$emit("CallBlogLogin", {});
         }
         
@@ -25794,6 +25854,122 @@ function getLatLng(thisData) {
             });
             
         };
+            
+            
+        $scope.locateUser = function(){
+            if (navigator.geolocation) {
+                  var timeoutVal = 10 * 1000;
+                  navigator.geolocation.getCurrentPosition(
+                    displayPosition, 
+                    displayError,
+                    { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
+                  );
+                }
+                else {
+                  alert("Geolocation is not supported by your browser");
+                    //use ip info
+                }  
+        };
+            
+        function reverseGeocodeUser(lat, lng){
+            console.log("Reverse Geocode is called!");
+            var geocoder = new google.maps.Geocoder();
+            var latlng = new google.maps.LatLng(lat, lng);
+            geocoder.geocode({ 'latLng': latlng }, function (results, status){
+                if (status == google.maps.GeocoderStatus.OK) {
+                if (results[1]) {
+                    var gResults = results[1].address_components;
+                    var userAddress = {
+                        lat: lat,
+                        lng: lng,
+                        sublocality_level_2: null,    
+                        sublocality: null,    
+                        city: null,    
+                        state: null,    
+                        country: null,    
+                    };
+                    if($scope.user._id){
+                        userAddress._id = $scope.user._id;
+                    }
+
+                    //console.log(gResults);    
+                    gResults.forEach(function(thisComp, cindex){
+                    var cTypes = thisComp.types;
+
+                    if(cTypes.indexOf("sublocality_level_2") != -1){
+                        userAddress.sublocality_level_2 = thisComp.long_name;
+                    } 
+                    if(cTypes.indexOf("sublocality_level_1") != -1){
+                        userAddress.sublocality = thisComp.long_name;
+                    }    
+                    if(cTypes.indexOf("administrative_area_level_2") != -1){
+                        userAddress.city = thisComp.long_name;
+                    }
+                    if(cTypes.indexOf("administrative_area_level_1") != -1){
+                        userAddress.state = thisComp.long_name;
+                    }
+                    if(cTypes.indexOf("country") != -1){
+                        userAddress.country = thisComp.long_name;
+                    }
+                    });
+
+                    
+                    if(userAddress.sublocality && userAddress.city){
+                         //console.log(userAddress);
+                        UserService.saveUserLocation(userAddress).success(function (data, status, headers) {
+                            if(data){
+                                console.log(data);
+                                $scope.user = data;
+                                Notification.success({message: "Great, we have located you at " + userAddress.sublocality + ", " + userAddress.city,  positionY: 'top', positionX: 'right', delay: 1000});
+                            }else{
+                                Notification.warning({message: "Oops! Where are you located? Mars?",  positionY: 'top', positionX: 'right', delay: 1000});
+                            }
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log("Error ");
+                        });
+                        
+                        
+                        
+                    }
+
+
+                    //console.log(results[1].formatted_address);
+                    } else {
+                        console.log('Location not found');
+                    }
+                } else {
+                    console.log('Geocoder failed due to: ' + status);
+                }
+            });
+        };
+        function latlngfromIP(){
+            if($cookies.getObject('ip')){
+                var thisIP = $cookies.getObject('ip');
+                console.log("Using IP to geolocate user");
+                console.log(thisIP);
+                $scope.currLocation = [thisIP.lat, thisIP.long];
+                Notification.warning("Exambazaar couldn't locate you with accuracy");
+            }    
+        };
+        $scope.currLocation = null;
+        
+            
+        function displayPosition(position) {
+            $scope.currLocation = [position.coords.latitude, position.coords.longitude];
+            reverseGeocodeUser($scope.currLocation[0], $scope.currLocation[1]);
+            console.log($scope.currLocation);
+        }
+        function displayError(error) {
+          var errors = { 
+            1: 'Permission denied',
+            2: 'Position unavailable',
+            3: 'Request timeout'
+          };
+          console.log("Error: " + errors[error.code]);
+            //use ip info
+            latlngfromIP();
+        }   
             
         $scope.saveUser = function(){
             console.log($scope.user);
@@ -26886,7 +27062,7 @@ function getLatLng(thisData) {
         $rootScope.pageTitle = "Exam Eligibility - Find all exam options for you | Exambazaar";    
     }]); 
     exambazaar.controller("addEligibilityController", 
-        [ '$scope',  'examList','streamList','EligibilityService','$http','$state', 'eligibilityList', function($scope, examList,streamList, EligibilityService,$http,$state, eligibilityList){
+        [ '$scope',  'examList','streamList','EligibilityService','$http','$state', '$rootScope', 'eligibilityList', function($scope, examList,streamList, EligibilityService,$http, $state, $rootScope, eligibilityList){
         $scope.examNames = '';    
         $scope.exams = examList.data;
         
@@ -26894,7 +27070,7 @@ function getLatLng(thisData) {
         if(!$scope.newEligibility){
             $scope.newEligibility = [];
         }
-        
+        $rootScope.pageTitle = 'Eligibility Matrix';
         var examNameHelper = $scope.exams.map(function(a) {return a.displayname;});
         var examIdHelper = $scope.exams.map(function(a) {return a._id;});
         $scope.newEligibility.forEach(function(thisEligibility, index){
@@ -28886,7 +29062,7 @@ function getLatLng(thisData) {
         
         
     exambazaar.controller("addExamController", 
-        [ '$scope',  'examList', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', '$cookies', function($scope, examList, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope, $cookies){
+        [ '$scope',  'examList', 'streamList', 'ExamService', '$http', '$state', '$mdDialog', 'ImageService', 'Upload', '$timeout', 'testService', 'Notification', '$rootScope', '$cookies', 'questionService', function($scope, examList, streamList, ExamService, $http, $state, $mdDialog, ImageService, Upload, $timeout, testService, Notification, $rootScope, $cookies, questionService){
         $scope.masteruser = null;
         if($cookies.getObject('sessionuser')){
             $scope.user = $cookies.getObject('sessionuser');
@@ -28897,7 +29073,20 @@ function getLatLng(thisData) {
         }else{
             $scope.user = null;
         }
-            
+        
+        $scope.changeQuestionUsers = function(){
+                
+            questionService.changeUser().success(function (data, status, headers) {
+                if(data){
+                    Notification.success("Done!");
+                }else{
+                    console.log('Error');
+                }
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error ");
+            });
+        };
         $rootScope.pageTitle = 'All Exams listed on EB';        
         $scope.exams = examList.data;
         $scope.streams = streamList.data;
@@ -29891,7 +30080,6 @@ function getLatLng(thisData) {
                     console.log("Error ");
                 });
             };
-            
             
             $rootScope.pageTitle = "Manage users on EB";
             $rootScope.$on("setBloggerUser", function(event, data){
@@ -32903,7 +33091,7 @@ function getLatLng(thisData) {
             }
         })
         .state('eqad', {
-            url: '/ebinternal/eqad/:examName',
+            url: '/ebinternal/eqad/:examName/:eqadDate',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -32937,6 +33125,9 @@ function getLatLng(thisData) {
                 thisexam: ['ExamService', '$stateParams',
                     function(ExamService,$stateParams) {
                     return ExamService.getExamByName($stateParams.examName);    
+                }],
+                ngSticky: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngSticky'], {serie: true});
                 }],
             }
         })

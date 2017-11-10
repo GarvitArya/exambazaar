@@ -1187,8 +1187,23 @@ router.get('/edit/:userId', function(req, res) {
         //.deepPopulate('partner')
         .exec(function (err, thisuser) {
         if (!err){
+            if(thisuser){
+                if(thisuser.location){
+                    if(thisuser.location.length == 0){
+                        thisuser.location = null;
+                    }else{
+                        thisuser.location = [thisuser.location[thisuser.location.length - 1]];
+                    }
+                }else{
+                    thisuser.location = null;
+                }
+                
+                res.json(thisuser);
+            }else{
+                res.json(null);
+            }
             
-            res.json(thisuser);
+            
             //process.exit();
         } else {throw err;}
     });
@@ -1938,6 +1953,55 @@ router.get('/userShortlist/:userId', function(req, res) {
             }
         } else {throw err;}
     });
+});
+
+router.post('/saveUserLocation', function(req, res) {
+    var locationForm = req.body;
+    var userId = null;
+    if(locationForm && locationForm._id){
+        userId = locationForm._id.toString();
+    }
+    
+    if(userId){
+        var thisUser = user
+            .findOne({ '_id': userId }, {logins: 0})
+            .exec(function (err, thisUser) {
+                if (err) return console.error(err);
+                if(thisUser){
+                    if(!thisUser.location){
+                        thisUser.location = [];
+                    }
+                    var locations = thisUser.location;
+                    var newLocation = {};
+
+                    for (var property in locationForm) {
+                        if(property != '_id')
+                            newLocation[property] = locationForm[property];
+                    }
+                    thisUser.location.push(newLocation);
+                    thisUser.save(function(err, thisUser) {
+                        if (err) return console.error(err);
+                        if(thisUser.location){
+                            if(thisUser.location.length == 0){
+                                thisUser.location = null;
+                            }else{
+                                thisUser.location = [thisUser.location[thisUser.location.length - 1]];
+                            }
+                        }else{
+                            thisUser.location = null;
+                        }
+                        res.json(thisUser);
+                    });
+                }else{
+                    res.json(null);
+                }
+
+        });
+    }else{
+        res.json(null);
+    }
+    
+    
 });
 
 router.post('/makePartner', function(req, res) {

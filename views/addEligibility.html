@@ -47,7 +47,7 @@
     </h4>
     <div layout="row" id="">
             <form name="eligibilityForm" >
-                <hot-table settings="{colHeaders: colHeaders, afterChange: afterChange, wordWrap:'true', renderAllRows: 'true'}" datarows="newEligibility" min-rows="10" min-spare-rows="1">
+                <hot-table settings="{colHeaders: colHeaders, afterChange: afterChange, wordWrap:'true', renderAllRows: 'true', fixedRowsTop: 1, fixedColumnsLeft: 1}" datarows="newEligibility" min-rows="10" min-spare-rows="1">
                     <!-- settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row','undo','redo'], afterChange: afterChange,  renderAllRows: 'true', renderAllColumns: 'true'}" context-menu  datarows="newEligibility" min-rows="10" min-spare-rows="1" height="300" id="hotTable"-->
                     <!--<hot-column data="exam" title="'Exam Id'"></hot-column>-->
                     <hot-column width="100" data="examName" title="'Exam <br/>(e.g. CAT)'" type="'autocomplete'">

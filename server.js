@@ -261,7 +261,7 @@ var allStates = [
 '/ebinternal/user/:userId/filledAll',
 '/ebinternal/user/:userId/group',
 '/ebinternal/profile',
-'/ebinternal/eqad/:examName',
+'/ebinternal/eqad/:examName/:eqadDate',
 '/ebinternal/user/:userId/reviewed',
 '/ebinternal/user/:userId/sendEmail',
 '/ebinternal/user/:userId/shortlisted',
@@ -321,7 +321,7 @@ app.use(function(req, res, next){
   res.status(404);
   // respond with html page
   if (req.accepts('html')) {
-      console.log("req is " + req);
+      //console.log("req is " + req);
     res.render('error', { url: req.url });
     return;
   }
