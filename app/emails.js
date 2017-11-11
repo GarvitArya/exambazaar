@@ -569,7 +569,9 @@ router.post('/hundredblogEmail', function(req, res) {
     });
 });
 
-
+String.prototype.toProperCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
 
 router.post('/CATEmail', function(req, res) {
     console.log('Starting CAT 2017 Email');
@@ -584,232 +586,272 @@ router.post('/CATEmail', function(req, res) {
     var templateName = 'CAT 2017';
     res.json(true);
     
+    
+    /*var groupNames = college.aggregate(
+    [
+        {$match: {} },
+        {"$group": { "_id": { state: "$Institute.Correspondence Details.State", district: "$Institute.Correspondence Details.District" }, count:{$sum:1} } },
+        {$sort:{"count":-1}}
+
+    ],function(err, groupNames) {
+    if (!err){
+        //groupNames = groupNames.slice(0, 20);
+        //console.log(groupNames);
+        var queryGroups = [];
+        groupNames.forEach(function(thisGroup, index){
+            var qGroup = {
+                state: thisGroup._id.state,
+                district: thisGroup._id.district,
+                centers: thisGroup.count,
+            };
+            console.log(thisGroup._id.state + "|" + thisGroup._id.district + "|" + thisGroup.count);
+            //queryGroups.push(qGroup);
+        });
+        //console.log(queryGroups);
+        //res.json(queryGroups);
+    } else {throw err;}
+    });*/
+    
+    
     var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
         if (err) return handleError(err);
         if(existingSendGridCredential){
-            var apiKey = existingSendGridCredential.apiKey;
-            var sg = require("sendgrid")(apiKey);
-            var emailTemplate = existingSendGridCredential.emailTemplate;
-            var templateFound = false;
-            var nLength = emailTemplate.length;
-            var counter = 0;
-            var templateId;
-            emailTemplate.forEach(function(thisEmailTemplate, index){
-                if(thisEmailTemplate.name == templateName){
-                    templateFound = true;
-                    templateId = thisEmailTemplate.templateKey;
-                    var from_email = new helper.Email(fromEmail);
-                    
-                    /*var allUsers = user.find({email: {$exists: true}}, {basic: 1, email: 1, _id: 1}, function(err, allUsers) {
-                    if (!err){
-                        var emailcounter = 0;
-                        var counter = 0;
-                        var nUsers = allUsers.length;
-                        console.log("Total " + nUsers + " users!");
-                        allUsers.forEach(function(thisUser, index){
-                            
-                            var to = thisUser.email;
-                            var username = "Student";
-                            var subject = "Hola! Ready for CAT 2017? We've got some goodies for you!";
-                            if(thisUser.basic && thisUser.basic.name){
-                                username = thisUser.basic.name;
-                                subject = username + ", ready for CAT 2017? We've got some goodies for you!";
-                            }
-                            
-                            
-                            var to_email = new helper.Email(to);
-                            var html = ' ';
-                            
-                            var content = new helper.Content('text/html', html);
-                            var mail = new helper.Mail(fromEmail, subject, to_email, content);
-                            mail.setTemplateId(templateId);
-                             mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
-                            var request = sg.emptyRequest({
-                              method: 'POST',
-                              path: '/v3/mail/send',
-                              body: mail.toJSON(),
-                            });
-                            
-                            
-                            if(thisUser.email && thisUser.email != ''){
-                                console.log('Sending email to ' + username + ' at ' + to);
-                                sg.API(request, function(error, response) {
-                                if(error){
-                                    console.log('Could not send email! ' + error);
-                                }else{
-                                    counter += 1;
-                                    console.log(counter + "/" + nUsers + " done!");
-                                    if(counter == nUsers){
-                                        console.log('All Done');
-                                    }
-                                }
-                            });
-                                
-                                
-                            }else{
-                                counter += 1;
-                                if(counter == nUsers){
-                                    console.log('All Done');
-                                }
-                            }
-                        });
-                        
-                        
-    
-                    } else {throw err;}
-                    });*/
-                    
-                    /*var allSubscribers = subscriber.find({email: {$exists: true}}, {name: 1, email: 1, _id: 1}, function(err, allSubscribers) {
-                    if (!err){
-                        var emailcounter = 0;
-                        var counter = 0;
-                        var nUsers = allSubscribers.length;
-                        console.log("Total " + allSubscribers + " users!");
-                        allSubscribers.forEach(function(thisUser, index){
-                            
-                            var to = thisUser.email;
-                            var username = "Student";
-                            var subject = "Hola! Ready for CAT 2017? We've got some goodies for you!";
-                            if(thisUser.name){
-                                username = thisUser.name;
-                                subject = username + ", ready for CAT 2017? We've got some goodies for you!";
-                            }
-                            
-                            
-                            var to_email = new helper.Email(to);
-                            var html = ' ';
-                            
-                            var content = new helper.Content('text/html', html);
-                            var mail = new helper.Mail(fromEmail, subject, to_email, content);
-                            mail.setTemplateId(templateId);
-                             mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
-                            var request = sg.emptyRequest({
-                              method: 'POST',
-                              path: '/v3/mail/send',
-                              body: mail.toJSON(),
-                            });
-                            
-                            
-                            if(thisUser.email && thisUser.email != ''){
-                                console.log('Sending email to ' + username + ' at ' + to);
-                                sg.API(request, function(error, response) {
-                                if(error){
-                                    console.log('Could not send email! ' + error);
-                                }else{
-                                    counter += 1;
-                                    console.log(counter + "/" + nUsers + " done!");
-                                    if(counter == nUsers){
-                                        console.log('All Done');
-                                    }
-                                }
-                            });
-                                
-                                
-                            }else{
-                                counter += 1;
-                                if(counter == nUsers){
-                                    console.log('All Done');
-                                }
-                            }
-                        });
-                        
-                        
-    
-                    } else {throw err;}
-                    });
-                    */
-                    
-                    /*email: {$exists: true}*/
-                    var allColleges = college.find({_id: '5a00345da13aa00d18c989a4'}, {}, function(err, allColleges) {
-                    if (!err){
-                        var emailcounter = 0;
-                        var counter = 0;
-                        var nUsers = allColleges.length;
-                        console.log("Total " + allColleges.length + " colleges!");
-                        allColleges.forEach(function(thisCollege, index){
-                            
-                            
-                            var contactEmails = [];
-                            var facultyEmails = [];
-                            if(thisCollege['Institute'] && thisCollege['Institute']['Correspondence Details'] && thisCollege['Institute']['Correspondence Details']['Email']){
-                                contactEmails.push(thisCollege['Institute']['Correspondence Details']['Email']);
-                            }
-                            if(thisCollege['Institute'] && thisCollege['Institute']['Contact Person'] && thisCollege['Institute']['Contact Person']['Email']){
-                                contactEmails.push(thisCollege['Institute']['Contact Person']['Email']);
-                            }
+        var apiKey = existingSendGridCredential.apiKey;
+        var sg = require("sendgrid")(apiKey);
+        var emailTemplate = existingSendGridCredential.emailTemplate;
+        var templateFound = false;
+        var nLength = emailTemplate.length;
+        var counter = 0;
+        var templateId;
+        emailTemplate.forEach(function(thisEmailTemplate, index){
+        if(thisEmailTemplate.name == templateName){
+            templateFound = true;
+            templateId = thisEmailTemplate.templateKey;
+            var from_email = new helper.Email(fromEmail);
 
-                            if(thisCollege['Faculty'] && thisCollege['Faculty']['Faculty Details']){
-                                var allFaculties = thisCollege['Faculty']['Faculty Details'];
-                                allFaculties.forEach(function(thisFaculty, index){
-                                    if(thisFaculty.Email){
-                                        facultyEmails.push(thisFaculty.Email);
-                                    }
-                                });
+            /*var allUsers = user.find({email: {$exists: true}}, {basic: 1, email: 1, _id: 1}, function(err, allUsers) {
+            if (!err){
+                var emailcounter = 0;
+                var counter = 0;
+                var nUsers = allUsers.length;
+                console.log("Total " + nUsers + " users!");
+                allUsers.forEach(function(thisUser, index){
+
+                    var to = thisUser.email;
+                    var username = "Student";
+                    var subject = "Hola! Ready for CAT 2017? We've got some goodies for you!";
+                    if(thisUser.basic && thisUser.basic.name){
+                        username = thisUser.basic.name;
+                        subject = username + ", ready for CAT 2017? We've got some goodies for you!";
+                    }
+
+
+                    var to_email = new helper.Email(to);
+                    var html = ' ';
+
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                     mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+
+
+                    if(thisUser.email && thisUser.email != ''){
+                        console.log('Sending email to ' + username + ' at ' + to);
+                        sg.API(request, function(error, response) {
+                        if(error){
+                            console.log('Could not send email! ' + error);
+                        }else{
+                            counter += 1;
+                            console.log(counter + "/" + nUsers + " done!");
+                            if(counter == nUsers){
+                                console.log('All Done');
                             }
-                            console.log(contactEmails);
-                            
-                            var to = 'saloni@exambazaar.com';
-                            //thisCollege.email;
-                            var username = "Sir/Madam";
-                            var subject = "Are your students ready for CAT 2017? We've got some goodies for them!";
-                            var collegename = thisCollege.inst_name;
-                            
-                            var to_email = new helper.Email(to);
-                            var html = 'Please forward this email to your students who will be writing CAT2017! 4 Free CAT Mock Tests inside brought to them exclusively by Exambazaar!';
-                            
-                            var content = new helper.Content('text/html', html);
-                            var mail = new helper.Mail(fromEmail, subject, to_email, content);
-                            mail.setTemplateId(templateId);
-                             mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
-                             mail.personalizations[0].addSubstitution(new helper.Substitution('-collegename-', collegename));
-                            var request = sg.emptyRequest({
-                              method: 'POST',
-                              path: '/v3/mail/send',
-                              body: mail.toJSON(),
-                            });
-                            
-                            
-                            if(to && to != ''){
-                                console.log('Sending email to ' + username + ' at ' + to);
-                                sg.API(request, function(error, response) {
-                                    if(error){
-                                        console.log('Could not send email! ' + error);
-                                    }else{
-                                        //console.log(response);
-                                        counter += 1;
-                                        console.log(counter + "/" + nUsers + " done!");
-                                        if(counter == nUsers){
-                                            console.log('All Done');
-                                        }
-                                    }
-                                });
-                                
-                                
-                            }else{
-                                counter += 1;
-                                if(counter == nUsers){
-                                    console.log('All Done');
-                                }
+                        }
+                    });
+
+
+                    }else{
+                        counter += 1;
+                        if(counter == nUsers){
+                            console.log('All Done');
+                        }
+                    }
+                });
+
+
+
+            } else {throw err;}
+            });*/
+
+            /*var allSubscribers = subscriber.find({email: {$exists: true}}, {name: 1, email: 1, _id: 1}, function(err, allSubscribers) {
+            if (!err){
+                var emailcounter = 0;
+                var counter = 0;
+                var nUsers = allSubscribers.length;
+                console.log("Total " + allSubscribers + " users!");
+                allSubscribers.forEach(function(thisUser, index){
+
+                    var to = thisUser.email;
+                    var username = "Student";
+                    var subject = "Hola! Ready for CAT 2017? We've got some goodies for you!";
+                    if(thisUser.name){
+                        username = thisUser.name;
+                        subject = username + ", ready for CAT 2017? We've got some goodies for you!";
+                    }
+
+
+                    var to_email = new helper.Email(to);
+                    var html = ' ';
+
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                     mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+
+
+                    if(thisUser.email && thisUser.email != ''){
+                        console.log('Sending email to ' + username + ' at ' + to);
+                        sg.API(request, function(error, response) {
+                        if(error){
+                            console.log('Could not send email! ' + error);
+                        }else{
+                            counter += 1;
+                            console.log(counter + "/" + nUsers + " done!");
+                            if(counter == nUsers){
+                                console.log('All Done');
+                            }
+                        }
+                    });
+
+
+                    }else{
+                        counter += 1;
+                        if(counter == nUsers){
+                            console.log('All Done');
+                        }
+                    }
+                });
+
+
+
+            } else {throw err;}
+            });
+            */
+
+            /*email: {$exists: true}*/
+            /*_id: '5a00345da13aa00d18c989a4'*/
+            /*"Institute.Correspondence Details.State" : "Gujarat"*/
+            var allColleges = college.find({_id: '5a003985df1bcc1b4412f74d'}, {}, function(err, allColleges){
+            if (!err){
+                var emailcounter = 0;
+                var counter = 0;
+                var nUsers = allColleges.length;
+                console.log("Total " + allColleges.length + " colleges!");
+                //console.log(collegename);
+                allColleges.forEach(function(thisCollege, index){
+                    var contactEmails = [];
+                    var facultyEmails = [];
+                    var collegename = thisCollege.inst_name;//.toProperCase();
+                    
+                    if(thisCollege['Institute'] && thisCollege['Institute']['Correspondence Details'] && thisCollege['Institute']['Correspondence Details']['Email']){
+                        contactEmails.push(thisCollege['Institute']['Correspondence Details']['Email']);
+                    }
+                    if(thisCollege['Institute'] && thisCollege['Institute']['Contact Person'] && thisCollege['Institute']['Contact Person']['Email']){
+                        contactEmails.push(thisCollege['Institute']['Contact Person']['Email']);
+                    }
+
+                    /*if(thisCollege['Faculty'] && thisCollege['Faculty']['Faculty Details']){
+                        var allFaculties = thisCollege['Faculty']['Faculty Details'];
+                        allFaculties.forEach(function(thisFaculty, index){
+                            if(thisFaculty.Email){
+                                facultyEmails.push(thisFaculty.Email);
                             }
                         });
-                        
-                        
-    
-                    } else {throw err;}
-                    });
+                    }*/
                     
-                }
-                if(counter == nLength){
-                    if(!templateFound){
-                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    
+                    if(thisCollege['Institute'] && thisCollege['Institute']['Correspondence Details'] && thisCollege['Institute']['Correspondence Details']['District']){
+                        console.log(collegename + " | " + thisCollege['Institute']['Correspondence Details']['District'] + " | " + contactEmails.length + " emails!");
                     }
-                }
+                    
+                    //console.log(contactEmails);
+                    contactEmails = ['saloni@exambazaar.com'];
+                    var username = "Student";
+                    var subject = "Ready for CAT 2017? We've got some goodies for them!";
+                    
+                    contactEmails.forEach(function(thisEmail, index){
+                        
+                        var to = thisEmail;
+                        var to_email = new helper.Email(to);
+                        var html = ' ';
+                        var content = new helper.Content('text/html', html);
+                        var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                        mail.setTemplateId(templateId);
+                        mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                        
+                        mail.personalizations[0].addSubstitution(new helper.Substitution('-collegename-', collegename));
+                        var request = sg.emptyRequest({
+                          method: 'POST',
+                          path: '/v3/mail/send',
+                          body: mail.toJSON(),
+                        });
+                        if(to && to != ''){
+                            console.log('Sending email to ' + username + ' at ' + to);
+                            sg.API(request, function(error, response) {
+                                if(error){
+                                    console.log('Could not send email! ' + error);
+                                }else{
+                                    //console.log(response);
+                                    counter += 1;
+                                    console.log(counter + "/" + nUsers + " done!");
+                                    if(counter == nUsers){
+                                        console.log('All Done');
+                                    }
+                                }
+                            });
+                        }else{
+                            counter += 1;
+                            if(counter == nUsers){
+                                console.log('All Done');
+                            }
+                        }
+                        
+                        
+                        
+                        
+                    });
+
+
+                    
+                });
+
+
+
+            } else {throw err;}
             });
-            if(nLength == 0){
-                if(!templateFound){
-                    res.json('Could not send email as there is no template with name: ' + templateName);
-                }
+
+        }
+        if(counter == nLength){
+            if(!templateFound){
+                res.json('Could not send email as there is no template with name: ' + templateName);
             }
+        }
+        });
+        if(nLength == 0){
+            if(!templateFound){
+                res.json('Could not send email as there is no template with name: ' + templateName);
+            }
+        }
         }else{
             res.json('No Active SendGrid API Key');
         }

@@ -211,13 +211,13 @@
 <div id="spacer1">
 </div>
 <div layout="row" layout-xs="column" layout-align="center center" class="width100 thirdFont font14" id="examinfo2">
-    <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkTranslucentBackground">
+    <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkTranslucentBackground min50vh">
     <div layout="row" layout-xs="column" layout-align="start start" class="width100 textWhite" flex-xs="100" flex-gt-xs="90" >
     <div layout="column" layout-align="start start" flex-gt-xs="15" flex-xs="100" class="min40vh paddingLR10 " hide-xs  ng-if="exam.logo && exam.logo != ''">
         <div class="min8vh"></div>
         <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
     </div>
-    <div layout="column" layout-align="start start" flex class="paddingLR10 min40vh">
+    <div layout="column" layout-align="start start" flex class="paddingLR20 min40vh">
         <div class="min8vh"></div>
         <div class="width100 font36 bold narrowLine marginB10">
             {{exam.seoname}} Exam
@@ -231,9 +231,9 @@
             </div>
         </div>
     </div>
-    <div layout="column" layout-align="start start" flex-gt-xs="20" flex-xs="100" class="paddingLR10 width100" ng-class="{ min40vh: !mobileDevice }">
+    <div layout="column" layout-align="start start" flex-gt-xs="25" flex-xs="100" class="paddingLR20 width100" ng-class="{ min40vh: !mobileDevice }">
         <div class="min8vh"></div>
-        <div layout="column" layout-align="start start" class="width100 padding10 lightBorder textGainsboro">
+        <div layout="column" layout-align="start start" class="width100 padding10 paddingL40 lightBorder text-white">
             <div layout="row" layout-align="center start" class="width100">
                 <div flex>Frequency</div>
                 <div flex class="text-white">
