@@ -7362,6 +7362,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 '59dde339f4960e14c67a26af',
                 '59dd8ec781c83c64376914e1',
                 '5a0086ae6e43ae61e78d032d',
+                '5a0044d3bec4cc4181c08c30',
             ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
