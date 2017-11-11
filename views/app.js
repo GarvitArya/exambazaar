@@ -7360,7 +7360,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 '59bfa3660a814b248710137b',
                 '59dd145e04c18e302c59cfca',
                 '59dde339f4960e14c67a26af',
-                '59dd8ec781c83c64376914e1'
+                '59dd8ec781c83c64376914e1',
+                '5a0086ae6e43ae61e78d032d',
             ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
@@ -30085,7 +30086,7 @@ function getLatLng(thisData) {
             $rootScope.$on("setBloggerUser", function(event, data){
                 if(data && data.user){
                     $scope.thisuser = data.user;
-                     viewService.getuserviews($scope.thisuser._id).success(function (data2, status, headers) {
+                     /*viewService.getuserviews($scope.thisuser._id).success(function (data2, status, headers) {
                         $scope.thisuserViewed = data2;
                     })
                     .error(function (data, status, header, config) {
@@ -30096,7 +30097,7 @@ function getLatLng(thisData) {
                     })
                     .error(function (data, status, header, config) {
                         console.log("Error ");
-                    });
+                    });*/
                     
                 }
             });
@@ -30175,12 +30176,12 @@ function getLatLng(thisData) {
                 
                     
             };
-            
+            console.log('Log here');
             $scope.CATEmail = function(userId){
-                
-                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                console.log(userId);
+                 UserService.getUserBasic(userId).success(function (data, status, headers) {
                     var marketingUser = data;
-                    //console.log(marketingUser);
+                    console.log(marketingUser);
                     if(marketingUser.mobile == '9829685919'){
                         /*var emailForm = {
                             to: marketingUser.email,

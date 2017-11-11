@@ -748,10 +748,8 @@ router.post('/CATEmail', function(req, res) {
             });
             */
 
-            /*email: {$exists: true}*/
-            /*_id: '5a00345da13aa00d18c989a4'*/
-            /*"Institute.Correspondence Details.State" : "Gujarat"*/
-            var allColleges = college.find({_id: '5a003985df1bcc1b4412f74d'}, {}, function(err, allColleges){
+            
+            /*var allColleges = college.find({}, {Institute: 1, inst_name: 1}, function(err, allColleges){
             if (!err){
                 var emailcounter = 0;
                 var counter = 0;
@@ -763,35 +761,28 @@ router.post('/CATEmail', function(req, res) {
                     var facultyEmails = [];
                     var collegename = thisCollege.inst_name;//.toProperCase();
                     
-                    if(thisCollege['Institute'] && thisCollege['Institute']['Correspondence Details'] && thisCollege['Institute']['Correspondence Details']['Email']){
-                        contactEmails.push(thisCollege['Institute']['Correspondence Details']['Email']);
-                    }
+                    
                     if(thisCollege['Institute'] && thisCollege['Institute']['Contact Person'] && thisCollege['Institute']['Contact Person']['Email']){
                         contactEmails.push(thisCollege['Institute']['Contact Person']['Email']);
                     }
 
-                    /*if(thisCollege['Faculty'] && thisCollege['Faculty']['Faculty Details']){
-                        var allFaculties = thisCollege['Faculty']['Faculty Details'];
-                        allFaculties.forEach(function(thisFaculty, index){
-                            if(thisFaculty.Email){
-                                facultyEmails.push(thisFaculty.Email);
-                            }
-                        });
-                    }*/
+                    
                     
                     
                     if(thisCollege['Institute'] && thisCollege['Institute']['Correspondence Details'] && thisCollege['Institute']['Correspondence Details']['District']){
                         console.log(collegename + " | " + thisCollege['Institute']['Correspondence Details']['District'] + " | " + contactEmails.length + " emails!");
                     }
+                    //console.log("http://www.knowyourcollege-gov.in/InstituteDetails.php?insti_id=" + thisCollege.insti_id );
                     
                     //console.log(contactEmails);
-                    contactEmails = ['saloni@exambazaar.com'];
+                    //contactEmails = ['gaurav@exambazaar.com'];
                     var username = "Student";
-                    var subject = "Ready for CAT 2017? We've got some goodies for them!";
+                    var subject = "Ready for CAT 2017? We've got some goodies!";
                     
                     contactEmails.forEach(function(thisEmail, index){
                         
-                        var to = thisEmail;
+                        if(thisEmail && thisEmail != ''){
+                            var to = thisEmail;
                         var to_email = new helper.Email(to);
                         var html = ' ';
                         var content = new helper.Content('text/html', html);
@@ -806,14 +797,14 @@ router.post('/CATEmail', function(req, res) {
                           body: mail.toJSON(),
                         });
                         if(to && to != ''){
-                            console.log('Sending email to ' + username + ' at ' + to);
+                            //console.log();
                             sg.API(request, function(error, response) {
                                 if(error){
                                     console.log('Could not send email! ' + error);
                                 }else{
                                     //console.log(response);
                                     counter += 1;
-                                    console.log(counter + "/" + nUsers + " done!");
+                                    console.log('Sending email to ' + username + ' at ' + to + " | " + counter + "/" + nUsers + " done!");
                                     if(counter == nUsers){
                                         console.log('All Done');
                                     }
@@ -825,6 +816,14 @@ router.post('/CATEmail', function(req, res) {
                                 console.log('All Done');
                             }
                         }
+                    }else{
+                            counter += 1;
+                            if(counter == nUsers){
+                                console.log('All Done');
+                            }
+                        }
+                        
+                        
                         
                         
                         
@@ -838,7 +837,7 @@ router.post('/CATEmail', function(req, res) {
 
 
             } else {throw err;}
-            });
+            }).skip(10000).limit(1000);*/
 
         }
         if(counter == nLength){
