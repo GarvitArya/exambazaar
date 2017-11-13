@@ -46,8 +46,8 @@
                 <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB5">
                     {{$index + 1}}. {{test.name}}&nbsp;&nbsp;<i class="fa fa-anchor" aria-hidden="true" ng-if="test.url.answer"></i>
                 </a>
-                <div ng-click="download(test)">
-                    Download
+                <div ng-click="upload(test)">
+                    Upload
                 </div>
             </div>
         </div>

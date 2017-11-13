@@ -1188,6 +1188,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.download = function(fileInfo) {
             return $http.post('/api/s3Utils/download', fileInfo);
         };
+        this.upload = function(fileInfo) {
+            return $http.post('/api/s3Utils/upload', fileInfo);
+        };
         this.downloadFromURLS = function(fileInfo) {
             return $http.post('/api/s3Utils/downloadFromURLS');
         };
@@ -6711,7 +6714,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.internDueList[iIndex].taskList.push(thisTask);
                 }
                 
-                
+                console.log(thisTask);
                 if(thisTask.active){
                     $scope.fillsAssigned += 1;
                     var internIndex = internIds.indexOf(thisTask.user._id);
@@ -7363,6 +7366,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 '59dd8ec781c83c64376914e1',
                 '5a0086ae6e43ae61e78d032d',
                 '5a0044d3bec4cc4181c08c30',
+                '5a00274a9c1144293a4cb956',
             ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
@@ -12605,6 +12609,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });    
             };
             
+            
+            
+            $scope.upload = function(test){
+                var fileInfo = {};
+                s3UtilsService.upload(fileInfo).success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });    
+            };
     }]);    
         
     exambazaar.controller("eqadController", 
@@ -25640,7 +25655,7 @@ function getLatLng(thisData) {
                 $scope.currentSubcategories = thisCategory.subcategories;
             }
         });
-        $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
+        $scope.activeSubcategory = $scope.activeCategory.subcategories[1];
         
         $scope.setActiveSubcategory = function(subcategoryName){
             $scope.activeCategory.subcategories.forEach(function(thisSubcategory, index){

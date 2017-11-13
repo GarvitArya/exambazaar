@@ -83,47 +83,47 @@
         
     }
     .emptyTag{
-        padding:10px;
-        color: gray;
-        background: white;
-        border: 1px solid gray;
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        box-shadow: 0 0 5px whitesmoke;
     }
     .emptyTag:hover{
         color: white;
-        background: black;
-        border: 1px solid black;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
     }
     .filledTag{
-        padding:10px;
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
         color: white;
-        background: black;
-        border: 1px solid black;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
     }
     
     .edLevelTag{
-        padding-top:5px;
-        padding-bottom:5px;
-        padding-left:10px;
-        padding-right:10px;
-        color: gray;
-        background: white;
-        border: 1px solid gray;
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
         border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
     }
     .edLevelTag:hover{
         color: white;
-        background: #20C39A;
-        border: 1px solid #20C39A;
+        background: black;
+        border: 1px solid black;
+        box-shadow: 0 0 5px whitesmoke;
     }
     .filledEdLevelTag{
-        padding-top:5px;
-        padding-bottom:5px;
-        padding-left:10px;
-        padding-right:10px;
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
         color: white;
-        background: #20C39A;
-        border: 1px solid #20C39A;
+        background: black;
+        border: 1px solid black;
         border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
     }
     .badge{
         font-size: 14px;
@@ -318,7 +318,7 @@
                             </div>
                             <div layout="row" layout-align="start start" class="fieldRow" layout-wrap>
                                 <div flex-xs="20" flex="20" ng-repeat="educationLevel in educationLevels" class="padding10">
-                                    <span layout="row" layout-align="center center" class="wrap edLevelTag width100 min10vh text-center" ng-class="{ filledEdLevelTag: user.eligibility.educationLevel.name=='{{educationLevel.name}}' }" ng-click="setEducationLevel(educationLevel)">
+                                    <span layout="row" layout-align="center center" class="wrap edLevelTag width100 min15vh text-center" ng-class="{ filledEdLevelTag: user.eligibility.educationLevel.name=='{{educationLevel.name}}' }" ng-click="setEducationLevel(educationLevel)">
                                         {{educationLevel.name}}
                                     </span>
                                 </div>
@@ -332,7 +332,7 @@
                         <div layout="row" layout-align="start start" class="fieldRow">
                             <div flex="{{col1WidthAcademic}}" class="col1">Subjects</div>
                             <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
-                                <div flex="20" ng-repeat="class12Subject in class12Subjects" class="padding10">
+                                <div flex="25" ng-repeat="class12Subject in class12Subjects" class="padding10">
                                     <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.class12Subjects[class12Subject.name] }" ng-click="setClass12Subjects(class12Subject.name)">
                                         {{class12Subject.displayname}}
                                     </span>

@@ -159,6 +159,10 @@
         text-align: justify;
         text-justify: inter-word;
     }
+    .pageLogo{
+        max-height: 100%;
+        max-width: 80%;
+    }
 </style>
 <div id="spacer1" hide-xs>
 </div>
@@ -185,7 +189,59 @@
     </div>
     </div>
 </div>
-<div layout="row" layout-xs="column" layout-align="center center" class="width100 thirdFont font14 marginB30" id="examinfo2">
+<div layout="row" layout-xs="column" layout-align="center center" class="width100 thirdFont font14" id="examinfo2">
+    <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkTranslucentBackground min50vh">
+    <div layout="row" layout-xs="column" layout-align="start start" class="width100 textWhite" flex-xs="100" flex-gt-xs="90" >
+    <div layout="column" layout-align="start start" flex-gt-xs="15" flex-xs="100" class="min40vh paddingLR10 " hide-xs  ng-if="subcategory.logo && subcategory.logo != ''">
+        <div class="min8vh"></div>
+        <img  ng-src="{{subcategory.logo}}" class="pageLogo" ng-if="subcategory.logo !=''"/>
+    </div>
+    <div layout="column" layout-align="start start" flex class="paddingLR20 min40vh">
+        <div class="min8vh"></div>
+        <div class="width100 font36 bold narrowLine marginB10">
+            {{subcategory.seoname}} Exam
+        </div>
+        <div layout="column" layout-align="start start" flex flex-xs="100">
+            <div layout="row" layout-align="start start" class="width100">
+                <a ng-href="{{subcategory.website}}" target="_blank" class="bold">{{subcategory.website}}</a>
+            </div>
+            <div layout="row" layout-align="start start" class="width100">
+                {{subcategory.briefDescription}}
+            </div>
+        </div>
+    </div>
+    <div layout="column" layout-align="start start" flex-gt-xs="25" flex-xs="100" class="paddingLR20 width100" ng-class="{ min40vh: !mobileDevice }">
+        <div class="min8vh"></div>
+        <div layout="column" layout-align="start start" class="width100 padding10 paddingL40 lightBorder text-white">
+            <div layout="row" layout-align="center start" class="width100">
+                <div flex>Frequency</div>
+                <div flex class="text-white">
+                    {{subcategory.frequency}}
+                </div>
+            </div>
+            <div layout="row" layout-align="center start" class="width100">
+                <div flex>Mode</div>
+                <div flex class="text-white">
+                    <div ng-if="activeExamCycle.examMode">
+                        Online Only
+                    </div>
+                    <div ng-if="!activeExamCycle.examMode">
+                        Online & Offline
+                    </div>
+                </div>
+            </div>
+            <div class="width100 marginT40 marginB20">
+                <md-button class="md-danger md-small tolowercase font12 width100 margin0" ui-sref="exam({ examName:{{'subcategory.name'}} })" target="_blank"> 
+                    Read More
+                </md-button>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<!--<div layout="row" layout-xs="column" layout-align="center center" class="width100 thirdFont font14 marginB30" id="examinfo2">
     <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkerTranslucentBackground">
     <div layout="row" layout-xs="column" layout-align="start start" class="width100 textWhite" flex-xs="100" flex-gt-xs="90" >
     <div layout="column" layout-align="start start" flex-gt-xs="10" flex-xs="100" class="min40vh paddingR10 " hide-xs ng-if="subcategory.logo && subcategory.logo != ''">
@@ -237,7 +293,7 @@
     </div>
     </div>
     </div>
-</div>
+</div>-->
 <div class="whiteBackground mainContent" >
     
     <div layout="row" layout-align="start start" class="width100">
@@ -292,7 +348,7 @@
         
         
         
-        <div layout="row" layout-align="start start" class="width100">
+        <div layout="row" layout-align="start start" class="width100 marginT20">
             <div hide-xs flex="5">
             </div>
             <div flex class="paddingLR10">

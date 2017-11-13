@@ -78,12 +78,18 @@ router.post('/download', function(req, res) {
                                 if(thisIndex != -1){
                                 var examStream = examStreams[thisIndex];    
                                     
-                                var question = thisTest.url.question;
+                                var question = thisTest.url.answer;
+                                
+                                if(question){
+                                
+                                    
                                 var splits = question.split("/");
                                 var fileName = splits[splits.length - 1];
-                                var localFileName = thisTest.name + "#" + thisTest.description + "#" + fileName;
+                                //var localFileName = thisTest.name + "#" + thisTest.description + "#" + fileName;
+                                var localFileName = fileName;
 
-                                var localFile = "downloads-6Oct/tests/" + examStream.stream + "/" + examStream.exam + "/" + localFileName;
+                                //var localFile = "downloads-6Oct/tests/" + examStream.stream + "/" + examStream.exam + "/" + localFileName;
+                                var localFile = "downloads-13Nov/tests/" + localFileName;
                                 //console.log("Downloading " + fileName + " to " + localFile);    
                                 
                                     
@@ -122,7 +128,20 @@ router.post('/download', function(req, res) {
                                         console.log("All downloaded");
                                         console.log("------------");
                                     }
-                                });    
+                                }); 
+                                    
+                                    
+                                }else{
+                                    tCounter += 1;
+                                    console.log("Test number " + index + " not found: " + tCounter + "/" + nTests + " done!");
+                                    
+                                    if(tCounter == nTests){
+                                        console.log("------------");
+                                        console.log("All downloaded");
+                                        console.log("------------");
+                                    }
+                                }    
+                                   
                                     
                                     
                                     
@@ -134,7 +153,7 @@ router.post('/download', function(req, res) {
                             });
 
                             } else {throw err;}
-                        }).limit(100).skip(100);
+                        }).limit(1000).skip(0);
                             
                             
                             
@@ -203,6 +222,54 @@ router.post('/download', function(req, res) {
   
 });
 
+router.post('/upload', function(req, res) {
+    var fileInfo = req.body;
+    
+    var s3Config = awsCredential.findOne({active: true}, function(err, s3Config) {
+        if (!err){
+            var client = s3.createClient({
+              maxAsyncS3: 20,     // this is the default
+              s3RetryCount: 3,    // this is the default
+              s3RetryDelay: 1000, // this is the default
+              multipartUploadThreshold: 20971520, // this is the default (20 MB)
+              multipartUploadSize: 15728640, // this is the default (15 MB)
+              s3Options: {
+                accessKeyId: s3Config.accessKey,
+                secretAccessKey: s3Config.secretKey,
+                region: s3Config.region,
+              },
+            });
+            
+            var localFile = "upload/4f9bfcf9334f1c78afcdaea6541d17e3.pdf";
+            var splits = localFile.split("/");
+            var fileName = splits[splits.length - 1];
+            
+            var params = {
+              localFile: localFile,
+              s3Params: {
+                Bucket: s3Config.bucket,
+                Key: fileName,
+              },
+            };
+            var uploader = client.uploadFile(params);
+            uploader.on('error', function(err) {
+              console.error("unable to upload:", err.stack);
+            });
+            uploader.on('progress', function() {
+              console.log("progress", uploader.progressMd5Amount,
+                        uploader.progressAmount, uploader.progressTotal);
+            });
+            uploader.on('end', function() {
+              console.log("done uploading");
+            });
+    
+            res.json(true);
+            
+        } else {throw err;}
+    });
+    
+  
+});
 
 router.post('/downloadFromURLS', function(req, res) {
     var urls = [
