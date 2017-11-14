@@ -33,7 +33,7 @@
             Question Sets Added - Report for {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{addedQuestions.length}}</span>
         </div>
         <div layout="row" layout-align="center center" class="width100 marginTB10 font12" layout-wrap>
-            <div class="marginR5 badge padding5" id="badge" ng-repeat="examQ in examQCount | orderBy: '-count'">
+            <div class="margin5 badge padding5" id="badge" ng-repeat="examQ in examQCount | orderBy: '-count'">
                 {{examQ.exam.displayname}}: {{examQ.count}}
             </div>
         </div>

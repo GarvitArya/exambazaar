@@ -1060,7 +1060,7 @@ router.get('/flipwatermarked/:testId', function(req, res) {
                     console.log(thisTest._id + " saved! " + "Watermarked set to " + thisTest.watermarked);
                 });
                 
-                res.json(true);
+                res.json(thisTest.watermarked);
             }else{
                 res.json(null);
             }

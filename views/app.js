@@ -10206,12 +10206,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             $scope.generateExamSummary = function(){
                 $scope.examQCount = [];
-                var examQuestions = $scope.addedQuestions.map(function(a) {return a.exam._id;});
-               
+                var examQuestionIds = $scope.addedQuestions.map(function(a) {return a.exam._id;});
+                var examQuestionCounts = $scope.addedQuestions.map(function(a) {return a.questions;});
                 
                 var counts = {};
-                for (var i = 0; i < examQuestions.length; i++) {
-                    counts[examQuestions[i]] = 1 + (counts[examQuestions[i]] || 0);
+                for (var i = 0; i < examQuestionIds.length; i++) {
+                    var thisLength = 0;
+                    if(examQuestionCounts[i] && examQuestionCounts[i].length > 0){
+                        thisLength = examQuestionCounts[i].length;
+                    }
+                    counts[examQuestionIds[i]] = thisLength + (counts[examQuestionIds[i]] || 0);
                 }
                 for(var i in counts){
                     //console.log(i + " " + counts[i]);
@@ -10227,7 +10231,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }
                     $scope.examQCount.push(newExamCount);
                 }
-                console.log($scope.examQCount);
+                //console.log($scope.examQCount);
             };
             $scope.generateExamSummary();
     }]);
@@ -27231,7 +27235,12 @@ function getLatLng(thisData) {
             $scope.flipwatermarked = function(testId){
                 if($scope.user.userType = 'Master'){
                     testService.flipwatermarked(testId).success(function (data, status, headers) {
-                        console.log(data);
+                        
+                        if(data != null){
+                            $scope.test.watermarked = data;
+                           
+                        }
+                        //console.log(data);
                     })
                     .error(function (data, status, header, config) {
                         console.log("Error ");

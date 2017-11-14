@@ -1778,20 +1778,22 @@ router.get('/editFilled/:userId', function(req, res) {
 router.get('/addedInstitutes/:userId', function(req, res) {
     var userId = req.params.userId.toString();
     console.log('Finding Added Institutes for: ' + userId);
-    
+    var limit = 500;
     var thisUser = user
     .findOne({'_id': userId},{basic:1, userType:1})
     .exec(function (err, thisUser) {
     if (!err){
         if(thisUser){
             var fullUserScope = false;
-            if(thisUser.userType == 'Master' || thisUser._id == '59085f0fc7289d0011d6ea8c' || thisUser._id == '59899631a68cea0154b49502' ){
+            if(thisUser.userType == 'Master' || thisUser._id == '59085f0fc7289d0011d6ea8c'){
                fullUserScope = true; 
             }
             
             if(fullUserScope){
                 var addedInstitutes = targetStudyProvider
                 .find({_createdBy: {$exists: true}},{name:1, website: 1, address:1, city:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1})
+                .sort( { _created: -1 } )
+                .limit(limit)
                 .exec(function (err, addedInstitutes) {
                 if (!err){
                     //console.log(addedInstitutes.map(function(a) {return a._createdBy;}));
@@ -1801,6 +1803,8 @@ router.get('/addedInstitutes/:userId', function(req, res) {
             }else{
                 var addedInstitutes = targetStudyProvider
                 .find({_createdBy: {$exists: true}, _createdBy: thisUser._id},{name:1, website: 1, address:1, city:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1})
+                .sort( { _created: -1 } )
+                .limit(limit)
                 .exec(function (err, addedInstitutes) {
                 if (!err){
                     res.json(addedInstitutes);
@@ -1821,6 +1825,7 @@ router.get('/addedInstitutes/:userId', function(req, res) {
 
 router.get('/addedQuestions/:userId', function(req, res) {
     var userId = req.params.userId.toString();
+    var limit = 500;
     console.log('Finding Added Questions for: ' + userId);
     
     var thisUser = user
@@ -1836,6 +1841,8 @@ router.get('/addedQuestions/:userId', function(req, res) {
             if(fullUserScope){
                 var addedQuestions = question
                 .find({_createdBy: {$exists: true}})
+                .sort( { _created: -1 } )
+                .limit(limit)
                 .deepPopulate('test')
                 .exec(function (err, addedQuestions) {
                 if (!err){
@@ -1845,6 +1852,8 @@ router.get('/addedQuestions/:userId', function(req, res) {
             }else{
                 var addedQuestions = question
                 .find({_createdBy: {$exists: true}, _createdBy: thisUser._id})
+                .sort( { _created: -1 } )
+                .limit(limit)
                 .deepPopulate('test')
                 .exec(function (err, addedQuestions) {
                 if (!err){
