@@ -22,6 +22,7 @@ var testSchema = mongoose.Schema({
     downloadable : { type: Boolean, default: false},
     verified : { type: Boolean, default: false},
     active : { type: Boolean, default: true},
+    watermarked : { type: Boolean, default: false},
     _created: { type: Date, default: Date.now },
 });
 testSchema.plugin(deepPopulate);

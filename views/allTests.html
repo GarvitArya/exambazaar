@@ -33,6 +33,12 @@
 <div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
+    <div layout="row" layout-align="center center" class="width100 marginB20">
+        <a ng-click="markWatermarked()" id="link">
+            Mark Watermarked
+        </a>
+    
+    </div>
     <div layout="row" layout-align="start start" class="padded" ng-if="masterUser" layout-wrap>
     <div flex="100" layout="row" layout-align="start start" ng-repeat="exam in allExams | orderBy:['-tests.length']" class="width100">
         <div flex="15">

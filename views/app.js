@@ -547,6 +547,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExamTestsByExamName = function(examName) {
             return $http.get('/api/tests/examByName/'+examName, {examName: examName});
         };
+        this.markWatermarked = function() {
+            return $http.get('/api/tests/markWatermarked');
+        };
     }]);
     
     exambazaar.service('ExamService', ['$http', function($http) {
@@ -12578,6 +12581,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 .error(function (data, status, header, config) {
                     console.log("Error ");
                 });    
+            };
+            
+            $scope.markWatermarked = function(){
+                testService.markWatermarked().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                }); 
             };
             
             $scope.download = function(test){
