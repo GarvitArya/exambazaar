@@ -8457,6 +8457,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Siliguri",
             "Tirunelveli",
             "Baghpat",
+            "Hoshiarpur",
+            "Firozpur",
+            "Bathinda",
+            "Kapurthala",
+            "Sagar",
+            "Durg",
+            "Dhamtari",
+            "Kanker",
+            "Raigarh",
+            "Korba",
+
         ];
         
         if($cookies.getObject('sessionuser')){
