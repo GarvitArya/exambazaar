@@ -550,6 +550,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.markWatermarked = function() {
             return $http.get('/api/tests/markWatermarked');
         };
+        this.flipwatermarked = function(testId) {
+            return $http.get('/api/tests/flipwatermarked/'+testId, {testId: testId});
+        };
     }]);
     
     exambazaar.service('ExamService', ['$http', function($http) {
@@ -27164,7 +27167,7 @@ function getLatLng(thisData) {
         
          
     exambazaar.controller("addQuestionController", 
-        [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', 'questionService', '$state', '$mdDialog', '$timeout', 'thisTestQuestions', '$cookies', function($scope, Notification, $rootScope, thisTest, Upload, ImageService, questionService, $state, $mdDialog, $timeout, thisTestQuestions, $cookies){
+        [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', 'questionService', 'testService', '$state', '$mdDialog', '$timeout', 'thisTestQuestions', '$cookies', function($scope, Notification, $rootScope, thisTest, Upload, ImageService, questionService, testService, $state, $mdDialog, $timeout, thisTestQuestions, $cookies){
             $scope.test = thisTest.data;
             $scope.thisTestQuestions = thisTestQuestions.data;
             
@@ -27222,6 +27225,17 @@ function getLatLng(thisData) {
                     .error(function (data, status, header, config) {
                         console.log('Error ' + data + ' ' + status);
                     });
+                }
+            };
+            
+            $scope.flipwatermarked = function(testId){
+                if($scope.user.userType = 'Master'){
+                    testService.flipwatermarked(testId).success(function (data, status, headers) {
+                        console.log(data);
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    }); 
                 }
             };
             $scope.removeQuestionDialog = function(){

@@ -82,10 +82,10 @@
     <div id="spacer3">
     </div>
     <div layout="column" layout-align="start start" class="padded width100" ng-if="user">
-        <div layout="column" layout-align="start start" class="width100 font20 bold paddingB5 headingBottomBorder" >
+        <div layout="column" layout-align="start start" class="width100 paddingB5 headingBottomBorder" >
             <div layout="column" layout-align="start start">
                 <div layout="row" layout-align="start center">
-                    <div class="marginR20">
+                    <div class="font20 bold marginR20">
                         {{test.name}}
                     </div>
                     <div layout="row" layout-align="start start">
@@ -99,6 +99,10 @@
                     
                 </div>
                 <div class="font12">{{test.description}}</div>
+            </div>
+            
+            <div layout="row" layout-align="start center" class="marginTB5" ng-if="user.userType=='Master'" ng-click="flipwatermarked(test._id)">
+                Flip Watermarked
             </div>
             <div layout="row" layout-align="start center" flex layout-wrap class="marginT10">
                 <div ng-repeat="testQuestion in thisTestQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR5 marginB5" id="questionNoBadge" ng-click="setQuestion(testQuestion)">

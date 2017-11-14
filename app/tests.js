@@ -1042,4 +1042,33 @@ router.get('/markWatermarked', function(req, res) {
     
 });
 
+router.get('/flipwatermarked/:testId', function(req, res) {
+    var testId = req.params.testId;
+    var thisTest = test
+        .findOne({'_id': testId}, {watermarked: 1})
+        .exec(function (err, thisTest) {
+        if (!err){
+            if(thisTest){
+                if(!thisTest.watermarked){
+                    thisTest.watermarked = true;
+                }else{
+                    thisTest.watermarked = false;
+                }
+                
+                thisTest.save(function(err, thisTest) {
+                    if (err) return console.error(err);
+                    console.log(thisTest._id + " saved! " + "Watermarked set to " + thisTest.watermarked);
+                });
+                
+                res.json(true);
+            }else{
+                res.json(null);
+            }
+            //console.log(thisTest);
+            
+        } else {throw err;}
+    });
+    
+});
+
 module.exports = router;
