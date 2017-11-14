@@ -7492,7 +7492,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
-            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'profile', 'eqad'];
+            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'profile', 'eqad', 'addQuestion'];
             
             SidebarJS.close();
             if(forceLoginStates.indexOf($state.current.name) != -1){
@@ -27172,6 +27172,16 @@ function getLatLng(thisData) {
          
     exambazaar.controller("addQuestionController", 
         [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', 'questionService', 'testService', '$state', '$mdDialog', '$timeout', 'thisTestQuestions', '$cookies', function($scope, Notification, $rootScope, thisTest, Upload, ImageService, questionService, testService, $state, $mdDialog, $timeout, thisTestQuestions, $cookies){
+            
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+                
+                
+            }else{
+                $rootScope.$emit("CallBlogLogin", {});
+            }
+            
+            
             $scope.test = thisTest.data;
             $scope.thisTestQuestions = thisTestQuestions.data;
             
@@ -27330,11 +27340,7 @@ function getLatLng(thisData) {
             $scope.toAddQuestion = null;
             $scope.questionTypes = ["MCQ"];
             
-            if($cookies.getObject('sessionuser')){
-                $scope.user = $cookies.getObject('sessionuser');
-            }else{
-                $scope.user = null;
-            }
+            
             
             $scope.addNewQuestionSet = function(){
                 $scope.toAddQuestion = {

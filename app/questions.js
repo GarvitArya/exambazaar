@@ -196,7 +196,7 @@ router.get('/question/:questionId', function(req, res) {
 });
 
 router.get('/markCreator/:testId', function(req, res) {
-    var creatorId = '59ae8cf5a4a2e43f2519ea8d';
+    var creatorId = '5a0a975e7e56384fa04379ab';
     var testId = req.params.testId;
     res.json('Done');
     var allQuestions = question
