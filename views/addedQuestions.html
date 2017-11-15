@@ -30,7 +30,7 @@
     </div>
     <div layout="column" layout-align="start start" ng-if="authorized">
         <div layout="row" layout-align="center center" class="font20 text-primary bold width100">
-            Question Sets Added - Report for {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{addedQuestions.length}}</span>
+            Question Sets Added - Report for {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{totalQuestions}}</span>
         </div>
         <div layout="row" layout-align="center center" class="width100 marginTB10 font12" layout-wrap>
             <div class="margin5 badge padding5" id="badge" ng-repeat="examQ in examQCount | orderBy: '-count'">

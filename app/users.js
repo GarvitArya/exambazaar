@@ -1837,10 +1837,11 @@ router.get('/addedQuestions/:userId', function(req, res) {
             if(thisUser.userType == 'Master' || thisUser._id == '59085f0fc7289d0011d6ea8c'){
                fullUserScope = true; 
             }
+            //_createdBy: '59aecd5987b4c258f9b62111', _created: {$gte: new Date("2017-11-07T00:00:00Z")}
             //,{exam:1, test:1, _createdBy:1, _created:1}
             if(fullUserScope){
                 var addedQuestions = question
-                .find({_createdBy: {$exists: true}})
+                .find({})
                 .sort( { _created: -1 } )
                 .limit(limit)
                 .deepPopulate('test')

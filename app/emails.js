@@ -687,8 +687,10 @@ router.post('/CATEmail', function(req, res) {
 
             } else {throw err;}
             });*/
-
-            /*var allSubscribers = subscriber.find({email: {$exists: true}}, {name: 1, email: 1, _id: 1}, function(err, allSubscribers) {
+            
+            
+            //email: {$exists: true}
+            var allSubscribers = subscriber.find({_created: {$gte: new Date('2017-11-15T00:00:00.000Z')}}, {name: 1, email: 1, _id: 1, mobile:1}, function(err, allSubscribers) {
             if (!err){
                 var emailcounter = 0;
                 var counter = 0;
@@ -746,7 +748,7 @@ router.post('/CATEmail', function(req, res) {
 
             } else {throw err;}
             });
-            */
+            
 
             
             /*var allColleges = college.find({}, {Institute: 1, inst_name: 1}, function(err, allColleges){

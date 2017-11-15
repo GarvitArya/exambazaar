@@ -272,6 +272,7 @@ var allStates = [
 '/ebinternal/verify/:userId/',
 '/ebinternal/why',
 '/group/:categoryName/:subCategoryName/:cityName/:groupName',
+'/availDiscount/:categoryName/:subCategoryName/:cityName/:groupName',
 '/login',
 '/privacy',
 '/rankerswall/:examName/:year',

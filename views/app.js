@@ -2305,8 +2305,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }, true);
     }]);  
     
-   
-    exambazaar.controller("p5Controller", 
+    exambazaar.controller("availDiscountController", 
     [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
         $rootScope.reviewStream = null;
         $rootScope.reviewExam = null;
@@ -3206,9 +3205,960 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
         
+        $scope.availDiscount = function(ev){
+            $scope.discountForm = {
+                email: null,
+                mobile: null,
+            };
+            if($scope.user._id){
+                if($scope.user.email){
+                    $scope.discountForm.email = $scope.user.email;
+                }
+                if($scope.user.mobile){
+                    $scope.discountForm.mobile = $scope.user.mobile;
+                }
+            }
+            $mdDialog.show({
+              contentElement: '#availDiscountDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        
+        $scope.availDiscount2 = function(){
+            alert('Here');
+        };
+        
+        
+    }]);
+    
+   
+    exambazaar.controller("p5Controller", 
+    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
+        $rootScope.reviewStream = null;
+        $rootScope.reviewExam = null;
+        $rootScope.reviewCity = null;
+        $rootScope.reviewInstitute = null;
+        $mdDialog.hide();
+        
+        $scope.cancel = function() {
+          $mdDialog.cancel();
+        };
+        
+        $scope.thisGroupR = thisGroupResults.data;
+        if(!$scope.thisGroupR){
+            $scope.thisGroupR = [];
+        }
+        $scope.group = thisGroup.data;
+        var groupDisabled = $scope.group.map(function(a) {return a.disabled;});
+        var groupIds = $scope.group.map(function(a) {return a._id;});
+        
+        $scope.exam = thisExam.data;
+        $scope.thisExam = $scope.exam;
+        $scope.category = thisStream.data;
+        $scope.categoryName = $stateParams.categoryName;
+        $scope.groupName = $stateParams.groupName;
+        $scope.subCategoryName = $stateParams.subCategoryName;
+        $scope.subcategory = $scope.exam;
+        $scope.city = $stateParams.cityName; 
+        $scope.allExams = examList.data;
+        $scope.allStreams = streamList.data;
+        $scope.playerVars = {
+            controls: 1,
+            showinfo: 0
+        };
+        //console.log($scope.allExams);
+        if($cookies.getObject('sessionuser')){
+            $scope.user = $cookies.getObject('sessionuser');
+             UserService.getUserShortlistedInstitutes($scope.user.userId).success(function (data, status, headers) {
+                 var allShortlistData = data;
+                 var allShortlistedIds = allShortlistData.map(function(a) {return a.institute._id;});
+                 $scope.shortlistedIds = [];
+                 $scope.shortlistDetails = [];
+                 groupIds.forEach(function(thisGroupId, gindex){
+                     var sIndex = allShortlistedIds.indexOf(thisGroupId);
+                     if(sIndex != -1){
+                     $scope.shortlistedIds.push(thisGroupId); $scope.shortlistDetails.push(allShortlistData[sIndex]);
+                     }
+                 });
+                if($scope.shortlistedIds.indexOf($scope.provider._id) != -1){
+                    $scope.shortlisted = true;
+                }
+            })
+            .error(function (data, status, header, config) {
+                console.log('Shortlist Error' + status + " " + data);    
+            }); 
+            
+            if($scope.user.userType=='Master' || $scope.user.userType=='Intern - Business Development'){
+                $scope.ebuser = true;
+            }
+            
+            /*if($scope.user.userType=='Master'){
+                $scope.editable = true;
+                $scope.verifiedUser = true;
+                $scope.ebuser = true;
+            }
+            if($scope.user.userType=='Intern - Business Development'){
+                $scope.editable = true;
+                $scope.verifiedUser = true;
+                $scope.ebuser = true;
+                //$scope.showClaimDialog();
+            }
+            if($scope.user.userType=='Partner'){
+                $scope.verifiedUser = true;
+                $scope.ebuser = false;
+                if($scope.user.partner.indexOf($scope.provider._id) != -1){
+                    if(!$scope.provider.primaryManagement || $scope.provider.primaryManagement.name =='' || $scope.provider.primaryManagement.mobile ==''){
+                        
+                        $scope.editable = false;
+                        $scope.showAddPrimaryManagement();
+                    }else{
+                        $scope.editable = true;
+                    }
+                    
+                    
+                    
+                }else{
+                    $scope.editable = false;
+                    $scope.showUnauthorizedAccess();
+                    
+                }
+                
+            }*/
+        }else{
+            
+            $scope.signupNeeded = true;
+            //user is not allowed to access this page
+            /*var viewForm = {
+                institute: $scope.provider._id,
+                claim: true
+            };
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                console.log('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.log();
+            });*/
+        }
+        
+        if(!$scope.user || !$scope.user.userId){
+            $scope.showLoginForm();
+        }
+        
+        $scope.overviewIcons = [
+            {
+                icon:'images/icons/centre.png',
+                text:'Centres',
+                data: '1'
+            },
+            {
+                icon:'images/icons/city.png',
+                text:'Cities',
+                data: '1'
+            },
+            {
+                icon:'images/icons/students.png',
+                text:'Students',
+                data: '100'
+            },
+            {
+                icon:'images/icons/faculty.png',
+                text:'Faculty',
+                data: '10'
+            }
+        ];
+        $scope.components = [
+            /*'Overview',*/
+            'Contact',
+            'Exams',
+            'Results',
+            'Courses',
+            'Photos',
+            'Videos',
+            'Faculty',
+            'Location',
+            'Reviews'
+        ];
+        $scope.rankCategories = [
+            'GENERAL',    
+            'OBC-NCL',    
+            'SC/ST',    
+            'PwD'   
+        ];
+        $scope.resultYears = [
+            '2017',    
+            '2016',    
+            '2015',    
+            '2014',    
+            '2013',    
+            '2012',    
+            '2011',    
+            '2010',    
+            '2009',    
+            '2008',    
+            '2007',    
+            '2006',    
+            '2005',    
+            '2004',    
+            '2003'    
+        ];
+        
+        $scope.provider = {
+            name: $stateParams.groupName,
+            city: $stateParams.cityName
+        };
+        $scope.groupExams = [];
+        $scope.groupStreams = [];
+        $scope.groupPhotos = [];
+        $scope.groupVideos = [];
+        $scope.groupResults = [];
+        $scope.groupCourses = [];
+        $scope.groupFaculties = [];
+        var groupExamIds = [];
+        var groupStreamIds = [];
+        var examTitle = ' for ';
+        $scope.currStreamExams = [];
+        $scope.group.forEach(function(thisGroup, index){
+            if(thisGroup.latlng){
+                thisGroup.mapAddress = [thisGroup.latlng.lat, thisGroup.latlng.lng];
+                //console.log(thisGroup.mapAddress);
+            }
+            if(thisGroup.logo){
+                $scope.provider.logo = thisGroup.logo;
+            }
+            var thisGroupExams = thisGroup.exams;
+            thisGroupExams.forEach(function(thisExam, index){
+                groupExamIds = $scope.groupExams.map(function(a) {return a.exam._id;});
+                var eIndex = groupExamIds.indexOf(thisExam._id);
+                
+                if(eIndex == -1){
+                    var newGroupExam = {
+                        exam: thisExam,
+                        centre: [thisGroup]
+                    };
+                    var thisStream = thisExam.stream;
+                    groupStreamIds = $scope.groupStreams.map(function(a) {return a._id;});
+                    if(groupStreamIds.indexOf(thisStream._id) == -1){ $scope.groupStreams.push(thisStream);
+                    }
+                    $scope.groupExams.push(newGroupExam);
+                    if($scope.category._id.toString() == thisExam.stream._id.toString()){
+                        $scope.currStreamExams.push(thisExam);
+                    }
+                }else{
+                    var groupExam = $scope.groupExams[eIndex];
+                    groupExam.centre.push(thisGroup);
+                }
+            });
+            var thisGroupPhoto = thisGroup.photo;
+            //var thisGroupResults = thisGroup.results;
+            var thisGroupResults = $scope.thisGroupR;
+            var thisGroupVideo = thisGroup.video;
+            var thisGroupFaculty = thisGroup.faculty;
+            var thisGroupCourse = thisGroup.course;
+            $scope.groupPhotos = $scope.groupPhotos.concat(thisGroupPhoto);
+            $scope.groupVideos = $scope.groupVideos.concat(thisGroupVideo);
+            $scope.groupFaculties = $scope.groupFaculties.concat(thisGroupFaculty);
+            $scope.groupResults = $scope.groupResults.concat(thisGroupResults);
+            $scope.groupCourses = $scope.groupCourses.concat(thisGroupCourse);
+        });
+        
+        $scope.groupExamsOnly = $scope.groupExams.map(function(a) {return a.exam;});
+        //console.log($scope.groupResults);
+        
+        $scope.showPhotoDialog = function(ev,index) {
+            $scope.activePhotoIndex = index;
+            $scope.activePhoto = $scope.groupPhotos[index];
+            var indexPair = startEndIndex(index, $scope.groupPhotos.length);
+            $scope.startPhotoIndex = indexPair.start;
+            $scope.endPhotoIndex = indexPair.end;
+            
+            $mdDialog.show({
+              contentElement: '#photoDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        function startEndIndex (index, arrayLength){
+            
+            var showLength = 6;
+            var indexPair = {
+                start: 0,
+                end: arrayLength
+            };
+            
+            if(index - showLength/2 <=0){
+                indexPair.start = 0;
+                indexPair.end = Math.min(indexPair.start + showLength, arrayLength);
+            }else{
+                if(index + showLength/2 >= arrayLength){
+                    indexPair.end = arrayLength;
+                    indexPair.start = Math.max(0, indexPair.end - showLength);
+                    
+                }else{
+                    indexPair.start = index -showLength/2;
+                    indexPair.end = Math.min(indexPair.start + showLength, arrayLength);
+                }
+                
+            }
+            return (indexPair);
+        };
+        
+        $scope.prevPhoto = function(){
+            var index = $scope.activePhotoIndex - 1;
+            $scope.changePhotoImage(index);
+        };
+         $scope.nextPhoto = function(){
+            var index = $scope.activePhotoIndex + 1;
+            $scope.changePhotoImage(index);
+        };
+        $scope.changePhotoImage = function(index){
+            var arrayLength = $scope.groupPhotos.length;
+            if(index >=0 && index < arrayLength){
+                $scope.activePhotoIndex = index;
+                $scope.activePhoto = $scope.groupPhotos[index];
+                var indexPair = startEndIndex(index, $scope.groupPhotos.length);
+                //console.log(JSON.stringify(indexPair));
+                $scope.startPhotoIndex = indexPair.start;
+                $scope.endPhotoIndex = indexPair.end;
+            }
+            
+        };
+        $scope.showFacultyDialog = function(ev,index) {
+            $scope.activeFacultyIndex = index;
+            $scope.activeFaculty = $scope.groupFaculties[index];
+            var indexPair = startEndIndex(index, $scope.groupFaculties.length);
+            $scope.startFacultyIndex = indexPair.start;
+            $scope.endFacultyIndex = indexPair.end;
+            
+            $mdDialog.show({
+              contentElement: '#facultyDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        
+        $scope.getShortlistSelectedColour = function(thisGroup){
+            var className = "notselected";
+            if($scope.shortlistedIds){
+                var sIndex = $scope.shortlistedIds.indexOf(thisGroup._id);
+                if(sIndex == -1){
+                }else{
+                    className = "selected";
+                }
+            }
+            
+            
+            
+            return className;
+        };
+        
+        
+        $scope.updateShortlistInstitute = function(thisGroup){
+            var sIndex = $scope.shortlistedIds.indexOf(thisGroup._id);
+            
+            if(sIndex == -1){
+                $scope.shortlistedIds.push(thisGroup._id);
+                $scope.shortlistInstitute(thisGroup._id);
+            }else{
+                //$scope.shortlistedIds.splice(sIndex, 1);
+            }
+            
+        };
+        
+        
+        $scope.shortlistInstitute = function(instituteId){
+            //console.log($scope.shortlistedIds);
+            //$scope.showSelectShortlistCentreDialog();
+            if($scope.user.userId && instituteId){
+                var shortListForm = {
+                    userId: $scope.user.userId,
+                    instituteId: instituteId
+                };
+                UserService.shortlistInstitute(shortListForm).success(function (data, status, headers) {
+                    console.log('Institute Shortlisted');
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Shortlist error: ' + status + " " + data);    
+                });  
+            }
+              
+        };
+        $scope.prevFaculty = function(){
+            var index = $scope.activeFacultyIndex - 1;
+            $scope.changeFacultyImage(index);
+        };
+         $scope.nextFaculty = function(){
+            var index = $scope.activeFacultyIndex + 1;
+            $scope.changeFacultyImage(index);
+        };
+        $scope.changeFacultyImage = function(index){
+            var arrayLength = $scope.groupFaculties.length;
+            if(index >=0 && index < arrayLength){
+                $scope.activeFacultyIndex = index;
+                $scope.activeFaculty = $scope.groupFaculties[index];
+                var indexPair = startEndIndex(index,$scope.groupFaculties.length);
+                $scope.startFacultyIndex = indexPair.start;
+                $scope.endFacultyIndex = indexPair.end;
+            }
+            
+        };
+        
+        $scope.showResultDialog = function(ev, index, examResult) {
+            $scope.activeResultIndex = index;
+            $scope.activeResult = $scope.groupResults[index];
+            var indexPair = startEndIndex(index, $scope.groupResults.length);
+            
+            $scope.startResultIndex = indexPair.start;
+            $scope.endResultIndex = indexPair.end;
+            $scope.dialogExamResult = examResult;
+            
+            $mdDialog.show({
+              contentElement: '#resultsDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        
+        $scope.prevResult = function(){
+            var index = $scope.activeResultIndex - 1;
+            $scope.changeResultImage(index);
+        };
+         $scope.nextResult = function(){
+            var index = $scope.activeResultIndex + 1;
+            $scope.changeResultImage(index);
+        };
+        $scope.changeResultImage = function(index){
+            var arrayLength = $scope.groupResults.length
+            if(index >=0 && index < arrayLength){
+                $scope.activeResultIndex = index;
+                $scope.activeResult = $scope.groupResults[index];
+                var indexPair = startEndIndex(index,$scope.groupResults.length);
+                $scope.startResultIndex = indexPair.start;
+                $scope.endResultIndex = indexPair.end;
+            }
+        };
+        
+        
+        var instituteIds = []; //$scope.group.map(function(a) {return a._id;});
+        
+        $scope.group.forEach(function(thisGroup, index){
+            if(thisGroup.city == $stateParams.cityName){
+                instituteIds.push(thisGroup._id);
+            }
+        });
+        $scope.user = $cookies.getObject('sessionuser');
+        var viewForm = {
+            institutes: instituteIds,
+            state: $state.current.name,
+            //user: $scope.user.userId,
+            claim: false
+        };
+        if($scope.user && $scope.user.userId){
+            viewForm.user = $scope.user.userId
+        }
+        if($cookies.getObject('ip')){
+            var ip = $cookies.getObject('ip');
+            viewForm.ip = ip;
+        }
+        viewService.saveview(viewForm).success(function (data, status, headers) {
+            //console.log('View Marked');
+        })
+        .error(function (data, status, header, config) {
+            console.log();
+        });
+        
+        var examNamesKeywords = "";
+        
+        $scope.groupExams.forEach(function(thisExam, index){
+            examNamesKeywords += $stateParams.groupName + " " + $stateParams.cityName + " for " + thisExam.exam.displayname;
+            if(index < $scope.groupExams.length - 1){
+                examNamesKeywords += ", ";
+            }
+        });
+        var thisCity = $scope.city;
+        $scope.cityCenters = [];
+        $scope.group.forEach(function(thisGroup, gindex){
+            if(thisGroup.city == thisCity){
+                $scope.cityCenters.push(thisGroup);
+            }
+        });
+        var instituteDefinerLower = ["coaching", "classes"];
+        var instituteDefiner = [];//"Coaching", "Classes"
+        var groupNameLowerCase = $stateParams.groupName.toLowerCase();
+        if(groupNameLowerCase.indexOf('coaching') == -1){
+            instituteDefiner.push("Coaching");
+        }
+        if(groupNameLowerCase.indexOf('class') == -1 && groupNameLowerCase.indexOf('classes') == -1){
+            instituteDefiner.push("Classes");
+        }
+        var instituteDefinerString = '';
+        instituteDefiner.forEach(function(thisDefiner, dindex){
+            if(dindex == 0){
+                instituteDefinerString += " ";
+            }
+            instituteDefinerString += thisDefiner + " ";
+        });
+        //console.log(instituteDefinerString);
+        
+        /*
+        $rootScope.pageTitle = $stateParams.groupName + instituteDefinerString + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + " Exam";
+        $rootScope.pageDescription = $stateParams.groupName + ", " +$scope.city +  " has " + $scope.cityCenters.length + " " +   $scope.subcategory.displayname + " Coaching Centers in " + $scope.city + ". | Find fees, photos and reviews of " + $stateParams.groupName;
+        
+        var groupKeywords = $stateParams.groupName + ", Top " + $stateParams.subCategoryName + " Coaching in " + $stateParams.cityName + ", " + $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ", " + $scope.cityCenters.length + " " + $stateParams.groupName + " Centers in " + $scope.city + ", ";
+        $rootScope.pageKeywords = groupKeywords + examNamesKeywords;
+        */
+        
+        /*
+        Title: <CI Name> | <Exam Name> Coaching in <City> for <Exam Name> Preparation
+        Description: <CI Name> <Exam Name> Coaching in <City> for <Exam Name> Preparation | <ncenter> centers | <CI Name> Courses, Fees, Reviews, Results, Faculty, Photos and <Exam Name> Tests
+        Keywords
+        <CI Name> Coaching in <City>
+        <CI Name> Coaching for <Exam Name>
+        <CI Name> <City>
+        <CI Name> <City> Reviews
+        <CI Name> <City> Tests
+        <CI Name> <City> Courses
+        <CI Name> Photos
+        <CI Name> Videos
+        <CI Name> How to prepare for <Exam Name>
+        <CI Name> Online Coaching
+        <CI Name> <Exam Name> Preparation
+        <CI Name> Online Test Series
+        <CI Name> Coaching in <Locality>
+        <Exam Name> Coaching Classes in <City>
+
+        */
+        var nCentersCity = $scope.cityCenters.length;
+        var nCentersTotal = $scope.group.length;
+        var centerText = " Centre";
+        if(nCentersCity > 1){
+            centerText = " Centres"
+        }
+        var nCentersCityText = nCentersCity + " " + $stateParams.groupName + " " + centerText + " in " + $stateParams.cityName;
+        var nCentersCityKeyword = nCentersCity + " " + $stateParams.groupName + centerText + " in " + $stateParams.cityName;    
+        
+        $rootScope.pageTitle = $stateParams.groupName + " | " + $scope.subcategory.seoname + ' Coaching in ' + $stateParams.cityName + " | " + nCentersCityText;
+        //+ " for " + $scope.subcategory.seoname + " Preparation"
         
         
         
+        $rootScope.pageDescription = $stateParams.groupName + " " + $scope.subcategory.seoname + " Coaching in " + $stateParams.cityName + " for " + $scope.subcategory.seoname + " | " + nCentersCityText + " | " + $stateParams.groupName + " Courses, Fees, Reviews, Results, Faculty, Photos and " + $scope.subcategory.seoname + " Tests";
+        
+        /*<CI Name> Coaching in <City>
+        <CI Name> Coaching for <Exam Name>
+        <CI Name> <City>
+        <CI Name> <City> Reviews
+        <CI Name> <City> Tests
+        <CI Name> <City> Courses
+        <CI Name> <City> Photos
+        <CI Name> <City> Videos
+        <CI Name> How to prepare for <Exam Name>
+        <CI Name> Online Coaching
+        <CI Name> <Exam Name> Preparation
+        <CI Name> Online Test Series
+        <CI Name> Coaching in <Locality>
+        <Exam Name> Coaching Classes in <City>*/
+
+        
+        var coachingKeywordArray = [];
+        coachingKeywordArray.push($stateParams.groupName + " Coaching in " + $scope.city);
+        coachingKeywordArray.push($stateParams.groupName + " Coaching for " + $scope.subcategory.seoname);
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName);
+        coachingKeywordArray.push(nCentersCityKeyword);
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Reviews");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " " + $scope.subcategory.seoname +  " Reviews");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Tests");
+        coachingKeywordArray.push($stateParams.groupName + " " + $scope.subcategory.seoname + " Tests");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Courses");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Photos");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Videos");
+        var thisKeyword1 = "";
+        var thisKeyword2 = "";
+        var thisKeyword3 = "";
+        var thisKeyword4 = "";
+        $scope.cityCenters.forEach(function(thisCenter, cindex){
+            thisKeyword1 = $stateParams.groupName + " Coaching in ";
+            thisKeyword2 = $scope.subcategory.seoname + " Coaching in ";
+            thisKeyword3 = $stateParams.groupName + " Coaching in ";
+            thisKeyword4 = $scope.subcategory.seoname + " Coaching in ";
+            if(thisCenter.location && thisCenter.location.area){
+                thisKeyword1 = thisKeyword1 + thisCenter.location.area;
+                thisKeyword2 = thisKeyword2 + thisCenter.location.area;
+                thisKeyword3 = thisKeyword3 + thisCenter.location.area + ", " + $stateParams.cityName;
+                thisKeyword4 = thisKeyword4 + thisCenter.location.area + ", " + $stateParams.cityName;
+            }else{
+                thisKeyword1 = thisKeyword1 + thisCenter.address;
+                thisKeyword2 = thisKeyword2 + thisCenter.address;
+                thisKeyword3 = thisKeyword3 + thisCenter.address + " " + $stateParams.cityName;
+                thisKeyword4 = thisKeyword4 + thisCenter.address + " " + $stateParams.cityName;
+            }
+            //coachingKeywordArray.push(thisKeyword1);
+            //coachingKeywordArray.push(thisKeyword2);
+            coachingKeywordArray.push(thisKeyword3);
+            coachingKeywordArray.push(thisKeyword4);
+        });
+        //console.log(coachingKeywordArray.length);
+        if(coachingKeywordArray.length < 20){
+            coachingKeywordArray.push($stateParams.groupName + " How to prepare for " + $scope.subcategory.seoname);
+            coachingKeywordArray.push($stateParams.groupName + " Online Coaching");
+            coachingKeywordArray.push($stateParams.groupName + " " + $scope.subcategory.seoname + " Preparation");
+            coachingKeywordArray.push($stateParams.groupName + " Online Test Series");
+            coachingKeywordArray.push($scope.subcategory.seoname + " Coaching in " + $stateParams.cityName);
+        }
+        
+        
+        //console.log($scope.cityCenters);
+        
+        //thisGroup.location
+        
+        
+        var coachingKeywords = "";
+        coachingKeywordArray.forEach(function(thisKeyword, kindex){
+            coachingKeywords += thisKeyword;
+            if(kindex < coachingKeywordArray.length - 1){
+                coachingKeywords += ", ";
+            }
+        });
+        //console.log(coachingKeywords);
+        $rootScope.pageKeywords = coachingKeywords;
+        
+        
+        
+        $scope.years = ["2017","2016","2015","2014","2013","2012","2011","2010","2009","2008","2007","2006","2005","2004","2003"];
+        $scope.reviewTags = ["Great Faculty", "Supportive Administration", "Value for Money", "Tech Powered", "Exhaustive Content", "Effective Test Series"];
+        $scope.addRemoveReviewTag = function(reviewTag){
+            if(!$scope.userReview.tags){
+                $scope.userReview.tags = [];
+            }
+            var rIndex = $scope.userReview.tags.indexOf(reviewTag);
+            if(rIndex == -1){
+                $scope.userReview.tags.push(reviewTag);
+            }else{
+                $scope.userReview.tags.splice(rIndex, 1);
+            }
+        };
+        $scope.setReviewTagColor = function(reviewTag){
+            var className = "unfilledTag";
+            var rIndex = $scope.userReview.tags.indexOf(reviewTag);
+            if(rIndex -= -1){
+                className = "filledTag";
+            }
+            return className;
+        };
+        
+        $scope.updateUserReviewYear = function(year){
+            if($scope.userReview){
+                UserService.year_of_start = year;
+            }
+        };
+        $scope.userReviewMode = false;
+        
+        $scope.showUserReviewDialog = function(ev,index) {
+            $mdDialog.show({
+              contentElement: '#userReviewDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            }).finally(function() {
+                $scope.userReviewMode = true;
+            });
+        };
+        
+        
+        
+        $scope.editUserReviewMode = function(){
+            $scope.userReviewMode = !$scope.userReviewMode;
+        };
+        reviewService.groupReviews(groupIds).success(function (data, status, headers) {
+            $scope.otherReviews = data;
+            $scope.otherReviews.forEach(function(thisReview, rindex){
+                var instituteId = thisReview.institute;
+                var iIndex = groupIds.indexOf(instituteId);
+                thisReview.institute = $scope.group[iIndex];
+                
+                $scope.reviewParams.forEach(function(thisParam, index){
+                                
+                var pIndex = $scope.reviews.indexOf(parseFloat(thisReview[thisParam.name]));
+                    
+                //console.log(thisReview[thisParam.name] + " "+ parseFloat(thisReview[thisParam.name]) + " " + pIndex);
+                $scope.setReview(thisParam.name,parseFloat(thisReview[thisParam.name]), $scope.otherReviews[rindex]);
+
+                });
+                
+                
+                
+            });
+            
+            
+        })
+        .error(function (data, status, header, config) {
+            console.log('Error ' + data + ' ' + status);
+        });
+        //groupIds
+        $scope.updateReviewInstitute = function(thisGroup){
+            $scope.userReview.institute = thisGroup._id;
+            console.log($scope.userReview.institute);
+        };
+        $scope.reviewParams = [
+            {name: "faculty", displayname:"Faculty and Teaching Experience", hoverVal: -1},
+            {name: "competitive_environment", displayname:"Competitive Environment", hoverVal: -1},
+            {name: "quality_of_material", displayname:"Quality of material", hoverVal: -1},
+            {name: "infrastructure", displayname:"Infrastructure", hoverVal: -1},
+        ];
+        
+        $scope.userReview = {
+            institute: null,
+            exam: $scope.exam._id,
+            stream: $scope.category._id,
+            text: '',
+            tags:[]
+        };
+        if($scope.user && $scope.user.userId){
+            $scope.userReview.user = $scope.user.userId;
+        }
+        $scope.reviewParams.forEach(function(thisParam, index){
+            $scope.userReview[thisParam.name] = null;
+        });
+        var noReview = false;
+        var reviewsQueried = false;
+        $scope.$watch('user.userId', function (newValue, oldValue, scope) {
+            if(newValue && !reviewsQueried){
+                reviewsQueried = true;
+                var userInstituteForm = {
+                    user: newValue,   
+                    instituteIdArray: groupIds,   
+                }; reviewService.existingReview(userInstituteForm).success(function (data, status, headers) {
+                    if(data && data.length > 0){
+                        $scope.userReview = data[0];
+                        
+                        if($scope.userReview){
+                            $scope.reviewParams.forEach(function(thisParam, index){
+                                
+                            var pIndex = $scope.reviews.indexOf(parseFloat($scope.userReview[thisParam.name]));
+                            $scope.setReview(thisParam.name,parseFloat($scope.userReview[thisParam.name]), $scope.userReview);
+                                
+                            });
+                        }
+                        
+                    }else{
+                        //console.log('Here');
+                        if($scope.user){
+                            //$scope.showUserReviewDialog();
+                        }
+                    } 
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                }); 
+            }else{
+            }
+        }, true);
+        $scope.reviews = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
+        $scope.reviewsClasses = ["review1","review2","review3","review4","review5","review6","review7","review8","review9"];
+        $scope.minTextLength = 70;
+        
+        $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + $scope.minTextLength + " characters long. The best review will be featured on our main page :)";
+        
+        var paramNames = $scope.reviewParams.map(function(a) {return a.name;});
+        
+        $scope.getBackgroundColour = function(reviewParam,  paramIndex, userReview){
+            var pIndex = paramNames.indexOf(reviewParam.name);
+            var className = "noreview";
+            
+            var propName = $scope.reviewParams[pIndex].name;
+            
+            if(userReview && userReview[propName]){
+                var review = userReview[propName];
+                var rIndex = $scope.reviews.indexOf(review);
+                //console.log(rIndex);
+                if(paramIndex <= rIndex){
+                    var rIndex2 = rIndex + 1;
+                    className = "review" + rIndex2;    
+                }
+            }
+            
+            if($scope.reviewParams[pIndex].hoverVal >= 0){
+                className = "noreview";
+            };
+            
+            if($scope.reviewParams[pIndex].hoverVal >= paramIndex){
+                
+                var paramIndex2 = paramIndex + 1;
+                className = "review" + paramIndex2;
+            }
+            
+            
+            return className;
+        };
+        
+        
+        $scope.getReviewSelectedColour = function(thisGroup){
+            var className = "notselected";
+            if($scope.userReview && $scope.userReview.institute && $scope.userReview.institute == thisGroup._id){
+                className = "selected";
+            }
+            
+            return className;
+        };
+        $scope.logMouseEvent = function(reviewParam,  paramIndex) {
+            switch (event.type) {
+              case "mouseenter":
+                    console.log("Hey Mouse Entered");
+                    break;
+              case "mouseover":{
+                    var pIndex = paramNames.indexOf(reviewParam.name);
+                    $scope.reviewParams[pIndex].hoverVal = paramIndex;
+                    break;
+              }
+              case "mouseout":{
+                    var pIndex = paramNames.indexOf(reviewParam.name);
+                    $scope.reviewParams[pIndex].hoverVal = -1;
+                    break;
+              }
+                    
+              case "mouseleave":
+                console.log("Mouse Gone");
+                break;
+
+              default:
+                console.log(event.type);
+                break;
+            };
+        };
+        $scope.reviewCentreError = false;
+        $scope.showSelectReviewCentreDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#selectReviewCentreDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.showSelectShortlistCentreDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#selectShortlistCentreDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.showSavedReviewDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#savedReviewDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
+        
+        $scope.selectReviewCentre = function(){
+            if($scope.group.length > 1){
+                $scope.showSelectReviewCentreDialog();
+            }else{
+                $scope.updateReviewInstitute($scope.group[0]);
+                $scope.submitReview();
+            }
+        };
+        $scope.cancelSelectReviewCentre = function(){
+            $scope.reviewCentreError = false;
+            $mdDialog.hide();
+        };
+        $scope.submitReview = function(){
+            if(!$scope.userReview.institute){
+                $scope.reviewCentreError = true;
+            }else{
+                if($scope.userReview.user){
+                    reviewService.savereview($scope.userReview).success(function (data, status, headers) {
+                        var reviewId = data;
+                        $scope.showSavedReviewDialog();
+                        
+                        $state.go('availOffer', {userId: $scope.user.userId, reviewId: reviewId});
+                        
+                        //$state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                }else{
+                    console.log('No user set');
+                    $scope.showLoginForm();
+                }
+            }
+            
+            
+        };
+        $scope.checkReview = function(reviewParam, rateVal) {   
+            if($scope.userReview[reviewParam.name] >=rateVal){return true;}else{return false;}
+        }
+        $scope.setReview = function(param, value, userReview){
+            //console.log(userReview);
+            if(userReview){
+                userReview[param] = value;
+            }
+            
+        };
+        $scope.invalidSubmit = function(){
+            var invalid = false;
+            
+            $scope.reviewParams.forEach(function(thisParam, index){
+                if(!$scope.userReview || !$scope.userReview[thisParam.name]){
+                    invalid = true;
+                }
+            });
+            if($scope.userReview){
+                $scope.userReview.text = $scope.userReview.text.trim();
+                $scope.userReview.text = $scope.userReview.text.replace(/\s+/g, " ");
+
+                var textLength = $scope.userReview.text.length;
+                //console.log(textLength);
+                if(textLength < $scope.minTextLength){
+                    invalid = true;
+                }
+            }
+            if(!$scope.userReview.exam ||  !$scope.userReview.stream ||  !$scope.userReview.year_of_start){
+                invalid = true;
+            }
+            
+            return invalid;
+        };
+        
+        
+        $scope.availDiscount = function(ev){
+            $scope.discountForm = {
+                email: null,
+                mobile: null,
+            };
+            if($scope.user._id){
+                if($scope.user.email){
+                    $scope.discountForm.email = $scope.user.email;
+                }
+                if($scope.user.mobile){
+                    $scope.discountForm.mobile = $scope.user.mobile;
+                }
+            }
+            $mdDialog.show({
+              contentElement: '#availDiscountDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        
+        $scope.availDiscount2 = function(){
+            alert('Here');
+        };
         
         
     }]);
@@ -8473,6 +9423,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Kanker",
             "Raigarh",
             "Korba",
+            "Cuttack",
+            "Rourkela",
+            "Haridwar",
+            "Rewari",
+            "Howrah",
+            "Kotputli",
+            "Beawar",
+            "Ratnagiri",
 
         ];
         
@@ -10208,7 +11166,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.examQCount = [];
                 var examQuestionIds = $scope.addedQuestions.map(function(a) {return a.exam._id;});
                 var examQuestionCounts = $scope.addedQuestions.map(function(a) {return a.questions;});
-                
+                $scope.totalQuestions = 0;
                 var counts = {};
                 for (var i = 0; i < examQuestionIds.length; i++) {
                     var thisLength = 0;
@@ -10216,6 +11174,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         thisLength = examQuestionCounts[i].length;
                     }
                     counts[examQuestionIds[i]] = thisLength + (counts[examQuestionIds[i]] || 0);
+                    $scope.totalQuestions += thisLength;
                 }
                 for(var i in counts){
                     //console.log(i + " " + counts[i]);
@@ -32794,6 +33753,63 @@ function getLatLng(thisData) {
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getProvider($stateParams.coachingId);
                 }],
+                
+                
+            }
+        })
+        .state('availDiscount', {
+            url: '/availDiscount/:categoryName/:subCategoryName/:cityName/:groupName',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'availDiscount.html',
+                    controller: 'availDiscountController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisStream: ['StreamService','$stateParams',
+                    function(StreamService,$stateParams){
+                    return StreamService.getStreamByName($stateParams.categoryName);
+                }],
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamByName($stateParams.subCategoryName);
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
+                thisGroup: ['targetStudyProviderService','$stateParams',
+                    function(targetStudyProviderService,$stateParams) {
+                    var groupCity = {
+                        groupName: $stateParams.groupName,
+                        cityName: $stateParams.cityName,
+                    };
+                    return targetStudyProviderService.getGroupCity(groupCity);
+                }],
+                thisGroupResults: ['resultService','$stateParams',
+                    function(resultService,$stateParams) {
+                    var groupCity = {
+                        groupName: $stateParams.groupName,
+                        cityName: $stateParams.cityName,
+                        examName: $stateParams.subCategoryName
+                    };
+                    return resultService.groupResults(groupCity);
+                }],
+                bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
+                }],
+                
                 
                 
             }
