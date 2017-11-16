@@ -489,7 +489,7 @@
 
                             </div>
 
-                            <div layout="row" layout-align="start start" class="width100 basicFont paddingTB20 gainsboroTopBorder" ng-if="coachingGroup.expertReview" ui-sref="showblog({ blogpostSlug:{{'coachingGroup.expertReview.urlslug'}} })" target="_blank">
+                            <div layout="row" layout-align="start start" class="width100 basicFont paddingTB20 gainsboroTopBorder" ng-if="coachingGroup.expertReview">
                                 
                                 <div flex="25"  class="">
                                    <div id="expertImage" ng-style="{'background-image':'url({{coachingGroup.expertReview.coverPhoto}})'}" class="max10vh width100 "> 
@@ -497,8 +497,11 @@
                                 </div>
                                 
                                 <div flex layout="column" layout-align="center start" class="paddingL20">
-                                <div class="width100 font14 bold wideLine" id="coachingHeader"> 
+                                <div class="width100 font14 bold wideLine" > 
+                                    <a ui-sref="showblog({ blogpostSlug:{{'coachingGroup.expertReview.urlslug'}} })" target="_blank" id="coachingHeader">
                                     {{coachingGroup.expertReview.title}}
+                                    </a>
+                                    
                                 </div>
                                 <div class="width100 marginTB10 wideLine fourthFont">
                                     {{coachingGroup.expertReview.seoDescription}}
