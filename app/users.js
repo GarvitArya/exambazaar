@@ -1825,7 +1825,7 @@ router.get('/addedInstitutes/:userId', function(req, res) {
 
 router.get('/addedQuestions/:userId', function(req, res) {
     var userId = req.params.userId.toString();
-    var limit = 500;
+    var limit = 50000;
     console.log('Finding Added Questions for: ' + userId);
     
     var thisUser = user
@@ -1839,6 +1839,7 @@ router.get('/addedQuestions/:userId', function(req, res) {
             }
             //_createdBy: '59aecd5987b4c258f9b62111', _created: {$gte: new Date("2017-11-07T00:00:00Z")}
             //,{exam:1, test:1, _createdBy:1, _created:1}
+            //_createdBy: '59aecd5987b4c258f9b62111', _created: {$gte: new Date("2017-10-08T00:00:00Z"), $lte: new Date("2017-11-08T00:00:00Z")}
             if(fullUserScope){
                 var addedQuestions = question
                 .find({})

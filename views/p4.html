@@ -413,8 +413,8 @@
                             <div class="width100 marginT5 paddingB5 gainsboroBottomBorder font14">
                                 <a ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
                             </div>
-                            <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT10 width100">
-                                <div layout="row" layout-align="start center" class="bold narrowLine basicFont" ng-if="coachingGroup.examsOffered.length > 0">
+                            <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT15 width100">
+                                <div layout="row" layout-align="start center" class="bold wideLine basicFont" ng-if="coachingGroup.examsOffered.length > 0">
                                     {{category.displayname}} Courses at {{coachingGroup.groupName}}
                                 </div>
                                 <div layout="row" layout-align="start center" layout-wrap class="marginT5">
@@ -430,11 +430,11 @@
                                 </div>
                             </div>
 
-                            <div layout="row" class="font14 bold narrowLine marginT10 width100 basicFont" ng-if="coachingGroup.groupResults.length > 0">
+                            <div layout="row" class="font14 bold narrowLine width100 marginT10 basicFont" ng-if="coachingGroup.groupResults.length > 0">
                                  {{subcategory.displayname}}&nbsp;Results of {{coachingGroup.groupName}}
 
                             </div>
-                            <div layout="row" class="width100 marginT5" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
+                            <div layout="row" class="width100 marginT5 marginB10" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
                                 
                             <div flex-xs="25" flex-gt-xs="10" layout="row" layout-align="start center" ng-repeat="result in coachingGroup.groupResults" ng-if="$index < 9" class="padding5">
                                 <div class="width100" id="imageContainer2">
@@ -489,6 +489,28 @@
 
                             </div>
 
+                            <div layout="row" layout-align="start start" class="width100 basicFont paddingTB20 gainsboroTopBorder" ng-if="coachingGroup.expertReview" ui-sref="showblog({ blogpostSlug:{{'coachingGroup.expertReview.urlslug'}} })" target="_blank">
+                                
+                                <div flex="25"  class="">
+                                   <div id="expertImage" ng-style="{'background-image':'url({{coachingGroup.expertReview.coverPhoto}})'}" class="max10vh width100 "> 
+                                    </div> 
+                                </div>
+                                
+                                <div flex layout="column" layout-align="center start" class="paddingL20">
+                                <div class="width100 font14 bold wideLine" id="coachingHeader"> 
+                                    {{coachingGroup.expertReview.title}}
+                                </div>
+                                <div class="width100 marginTB10 wideLine fourthFont">
+                                    {{coachingGroup.expertReview.seoDescription}}
+                                </div>
+                                
+                                
+                                
+                                </div> 
+                                 
+
+                            </div>
+                            
                         </div>
 
                     </div>

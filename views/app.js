@@ -28793,6 +28793,10 @@ function getLatLng(thisData) {
                 }
             });
             
+            if(!$scope.activeExamCycle && $scope.exam.cycle && $scope.exam.cycle.length > 0){
+                $scope.activeExamCycle = $scope.exam.cycle[$scope.exam.cycle.length-1];
+            }
+            
             $scope.setCycle = function(examCycle){
                 $scope.events = [];
                 $scope.activeExamCycle = examCycle;

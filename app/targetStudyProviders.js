@@ -3,6 +3,7 @@ var router = express.Router();
 //basiccoaching
 var config = require('../config/mydatabase.js');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
+var blogpost = require('../app/models/blogpost');
 var cisaved = require('../app/models/cisaved');
 var email = require('../app/models/email');
 var disableProvider = require('../app/models/disableProvider');
@@ -1902,16 +1903,30 @@ router.post('/CoachingStream', function(req, res) {
                             .limit(20)
                             .exec(function(err, groupResults) {
                             if (!err){
-                                newProvider.groupResults = groupResults;
+                            newProvider.groupResults = groupResults;
+                                
+                                
+                                
+                            var expertReview = blogpost
+                            .findOne({blogSeries: 'Expert Reviews', coachingGroups: newProvider.groupName, exams: thisExam._id, active: true}, {title:1, urlslug: 1,seoDescription: 1, coverPhoto: 1, _published: 1})
+                            .exec(function(err, expertReview) {
+                            if (!err){
+                                
+                                newProvider.expertReview = expertReview;
                                 allProviders.push(newProvider);
                                 counter += 1;
                                 if(counter == nCoachings){
-                                    
+
                                     allProviders.sort(function(a,b){
                                       return new Date(b.count) - new Date(a.count);
                                     });
                                    res.json(allProviders);
                                 }
+                                
+                            } else {throw err;}    
+                            });
+                                
+                            
                             } else {throw err;}
                         });
 
