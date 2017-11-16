@@ -13671,6 +13671,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 'D) ',
                 'E) ',
                 'F) ',
+                'G) ',
+                'H) ',
             ];
             
             var sanitizeQuestion = function(question){
@@ -13693,6 +13695,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.getQuestion = function(questionId){
                 questionService.getQuestion(questionId).success(function (data, status, headers) {
                     if(data){
+                        
                         $scope.question = data;
                         $scope.question = sanitizeQuestion($scope.question);
                         Notification.primary({message: "Question loaded successfully!",  positionY: 'top', positionX: 'right', delay: 1000});
@@ -13710,6 +13713,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             var randomQuestion = function(){
                 if($scope.exam && $scope.exam._id){
                     questionService.randomQuestion($scope.exam._id).success(function (data, status, headers) {
+                        console.log(data);
                         //return(data);
                         var questionId = data;
                         $scope.getQuestion(questionId);

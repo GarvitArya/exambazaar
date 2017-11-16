@@ -406,7 +406,7 @@ router.post('/suggestedblogstream', function(req, res) {
             if(thisExam){
                 var examId = thisExam._id.toString();
                 var blogposts = blogpost
-                .find({active: true, exams: examId}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
+                .find({active: true, exams: examId, blogSeries: {$ne: "Expert Reviews"}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
                 .sort({_published: -1})
                 .limit(limit)
                 .skip(skip)

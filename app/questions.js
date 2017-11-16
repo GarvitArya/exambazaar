@@ -135,13 +135,13 @@ router.get('/exam/:examId', function(req, res) {
 router.get('/exam/randomQuestion/:examId', function(req, res) {
     var examId = req.params.examId.toString();
     var allQuestions = question
-        .find({exam: examId}, {_id: 1})
+        .find({exam: examId, active: true}, {_id: 1})
         .limit(100)
         .exec(function (err, allQuestions) {
         if (!err){
             var nQuestions = allQuestions.length;
             var rIndex = Math.floor(Math.random() * (nQuestions - 1 - 0) + 0);
-            console.log(nQuestions + " " + rIndex);
+            //console.log(nQuestions + " " + rIndex);
             thisQuestion = allQuestions[rIndex];
             res.json(thisQuestion._id);
         } else {throw err;}
