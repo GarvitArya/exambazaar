@@ -36349,16 +36349,17 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
                     $rootScope.$emit("ForcedLogin", {});
                 }
                 
-                if(mIndex != -1 && (userType != 'Master' || userType != 'Intern - Business Development')){
+                if(aIndex != -1 && (userType != 'Master' && userType != 'Intern - Business Development')){
                     $cookies.remove('sessionuser');
                     //$state.reload();
                     $rootScope.$emit("ForcedLogin", {});
                 }
                 
             }else{
+                console.log('Could not find user');
                 $cookies.remove('sessionuser');
                 $rootScope.$emit("ForcedLogin", {});
-                //console.log('Could not find user');
+                
             }
             
         }else{
