@@ -165,12 +165,11 @@
     <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
     <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
         <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100">
-            <a layout="row" layout-align="start center" ng-repeat="component in components" href="#{{component}}" du-smooth-scroll du-scrollspy offset="200" class="paddingLR20">
-            <span id="topBar" ng-class="{ active: component.active }" >
-                {{component.name}}
-            </span>        
-        </a>
-        
+            <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="paddingLR20">
+                <span id="topBar" ng-class="{ active: component.active }" >
+                    {{component.name}}
+                </span>       
+            </a>
         </div>
     </div>
     <div layout="row" layout-align="center start" class="width100">

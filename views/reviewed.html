@@ -1,4 +1,160 @@
 <style>
+    input[type="text"],input[type="email"]
+    {
+        font-size: 14px;
+        color: #333333;
+        padding: 10px;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus{
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    #profileSection{
+        min-height: 20vh;
+    }
+    .profileBar{
+        background-color: #161616;
+        color: white;
+    }
+    .profileBar a{
+        color: white;
+        text-decoration: none;
+        
+    }
+    
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        
+    }
+    .fieldRow{
+        min-height: 5vh;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .fieldRow div.col1{
+        color: gray;
+        font-family: 'Roboto Condensed', sans-serif;
+    }
+    .fieldRow div.col2{
+        color: black;
+    }
+    
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    .active{
+        color: white;
+        font-weight: bold;
+        border-bottom: 2px solid white;
+    }
+    #topBar{
+        color: white;
+    }
+    #topBar.active{
+        color: white;
+    }
+    #topBar:hover{
+        font-weight: bold;
+    }
+    .leftBar{
+        border-right: 2px solid whitesmoke;
+    }
+    #leftBarButton{
+        border-bottom: 2px solid whitesmoke;
+    }
+    #leftBarButton:hover{
+        border-bottom: 2px solid #20C39A;
+    }
+    #leftBarButton.sideactive{
+        /*border: 2px solid #20C39A;
+        color: #20C39A;
+        font-weight: bold;*/
+        background: whitesmoke;
+        
+    }
+    .emptyTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    
+    .edLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .edLevelTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledEdLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .badge{
+        font-size: 14px;
+        white-space: normal;
+        margin-top: 0px;
+    }
+    .subSectionHeader{
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid whitesmoke;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .academicSubSection{
+        border-bottom: 1px solid #20C39A;
+        
+    }
+    .academicSubHeader{
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    .nextButton{
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    #profilePicSection{
+        margin-bottom: 20px;
+    }
+    
     #instituteHolder{
         background: white;
         border: 1px solid #ccc;
@@ -49,160 +205,214 @@
         background-color: #FF5A5F;
         color: white;
     }
+    
+    
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
 </div>
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
-<div flex layout="row" layout-align="center center" class="whiteBackground">
-<div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="paddingTB20 width100" ng-if="user">
-    <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
-        <div layout="row" layout-align="center center" class="width100 font16">
-            <div ng-if="user.image">
-            <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
-            </div>
-            <div class="marginL10">
-                {{user.basic.name}}
-            </div>
-        </div>
-        <div layout="row" layout-align="center center" class="width100 font20">
-            Your reviews&nbsp;
-            <span class="badge" id="badge">{{userReviewed.length}}</span>
-        </div>
-        <div layout="row" layout-align="center center" class="width100 editFont font12">
-            Review coaching institutes to unlock amazing discounts!
+
+<div class="textBlack whiteBackground secondFont font14" ng-if="user">
+    <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
+    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
+        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100">
+            <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="paddingLR20">
+                <span id="topBar" ng-class="{ active: component.active }" >
+                    {{component.name}}
+                </span>       
+            </a>
         </div>
     </div>
-    <div layout="row" layout-align="center center" ng-if="userReviewed.length == 0" class="secondFont textBlack width100 paddingT20">
-        You have not reviewed any institutes yet.&nbsp;
-        <a ui-sref="review" class="bold" id="dangerLink" target="_blank">Start reviewing now!</a>
-    </div>
-    <div layout="row" layout-align="start center" layout-wrap ng-if="userReviewed.length > 0" class="width100">
-        <div layout="column" layout-align="center center" ng-repeat="userReview in userReviewed | orderBy:'-_date'" flex="100" class="width100 padding10">
-            <div layout="column" layout-align="start start" class="width100 gainsboroBorder padding10">
-            <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder">
-                <div layout="row" layout-align="start center" id="logoHolder">
-                    <img ng-src="{{userReview.institute.logo}}" id="logo"/>
-                </div>
-                <div layout="column" layout-align="start start" class="paddingL20">
-                <div layout="column" layout-align="start start" class="secondFont">
-                    <div layout="row" layout-align="start center">
-                        <a ui-sref="showGroup({ categoryName:{{'userReview.institute.exams[0].stream.name'}}, subCategoryName:{{'userReview.institute.exams[0].name'}}, cityName:{{'userReview.institute.city'}}, groupName:{{'userReview.institute.groupName'}} })" target="_blank">
-                        {{userReview.institute.groupName}}
-                        </a>
-                    </div>
-                    <div layout="row" layout-align="start start" layout-wrap class="width100 editFont">
-                        
-                        {{userReview.institute.address}}, {{userReview.city}}
-                       
-                    </div>
-                </div>
-                </div>
-            </div>
-            
-            <div layout="column" layout-align="start start" class="paddingTB10 paddingLR20">
-                <div layout="row" layout-align="start start" class="marginB5 width100">
-                <div flex>
-                    <span ng-if="user.image">
-                    <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
-                    </span>
-                    <span class="marginL10">
-                        {{user.basic.name}}
-                        <span class="font12 textLightGrey">
-                        reviewed 
-                        <span>
-                            {{userReview.institute.name}} Centre
-                            <span ng-if="userReview.institute.location.area">
-                            , {{userReview.institute.location.area}}
-                            </span>
-                            <md-tooltip>{{userReview.institute.address}}</md-tooltip>
-                        </span>
-                        <span>
-                            on {{userReview._created | date:'longDate'}}
-                        </span>    
-                        </span>
-                    </span>
-                </div>
-                </div>
-                <div layout="row" layout-align="start start" class="marginB5 width100">
-
-
-                    <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 font12" ng-repeat="reviewParam in reviewParams">
-                        <div layout="row" layout-align="start start">
-                        <div flex class="textBlack  text-left">
-                            {{reviewParam.displayname}}
-                        </div>
-                        <div layout="row" layout-align="start center" >
-                            <div ng-repeat="review in reviews" layout-align="center" id="smallreviewCell"  class="noreview" ng-class="getBackgroundColour(reviewParam,  $index, userReview)">
-                            </div>
-                            <div layout="row" layout-align="center center"  class="secondFont bold">
-                            <div layout="row" layout-align="center center" id="smallreviewCellEmpty">
-                            <span ng-if="userReview[reviewParam.name]" class="textBlack font12">
-                                {{userReview[reviewParam.name] | number:1}}
-                            </span>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                </div>
-                <div layout="row" layout-align="start start" class="font12 paddingT20">
-                    {{userReview.text}}
-                </div>
-                <div layout="row" layout-xs="column" layout-align="start center" class="width100  marginT10 paddingTB10">
-                    <div flex layout="row" layout-align="start center" class="bold">
-                        Thank you for reviewing {{userReview.institute.name}}! We will share your feedback with our community!
-                    </div>
-                    <!--<div  layout="row" layout-align="end center" class="">
-                        
-                        <md-button class="md-danger md-small font10 width8" ng-click="flipShowCoupon(userReview)" class="marginL10" ng-if="!userReview.coupon && userReview.active">
-                            Avail Discount
-                        </md-button>
-                        
-                        <md-button class="md-green2 md-small font10 width8" ng-click="flipShowCoupon(userReview)" class="marginL10" ng-if="userReview.coupon && userReview.active">
-                            Your Coupon
-                        </md-button>
-                        
-                        <div ng-if="!userReview.active" class="danger bold">
-                        Review Disabled by Admin
-                        </div>
-                    </div>-->
-                </div>
-                <div layout="column" layout-align="start center" class="width100  marginTB10 paddingTB10 gainsboroTBBorder" ng-if="!userReview.coupon && userReview.showCouponOptions">
-                    <div layout="row" layout-align="start center" class="paddingB10 secondFont">
-                    <i class="fa fa-gift" aria-hidden="true"></i>&nbsp; Select one of the most popular exam prep packages offered by our partners
-                    </div>
-                    <div layout="row" layout-align="start center" layout-wrap class="width100">
-                    <div flex="33" layout="column" layout-align="start start" ng-repeat="activeOffer in activeOffers" class="width100 padding10">
-                    <div layout="column" layout-align="start center" class="gainsboroBorder width100 padding10">
-                        <div layout="row" layout-align="start center">
-                            <div layout="row" layout-align="start center" id="logoHolder" class="marginR10">
-                                <img ng-src="{{activeOffer.image}}" id="logo"/>
-                            </div>
-                            <div layout="row" layout-align="start center">
-                                {{activeOffer.displayname}}
-                            </div>
-                            
-                        </div>
-                        
-                    </div>    
-                        
-
-                        
-                    </div>
-                        
-                        
-                    </div>
-                </div>
-            </div>      
+    <div layout="row" layout-align="center start" class="width100">
+    <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
+        <div layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
+            <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }">
+                {{subcategory.name}}
             </div>
         </div>
+        <div flex layout="row" layout-align="center center">
+            <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
+            <div layout="column" layout-align="start start" class="width100 min100vh" flex>
+                <div layout="column" layout-align="center start" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20">
+                    {{activeSubcategory.name}} by {{user.basic.name}}
+                </div>
+                <div layout="column" layout-align="center start" class="width100 marginB40">
+                     
+                    
+                    
+                    
+                    
+                    
+                    
+                <!--<div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
+                    <div layout="row" layout-align="center center" class="width100 font16">
+                        <div ng-if="user.image">
+                        <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
+                        </div>
+                        <div class="marginL10">
+                            {{user.basic.name}}
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="center center" class="width100 font20">
+                        Your reviews&nbsp;
+                        <span class="badge" id="badge">{{userReviewed.length}}</span>
+                    </div>
+                    <div layout="row" layout-align="center center" class="width100 editFont font12">
+                        Review coaching institutes to unlock amazing discounts!
+                    </div>
+                </div>-->
+                <div layout="row" layout-align="center center" ng-if="userReviewed.length == 0" class="secondFont textBlack width100 paddingT20">
+                    You have not reviewed any institutes yet.&nbsp;
+                    <a ui-sref="review" class="bold" id="dangerLink" target="_blank">Start reviewing now!</a>
+                </div>
+                <div layout="row" layout-align="start center" layout-wrap ng-if="userReviewed.length > 0" class="width100">
+                    <div layout="column" layout-align="center center" ng-repeat="userReview in userReviewed | orderBy:'-_date'" flex="100" class="width100 paddingB20">
+                        <div layout="column" layout-align="start start" class="width100 gainsboroBorder padding10">
+                        <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder">
+                            <div layout="row" layout-align="start center" id="logoHolder">
+                                <img ng-src="{{userReview.institute.logo}}" id="logo"/>
+                            </div>
+                            <div layout="column" layout-align="start start" class="paddingL20">
+                            <div layout="column" layout-align="start start" class="secondFont">
+                                <div layout="row" layout-align="start center">
+                                    <a ui-sref="showGroup({ categoryName:{{'userReview.institute.exams[0].stream.name'}}, subCategoryName:{{'userReview.institute.exams[0].name'}}, cityName:{{'userReview.institute.city'}}, groupName:{{'userReview.institute.groupName'}} })" target="_blank">
+                                    {{userReview.institute.groupName}}
+                                    </a>
+                                </div>
+                                <div layout="row" layout-align="start start" layout-wrap class="width100 editFont">
+
+                                    {{userReview.institute.address}}, {{userReview.city}}
+
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div layout="column" layout-align="start start" class="paddingTB10 paddingLR20">
+                            <div layout="row" layout-align="start start" class="marginB5 width100">
+                            <div flex>
+                                <span ng-if="user.image">
+                                <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
+                                </span>
+                                <span class="marginL10">
+                                    {{user.basic.name}}
+                                    <span class="font12 textLightGrey">
+                                    reviewed 
+                                    <span>
+                                        {{userReview.institute.name}} Centre
+                                        <span ng-if="userReview.institute.location.area">
+                                        , {{userReview.institute.location.area}}
+                                        </span>
+                                        <md-tooltip>{{userReview.institute.address}}</md-tooltip>
+                                    </span>
+                                    <span>
+                                        on {{userReview._created | date:'longDate'}}
+                                    </span>    
+                                    </span>
+                                </span>
+                            </div>
+                            </div>
+                            <div layout="row" layout-align="start start" class="marginB5 width100">
+
+
+                                <div class="row">
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 font12" ng-repeat="reviewParam in reviewParams">
+                                    <div layout="row" layout-align="start start">
+                                    <div flex class="textBlack  text-left">
+                                        {{reviewParam.displayname}}
+                                    </div>
+                                    <div layout="row" layout-align="start center" >
+                                        <div ng-repeat="review in reviews" layout-align="center" id="smallreviewCell"  class="noreview" ng-class="getBackgroundColour(reviewParam,  $index, userReview)">
+                                        </div>
+                                        <div layout="row" layout-align="center center"  class="secondFont bold">
+                                        <div layout="row" layout-align="center center" id="smallreviewCellEmpty">
+                                        <span ng-if="userReview[reviewParam.name]" class="textBlack font12">
+                                            {{userReview[reviewParam.name] | number:1}}
+                                        </span>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            </div>
+                            <div layout="row" layout-align="start start" class="font12 paddingT20">
+                                {{userReview.text}}
+                            </div>
+                            <div layout="row" layout-xs="column" layout-align="start center" class="width100  marginT10 paddingTB10">
+                                <div flex layout="row" layout-align="start center" class="bold">
+                                    Thank you for reviewing {{userReview.institute.name}}! We will share your feedback with our community!
+                                </div>
+                                <!--<div  layout="row" layout-align="end center" class="">
+
+                                    <md-button class="md-danger md-small font10 width8" ng-click="flipShowCoupon(userReview)" class="marginL10" ng-if="!userReview.coupon && userReview.active">
+                                        Avail Discount
+                                    </md-button>
+
+                                    <md-button class="md-green2 md-small font10 width8" ng-click="flipShowCoupon(userReview)" class="marginL10" ng-if="userReview.coupon && userReview.active">
+                                        Your Coupon
+                                    </md-button>
+
+                                    <div ng-if="!userReview.active" class="danger bold">
+                                    Review Disabled by Admin
+                                    </div>
+                                </div>-->
+                            </div>
+                            <div layout="column" layout-align="start center" class="width100  marginTB10 paddingTB10 gainsboroTBBorder" ng-if="!userReview.coupon && userReview.showCouponOptions">
+                                <div layout="row" layout-align="start center" class="paddingB10 secondFont">
+                                <i class="fa fa-gift" aria-hidden="true"></i>&nbsp; Select one of the most popular exam prep packages offered by our partners
+                                </div>
+                                <div layout="row" layout-align="start center" layout-wrap class="width100">
+                                <div flex="33" layout="column" layout-align="start start" ng-repeat="activeOffer in activeOffers" class="width100 padding10">
+                                <div layout="column" layout-align="start center" class="gainsboroBorder width100 padding10">
+                                    <div layout="row" layout-align="start center">
+                                        <div layout="row" layout-align="start center" id="logoHolder" class="marginR10">
+                                            <img ng-src="{{activeOffer.image}}" id="logo"/>
+                                        </div>
+                                        <div layout="row" layout-align="start center">
+                                            {{activeOffer.displayname}}
+                                        </div>
+
+                                    </div>
+
+                                </div>    
+
+
+
+                                </div>
+
+
+                                </div>
+                            </div>
+                        </div>      
+                        </div>
+                    </div>
+
+                </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                </div>    
+            </div>
         
+            </div>
+        </div>
     </div>
-</div>
+    </div>
 </div>

@@ -261,8 +261,10 @@ var allStates = [
 '/ebinternal/user/:userId/filledAll',
 '/ebinternal/user/:userId/group',
 '/ebinternal/profile',
+'/ebinternal/reviewed',
+'/ebinternal/userInstitutes',
 '/ebinternal/eqad/:examName/:eqadDate',
-'/ebinternal/user/:userId/reviewed',
+
 '/ebinternal/user/:userId/sendEmail',
 '/ebinternal/user/:userId/shortlisted',
 '/ebinternal/user/:userId/suggestCoaching',

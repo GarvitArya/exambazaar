@@ -176,12 +176,16 @@ router.get('/', function(req, res) {
         } else {throw err;}
     });
 });
+
+
+
 //to get all views for a user
 router.get('/user/:userId', function(req, res) {
     var userId = req.params.userId;
     var views = view
         .find({user: userId, institute: {$exists: true}})
         .sort( { _date: -1 } )
+        //.limit(20)
         //.deepPopulate('institute institute.exams institute.exams.stream')
         .exec(function (err, views) {
         if (!err){
