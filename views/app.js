@@ -36334,8 +36334,8 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         var fIndex = stateToURL.indexOf(filterPattern);
         
         if(fIndex != -1){
-            console.log(stateTo.name);
-            console.log(stateTo.url.pattern);
+            //console.log(stateTo.name);
+            //console.log(stateTo.url.pattern);
             
             var mIndex = onlyMasterStates.indexOf(stateTo.name);
             var aIndex = atleastInternState.indexOf(stateTo.name);
