@@ -8442,7 +8442,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
-            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'profile', 'eqad', 'addQuestion'];
+            var forceLoginStates = ['showGroup', 'claim', 'rankerswall'];
             
             SidebarJS.close();
             if(forceLoginStates.indexOf($state.current.name) != -1){
@@ -8481,6 +8481,28 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
                 });
             }
+            
+        };
+            
+        $scope.showForcedLoginDialog = function(ev) {
+            console.log('Forced Login');
+            SidebarJS.close();
+            $mdDialog.show({
+              contentElement: '#loginDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: false,
+              escapeToClose: false,
+              //hasBackdrop: true,
+              openFrom: {
+                  top: -50,
+                  width: 30,
+                  height: 80
+                },
+             closeTo: {
+              left: 1500
+            }
+            });
             
         };
         $scope.hideLoginDialog = function(ev){
@@ -8569,9 +8591,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.showLoginDialog();
             
         };
+        $scope.showForcedLoginForm = function(){
+            $scope.showForcedLoginDialog();
+            
+        };    
+        
             
         $rootScope.$on("CallShowLogin", function(){
            $scope.showLoginForm();
+        });
+        $rootScope.$on("ForcedLogin", function(){
+           $scope.showForcedLoginForm();
         });
 
         $rootScope.$on("CallBlogLogin", function(){
@@ -26450,7 +26480,7 @@ function getLatLng(thisData) {
             
         }else{
             $cookies.remove("sessionuser");
-            $rootScope.$emit("CallBlogLogin", {});
+            //$rootScope.$emit("CallBlogLogin", {});
         }
         
         $scope.uploadPic = function (newPic) {
@@ -28141,7 +28171,7 @@ function getLatLng(thisData) {
                 
                 
             }else{
-                $rootScope.$emit("CallBlogLogin", {});
+                //$rootScope.$emit("CallBlogLogin", {});
             }
             
             
@@ -36211,7 +36241,7 @@ function getLatLng(thisData) {
         
     })();
 
-exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $window, $transitions, $anchorScroll) {
+exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, $anchorScroll, $state, $cookies, $mdDialog) {
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
     $rootScope.imageUrl = '';
@@ -36219,23 +36249,129 @@ exambazaar.run(function(GAuth, GApi, GData, $rootScope,$mdDialog, $location, $wi
     $rootScope.today = moment().toDate();
     moment.tz.add("Asia/Calcutta|HMT BURT IST IST|-5R.k -6u -5u -6u|01232|-18LFR.k 1unn.k HB0 7zX0");
     moment.tz.link("Asia/Calcutta|Asia/Kolkata");
-    
-    /*$transitions.onStart({}, function() {
-        window._atrk_fired = false;
-        //atrk();
-    });*/
-                                                   
-    $transitions.onSuccess({}, function() {
-        //console.log("statechange success");
+    var onlyMasterStates = [
+        "offers",
+        "socialLogin",
+        "contacts",
+        "charting",
+        "activeUsers",
+        "allTests",
+        "allOffers",
+        "allreviews",
+        "allblogtags",
+        "extractEmails",
+        "coachingGroupSummary",
+        "coachingGroup",
+        "sandbox2",
+        "sendEmail",
+        "userMarketing",
+        "userSurvey",
+        "editTargetStudyProvider",
+        "providersWithAreas",
+        "master-dashboard",
+        "filledAll",
+        "checkLogo",
+        "addStream",
+        "addOffer",
+        "addLocation",
+        "addMediaTag",
+        "addSendGridCredential",
+        "addAwsCredential",
+        "addSubscriber",
+        "addExam",
+        "addEligibility",
+        "addMaster",
+        "manageUsers",
+        "addIntern",
+        "sitemap",
+        "blogsitemap",
+
+    ];
+    var atleastInternState = [
+        "scheduleQAD",
+        "suggestCoaching",
+        "addedInstitutes",
+        "addedQuestions",
+        "providers",
+        "targetStudyProviders",
+        "filled",
+        "assigned",
+        "assignedToVerify",
+        "assignedToRate",
+        "assignedToAddContactInfo",
+        "addGroup",
+        "editExam",
+        "addQuestion",
+        "addInstitute",
+        "bulkDisable",
+
+    ];
+    $transitions.onStart( {}, function($transition$) {
+        //stateTo === $transition$.$to();
         
-        window.scrollTo(0, 0);
-        //$mdDialog.hide();
+        
+        
+        
+    });
+    
+    
+                                                   
+    $transitions.onSuccess({}, function($transition$) {
+        //console.log("statechange success");
+        //console.log($state.current.name);
+        /*window.scrollTo(0, 0);
         console.log("SEO Title: " + $rootScope.pageTitle);
         console.log("SEO Description: " + $rootScope.pageDescription);
         $rootScope.searchMode = false;
         console.log("SEO Keywords: " +  $rootScope.pageKeywords);
         console.log("FB Page URL: " +  $rootScope.pageURL);
-        console.log("FB Page Image: " +  $rootScope.pageImage);
+        console.log("FB Page Image: " +  $rootScope.pageImage);*/
+        $mdDialog.hide();
+        var stateTo = $transition$.$to();
+        var stateToURL = stateTo.url.pattern;
+        var filterPattern = '/ebinternal/';
+        
+        var fIndex = stateToURL.indexOf(filterPattern);
+        
+        if(fIndex != -1){
+            console.log(stateTo.name);
+            console.log(stateTo.url.pattern);
+            
+            var mIndex = onlyMasterStates.indexOf(stateTo.name);
+            var aIndex = atleastInternState.indexOf(stateTo.name);
+            
+            if($cookies.getObject('sessionuser')){
+                var user = $cookies.getObject('sessionuser');
+                var userType = user.userType;
+                if(mIndex != -1 && userType != 'Master'){
+                    $cookies.remove('sessionuser');
+                    //$state.reload();
+                    $rootScope.$emit("ForcedLogin", {});
+                }
+                
+                if(mIndex != -1 && (userType != 'Master' || userType != 'Intern - Business Development')){
+                    $cookies.remove('sessionuser');
+                    //$state.reload();
+                    $rootScope.$emit("ForcedLogin", {});
+                }
+                
+            }else{
+                $cookies.remove('sessionuser');
+                $rootScope.$emit("ForcedLogin", {});
+                //console.log('Could not find user');
+            }
+            
+        }else{
+            console.log('Not EB Internal');
+        }
+        
+        
+        /*if(cookies.getObject('sessionuser')){
+            var user = cookies.getObject('sessionuser');
+            console.log(user);
+        }else{
+            console.log('Could not find user');
+        }*/
         
         window.prerenderReady = true;
     });
