@@ -83,19 +83,19 @@
         color: black;
         padding: 0px;
     }
-    #examTagHolder{
+    .tagHolder{
         padding:5px;
         color: #333333;
         background: white;
         border: 1px solid #FF5A5F;
     }
-    #examTagHolder:hover{
+    .tagHolder:hover{
         color: white;
         
         background: #FF5A5F;
         border: 1px solid #fff;
     }
-    #existingExamTagHolder{
+    .existingTagHolder{
         padding:5px;
         color: white;
         background: #FF5A5F;
@@ -159,7 +159,7 @@
     
     <div layout="column" layout-align="center center" class="width100 marginB40">
         <div layout="row" layout-align="center center" class="width100 blogHeader  marginB20" ng-style="{'background-image':'url({{thisBlogCover}})'}">
-            <div layout="row" layout-align="start start" id="blogHeaderBasics">
+            <!--<div layout="row" layout-align="start start" id="blogHeaderBasics">
                 <md-button class="md-danger md-small tolowercase" href="https://exambazaar.com/blogpost/blog-basics" target="_blank">
                     Blog Basics
                 </md-button>
@@ -168,7 +168,7 @@
                 <md-button class="md-black md-small  tolowercase" ngf-select="uploadCover(coverPic)" ng-model="coverPic" ngf-accept="'image/*'" layout="row" layout-align="start center">
                     Change Cover Photo
                 </md-button>
-            </div>
+            </div>-->
             <div layout="row" layout-align="center center" class="width100 darkTranslucentBackground">
                 <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 margintT20 padding20  textWhite ">
                     <h1 ng-model="blogpost.title" medium-editor bind-options="titleBindOptions" data-placeholder="Enter your blog title here" class="width100 text-center marginB20 textWhite editable"></h1>
@@ -206,14 +206,7 @@
                     </div>
                     
                 </div>
-                <div layout="column" layout-align="center center" class="width100 paddingTB10 blogSeparator">
-                    <md-button class="md-black md-small  tolowercase" ng-click="showBlogGalleryDialog()">
-                        {{user.basic.name}}'s Blog Gallery
-                    </md-button>
-                    <div class="font12 textLightGrey">
-                        Add Images to your blog post
-                    </div>
-                </div>
+                
                 
                 <p ng-model="blogpost.content" medium-editor bind-options="mediumBindOptions" class="width100 min20vh marginT40 marginB20 blogContent editable">
                 </p>    
@@ -331,32 +324,35 @@
     </div>
 </div>
 
-<div layout="column" layout-align="start end" class="width100 padding10 rightMidButton">         
-    <div class="marginR10">
-        <md-button class="md-black md-small  tolowercase" ng-click="showBlogExamDialog()">
-            Mark Exams
-        </md-button>
-    </div>
-    <div class="marginR10">
-        <md-button class="md-black md-small  tolowercase" ng-click="showBlogCoachingDialog()">
-            Mark Coaching
-        </md-button>
-    </div>
-    <div class="marginR10">
-        <md-button class="md-black md-small  tolowercase" ng-click="showBlogTagDialog()">
-            Add Tags
-        </md-button>
-    </div>
-    <div class="marginR10" ng-if="user.userType =='Master'">
-        <md-button class="md-danger md-small  tolowercase" ng-click="showHTMLDialog()">
-            Edit HTML
-        </md-button>
-    </div>
-    <div class="marginR10" ng-if="closestBlockText && closestTag">
+<div layout="column" layout-align="start end" class="width100 paddingR10 rightMidButton">         
+    <md-button class="md-green2 md-small tolowercase" href="https://exambazaar.com/blogpost/blog-basics" target="_blank">
+        Read Blog Basics
+    </md-button>
+    <md-button class="md-danger md-small  tolowercase" ng-click="showBlogGalleryDialog()">
+        Your Blog Gallery
+    </md-button>
+    <md-button class="md-danger md-small  tolowercase" ngf-select="uploadCover(coverPic)" ng-model="coverPic" ngf-accept="'image/*'">
+        Edit Cover Photo
+    </md-button>
+    <md-button class="md-black md-small  tolowercase" ng-click="showBlogExamDialog()">
+        Mark Exams
+    </md-button>
+    <md-button class="md-black md-small  tolowercase" ng-click="showBlogCoachingDialog()">
+        Mark Coaching
+    </md-button>
+    <md-button class="md-black md-small  tolowercase" ng-click="showBlogTagDialog()">
+        Add Tags
+    </md-button>
+    <md-button class="md-default md-cancel md-small  tolowercase" ng-click="showHTMLDialog()" ng-if="user.userType =='Master'">
+        Edit HTML
+    </md-button>
+    <div ng-if="closestBlockText && closestTag">
         <md-button class="md-signup md-small  tolowercase" ng-click="replaceTag(closestBlockText, closestTag)">
             <i class="fa fa-star" aria-hidden="true"></i> Remove {{closestTag}}
         </md-button>
     </div>
+    
+    
 </div>
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="savedDialog">
@@ -512,55 +508,57 @@
     </div>    
 </div> 
 
+
+
+
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="examDialog">
-      <md-dialog class="edit-dialog whiteBackground">
-          <md-content flex layout="column" class="width100 paddingLR20">
+      <md-dialog class="blog-dialog whiteBackground">
+          <div layout="column" layout-align="center center" class="width100 galleryDiv">
             
-            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
-                <div layout="row" layout-align="center center" flex>
-                    Mark Exams relevant to this blog post!
-                </div>
-                <div>
-                    <md-button class="md-danger md-small  tolowercase" ng-click="markExamsDone()">
+              <div layout="row" layout-align="center center" class="blogFont width100 paddingTB10 subhheadingBottomBorder2 ">
+                  <div layout="row" layout-align="center center" flex>
+                  Mark Exams relevant to this blog post!
+                  </div>
+                    <div>
+                        <md-button class="md-danger md-small  tolowercase" ng-click="markExamsDone()">
                         Marking Exams Done
-                    </md-button>
+                        </md-button>
+                    </div>
+              </div>
+              
+              <div layout="row" layout-wrap layout-align="center start" class="width100 galleryDiv exact40vh paddingTB10">
+                <div layout="column" layout-align="start start" ng-repeat="thisStream in allStreams | orderBy:'-rank'" class="paddingLR40 marginTB5 width100">
+                    <div layout="row" layout-align="center center" class="width100">
+                        <div flex="15">
+                            {{thisStream.displayname}}
+                        </div>
+                        <div flex="85" layout="row" layout-align="start start" layout-wrap class="">
+                            <span class="badge tagHolder marginB5 marginR5" ng-repeat="thisExam in allExams  | orderBy:'-rank'" ng-if="thisExam.stream._id == thisStream._id" ng-class="{  existingTagHolder: blogpost.exams.indexOf(thisExam._id) != -1 }" ng-click="addRemoveBlogExam(thisExam)">
+                                {{thisExam.displayname}}
+                            </span>
+                            
+                        </div>
+                        
+                        
+                        
+                    </div>
+                    
+                    
+                    
                 </div>
                 
             </div>
-            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
-                <div layout="row" layout-align="start start"  class="width100 marginB5 bold">
-                    <div flex="15">
-                        Stream
-                    </div>
-                    <div flex="85">
-                        Select Exams
-                    </div>
-                </div>
-                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginB5">
-                    <div flex="15">
-                        {{thisStream.displayname}}
-                    </div>
-                    <div flex="85">
-                        <span ng-repeat="thisExam in allExams  | orderBy:'-rank'" ng-if="thisExam.stream._id == thisStream._id">
-                            <span class="badge" id="examTagHolder" ng-if="blogpost.exams.indexOf(thisExam._id) == -1" ng-click="addBlogExam(thisExam)">
-                                {{thisExam.displayname}}
-                            </span>
-                            <span class="badge" id="existingExamTagHolder" ng-if="blogpost.exams.indexOf(thisExam._id) != -1" ng-click="removeBlogExam(thisExam)">
-                                {{thisExam.displayname}}
-                            </span>
-                        </span>
-                    </div>
-                </div>
-
-            </div>
-              
+            
           
           
-        </md-content>  
+        </div>  
       </md-dialog>
     </div>    
-</div> 
+</div>
+
+
+
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="coachingDialog">

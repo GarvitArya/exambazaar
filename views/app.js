@@ -32543,6 +32543,18 @@ function getLatLng(thisData) {
             $scope.urlslugError = false;
             $scope.urlslugSet = false;
             
+            
+            $scope.addRemoveBlogExam = function(thisExam){
+                if(!$scope.blogpost.exams){
+                    $scope.blogpost.exams = [];
+                }
+                var eIndex = $scope.blogpost.exams.indexOf(thisExam._id);
+                if(eIndex == -1){
+                    $scope.blogpost.exams.push(thisExam._id);
+                }else{
+                    $scope.blogpost.exams.splice(eIndex, 1);
+                }
+            };
             $scope.addBlogExam = function(thisExam){
                 if(!$scope.blogpost.exams){
                     $scope.blogpost.exams = [];
