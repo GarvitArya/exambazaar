@@ -263,6 +263,7 @@ var allStates = [
 '/ebinternal/profile',
 '/ebinternal/reviewed',
 '/ebinternal/userInstitutes',
+'/ebinternal/academics',
 '/ebinternal/eqad/:examName/:eqadDate',
 
 '/ebinternal/user/:userId/sendEmail',

@@ -54,7 +54,7 @@
         <a ui-sref="main" class="bold" id="dangerLink" target="_blank">Start browsing now!</a>
     </div>
     <div layout="row" layout-align="start center" layout-wrap ng-if="shortlisted.length > 0" class="width100">
-        <div layout="column" layout-align="center center" ng-repeat="institute in shortlisted | orderBy:'-_date'" class="width100 padding10">
+        <div layout="column" layout-align="center center" ng-repeat="institute in shortlisted | orderBy:'-_date'" flex-xs="100" flex-gt-xs="33" class="width100 padding10">
             <div layout="column" layout-align="start start" class="width100 gainsboroBorder padding10">
             <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder">
                 <div layout="row" layout-align="start center" id="logoHolder">

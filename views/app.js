@@ -9461,6 +9461,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Kotputli",
             "Beawar",
             "Ratnagiri",
+            "Shillong",
+            "Jalgaon",
+            "Kurnool",
+            "Gandhinagar",
 
         ];
         
@@ -26101,7 +26105,873 @@ function getLatLng(thisData) {
             
         if($scope.user.basic)
             $rootScope.pageTitle =$scope.user.basic.name;
-    }]);       
+    }]); 
+    
+    exambazaar.controller("academicsController", 
+        [ '$scope', '$http','$state', '$rootScope', '$cookies', '$geolocation', 'Upload', 'ImageService', 'UserService', '$facebook', '$mdDialog', '$timeout', 'Notification', function($scope,$http,$state,$rootScope, $cookies, $geolocation, Upload, ImageService, UserService, $facebook, $mdDialog, $timeout, Notification){
+        $scope.col1Width = 40;
+        $scope.col1WidthAcademic = 20;
+        $scope.components = [
+            {
+                name: 'Profile',
+                active: false,
+                state: 'profile',
+                subcategories: [
+                    {
+                        name: 'Personal',
+                    },
+                    /*{
+                        name: 'Academic',
+                    },*/
+                    {
+                        name: 'Social',
+                    },
+                    {
+                        name: 'Blogging',
+                    },
+                    {
+                        name: 'Contact',
+                    },
+                    /*{
+                        name: 'Preferences',
+                    },*/
+
+                ],
+            },
+            {
+                name: 'Academic Details',
+                active: true,
+                state: 'academics',
+                subcategories: [
+                    {
+                        name: 'School Class XII',
+                    },
+                    {
+                        name: 'Undergraduate',
+                    },
+                    {
+                        name: 'Postgraduate',
+                    },
+                ],
+            },
+            {
+                name: 'Your Reviews',
+                active: false,
+                state: 'reviewed',
+                subcategories: [
+                    {
+                        name: 'Coaching Reviews',
+                    },
+                ],
+            },
+            {
+                name: 'Your Coachings',
+                active: false,
+                state: 'userInstitutes',
+                subcategories: [
+                    {
+                        name: 'Coachings Viewed',
+                    },
+                    {
+                        name: 'Coachings Shortlisted',
+                    },
+                ],
+            },
+        ];
+        $scope.educationLevels = [
+            {
+                level: 0,
+                name: "I-X"
+            },
+            {
+                level: 2,
+                name: "XI / XII / After XII"
+            },
+            /*{
+                level: 2,
+                name: "After XII (Drop Year)"
+            },*/
+            {
+                level: 3,
+                name: "In UG or equivalent"
+            },
+            {
+                level: 4,
+                name: "During or After Final Year of UG"
+            },
+            {
+                level: 5,
+                name: "During or After Final Year of PG"
+            },
+        ];
+        $scope.class12Subjects = [
+            {
+                name: "english",
+                displayname: "English"
+            },
+            {
+                name: "physics",
+                displayname: "Physics"
+            },
+            {
+                name: "chemistry",
+                displayname: "Chemistry"
+            },
+            {
+                name: "mathematics",
+                displayname: "Mathematics"
+            },
+            {
+                name: "biology",
+                displayname: "Biology"
+            },
+            {
+                name: "biotechnology",
+                displayname: "Biotechnology"
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+        ];
+        $scope.undergradMajors = [
+            {
+                name: "btech",
+                displayname: "B.Tech.",
+                stream:{
+                    name: "engineering",
+                    displayname: "Engineering",
+                },
+            },
+            {
+                name: "be",
+                displayname: "B.E.",
+                stream:{
+                    name: "engineering",
+                    displayname: "Engineering",
+                },
+            },
+            {
+                name: "mbbs",
+                displayname: "M.B.B.S.",
+                stream:{
+                    name: "medical",
+                    displayname: "Medical",
+                },
+            },
+            {
+                name: "bds",
+                displayname: "B.D.S.",
+                stream:{
+                    name: "medical",
+                    displayname: "Medical",
+                },
+            },
+            {
+                name: "bsc",
+                displayname: "B.Sc.",
+                stream:{
+                    name: "other",
+                    displayname: "Other",
+                },
+            },
+            {
+                name: "ba",
+                displayname: "B.A.",
+                stream:{
+                    name: "other",
+                    displayname: "Other",
+                },
+            },
+            {
+                name: "bftech",
+                displayname: "NIFT B.F.Tech.",
+                stream:{
+                    name: "other",
+                    displayname: "Other",
+                },
+            },
+            {
+                name: "bcom",
+                displayname: "B.Com.",
+                stream:{
+                    name: "other",
+                    displayname: "Other",
+                },
+            },	
+            {
+                name: "barch",
+                displayname: "B. Arch.",
+                stream:{
+                    name: "engineering",
+                    displayname: "Engineering",
+                },
+            },
+            {
+                name: "llb",
+                displayname: "LL.B.",
+                stream:{
+                    name: "law",
+                    displayname: "Law",
+                },
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+            {
+                name: "fiveyearballb",
+                displayname: "Five Year B.A. LL.B.",
+                stream:{
+                    name: "law",
+                    displayname: "Law",
+                },
+            },
+            {
+                name: "fiveyearintegratedllb",
+                displayname: "Five Year Integrated LL.B. (Hons.)",
+                stream:{
+                    name: "law",
+                    displayname: "Law",
+                },
+            },
+            
+            {
+                name: "lawdegreeequivalenttollb",
+                displayname: "Law Degree equivalent to LL.B.",
+                stream:{
+                    name: "law",
+                    displayname: "Law",
+                },
+            },
+            {
+                name: "professionalcourseequivalenttobtech",
+                displayname: "Professional Courses equivalent to B.E. / B.Tech.",
+                stream:{
+                    name: "other",
+                    displayname: "Other",
+                },
+            },
+
+        ];
+        $scope.postgradMajors = [
+            {
+                name: "mba",
+                displayname: "M.B.A."
+            },
+            {
+                name: "ms",
+                displayname: "M.S."
+            },
+            {
+                name: "mtech",
+                displayname: "M.Tech."
+            },
+            {
+                name: "mcom",
+                displayname: "M.Com."
+            },
+            {
+                name: "msc",
+                displayname: "M.Sc."
+            },
+            {
+                name: "ma",
+                displayname: "M.A."
+            },
+            {
+                name: "mca",
+                displayname: "M.C.A."
+            },
+            {
+                name: "llm",
+                displayname: "LL.M."
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+
+        ];
+        $scope.sanitizeEligibility = function(){
+            if($scope.user.eligibility){
+                if($scope.user.eligibility.age){
+                    $scope.user.eligibility.age = Number($scope.user.eligibility.age);
+                }
+                if($scope.user.eligibility.class12Percentage){
+                    $scope.user.eligibility.class12Percentage = Number($scope.user.eligibility.class12Percentage);
+                }
+                if($scope.user.eligibility.undergradPercentage){
+                    $scope.user.eligibility.undergradPercentage = Number($scope.user.eligibility.undergradPercentage);
+                }
+                if($scope.user.eligibility.postgradPercentage){
+                    $scope.user.eligibility.postgradPercentage = Number($scope.user.eligibility.postgradPercentage);
+                }
+            }
+        };    
+        if($cookies.getObject('sessionuser')){
+            var sessionuser = $cookies.getObject( 'sessionuser');
+            if(sessionuser && sessionuser._id){
+                UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    console.log($scope.user);
+                    $scope.sanitizeEligibility();
+                    Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    if($scope.user.basic)
+                        $rootScope.pageTitle =$scope.user.basic.name;
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }else{
+                $cookies.remove("sessionuser");
+                $rootScope.$emit("CallBlogLogin", {});
+            }
+            
+        }else{
+            $cookies.remove("sessionuser");
+        }
+        
+        $scope.uploadPic = function (newPic) {
+            //var pic = $scope.newPic;
+            var pic = [newPic];
+            var nFiles = pic.length;
+            
+            var counter = 0;
+            console.log(JSON.stringify($scope.user));
+            var userId = $scope.user._id;
+            if (pic && pic.length) {
+            
+            pic.forEach(function(thisFile, index){
+            var fileInfo = {
+                filename: thisFile.name,
+                contentType: thisFile.type
+            }; ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+            var s3Request = {};
+            var allParams = data.params;
+            for (var key in allParams) {
+              if (allParams.hasOwnProperty(key)) {
+                s3Request[key] = allParams[key];
+              }
+            }
+                 
+            s3Request.file = thisFile;
+            Upload.upload({
+                url: data.endpoint_url,
+                data: s3Request
+            }).then(function (resp) {
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                var picLink = $(resp.data).find('Location').text();
+                
+                var newPicForm ={
+                    image: picLink,
+                    userId: userId
+                };
+                
+                UserService.addPic(newPicForm).success(function (data, status, headers) {
+                    counter = counter + 1;
+                    if(counter == nFiles){
+                    
+                        
+                    if($cookies.getObject('sessionuser')){
+                        var sessionuser = $cookies.getObject( 'sessionuser');
+                        sessionuser.image = picLink;
+                        $cookies.putObject('sessionuser', sessionuser);
+                    }
+
+                    $state.reload();
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    
+                });
+
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error");
+            });   
+                 
+            });
+            }
+         };
+            
+        $scope.saveBlogger = function(){
+            UserService.updateUser($scope.user).success(function (data, status, headers) {
+                $scope.showSavedDialog();
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });    
+        };
+        $scope.fblogin = function() {
+            $facebook.getLoginStatus().then(function(response) {
+                $scope.fbLoginStatus = response;
+            });
+            //console.log('Loggin into fb');
+            $facebook.login().then(function(response) {
+                $scope.fbLoginStatus = response;
+                refresh();
+            });   
+        };
+        function refresh() {
+            
+            $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
+                function(response) {
+                    //console.log($scope.user);
+
+                    if($scope.user && $scope.user._id){
+                        //link the user's fb id to the current user
+                        $scope.user.fbuser = {
+                            name: response.name,
+                            gender: response.gender,
+                            image: response.picture.data.url,
+                            email: response.email,
+                            facebook: {
+                                link: response.link,
+                                id: response.id,
+                            }
+                        };
+
+
+                    }else{
+                        $scope.user = {};
+                        $scope.user.fbuser = {
+                            name: response.name,
+                            gender: response.gender,
+                            image: response.picture.data.url,
+                            email: response.email,
+                            facebook: {
+                                link: response.link,
+                                id: response.id,
+                            }
+                        };
+                        //add a new user with facebook id
+                    }
+
+                },
+                function(err) {
+                    $scope.welcomeMsg = "Please log in";
+                    $scope.isLoggedIn = false;
+            });
+            $facebook.api("/me/permissions").then(
+                function(response) {
+                    //console.log(response);
+                    $scope.permissions = response;
+                },
+                function(err) {
+                $scope.welcomeMsg = "Permissions Error";
+            });
+                
+        };            
+        $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
+            //console.log(newValue);
+        if(newValue[0] == 'connected' && newValue[1]){
+            $scope.fbUser = true;
+            $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
+            if(!$scope.user.facebookId || $scope.user.facebookId == ''){
+                //console.log($scope.user);
+                UserService.fbSave($scope.user).success(function (data, status, headers) {
+
+                    var fulluser = data;
+                    //console.log(fulluser);
+                    var sessionuser = {
+                        userId: fulluser._id,
+                        facebookId: fulluser.facebookId,
+                        userType: fulluser.userType,
+                        basic: fulluser.basic,
+                        image: fulluser.image,
+                        mobile: fulluser.mobile,
+                        email: fulluser.email,
+
+                    };
+                    $cookies.putObject('sessionuser', sessionuser);
+                    $scope.user = sessionuser;
+
+                    //console.log(sessionuser.userType);
+                    //alert('Done');
+                    $scope.showSavedDialog();
+
+                    //$state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+            }
+
+
+
+
+        }
+
+        }, true);
+        $scope.showSavedDialog = function(ev) {
+        $mdDialog.show({
+              contentElement: '#savedDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
+            
+        
+        $scope.components.forEach(function(thisCategory, index){
+            if(thisCategory.active){
+                $scope.activeCategory = thisCategory;
+                $scope.currentSubcategories = thisCategory.subcategories;
+            }
+        });
+        $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
+        
+        $scope.setActiveSubcategory = function(subcategoryName){
+            $scope.activeCategory.subcategories.forEach(function(thisSubcategory, index){
+                if(thisSubcategory.name == subcategoryName){
+                    $scope.activeSubcategory = thisSubcategory;
+                }
+            });
+        };
+            
+        $scope.elgInput = {
+            category: {
+                general: true,
+                sc: false,
+                st: false,
+                obc: false,
+                pwd: false,
+            },
+            age: null,
+            educationLevel:{
+                level: null,
+                name: null
+            },
+            class12Subjects:{
+                biology: false,
+                chemistry: false,
+                biotechnology: false,
+                physics: false,
+                mathematics: false,
+                english: false,
+                others: false
+            },
+            class12Percentage: null,
+            undergradMajor:{
+                mbbs: false,
+                bds: false,
+                bsc: false,
+                bftech: false,
+                be: false,
+                btech: false,
+                bcom: false,
+                ba: false,
+                barch: false,
+                llb: false,
+                fiveyearintegratedllb: false,
+                fiveyearballb: false,
+                lawdegreeequivalenttollb: false,
+                others: false,
+            },
+            undergradPercentage: null,
+            postgradMajor:{
+                mcom: false,
+                msc: false,
+                ma: false,
+                mca: false,
+                mtech: false,
+                mba: false,
+                ms: false,
+                llm: false,
+                others: false,
+            },
+            postgradPercentage: null,
+            
+        };    
+        $scope.userVariables ={
+            genders: [
+                "Male",
+                "Female",
+            ],
+            categories:[
+                'GENERAL',    
+                'OBC-NCL',    
+                'SC',
+                'ST',
+            ],
+        };
+        $scope.setGender = function(gender){
+            if(!$scope.user.basic){
+                $scope.user.basic = {};
+            }
+            $scope.user.basic.gender = gender;
+        };
+        $scope.setCategory = function(caste){
+            if(!$scope.user.basic){
+                $scope.user.basic = {};
+            }
+            $scope.user.basic.category = caste;
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.category){
+                $scope.user.eligibility.category = {};
+            }
+            if(caste == 'GENERAL'){
+                $scope.user.eligibility.category.general = true;
+                $scope.user.eligibility.category.sc = false;
+                $scope.user.eligibility.category.st = false;
+                $scope.user.eligibility.category.obc = false;
+            }
+            if(caste == 'OBC-NCL'){
+                $scope.user.eligibility.category.general = false;
+                $scope.user.eligibility.category.sc = false;
+                $scope.user.eligibility.category.st = false;
+                $scope.user.eligibility.category.obc = true;
+            }
+            if(caste == 'SC'){
+                $scope.user.eligibility.category.general = false;
+                $scope.user.eligibility.category.sc = true;
+                $scope.user.eligibility.category.st = false;
+                $scope.user.eligibility.category.obc = false;
+            }
+            if(caste == 'ST'){
+                $scope.user.eligibility.category.general = false;
+                $scope.user.eligibility.category.sc = false;
+                $scope.user.eligibility.category.st = true;
+                $scope.user.eligibility.category.obc = false;
+            }
+        };    
+        $scope.setPwD = function(PwD){
+            if(!$scope.user.basic){
+                $scope.user.basic = {};
+            }
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.category){
+                $scope.user.eligibility.category = {};
+            }
+            $scope.user.basic.PwD = PwD;
+            $scope.user.eligibility.category.pwd = PwD;
+        };
+        
+        $scope.setAge = function(){
+            if($scope.user.basic && $scope.user.basic.dob){
+                var dob = moment($scope.user.basic.dob);
+                var age = moment().diff(dob, 'years');
+                if(!$scope.user.eligibility){
+                    $scope.user.eligibility = {};
+                }
+                $scope.user.eligibility.age = age;
+            }
+        };
+        
+        $scope.setEducationLevel = function(educationLevel){
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.educationLevel){
+                $scope.user.eligibility.educationLevel = {};
+            }
+            
+            $scope.user.eligibility.educationLevel = educationLevel;
+        };
+            
+        $scope.setClass12Subjects = function(subjectName){
+            //console.log($scope.user.eligibility.class12Subjects);
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.class12Subjects){
+                $scope.user.eligibility.class12Subjects = {};
+            }
+            
+            if(!$scope.user.eligibility.class12Subjects[subjectName]){
+                $scope.user.eligibility.class12Subjects[subjectName] = true;
+            }else{
+                $scope.user.eligibility.class12Subjects[subjectName] = false;
+            }
+        };     
+        $scope.setUndergradMajor = function(degreeName){
+            
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.undergradMajor){
+                $scope.user.eligibility.undergradMajor = {};
+            }
+            $scope.undergradMajors.forEach(function(thisDegree, index){
+                if(thisDegree.name == degreeName){
+                    if(!$scope.user.eligibility.undergradMajor[degreeName]){
+                        $scope.user.eligibility.undergradMajor[degreeName] = true;
+                    }else{
+                        $scope.user.eligibility.undergradMajor[degreeName] = false;
+                    }
+                    
+                }else{
+                    $scope.user.eligibility.undergradMajor[thisDegree.name] = false;   
+                }
+            });
+            
+        };  
+            
+        $scope.setPostgradMajor = function(degreeName){
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.postgradMajor){
+                $scope.user.eligibility.postgradMajor = {};
+            }
+            $scope.postgradMajors.forEach(function(thisDegree, index){
+                if(thisDegree.name == degreeName){
+                    if(!$scope.user.eligibility.postgradMajor[degreeName]){
+                        $scope.user.eligibility.postgradMajor[degreeName] = true;
+                    }else{
+                        $scope.user.eligibility.postgradMajor[degreeName] = false;
+                    }
+                    
+                }else{
+                    $scope.user.eligibility.postgradMajor[thisDegree.name] = false;   
+                }
+            });
+            
+        };
+            
+            
+        $scope.locateUser = function(){
+            if (navigator.geolocation) {
+                  var timeoutVal = 10 * 1000;
+                  navigator.geolocation.getCurrentPosition(
+                    displayPosition, 
+                    displayError,
+                    { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
+                  );
+                }
+                else {
+                  alert("Geolocation is not supported by your browser");
+                    //use ip info
+                }  
+        };
+            
+        function reverseGeocodeUser(lat, lng){
+            console.log("Reverse Geocode is called!");
+            var geocoder = new google.maps.Geocoder();
+            var latlng = new google.maps.LatLng(lat, lng);
+            geocoder.geocode({ 'latLng': latlng }, function (results, status){
+                if (status == google.maps.GeocoderStatus.OK) {
+                if (results[1]) {
+                    var gResults = results[1].address_components;
+                    var userAddress = {
+                        lat: lat,
+                        lng: lng,
+                        sublocality_level_2: null,    
+                        sublocality: null,    
+                        city: null,    
+                        state: null,    
+                        country: null,    
+                    };
+                    if($scope.user._id){
+                        userAddress._id = $scope.user._id;
+                    }
+
+                    //console.log(gResults);    
+                    gResults.forEach(function(thisComp, cindex){
+                    var cTypes = thisComp.types;
+
+                    if(cTypes.indexOf("sublocality_level_2") != -1){
+                        userAddress.sublocality_level_2 = thisComp.long_name;
+                    } 
+                    if(cTypes.indexOf("sublocality_level_1") != -1){
+                        userAddress.sublocality = thisComp.long_name;
+                    }    
+                    if(cTypes.indexOf("administrative_area_level_2") != -1){
+                        userAddress.city = thisComp.long_name;
+                    }
+                    if(cTypes.indexOf("administrative_area_level_1") != -1){
+                        userAddress.state = thisComp.long_name;
+                    }
+                    if(cTypes.indexOf("country") != -1){
+                        userAddress.country = thisComp.long_name;
+                    }
+                    });
+
+                    
+                    if(userAddress.sublocality && userAddress.city){
+                         //console.log(userAddress);
+                        UserService.saveUserLocation(userAddress).success(function (data, status, headers) {
+                            if(data){
+                                console.log(data);
+                                $scope.user = data;
+                                Notification.success({message: "Great, we have located you at " + userAddress.sublocality + ", " + userAddress.city,  positionY: 'top', positionX: 'right', delay: 1000});
+                            }else{
+                                Notification.warning({message: "Oops! Where are you located? Mars?",  positionY: 'top', positionX: 'right', delay: 1000});
+                            }
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log("Error ");
+                        });
+                        
+                        
+                        
+                    }
+
+
+                    //console.log(results[1].formatted_address);
+                    } else {
+                        console.log('Location not found');
+                    }
+                } else {
+                    console.log('Geocoder failed due to: ' + status);
+                }
+            });
+        };
+        function latlngfromIP(){
+            if($cookies.getObject('ip')){
+                var thisIP = $cookies.getObject('ip');
+                console.log("Using IP to geolocate user");
+                console.log(thisIP);
+                $scope.currLocation = [thisIP.lat, thisIP.long];
+                Notification.warning("Exambazaar couldn't locate you with accuracy");
+            }    
+        };
+        $scope.currLocation = null;
+        
+            
+        function displayPosition(position) {
+            $scope.currLocation = [position.coords.latitude, position.coords.longitude];
+            reverseGeocodeUser($scope.currLocation[0], $scope.currLocation[1]);
+            console.log($scope.currLocation);
+        }
+        function displayError(error) {
+          var errors = { 
+            1: 'Permission denied',
+            2: 'Position unavailable',
+            3: 'Request timeout'
+          };
+          console.log("Error: " + errors[error.code]);
+            //use ip info
+            latlngfromIP();
+        }   
+            
+        $scope.saveUser = function(){
+            console.log($scope.user);
+            $scope.setAge();
+            UserService.updateUser($scope.user).success(function (data, status, headers) {
+                Notification.success({message: "Changes successfully saved!",  positionY: 'top', positionX: 'right', delay: 1000});
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });    
+        };
+    }]);        
         
     exambazaar.controller("profileController", 
         [ '$scope', '$http','$state', '$rootScope', '$cookies', '$geolocation', 'Upload', 'ImageService', 'UserService', '$facebook', '$mdDialog', '$timeout', 'Notification', function($scope,$http,$state,$rootScope, $cookies, $geolocation, Upload, ImageService, UserService, $facebook, $mdDialog, $timeout, Notification){
@@ -26134,6 +27004,22 @@ function getLatLng(thisData) {
 
                 ],
             },
+            /*{
+                name: 'Academic Details',
+                active: false,
+                state: 'academics',
+                subcategories: [
+                    {
+                        name: 'School Class XII',
+                    },
+                    {
+                        name: 'Undergraduate',
+                    },
+                    {
+                        name: 'Postgraduate',
+                    },
+                ],
+            },*/
             {
                 name: 'Your Reviews',
                 active: false,
@@ -27128,6 +28014,8 @@ function getLatLng(thisData) {
             $rootScope.pageURL = currURL;*/
             $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
     }]);
+    
+    
         
      exambazaar.controller("userInstitutesController", 
         [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'targetStudyProviderService', 'viewService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, targetStudyProviderService, viewService, $location, Notification){
@@ -34974,26 +35862,26 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                /*thisuser: ['UserService', '$stateParams',
-                    function(UserService,$stateParams){
-                    return UserService.getUser($stateParams.userId);
-                }],
-                thisuserReviewed: ['reviewService', '$stateParams',
-                    function(reviewService, $stateParams){
-                    return reviewService.getuserReviews($stateParams.userId);
-                }],
-                
-                activeOffers: ['offerService', '$stateParams',
-                    function(offerService,$stateParams){
-                    return offerService.getActiveOffersMedium();
-                }],
-                */
-                
-                
-                
             }
         })
-    
+        .state('academics', {
+            url: '/ebinternal/academics',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'academics.html',
+                    controller: 'academicsController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+            }
+        })
     
         .state('addedInstitutes', {
             url: '/ebinternal/user/:userId/addedInstitutes',
