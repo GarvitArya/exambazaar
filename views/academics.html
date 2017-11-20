@@ -188,10 +188,10 @@
                 <div layout="column" layout-align="center start" class="width100">
                      
                     
-                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Academic'">
-                        <div layout="column" layout-align="start start" class="academicRow academicSubSection">
+                    <div layout="column" layout-align="center start" class="width100 font14">
+                        <div layout="column" layout-align="start start" class="academicRow subSectionHeader" ng-if="activeSubcategory.name =='Education Level'">
                         
-                            <div layout="row" layout-align="center center" class="font16 marginB10 width100 academicSubHeader">
+                            <div layout="row" layout-align="start center" class="font16 marginB10 width100 academicSubHeader">
                                 Choose your Education Level
                             </div>
                             <div layout="row" layout-align="start start" class="fieldRow" layout-wrap>
@@ -202,7 +202,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 1">
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="activeSubcategory.name =='School Class XII' && user.eligibility.educationLevel.level >= 1">
                             
                         <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
                             School Class XII
@@ -229,7 +229,7 @@
                         </div>
                         
                         
-                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 3">
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="activeSubcategory.name =='Undergraduate' && user.eligibility.educationLevel.level >= 3">
                             
                         <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
                             Undergraduate
@@ -305,7 +305,7 @@
                         </div>
                         
                         
-                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 5">
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="activeSubcategory.name =='Postgraduate' && user.eligibility.educationLevel.level >= 5">
                             
                         <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
                             Postgraduate
@@ -330,101 +330,13 @@
                             </div>
                         </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start start" class="fieldRow" ng-if="activeSubcategory.name != activeCategory.subcategories[activeCategory.subcategories.length-1].name">
                             <div flex="{{col1Width}}" class="col1">
-                                <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Social')">
+                                <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setNextActiveSubcategory()">
                                     Next
                                 </md-button>
                             </div>
                         </div>
-                    </div>
-                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Social'">
-                        <span ng-if="!user.facebookId" class="editFont marginB20">
-                            You can link Facebook to your existing account to enable seamless logging in.
-                        </span>
-
-                        <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase" ng-show="!user.facebookId">
-                            <span class="font14" hide-xs>
-                                Link with Facebook
-                            </span>
-                            <span class="font12" hide-gt-xs>
-                                Link with Facebook
-                            </span>
-                        </md-button>
-
-
-                        <div layout="column" ng-if="user.facebookId" class="marginT10">
-                            <div>
-                                Facebook Linked&nbsp;&nbsp;<i class="fa fa-facebook-official" aria-hidden="true"></i>
-                            </div>
-                            <div layout="row" layout-align="start center" class="width100 marginTB20">
-                                <div layout="row" layout-align="center center"  flex="20">
-                                <i class="fa fa-check font32 text-primary bold" aria-hidden="true"></i>
-                                </div>
-                                    <!--(id: {{user.facebookId}})-->
-                                <div layout="row" layout-align="start center"  class="editFont">
-                                    You are already linked to your Facebook account. Enjoy seamless logging in with Facebook to your Exambazaar account.
-                                </div>
-                            </div>
-
-                        </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">
-                                <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Blogging')">
-                                    Next
-                                </md-button>
-                            </div>
-                        </div>
-                    </div>
-                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Blogging'">
-                        <div layout="row" layout-align="start start" class="fieldRow" ng-if="user.blogger.active">
-                            <div flex="{{col1Width}}" class="col1">
-                                <div>
-                                    Add profile credential
-                                </div>
-                                <div class="editFont font10 ">
-                                    Credentials also appear on blogs you write
-                                </div>
-                            </div>
-                            <div flex class="col2">
-                                <input type="text" class="width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
-                                
-                            </div>
-                        </div>
-                        <div layout="row" layout-align="start start" class="fieldRow" ng-if="!user.blogger.active">
-                            <div layout="column" layout-align="start start" class="width100 font14">
-                                <div class="marginB20 font20">
-                                Would you like to contribute to <a ui-sref="blog" target="_blank" id="link">Exambazaar Blog</a>?
-                                </div>
-                                
-                                
-                                <span>
-                                    {{user.basic.name}}, blogging on Exambazaar has not been activated for you.<br/>
-                                    <a href="mailto:team@exambazaar.com?Subject=Blogging%20Request" target="_top" id="link">
-                                        Write to us at team@exambazaar.com
-                                    </a>
-                                    &nbsp;with your blogging experience and we will enable it for you!
-                                </span>
-                            
-                            </div>
-                        </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">
-                                <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Preferences')">
-                                    Next
-                                </md-button>
-                            </div>
-                        </div>
-                    </div>
-                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Preferences'">
-                        <div layout="row" layout-align="start start" class="fieldRow">
-                            <div layout="column" layout-align="start start" class="width100 font14">
-                                <div class="marginB20 font20">
-                                This section is coming up soon!
-                                </div>    
-                            </div>
-                        </div>
-                        
                     </div>
                     
                     
@@ -435,108 +347,11 @@
         
             </div>
         </div>
-        <!--<div layout="column" layout-align="start start" class="width100 paddingLR20 min100vh" flex>
-            <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100" id="profileSection">
-                <div layout="row" layout-align="start center" ng-if="user.basic" class="width100">
-                    <div>
-                        Welcome, {{user.basic.name}}
-                    </div>
-                    <div layout="column" layout-align="start start" class="paddingL20 editFont">
-                        <div layout="column" layout-align="center center" ng-if="user.image">
-                            <img id="userPic" ng-src="{{user.image}}" class="img-circle" />
-                            <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.8, centerCrop: true}">Change</span>
-                        </div>
-                        <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.7, centerCrop: true}">
-                            <div layout="row" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
-                                <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Image
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-                <span ng-if="!user.facebookId" class="editFont marginB20">
-                    You can link Facebook to your existing account to enable seamless logging in.
-                </span>
-
-                <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase" ng-show="!user.facebookId">
-                    <span class="font14" hide-xs>
-                        Link with Facebook
-                    </span>
-                    <span class="font12" hide-gt-xs>
-                        Link with Facebook
-                    </span>
-                </md-button>
-
-
-                <div layout="column" ng-if="user.facebookId" class="marginT10">
-                    <div>
-                        Facebook Linked <i class="fa fa-facebook-official" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                    <span>
-                    <i class="fa fa-check font20 text-primary bold" aria-hidden="true"></i>
-                    </span>
-                    <span class="editFont marginB20">
-                        You are already linked to your Facebook account (id: {{user.facebookId}}). Enjoy seamless logging in with Facebook to your Exambazaar account.
-                    </span>
-                    </div>
-
-                </div>
-                <span ng-if="!user.basic">
-                Name: 
-                </span>
-
-
-            </div>
-            <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100 marginT20" id="profileSection" ng-if="user.blogger.active">
-
-                <div layout="row" layout-align="start start" class="width100">
-                    Credentials & Highlights
-                </div>
-                <div layout="row" layout-align="start center" class="width100 marginT20">
-                    <div flex="25" layout="column" layout-align="start start">
-                        <div>
-                            Add profile credential
-                        </div>
-                        <div class="editFont font10 ">
-                            Credentials also appear on blogs you write
-                        </div>
-                    </div>
-                    <div flex>
-                        <input type="text" class="font12 width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
-                    </div>
-                </div>
-                <div layout="row" layout-align="end center" class="width100">
-                    <md-button class="md-raised md-primary" ng-click="saveBlogger()">
-                         Save
-                    </md-button>
-                </div>
-            </div>
-
-        </div>-->
     </div>
     </div>
 </div>
 
-<!--<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="savedDialog">
-      <md-dialog>
-          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
-              <div class="margin20 padding10">
-                <span class="text-primary md-headline">
-                  <i class="fa fa-check-square" aria-hidden="true"></i>
-                </span>
-                <span class="md-title">
-                    Changes Saved!
-                </span>
-                
-              </div>
-          </div>
-      </md-dialog>
-    </div>    
-</div>-->
+
 
 <div class="bottomBar">
     <div layout="row" layout-align="start center">

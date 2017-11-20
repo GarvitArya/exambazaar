@@ -26108,9 +26108,18 @@ function getLatLng(thisData) {
     }]); 
     
     exambazaar.controller("academicsController", 
-        [ '$scope', '$http','$state', '$rootScope', '$cookies', '$geolocation', 'Upload', 'ImageService', 'UserService', '$facebook', '$mdDialog', '$timeout', 'Notification', function($scope,$http,$state,$rootScope, $cookies, $geolocation, Upload, ImageService, UserService, $facebook, $mdDialog, $timeout, Notification){
+        [ '$scope', '$http','$state', '$rootScope', '$cookies', 'UserService', '$mdDialog', '$timeout', 'Notification', function($scope,$http,$state,$rootScope, $cookies, UserService, $mdDialog, $timeout, Notification){
         $scope.col1Width = 40;
         $scope.col1WidthAcademic = 20;
+        var setPage = function(pageName){
+            $scope.components.forEach(function(thisCategory, index){
+                if(thisCategory.name == pageName){
+                    thisCategory.active = true;
+                    $scope.activeCategory = thisCategory;
+                    $scope.currentSubcategories = thisCategory.subcategories;
+                }
+            });
+        };
         $scope.components = [
             {
                 name: 'Profile',
@@ -26120,9 +26129,6 @@ function getLatLng(thisData) {
                     {
                         name: 'Personal',
                     },
-                    /*{
-                        name: 'Academic',
-                    },*/
                     {
                         name: 'Social',
                     },
@@ -26140,9 +26146,12 @@ function getLatLng(thisData) {
             },
             {
                 name: 'Academic Details',
-                active: true,
+                active: false,
                 state: 'academics',
                 subcategories: [
+                    {
+                        name: 'Education Level',
+                    },
                     {
                         name: 'School Class XII',
                     },
@@ -26178,6 +26187,9 @@ function getLatLng(thisData) {
                 ],
             },
         ];
+        setPage('Academic Details');
+        
+            
         $scope.educationLevels = [
             {
                 level: 0,
@@ -26432,202 +26444,8 @@ function getLatLng(thisData) {
             $cookies.remove("sessionuser");
         }
         
-        $scope.uploadPic = function (newPic) {
-            //var pic = $scope.newPic;
-            var pic = [newPic];
-            var nFiles = pic.length;
-            
-            var counter = 0;
-            console.log(JSON.stringify($scope.user));
-            var userId = $scope.user._id;
-            if (pic && pic.length) {
-            
-            pic.forEach(function(thisFile, index){
-            var fileInfo = {
-                filename: thisFile.name,
-                contentType: thisFile.type
-            }; ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
-            var s3Request = {};
-            var allParams = data.params;
-            for (var key in allParams) {
-              if (allParams.hasOwnProperty(key)) {
-                s3Request[key] = allParams[key];
-              }
-            }
-                 
-            s3Request.file = thisFile;
-            Upload.upload({
-                url: data.endpoint_url,
-                data: s3Request
-            }).then(function (resp) {
-                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
-                var picLink = $(resp.data).find('Location').text();
-                
-                var newPicForm ={
-                    image: picLink,
-                    userId: userId
-                };
-                
-                UserService.addPic(newPicForm).success(function (data, status, headers) {
-                    counter = counter + 1;
-                    if(counter == nFiles){
-                    
-                        
-                    if($cookies.getObject('sessionuser')){
-                        var sessionuser = $cookies.getObject( 'sessionuser');
-                        sessionuser.image = picLink;
-                        $cookies.putObject('sessionuser', sessionuser);
-                    }
-
-                    $state.reload();
-                    }
-                })
-                .error(function (data, status, header, config) {
-                    console.log("Error ");
-                });
-                }, function (resp) {
-                    console.log('Error status: ' + resp.status);
-                }, function (evt) {
-                    
-                });
-
-            })
-            .error(function (data, status, header, config) {
-                console.log("Error");
-            });   
-                 
-            });
-            }
-         };
-            
-        $scope.saveBlogger = function(){
-            UserService.updateUser($scope.user).success(function (data, status, headers) {
-                $scope.showSavedDialog();
-            })
-            .error(function (data, status, header, config) {
-                console.log('Error ' + data + ' ' + status);
-            });    
-        };
-        $scope.fblogin = function() {
-            $facebook.getLoginStatus().then(function(response) {
-                $scope.fbLoginStatus = response;
-            });
-            //console.log('Loggin into fb');
-            $facebook.login().then(function(response) {
-                $scope.fbLoginStatus = response;
-                refresh();
-            });   
-        };
-        function refresh() {
-            
-            $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
-                function(response) {
-                    //console.log($scope.user);
-
-                    if($scope.user && $scope.user._id){
-                        //link the user's fb id to the current user
-                        $scope.user.fbuser = {
-                            name: response.name,
-                            gender: response.gender,
-                            image: response.picture.data.url,
-                            email: response.email,
-                            facebook: {
-                                link: response.link,
-                                id: response.id,
-                            }
-                        };
-
-
-                    }else{
-                        $scope.user = {};
-                        $scope.user.fbuser = {
-                            name: response.name,
-                            gender: response.gender,
-                            image: response.picture.data.url,
-                            email: response.email,
-                            facebook: {
-                                link: response.link,
-                                id: response.id,
-                            }
-                        };
-                        //add a new user with facebook id
-                    }
-
-                },
-                function(err) {
-                    $scope.welcomeMsg = "Please log in";
-                    $scope.isLoggedIn = false;
-            });
-            $facebook.api("/me/permissions").then(
-                function(response) {
-                    //console.log(response);
-                    $scope.permissions = response;
-                },
-                function(err) {
-                $scope.welcomeMsg = "Permissions Error";
-            });
-                
-        };            
-        $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
-            //console.log(newValue);
-        if(newValue[0] == 'connected' && newValue[1]){
-            $scope.fbUser = true;
-            $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
-            if(!$scope.user.facebookId || $scope.user.facebookId == ''){
-                //console.log($scope.user);
-                UserService.fbSave($scope.user).success(function (data, status, headers) {
-
-                    var fulluser = data;
-                    //console.log(fulluser);
-                    var sessionuser = {
-                        userId: fulluser._id,
-                        facebookId: fulluser.facebookId,
-                        userType: fulluser.userType,
-                        basic: fulluser.basic,
-                        image: fulluser.image,
-                        mobile: fulluser.mobile,
-                        email: fulluser.email,
-
-                    };
-                    $cookies.putObject('sessionuser', sessionuser);
-                    $scope.user = sessionuser;
-
-                    //console.log(sessionuser.userType);
-                    //alert('Done');
-                    $scope.showSavedDialog();
-
-                    //$state.reload();
-                })
-                .error(function (data, status, header, config) {
-                    console.log("Error ");
-                });
-            }
-
-
-
-
-        }
-
-        }, true);
-        $scope.showSavedDialog = function(ev) {
-        $mdDialog.show({
-              contentElement: '#savedDialog',
-              parent: angular.element(document.body),
-              targetEvent: ev,
-              clickOutsideToClose: true
-            });
-            $timeout(function(){
-                $mdDialog.cancel();
-            },1000)
-        };
-            
         
-        $scope.components.forEach(function(thisCategory, index){
-            if(thisCategory.active){
-                $scope.activeCategory = thisCategory;
-                $scope.currentSubcategories = thisCategory.subcategories;
-            }
-        });
+        
         $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
         
         $scope.setActiveSubcategory = function(subcategoryName){
@@ -26636,6 +26454,24 @@ function getLatLng(thisData) {
                     $scope.activeSubcategory = thisSubcategory;
                 }
             });
+        };
+        
+        $scope.setNextActiveSubcategory = function(){
+            var thisIndex = null;
+            var nSubcategories = $scope.activeCategory.subcategories.length;
+            $scope.activeCategory.subcategories.forEach(function(thisSubcategory, index){
+                if(thisSubcategory.name == $scope.activeSubcategory.name){
+                    thisIndex = index;
+                }
+            });
+            if(thisIndex != null){
+                if(thisIndex == nSubcategories - 1){
+                    console.log('Do nothing');
+                }else{
+
+                    $scope.activeSubcategory = $scope.activeCategory.subcategories[thisIndex + 1];
+                }
+            }
         };
             
         $scope.elgInput = {
@@ -26845,121 +26681,7 @@ function getLatLng(thisData) {
             
         };
             
-            
-        $scope.locateUser = function(){
-            if (navigator.geolocation) {
-                  var timeoutVal = 10 * 1000;
-                  navigator.geolocation.getCurrentPosition(
-                    displayPosition, 
-                    displayError,
-                    { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
-                  );
-                }
-                else {
-                  alert("Geolocation is not supported by your browser");
-                    //use ip info
-                }  
-        };
-            
-        function reverseGeocodeUser(lat, lng){
-            console.log("Reverse Geocode is called!");
-            var geocoder = new google.maps.Geocoder();
-            var latlng = new google.maps.LatLng(lat, lng);
-            geocoder.geocode({ 'latLng': latlng }, function (results, status){
-                if (status == google.maps.GeocoderStatus.OK) {
-                if (results[1]) {
-                    var gResults = results[1].address_components;
-                    var userAddress = {
-                        lat: lat,
-                        lng: lng,
-                        sublocality_level_2: null,    
-                        sublocality: null,    
-                        city: null,    
-                        state: null,    
-                        country: null,    
-                    };
-                    if($scope.user._id){
-                        userAddress._id = $scope.user._id;
-                    }
-
-                    //console.log(gResults);    
-                    gResults.forEach(function(thisComp, cindex){
-                    var cTypes = thisComp.types;
-
-                    if(cTypes.indexOf("sublocality_level_2") != -1){
-                        userAddress.sublocality_level_2 = thisComp.long_name;
-                    } 
-                    if(cTypes.indexOf("sublocality_level_1") != -1){
-                        userAddress.sublocality = thisComp.long_name;
-                    }    
-                    if(cTypes.indexOf("administrative_area_level_2") != -1){
-                        userAddress.city = thisComp.long_name;
-                    }
-                    if(cTypes.indexOf("administrative_area_level_1") != -1){
-                        userAddress.state = thisComp.long_name;
-                    }
-                    if(cTypes.indexOf("country") != -1){
-                        userAddress.country = thisComp.long_name;
-                    }
-                    });
-
-                    
-                    if(userAddress.sublocality && userAddress.city){
-                         //console.log(userAddress);
-                        UserService.saveUserLocation(userAddress).success(function (data, status, headers) {
-                            if(data){
-                                console.log(data);
-                                $scope.user = data;
-                                Notification.success({message: "Great, we have located you at " + userAddress.sublocality + ", " + userAddress.city,  positionY: 'top', positionX: 'right', delay: 1000});
-                            }else{
-                                Notification.warning({message: "Oops! Where are you located? Mars?",  positionY: 'top', positionX: 'right', delay: 1000});
-                            }
-                        })
-                        .error(function (data, status, header, config) {
-                            console.log("Error ");
-                        });
-                        
-                        
-                        
-                    }
-
-
-                    //console.log(results[1].formatted_address);
-                    } else {
-                        console.log('Location not found');
-                    }
-                } else {
-                    console.log('Geocoder failed due to: ' + status);
-                }
-            });
-        };
-        function latlngfromIP(){
-            if($cookies.getObject('ip')){
-                var thisIP = $cookies.getObject('ip');
-                console.log("Using IP to geolocate user");
-                console.log(thisIP);
-                $scope.currLocation = [thisIP.lat, thisIP.long];
-                Notification.warning("Exambazaar couldn't locate you with accuracy");
-            }    
-        };
-        $scope.currLocation = null;
-        
-            
-        function displayPosition(position) {
-            $scope.currLocation = [position.coords.latitude, position.coords.longitude];
-            reverseGeocodeUser($scope.currLocation[0], $scope.currLocation[1]);
-            console.log($scope.currLocation);
-        }
-        function displayError(error) {
-          var errors = { 
-            1: 'Permission denied',
-            2: 'Position unavailable',
-            3: 'Request timeout'
-          };
-          console.log("Error: " + errors[error.code]);
-            //use ip info
-            latlngfromIP();
-        }   
+         
             
         $scope.saveUser = function(){
             console.log($scope.user);
@@ -26977,17 +26699,24 @@ function getLatLng(thisData) {
         [ '$scope', '$http','$state', '$rootScope', '$cookies', '$geolocation', 'Upload', 'ImageService', 'UserService', '$facebook', '$mdDialog', '$timeout', 'Notification', function($scope,$http,$state,$rootScope, $cookies, $geolocation, Upload, ImageService, UserService, $facebook, $mdDialog, $timeout, Notification){
         $scope.col1Width = 40;
         $scope.col1WidthAcademic = 20;
+            
+        var setPage = function(pageName){
+            $scope.components.forEach(function(thisCategory, index){
+                if(thisCategory.name == pageName){
+                    thisCategory.active = true;
+                    $scope.activeCategory = thisCategory;
+                    $scope.currentSubcategories = thisCategory.subcategories;
+                }
+            });
+        };
         $scope.components = [
             {
                 name: 'Profile',
-                active: true,
+                active: false,
                 state: 'profile',
                 subcategories: [
                     {
                         name: 'Personal',
-                    },
-                    {
-                        name: 'Academic',
                     },
                     {
                         name: 'Social',
@@ -27004,11 +26733,14 @@ function getLatLng(thisData) {
 
                 ],
             },
-            /*{
+            {
                 name: 'Academic Details',
                 active: false,
                 state: 'academics',
                 subcategories: [
+                    {
+                        name: 'Education Level',
+                    },
                     {
                         name: 'School Class XII',
                     },
@@ -27019,7 +26751,7 @@ function getLatLng(thisData) {
                         name: 'Postgraduate',
                     },
                 ],
-            },*/
+            },
             {
                 name: 'Your Reviews',
                 active: false,
@@ -27044,6 +26776,8 @@ function getLatLng(thisData) {
                 ],
             },
         ];
+        setPage('Profile');    
+            
         $scope.educationLevels = [
             {
                 level: 0,
@@ -27846,6 +27580,15 @@ function getLatLng(thisData) {
             $scope.col1Width = 40;
             $scope.col1WidthAcademic = 20;
         
+            var setPage = function(pageName){
+                $scope.components.forEach(function(thisCategory, index){
+                    if(thisCategory.name == pageName){
+                        thisCategory.active = true;
+                        $scope.activeCategory = thisCategory;
+                        $scope.currentSubcategories = thisCategory.subcategories;
+                    }
+                });
+            };
             $scope.components = [
                 {
                     name: 'Profile',
@@ -27854,9 +27597,6 @@ function getLatLng(thisData) {
                     subcategories: [
                         {
                             name: 'Personal',
-                        },
-                        {
-                            name: 'Academic',
                         },
                         {
                             name: 'Social',
@@ -27874,8 +27614,27 @@ function getLatLng(thisData) {
                     ],
                 },
                 {
+                    name: 'Academic Details',
+                    active: false,
+                    state: 'academics',
+                    subcategories: [
+                        {
+                            name: 'Education Level',
+                        },
+                        {
+                            name: 'School Class XII',
+                        },
+                        {
+                            name: 'Undergraduate',
+                        },
+                        {
+                            name: 'Postgraduate',
+                        },
+                    ],
+                },
+                {
                     name: 'Your Reviews',
-                    active: true,
+                    active: false,
                     state: 'reviewed',
                     subcategories: [
                         {
@@ -27897,6 +27656,7 @@ function getLatLng(thisData) {
                     ],
                 },
             ];
+            setPage('Your Reviews');
             
             $scope.components.forEach(function(thisCategory, index){
                 if(thisCategory.active){
@@ -28021,7 +27781,16 @@ function getLatLng(thisData) {
         [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'targetStudyProviderService', 'viewService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, targetStudyProviderService, viewService, $location, Notification){
             $scope.col1Width = 40;
             $scope.col1WidthAcademic = 20;
-        
+            
+            var setPage = function(pageName){
+                $scope.components.forEach(function(thisCategory, index){
+                    if(thisCategory.name == pageName){
+                        thisCategory.active = true;
+                        $scope.activeCategory = thisCategory;
+                        $scope.currentSubcategories = thisCategory.subcategories;
+                    }
+                });
+            };
             $scope.components = [
                 {
                     name: 'Profile',
@@ -28030,9 +27799,6 @@ function getLatLng(thisData) {
                     subcategories: [
                         {
                             name: 'Personal',
-                        },
-                        {
-                            name: 'Academic',
                         },
                         {
                             name: 'Social',
@@ -28050,6 +27816,25 @@ function getLatLng(thisData) {
                     ],
                 },
                 {
+                    name: 'Academic Details',
+                    active: false,
+                    state: 'academics',
+                    subcategories: [
+                        {
+                            name: 'Education Level',
+                        },
+                        {
+                            name: 'School Class XII',
+                        },
+                        {
+                            name: 'Undergraduate',
+                        },
+                        {
+                            name: 'Postgraduate',
+                        },
+                    ],
+                },
+                {
                     name: 'Your Reviews',
                     active: false,
                     state: 'reviewed',
@@ -28061,7 +27846,7 @@ function getLatLng(thisData) {
                 },
                 {
                     name: 'Your Coachings',
-                    active: true,
+                    active: false,
                     state: 'userInstitutes',
                     subcategories: [
                         {
@@ -28073,13 +27858,8 @@ function getLatLng(thisData) {
                     ],
                 },
             ];
+            setPage('Your Coachings');
             
-            $scope.components.forEach(function(thisCategory, index){
-                if(thisCategory.active){
-                    $scope.activeCategory = thisCategory;
-                    $scope.currentSubcategories = thisCategory.subcategories;
-                }
-            });
             $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
             
             $scope.setActiveSubcategory = function(subcategoryName){
