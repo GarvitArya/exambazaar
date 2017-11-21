@@ -3294,6 +3294,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.groupName = $stateParams.groupName;
             
         $scope.exam = thisExam.data;    
+        $scope.coachingGroup = thisGroup.data;
+        $scope.coachingLogo = null;
+            
+        $scope.coachingGroup.forEach(function(thisCoaching, cindex){
+            if(thisCoaching.logo && !$scope.coachingLogo){
+                $scope.coachingLogo = thisCoaching.logo;
+            }
+            
+        });
+            //console.log($scope.coachingGroup);
         $scope.setPage = function(pageName){
             console.log(pageName);
             $scope.components.forEach(function(thisCategory, index){
@@ -37570,6 +37580,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         console.log("SEO Keywords: " +  $rootScope.pageKeywords);
         console.log("FB Page URL: " +  $rootScope.pageURL);
         console.log("FB Page Image: " +  $rootScope.pageImage);*/
+        $window.scrollTo(0, 0);
         $mdDialog.hide();
         var stateTo = $transition$.$to();
         var stateToURL = stateTo.url.pattern;
