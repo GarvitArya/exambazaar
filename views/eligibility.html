@@ -1,5 +1,171 @@
-
 <style>
+    input[type="text"],input[type="email"]
+    {
+        font-size: 14px;
+        color: #333333;
+        padding: 10px;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus{
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    #profileSection{
+        min-height: 20vh;
+    }
+    .profileBar{
+        background-color: #29335C;
+        color: white;
+    }
+    .profileBar a{
+        color: white;
+        text-decoration: none;
+        
+    }
+    
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        
+    }
+    .fieldRow{
+        min-height: 5vh;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .fieldRow div.col1{
+        color: gray;
+        font-family: 'Roboto Condensed', sans-serif;
+    }
+    .fieldRow div.col2{
+        color: black;
+    }
+    
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    .active{
+        color: white;
+        font-weight: bold;
+        border-bottom: 2px solid white;
+    }
+    #topBar{
+        color: white;
+    }
+    #topBar.active{
+        color: white;
+    }
+    #topBar:hover{
+        font-weight: bold;
+    }
+    .leftBar{
+        border-right: 2px solid whitesmoke;
+    }
+    #leftBarButton{
+        border-bottom: 2px solid whitesmoke;
+    }
+    #leftBarButton:hover{
+        border-bottom: 2px solid #20C39A;
+    }
+    #leftBarButton.sideactive{
+        /*border: 2px solid #20C39A;
+        color: #20C39A;
+        font-weight: bold;*/
+        background: whitesmoke;
+        
+    }
+    .emptyTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    
+    .edLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .edLevelTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledEdLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .badge{
+        font-size: 14px;
+        white-space: normal;
+        margin-top: 0px;
+    }
+    .subSectionHeader{
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid whitesmoke;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .academicSubSection{
+        border-bottom: 1px solid #20C39A;
+        
+    }
+    .academicSubHeader{
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    academicSubHeader2{
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .nextButton{
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    .previousButton{
+        margin-right: 20px;
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    
+    #profilePicSection{
+        margin-bottom: 20px;
+    }
+    
+    
     a, a:link, a:visited{
         color:#20C39A;
     }
@@ -61,296 +227,384 @@
     #lineHeight{
         line-height: 150%;
     }
-    .streamBoxBorder{
+    /*.streamBoxBorder{
         border-right: 1px solid lightgray;
-    }
+    }*/
 </style>
+
 <div id="spacer1" class="hidden-xs whiteBackground">
 </div>
-<div id="spacerXS" class="hide-gt-xs whiteBackground">
-</div>
-<div layout="column" layout-align="center center" class="width100 subhheadingBottomBorder2 marginTB20">
-    <div layout="row" layout-align="center center" class="width100 font16">
-        <div ng-if="user.image">
-        <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
-        </div>
-        <div class="marginL10">
-            {{user.basic.name}}
-        </div>
-    </div>
-    <div layout="row" layout-align="center center" class="width100 font20">
-        Exam Eligibility Report&nbsp;
-        <span class="badge" id="badge">{{streamExam.examEligs.length}}</span>
-    </div>
-    <div layout="row" layout-align="center center" class="width100 editFont font12" ng-if="!elgVerified">
-        Find all exams you can write in India and abroad!
-    </div>
-    
-    <div layout="row" layout-align="center center" class="width100 darkGreyBackground">
-    <div layout="column" layout-align="center center" class="padding20 width100" ng-if="elgVerified" flex-xs="100" flex-gt-xs="80">
-        <div layout="row" layout-align="center center" class="text-white secondFont marginB10">
-            <span>
-                Your Qualifications&nbsp;&nbsp;
-            </span>
-
-            <span ng-click="editQualifications()" class="badge font8">
-                Edit
-            </span>
-        </div>
-        <div layout="row" layout-xs="column" layout-align="center center" class="width100 text-white paddingT10">
-            <div flex layout="column" layout-align="center center" ng-if="elgInput.educationLevel.level >=1" class="width100">
-                <div layout="column" class="font14">
-                XII or Equivalent
-                </div>
-                <div layout="row" layout-align="center center" class="width100 textWhiteSmoke">
-                    <div ng-repeat="class12Subject in class12Subjects" ng-if="elgInput.class12Subjects[class12Subject.name]">
-                        {{class12Subject.displayname}}&nbsp;
-                    </div>
-                    <div ng-if="elgInput.class12Percentage">
-                        |&nbsp;{{elgInput.class12Percentage}}%
-                    </div>
-                </div>
-
-            </div>
-            <div flex layout="column" layout-align="center center" ng-if="elgInput.educationLevel.level >=3" class="width100">
-                <div layout="column" class="font14">
-                Undergraduate
-                </div>
-                <div layout="row" layout-align="center center" class="width100 textWhiteSmoke">
-                    <div ng-repeat="undergradMajor in undergradMajors" ng-if="elgInput.undergradMajor[undergradMajor.name]">
-                        {{undergradMajor.displayname}}&nbsp;
-                    </div>
-                    <div ng-if="elgInput.undergradPercentage && elgInput.undergradPercentage > 0">
-                        |&nbsp;{{elgInput.undergradPercentage}}%
-                    </div>
-                </div>
-            </div>
-            <div flex layout="column" layout-align="center center" ng-if="elgInput.educationLevel.level >=5" class="width100">
-                <div layout="column" class="font14">
-                Postgraduate
-                </div>
-                <div layout="row" layout-align="center center" class="width100 textWhiteSmoke">
-                    <div ng-repeat="postgradMajor in postgradMajors" ng-if="elgInput.postgradMajor[postgradMajor.name]">
-                        {{postgradMajor.displayname}}&nbsp;
-                    </div>
-                    <div ng-if="elgInput.postgradPercentage && elgInput.postgradPercentage > 0">
-                        |&nbsp;{{elgInput.postgradPercentage}}%
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 
-
-
-
-<div layout="row" layout-align="center center" class="whiteBackground">
-    <div layout="column" layout-align="center center"  flex-xs="100" flex-gt-xs="80" class="paddingTB20">
-        
-        
-        
-        
-        <div layout="column" ng-if="!elgVerified">
-            <form name="eligibilityForm" >
-                <div layout="column" id="questionDiv" layout-align="start start">
-                    <div layout="row">1. Please select your category</div>
-                    <div layout="row" layout-align="start start">
-                        <div ng-repeat="cateogryOption in categoryOptions" class="marginR10">
-                            <div class="editFont" id="tagHolder" ng-click="setCategory(cateogryOption)" ng-if="elgInput.category[cateogryOption] != true">{{cateogryOption | uppercase}}
-                            </div>
-                            <div class="editFont" id="existingTagHolder" ng-click="setCategory(cateogryOption)" ng-if="elgInput.category[cateogryOption] == true">{{cateogryOption | uppercase}}
-                            </div>
-                        </div>
-                    </div>
+<div class="textBlack whiteBackground secondFont font14" ng-if="user">
+    <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
+    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
+        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100" >
+            <div layout="row" layout-align="start start" ng-repeat="component in components" class="paddingLR20">
+                <span layout="row" layout-align="start center" ng-click="setPage(component.name)">
+                    <!-- ng-click="setPage(component.name)"
+                    ui-sref="{{component.state}}"-->
+                    <span id="topBar"  ng-class="{ active: component.name == activeCategory.name}" >
+                        {{component.name}}
+                    </span>
+                </span>
+                <span class="marginL40" ng-if="!$last">
+                >
+                </span>
+            </div>
+            
+        </div>
+    </div>
+    <div layout="row" layout-align="center start" class="width100">
+    <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
+        <div layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
+            <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }">
+                {{subcategory.name}}
+            </div>
+        </div>
+        <div flex layout="row" layout-align="center center">
+            <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
+            <div layout="column" layout-align="start start" class="width100 min100vh" flex>
+                <div layout="column" layout-align="center start" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20">
+                    {{activeSubcategory.name}}
                 </div>
-                <div layout="column" id="questionDiv" layout-align="start start">
-                    <div layout="row">2. Are you a person with disability?</div>
-                    <div layout="row" layout-align="start start" class="width100">
-                        <div class="editFont marginR10" id="tagHolder" ng-click="setPWD(false)" ng-if="elgInput.category.pwd">No
-                        </div>
-                        <div class="editFont marginR10" id="existingTagHolder" ng-click="setPWD(false)" ng-if="!elgInput.category.pwd">No
-                        </div>
-                        <div class="editFont marginR10" id="tagHolder" ng-click="setPWD(true)" ng-if="!elgInput.category.pwd">Yes
-                        </div>
-                        <div class="editFont marginR10" id="existingTagHolder" ng-click="setPWD(true)" ng-if="elgInput.category.pwd">Yes
-                        </div>
-                    </div>
-                </div>
-                <div layout="column" id="questionDiv" layout-align="start start">
-                    <div layout="row" >3. What is your current age?</div>
-                    <div layout="row" layout-align="start center" layout-padding class="width50">
-
-                      <!--<div flex="10" layout layout-align="center center">
-                        <span class="md-body-1">Age</span>
-                      </div>-->
-                      <md-slider flex md-discrete ng-model="elgInput.age" step="1" min="14" max="35" aria-label="Age">
-                      </md-slider>
-
-                    </div>
-                </div>
-                <div layout="column" id="questionDiv" layout-align="start start">
-                    <div layout="row">4. Please select your current education level</div>
-                    <div layout="row" layout-padding>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" ng-repeat="educationLevel in educationLevels">
-
-                        <div class="editFont" id="tagHolder" ng-click="setEducationLevel(educationLevel)" ng-if="elgInput.educationLevel.name != educationLevel.name">{{educationLevel.name | uppercase}}
-                        </div>
-                        <div class="editFont" id="existingTagHolder" ng-click="setEducationLevel(educationLevel)" ng-if="elgInput.educationLevel.name == educationLevel.name">{{educationLevel.name | uppercase}}
-                        </div>
-
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <div layout="column" id="questionDiv" layout-align="start start" ng-if="elgInput.educationLevel.level >=1">
-                    <div layout="row" ng-if="elgInput.educationLevel.level <=1">5. Please tell us the subjects you will appear for in Class XII</div>
-                    <div layout="row" ng-if="elgInput.educationLevel.level >1">5. Please tell us the subjects you have studied in Class XII</div>
-                    <div layout="row" layout-padding class="width100">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2" ng-repeat="class12Subject in class12Subjects">
-                        <div class="editFont" id="tagHolder" ng-click="setClass12Subjects(class12Subject.name)" ng-if="!elgInput.class12Subjects[class12Subject.name]">{{class12Subject.displayname | uppercase}}
-                        </div>
-                        <div class="editFont" id="existingTagHolder" ng-click="unsetClass12Subjects(class12Subject.name)" ng-if="elgInput.class12Subjects[class12Subject.name]">{{class12Subject.displayname | uppercase}}
-                        </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <div layout="column" id="questionDiv" layout-align="start start" ng-if="elgInput.educationLevel.level >=2 ">
-                    <div layout="row">6. Please tell us your percentage score (or expected score) in Class XII</div>
-
-                    <div layout="row" layout-align="start center" layout-padding class="width50">
-                      <md-slider flex md-discrete ng-model="elgInput.class12Percentage" step="1" min="40" max="100" aria-label="Class 12th Percentage">
-                      </md-slider>
-
-                    </div>
-
-                </div>
-                <div layout="column" id="questionDiv" layout-align="start start" ng-if="elgInput.educationLevel.level >=3 ">
-                    <div layout="row">7. Please tell us your major in Undergraduate</div>
-                    <div layout="row" layout-padding>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2" ng-repeat="undergradMajor in undergradMajors">
-                        <div class="editFont" id="tagHolder" ng-click="setUndergradMajor(undergradMajor.name)" ng-if="!elgInput.undergradMajor[undergradMajor.name]">{{undergradMajor.displayname | uppercase}}
-                        </div>
-                        <div class="editFont" id="existingTagHolder" ng-click="setUndergradMajor(undergradMajor.name)" ng-if="elgInput.undergradMajor[undergradMajor.name]">{{undergradMajor.displayname | uppercase}}
-                        </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <div layout="column" id="questionDiv" layout-align="start start" ng-if="elgInput.educationLevel.level >=4">
-                    <div layout="row">8. Please tell us your percentage score (or equivalent) in Undergraduate</div>
-
-                    <div layout="row" layout-align="start center" layout-padding class="width50">
-                      <md-slider flex md-discrete ng-model="elgInput.undergradPercentage" step="1" min="40" max="100" aria-label="Undergraduate Percentage">
-                      </md-slider>
-
-                    </div>
-
-                </div>
-                <div layout="column" id="questionDiv" layout-align="start start" ng-if="elgInput.educationLevel.level >=5 ">
-                    <div layout="row">9. Please tell us your major in Postgraduate</div>
-                    <div layout="row" layout-padding>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2" ng-repeat="postgradMajor in postgradMajors">
-                        <div class="editFont" id="tagHolder" ng-click="setPostgradMajor(postgradMajor.name)" ng-if="!elgInput.postgradMajor[postgradMajor.name]">{{postgradMajor.displayname | uppercase}}
-                        </div>
-                        <div class="editFont" id="existingTagHolder" ng-click="setPostgradMajor(postgradMajor.name)" ng-if="elgInput.postgradMajor[postgradMajor.name]">{{postgradMajor.displayname | uppercase}}
-                        </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <div layout="column" id="questionDiv" layout-align="start start" ng-if="elgInput.educationLevel.level >=5 ">
-                    <div layout="row">10. Please tell us your percentage score (or equivalent) in Postgraduate</div>
-
-                    <div layout="row" layout-align="start center" layout-padding class="width50">
-                      <md-slider flex md-discrete ng-model="elgInput.postgradPercentage" step="1" min="40" max="100" aria-label="Postgraduate Percentage">
-                      </md-slider>
-
-                    </div>
-
-                </div>
-                <div layout="column" layout-align="center center" class="width100">
-                    <md-button class="md-raised md-primary tolowercase marginTB10" ng-click="checkEligibility()">Check Eligibility</md-button>
+                <div layout="column" layout-align="center start" class="width100">
+                     
                     
-                    <div layout="column" layout-align="start center" ng-if="error" class="danger">
-                        <div ng-repeat="errorMessage in errorMessages">
-                            {{$index + 1}}.&nbsp;{{errorMessage}}
+                <div layout="column" layout-align="center start" class="width100 font14">
+                    
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Personal Details'">
+                        <div layout="row" layout-align="start start" class="fieldRow academicSubSection paddingB20" id="profilePicSection">
+                            <div flex="20" class="col1">
+                                <div layout="column" layout-align="start start" class="editFont">
+                                <div layout="column" layout-align="center center" ng-if="user.image">
+                                    <img id="userPicProfile2" ng-src="{{user.image}}" class="img-circle" />
+                                    <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.8, centerCrop: true}">Change</span>
+                                </div>
+                                <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.7, centerCrop: true}">
+                                    <div layout="column" layout-align="center center" class="lightGreyBackground width100"  id="picHolder" >
+                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                        <div class="font10 text-center width100">Add Image</div>
+                                    </div>
+
+                                </div>
+
+                                </div>
+                                
+                            
+                            
+                            </div>
+                            <div flex class="col2">
+                                <input type="text" class="width100" ng-model="user.basic.name"  placeholder="Name" disabled>
+                            </div>
                         </div>
+                        <!--<div layout="row" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Profile Picture</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingTB10">
+                                
+                            </div>
+                        </div>-->
+                        <div layout="row" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Gender</div>
+                            <div layout="row" layout-align="start center" flex class="col2">
+                                <div ng-repeat="gender in userVariables.genders" class="marginR10">
+                                    <span class="badge emptyTag" ng-class="{ filledTag: user.basic.gender=='{{gender}}' }" ng-click="setGender(gender)">
+                                        {{gender}}
+                                    </span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Category</div>
+                            <div layout="row" layout-align="start center" flex class="col2">
+                                <div ng-repeat="caste in userVariables.categories" class="marginR10">
+                                    <span class="badge emptyTag" ng-class="{ filledTag: user.basic.category=='{{caste}}' }" ng-click="setCategory(caste)">
+                                        {{caste}}
+                                    </span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Person with Disability (PwD)</div>
+                            <div layout="row" layout-align="start center" flex class="col2">
+                                <span class="badge emptyTag marginR10" ng-class="{ filledTag: user.basic.PwD==true }" ng-click="setPwD(true)">
+                                    Yes
+                                </span>
+                                <span class="badge emptyTag marginR10" ng-class="{ filledTag: user.basic.PwD==false }" ng-click="setPwD(false)">
+                                    No
+                                </span>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Date of Birth</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingTB10">
+                                <md-datepicker ng-model="user.basic.dob" md-placeholder="Date of Birth" class="margin0"></md-datepicker>
+                            </div>
+                        </div>
+                        
+                        
                     </div>
-                </div>
-                
+                    
+            <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Academic Details'">
+                <div layout="column" layout-align="start start" class="academicRow academicSubSection">
 
-            </form>
-        </div>
-
-        <div layout="column" ng-if="elgVerified">
-
-        
-
-        <div flex layout="row" class="paddingLR10 paddingTB40" ng-repeat="streamExam in validStreamExams | orderBy:'-stream.rank'">
-
-        <div flex="15" class="bold font16">
-            <div class="width100 streamBoxBorder">
-            {{streamExam.stream.displayname}}
-            </div>
-        </div>
-        <div flex layout="row" layout-align="start start" class="paddingB10 width100" layout-wrap>
-            <div ng-repeat="examElig in streamExam.examEligs | orderBy:'-exam.rank'" flex-xs="100" flex-gt-xs="50" layout="row" layout-align="start start" class="width100 paddingB10 paddingLR10">
-            <div layout="row" layout-align="start start" class="padding10 width100 min25vh" id="examBox">  
-                <div flex ="30" layout="column" layout-align="start start" class="paddingLR10">
-                    <img ng-src="{{examElig.exam.logo}}" id="logo"/>
-                </div>
-                <div flex ="70" layout="column" layout-align="start start" class="paddingLR10">
-                    <div layout="column" layout-align="start start" class="editFont">
-                        <div class="fifthFont textBlack marginB5" id="lineHeight2" >
-                            <h1 class="font20">
-                                <a ui-sref="exam({ examName:{{'examElig.exam.name'}} })" target="_blank">
-                                    {{examElig.exam.seoname}}
-                                </a>
-                            </h1>
-
-                        </div>
-
-                        <div id="lineHeight" class="">
-                        <span ng-repeat="eligibility in examElig.eligibilitys">
-
-                        <span ng-if="eligibility.courseLevel">
-                            {{eligibility.courseLevel}}
-                            <span ng-if="!$last">
-                                &nbsp;|&nbsp;
+                    <div layout="row" layout-align="center center" class="font16 marginB10 width100 academicSubHeader">
+                        Choose your Education Level
+                    </div>
+                    <div layout="row" layout-align="start start" class="fieldRow" layout-wrap>
+                        <div flex-xs="20" flex="20" ng-repeat="educationLevel in educationLevels" class="padding10">
+                            <span layout="row" layout-align="center center" class="wrap edLevelTag width100 min15vh text-center" ng-class="{ filledEdLevelTag: user.eligibility.educationLevel.name=='{{educationLevel.name}}' }" ng-click="setEducationLevel(educationLevel)">
+                                {{educationLevel.name}}
                             </span>
-                        </span> 
-                        </span>
                         </div>
-                        <div id="lineHeight">
-                        <span class="editFont ">
-                        <span class="">
-                            Recommended for:</span>&nbsp;{{examElig.eligibilitys[0].recommendedFor}}
-
-                        </span> 
-                        </div>
-                    </div>
-
-
-                    <div class="editFont danger marginT10">
-                        <span ng-click="showExamEligibility(examElig)">
-                        Fine Print
-                        </span>
-
                     </div>
                 </div>
-            </div>
-            </div>
-        </div>
+                <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 1">
 
+                <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
+                    School Class XII
+                </div>
+                <div layout="row" layout-align="start start" class="fieldRow">
+                    <div flex="{{col1WidthAcademic}}" class="col1">Subjects</div>
+                    <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
+                        <div flex="25" ng-repeat="class12Subject in class12Subjects" class="padding10">
+                            <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.class12Subjects[class12Subject.name] }" ng-click="setClass12Subjects(class12Subject.name)">
+                                {{class12Subject.displayname}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="start center" class="fieldRow paddingB20">
+                    <div flex="{{col1WidthAcademic}}" class="col1">Class XII Percentage</div>
+                    <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
+                        <span class="marginR10">40</span>
+                        <md-slider class="width100" md-discrete ng-model="user.eligibility.class12Percentage" step="1" min="40" max="100" aria-label="Class 12th Percentage">
+                        </md-slider>
+                        <span class="marginL10">100</span>
+                    </div>
+                </div>
+                </div>
+
+
+                <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 3">
+
+                <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
+                    Undergraduate
+                </div>
+                <div layout="row" layout-align="start start" class="fieldRow">
+                    <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
+
+                    <div flex layout="column" layout-align="start start" class="width100">
+
+                    <div flex layout="column" layout-align="start start" class="width100 marginB10">
+                    <div layout="row" layout-align="start start" class="width100 paddingL10">
+                        Engineering
+                    </div>    
+                    <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                        <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='engineering'">
+                            <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                {{undergradMajor.displayname}}
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div flex layout="column" layout-align="start start" class="width100 marginB10">    
+                    <div layout="row" layout-align="start start" class="width100 paddingL10">
+                        Medical
+                    </div>    
+                    <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                        <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='medical'">
+                            <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                {{undergradMajor.displayname}}
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div flex layout="column" layout-align="start start" class="width100 marginB10">    
+                    <div layout="row" layout-align="start start" class="width100 paddingL10">
+                        Law
+                    </div>    
+                    <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                        <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='law'">
+                            <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                {{undergradMajor.displayname}}
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div flex layout="column" layout-align="start start" class="width100 marginB10">    
+                    <div layout="row" layout-align="start start" class="width100 paddingL10">
+                        Other
+                    </div>    
+                    <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                        <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='other'">
+                            <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                {{undergradMajor.displayname}}
+                            </span>
+                        </div>
+                    </div>     
+                    </div>
+                    </div>
+
+                </div>
+                <div layout="row" layout-align="start center" class="fieldRow paddingB20">
+                    <div flex="{{col1WidthAcademic}}" class="col1">Equivalent Percentage</div>
+                    <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
+                        <span class="marginR10">40</span>
+                        <md-slider class="width100" md-discrete ng-model="user.eligibility.undergradPercentage" step="1" min="40" max="100" aria-label="Undergrad Percentage">
+                        </md-slider>
+                        <span class="marginL10">100</span>
+                    </div>
+                </div>
+                </div>
+
+
+                <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 5">
+
+                <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
+                    Postgraduate
+                </div>
+                <div layout="row" layout-align="start start" class="fieldRow">
+                    <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
+                    <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
+                        <div flex="25" ng-repeat="postgradMajor in postgradMajors" class="padding10">
+                            <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.postgradMajor[postgradMajor.name] }" ng-click="setPostgradMajor(postgradMajor.name)" layout-wrap>
+                                {{postgradMajor.displayname}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="start center" class="fieldRow paddingB20">
+                    <div flex="{{col1WidthAcademic}}" class="col1">Equivalent Percentage</div>
+                    <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
+                        <span class="marginR10">40</span>
+                        <md-slider class="width100" md-discrete ng-model="user.eligibility.postgradPercentage" step="1" min="40" max="100" aria-label="Postgrad Percentage">
+                        </md-slider>
+                        <span class="marginL10">100</span>
+                    </div>
+                </div>
+                </div>
+                <!--<div layout="row" layout-align="start start" class="fieldRow">
+                    <div flex="{{col1Width}}" class="col1">
+                        <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Social')">
+                            Next
+                        </md-button>
+                    </div>
+                </div>-->
+            </div>
+
+
+            <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Your Exams'">
+                <div layout="column" layout-align="start start" class="fieldRow width100">
+                    <div class="width100">
+                        {{user.basic.name}}, you are eligible to write the following exams immediately!
+                    </div>
+                           
+                            
+                            
+                    <div flex layout="row" class="paddingLR10 paddingTB20" ng-repeat="streamExam in validStreamExams | orderBy:'-stream.rank'">
+
+                    <div flex="25" class="bold font16">
+                        <div class="width100">
+                        {{streamExam.stream.displayname}}
+                        </div>
+                    </div>
+                    <div flex layout="column" layout-align="start start" class="width100">
+                        <div ng-repeat="examElig in streamExam.examEligs | orderBy:'-exam.rank'" layout="column" layout-align="start start" class="width100 paddingB10 paddingLR10">
+                        <div layout="row" layout-align="start start" class="padding10 width100" id="examBox">  
+                            <div flex ="30" layout="column" layout-align="start start" class="paddingLR20">
+                                <img ng-src="{{examElig.exam.logo}}" id="logo"/>
+                            </div>
+                            <div flex ="70" layout="column" layout-align="start start" class="paddingLR10">
+                                <div layout="column" layout-align="start start" class="editFont">
+                                    <div class="fifthFont textBlack marginB5" id="lineHeight2" >
+                                        <h1 class="font20">
+                                            <a ui-sref="exam({ examName:{{'examElig.exam.name'}} })" target="_blank">
+                                                {{examElig.exam.seoname}}
+                                            </a>
+                                        </h1>
+
+                                    </div>
+
+                                    <div id="lineHeight" class="">
+                                    <span ng-repeat="eligibility in examElig.eligibilitys">
+
+                                    <span ng-if="eligibility.courseLevel">
+                                        {{eligibility.courseLevel}}
+                                        <span ng-if="!$last">
+                                            &nbsp;|&nbsp;
+                                        </span>
+                                    </span> 
+                                    </span>
+                                    </div>
+                                    <div id="lineHeight">
+                                    <span class="editFont ">
+                                    <span class="">
+                                        Recommended for:</span>&nbsp;{{examElig.eligibilitys[0].recommendedFor}}
+
+                                    </span> 
+                                    </div>
+                                </div>
+
+
+                                <div class="editFont danger marginT10">
+                                    <span ng-click="showExamEligibility(examElig)">
+                                    Fine Print
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                </div>
+            </div>
+                    
+                    
+                    
+                    <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="end start" class="width100">
+                            <md-button class="md-black md-large tolowercase margin0 previousButton" ng-click="setPreviousActiveCategory()" ng-if="activeCategory.name != components[0].name && activeCategory.name != components[components.length-1].name">
+                                Previous
+                            </md-button>
+                            <md-button class="md-next md-large tolowercase margin0 nextButton" ng-click="setNextActiveCategory()" ng-if="activeCategory.name != components[components.length-1].name">
+                                Next Section
+                            </md-button>
+                        </div>
+
+                    </div>
+                        
+                        
+                </div>
+                    
+                    
+                    
+                    
+               </div>    
+            </div>
+        
+            </div>
         </div>
-        </div>
+    </div>
     </div>
 </div>
 
@@ -442,4 +696,3 @@
     </md-dialog>
     </div>    
 </div>
-

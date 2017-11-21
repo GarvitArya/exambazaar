@@ -1,0 +1,673 @@
+/*exambazaar.controller("eligibilityController", 
+        [ '$scope', '$rootScope',  'examList', 'streamList', 'EligibilityService', 'UserService', '$http', '$state', 'eligibilityList', '$mdDialog', '$cookies', 'Notification', function($scope, $rootScope, examList, streamList, EligibilityService, UserService, $http, $state, eligibilityList, $mdDialog, $cookies, Notification){
+        $scope.examNames = '';    
+        $scope.exams = examList.data;
+        
+        $scope.sanitizeEligibility = function(){
+            if($scope.user.eligibility){
+                if($scope.user.eligibility.age){
+                    $scope.user.eligibility.age = Number($scope.user.eligibility.age);
+                }
+                if($scope.user.eligibility.class12Percentage){
+                    $scope.user.eligibility.class12Percentage = Number($scope.user.eligibility.class12Percentage);
+                }
+                if($scope.user.eligibility.undergradPercentage){
+                    $scope.user.eligibility.undergradPercentage = Number($scope.user.eligibility.undergradPercentage);
+                }
+                if($scope.user.eligibility.postgradPercentage){
+                    $scope.user.eligibility.postgradPercentage = Number($scope.user.eligibility.postgradPercentage);
+                }
+            }
+        };
+        if($cookies.getObject('sessionuser')){
+            $scope.user = $cookies.getObject('sessionuser');
+            
+            UserService.getEligibility($scope.user._id).success(function (data, status, headers) {
+                if(data && data.eligibility){
+                    $scope.user.eligibility = data.eligibility;
+                    Notification.primary("Hurray! We have loaded your qualifications!");
+                    $scope.sanitizeEligibility();
+                    $scope.elgInput = $scope.user.eligibility;
+                    $scope.checkEligibility();
+                }
+                
+                
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });
+            
+            
+        }else{
+            $scope.user = null;
+        }
+            
+        $scope.eligibilityList = eligibilityList.data;
+        $scope.elgVerified = false;
+        $scope.activeExamEligibility = null;
+        
+        $scope.showExamEligibility = function(examElig){
+            $scope.activeExamEligibility = examElig;
+            $scope.showExamEligDialog();
+        };
+        $scope.showExamEligDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#examEligDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+            
+        var examNameHelper = $scope.exams.map(function(a) {return a.displayname;});
+        var examIdHelper = $scope.exams.map(function(a) {return a._id;});
+        $scope.eligibilityList.forEach(function(thisEligibility, index){
+            
+            var examName = thisEligibility.exam.displayname;
+            thisEligibility.examName = examName;
+        });
+            
+        $scope.exams.forEach(function(thisExam, eIndex){
+            $scope.examNames += thisExam.displayname+',';
+        });
+        //console.log($scope.examNames);    
+        $scope.streams = streamList.data;
+        $scope.categoryOptions = ["general","sc","st","obc"];
+        $scope.educationLevels = [
+            {
+                level: 0,
+                name: "I-X"
+            },
+            {
+                level: 2,
+                name: "XI / XII / After XII"
+            },
+            /*{
+                level: 2,
+                name: "After XII (Drop Year)"
+            },*/
+            {
+                level: 3,
+                name: "In UG or equivalent"
+            },
+            {
+                level: 4,
+                name: "During or After Final Year of UG"
+            },
+            {
+                level: 5,
+                name: "During or After Final Year of PG"
+            },
+        ];
+        $scope.class12Subjects = [
+            {
+                name: "english",
+                displayname: "English"
+            },
+            {
+                name: "physics",
+                displayname: "Physics"
+            },
+            {
+                name: "chemistry",
+                displayname: "Chemistry"
+            },
+            {
+                name: "mathematics",
+                displayname: "Mathematics"
+            },
+            {
+                name: "biology",
+                displayname: "Biology"
+            },
+            {
+                name: "biotechnology",
+                displayname: "Biotechnology"
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+        ];
+        $scope.undergradMajors = [
+            {
+                name: "btech",
+                displayname: "B.Tech."
+            },
+            {
+                name: "be",
+                displayname: "B.E."
+            },
+            {
+                name: "mbbs",
+                displayname: "M.B.B.S."
+            },
+            {
+                name: "bds",
+                displayname: "B.D.S."
+            },
+            {
+                name: "bsc",
+                displayname: "B.Sc."
+            },
+            {
+                name: "ba",
+                displayname: "B.A."
+            },
+            {
+                name: "bftech",
+                displayname: "NIFT B.F.Tech."
+            },
+            {
+                name: "bcom",
+                displayname: "B.Com."
+            },	
+            {
+                name: "barch",
+                displayname: "B. Arch."
+            },
+            {
+                name: "llb",
+                displayname: "LL.B."
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+            {
+                name: "fiveyearballb",
+                displayname: "Five Year B.A. LL.B."
+            },
+            {
+                name: "fiveyearintegratedllb",
+                displayname: "Five Year Integrated LL.B. (Hons.)"
+            },
+            
+            {
+                name: "lawdegreeequivalenttollb",
+                displayname: "Law Degree equivalent to LL.B."
+            },
+            {
+                name: "professionalcourseequivalenttobtech",
+                displayname: "Professional Courses equivalent to B.E. / B.Tech."
+            },
+
+        ];
+        $scope.postgradMajors = [
+            {
+                name: "mba",
+                displayname: "M.B.A."
+            },
+            {
+                name: "ms",
+                displayname: "M.S."
+            },
+            {
+                name: "mtech",
+                displayname: "M.Tech."
+            },
+            {
+                name: "mcom",
+                displayname: "M.Com."
+            },
+            {
+                name: "msc",
+                displayname: "M.Sc."
+            },
+            {
+                name: "ma",
+                displayname: "M.A."
+            },
+            {
+                name: "mca",
+                displayname: "M.C.A."
+            },
+            {
+                name: "llm",
+                displayname: "LL.M."
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+
+        ];
+            
+        $scope.setCategory = function(categoryName){
+            $scope.categoryOptions.forEach(function(thisCategory, index){
+                $scope.elgInput.category[thisCategory] = false;
+            });
+            $scope.elgInput.category[categoryName] = true;
+            
+        };
+        $scope.setEducationLevel = function(educationLevel){
+            $scope.elgInput.educationLevel = educationLevel;
+        };
+        $scope.setPWD = function(truefalse){
+            $scope.elgInput.category.pwd = truefalse;
+        };
+        $scope.setClass12Subjects = function(class12Subject){
+            $scope.elgInput.class12Subjects[class12Subject] = true;
+        };
+        $scope.unsetClass12Subjects = function(class12Subject){
+            $scope.elgInput.class12Subjects[class12Subject] = false;
+        };
+        $scope.setUndergradMajor = function(undergradMajor){
+            $scope.undergradMajors.forEach(function(thisUndergrad, index){
+                $scope.elgInput.undergradMajor[thisUndergrad.name] = false;
+            });
+            $scope.elgInput.undergradMajor[undergradMajor] = true;
+        };
+        $scope.setPostgradMajor = function(postgradMajor){
+            $scope.postgradMajors.forEach(function(thisPostgrad, index){
+                $scope.elgInput.postgradMajor[thisPostgrad.name] = false;
+            });
+            $scope.elgInput.postgradMajor[postgradMajor] = true;
+        };
+        $scope.elgInput = {
+            category: {
+                general: true,
+                sc: false,
+                st: false,
+                obc: false,
+                pwd: false,
+            },
+            age: null,
+            educationLevel:{
+                level: null,
+                name: null
+            },
+            class12Subjects:{
+                biology: false,
+                chemistry: false,
+                biotechnology: false,
+                physics: false,
+                mathematics: false,
+                english: false,
+                others: false
+            },
+            class12Percentage: null,
+            undergradMajor:{
+                mbbs: false,
+                bds: false,
+                bsc: false,
+                bftech: false,
+                be: false,
+                btech: false,
+                bcom: false,
+                ba: false,
+                barch: false,
+                llb: false,
+                fiveyearintegratedllb: false,
+                fiveyearballb: false,
+                lawdegreeequivalenttollb: false,
+                others: false,
+            },
+            undergradPercentage: null,
+            postgradMajor:{
+                mcom: false,
+                msc: false,
+                ma: false,
+                mca: false,
+                mtech: false,
+                mba: false,
+                ms: false,
+                llm: false,
+                others: false,
+            },
+            postgradPercentage: null,
+            
+        };
+            
+        $scope.elgInput = {
+            category: {
+                general: true,
+                sc: false,
+                st: false,
+                obc: false,
+                pwd: false,
+            },
+            age: 18,
+            educationLevel:{
+                level: null,
+                name: null
+            },
+            class12Subjects:{
+                biology: false,
+                chemistry: true,
+                biotechnology: false,
+                physics: true,
+                mathematics: true,
+                english: true,
+                others: false
+            },
+            class12Percentage: 90,
+            undergradMajor:{
+                mbbs: false,
+                bds: false,
+                bsc: false,
+                bftech: false,
+                be: false,
+                btech: false,
+                bcom: false,
+                ba: false,
+                barch: false,
+                llb: false,
+                fiveyearintegratedllb: false,
+                fiveyearballb: false,
+                lawdegreeequivalenttollb: false,
+                others: false,
+            },
+            undergradPercentage: null,
+            postgradMajor:{
+                mcom: false,
+                msc: false,
+                ma: false,
+                mca: false,
+                mtech: false,
+                mba: false,
+                ms: false,
+                llm: false,
+                others: false,
+            },
+            postgradPercentage: null,
+            
+        };
+        $scope.editQualifications = function(){
+            $scope.elgVerified = false;
+        };
+        $scope.scrollTop = function(){
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+        };
+        $scope.checkEligibility = function(){
+            //console.log($scope.elgInput);
+            
+            $scope.error = false;
+            var error = false;
+            var errorClass12Subjects = true;
+            var errorUnderGradMajor = true;
+            var errorPostGradMajor = true;
+            var errorMessages = [];
+            
+            if(!$scope.elgInput.age){
+                error = true;
+                errorMessages.push("Please select your age");
+            }
+            
+            if($scope.elgInput.educationLevel.level == null){
+                error = true;
+                errorMessages.push("Please select your current education level");
+            }
+           
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=1){
+                
+                $scope.class12Subjects.forEach(function(thisSubject, index){
+                    if($scope.elgInput.class12Subjects[thisSubject.name]){
+                        errorClass12Subjects = false;
+                    }
+                    
+                });
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=1 && errorClass12Subjects){
+                error = true;
+                errorMessages.push("Please select your Class XII Subjects");
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=3){
+                if(!$scope.elgInput.class12Percentage){
+                    error = true;
+                    errorMessages.push("Please select your Class XII Percentage");
+                }
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=3){
+                $scope.undergradMajors.forEach(function(thisMajor, index){
+                    if($scope.elgInput.undergradMajor[thisMajor.name]){
+                        errorUnderGradMajor = false;
+                    }
+                    if(index == $scope.undergradMajors.length - 1 && errorUnderGradMajor){
+                        error = errorUnderGradMajor;
+                        errorMessages.push("Please select your Undergraduate Major");
+                    }
+                });
+            }
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=4){
+                if(!$scope.elgInput.undergradPercentage){
+                    error = true;
+                    errorMessages.push("Please select your Undergraduate Percentage (or equivalent CGPA)");
+                }
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=5){
+                $scope.postgradMajors.forEach(function(thisMajor, index){
+                    if($scope.elgInput.postgradMajor[thisMajor.name]){
+                        errorPostGradMajor = false;
+                    }
+                    if(index == $scope.postgradMajors.length - 1 && errorPostGradMajor){
+                        error = errorPostGradMajor;
+                        errorMessages.push("Please select your Postgraduate Major");
+                    }
+                });
+            }
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=5){
+                if(!$scope.elgInput.postgradPercentage){
+                    error = true;
+                    errorMessages.push("Please select your achieved or expected Postgraduate Percentage (or equivalent CGPA)");
+                }
+            }
+            
+            
+            if(error){
+                $scope.error = true;
+                $scope.errorMessages = errorMessages;
+            }else{
+                
+            if($scope.user && $scope.user._id){
+                var eligibilityForm = {
+                    user: $scope.user._id,
+                    eligibility: $scope.elgInput
+                };
+                UserService.saveEligibility(eligibilityForm).success(function (data, status, headers) {
+                    //Notification.success("Eligibilty saved!");
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            } 
+              
+            
+            $scope.elgVerified = true;    
+            $scope.validEligibilities = [];    
+            $scope.uniqueValidEligibilities = [];
+            var checkExamIds = ['58ad20045401f52440af6f24'];
+            $scope.eligibilityList.forEach(function(thisEligibility, index){
+                
+            var checkCategory = thisEligibility.category.applicable;
+            var checkAge = thisEligibility.age.applicable;
+            var checkClass12Subjects = thisEligibility.class12Subjects.applicable;
+            var checkClass12Percentage = thisEligibility.class12Percentage.applicable;
+            var checkUndergradMajor = thisEligibility.undergradMajor.applicable;
+            var checkUndergradPercentage = thisEligibility.undergradPercentage.applicable;
+            var checkPostgradMajor = thisEligibility.postgradMajor.applicable;
+            var checkPostgradPercentage = thisEligibility.postgradPercentage.applicable;
+            var valid = true;
+            if(checkCategory){
+                var categoryBool = false;
+                $scope.categoryOptions.forEach(function(thisItem, itemIndex){
+                    if(thisEligibility.category[thisItem] && $scope.elgInput.category[thisItem]){
+                        categoryBool = true;
+                        //console.log(index + " " + valid + " " + thisItem + " " + thisEligibility._id);
+                    }
+                });
+                if(!categoryBool){
+                    valid = false;
+                        /*if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
+                            console.log(index + " " + valid + " " + thisItem + " " + thisEligibility._id);
+                        }*/
+                }
+                
+            }
+            if(checkAge){
+                if($scope.elgInput.age < thisEligibility.age.minage || $scope.elgInput.age > thisEligibility.age.maxage){
+                    valid = false;
+                    if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
+                        console.log(index + " " + valid + " " + thisEligibility._id);
+                    }
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
+                }
+            }
+            if(checkClass12Subjects){
+                
+                if($scope.elgInput.educationLevel.level < 1){
+                    valid = false;
+                }
+                $scope.class12Subjects.forEach(function(thisItem, itemIndex){
+                    if(thisEligibility.class12Subjects[thisItem.name] && !$scope.elgInput.class12Subjects[thisItem.name]){
+                        valid = false;
+                        if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
+                            console.log(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
+                        }
+                        //console.log(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
+                    }
+                });
+            }    
+            if(checkClass12Percentage){
+                if(thisEligibility.class12Percentage.minPercentage && $scope.elgInput.class12Percentage < thisEligibility.class12Percentage.minPercentage){
+                    valid = false;
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
+                }
+                if($scope.elgInput.class12Percentage == null || $scope.elgInput.class12Percentage == 0){
+                    valid = false;
+                }
+            }    
+            if(checkUndergradMajor){
+                var undergradBool = false;
+                if($scope.elgInput.educationLevel.level < 3){
+                    valid = false;
+                }
+                $scope.undergradMajors.forEach(function(thisItem, itemIndex){
+                    if(thisEligibility.undergradMajor[thisItem.name] && $scope.elgInput.undergradMajor[thisItem.name]){
+                        undergradBool = true;
+                        //console.log(index + " " + valid + " " + thisItem.name + " "+ thisEligibility._id);
+                    }
+                });
+                if(!undergradBool){
+                    valid = false;
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
+               }
+            }
+            if(checkUndergradPercentage){
+                if(thisEligibility.undergradPercentage.minPercentage && $scope.elgInput.undergradPercentage < thisEligibility.undergradPercentage.minPercentage){
+                    valid = false;
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
+                }
+                if($scope.elgInput.undergradPercentage == null || $scope.elgInput.undergradPercentage == 0){
+                    valid = false;
+                }
+            }    
+            if(checkPostgradMajor){
+                var postgradBool = false;
+                if($scope.elgInput.educationLevel.level < 5){
+                    valid = false;
+                }
+                $scope.postgradMajors.forEach(function(thisItem, itemIndex){
+                    if(thisEligibility.postgradMajor[thisItem.name] && $scope.elgInput.postgradMajor[thisItem.name]){
+                        postgradBool = true;
+                    }
+                });
+                if(!postgradBool){
+                    valid = false;
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
+               }
+            }    
+            if(checkPostgradPercentage){
+                if(thisEligibility.postgradPercentage.minPercentage && $scope.elgInput.postgradPercentage < thisEligibility.postgradPercentage.minPercentage){
+                    valid = false;
+                    //console.log(index + " " + valid + " " + thisEligibility._id);
+                }
+                if($scope.elgInput.postgradPercentage == null || $scope.elgInput.postgradPercentage == 0){
+                    valid = false;
+                }
+            } 
+                
+            if(valid){
+                //console.log(thisEligibility.level + " " + $scope.elgInput.educationLevel.level);
+                if(thisEligibility.level >= $scope.elgInput.educationLevel.level){
+                    $scope.validEligibilities.push(thisEligibility);
+                }
+                
+            }
+                
+            });
+            
+            $scope.validStreamExams = [];
+            var uniqueStreamIds = [];
+            var uniqueExamIds = [];
+            
+            $scope.validEligibilities.forEach(function(thisEligibility, eligIndex){
+                var streamId = thisEligibility.exam.stream._id;
+                var examId = thisEligibility.exam._id;
+                
+                var sIndex = uniqueStreamIds.indexOf(streamId);
+                if(sIndex == -1){
+                    uniqueStreamIds.push(streamId);
+                    var streamexam = {
+                        stream: thisEligibility.exam.stream,
+                        examEligs: []
+                    };
+                    var newExamElig = {
+                        exam: thisEligibility.exam,
+                        eligibilitys: [thisEligibility]
+                    };
+                    streamexam.examEligs.push(newExamElig);
+                    $scope.validStreamExams.push(streamexam);
+                }else{
+                    
+                    var thisStreamExam = $scope.validStreamExams[sIndex];
+                    var eIndex = -1;
+                    thisStreamExam.examEligs.forEach(function(thisExamElig, examEligIndex){
+                        if(thisExamElig.exam._id == examId){
+                            eIndex = examEligIndex;
+                        }
+                    });
+                    
+                    if(eIndex != -1){
+                        thisStreamExam.examEligs[eIndex].eligibilitys.push(thisEligibility);
+                    }else{
+                        var newExamElig = {
+                            exam: thisEligibility.exam,
+                            eligibilitys: [thisEligibility]
+                        };
+                        thisStreamExam.examEligs.push(newExamElig);
+                    }
+                    
+                }
+            });
+                
+            //console.log($scope.validStreamExams);
+            $scope.scrollTop();    
+            
+            /*var uniqueValidExamIds = [];
+            $scope.validEligibilities.forEach(function(thisEligibility, examIndex){
+                //console.log(thisEligibility);
+                var eIndex = uniqueValidExamIds.indexOf(thisEligibility.exam._id);
+                if(eIndex == -1){
+                    $scope.uniqueValidEligibilities.push(thisEligibility);
+                    uniqueValidExamIds.push(thisEligibility.exam._id);
+                }else{
+                    
+                }
+            });*/
+                
+                
+            
+            
+            }
+            
+        };
+        
+            
+        $rootScope.pageTitle = "Exam Eligibility - Find all exam options for you | Exambazaar";    
+    }]); */

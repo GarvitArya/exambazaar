@@ -168,7 +168,7 @@
 </div>
 <div id="spacerXS" hide-gt-xs>
 </div>
-<div layout="row" layout-align="start start"  hide-xs class="editFont text-primary font11 width100 marginT10 min5vh" id="breadcrumb">
+<div layout="row" layout-align="start end"  hide-xs class="editFont text-primary font11 width100 min8vh paddingB5" id="breadcrumb">
     <div hide-xs flex="5">
     </div>
     <div layout="row" layout-align="start start" flex class="paddingLR10">
@@ -205,7 +205,7 @@
             <div layout="row" layout-align="start start" class="width100">
                 <a ng-href="{{subcategory.website}}" target="_blank" class="bold">{{subcategory.website}}</a>
             </div>
-            <div layout="row" layout-align="start start" class="width100">
+            <div layout="row" layout-align="start start" class="width100 paddingB20">
                 {{subcategory.briefDescription}}
             </div>
         </div>
@@ -365,7 +365,7 @@
                     Great! We have found these coaching classes around you!
                 </div>
                 <div flex class="paddingLR10" ng-if="allCoachings.items.length == 0 && allCoachings.finished">
-                    Sorry! We found NO coaching classes in {{city}} for {{subcategory.displayname}}!
+                    Sorry! We found no coaching classes in {{city}} for {{subcategory.displayname}} Exam!
                 </div>
             </div>
             

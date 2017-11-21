@@ -176,13 +176,13 @@
     <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
         <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100" >
             <div layout="row" layout-align="start start" ng-repeat="component in components" class="paddingLR20">
-                <a layout="row" layout-align="start center" >
+                <span layout="row" layout-align="start center" >
                     <!-- ng-click="setPage(component.name)"
                     ui-sref="{{component.state}}"-->
                     <span id="topBar"  ng-class="{ active: component.name == activeCategory.name}" >
                         {{component.name}}
                     </span>
-                </a>
+                </span>
                 <span class="marginL40" ng-if="!$last">
                 >
                 </span>

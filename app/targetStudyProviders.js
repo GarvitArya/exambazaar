@@ -1938,7 +1938,9 @@ router.post('/CoachingStream', function(req, res) {
                     
                 });
                 
-                
+                if(nCoachings == 0){
+                    res.json([]);
+                }
             } else {throw err;}
             });
                 

@@ -632,7 +632,7 @@
         <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
         </div>
     </div>-->
-    <div layout="row" layout-align="start start"  hide-xs class="editFont text-primary font11 width100 marginT10 min5vh" id="breadcrumb">
+    <div layout="row" layout-align="start end"  hide-xs class="editFont text-primary font11 width100 min8vh paddingB5" id="breadcrumb">
         <div hide-xs flex="5">
         </div>
         <div layout="row" layout-align="start start" flex class="paddingLR10">
@@ -2069,18 +2069,18 @@
       <md-dialog class="availDiscount">
           <div layout="column" layout-align="center center" class="width100">
               <div layout="row" layout-align="center center" class="width100">
-                <img src="images/popups/apply_discount.png" class="width100"/>
+                <img src="images/popups/apply_discount_1.jpg" class="width100"/>
               </div>
-              <div layout="row" layout-xs="column" layout-align="center center" class="width100 padding10 secondFont">
-                  <div layout="row" layout-align="center center" flex class="width100 padding10 ">
+              <div layout="row" layout-xs="column" layout-align="center center" class="width100 secondFont padding20">
+                  <!--<div layout="row" layout-align="center center" flex class="width100 padding10 ">
                     <input type="text" class="width100" ng-model="discountForm.email"  placeholder="Email Address">
                   </div>
                   <div layout="row" layout-align="center center" flex class="width100 padding10 ">
                     <input type="text" class="width100" ng-model="discountForm.mobile"  placeholder="Mobile">
-                  </div>
-                  <div layout="row" layout-align="center center" class="padding10 ">
-                    <md-button class="md-small md-green2  font12 tolowercase margin0 " ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'groupName'}} })">Apply</md-button>
-                  </div>
+                  </div>-->
+                  <md-button class="md-small md-next font12 tolowercase margin0 width50" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'groupName'}} })">
+                      Apply
+                  </md-button>
               </div>
         </div>
       </md-dialog>
