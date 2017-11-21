@@ -516,10 +516,10 @@
                         </div>
                     </div>
                     <div flex layout="column" layout-align="start start" class="width100">
-                        <div ng-repeat="examElig in streamExam.examEligs | orderBy:'-exam.rank'" layout="column" layout-align="start start" class="width100  paddingLR10">
+                        <div ng-repeat="examElig in streamExam.examEligs | orderBy:'-exam.rank'" layout="column" layout-align="start start" class="width100  paddingLR10 marginB20">
                         <div layout="row" layout-align="start start" class="padding10 width100" id="examBox">  
                             <div flex ="30" layout="column" layout-align="start start" class="paddingLR20">
-                                <img ng-src="{{examElig.exam.logo}}" id="logo"/>
+                                <img ng-src="{{examElig.exam.logo}}" id="logo" alt="{{examElig.exam.seoname}}"/>
                             </div>
                             <div flex ="70" layout="column" layout-align="start start" class="paddingLR10">
                                 <div layout="column" layout-align="start start" class="editFont">
@@ -555,7 +555,7 @@
 
                                 <div class="editFont danger marginT10">
                                     <span ng-click="showExamEligibility(examElig)">
-                                    Fine Print
+                                    Read More
                                     </span>
 
                                 </div>

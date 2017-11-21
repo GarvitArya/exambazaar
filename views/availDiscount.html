@@ -164,6 +164,15 @@
     #profilePicSection{
         margin-bottom: 20px;
     }
+    
+    .pageLogo{
+        max-width: 100%;
+        max-height: 100%;
+    }
+    #pageLogoHolder{
+        height: 150px;
+        width: 150px;
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -173,9 +182,26 @@
 
 <div class="textBlack whiteBackground secondFont font14" ng-if="user">
     <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
+    <div layout="row" hide-xs layout="row" class="affixBar width100 paddingTB20" layout-align="center center"> 
+        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100 paddingLR20">
+            <div flex="20" class="paddingR20 pageLogoHolder">
+                <img src='ebloader2.gif' lazy-img="{{coachingLogo}}" alt="{{coachingGroup[0].groupName}}" class="pageLogo" ng-if="coachingLogo"/>
+                <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingLogo"/>
+            </div>
+            <div flex layout="column" layout-align="start start" class="paddingLR20 width100">
+                <div class="blogFont font20 bold">
+                Avail Discount at {{groupName}}
+                </div>
+                <div class="">
+                Upto 20% off on your coaching fees with Exambazaar!
+                </div>
+            </div>
+        </div>
+    </div>
     <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
-        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100" >
-            <div layout="row" layout-align="start start" ng-repeat="component in components" class="paddingLR20">
+        <div layout="column" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100" >
+            <div layout="row" layout-align="start start"  class="width100">
+                <div layout="row" layout-align="start start" ng-repeat="component in components" class="paddingLR20">
                 <span layout="row" layout-align="start center" >
                     <!-- ng-click="setPage(component.name)"
                     ui-sref="{{component.state}}"-->
@@ -186,6 +212,7 @@
                 <span class="marginL40" ng-if="!$last">
                 >
                 </span>
+                </div>    
             </div>
             
         </div>

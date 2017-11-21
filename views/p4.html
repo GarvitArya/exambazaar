@@ -391,11 +391,21 @@
                             <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup.logo"/>
                         </div>
                         <div flex layout="column" layout-align="center start" class="paddingL20">
-                            <h2 class=" text-primary thirdFont font18 bold">
-                            <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
-                                {{coachingGroup.groupName}}
-                            </a>
-                            </h2>
+                            <div layout="row" layout-align="start center" class="width100">
+                                <h2 class=" text-primary thirdFont font18 bold">
+                                    <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
+                                        {{coachingGroup.groupName}}
+                                    </a>
+                                </h2>
+                                <div layout="row" layout-align="end center" flex>
+                                <button class="btn actionButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
+                                </button>
+                                <button class="btn actionButton  tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
+                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
+                                </button>
+                                </div>
+                            </div>
                             <div layout="row" layout-align="start center" class="width100 marginT5 " layout-wrap>
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
                                 <span>{{coachingGroup.count}} centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
