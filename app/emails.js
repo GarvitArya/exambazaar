@@ -380,6 +380,113 @@ router.post('/contactEmail', function(req, res) {
     
 });
 
+
+router.post('/availDiscountEmail', function(req, res) {
+    var thisEmail = req.body;
+    var templateName = thisEmail.templateName;
+    var fromEmail = {
+        email: 'team@exambazaar.com',
+        name: 'Team Exambazaar'
+    };
+    
+    var student = thisEmail.student;
+    var coaching = thisEmail.coaching;
+    var course = thisEmail.course;
+    var to = student.email;
+    var mobile = student.mobile;
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+            if(thisEmailTemplate.name == templateName){
+                templateFound = true;
+                templateId = thisEmailTemplate.templateKey;
+                var from_email = new helper.Email(fromEmail);
+                var to_email = new helper.Email(to);
+                var to_email2 = new helper.Email('team@exambazaar.com');
+                var html = ' ';
+                var subject = student.name + ', you have applied for discount at ' + coaching.name;
+                var subject2 = student.name + ' (' + student.mobile + ') '+'has applied for discount at ' + coaching.name;
+                var content = new helper.Content('text/html', html);
+                var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                var mail2 = new helper.Mail(fromEmail, subject2, to_email2, content);
+
+                mail.setTemplateId(templateId);
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-student.name-', student.name));
+                console.log(to);
+                console.log(mobile);
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-student.email-', to));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-student.mobile-', mobile));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-coaching.name-', coaching.name));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-coaching.city-', coaching.city));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-coaching.exam-', coaching.exam));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-course.name-', course.name));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-course.duration-', course.duration));
+                
+                mail2.setTemplateId(templateId);
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-student.name-', student.name));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-student.email-', to));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-student.mobile-', mobile));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-coaching.name-', coaching.name));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-coaching.city-', coaching.city));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-coaching.exam-', coaching.exam));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-course.name-', course.name));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-course.duration-', course.duration));
+
+                var request = sg.emptyRequest({
+                  method: 'POST',
+                  path: '/v3/mail/send',
+                  body: mail.toJSON(),
+                });
+                sg.API(request, function(error, response) {
+                    if(error){
+                        res.json('Could not send email! ' + error);
+                    }else{
+
+                        var request = sg.emptyRequest({
+                          method: 'POST',
+                          path: '/v3/mail/send',
+                          body: mail2.toJSON(),
+                        });
+                        sg.API(request, function(error, response) {
+                            if(error){
+                                res.json('Could not send email! ' + error);
+                            }else{
+                                res.json(response);
+                            }
+                        });
+
+
+                        //res.json(response);
+                    }
+                });
+            }
+            if(counter == nLength){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+    
+    
+});
+
 router.post('/recruitmentEmail', function(req, res) {
     var thisEmail = req.body;
     

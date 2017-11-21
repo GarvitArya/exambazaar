@@ -1,2094 +1,469 @@
 <style>
-    .whiteBackground{
-        background: white;
-    }
-    .bottomBorder{
-        border-bottom: solid;
-        border-width: 1px;
-        border-color: lightgray;
-    }
-    .badge{
-        font-family: 'Fira Sans', sans-serif;
-        color: #333333;
-        font-size: 11px;
-        
-    }
-    #deleteBadge{
-        background: white;
-        border: 1px solid #333333;
-    }
-    #examBadge{
-        color: white;
-        font-size: 16px;
-    }
-    .topBorder{
-        border-top: solid;
-        border-width: 1px;
-        border-color: lightgray;
-    }
-    .rightBorder{
-        border-right: solid;
-        border-width: 1px;
-        border-color: lightgray;
-    }
-    .leftBorder{
-        border-left: solid;
-        border-width: 1px;
-        border-color: lightgray;
-    }
-    .editing{
-        border-left: 4px solid #20C39A;
-    }
-    
-    .saveCancel{
-        position:fixed; 
-        bottom:0%;
-        width:100%;
-        padding-left:40px;
-        padding-right:40px;
-        background: #f7f7f7;
-        color: black;
-        border-top: 1px solid #ccc;
-    }
-    .componentRow{
-        min-height: 20vh;
-    }
-    .lastRow{
-        margin-bottom: 100px;
-    }
-    .componentRowElement{
-        padding-top: 20px;
-        padding-bottom: 20px;
-        min-height: 20vh;
-        font-family: 'Roboto', sans-serif;
-        font-size: 16px;
-    }
-    #paneLeft{
-        font-family: 'Roboto', sans-serif;
-        font-size: 16px;
-    }
-    .componentRowElement2{
-        padding-top: 20px;
-        padding-bottom: 20px;
-        min-height: 10vh;
-    }
-    #showYearResult{
-        overflow-y: scroll;
-        text-align: left;
-        height: 300px;
-        /*background: #f7f7f7;*/
-    }
-    #showResultRow{
-        min-height: 40px;
-    }
-    #hotTable{
-        overflow: hidden;
-        text-align: left;
-    }
-    #tableHolder{
-        
-    }
-    .component{
-        padding-top: 5px;
-        padding-bottom: 5px;
-        padding-left: 20px;
-        padding-right: 20px;
-        z-index: 100;
-        /*letter-spacing: 2px;*/
-    }
-    .component:hover{
-        background: #FF5A5F;
-        color: white;
-    }
-    .mainContent{
-        min-height: 200vh;
-    }
-    #heroHeader{
-        margin-top: 0px;
-        background-color: rgba(0,0,0,0.8);
-        color: white;
-        min-height: 25vh;
-        padding-top: 10px;
-    }
-    #heroHeaderContent{
-        
-    }
-    #coachingHeader{
-        letter-spacing: 2px;
-    }
-    #coachingHeader a{
-        color: #20C39A;
-    }
-    
-    .actionButton{
-        background-color: #FF5A5F;
-        color:white;
-        margin-top: 10px;
-        margin-right: 10px;
-    }
-    .actionButton:hover{
-        background-color: white;
-        color: #FF5A5F;
-        font-weight: bold;
-    }
-    .tolowercase {
-        text-transform: none;
-    }
-    #locationHolder{
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-    .affixBar{
-        min-height: 5vh;
-        background: #f7f7f7;
-        z-index: 1;
-    }
-    .coachingNavBar{
-        padding-left: 40px;
-    }
-    a{
-        color: #333333;
-        text-decoration: none;
-        text-decoration: none;
-    }
-    a.link{
-        color: #333333;
-        text-decoration: none;
-    }
-    a.visted{
-        color: #333333;
-        text-decoration: none;
-    }
-    a:hover{
-        text-decoration: none;
-    }
-    a:link:hover{
-        text-decoration: none;
-    }
-    a.active {
-        background: #FF5A5F;
-        color: #fff;
-        text-decoration: none;
-    }
-    .affix-top {
-        top: 100px;
-    }
-
-    .affix-bottom {
-        bottom: 0px;
-    }
-    
-    #overviewIcon{
-        max-height: 40px;
-        padding-bottom: 7px;
-     }
-    #iconText{
-        color:rgba(0,0,0,0.4);
-        padding-top: 2px;
-        border-top: solid;
-        border-width: 1px;
-        border-color: lightgray;
-        border-spacing: 10px;
-    }
-    #iconTextContainer{
-        margin-top:1px;
-        
-    }
-    
-    #iconData{
-        color:#333333;
-        padding-top: 10px;
-    }
-    #linkFont{
-        color:#333333;
-    }
-    #breadcrumb{
-        color: #20C39A;
-        
-    }
-    
-    #paneMiddle{
-    }
-    #spacerXS{
-        min-height: 13vh;
-    }
-    #displayFacultyOuterBox{
-        max-width: 100%;
-        
-    }
-    #displayFacultyInnerBox{
-        margin: 5px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-left: 5px;
-        padding-right: 5px;
-        max-width: 100%;
-    }
-    .fillParent{
-        height: 100%;
-        width: 100%;
-    }
-    .dialogText{
-        color: white;
-    }
-    #firstContainerImage{
-        max-height: 100%;
-        object-fit: contain;
-        z-index: 99;
-    }
-    
-    
-    #suggestedPics{
-        background: rgba(0,0,0,0.8);
-    }
-    #prevButton{
-        color: #ccc;
-        margin-right: 10px;
-        padding:10px;
-    }
-    #prevButton:hover{
-        color: #20C39A;
-    }
-    #nextButton{
-        color: #ccc;
-        margin-left: 10px;
-        padding:10px;
-    }
-    #nextButton:hover{
-        color: #20C39A;
-    }
-    .thumb{
-        max-height: 100px;
-        max-width: 100px;
-    }
-    #progressBar{
-        margin-top: 10px;
-        margin-bottom: 10px;
-        max-width: 100px;
-    }
-    #upload{
-        /*min-width: 400px;
-        min-height: 100px;*/
-        margin-top: 10px;
-        background: white;
-        border: 1px solid #ccc;
-        padding: 10px;
-    }
-    #upload:hover {
-        background: #ccc;
-        color: white;
-        border: 1px solid #FF5A5F;
-    }
-    #upload2{
-        background: white;
-        color: black;
-        border: 1px solid #000;
-        padding: 5px;
-    }
-    #upload2:hover {
-        background: #FF5A5F;
-        color: white;
-        border: 1px solid #FF5A5F;
-    }
-    #upload3{
-        background-color: #F5F5F5;
-        color: #333333;
-        border: 7px solid #fff;
-        padding: 5px;
-        margin: 10px;
-    }
-    #upload3:hover {
-        background: #FF5A5F;
-        color: white;
-    }
-    
-    
-    #displayBox{
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-    #addBox{
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-    #elementBox{
-        padding: 10px;
-    }
-    #editSection{
-        /*border: 3px solid #FF5A5F;*/
-        
-    }
-    .formElement{
-        padding-right: 5px;
-        
-    }
-    input[type="text"]
+    input[type="text"],input[type="email"]
     {
-        font-size: 13px;
+        font-size: 14px;
         color: #333333;
         padding: 10px;
-        border: solid 1px #333333;
+        border: solid 1px #ccc;
         transition: box-shadow 0.3s, border 0.3s;
         box-shadow: 0 0 5px 1px white;
     }
     
-    input[type="text"]:hover, input[type="text"]:focus {
-        border: solid 1px #707070;
+    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus{
+        border: solid 1px #333333;
         box-shadow: 0 0 5px 1px #969696;
     }
+    #profileSection{
+        min-height: 20vh;
+    }
+    .profileBar{
+        background-color: #29335C;
+        color: white;
+    }
+    .profileBar a{
+        color: white;
+        text-decoration: none;
+        
+    }
     
-    textarea{
-        width:100%;
-        padding-top: 10px;
-        padding-left: 15px;
-        padding-right: 15px;
-        padding-bottom: 10px;
-        color: #333333;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        
+    }
+    .fieldRow{
+        min-height: 5vh;
+        width: 100%;
         margin-top: 10px;
+        margin-bottom: 10px;
     }
-    textarea:hover {
-        border: 1px solid #20C39A;
+    .fieldRow div.col1{
+        color: gray;
+        font-family: 'Roboto Condensed', sans-serif;
     }
-    textarea:focus {
-        border: 1px solid #20C39A;
-    }
-    .validComment{
-        border: solid 1px #20C39A;
-    }
-    .paddingLeft{
-        padding-left: 20px;
-    }
-    #deleteButton{
-        background: #FF5A5F;
-        color:white;
-    }
-    #restoreButton{
-        background: #20C39A;
-    }
-    #addedButton{
-        background: #FBBC05;
-    }
-    #saveButton{
-        background: #20C39A;
-    }
-    #tagHolder{
-        background: white;
-        border: 1px solid #000;
-    }
-    #existingTagHolder{
-        color: white;
-        background: #FF5A5F;
-        border: 1px solid #fff;
-    }
-    #tagHolder:hover{
-        color: white;
-        background: #FF5A5F;
-        border: 1px solid #fff;
-    }
-    
-    #dialogHeaderPic{
-        max-height: 120px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-    
-    #examTagHolder{
-        padding:5px;
-        font-size: 16px;
-        color: #333333;
-        background: white;
-        border: 1px solid #FF5A5F;
-    }
-    #examTagHolder:hover{
-        color: white;
-        
-        background: #FF5A5F;
-        border: 1px solid #fff;
-    }
-    #existingExamTagHolder{
-        padding:5px;
-        font-size: 16px;
-        color: white;
-        background: #FF5A5F;
-        border: 1px solid #fff;
-    }
-    
-    
-    #courseLeftContainer{
-        min-height: 200px;
-        /*background: #20C39A;
-        color: white;*/
-        position: relative;
-        display: inline-block;
-    }
-    #courseRightContainer{
-        min-height: 200px;
-        border-left: 1px solid #ccc;
-    }
-    .inner {
-        white-space: nowrap;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-    }
-
-    .rotate {
-        -moz-transform: translateX(-50%) translateY(-50%) rotate(270deg);
-        -webkit-transform: translateX(-50%) translateY(-50%) rotate(270deg);
-        transform:  translateX(-50%) translateY(-50%) rotate(270deg);
-    }
-    
-    #addCourse{
-        background: #ccc;
-        border: 1px solid #FF5A5F;
-    }
-    
-    #leftBadge{
-        background:#20C39A;
-    }
-    #resultExamDialog{
-        
-    }
-    #claimLogo{
-        max-height: 50px;
-        margin-bottom: 20px;
-    }
-    .pageLogo{
-        max-height: 80px;
-        max-width: 80px;
-    }
-    #pageLogoHolder{
-        /*border: 1px solid rgba(0,0,0,0.8);
-        border-radius: 4px;*/
-        background: white;
-        height: 90px;
-        width: 90px;
-        
-    }
-    
-    
-    #editPic{
-        max-width: 40px;
-        max-height: 40px;
-    }
-    #editPicHolder{
-        width: 40px;
-        height: 40px;
-    }
-    #claimButton{
-        min-height: 100px;
-        min-width: 150px;
-        padding: 10px;
-        border: 1px solid #ccc;
-    }
-    #claimButton:hover{
-        background: #FF5A5F;
-    }
-    #claimMobileLink{
-        color: #ccc;
-        text-decoration: underline;
-        
-    }
-    #claimMobile{
-        padding: 5px;
-        background: white;
+    .fieldRow div.col2{
         color: black;
     }
-    #claimExistingMobile{
-        padding: 5px;
-        background: #FF5A5F;
+    
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    .active{
+        color: white;
+        font-weight: bold;
+        border-bottom: 2px solid white;
+    }
+    #topBar{
         color: white;
     }
-    #newMobile{
-        color: black;
-    }
-    #successOTP{
-        background: green;
-    }
-    #addressRow{
-        line-height: 100%;
-        padding-top: 10px;
-        min-height: 10vh;
-    }
-    #mobilephoneRow{
-        min-height: 4vh;
-    }
-    #contactbox{
-        min-height: 15vh;
-    }
-    #contactDialogbox{
-        min-height: 10vh;
-    }
-    
-    
-    
-    
-    #reviewCell{
-        margin: 1px;
-        width: 20px;
-        height: 20px;
-        border-radius: 5px;
-    }
-    
-    #reviewCellEmpty{
-        margin: 1px;
-        margin-left: 10px;
-        width: 20px;
-        height: 20px;
-        border-radius: 5px;
-    }
-    
-    #smallreviewCell{
-        margin: 1px;
-        width: 10px;
-        height: 10px;
-        border-radius: 3px;
-    }
-    
-    #smallreviewCellEmpty{
-        margin: 1px;
-        margin-left: 10px;
-        width: 10px;
-        height: 10px;
-        border-radius: 3px;
-    }
-    
-    .noreview{background-color: #CBCBCB;}
-    .review1{background-color:#CD1C26;}
-    .review2{background-color:#DE1D0F;}
-    .review3{background-color:#FF7800;}
-    .review4{background-color:#FFBA00;}
-    .review5{background-color:#CDD614;}
-    .review6{background-color:#9ACD32;}
-    .review7{background-color:#5BA829;}
-    .review8{background-color:#3F7E00;}
-    .review9{background-color:#305D02;}
-    .hover{background-color: red;}
-    
-    .notselected{}
-    .selected{
-        background-color: #FF5A5F;
+    #topBar.active{
         color: white;
     }
-    
-    .unfilledTag{
-        padding:5px;
+    #topBar:hover{
+        font-weight: bold;
+    }
+    .leftBar{
+        border-right: 2px solid whitesmoke;
+    }
+    #leftBarButton{
+        border-bottom: 2px solid whitesmoke;
+    }
+    #leftBarButton:hover{
+        border-bottom: 2px solid #20C39A;
+    }
+    #leftBarButton.sideactive{
+        /*border: 2px solid #20C39A;
+        color: #20C39A;
+        font-weight: bold;*/
+        background: whitesmoke;
+        
+    }
+    .emptyTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
         color: #333333;
-        background: white;
-        border: 1px solid #FF5A5F;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        box-shadow: 0 0 5px whitesmoke;
     }
-    .unfilledTag:hover{
+    .emptyTag:hover{
         color: white;
-        background: #FF5A5F;
-        border: 1px solid #fff;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
     }
     .filledTag{
-        padding:5px;
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
         color: white;
-        background: #FF5A5F;
-        border: 1px solid #fff;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
     }
-    h1,h2,h3{
-        margin: 0px;
-        padding: 5px;
+    
+    .edLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
     }
-    a{
-        color: #20C39A;
-        text-decoration: none;
+    .edLevelTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+        box-shadow: 0 0 5px whitesmoke;
     }
-    a, a:hover, a:link, a:active, a:visited, a:focus, a:visited:hover, a:link:hover{
-        color: #20C39A;
-        text-decoration:none;
+    .filledEdLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .badge{
+        font-size: 14px;
+        white-space: normal;
+        margin-top: 0px;
+    }
+    .subSectionHeader{
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid whitesmoke;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .academicSubSection{
+        border-bottom: 1px solid #20C39A;
+        
+    }
+    .academicSubHeader{
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    academicSubHeader2{
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .nextButton{
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    .previousButton{
+        margin-right: 20px;
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    
+    #profilePicSection{
+        margin-bottom: 20px;
     }
 </style>
+
 <div id="spacer1" class="hidden-xs whiteBackground">
 </div>
-<div id="spacerXS" class="hide-gt-xs whiteBackground">
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
-<!-- Claim the page section -->
-<div layout="column" layout-xs="column" class="whiteBackground mainContent">
-    <!--<div layout="row" layout-align="start center" id="breadcrumb" class="marginTB5" hide-xs>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <h3 class="col-xs-12 col-sm-8 col-md-8 col-lg-8  editFont text-primary" id="paneLeft">
-            <small class="">
-            <span><a ui-sref="main">{{category.displayname | uppercase}}</a></span>
-            <span> > <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a></span>
-            <span> > <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{city | uppercase}}</a></span>
-            <span> > <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{provider.name | uppercase}}</a></span>
-            </small>
-            
-            
-        </h3>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div>-->
-    <div layout="row" layout-align="start start"  hide-xs class="editFont text-primary font11 width100 marginT10 min5vh" id="breadcrumb">
-        <div hide-xs flex="5">
-        </div>
-        <div layout="row" layout-align="start start" flex class="paddingLR10">
-        <div layout="row" layout-align="start start" class="marginR5">
-            <a ui-sref="main">{{category.displayname | uppercase}}</a>
-        </div>
-        <div layout="row" layout-align="start start" class="marginR5">
-        >
-        </div>
-        <div layout="row" layout-align="start start" class="marginR5">
-            <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a>
-        </div>
-        <div layout="row" layout-align="start start" class="marginR5">
-        >
-        </div>
-        <div layout="row" layout-align="start start" class="marginR5">
-            <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{city | uppercase}}</a>
-        </div>
-        <div layout="row" layout-align="start start" class="marginR5">
-        >
-        </div>
-        <div layout="row" layout-align="start start" class="marginR5">
-            <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">{{provider.name | uppercase}}</a>
-        </div>
-            
-        </div>
-    </div>
-    
-    <div layout="row" id="heroHeader">
-        <div hide-xs flex="15" layout="column" layout-align="end end" class="paddingB10">
-            <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="pageLogoHolder">
-                <img  ng-if="provider.logo" ng-src="{{provider.logo}}" class="pageLogo" alt="{{provider.name}} Logo" />
-                <img  ng-if="!provider.logo || provider.logo==''" ng-src="{{defaultCoachingLogo}}" class="pageLogo" alt="{{provider.name}} Logo" />
-                
 
-            </div>
-        </div>
-        <div layout="column" flex id="heroHeaderContent" >
-            <div layout="row" layout-align="end start" class="">
-                <span hide-gt-xs>
-                    <button class="btn actionButton  tolowercase"><i class="fa fa-heart-o" aria-hidden="true" ng-if="shortlistedIds.length == 0" title="Shortlist Coaching {{provider.name}}"></i><i class="fa fa-heart" aria-hidden="true" ng-if="shortlistedIds.length > 0" title="Shortlisted Coaching {{provider.name}}"></i>
-                    </button>
-                    <button class="btn actionButton  tolowercase" ng-click="availDiscount()"><i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
-                    </button>
-                    <button class="btn actionButton  tolowercase"><i class="fa fa-calendar-plus-o" aria-hidden="true" title="Schedule Appointment at {{provider.name}}"></i>
-                    </button>
-                </span>
-                <span hide-xs>
-                    <button class="btn actionButton heroButton tolowercase" ng-if="user.userId" ng-click="showSelectShortlistCentreDialog()">
-                        <span ng-if="shortlistedIds.length == 0">
-                            <i class="fa fa-heart-o" aria-hidden="true" title="Shortlist Coaching {{provider.name}}"></i>&nbsp;&nbsp;Shortlist
-                        </span>
-                        <span ng-if="shortlistedIds.length > 0">
-                            <i class="fa fa-heart" aria-hidden="true" title="Shortlisted {{provider.name}}"></i>&nbsp;&nbsp;Shortlisted
-                        </span>
-                        
-                    </button>
-                    <button class="btn actionButton heroButton tolowercase" ng-click="availDiscount()"><i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
-                    </button>
-                    <button class="btn actionButton heroButton tolowercase"><i class="fa fa-calendar-plus-o" aria-hidden="true" title="Schedule Appointment at {{provider.name}}"></i>&nbsp;&nbsp;Schedule Demo
-                    </button>
+<div class="textBlack whiteBackground secondFont font14" ng-if="user">
+    <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
+    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
+        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100" >
+            <div layout="row" layout-align="start start" ng-repeat="component in components" class="paddingLR20">
+                <a layout="row" layout-align="start center" >
+                    <!-- ng-click="setPage(component.name)"
+                    ui-sref="{{component.state}}"-->
+                    <span id="topBar"  ng-class="{ active: component.name == activeCategory.name}" >
+                        {{component.name}}
+                    </span>
+                </a>
+                <span class="marginL40" ng-if="!$last">
+                >
                 </span>
             </div>
-            <div flex layout="column" layout-align="end start" class="paddingL20 paddingB10">
-                <h1 class="hide-xs md-headline mainFont text-white" id="coachingHeader">
-                    {{provider.name | uppercase}}
-                </h1>
-                <h1 class="hide-gt-xs text md-subhead mainFont text-white" id="coachingHeader">
-                    {{provider.name | uppercase}}
-                </h1>
-                <p>
-                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    <span ng-if="provider.location">
-                    {{provider.location.area}},
-                    </span>
-                    {{provider.city}} | {{cityCenters.length}} Center<span ng-if="cityCenters.length>1">s</span>
-                </p>
-            </div>
-        
-        </div>
-        <div flex="5">
-        </div>
-        
-    </div>
-    
-    <div bs-affix data-offset-top="200" data-offset-bottom="300" hide-xs layout="row" class="affixBar whiteBackground bottomBorder width100 " layout-align="center center">
             
-            <a ng-repeat="component in components" href="#{{component}}" du-smooth-scroll du-scrollspy offset="200" class="component secondFont textDarkGrey" >
-                <h3 class="secondFont">
-                    {{component}}
-                </h3>        
-            </a>
-    </div>
-    <div layout="row" layout-align="center center" class="width100 marginT20 marginB10">
-        <div layout="row" layout-align="center center" ng-repeat="thisExam in currStreamExams" class="editFont font14" >
-            <a ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'thisExam.name'}}, cityName:{{'city'}}, groupName:{{'provider.name'}} })" target="_blank">{{thisExam.name}}
-            </a>
-            <div ng-if="!$last" class="textBlack">
-                &nbsp;&nbsp;|&nbsp;&nbsp;
-            </div>
         </div>
     </div>
-    
-    <!--start of Overview
-    <div layout="row " layout-align="center center" class="componentRow" id="Overview">
-        
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1  bottomBorder secondFont textLightGrey" id="paneLeft"  ng-class="{ editing: editOverview }">
-            <h1 class="componentRowElement height100" layout="column" layout-align="start start" >
-                Overview
+    <div layout="row" layout-align="center start" class="width100">
+    <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
+        <div layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
+            <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }">
+                {{subcategory.name}}
             </div>
         </div>
-        <h1 class="col-xs-12 hide-gt-xs bottomBorder secondFont textLightGrey" id="paneLeft">
-            Overview
-        </div>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement secondFont textDarkGrey" id="paneMiddle">
-            <div layout="row" layout-align="center center" id="upload2" ng-click="editContacts()" class="marginB10 secondFont textLightGrey" ng-show="!editOverview && editable && !disabled">
-                <span>
-                    <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit / Add
-                </span>
-            </div>
-            <div layout="row" layout-align="start center">  
-            <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="section in overviewIcons" id="overviewIcons">
-                <div class="row">
-                    <img ng-src="{{section.icon}}" id="overviewIcon"/>
+        <div flex layout="row" layout-align="center center">
+            <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
+            <div layout="column" layout-align="start start" class="width100 min100vh" flex>
+                <div layout="column" layout-align="center start" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20">
+                    {{activeSubcategory.name}}
                 </div>
-                <div class="row text-center" id="iconTextContainer">
-                    <span id="iconText">
-                    {{section.text}}
-                    </span>
-                </div>
-                <div class="row text-center" id="iconTextContainer">
-                    <span class="md-display-1" id="iconData">
-                    </span>
-                </div>
-            </div>
-            </div>
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        
-        
-    </div>
-     -->
-    
-    
-    <div>
-    
-          
-    <div layout="row" layout-xs="column" class="componentRow secondFont" ng-if="userReviewMode">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement secondFont textDarkGrey" id="paneMiddle">
-            <div layout="row" id="offerRow" ng-controller="offerController">
-
-              <div layout="column" layout-align="center center" class=" width100 secondFont ">
-                  <!-- href="#userReview" du-smooth-scroll du-scrollspy offset="200"-->
-                <div layout="column" layout-align="center center" class="translucentBackground width100 padding10">
-
-                <div layout="column" layout-align="center center" class="secondFont marginTB10" style="display:inline-block" >
-                    <div layout="row" layout-align="center center" class="marginB10 offerFont spacedLetter1">
-                        <span hide-xs class="text-center font20">
-                        <!--
-                        Review your coaching institute at Exambazaar to unlock amazing discounts and offers from
-                        -->
-                            You’d love our discounts on the most popular exam prep courses!
-                        </span>
-                        <span hide-gt-xs class="font12 text-center">
-                            You’d love our discounts on the most popular exam prep courses!
-                        </span>
-                    </div>
-
-
-                    <div layout="row" layout-align="center center" class="translucentWhiteBackground textBlack spacedLetter1 paddingT10">
-                        <span hide-xs class="font14 text-center">
-                            Unlock discounts from 20% - 50% on
-                        </span>
-                        <span hide-gt-xs class="font10 text-center">
-                            Unlock discounts from 20% - 50% on
-                        </span>
-
-
-                    </div>
-                    <div layout="row" layout-align="center center" class="translucentWhiteBackground">
-
-                        <div hide-xs layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR10 paddingTB10">
-                            <div>
-                                <img ng-src="{{offer.image}}" id="offerImage"/>
-                            </div>
-                            <div class="font12 bold textBlack paddingT5">
-                                {{offer.displayname}}
-                            </div>
-                        </div>
-                        <div hide-gt-xs layout="column" layout-align="center center" ng-repeat="offer in offers" class="paddingLR5 paddingTB10">
-                            <div layout="row" layout-align="center center" class="marginT5">
-                                <img ng-src="{{offer.image}}" id="smallofferImage"/>
-                            </div>
-                            <div layout="row" layout-align="center center" class="font8 textBlack text-center narrowLine paddingT5" >
-                                {{offer.displayname}}
-                            </div>
-                        </div>
-                    </div>
-                    <div layout="row" layout-align="center center" class=" marginB10 secondFont dangerBackground" ng-click="goToReview()">
-                        <span hide-xs class="text-center">
-                            Review your Coaching Institute
-                        </span>
-                        <span hide-gt-xs class="font14 text-center">
-                            Review your Coaching Institute
-                        </span>
-
-                    </div>
-                </div>
-
-                <!--<div hide-gt-xs layout="row" layout-align="center center" class="paddingB10 secondFont ">
-                <md-button class="md-small md-green2  font12 tolowercase width50"  ng-click="">Review Now</md-button>
-                </div>-->
-
-                </div>
-
-                </div>
-
-
-
-        </div>
-            
-        
-
-
-
-            
-            
-            
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div>
-
-        
-    <div layout="row" layout-xs="column" class="componentRow secondFont" id="Contact">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1  bottomBorder textLightGrey" id="paneLeft">
-            <h1 class="componentRowElement height100" layout="column" layout-align="start start" >
-                Contact
-            </h1>
-        </div>
-        <h1 class="col-xs-12 hide-gt-xs bottomBorder textLightGrey" id="paneLeft">
-            Contact
-        </h1>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement secondFont textDarkGrey" id="paneMiddle">
-            
-            <div flex ng-repeat="thisGroup in cityCenters" layout="column" class="editFont font10 textDarkGrey col-xs-6 col-sm-3 col-md-3 col-lg-3 paddingLRB10" >
-            <div class="lightGreyBorder padding10" >
-                <div id="contactbox">
-                <div layout="row" class="secondFont font12 bold greyBottomBorder">
-                    <!--<a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank"></a>-->
-                    <span ng-if="!thisGroup.location.area">
-                        <h1 ng-if="!ebuser" id="paneLeft">
-                            {{provider.name}} Centre {{$index+1}}
-                        </h1>
-                        <span ng-if="ebuser">
-                            <a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank">{{provider.name}} Centre {{$index+1}}
-                            </a>
-                        </span>
-                        <!--<a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank">
-                        
-                        </a>-->
-                    </span>
-                    <span ng-if="thisGroup.location.area">
-                        
-                        <h1 ng-if="!ebuser"  id="paneLeft">
-                            {{provider.name}} {{thisGroup.location.area}}
-                        </h1>
-                        <span ng-if="ebuser">
-                            <a ui-sref="claim({ coachingId:{{'thisGroup._id'}} })" target="_blank">{{provider.name}} {{thisGroup.location.area}}
-                            </a>
-                        </span>
-                        
-                        
-                    </span>
+                <div layout="column" layout-align="center start" class="width100">
+                     
                     
-                </div>
-                <h3 layout="row" id="addressRow" class="secondFont font12 textLightGrey marginB5" >
-                    {{thisGroup.address}}
-                </h3>
-                <div id="mobilephoneRow" class="">
-                <div layout="row" ng-show="thisGroup.phone.length > 0" class="">
-                    <div flex="10">
-                        <i class="md-title fa fa-phone" aria-hidden="true"></i>
-                    </div>
-                    <div flex="90">
-                        <span ng-repeat="phone in thisGroup.phone track by $index" ng-if="$index<1">
-                            <a ng-href="tel:{{phone}}" >
-                                {{phone}}
-                            </a>&nbsp;
-                        </span>
-                    </div>
-                </div>
-                    <!--&& thisGroup.phone.length == 0-->
-                <div layout="row" ng-show="thisGroup.mobile.length > 0 && thisGroup.phone.length == 0" class="">
-                    <div flex="10">
-                        <i class="md-title fa fa-mobile" aria-hidden="true"></i>
-                    </div>
-                    <div flex="90">
-                        <span ng-repeat="mobile in thisGroup.mobile track by $index" ng-if="$index<1">
-                            <a ng-href="tel:{{mobile}}">
-                                {{mobile}}
-                            </a>&nbsp;
-                        </span>
-                    </div>
-                </div>
-                <div id="mobilephoneRow" class="">
-                    <div layout="row" ng-show="thisGroup.phone.length > 0" class="">
-                    <div flex="10">
-                        <i class="md-title fa fa-link" aria-hidden="true"></i>
-                    </div>
-                    <div flex="90">
-                        <span ng-repeat="website in thisGroup.website track by $index" ng-if="$index<1">
-                            <a ng-href="{{website}}" target="_blank">
-                                <!--{{website}}-->
-                                Coaching Website
-                            </a>
-                        </span>
-                    </div>
-                </div>
-                </div>
-            </div>
-                <!--<div layout="row" ng-show="thisGroup.email" class="marginB5">
-                    <div flex="5">
-                        <i class="md-title fa fa-envelope" aria-hidden="true"></i>
-                    </div>
-                    <div flex="95">
-                        <span ng-repeat="email in thisGroup.email track by $index" ng-if="editContact">
-                            <input type="text" class=" width25" ng-model="thisGroup.email[$index]"  placeholder="Add Email">&nbsp;
-                        </span>
-                        <span ng-if="editContact">
-                            <span ng-click="addEmail()">
-                            <i class="md-title fa fa-plus-circle" aria-hidden="true"></i>
-                            </span>
-                            <span ng-click="showDeleteEmailConfirm($event)">
-                            <i class="md-title fa fa-minus-circle" aria-hidden="true" ></i>
-                        </span>
-                        </span>
-                        <span ng-repeat="email in thisGroup.email track by $index" ng-if="!editContact">
-                            <a >
-                                {{email}}
-                            </a>&nbsp;
-                        </span>
-                    </div>
-                </div>
-                <div layout="row" ng-show="thisGroup.website" class="marginB5">
-                    <div flex="5">
-                        <i class="md-title fa fa-link" aria-hidden="true"></i>
-                    </div>
-                    <div flex="95">
-                        <span ng-if="!editContact">
-                        <a ng-href="{{thisGroup.website}}" target="_blank" ng-if="thisGroup.website">
-                        {{thisGroup.website}}
-                        </a>&nbsp;
-                        </span>
-                        <span ng-if="editContact">
-                            <input type="text" class=" width50" ng-model="thisGroup.website"  placeholder="Add Website">&nbsp;
-                        </span>
-                    </div>
-                </div>-->
-            </div>
-            </div>
-            </div>
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement height100" id="paneRight">
-            
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div>
-    
-    
-    <div layout="row" layout-xs="column" class="componentRow " id="Results">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft" ng-class="{ editing: editResult }">
-            <h1 class="componentRowElement"layout="column" layout-align="start start">
-                <span>
-                    Results
-                    <!--<span class="badge" id="leftBadge">
-                        {{provider.results.length}}
-                        <md-tooltip>Provider had added a total of {{provider.results.length}} past results</md-tooltip>
-                    </span>-->
-                </span>
-                
-            </h1>
-        </div>
-        <h1 class="col-xs-12 hide-gt-xs bottomBorder secondFont textLightGrey" id="paneLeft">
-            <span>
-                Results
-                <!--<span class="badge" id="leftBadge">
-                    {{provider.results.length}}
-                    <md-tooltip>Provider had added a total of {{provider.results.length}} past results</md-tooltip>
-                </span>-->
-            </span>
-        </h1>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center thirdFont textDarkGrey" id="paneMiddle">
-            
-            <div flex layout="row" class="bottom-buffer10" ng-repeat="exam in groupExamsOnly" ng-if="exam._id == thisExam._id" id="greyBorder"  layout-align="start center">
-                
-                <div layout="column" layout-align="center center" flex="5" id="courseLeftContainer">
-                    
-                    <div layout="row" >
-                        <h1 class="secondFont inner rotate" id="paneLeft">
-                        {{exam.displayname}}
-                        </h1>
-                        
-                    </div>
-                </div>
-                <div layout="column" flex="95" id="courseRightContainer">
-                  
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="result in groupResults track by $index" ng-if="result.exam==exam._id" id="imageContainer" ng-click="showResultDialog($event, $index, result)">
-                        
-                         <!--&& result.image && result.image!=''-->
-                        <div ng-if="$index != 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}" title="{{result.name}}">
-                            <div layout="row" layout-align="end center" class="text-white" id="thumbnailResultText">
-                                <div flex="60" layout="row" layout-padding layout-align="start center" class="font10">
-                                    <span ng-if="result.exam.resultFormat == 'Rank'">
-                                        AIR {{result.rank}}
-                                    </span>
-                                    <span ng-if="result.exam.resultFormat == 'Marks'">
-                                        {{result.marks}}
-                                    </span>
-                                    
-                                    
+                <div layout="column" layout-align="center start" class="width100 font14">
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Contact Information'">
+                        <div layout="column" layout-align="start start" class="academicRow academicSubSection paddingB20">
+                            
+                            <div layout="row" layout-align="start center" class="fieldRow">
+                                <div layout="row" layout-align="start center" flex="{{col1WidthAcademic}}" class="col1">Student Name</div>
+                                <div layout="row" layout-align="start center" flex class="col2">
+                                    {{user.basic.name}}
                                 </div>
-                                <div flex="40" layout="row" layout-padding layout-align="end center" class="font8">
-                                    {{result.year}}
+                            </div>
+                            <div layout="row" layout-align="start center" class="fieldRow">
+                                <div layout="row" layout-align="start center" flex="{{col1WidthAcademic}}" class="col1">Mobile</div>
+                                <div layout="row" layout-align="start center" flex class="col2" ng-show="user.mobile">
+                                    {{user.mobile}}
+                                </div>
+                                <div layout="row" layout-align="start center" flex class="col2" ng-show="!user.mobile">
+                                    <input type="text" class="width100" ng-minlength="10" ng-maxlength="10" only-digits ng-model="user.newmobile"  placeholder="Mobile Number">
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="fieldRow">
+                                <div layout="row" layout-align="start center" flex="{{col1WidthAcademic}}" class="col1">Email</div>
+                                <div layout="row" layout-align="start center" flex class="col2" ng-show="user.email">
+                                    {{user.email}}
+                                </div>
+                                <div layout="row" layout-align="start center" flex class="col2" ng-show="!user.email">
+                                    <input type="text" class="width100" ng-model="user.newemail"  placeholder="Email">
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="center center" class="text-white font10" id="thumbnailResultTextTop">
-                            {{result.name}}
+                    </div>
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Academic Details'">
+                        <div layout="column" layout-align="start start" class="academicRow academicSubSection">
+                        
+                            <div layout="row" layout-align="center center" class="font16 marginB10 width100 academicSubHeader">
+                                Choose your Education Level
+                            </div>
+                            <div layout="row" layout-align="start start" class="fieldRow" layout-wrap>
+                                <div flex-xs="20" flex="20" ng-repeat="educationLevel in educationLevels" class="padding10">
+                                    <span layout="row" layout-align="center center" class="wrap edLevelTag width100 min15vh text-center" ng-class="{ filledEdLevelTag: user.eligibility.educationLevel.name=='{{educationLevel.name}}' }" ng-click="setEducationLevel(educationLevel)">
+                                        {{educationLevel.name}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 1">
+                            
+                        <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
+                            School Class XII
+                        </div>
+                        <div layout="row" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Subjects</div>
+                            <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
+                                <div flex="25" ng-repeat="class12Subject in class12Subjects" class="padding10">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.class12Subjects[class12Subject.name] }" ng-click="setClass12Subjects(class12Subject.name)">
+                                        {{class12Subject.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow paddingB20">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Class XII Percentage</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
+                                <span class="marginR10">40</span>
+                                <md-slider class="width100" md-discrete ng-model="user.eligibility.class12Percentage" step="1" min="40" max="100" aria-label="Class 12th Percentage">
+                                </md-slider>
+                                <span class="marginL10">100</span>
+                            </div>
+                        </div>
                         </div>
                         
-                        <!--<div ng-if="$index == 11" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}">
-                            <div layout="row" layout-align="center center" class="md-headline text-white" id="thumbnailText">
-                                +{{groupResults.length - 12}}
+                        
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 3">
+                            
+                        <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
+                            Undergraduate
+                        </div>
+                        <div layout="row" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
+                            
+                            <div flex layout="column" layout-align="start start" class="width100">
+                            
+                            <div flex layout="column" layout-align="start start" class="width100 marginB10">
+                            <div layout="row" layout-align="start start" class="width100 paddingL10">
+                                Engineering
+                            </div>    
+                            <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                                <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='engineering'">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                        {{undergradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                                
+                            <div flex layout="column" layout-align="start start" class="width100 marginB10">    
+                            <div layout="row" layout-align="start start" class="width100 paddingL10">
+                                Medical
+                            </div>    
+                            <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                                <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='medical'">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                        {{undergradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                                
+                            <div flex layout="column" layout-align="start start" class="width100 marginB10">    
+                            <div layout="row" layout-align="start start" class="width100 paddingL10">
+                                Law
+                            </div>    
+                            <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                                <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='law'">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                        {{undergradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                            
+                            <div flex layout="column" layout-align="start start" class="width100 marginB10">    
+                            <div layout="row" layout-align="start start" class="width100 paddingL10">
+                                Other
+                            </div>    
+                            <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                                <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='other'">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                        {{undergradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>     
+                            </div>
+                            </div>
+                            
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow paddingB20">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Equivalent Percentage</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
+                                <span class="marginR10">40</span>
+                                <md-slider class="width100" md-discrete ng-model="user.eligibility.undergradPercentage" step="1" min="40" max="100" aria-label="Undergrad Percentage">
+                                </md-slider>
+                                <span class="marginL10">100</span>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 5">
+                            
+                        <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
+                            Postgraduate
+                        </div>
+                        <div layout="row" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
+                            <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
+                                <div flex="25" ng-repeat="postgradMajor in postgradMajors" class="padding10">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.postgradMajor[postgradMajor.name] }" ng-click="setPostgradMajor(postgradMajor.name)" layout-wrap>
+                                        {{postgradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="fieldRow paddingB20">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Equivalent Percentage</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
+                                <span class="marginR10">40</span>
+                                <md-slider class="width100" md-discrete ng-model="user.eligibility.postgradPercentage" step="1" min="40" max="100" aria-label="Postgrad Percentage">
+                                </md-slider>
+                                <span class="marginL10">100</span>
+                            </div>
+                        </div>
+                        </div>
+                        <!--<div layout="row" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">
+                                <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Social')">
+                                    Next
+                                </md-button>
                             </div>
                         </div>-->
                     </div>
-                </div>
-                
-                </div>
-            </div>
-            
-        </div>
-            
-            
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div> 
-    
-    <div layout="row" layout-xs="column" class="componentRow " id="Courses">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft" ng-class="{ editing: editCourse }">
-            <h1 class="componentRowElement"layout="column" layout-align="start start">
-                <span>
-                    Courses
-                    <!--<span class="badge" id="leftBadge">
-                        {{groupCourses.length}}
-                        <md-tooltip>Provider teaches a total of {{groupCourses.length}} courses</md-tooltip>
-                    </span>-->
-                </span>
-            </h1>
-        </div>
-        <h1 class="col-xs-12 hide-gt-xs bottomBorder secondFont textLightGrey" id="paneLeft">
-            <span>
-                Courses
-                <!--<span class="badge" id="leftBadge">
-                    {{groupCourses.length}}
-                    <md-tooltip>Provider teaches a total of {{groupCourses.length}} courses</md-tooltip>
-                </span>-->
-            </span>
-        </h1>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement thirdFont textDarkGrey" id="paneMiddle" >
-            
-            <div flex layout="row" class="bottom-buffer10" ng-repeat="exam in groupExamsOnly" ng-if="exam._id == thisExam._id" id="greyBorder" layout-align="start center" >
-                <div layout="column" layout-align="center center" flex="5" id="courseLeftContainer">
-                    <div layout="row" >
-                    <h1 class=" secondFont inner rotate" id="paneLeft">
-                        
-                        {{exam.displayname}}
-                    </h1>
-                    </div>
-                </div>
-                
-                
-                <div flex="95" id="courseRightContainer">
-                    <div layout="row" layout-align="start center" class="marginTB5 bold">
-                        <div flex="45" class="paddingLeft10  paddingRight10" layout="column" layout-align="start start">
-                            Course Name
-                        </div>
-                        <div flex layout="column" layout-align="start center">
-                            Duration
-                        </div>
-                        <div flex layout="column" layout-align="start center" >
-                            Mode
-                        </div>
-                        <div flex layout="column" layout-align="start center">
-                            Fees
-                        </div>
-                        
-                    </div>
-                    <div flex layout="row" layout-align="center start" ng-repeat="course in groupCourses" ng-if="course.exam == exam._id" class="marginTB5">
-                        <div flex="45" class="paddingLeft10 height100 paddingRight10" layout="column" layout-align="start start">
-                            <h1 layout="row" id="paneLeft">
-                            {{course.name}}
-                            </h1>
-                            <div layout="row" class="textLightGrey fourthFont">
-                                {{course.idealFor}}
-                            </div>
-                            
-                        </div>
-                        <div flex layout="column" layout-align="start center" class="height100">
-                            <div layout="row">
-                            {{course.duration}}
-                            </div>
-                            <div layout="row" class="textLightGrey fourthFont">
-                                {{course.hoursPerWeek}}
-                            </div>
-                        </div>
-                        <div flex layout="column" layout-align="start center" class="height100">
-                            {{course.mode}}
-                        </div>
-                        <div flex layout="column" layout-align="start center" class="height100">
-                            <span ng-if="course.fees > 0">
-                                {{course.fees | currency:"₹":0}}
-                            </span>
-                            <div layout="row" class="textLightGrey fourthFont">
-                                {{course.feeType}}
-                            </div>
-                            <span ng-if="course.fees == 0 || !course.fees">
-                            </span>
-                        </div>
-                        
-                    </div>
                     
-                </div>
-            </div>
-            
-            <div flex layout="row" class="bottom-buffer10" ng-repeat="exam in groupExamsOnly" id="greyBorder" ng-show="editCourse" layout-align="start center">
-                
-                <div layout="column" layout-align="center center" flex="5" id="courseLeftContainer" class="">
-                    <div layout="row" >
-                    <h1 class="secondFont inner rotate" id="paneLeft">
-                        {{exam.displayname}}
-                    </h1>
-                    </div>
-                </div>
-                <div flex="95" id="courseRightContainer">
-                    <div layout="row" layout-align="center start" class="bold ">
-                        <div flex="35" class="paddingLeft10">
-                            Course Name
-                        </div>
-                        <div flex layout="row" layout-align="center start">
-                            Duration
-                        </div>
-                        <div flex layout="row" layout-align="center start">
-                            Mode
-                        </div>
-                        <div flex layout="row" layout-align="center start">
-                            Fees
-                        </div>
-                        <div flex="5">
-                        </div>
-                        
-                    </div>
-                    <div ng-repeat="course in groupCourses" ng-if="course.exam == exam._id" class="editFont marginTB10 paddingB20">
-                        <div layout="row" layout-align="center start">
-                        <div flex="35" layout="column" class="paddingLeft10 paddingRight10 ">
-                            <input type="text" class="editFont width100"  id="course.name" ng-model="course.name"  placeholder="New Course" focus-me="$index == preAddCourseLength">
-                            <input type="text" class="editFont width100"  id="course.idealFor" ng-model="course.idealFor"  placeholder="Ideal for..">
-                            
-                        </div>
-                        <div flex="25" class="paddingLeft10 paddingRight10">
-                            <div layout="row">
-                                <input type="text" class="editFont width100"  id="course.hoursPerWeek" ng-model="course.hoursPerWeek"  placeholder="Hours per week">
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Course Preferences'">
+                        <div layout="column" layout-align="start start" class="academicRow academicSubSection paddingB20">
+                            <div layout="row" layout-align="start center" class="font16 marginB10 width100 academicSubHeader2">
+                                Tell us about the course at {{groupName}} you would like to join!
                             </div>
-                            <span ng-repeat="duration in durations" >
-                                <span class="badge editFont" id="tagHolder" ng-click="setCourseDuration(course, duration)" ng-if="course.duration != duration">
-                                {{duration}}
-                                </span>
-                                <span class="badge editFont" id="existingTagHolder" ng-click="setCourseDuration(course, duration)" ng-if="course.duration == duration">
-                                {{duration}}
-                                </span>&nbsp;
-                            </span>
-                            
-                        </div>
-                        <div flex class="paddingLeft10 paddingRight10">
-                            <span ng-repeat="mode in modes">
-                                <span class="badge editFont" id="tagHolder" ng-click="setCourseStudyMode(course, mode)" ng-if="course.mode != mode">
-                                {{mode}}
-                                </span>
-                                <span class="badge editFont" id="existingTagHolder" ng-click="setCourseStudyMode(course, mode)" ng-if="course.mode == mode">
-                                {{mode}}
-                                </span>&nbsp;
-                            </span>
-                            
-                        </div>
-                        <div flex class="paddingLeft10 paddingRight10">
-                            <input type="text" class="editFont width100"  id="course.fees" ng-model="course.fees"  placeholder="Course Fees">
-                            <span ng-repeat="feeType in feeTypes" >
-                                <span class="badge editFont" id="tagHolder" ng-click="setFeeType(course, feeType)" ng-if="course.feeType != feeType">
-                                {{feeType}}
-                                </span>
-                                <span class="badge editFont" id="existingTagHolder" ng-click="setFeeType(course, feeType)" ng-if="course.feeType == feeType">
-                                {{feeType}}
-                                </span>&nbsp;
-                            </span>
-                        </div>
-                        <div flex="5" layout="row" layout-align="center start" class="">
-                            <span class="badge text-black font20" ng-click="deleteCourse(course)" id="deleteBadge">
-                                <i class="fa fa-times" aria-hidden="true"></i>
-                            </span>
-                        </div>
-                    </div>
-                    </div>
-                    <div layout="row" layout-align="center center" id="upload3" ng-click="addCourse(exam)" class="">
-                        <span>
-                            <i class="fa fa-plus" aria-hidden="true"></i>
-                        </span>
-                    </div>
-                </div>
-                
-            </div>
-        </div> 
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div>
-    <div layout="row" layout-xs="column" class="componentRow  secondFont textLightGrey" id="Photos">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder" id="paneLeft">
-            <h1 class="componentRowElement"layout="column" layout-align="start start">
-                <span>
-                    Photos
-                    <!--<span class="badge" id="leftBadge">
-                        {{groupPhotos.length}}
-                        <md-tooltip>Provider had added a total of {{groupPhotos.length}} photos</md-tooltip>
-                    </span>-->
-                </span>
-            </h1>
-        </div>
-        <h1 class="col-xs-12 hide-gt-xs bottomBorder secondFont textLightGrey" id="paneLeft">
-            <span>
-                Photos
-                <!--<span class="badge" id="leftBadge">
-                    {{groupPhotos.length}}
-                    <md-tooltip>Provider had added a total of {{groupPhotos.length}} photos</md-tooltip>
-                </span>-->
-            </span>
-        </h1>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center thirdFont textDarkGrey" id="paneMiddle">
-                      
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="photo in groupPhotos" ng-if="$index<12" id="imageContainer" ng-click="showPhotoDialog($event, $index)">
-                    <div ng-if="$index != 11" id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
-                    </div>
-                    <div ng-if="$index == 11" id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}">
-                        <div layout="row" layout-align="center center" class="md-headline text-white" id="thumbnailText">
-                            +{{groupPhotos.length - 12}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="editPhoto" id="editSection">
-            <form name="editPhotoForm">
-            <div class="hidden-xs col-sm-6 col-md-6 col-lg-6" ng-repeat="photo in provider.photo" id="displayBox" >
-                 <!--| orderBy:'-_added'-->
-                <div class="hidden-xs col-sm-4 col-md-4 col-lg-4" id="elementBox">
-                    
-                    <div id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}" ng-click="showPhotoDialog($event, $index)" >
-                        <div layout="column" layout-align="center center" class="md-headline text-white md-display-2" id="thumbnailText">
-                            <div class="row" ng-if="$index >= preUploadPhotoLength">
-                                <span class="badge font9" id="addedButton">
-                                    Just Added
-                                </span>
-                            </div>
-                            <div class="row font9">
-                            Photo# {{$index + 1}} of {{provider.photo.length}}
-                            </div>
-                            <div class="row">
-                            <i class="fa fa-check-circle text-primary" ng-if="photo.active" aria-hidden="true"></i>
-                            <i class="fa fa-times-circle text-danger" ng-if="!photo.active" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <span class="badge font9" id="deleteButton" ng-click="deletePhoto(photo)">
-                            Delete
-                        </span>
-                    </div>
-                    <div class="row" ng-if="photo.uploadProgress">
-                        <md-progress-linear md-mode="determinate" value="{{photo.uploadProgress}}" id="progressBar"></md-progress-linear>
-                        <span><small>
-                            {{photo.size | bytes}}
-                        </small></span>
-                    </div>
-                </div>
-                <div class="hidden-xs col-sm-8 col-md-8 col-lg-8 text-left" id="elementBox" >
-                    <!-- ng-class="{ newUpload: $index >= preUploadPhotoLength }" -->
-                    <div layout="column" class="paddingLeft" >
-                        <div class="row">
-                            <input type="text" class="font9 width100"  id="photo.title" ng-model="photo.title"  placeholder="Title" focus-me="$index == preUploadPhotoLength">
-                        </div>
-                        <div class="row">
-                            <textarea class="font9 width100" ng-model="photo.description" placeholder="Description of the photo" rows="2"></textarea>
-                        </div>
-                        <div class="row font9 top-buffer10">
-                            <!--<span ng-repeat="tag in photo.tags">
-                                {{tag}}
-                                <span ng-if="!$last">
-                                ,&nbsp;
-                                </span>
-                            </span>-->
-                            <span class="badge font9" id="tagHolder" ng-click="showPhotoTagDialog($event, photo)" ng-if="photo.tags.length==0">
-                            Add Photo Tag
-                            </span>
-                            
-                            <span class="badge font9" id="existingTagHolder" ng-click="showPhotoTagDialog($event, photo)" ng-if="photo.tags.length>0">
-                            Edit Photo Tags
-                            </span>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Add New Photo -->
-            <div class="hidden-xs col-sm-6 col-md-6 col-lg-6" id="addBox" >
-                <div class="hidden-xs col-sm-4 col-md-4 col-lg-4" id="elementBox">
-                    <div id="thumbnailImage"  ng-click="showPhotoDialog($event, $index)" ></div>
-                </div>
-                <div layout="row" layout-align="center center" class="text-black editFont" id="AddButton" ngf-select="uploadPhotos(photos)" multiple="multiple" ng-model="photos" ngf-accept="'image/*'">
-                    <span class="font100">
-                        +
-                    </span>
-                </div>
-            </div>
-                
-            </form>
-            </div>
-            
-            
-        </div> 
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div>
-    
-    <div layout="row" layout-xs="column" class="componentRow " id="Videos">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder" id="paneLeft" ng-class="{ editing: editVideo }">
-            <h1 class="componentRowElement secondFont textLightGrey"layout="column" layout-align="start start">
-                <span>
-                    Videos
-                    <!--<span class="badge" id="leftBadge">
-                        {{groupVideos.length}}
-                        <md-tooltip>Provider had added a total of {{groupVideos.length}} videos</md-tooltip>
-                    </span>-->
-                </span>
-            </h1>
-        </div>
-        <h1 class="col-xs-12 hide-gt-xs bottomBorder secondFont textLightGrey" id="paneLeft">
-            <span>
-                Videos
-                <!--<span class="badge" id="leftBadge">
-                    {{groupVideos.length}}
-                    <md-tooltip>Provider had added a total of {{groupVideos.length}} videos</md-tooltip>
-                </span>-->
-            </span>
-        </h1>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
-             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-hide="editVideo">
-                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" ng-repeat="video in groupVideos" ng-if="$index<12">
-                    <div class="embed-responsive embed-responsive-16by9">
-                    <youtube-video class="margin10" video-url="video.link" class="embed-responsive-item" player-vars="playerVars"></youtube-video>
-                    </div>
-                </div>
-            </div>
-        </div> 
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div>
-    
-    <div layout="row" layout-xs="column" class="componentRow " id="Faculty" ng-if="groupFaculties.length > 0">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft" ng-class="{ editing: editFaculty }">
-            <h1 class="componentRowElement"layout="column" layout-align="start start">
-                <span>
-                    Faculty
-                    <!--<span class="badge" id="leftBadge">
-                        {{groupFaculties.length}}
-                        <md-tooltip>Provider had added a total of {{groupFaculties.length}} faculty photos</md-tooltip>
-                    </span>-->
-                </span>
-            </h1>
-        </div>
-        <h1 class="col-xs-12 hide-gt-xs bottomBorder secondFont textLightGrey" id="paneLeft">
-            <span>
-                Faculty
-                <!--<span class="badge" id="leftBadge">
-                    {{groupFaculties.length}}
-                    <md-tooltip>Provider had added a total of {{groupFaculties.length}} faculty photos</md-tooltip>
-                </span>-->
-            </span>
-        </h1>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 text-center" ng-repeat="faculty in groupFaculties" ng-if="$index<12" id="imageContainer" ng-click="showFacultyDialog($event, $index)">
-                    <div ng-if="$index != 11" id="thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}">
-                    </div>
-                    <div ng-if="$index == 11" id="thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}">
-                        <div layout="row" layout-align="center center" class="md-headline text-white" id="thumbnailText">
-                            +{{groupFaculties.length - 12}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            
-            
-        </div> 
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div>
-     
-    <div layout="row" layout-xs="column" class="componentRow " id="Location">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 bottomBorder secondFont textLightGrey" id="paneLeft" ng-class="{ editing: editLocation }">
-            <h1 class="componentRowElement"layout="row" layout-align="start start">
-                Location
-            </h1>
-        </div>
-        <h1 class="col-xs-12 hide-gt-xs bottomBorder secondFont textLightGrey" id="paneLeft">
-            Location
-        </h1>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement text-center" id="paneMiddle">
-            
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="map">
-                <ng-map default-style="false" zoom-to-include-markers=true  scrollwheel="false" minimum-zoom="12"  maximum-zoom="15">
-                <marker position="{{thisGroup.mapAddress}}"
-                      title="{{thisGroup.name}}"
-                      animation="Animation.DROP"
-                      centered="true" ng-repeat="thisGroup in group" ng-if="thisGroup.city == city"></marker>
-                </ng-map>
-            </div>
-            
-        </div> 
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1 componentRowElement" id="paneRight">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-    </div>
-        
-    
-    <div layout="row" layout-xs="column" class="componentRow secondFont marginB80" id="Reviews">
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
-        </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1  bottomBorder textLightGrey" id="paneLeft" >
-            <h1 class="componentRowElement height100" layout="column" layout-align="start start" >
-                Reviews
-            </h1>
-        </div>
-        <h1 class="col-xs-12 hide-gt-xs bottomBorder textLightGrey" id="paneLeft">
-            Reviews
-        </h1>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 bottomBorder componentRowElement editFont" id="paneMiddle">
-            <!--<div layout="row" layout-align="center center" id="upload2" ng-click="editUserReviewMode()" class="marginB10 secondFont textLightGrey" ng-show="!userReviewMode">
-                <span>
-                    <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Add
-                </span>
-            </div>-->
-            
-            <div class="greyBorder paddingTB20"  id="userReview">
-            <div layout="row" class="marginB5 secondFont bold textDarkGrey">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <span ng-if="user.image">
-                        <img ng-src="{{user.image}}" id="userPicSmall" class="img-circle"/>
-                        </span>
-                        <span class="marginL10">
-                        <span hide-xs>
-                            <span ng-if="!userReview._id">
-                                Add
-                            </span>
-                            <span ng-if="userReview._id">
-                                {{user.basic.name}}, thank you for
-                            </span>
-                            &nbsp;your Review of {{provider.name}}, {{city}}
-                        </span>
-                        <span class="font14" hide-gt-xs>
-                            <span ng-if="!userReview._id">
-                                Add
-                            </span>
-                            <span ng-if="userReview._id">
-                                {{user.basic.name}}, thank you for
-                            </span>
-                            &nbsp;your Review of {{provider.name}}
-                        </span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div layout="row" class="marginB5">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 marginB10" ng-repeat="reviewParam in reviewParams">
-                    <div flex class="textBlack  text-left">
-                        {{reviewParam.displayname}}
-                    </div>
-                    <div layout="row" layout-align="start center" >
-                        <div ng-repeat="review in reviews" layout-align="center" id="reviewCell" ng-click="setReview(reviewParam.name, review, userReview)" ng-mouseenter="logMouseEvent(reviewParam,  $index)"  ng-mouseleave="logMouseEvent(reviewParam,  $index)" class="noreview" ng-class="getBackgroundColour(reviewParam,  $index, userReview)">
-                        </div>
-                        <div layout="row" layout-align="center center"  class="secondFont bold">
-                        <div layout="row" layout-align="center center" id="reviewCellEmpty">
-                        <span ng-if="userReview[reviewParam.name]" class="textBlack">
-                            {{userReview[reviewParam.name] | number:1}}
-                        </span>
-                        </div>
-                        </div>
-                    </div>
-                    
-                    
-                </div>
-                
-            </div>
-            </div>
-            <div layout="row" class="marginTB5 marginLR10">
-                
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="font10 text-right" ng-if="userReview.text.length < minTextLength">{{userReview.text.length}} chars. Review needs to be atleast {{minTextLength}} characters long</div>
-                    <div class="font10 text-right" ng-if="userReview.text.length > 10 && userReview.text.length >= minTextLength">{{userReview.text.length}} chars <i class="fa fa-check-circle text-primary" aria-hidden="true"></i></div>
-                    <textarea class="font12 width100" ng-model="userReview.text" placeholder="{{placeholder}}" rows="3" id="userText" ng-class="userReview.text >= minTextLength"></textarea>
-                    
-                </div>
-            </div>
-                
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">    
-            <div layout-wrap layout="row" layout-align="start center" class="font12 marginLR10">
-                <div layout="row" layout-align="start center" class="paddingR10 textBlack">
-                Tag your review:
-                </div>
-                <div layout="row" layout-align="start center" ng-repeat="reviewTag in reviewTags" class="">
-                    <span class="badge font10 marginR5 marginTB5" ng-class="setReviewTagColor(reviewTag)" ng-click="addRemoveReviewTag(reviewTag)">
-                        {{reviewTag}}
-                    </span>
-                </div>
-            </div>
-            </div>
-            <div layout="row" layout-align="end center" class="marginT10 width100">
-                
-                <div layout="row" layout-align="end center" class="paddingR10 width100">
-                
-                    
-                <md-input-container class="text-primary">
-                  <md-select required ng-model="userReview.year_of_start"  placeholder="Select Year of Study (start)">
-
-                    <md-option ng-value="year" ng-repeat="year in years" class="text-primary" ng-click="updateUserReviewYear(year)">
-                      {{year}}
-                    </md-option>
-                  </md-select>
-                </md-input-container>    
-                    
-                <md-button class="md-raised md-primary  font12"  id="doneButton" ng-disabled="invalidSubmit()" ng-click="selectReviewCentre()">Submit</md-button>
-                </div>
-            </div>
-            </div>
-            
-            <div class=" marginT10 secondFont textDarkGrey" ng-if="otherReviews.length > 0">
-                <div layout="column" layout-align="start start" class="font20 paddingLR20">
-                User Reviews
-                </div>
-                     
-                <div layout="column" layout-align="center start" ng-repeat="otherReview in otherReviews" class="paddingTB10 paddingLR20">
-                    <div layout="column" layout-align="start start" class="marginB10 width100">
-                        <div layout="row" layout-align="start center">
-                            <div ng-if="otherReview.user.image">
-                            <img ng-src="{{otherReview.user.image}}" id="userPicSmall" class="img-circle"/>
-                            </div>
-                            <div layout="column" layout-align="center start" class="marginL10">
-                            <div layout="row" layout-align="start center">
-                                <span>
-                                {{otherReview.user.basic.name}}
-                                </span>
-                                <span class="font12 textLightGrey marginL5">
-                                reviewed 
-                                <span>
-                                    {{otherReview.institute.name}} Centre
-                                    <span ng-if="thisGroup.location.area">
-                                    , {{otherReview.institute.location.area}}
-                                    </span>
-                                    <md-tooltip>{{otherReview.institute.address}}</md-tooltip>
-                                </span>
-                                <span>
-                                    on {{otherReview._created | date:'longDate'}}
-                                </span>    
-                                </span>
-                            </div>
-                            <div layout="row" layout-align="start center" class="font12 textLightGrey">
-                                {{otherReview.institute.address}}
-                            </div>    
-                                
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div layout="row" layout-align="start start" class="marginB10 width100">
-                        
-                    </div>
-                    <div layout="row" layout-align="start start" class="marginB5 width100">
-                        
-                        
-                        <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 font12" ng-repeat="reviewParam in reviewParams">
-                            <div layout="row" layout-align="start start">
-                            <div flex class="textBlack  text-left">
-                                {{reviewParam.displayname}}
-                            </div>
-                            <div layout="row" layout-align="start center" >
-                                <div ng-repeat="review in reviews" layout-align="center" id="smallreviewCell"  class="noreview" ng-class="getBackgroundColour(reviewParam,  $index, otherReview)">
-                                </div>
-                                <div layout="row" layout-align="center center"  class="secondFont bold">
-                                <div layout="row" layout-align="center center" id="smallreviewCellEmpty">
-                                <span ng-if="otherReview[reviewParam.name]" class="textBlack font12">
-                                    {{otherReview[reviewParam.name] | number:1}}
-                                </span>
-                                </div>
+                            <div layout="row" layout-align="start center" class="fieldRow">
+                                <div layout="row" layout-align="start center" flex="{{col1WidthAcademic}}" class="col1">Exam</div>
+                                <div layout="row" layout-align="start center" flex class="col2">
+                                    {{exam.seoname}}
                                 </div>
                             </div>
+                            <div layout="row" layout-align="start center" class="fieldRow">
+                                <div layout="row" layout-align="start center" flex="{{col1WidthAcademic}}" class="col1">Course Name</div>
+                                <div layout="row" layout-align="start center" flex class="col2">
+                                    <input type="text" class="width100" ng-model="availDiscount.course.name"  placeholder="Course Name">
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="fieldRow">
+                                <div layout="row" layout-align="start center" flex="{{col1WidthAcademic}}" class="col1">Course Duration</div>
+                                <div layout="row" layout-align="start center" flex class="col2">
+                                    <input type="text" class="width100" ng-model="availDiscount.course.duration"  placeholder="Course Duration (months or years)">
+                                </div>
                             </div>
                         </div>
-
                     </div>
-                        
-                    </div>
-                    <div layout="row" layout-align="start start" class="font12 marginT10">
-                        {{otherReview.text}}
-                    </div>
-                    <div layout="row" layout-xs="column" layout-align="start center" class="width100 font12 marginT10 paddingTB10 gainsboroBorder" ng-if="otherReview.user._id == user.userId">
-                        <div flex layout="row" layout-align="start center" class="bold paddingL10">
-                            Thank you for reviewing {{otherReview.institute.name}}, unlock exclusive discounts brought to you by Exambazaar!
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Thank you'">
+                        <div layout="column" layout-align="start start" class="fieldRow width100">
+                            <div class="width100">
+                                We have received your request for {{exam.seoname}} coaching at {{groupName}} on {{availDiscount._created | date: "MMMM dd, yyyy"}} and will get back to you shortly.
+                            </div>
+                            <div class="width100 textLightGrey ">
+                            You can write to us at team@exambazaar.com for any followups!
+                            </div>
+                            
                         </div>
-                        
-                        
-                        <div  layout="row" layout-align="end center" class="">
-                        
-                            <md-button class="md-danger md-small font10 width8" class="marginL10" ng-if="!otherReview.coupon && otherReview.active" ui-sref="availOffer({ userId:{{'user.userId'}}, reviewId:{{'otherReview._id'}} })">
-                                Avail Discount
+                    </div>
+                    <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="end start" class="width100">
+                            <md-button class="md-black md-large tolowercase margin0 previousButton" ng-click="setPreviousActiveCategory()" ng-if="activeCategory.name != components[0].name && activeCategory.name != components[components.length-1].name">
+                                Previous
                             </md-button>
-
-                            <md-button class="md-green2 md-small font10 width8"  class="marginL10" ng-if="otherReview.coupon && otherReview.active" ui-sref="availOffer({ userId:{{'user.userId'}}, reviewId:{{'otherReview._id'}} })">
-                                Your Coupon
+                            <md-button class="md-next md-large tolowercase margin0 nextButton" ng-click="setNextActiveCategory()" ng-if="activeCategory.name != components[components.length-1].name">
+                                Next Section
                             </md-button>
-
-                            <div ng-if="!otherReview.active" class="danger bold">
-                            Review Disabled by Admin
-                            </div>
                         </div>
+
                     </div>
+                        
+                        
                 </div>
+                    
+                    
+                    
+                    
+               </div>    
+            </div>
+        
             </div>
         </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+    </div>
+    </div>
+</div>
+
+
+
+<!--<div class="bottomBar">
+    <div layout="row" layout-align="start center">
+        <div flex ="80">
+            <span>
+            Do you want to save changes to your profile? 
+            </span>
         </div>
-        <div class="hidden-xs col-sm-1 col-md-1 col-lg-1">
+        <div layout="row" layout-align="end center" flex = "20">
+            <md-button class="md-danger md-small font10 width8" ng-click="saveUser()">
+                Save
+            </md-button>
         </div>
-    </div>    
-        
-        
         
     </div>
-    
- </div>
-
-
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="photoDialog">
-      <md-dialog class="fullscreen-dialog dialogText">
-        <div layout="row" layout-xs="column" layout-fill layout-margin>
-            <div hide-gt-xs flex-xs="5">
-            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
-            </div>
-            <div flex-gt-xs="95" flex-xs="95" layout = "row" layout-xs="column">
-                <div flex="100" layout ="column">
-                    <div flex="80" >
-                        <div layout="row" layout-align="center center" class="fillParent">
-                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
-                             <span id = "prevButton" class="md-subhead" ng-click="prevPhoto()">
-                              <i class="fa fa-chevron-circle-left" aria-hidden="true" ></i>
-                             </span>
-                            </div>
-                            <div flex="80" class="fillParent" layout="row" layout-align="center center">
-                             <img ng-src="{{activePhoto.image}}" id="firstContainerImage" />
-                            </div>
-                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
-                             <span id = "nextButton"  class="md-subhead" ng-click="nextPhoto()">
-                              <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-                             </span>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div flex="20">
-                        <div layout="row" layout-align="center center">
-                          <div flex = "10" class="opaqueImage" ng-repeat="photo in groupPhotos" ng-if="$index >= startPhotoIndex &&  $index < endPhotoIndex" layout-padding>
-                            <div id="thumbnailImage" ng-style="{'background-image':'url({{photo.image}})'}" ng-click="changePhotoImage($index)">
-                            </div>
-                          </div>
-                      </div>
-                    </div>
-                </div>
-            </div>
-            <div flex-gt-xs="0" flex-xs="0" layout = "column">
-                <div layout="column" layout-margin>
-                    <small>
-                    
-                    <div class="md-subhead">{{activeFaculty.name | uppercase}}
-                    </div>
-                    <div class="textCCC">
-                        {{activeFaculty.subject}}
-                        <span ng-if="activeFaculty.yearsExperience">
-                        &nbsp;|&nbsp;{{activeFaculty.yearsExperience}} years of Experience
-                        </span>
-                        
-                    </div>
-                    <div class="textCCC">
-                            {{activeFaculty.qualification}}
-                    </div>
-                    <div class="top-buffer10 text-justify textCCC">
-                        {{activeFaculty.description}}
-                    </div>
-                    </small>
-                </div>
-            </div>
-            <div hide-xs flex-gt-xs="5" class="" layout="row" layout-align="end start">
-            <span class="pull-right" ng-click="cancel()" id="closeButton"><i class="fa fa-times" aria-hidden="true"></i></span>
-            </div>
-        </div>
-      </md-dialog>
-</div>    
-</div>
-
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="facultyDialog">
-      <md-dialog class="fullscreen-dialog dialogText">
-        <div layout="row" layout-xs="column" layout-fill layout-margin>
-            <div hide-gt-xs flex-xs="5">
-            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
-            </div>
-            <div flex-gt-xs="65" flex-xs="65" layout = "row" layout-xs="column">
-                <div flex="100" layout = "column">
-                    <div flex="80" >
-                        <div layout="row" layout-align="center center" class="fillParent">
-                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
-                             <span id = "prevButton" class="md-subhead" ng-click="prevFaculty()">
-                              <i class="fa fa-chevron-circle-left" aria-hidden="true" ></i>
-                             </span>
-                            </div>
-                            <div flex="80" class="fillParent" layout="row" layout-align="center center">
-                             <img ng-src="{{activeFaculty.image}}" id="firstContainerImage" />
-                            </div>
-                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
-                             <span id = "nextButton"  class="md-subhead" ng-click="nextFaculty()">
-                              <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-                             </span>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div flex="20">
-                        <div layout="row" layout-align="center center">
-                          <div flex = "10" class="opaqueImage" ng-repeat="faculty in groupFaculties" ng-if="$index >= startFacultyIndex &&  $index < endFacultyIndex" layout-padding>
-                            <div id="thumbnailImage" ng-style="{'background-image':'url({{faculty.image}})'}" ng-click="changeFacultyImage($index)">
-                            </div>
-                          </div>
-                      </div>
-                    </div>
-                </div>
-            </div>
-            <div flex-gt-xs="30" flex-xs="30" layout = "column">
-                <div layout="column" layout-margin>
-                    <small>
-                    
-                    <div class="md-subhead">{{activeFaculty.name | uppercase}}
-                    </div>
-                    <div class="textCCC">
-                        {{activeFaculty.subject}}
-                        <span ng-if="activeFaculty.yearsExperience">
-                        &nbsp;|&nbsp;{{activeFaculty.yearsExperience}} years of Experience
-                        </span>
-                        
-                    </div>
-                    <div class="textCCC">
-                            {{activeFaculty.qualification}}
-                    </div>
-                    <div class="top-buffer10 text-justify textCCC">
-                        {{activeFaculty.description}}
-                    </div>
-                    </small>
-                </div>
-            </div>
-            <div hide-xs flex-gt-xs="5">
-            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
-            </div>
-        </div>
-      </md-dialog>
-</div>    
-</div>
-
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="resultsDialog">
-      <md-dialog class="fullscreen-dialog dialogText">
-        <div layout="row" layout-xs="column" layout-fill layout-margin>
-            <div hide-gt-xs flex-xs="5">
-            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
-            </div>
-            <div flex-gt-xs="65" flex-xs="65" layout = "row" layout-xs="column">
-                <div flex="100" layout = "column">
-                    <div flex="80" >
-                        <div layout="row" layout-align="center center" class="fillParent">
-                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
-                             <span id = "prevButton" class="md-subhead" ng-click="prevResult()">
-                              <i class="fa fa-chevron-circle-left" aria-hidden="true" ></i>
-                             </span>
-                            </div>
-                            <div flex="80" class="fillParent" layout="row" layout-align="center center">
-                             <img ng-src="{{activeResult.image}}" id="firstContainerImage" />
-                            </div>
-                            <div flex="10" class="fillParent" layout="row" layout-align="center center">
-                             <span id = "nextButton"  class="md-subhead" ng-click="nextResult()">
-                              <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-                             </span>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div flex="20">
-                        <div layout="row" layout-align="center center">
-                          <div flex = "10" class="opaqueImage" ng-repeat="result in groupResults track by $index" ng-if="$index >= startResultIndex &&  $index < endResultIndex" layout-padding>
-                            <div id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}" ng-click="changeResultImage($index)">
-                            </div>
-                          </div>
-                      </div>
-                    </div>
-                </div>
-            </div>
-            <div flex-gt-xs="30" flex-xs="30" layout = "column">
-                <div layout="column" layout-margin>
-                    <small>
-                    
-                    <div class="md-subhead">{{activeResult.name | uppercase}}
-                    </div>
-                    <div class="textCCC">
-                        {{activeResult.exam.displayname}}&nbsp;
-                        {{activeResult.year}}<br/>
-                        All India Rank: {{activeResult.rank}}<br/>
-                        Category: {{activeResult.category}}
-                        
-                    </div>
-                    <div class="textCCC">
-                            {{activeResult.qualification}}
-                    </div>
-                    <div class="top-buffer10 text-justify textCCC">
-                        {{activeResult.description}}
-                    </div>
-                    </small>
-                </div>
-            </div>
-            <div hide-xs flex-gt-xs="5">
-            <span class="pull-right" id="closeButton" ng-click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></span>
-            </div>
-        </div>
-      </md-dialog>
-</div>    
-</div>
-
-
-
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="savedReviewDialog">
-      <md-dialog>
-          <div layout="row" layout-xs="column" layout-padding layout-align="center center" id="dialogHeaderWhite" >
-              <div class="margin20 padding10">
-                <span class="text-primary md-headline">
-                  <i class="fa fa-check-square" aria-hidden="true"></i>
-                </span>
-                <span class="md-title">
-                    Review Saved!
-                </span>
-                
-              </div>
-          </div>
-      </md-dialog>
-    </div>    
-</div>
-
-
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="selectReviewCentreDialog">
-      <md-dialog class="fullscreen-dialog2 padding20">
-          <div layout="column" layout-align="center center" class="width100">
-              <div layout="row" layout-align="center center" class="width100 paddingB20 marginB20 secondFont textBlack bold text-center">
-                Select the centre of {{provider.name}} in {{city}} you want to review
-              </div>
-              
-              <div layout-wrap layout="row" layout-align="center center" class="width100 marginTB20">
-                  <div flex-xs="100" flex-gt-xs="33" ng-repeat="thisGroup in group" layout="column" class="editFont font10 textDarkGrey paddingLRB10" ng-if="thisGroup.city == city" ng-click="updateReviewInstitute(thisGroup)" >
-                    <div class="padding10" ng-class="getReviewSelectedColour(thisGroup)">
-                        <div id="contactDialogbox" >
-                        <div layout="row" class="secondFont font12 bold greyBottomBorder">
-                            <span ng-if="!thisGroup.location.area">
-                                Centre
-                            </span>
-                            <span ng-if="thisGroup.location.area">
-                                {{thisGroup.location.area}}
-                            </span>
-
-                        </div>
-                        <h3 layout="row" id="addressRow" class="secondFont font12 textLightGrey marginB5" >
-                            {{thisGroup.address}}
-                        </h3>
-
-                    </div>
-                    </div>
-                    </div>
-                  
-              </div>
-              
-              <div layout-wrap layout="row" layout-align="center center" class="width100 paddingB10 font10 danger" ng-if="reviewCentreError">
-                    Pick a centre    
-              </div>
-              
-              <div layout="row" layout-align="center center" class="width100 paddingB10 paddingT20 font10 danger">
-                    <div flex="35" class="marginR20">   
-                        <md-button class="md-small md-signup font12 tolowercase width100"  ng-click="cancelSelectReviewCentre()">Cancel</md-button>
-                    </div>
-                    <div flex="35">
-                        <md-button class="md-small md-green2  font12 tolowercase width100"  ng-disabled="invalidSubmit()" ng-click="submitReview()">Submit</md-button>
-                    </div>    
-              </div>
-              
-        </div>
-      </md-dialog>
-    </div>    
-</div>
-
-
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="selectShortlistCentreDialog">
-      <md-dialog class="halfscreen-dialog2 padding20">
-          <div layout="column" layout-align="center center" class="width100">
-              <div layout="row" layout-align="center center" class="width100 paddingB20 marginB20 secondFont textBlack bold text-center">
-                Shortlist centres of {{provider.name}} in {{city}}
-              </div>
-              
-              <div layout-wrap layout="row" layout-align="center center" class="width100 marginTB20">
-                  <div flex-xs="100" flex-gt-xs="33" ng-repeat="thisGroup in group" layout="column" class="editFont font10 textDarkGrey paddingLRB10" ng-if="thisGroup.city == city" ng-click="updateShortlistInstitute(thisGroup)" >
-                    <div class="lightGreyBorder padding10" ng-class="getShortlistSelectedColour(thisGroup)">
-                        <div id="contactDialogbox" >
-                        <div layout="row" class="secondFont font12 bold greyBottomBorder">
-                            <span ng-if="!thisGroup.location.area">
-                                Centre
-                            </span>
-                            <span ng-if="thisGroup.location.area">
-                                {{thisGroup.location.area}}
-                            </span>
-
-                        </div>
-                        <h3 layout="row" id="addressRow" class="secondFont font12 textLightGrey marginB5" >
-                            {{thisGroup.address}}
-                        </h3>
-                        <div layout="row" layout-align="start center" class="marginB5" ng-if="shortlistedIds.indexOf(thisGroup._id) != -1">
-                            <div>
-                            <i class="fa fa-heart" aria-hidden="true"></i>
-                            &nbsp;Shortlisted on 
-                            {{shortlistDetails[shortlistedIds.indexOf(thisGroup._id)]._date | date:'dd MMM yy'}}
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                  
-              </div>
-              
-              <div layout-wrap layout="row" layout-align="center center" class="width100 paddingB10 font10 danger" ng-if="reviewCentreError">
-                    Pick a centre    
-              </div>
-              
-              <!--<div layout-wrap layout="row" layout-align="center center" class="width100 paddingB10 paddingT20 font10 danger">
-                    <div flex="35" class="marginR20">   
-                        <md-button class="md-small md-signup font12 tolowercase width100"  ng-click="cancelSelectReviewCentre()">Cancel</md-button>
-                    </div>
-                    <div flex="35">
-                        <md-button class="md-small md-green2  font12 tolowercase width100"  ng-disabled="invalidSubmit()" ng-click="submitReview()">Submit</md-button>
-                    </div>    
-              </div>-->
-              
-        </div>
-        </div>
-      </md-dialog>
-    </div>    
-</div>
-
-
-
-<div style="visibility: hidden">    
-    <div class="md-dialog-container" id="availDiscountDialog">
-      <md-dialog class="availDiscount">
-          <div layout="column" layout-align="center center" class="width100">
-              <div layout="row" layout-align="center center" class="width100">
-                <img src="images/popups/apply_discount.png" class="width100"/>
-              </div>
-              <div layout="row" layout-xs="column" layout-align="center center" class="width100 padding10 secondFont">
-                  <div layout="row" layout-align="center center" flex class="width100 padding10 ">
-                    <input type="text" class="width100" ng-model="discountForm.email"  placeholder="Email Address">
-                  </div>
-                  <div layout="row" layout-align="center center" flex class="width100 padding10 ">
-                    <input type="text" class="width100" ng-model="discountForm.mobile"  placeholder="Mobile">
-                  </div>
-                  <div layout="row" layout-align="center center" class="padding10 ">
-                    <md-button class="md-small md-green2  font12 tolowercase margin0 " ng-click="availDiscount2()">Apply</md-button>
-                  </div>
-              </div>
-        </div>
-      </md-dialog>
-    </div>    
-</div>
-<!--selectShortlistCentreDialog-->
-
-
-
-
-
+</div>-->
