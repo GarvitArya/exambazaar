@@ -508,7 +508,7 @@
                            
                             
                             
-                    <div flex layout="row" class="paddingLR10 paddingTB20" ng-repeat="streamExam in validStreamExams | orderBy:'-stream.rank'">
+                    <div layout="row" class="paddingLR10 paddingTB20 width100" ng-repeat="streamExam in validStreamExams | orderBy:'-stream.rank'">
 
                     <div flex="25" class="bold font16">
                         <div class="width100">
@@ -516,7 +516,7 @@
                         </div>
                     </div>
                     <div flex layout="column" layout-align="start start" class="width100">
-                        <div ng-repeat="examElig in streamExam.examEligs | orderBy:'-exam.rank'" layout="column" layout-align="start start" class="width100 paddingB10 paddingLR10">
+                        <div ng-repeat="examElig in streamExam.examEligs | orderBy:'-exam.rank'" layout="column" layout-align="start start" class="width100  paddingLR10">
                         <div layout="row" layout-align="start start" class="padding10 width100" id="examBox">  
                             <div flex ="30" layout="column" layout-align="start start" class="paddingLR20">
                                 <img ng-src="{{examElig.exam.logo}}" id="logo"/>
