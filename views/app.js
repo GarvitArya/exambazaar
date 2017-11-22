@@ -35493,7 +35493,7 @@ function getLatLng(thisData) {
             resolve: {
                 examList: ['ExamService',
                     function(ExamService){
-                    return ExamService.getExams();
+                    return ExamService.getExamsBasic();
                 }],
                 streamList: ['StreamService',
                     function(StreamService){
