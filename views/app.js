@@ -31326,7 +31326,15 @@ function getLatLng(thisData) {
             
             
         }; 
+        
             
+        $scope.removeSyllabus = function(syllabus){
+            var syllabusIds = $scope.newExamCycle.syllabus.map(function(a) {return a.url;});
+            var sIndex = syllabusIds.indexOf(syllabus.url);
+            if(sIndex!= -1){
+                $scope.newExamCycle.syllabus.splice(sIndex,1);
+            }
+        };    
     }]);
         
         
@@ -31837,7 +31845,9 @@ function getLatLng(thisData) {
         };
             
         $scope.removeSyllabus = function(syllabus){
+            console.log(syllabus);
             var syllabusIds = $scope.newExamCycle.syllabus.map(function(a) {return a.url;});
+            console.log(syllabusIds);
             var sIndex = syllabusIds.indexOf(syllabus.url);
             if(sIndex!= -1){
                 $scope.newExamCycle.syllabus.splice(sIndex,1);
