@@ -10376,7 +10376,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Jalgaon",
             "Kurnool",
             "Gandhinagar",
-
+            "Ajmer"
         ];
         
         if($cookies.getObject('sessionuser')){
