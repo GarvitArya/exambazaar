@@ -37532,7 +37532,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         "addSendGridCredential",
         "addAwsCredential",
         "addSubscriber",
-        "addExam",
+        
         "addEligibility",
         "addMaster",
         "manageUsers",
@@ -37542,6 +37542,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
 
     ];
     var atleastInternState = [
+        "addExam",
         "scheduleQAD",
         "suggestCoaching",
         "addedInstitutes",
