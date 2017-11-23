@@ -9173,7 +9173,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("footerController", 
         [ '$scope', '$rootScope', 'ExamService', function($scope, $rootScope, ExamService){
-        $scope.maintenance = true;    
+        $scope.maintenance = false;    
         if(!$rootScope.streamExams || $rootScope.streamExams.length == 0){
             ExamService.getExamsBasic().success(function (data, status, headers) {
                 var doNotShow = ['Other', 'Insurance', 'School'];
@@ -9210,7 +9210,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);     
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS','$timeout', '$window', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS,$timeout, $window){
-            $scope.maintenance = true;
+            $scope.maintenance = false;
             
             
             $rootScope.searchMode = false;
@@ -34822,7 +34822,7 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'maintenance.html',
+                    templateUrl: 'p0.html',
                     controller: 'p0Controller'
                 },
                 'footer': {
