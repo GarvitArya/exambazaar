@@ -9399,8 +9399,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
-            var forceLoginStates = ['showGroup', 'claim', 'rankerswall'];
-            
+            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'k21'];
+            console.log($state.current.name);
             SidebarJS.close();
             if(forceLoginStates.indexOf($state.current.name) != -1){
                 //console.log('I am here');
@@ -9865,7 +9865,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if(newValue)
             newValue = newValue.toString();
             if(newValue && newValue.length == 10){
-                $scope.showVerifyOTP = true;
+                //$scope.showVerifyOTP = true;
+                //Change this back
+                $scope.showVerifyOTP = false;
+                $scope.OTPVerified = true;
                 $scope.userExistMessage = null;
             }
 
@@ -14614,6 +14617,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.disabled = false;
             }
             
+            $scope.setQuestion = function(question){
+                $scope.question = question;
+            };
+            
+            
             var sanitizeQuestion = function(question){
                 if(question && question.context){
                     question.context = question.context.replace(/\n/ig, '<br/>');
@@ -14693,7 +14701,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.testQuestions = thisTestQuestions.data;
                 $rootScope.pageTitle = "K21 Academy";
                 var nQuestions = $scope.testQuestions.length;
-                
+                $scope.setQuestion($scope.testQuestions[0]);
                  $scope.testQuestions.forEach(function(thisQuestion, index){
                     thisQuestion = sanitizeQuestion(thisQuestion);
                 });
@@ -14755,8 +14763,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });
             }else{
-                $scope.user = null;
-                $scope.showLoginForm();
+                //$scope.user = null;
+                //$rootScope.$emit("CallBlogLogin", {});
             }
             var optionsPrefix = [
                 'A) ',
@@ -14852,9 +14860,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             }, true);
             
-            $scope.setQuestion = function(question){
-                $scope.question = question;
-            };
+            
             $scope.setNextQuestion = function(question){
                 var questionId = question._id;
                 var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
@@ -14899,7 +14905,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.question = $scope.testQuestions[0];
                 }
             };
-            $scope.setQuestion($scope.testQuestions[0]);
+            
             
             $scope.markAnswer = function(question, subquestion, option){
                 var questionresponseForm = {
@@ -38126,7 +38132,17 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         }else{
             console.log('Not EB Internal');
         }
-        
+        if(stateTo == 'k21'){
+            if($cookies.getObject('sessionuser')){
+                
+                
+            }else{
+                
+                $cookies.remove('sessionuser');
+                $rootScope.$emit("ForcedLogin", {});
+                
+            }
+        }
         
         /*if(cookies.getObject('sessionuser')){
             var user = cookies.getObject('sessionuser');
