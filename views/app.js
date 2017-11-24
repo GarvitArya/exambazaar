@@ -13731,6 +13731,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //$scope.currLocation = [17.413502, 78.528736];
                 //$scope.currLocation = [24.434886, 77.161200];
                 //$scope.currLocation = [17.318687, 78.543050];
+                $scope.currLocation = [26.775534, 75.877486];
             }
             function displayError(error) {
               var errors = { 
@@ -34362,12 +34363,17 @@ function getLatLng(thisData) {
                 
             }else{
                 var nContent = $scope.blogpost.content.length;
-                var cutoff = Math.round(nContent/2);
-                $scope.blogpost.lockedcontent = $scope.blogpost.content.substring(cutoff, nContent);
+                var cutoff = Math.round(nContent/4);
+                var cutoff2 = Math.round(2*nContent/4);
+                var cutoff3 = Math.round(3*nContent/4);
+                $scope.blogpost.lockedcontent1 = $scope.blogpost.content.substring(cutoff, cutoff2);
+                
+                $scope.blogpost.lockedcontent2 = $scope.blogpost.content.substring(cutoff2, cutoff3);
+                $scope.blogpost.lockedcontent3 = $scope.blogpost.content.substring(cutoff3, nContent);
                 
                 $scope.blogpost.content = $scope.blogpost.content.substring(0, cutoff);
                 
-                console.log($scope.blogpost.lockedcontent);
+                //console.log($scope.blogpost.lockedcontent);
                 
                 if(!$scope.thisUserComment){
                     $scope.thisUserComment = $scope.newComment;

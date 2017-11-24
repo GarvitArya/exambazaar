@@ -97,7 +97,11 @@
     
     .blur {
        color: transparent;
-       text-shadow: 0 0 5px rgba(0,0,0,0.5);
+       text-shadow: 0 0 2px rgba(0,0,0,0.2);
+    }
+    .blur img{
+        filter: blur(5px);
+        -webkit-filter: blur(5px);
     }
     
 </style>
@@ -227,7 +231,23 @@
                     </md-button>
                     <div class="blogFont textLightGrey font12">Login/signup into Exambazaar to read the rest of this blog. Remember, our blog is always free!</div>
                     </div>    
-                    <div class="width100 marginTB20 blogContent blur disable-text-selection" ng-bind-html="blogpost.lockedcontent" ng-if="!user" www.exambazaar.com>
+                    <div class="width100 marginTB20 blogContent blur disable-text-selection" ng-bind-html="blogpost.lockedcontent1" ng-if="!user" www.exambazaar.com>
+                     </div>
+                    <div layout="column" layout-align="center center" class="marginTB20 width100">
+                    <md-button class="md-danger md-small tolowercase" ng-click="continueReading()">
+                        <i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;Continue Reading
+                    </md-button>
+                    <div class="blogFont textLightGrey font12">Login/signup into Exambazaar to read the rest of this blog. Remember, our blog is always free!</div>
+                    </div>
+                    <div class="width100 marginTB20 blogContent blur disable-text-selection" ng-bind-html="blogpost.lockedcontent2" ng-if="!user" www.exambazaar.com>
+                     </div>
+                    <div layout="column" layout-align="center center" class="marginTB20 width100">
+                    <md-button class="md-danger md-small tolowercase" ng-click="continueReading()">
+                        <i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;Continue Reading
+                    </md-button>
+                    <div class="blogFont textLightGrey font12">Login/signup into Exambazaar to read the rest of this blog. Remember, our blog is always free!</div>
+                    </div>
+                    <div class="width100 marginTB20 blogContent blur disable-text-selection" ng-bind-html="blogpost.lockedcontent3" ng-if="!user" www.exambazaar.com>
                      </div>
                 </div>
                 
