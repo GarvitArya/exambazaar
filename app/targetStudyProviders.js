@@ -3013,13 +3013,13 @@ router.get('/cityStateService2', function(req, res) {
     console.log("City State 2 Service Starting now");
     
     res.json('Done');
-    var allProviders = targetStudyProvider.find({type:'Coaching', city:'Vishakhapatnam'}, {name:1, city:1, state:1},function(err, allProviders) {
+    var allProviders = targetStudyProvider.find({type:'Coaching', city:'Bhubaneshwar'}, {name:1, city:1, state:1},function(err, allProviders) {
         if (!err){
             var nProviders = allProviders.length;
             var counter = 0;
             console.log("There are " + nProviders + " providers!");
             allProviders.forEach(function(thisprovider, index){
-                thisprovider.city = 'Visakhapatnam';
+                thisprovider.city = 'Bhubaneswar';
                 thisprovider.save(function(err, thisprovider) {
                     if (err) return console.error(err);
                     console.log(index + ' ' + thisprovider._id + " saved!");
