@@ -30,6 +30,7 @@ var questionSchema = mongoose.Schema({
     exam: { type: Schema.ObjectId, ref: 'exam'},
     
     active : { type: Boolean, default: true},
+    _answerExists : { type: Boolean, default: false},
     _readyToPublish : { type: Boolean, default: false},
     _created: { type: Date, default: Date.now },
     _createdBy: { type: Schema.ObjectId, ref: 'user' },

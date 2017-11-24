@@ -132,18 +132,64 @@ router.get('/exam/:examId', function(req, res) {
     
 });
 
+router.get('/markAnswerExists', function(req, res) {
+    res.json(true);
+    question
+        .find({}, {questions: 1})
+        //.deepPopulate('exam')
+        .exec(function (err, allQuestions) {
+        if (!err){
+            allQuestions.forEach(function(thisQuestion, qIndex){
+                var valid = false;
+                var subQuestions = thisQuestion.questions;
+                subQuestions.forEach(function(thisSubQuestion, sqIndex){
+                    var thisOptions = thisSubQuestion.options;
+                    thisOptions.forEach(function(thisOption, oIndex){
+                        if(thisOption._correct){
+                            valid = true;
+                        }
+                        
+                    });
+                });
+                
+                if(valid){
+                    thisQuestion._answerExists = true;
+                    thisQuestion.save(function(err, thisQuestion) {
+                        if (err) return console.error(err);
+                        console.log(thisQuestion._answerExists + ' Question saved: ' + thisQuestion._id);
+                    });
+                }else{
+                    thisQuestion._answerExists = false;
+                    thisQuestion.save(function(err, thisQuestion) {
+                        if (err) return console.error(err);
+                        console.log(thisQuestion._answerExists + ' Question saved: ' + thisQuestion._id);
+                    });
+                }
+            });
+        } else {throw err;}
+    });
+    
+});
+
 router.get('/exam/randomQuestion/:examId', function(req, res) {
     var examId = req.params.examId.toString();
     var allQuestions = question
-        .find({exam: examId, active: true}, {_id: 1})
+        .find({exam: examId, active: true, _answerExists: true}, {_id: 1})
         .limit(100)
         .exec(function (err, allQuestions) {
         if (!err){
+            
             var nQuestions = allQuestions.length;
-            var rIndex = Math.floor(Math.random() * (nQuestions - 1 - 0) + 0);
-            //console.log(nQuestions + " " + rIndex);
-            thisQuestion = allQuestions[rIndex];
-            res.json(thisQuestion._id);
+            if(nQuestions > 0){
+                var rIndex = Math.floor(Math.random() * (nQuestions - 1 - 0) + 0);
+                thisQuestion = allQuestions[rIndex];
+                res.json(thisQuestion._id);
+            }else{
+                res.json(null);
+            }
+            
+            
+            
         } else {throw err;}
     });
     

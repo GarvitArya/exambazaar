@@ -229,9 +229,9 @@
                             <div layout="column" layout-align="start start" class="width100" ng-if="question.questions">
                                 <div layout="column" layout-align="start start" class="width100 blogContent greyBorder padding10 marginTB10"  ng-repeat="thisQuestion in question.questions">
                                     <div layout="column" layout-align="start start" class="width100">
-                                        <div layout="row" layout-align="center center" class="questionRow">
+                                        <div layout="row" layout-align="start center" class="questionRow">
                                             <div class="marginR10">Question:</div>
-                                            <div class="marginR10">{{thisQuestion._id}}</div>
+                                            <!--<div class="marginR10">{{thisQuestion._id}}</div>-->
 
                                         </div>
                                         <div ng-bind-html="thisQuestion.question" class="marginB10">
@@ -241,6 +241,7 @@
                                     
                                     <md-radio-button value="{{option.option}}" ng-model="userAnswer" ng-repeat="option in thisQuestion.options" class="marginTB5">
                                         {{option.option}}
+                                        <i class="fa fa-check-circle text-primary font20 marginL10" aria-hidden="true" ng-if="option._correct"></i>
                                     </md-radio-button>
                                     
                                     </md-radio-group>

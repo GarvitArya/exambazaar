@@ -134,6 +134,8 @@ var exams = require('./app/exams.js',exams);
 var tests = require('./app/tests.js',tests); 
 var availDiscounts = require('./app/availDiscounts.js',availDiscounts); 
 var questions = require('./app/questions.js',questions); 
+var questionresponses = require('./app/questionresponses.js',questionresponses); 
+var assessments = require('./app/assessments.js',assessments); 
 var eligibilitys = require('./app/eligibilitys.js',eligibilitys); 
 var streams = require('./app/streams.js',streams); 
 var locations = require('./app/locations.js',locations); 
@@ -178,6 +180,8 @@ app.use('/api/otps', otps);
 app.use('/api/exams', exams);
 app.use('/api/tests', tests);
 app.use('/api/questions', questions);
+app.use('/api/questionresponses', questionresponses);
+app.use('/api/assessments', assessments);
 app.use('/api/availDiscounts', availDiscounts);
 app.use('/api/eligibilitys', eligibilitys);
 app.use('/api/streams', streams);
@@ -267,6 +271,7 @@ var allStates = [
 '/ebinternal/userInstitutes',
 '/ebinternal/academics',
 '/ebinternal/eqad/:examName/:eqadDate',
+'/k21',
 
 '/ebinternal/user/:userId/sendEmail',
 '/ebinternal/user/:userId/shortlisted',

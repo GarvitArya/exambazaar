@@ -120,6 +120,7 @@
         </div>
         <div layout="row" layout-align="start center" class="width100 marginTB5" ng-if="user.userType=='Master'"  layout-wrap>
             <a ng-click="markCreator()" class="marginR10">Mark Creator</a>
+            <a ng-click="markAnswerExists()" class="marginR10">Mark Answered Questions</a>
             <div ng-repeat="missingQuestion in missingQuestions" layout-wrap class="badge marginB5 marginR5" id="missingBadge">
                 <span>
                     Q. {{missingQuestion}}

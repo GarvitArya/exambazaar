@@ -176,6 +176,20 @@ router.get('/edit/:testId', function(req, res) {
     });
 });
 
+router.get('/k21', function(req, res) {
+    var testId = '5a17f5f617cb4c07c5dd7f5b';
+    //console.log("Test is " + testId);
+    test
+        .findOne({ '_id': testId },{})
+        //.deepPopulate('_master.contact')
+        .exec(function (err, docs) {
+        if (!err){ 
+            //console.log(docs);
+            res.json(docs);
+            //process.exit();
+        } else {throw err;}
+    });
+});
 
 router.get('/markWatermarked', function(req, res) {
     var urls = [

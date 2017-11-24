@@ -1,0 +1,27 @@
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
+
+var assessmentSchema = mongoose.Schema({
+    user: { type: Schema.ObjectId, ref: 'user' },
+    test: { type: Schema.ObjectId, ref: 'test'},
+    _start: { type: Date, default: Date.now },
+    _end: { type: Date },
+    submitted: { type: Boolean, default: false },
+    _submit: { type: Date },
+    
+    info:{
+        name: {type: String},
+        mobile: {type: String},
+        email: {type: String},
+        address: {type: String},
+        degree: {type: String},
+        otherdegree: {type: String},
+        stream: {type: String},
+        otherstream: {type: String},
+        agree: {type: Boolean, default: false },
+    },
+                                       
+});
+assessmentSchema.plugin(deepPopulate);
+module.exports = mongoose.model('assessment', assessmentSchema);
