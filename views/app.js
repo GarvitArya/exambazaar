@@ -15184,7 +15184,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             var sessionuser = $cookies.getObject( 'sessionuser');
             $scope.test = thistest.data;
             $scope.testQuestions = thisTestQuestions.data;
-            $rootScope.pageTitle = "K21 Academy";
+            $rootScope.pageTitle = "Aptitude Test";
             var nQuestions = $scope.testQuestions.length;
             $scope.setQuestion($scope.testQuestions[0]);
              $scope.testQuestions.forEach(function(thisQuestion, index){
@@ -36475,8 +36475,8 @@ function getLatLng(thisData) {
                 }],
             }
         })
-        .state('k21', {
-            url: '/k21',
+        .state('aptitude', {
+            url: '/career/aptitude',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -36509,7 +36509,7 @@ function getLatLng(thisData) {
             url: '/k21Test',
             views: {
                 'header':{
-                    templateUrl: 'header.html',
+                    /*templateUrl: 'header.html',*/
                     
                 },
                 'body':{
@@ -36517,7 +36517,7 @@ function getLatLng(thisData) {
                     controller: 'k21TestController',
                 },
                 'footer': {
-                    templateUrl: 'footer.html'
+                    /*templateUrl: 'footer.html'*/
                 }
             },
             resolve: {
@@ -38682,7 +38682,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         }else{
             console.log('Not EB Internal');
         }
-        if(stateTo == 'k21'){
+        if(stateTo == 'aptitude'){
             if($cookies.getObject('sessionuser')){
                 
                 

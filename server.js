@@ -271,7 +271,7 @@ var allStates = [
 '/ebinternal/userInstitutes',
 '/ebinternal/academics',
 '/ebinternal/eqad/:examName/:eqadDate',
-'/k21',
+'/career/aptitude',
 '/k21Test',
 
 '/ebinternal/user/:userId/sendEmail',
