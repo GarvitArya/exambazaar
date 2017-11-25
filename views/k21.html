@@ -211,7 +211,7 @@
             </div>
             <div flex="80" layout="column" layout-align="center center" class="blogFont">
                 <div class="bold">K21 Academy Campus Hiring Test</div>
-                <div class="font14">JECRC University - 24 November 2017</div>
+                <div class="font14">JECRC University - 25 November 2017</div>
                 <div class="font14" ng-click="showInstructionDialog()">Read Instructions</div>
             </div>
             <div layout="row" layout-align="end center" flex="20">
@@ -219,7 +219,7 @@
                     Submit Test
                 </md-button>
 
-            </div>
+            </div>   
             </div>
             
         </div>
@@ -269,7 +269,7 @@
                         </div>
                         <div layout="row" layout-align="start center" class="width100">
                             <div flex layout="row" layout-align="start center">
-                                <md-button class="md-next md-large tolowercase margin0 nextButton" ng-click="setNextQuestion(question)" ng-if="question._id != testQuestions[0]._id">
+                                <md-button class="md-next md-large tolowercase margin0 nextButton" ng-click="setPreviousQuestion(question)" ng-if="question._id != testQuestions[0]._id">
                                     Previous
                                 </md-button>
                             
@@ -400,7 +400,10 @@
                     Start
                 </md-button>
             </div>
-
+            <div layout="column" layout-align="start start" class="paddingL20 font12 danger width100">
+                <div layout="row" layout-align="start start" ng-repeat="startError in startErrors">{{$index+1}}. {{startError}}
+                </div>
+            </div> 
         </div>
         
         

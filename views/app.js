@@ -14902,7 +14902,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 console.log(tIndex);
                 
                 if(tIndex != -1 && tIndex != 0){
-                    $scope.question = $scope.testQuestions[0];
+                    $scope.question = $scope.testQuestions[tIndex-1];
                 }
             };
             
@@ -14943,43 +14943,52 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $mdDialog.hide();
             };
             $scope.startAssessment = function(ev) {
-                
+                $scope.startErrors = [];
                 var valid = true;
                 if(!$scope.assessmentInfo.agree){
                     valid = false;
                     console.log('1');
+                    $scope.startErrors.push('Please agree to terms and conditions.');
                 }
                 if($scope.assessmentInfo.name.length < 2){
                     valid = false;
                     console.log('2');
+                    $scope.startErrors.push('Please enter name');
                 }
                 if($scope.assessmentInfo.email.length < 2){
                     valid = false;
                     console.log('3');
+                    $scope.startErrors.push('Please enter email');
                 }
                 if($scope.assessmentInfo.address.length < 2){
                     valid = false;
                     console.log('4');
+                    $scope.startErrors.push('Please enter permanent address');
                 }
                 if(!$scope.assessmentInfo.degree){
                     valid = false;
                     console.log('5');
+                    $scope.startErrors.push('Please select degree');
                 }
                 if($scope.assessmentInfo.degree == "Others" && $scope.assessmentInfo.otherdegree.length < 2){
                     valid = false;
                     console.log('6');
+                    $scope.startErrors.push('Please enter Other degree name');
                 }
                 if(!$scope.assessmentInfo.stream){
                     valid = false;
                     console.log('7');
+                    $scope.startErrors.push('Please select stream');
                 }
                 if($scope.assessmentInfo.stream == "Others" && $scope.assessmentInfo.otherstream.length < 2){
                     valid = false;
                     console.log('8');
+                    $scope.startErrors.push('Please select Other stream name');
                 }
                 if($scope.assessmentInfo.mobile.length != 10){
                     valid = false;
                     console.log('9');
+                    $scope.startErrors.push('Please enter mobile');
                 }
                 
                 if(valid){
