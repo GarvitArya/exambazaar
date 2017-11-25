@@ -21,7 +21,16 @@ var assessmentSchema = mongoose.Schema({
         otherstream: {type: String},
         agree: {type: Boolean, default: false },
     },
-                                       
+    evaluation: {
+        questions:{
+            attemped: {type: String},
+            unattemped: {type: String},
+            correct: {type: String},
+            incorrect: {type: String},
+        },
+        score: {type: String},
+        _created: { type: Date, default: Date.now },
+    },                           
 });
 assessmentSchema.plugin(deepPopulate);
 module.exports = mongoose.model('assessment', assessmentSchema);

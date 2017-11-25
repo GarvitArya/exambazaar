@@ -529,7 +529,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.bulkEnded = function() {
             return $http.post('/api/assessments/bulkEnded');
         };
-        
+        this.userevaluate = function(assessment) {
+            return $http.post('/api/assessments/userevaluate', assessment);
+        };
     }]);
         
     exambazaar.service('questionService', ['$http', function($http) {
@@ -14778,8 +14780,43 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             ];
             
             
-            $scope.checkAssessmentInfo = function(){
-                
+            $scope.submitAssessmentHelper = function(){
+                var assessmentForm = {
+                    user: $scope.user._id,
+                    test: '5a17f5f617cb4c07c5dd7f5b',
+                };
+                assessmentService.submitAssessment(assessmentForm).success(function (adata, status, headers) {
+                    Notification.success({message: "Thank you, all done!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    $scope.userAssessment = adata;
+                    $scope.testOver = false;
+                    $scope.testStarted = false;
+                    $scope.userevaluate();
+
+                    if($scope.userAssessment){
+                        $scope.testStarted = true;
+                        $scope.endTime = moment($scope.userAssessment._end);
+                        var timeNow = moment();
+                        if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
+                            $scope.testOver = true;
+                            console.log('Test is over or submitted');
+
+                        }else{
+                            $scope.testOver = false;
+
+                        }
+
+                    }else{
+                        $scope.testStarted = false;
+                    }
+                    getUserResponses();
+
+
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
                 
             };
             $scope.submitAssessment = function(){
@@ -14794,40 +14831,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 .cancel('Cancel');
                 $mdDialog.show(confirm).then(function() {
                     
-                    var assessmentForm = {
-                        user: $scope.user._id,
-                        test: '5a17f5f617cb4c07c5dd7f5b',
-                    };
-                    assessmentService.submitAssessment(assessmentForm).success(function (adata, status, headers) {
-                        Notification.success({message: "Thank you, all done!",  positionY: 'top', positionX: 'right', delay: 1000});
-                        $scope.userAssessment = adata;
-                        $scope.testOver = false;
-                        $scope.testStarted = false;
-                        
-                        
-                        if($scope.userAssessment){
-                            $scope.testStarted = true;
-                            $scope.endTime = moment($scope.userAssessment._end);
-                            var timeNow = moment();
-                            if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
-                                $scope.testOver = true;
-                                console.log('Test is over or submitted');
-                                
-                            }else{
-                                $scope.testOver = false;
-                                
-                            }
-                            
-                        }else{
-                            $scope.testStarted = false;
-                        }
-                        getUserResponses();
-
-                    })
-                    .error(function (data, status, header, config) {
-                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
-                        console.log('Error ' + data + ' ' + status);
-                    });
+                    $scope.submitAssessmentHelper();
                     
                     
                 }, function() {
@@ -14839,6 +14843,21 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     
             }
             
+            $scope.userevaluate = function(){
+                var assessmentForm = {
+                    user: $scope.user._id,
+                    test: '5a17f5f617cb4c07c5dd7f5b',
+                };
+
+                assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
+                    console.log(edata);
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }
             
             
             $scope.$watch('question', function (newValue, oldValue, scope) {
@@ -14854,11 +14873,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             }, true);
             
-            $scope.$watch('seconds', function (newValue, oldValue, scope) {
-                if(newValue != null){
-                    console.log(newValue);
-                }
-            }, true);
             
             
             $scope.setNextQuestion = function(question){
@@ -15030,6 +15044,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
                 
             };
+            
+            window.setInterval(function(){
+                console.log('Here');
+                if($scope.userAssessment){
+                    var timeNow = moment();
+                    if($scope.endTime - timeNow < 0 && !$scope.userAssessment.submitted){
+                        console.log('Test is over');
+                        $scope.testOver = true;
+                        $scope.submitAssessmentHelper();
+                    }
+                }
+                
+            }, 1000);
             
             /*var vis = (function(){
                 var stateKey, eventKey, keys = {
