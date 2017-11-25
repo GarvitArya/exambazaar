@@ -229,7 +229,7 @@
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB10" ng-if="!testOver && testStarted">
         
-        <div flex="25" layout="column" layout-align="start start"  class="height100 leftBar">
+        <!--<div flex="25" layout="column" layout-align="start start"  class="height100 leftBar">
             <div layout="row" layout-align="start start" class="width100"  layout-wrap>
                 <div flex="20" layout="row" layout-align="center center" ng-repeat="myquestion in testQuestions" class="paddingTB5" >
                     <div class="emptyTag" layout="row" layout-align="center center" ng-class="{ answeredTag: myquestion.userAnswer, activeTag: myquestion._id == question._id}" ng-click="setQuestion(myquestion)">
@@ -243,7 +243,7 @@
                 {{answered}} out of {{testQuestions.length}} attempted
                 
             </div>
-        </div>
+        </div>-->
         <div flex layout="row" layout-align="center center" class="paddingLR20">
             <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
             <div layout="column" layout-align="start start" class="width100 min100vh" flex>
@@ -259,16 +259,19 @@
                                 <div ng-bind-html="thisQuestion.question" class="marginB10">
                                 </div>
                             </div>
-                            <md-radio-group ng-model="question.userAnswer">
+                            <div class="marginB5" ng-repeat="option in thisQuestion.options">
+                                {{optionsPrefix[$index]}}. {{option.option}}
+                            </div>
+                            <!--<md-radio-group ng-model="question.userAnswer">
 
                             <md-radio-button value="{{option._id}}" ng-model="userAnswer" ng-repeat="option in thisQuestion.options" class="marginTB5" ng-click="markAnswer(question, thisQuestion, option)">
                                 {{option.option}}
-                                <!--<i class="fa fa-check-circle text-primary font20 marginL10" aria-hidden="true" ng-if="option._correct"></i>-->
+                                <i class="fa fa-check-circle text-primary font20 marginL10" aria-hidden="true" ng-if="option._correct"></i>
                             </md-radio-button>
 
-                            </md-radio-group>
+                            </md-radio-group>-->
                         </div>
-                        <div layout="row" layout-align="start center" class="width100">
+                        <!--<div layout="row" layout-align="start center" class="width100">
                             <div flex layout="row" layout-align="start center">
                                 <md-button class="md-next md-large tolowercase margin0 nextButton" ng-click="setPreviousQuestion(question)" ng-if="question._id != testQuestions[0]._id">
                                     Previous
@@ -292,7 +295,7 @@
                                 </md-button>
                             </div>
 
-                        </div>
+                        </div>-->
                         </div>
                         </div>
                     </div>

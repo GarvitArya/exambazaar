@@ -272,6 +272,7 @@ var allStates = [
 '/ebinternal/academics',
 '/ebinternal/eqad/:examName/:eqadDate',
 '/k21',
+'/k21Test',
 
 '/ebinternal/user/:userId/sendEmail',
 '/ebinternal/user/:userId/shortlisted',
