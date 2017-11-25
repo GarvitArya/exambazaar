@@ -49,7 +49,7 @@ app.get('/*', function (req, res, next) {
    next();
 });
 
-var productionMode = true;
+var productionMode = false;
 if(productionMode){
     app.get('*', function(req, res, next) {
         var host = req.get('host');
