@@ -2464,6 +2464,25 @@ router.get('/getGroupName/:coachingId', function(req, res) {
 });
 
 router.get('/basiccoaching/:coachingId', function(req, res) {
+    
+    /*var emails = email
+        .find({'user': '58900bd8fc519c0a04be52e8'},{})
+        .exec(function (err, emails) {
+        if (!err){
+            var counter = 0;
+            var nLength = emails.length;
+            emails.forEach(function(thisEmail, emailIndex){
+                thisEmail.user = '5a04512a63c45b592385f27b';
+                thisEmail.save(function(err, thisEmail) {
+                    if (err) return console.error(err);
+                    console.log(thisEmail._id + " saved!");
+                });
+            });
+
+
+        } else {throw err;}
+    });*/
+    
     var coachingId = req.params.coachingId;
     if(mongoose.Types.ObjectId.isValid(coachingId)){
         var thisProvider = targetStudyProvider
@@ -2483,6 +2502,7 @@ router.get('/basiccoaching/:coachingId', function(req, res) {
                         var counter = 0;
                         var nLength = emails.length;
                         emails.forEach(function(thisEmail, emailIndex){
+                            console.log(thisEmail);
                             var newemailUser = {
                                 user: thisEmail.user._id,
                                 name: thisEmail.user.basic.name,

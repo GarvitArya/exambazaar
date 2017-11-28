@@ -34111,7 +34111,7 @@ function getLatLng(thisData) {
             };
             $scope.email = {
                 to: '',
-                templateName: 'Claim CI Email - 7thNov2017',
+                templateName: 'Claim CI Email - 28thNov2017',
                 sender: '',
                 senderId: '',
                 from: '',
@@ -34155,6 +34155,7 @@ function getLatLng(thisData) {
             };
             $scope.templateNames = [
                 /*'Survey Email - 11March2017',*/
+                'Claim CI Email - 28thNov2017',
                 'Claim CI Email - 7thNov2017',
                 'Claim CI Email - 5thApril2017',
                 'Follow Up 1 to CIs',
@@ -34188,7 +34189,7 @@ function getLatLng(thisData) {
                 //alert($scope.email.instituteId);
                  targetStudyProviderService.getProviderBasic(newValue).success(function (data, status, headers) {
                 if(data){
-                    //console.log(data);
+                    console.log(data);
                     var refreshedProvider = data.provider;
                     
                     if(data.emailSent){
@@ -34234,7 +34235,7 @@ function getLatLng(thisData) {
                     
                     $scope.email.instituteId = $scope.provider._id;
                     $scope.email.logo = $scope.provider.logo;
-                    $scope.email.subject = $scope.provider.name + " - welcome to Exambazaar!";
+                    $scope.email.subject = $scope.provider.name + " - Get started with Exambazaar!";
                 }
                 }).error(function (data, status, header, config) {
                     console.log("Error ");
@@ -34249,7 +34250,7 @@ function getLatLng(thisData) {
             }, true);
             
             $scope.sendEmail = function() {
-                //
+                console.log($scope.email);
                 EmailService.sendGrid($scope.email).success(function (data, status, headers) {
                     var response = data;
                     console.log(JSON.stringify(response));

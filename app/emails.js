@@ -74,6 +74,7 @@ router.post('/send', function(req, res) {
 router.post('/sendGrid', function(req, res) {
     var thisEmail = req.body;
     var templateName = thisEmail.templateName;
+    console.log(templateName);
     var from = thisEmail.from;
     var sender = thisEmail.sender;
     var senderId = thisEmail.senderId;
