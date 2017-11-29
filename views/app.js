@@ -471,6 +471,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.CATEmail = function() {
             return $http.post('/api/emails/CATEmail');
         };
+        this.internshipEmail = function(emailForm) {
+            return $http.post('/api/emails/internshipEmail', emailForm);
+        };
     }]);    
     
     exambazaar.service('EligibilityService', ['$http', function($http) {
@@ -9867,11 +9870,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if(newValue)
             newValue = newValue.toString();
             if(newValue && newValue.length == 10){
-                //$scope.showVerifyOTP = true;
+                $scope.showVerifyOTP = true;
                 //Change this back
-                $scope.showVerifyOTP = false;
-                $scope.OTPVerified = true;
-                $scope.userExistMessage = null;
+                //$scope.showVerifyOTP = false;
+                //$scope.OTPVerified = true;
+                //$scope.userExistMessage = null;
             }
 
         }, true);
@@ -33440,7 +33443,140 @@ function getLatLng(thisData) {
                 
                     
             };
-            console.log('Log here');
+            
+            
+            /*var internshipEmailList = [
+                "shoaibrashid887@gmail.com",
+                "mehulag95@gmail.com",
+                "rj250596@gmail.com",
+                "anishamohanka@gmail.com",
+                "sk221996@gmail.com",
+                "adi.yadav30@gmail.com",
+                "yash.hnd@gmail.com",
+                "shivikasrvstv@gmail.com",
+                "prateekmathur005@gmail.com",
+                "itsjainrohit@gmail.com",
+                "may17harsh@gmail.com",
+                "sangeetakumawat420@gmail.com",
+                "sonalisetiajecrc@gmail.com",
+                "pratishtha.sharma@outlook.com",
+                "kajoljaswani@gmail.com",
+                "adityajain3008@gmail.com",
+                "amreenpathan014@gmail.com",
+                "mathurshub00@gmail.com",
+                "nehajain.nj2310@gmail.com",
+                "shubujain21@gmail.com",
+                "kumawat.nh15@gmail.com",
+                "abhinavbhargava1995@gmail.com",
+                "agrawal27aditi@gmail.com",
+                "madhavkhandelwal17@gmail.com",
+                "arpitchordia9@gmail.com",
+                "cjain0345gmail.com",
+                "karandaryani19@gmail.com",
+                "abhisheknirania25@gmail.com",
+                "utk13596@gmail.com",
+                "keshavjecrcu@gmail.com",
+                "gagan.jaiswal2@gmail.com",
+                "amit0709yadav@gmail.com",
+                "utkarshagrawal855@gmail.com",
+                "sajalsaxena93@gmail.com",
+                "nehanagda1995@gmail.com",
+                "ankitsingh8696@gmail.com",
+                "nilesh.singariya561@gmail.com",
+                "panwarmayank448@gmail.com",
+                "harshaljain003@gmail.com",
+                "nikhilkhatri22@gmail.com",
+                "chhayanks79@gmail.com",
+                "gunjankhandal05@gmail.com",
+                "thenaveen008@gmail.com",
+                "sahil.banthodiya@gmail.com",
+                "ayushshrimali2011@gmail.com",
+                "jchandwani27896@gmail.com",
+                "a7vi1912@gmail.com",
+                "narendrahada04@gmail.com",
+                "njain1768@gmail.com",
+                "karan21deep@gmail.com",
+                "mathurmohit1312@gmail.com",
+                "shoaibrashid887@gmail.com",
+                "srakesh95@gmail.com",
+                "divyajyotisharma20@gmail.com",
+                "iamsonikamal@gmail.com",
+                "meankitroy22@gmail.com",
+                "yogeshkumawat121@gmail.com",
+                "shubham.gupta130@gmail.com",
+                "nishaagarwal713@gmail.com",
+                "ssmtr29@gmail.com",
+                "shristitulsyan1995@gmail.com",
+                "arsh.chhabra4@gmail.com",
+                "somya94shah@gmail.com",
+                "abhiruchik64@gmail.com",
+                "akankshaajmera92@gmail.com",
+                "gyanchandprajapati65@gmail.com",
+                "kjha7111@gmail.com",
+                "bhairusingh101@gamail.com",
+                "vinaysainitruthandcare60@gmail.com",
+                "dheerajsh06@gmail.com",
+                "nishthapurohit1805@gmail.com",
+                "rahulgothwal5@gmail.com",
+                "piyushvijay92@gmail.com",
+                "choudhary.niket21@gmail.com",
+                "lalitaagarwal2211@gmail.com",
+                "sushil.kumar4889@gmail.com",
+                "goyalpayal1995@gmail.com",
+                "siddharthsoni020@gmail.com",
+                "lodhaarpit@outlook.com",
+                "kdost1995@gmail.com",
+                "hunnymeghnani1@gmail.com",
+                "saurabh.bhatteja@gmail.com",
+                "nkkumawat8@gmail.com",
+                "smriti2807singh@gmail.com",
+                "lakshitabhawnani@gmail.com",
+                "anshulgoyal1996@gmail.com",
+                "anjalishyam7895@gmail.com",
+                "jain.deepankshee190@gmail.com",
+                "naveendhupar@gmail.com",
+                "sasopa32@gmail.com",
+                "meghaur20@gmail.com",
+                "omnarayankhatri6@gmail.com",
+                "kunalbyn@gmail.com",
+                "hemantdadheech20@gmail.com",
+                "raghuwansi.shubham4@gmail.com",
+                "naveenkkumawat1995@gmail.com",
+
+            
+            ];*/
+            var internshipEmailList = ['gaurav@exambazaar.com'];
+            $scope.internshipEmail = function(userId){
+                
+                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                    var marketingUser = data;
+                    if(marketingUser.mobile == '9829685919'){
+                        var emailForm = {
+                            emailList: internshipEmailList,
+                            templateName: 'Internship at Exambazaar',
+                        };
+                        EmailService.internshipEmail(emailForm).success(function (thisData, status, headers) {
+                            console.log(thisData);
+                            //$scope.collegeMessageSent = true;
+                            Notification.success("Internship emails sent!");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });
+                        
+                        
+                    }
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                    
+            };
+            
+            
             $scope.CATEmail = function(userId){
                 console.log(userId);
                  UserService.getUserBasic(userId).success(function (data, status, headers) {

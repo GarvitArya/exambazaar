@@ -677,6 +677,89 @@ router.post('/hundredblogEmail', function(req, res) {
     });
 });
 
+
+router.post('/internshipEmail', function(req, res) {
+    var thisEmail = req.body;
+    var emailList = thisEmail.emailList;
+    var templateName = thisEmail.templateName;
+    var nEmails = emailList.length;
+    var counter = 0;
+    var emailcounter = 0;
+    console.log('Starting Internship Email');
+    var fromEmail = {
+        email: 'team@exambazaar.com',
+        name: 'Team Exambazaar'
+    };
+    
+    //var templateName = 'Internship at Exambazaar';
+    
+    
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+                if(thisEmailTemplate.name == templateName){
+                    templateFound = true;
+                    templateId = thisEmailTemplate.templateKey;
+                    var from_email = new helper.Email(fromEmail);
+                    
+                    emailList.forEach(function(thisEmail, index){
+                        
+                        
+                        var to = thisEmail;
+                        
+                        var to_email = new helper.Email(to);
+                        var html = ' ';
+                        var subject = ' ';
+                        var content = new helper.Content('text/html', html);
+                        var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                        mail.setTemplateId(templateId);
+                       
+                        var request = sg.emptyRequest({
+                          method: 'POST',
+                          path: '/v3/mail/send',
+                          body: mail.toJSON(),
+                        });
+                        
+                        sg.API(request, function(error, response) {
+                            if(error){
+                                counter += 1;
+                                console.log('Could not send email! to: ' + to);
+                                if(counter == nEmails){
+                                    console.log("Total emails sent are: " + emailcounter);
+                                    res.json(true);
+                                }
+                            }else{
+                                counter += 1;
+                                emailcounter += 1;
+                                console.log(counter + " Email sent to: " + to);
+                                if(counter == nEmails){
+                                    console.log("Total emails sent are: " + emailcounter);
+                                    res.json(true);
+                                }
+                            }
+                        });
+                        
+                    });
+                    
+                }
+            });
+            if(nLength == 0){
+                res.json(false);
+            }
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+});
+
 String.prototype.toProperCase = function () {
     return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
