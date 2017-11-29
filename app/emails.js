@@ -357,7 +357,7 @@ router.post('/introductionofEB', function(req, res) {
                 
                 
                 
-            }).limit(100).skip(0); //.skip(5)
+            }).limit(1).skip(0); //.skip(5)
             
             
             
