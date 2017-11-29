@@ -165,6 +165,7 @@
     #linkFont{
         color:#333333;
     }
+    
     #breadcrumb{
         margin-top: 5vh;
     }
@@ -511,13 +512,16 @@
     #successOTP{
         background: green;
     }
+    #linkFont2:{
+        color: #20C39A;
+    }
 </style>
 <div id="spacer1" class="hidden-xs whiteBackground">
 </div>
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 <!-- Claim the page section -->
-<div layout="column" layout-xs="column" class="whiteBackground mainContent" ng-cloak>
+<div layout="column" layout-xs="column" class="whiteBackground mainContent" ng-cloak ng-if="!smallScreen">
     <div layout="row">
         <div class="container">
             <div class="row">
@@ -2377,6 +2381,36 @@
     
  </div>
 
+
+<div layout="column" layout-xs="column" class="whiteBackground mainContent" ng-cloak ng-if="smallScreen">
+    <div layout="column" layout-align="center center" class="width100 min80vh blogFont paddingLR20">
+        
+        <div layout="row" layout-align="center center" class="width100 font48 marginTB10 text-center">
+            <div flex layout="column" layout-align="center center">
+                <i class="fa fa-times-circle danger marginB10" aria-hidden="true"></i>
+                <i class="fa fa-mobile" aria-hidden="true"></i>
+                
+            </div>
+            <div flex layout="column" layout-align="center center">
+                <i class="fa fa-check-circle text-primary marginB10" aria-hidden="true"></i>
+                <i class="fa fa-laptop" aria-hidden="true"></i>
+                
+            </div>
+        </div>
+        <div class="font24 marginTB20 bold text-center">
+            Please access this page on a laptop/desktop. It is too complex to be served on a mobile.
+        </div>
+        <div class="font12 marginTB20 text-center">
+            <div class="marginB10">
+                Your url is:
+            </div>
+            <div>
+                <a ng-href="{{thisUrl}}" id="linkFont2">{{thisUrl}}</a>
+            </div>
+        </div>
+    </div>
+    
+</div>
 <!-- Page on unathorized access-->
 
 <div style="visibility: hidden">    

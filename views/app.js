@@ -474,6 +474,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.internshipEmail = function(emailForm) {
             return $http.post('/api/emails/internshipEmail', emailForm);
         };
+        this.introductionofEB = function() {
+            return $http.post('/api/emails/introductionofEB');
+        };
     }]);    
     
     exambazaar.service('EligibilityService', ['$http', function($http) {
@@ -5646,7 +5649,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService',  'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService,  thisGroupInfo, addContactInfoService, rateInstituteService){
+    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService',  'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', 'screenSize', '$location', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService,  thisGroupInfo, addContactInfoService, rateInstituteService, screenSize, $location){
+        
+        $scope.thisUrl = $location.absUrl();
+        if (screenSize.is('xs, sm')){
+            $scope.smallScreen = true;
+        }else{
+            $scope.smallScreen = false;
+        }
+        
         $scope.provider = thisProvider.data;
         $scope.thisGroupInfo = thisGroupInfo.data;
         
@@ -33576,6 +33587,32 @@ function getLatLng(thisData) {
                     
             };
             
+            $scope.introductionofEB = function(userId){
+                
+                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                    var marketingUser = data;
+                    if(marketingUser.mobile == '9829685919'){
+                        EmailService.introductionofEB().success(function (thisData, status, headers) {
+                            console.log(thisData);
+                             Notification.success("Introduction emails sent!");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });
+                        
+                        
+                    }
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                    
+            };
+            
+            
             
             $scope.CATEmail = function(userId){
                 console.log(userId);
@@ -38780,12 +38817,17 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         console.log("FB Page URL: " +  $rootScope.pageURL);
         console.log("FB Page Image: " +  $rootScope.pageImage);*/
         $window.scrollTo(0, 0);
-        $mdDialog.hide();
         var stateTo = $transition$.$to();
         var stateToURL = stateTo.url.pattern;
         var filterPattern = '/ebinternal/';
         
         var fIndex = stateToURL.indexOf(filterPattern);
+        
+        if(stateTo != 'claim'){
+            $mdDialog.hide();
+        }
+        
+        
         
         if(fIndex != -1){
             //console.log(stateTo.name);
