@@ -131,10 +131,10 @@ router.post('/bulkEnded', function(req, res) {
 
 router.post('/userevaluate', function(req, res) {
     var thisAssessment = req.body;
-    thisAssessment = {
-        user: '5a203872f60925302876917c',
+    /*thisAssessment = {
+        user: '5a20ab026740556f2a36c7c0',
         test: '5a17f5f617cb4c07c5dd7f5b',
-    };
+    };*/
     for(var property in thisAssessment){
         if(property != 'info' || property != 'evaluation'){
             thisAssessment[property] = thisAssessment[property].toString();
