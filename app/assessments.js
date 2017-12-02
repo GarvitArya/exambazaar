@@ -131,10 +131,10 @@ router.post('/bulkEnded', function(req, res) {
 
 router.post('/userevaluate', function(req, res) {
     var thisAssessment = req.body;
-    /*thisAssessment = {
-        user: '5a190d2a08758e0724312a58',
+    thisAssessment = {
+        user: '5a203872f60925302876917c',
         test: '5a17f5f617cb4c07c5dd7f5b',
-    };*/
+    };
     for(var property in thisAssessment){
         if(property != 'info' || property != 'evaluation'){
             thisAssessment[property] = thisAssessment[property].toString();
@@ -319,6 +319,43 @@ router.get('/user/:userId', function(req, res) {
     
 });
 
+router.get('/', function(req, res) {
+    var allAssessments = assessment
+        .find({})
+        //.deepPopulate('user')
+        .exec(function (err, allAssessments) {
+        if (!err){
+            res.json(allAssessments);
+            /*var nAssessments = allAssessments.length;
+            var allUserIds = allAssessments.map(function(a) {return a.user;});
+            
+            var allUsers = user.find({_id: allUserIds},{basic:1},function(err, allUsers) {
+                var thisUserIds = allUsers.map(function(a) {return a._id.toString();});
+                allAssessments.forEach(function(thisAssessment, aIndex){
+                    var thisUser = thisAssessment.user.toString();
+                    var uIndex = thisUserIds.indexOf(thisUser);
+                    
+                    if(uIndex != -1){
+                        allAssessments[aIndex].user = allUsers[uIndex];
+                        console.log(allUsers[uIndex]);
+                        console.log(allAssessments[aIndex].user);
+                    }
+                    
+                    if(aIndex == nAssessments-1){
+                        res.json(allAssessments);
+                    }
+                });
+
+            });*/
+            
+            
+            
+            
+            
+        } else {throw err;}
+    });
+    
+});
 
 
 module.exports = router;

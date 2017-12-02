@@ -1,0 +1,133 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #upload2{
+        background: white;
+        color: black;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    #upload2:hover {
+        background: #ccc;
+        cursor: pointer;
+    }
+    #copyLink{
+        cursor: pointer;
+    }
+    #fullHeightPage{
+        min-height: 90vh;
+    }
+    #instituteSection{
+        min-height: 30vh;
+    }
+    .min30vh{
+        min-height: 30vh;
+    }
+    .min50vh{
+        min-height: 50vh;
+    }
+    #partner{
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
+    }
+    #loginInput{
+        border: 0;
+        outline: 0;
+        background: transparent;
+        padding: 5px;
+        margin-bottom: 2px;
+        text-align: left;
+        font-family: "Open Sans";
+        color: black;
+        border: 1px solid gainsboro;
+        font-size:12px;
+    }
+    
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
+    
+    
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 height100 width100 blogFont font14">
+    <div layout="row" layout-align="center center" class="marginT20 font20 textBlack bold paddingB10 width100">
+        All Assessments&nbsp;<span class="badge" id="badge">{{assessments.length}}</span>
+    </div>
+    <div layout="column" layout-align="center center" class="marginT40 width100">
+        <div layout="row" class="width100 bold paddingB5 marginB10 subhheadingBottomBorder2">
+            <div flex="5" class="">S. No.</div>
+            <div flex="15" class="">Candidate</div>
+            <div flex="15" class="">Degree</div>
+            <div flex="10" class="">Start</div>
+            <div flex="10" class="">End</div>
+            <div flex="10" class="">Score</div>
+            <div flex="10" class="">Questions</div>
+            <div flex="15" class="">Address</div>
+            
+            
+        </div>
+        <div layout="row" layout-align="start center" ng-repeat="assessment in assessments | orderBy:'-_start'" class="width100 paddingTB5 gainsboroBottomBorder">
+            <div flex="5" class="">{{$index+1}}</div>
+            <div layout="column"  flex="15" class=" ">
+                <div class="bold">{{assessment.info.name}}</div>
+                <div class="font8">{{assessment.info.mobile}}</div>
+                <div class="font8">{{assessment.info.email}}</div>
+                <div class="font8">{{assessment.user}}</div>
+            
+            </div>
+            <div layout="column"  flex="15" class="font8">
+                
+                <div layout="row" class="width100">
+                    <div>{{assessment.info.degree}}</div>
+                    <div ng-if="assessment.info.degree == 'Others'">&nbsp;&nbsp;({{assessment.info.otherdegree}})</div>
+                </div>
+                <div layout="row" class="width100">
+                    <div>{{assessment.info.stream}}</div>
+                    <div ng-if="assessment.info.stream == 'Others'">&nbsp;&nbsp;({{assessment.info.otherstream}})</div>
+                </div>
+                </div>
+            <div layout="column"  flex="10" class=" font8">
+                {{assessment._start | date:'medium'}}
+            </div>
+            <div layout="column"  flex="10" class=" font8">
+                {{assessment._end | date:'medium'}}
+            </div>
+            <div layout="column"  flex="10" class=" bold">
+                {{assessment.evaluation.score}}
+            </div>
+            <div layout="row"  flex="10" class="font10">
+                {{assessment.evaluation.questions.attemped}} | 
+                {{assessment.evaluation.questions.unattemped}} | 
+                {{assessment.evaluation.questions.correct}} | 
+                {{assessment.evaluation.questions.incorrect}}
+            </div>
+            <div layout="column"  flex="15" class="font8 paddingR10">
+                {{assessment.info.address}}
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+</div>

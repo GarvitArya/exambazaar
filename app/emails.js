@@ -281,7 +281,7 @@ router.post('/introductionofEB', function(req, res) {
                     
                     emailArray.forEach(function(thisEmail, eindex){
                         //console.log(thisEmail);
-                        thisEmail = "gaurav@exambazaar.com";
+                        //thisEmail = "gaurav@exambazaar.com";
                         var to_email = new helper.Email(thisEmail);
                         var mail = new helper.Mail(fromEmail, subject, to_email, content);
                         mail.setTemplateId(templateId);
@@ -357,7 +357,7 @@ router.post('/introductionofEB', function(req, res) {
                 
                 
                 
-            }).limit(1).skip(0); //.skip(5)
+            }).limit(500).skip(3000); //.skip(5)
             
             
             

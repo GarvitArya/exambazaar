@@ -529,6 +529,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getAssessment = function(assessment) {
             return $http.post('/api/assessments/edit', assessment);
         };
+        this.getAssessments = function() {
+            return $http.get('/api/assessments/');
+        };
         this.submitAssessment = function(assessment) {
             return $http.post('/api/assessments/submit', assessment);
         };
@@ -8643,7 +8646,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.internDueList[iIndex].taskList.push(thisTask);
                 }
                 
-                console.log(thisTask);
+                //console.log(thisTask);
                 if(thisTask.active){
                     $scope.fillsAssigned += 1;
                     var internIndex = internIds.indexOf(thisTask.user._id);
@@ -8664,6 +8667,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }else{
                         thisTask.noEmail = false;
                     }
+                    console.log(thisTask._id);
                     var internIndex = internIds.indexOf(thisTask.user._id);
                     $scope.internDueList[internIndex].done += 1;
                     if(compare(new Date(thisTask._finished), yesterday) == 1){
@@ -9283,19 +9287,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             
             $rootScope.permittedToAdd = [
-                '59899631a68cea0154b49502',
                 '59085f0fc7289d0011d6ea8c',
-                '5995886d0f6bc61245d8464f',
                 '59a7eb973d71f10170dbb468',
-                '59bcd748b0cdd5440a424d03',
-                '59c10639b2574f0f556f2722',
-                '59bfa3660a814b248710137b',
-                '59dd145e04c18e302c59cfca',
-                '59dde339f4960e14c67a26af',
-                '59dd8ec781c83c64376914e1',
-                '5a0086ae6e43ae61e78d032d',
-                '5a0044d3bec4cc4181c08c30',
-                '5a00274a9c1144293a4cb956',
+                '5a201e87b09d9a22d04f4779'
             ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
@@ -13758,7 +13752,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //$scope.currLocation = [17.413502, 78.528736];
                 //$scope.currLocation = [24.434886, 77.161200];
                 //$scope.currLocation = [17.318687, 78.543050];
-                $scope.currLocation = [26.775534, 75.877486];
+                //$scope.currLocation = [13.046689, 80.253591];
             }
             function displayError(error) {
               var errors = { 
@@ -27596,6 +27590,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     
+     exambazaar.controller("aptitudeTestResultController", 
+        [ '$scope', '$http', '$rootScope','UserService','assessments','$state', '$mdDialog', function($scope, $http, $rootScope, UserService, assessments, $state, $mdDialog){
+            $scope.assessments = assessments.data;
+            console.log($scope.assessments);
+            $rootScope.pageTitle = 'All Assessments';
+            
+            
+            
+    }]); 
     exambazaar.controller("allreviewsController", 
         [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'targetStudyProviderService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, targetStudyProviderService, $state, $mdDialog){
             $scope.allReviews = allReviews.data;
@@ -33556,7 +33559,10 @@ function getLatLng(thisData) {
 
             
             ];*/
-            var internshipEmailList = ['gaurav@exambazaar.com'];
+            var internshipEmailList = [
+                "venusrikanth007@gmail.com",
+
+            ];
             $scope.internshipEmail = function(userId){
                 
                 UserService.getUserBasic(userId).success(function (data, status, headers) {
@@ -36822,6 +36828,30 @@ function getLatLng(thisData) {
                 allReviews: ['reviewService',
                     function(reviewService) {   
                     return reviewService.getreviews();
+                }],
+                
+                
+            }
+        })
+        .state('aptitudeTestResult', {
+            url: '/ebinternal/aptitudeTestResult',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'aptitudeTestResult.html',
+                    controller: 'aptitudeTestResultController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                assessments: ['assessmentService',
+                    function(assessmentService) {   
+                    return assessmentService.getAssessments();
                 }],
                 
                 
