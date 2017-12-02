@@ -10399,6 +10399,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Silvassa",
             "Chittorgarh",
             "Bahraich",
+            "Madurai"
         ];
         
         if($cookies.getObject('sessionuser')){
