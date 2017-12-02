@@ -1778,7 +1778,7 @@ router.get('/editFilled/:userId', function(req, res) {
 router.get('/addedInstitutes/:userId', function(req, res) {
     var userId = req.params.userId.toString();
     console.log('Finding Added Institutes for: ' + userId);
-    var limit = 50000;
+    var limit = 500;
     var thisUser = user
     .findOne({'_id': userId},{basic:1, userType:1})
     .exec(function (err, thisUser) {
@@ -1825,7 +1825,7 @@ router.get('/addedInstitutes/:userId', function(req, res) {
 
 router.get('/addedQuestions/:userId', function(req, res) {
     var userId = req.params.userId.toString();
-    var limit = 50000;
+    var limit = 1000;
     console.log('Finding Added Questions for: ' + userId);
     
     var thisUser = user
