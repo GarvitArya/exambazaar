@@ -843,6 +843,10 @@ router.post('/hundredblogEmail', function(req, res) {
 
 router.post('/internshipEmail', function(req, res) {
     var thisEmail = req.body;
+    var html = ' ';
+    if(thisEmail.body){
+        html = thisEmail.body;
+    }
     var emailList = thisEmail.emailList;
     var templateName = thisEmail.templateName;
     var nEmails = emailList.length;
@@ -879,7 +883,7 @@ router.post('/internshipEmail', function(req, res) {
                         var to = thisEmail;
                         
                         var to_email = new helper.Email(to);
-                        var html = ' ';
+                        
                         var subject = ' ';
                         var content = new helper.Content('text/html', html);
                         var mail = new helper.Mail(fromEmail, subject, to_email, content);

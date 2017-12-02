@@ -15015,6 +15015,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 console.log('8');
                 $scope.startErrors.push('Please select Other stream name');
             }
+            console.log($scope.assessmentInfo.mobile.length);
             if($scope.assessmentInfo.mobile.length != 10){
                 valid = false;
                 console.log('9');
@@ -15450,6 +15451,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.startAssessment = function(ev) {
             $scope.startErrors = [];
             var valid = true;
+            $scope.assessmentInfo.mobile = $scope.assessmentInfo.mobile.toString();
             if(!$scope.assessmentInfo.agree){
                 valid = false;
                 console.log('1');
@@ -15537,11 +15539,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
 
         window.setInterval(function(){
-            console.log('Here');
+            //console.log('Here');
             if($scope.userAssessment){
                 var timeNow = moment();
                 if($scope.endTime - timeNow < 0 && !$scope.userAssessment.submitted){
-                    console.log('Test is over');
+                    //console.log('Test is over');
                     $scope.testOver = true;
                     $scope.submitAssessmentHelper();
                 }
@@ -27594,10 +27596,22 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         [ '$scope', '$http', '$rootScope','UserService','assessments','$state', '$mdDialog', function($scope, $http, $rootScope, UserService, assessments, $state, $mdDialog){
             $scope.assessments = assessments.data;
             console.log($scope.assessments);
+            $scope.assessments.forEach(function(thisAssessment, aindex){
+                if(thisAssessment.evaluation && thisAssessment.evaluation.score){
+                    thisAssessment.evaluation.score = Number(thisAssessment.evaluation.score);
+                }
+                
+            });
+            
             $rootScope.pageTitle = 'All Assessments';
             
-            
-            
+            $scope.sortByScore = function(){
+                $scope.assessments.sort(function(a,b) {return (a.evaluation.score > b.evaluation.score) ? -1 : ((b.evaluation.score > a.evaluation.score) ? 1 : 0);} );  
+            };
+            $scope.sortByDate = function(){
+                $scope.assessments.sort(function(a,b) {return (a._start > b._start) ? -1 : ((b._start > a._start) ? 1 : 0);} );  
+            };
+            $scope.sortByDate();
     }]); 
     exambazaar.controller("allreviewsController", 
         [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'targetStudyProviderService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, targetStudyProviderService, $state, $mdDialog){
@@ -33560,7 +33574,8 @@ function getLatLng(thisData) {
             
             ];*/
             var internshipEmailList = [
-                "venusrikanth007@gmail.com",
+                "gaurav@exambazaar.com"
+
 
             ];
             $scope.internshipEmail = function(userId){
@@ -33569,6 +33584,7 @@ function getLatLng(thisData) {
                     var marketingUser = data;
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
+                            //body: 'Dear Candidate, we like your profile and would like to meet you / speak over the phone to discuss any internship opportunity at Exambazaar. Please reach out to us by replying to this email :)',
                             emailList: internshipEmailList,
                             templateName: 'Internship at Exambazaar',
                         };

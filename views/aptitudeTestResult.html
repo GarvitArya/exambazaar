@@ -74,6 +74,14 @@
     <div layout="row" layout-align="center center" class="marginT20 font20 textBlack bold paddingB10 width100">
         All Assessments&nbsp;<span class="badge" id="badge">{{assessments.length}}</span>
     </div>
+    <div layout="row" layout-align="center center" class="width100">
+        <md-button class="md-black md-small tolowercase" ng-click="sortByScore()">
+            Sort by Score
+        </md-button>
+        <md-button class="md-black md-small tolowercase" ng-click="sortByDate()">
+            Sort by Date
+        </md-button>
+    </div>    
     <div layout="column" layout-align="center center" class="marginT40 width100">
         <div layout="row" class="width100 bold paddingB5 marginB10 subhheadingBottomBorder2">
             <div flex="5" class="">S. No.</div>
@@ -87,7 +95,8 @@
             
             
         </div>
-        <div layout="row" layout-align="start center" ng-repeat="assessment in assessments | orderBy:'-_start'" class="width100 paddingTB5 gainsboroBottomBorder">
+        <div layout="row" layout-align="start center" ng-repeat="assessment in assessments" class="width100 paddingTB5 gainsboroBottomBorder">
+            <!-- | orderBy:'-evaluation.score'-->
             <div flex="5" class="">{{$index+1}}</div>
             <div layout="column"  flex="15" class=" ">
                 <div class="bold">{{assessment.info.name}}</div>
