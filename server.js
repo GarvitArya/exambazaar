@@ -246,7 +246,7 @@ var allStates = [
 '/ebinternal/master/:userId/bulkDisable',
 '/ebinternal/partner/:coachingId/offers',
 '/ebinternal/partner/:userId/dashboard',
-'/ebinternal/postBlog/:userId',
+'/ebinternal/postBlog',
 '/ebinternal/scheduleQAD/:userId',
 '/ebinternal/search',
 '/ebinternal/sitemap',

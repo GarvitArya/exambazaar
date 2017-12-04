@@ -16129,15 +16129,51 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         
     exambazaar.controller("postBlogController", 
-        [ '$scope', '$http','$state', '$stateParams','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService','userBlogs', 'thisuser', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', 's3UtilsService', function($scope, $http, $state, $stateParams, $rootScope, $facebook, $location, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, userBlogs, thisuser, upvoteService, allBlogsUpvotesCount, allBloggers, s3UtilsService){
-            $scope.user = thisuser.data;
+        [ '$scope', '$http','$state', '$stateParams','$rootScope', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', 's3UtilsService', 'Notification', function($scope, $http, $state, $stateParams, $rootScope, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, upvoteService, allBlogsUpvotesCount, allBloggers, s3UtilsService, Notification){
+            var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
             if(!$scope.user){
                 if($cookies.getObject('sessionuser')){
                     $scope.user = $cookies.getObject('sessionuser');
-                     UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
-                        var userGallery = data.blogger.gallery;
-                        //console.log(userGallery);
-                        $scope.blogGallery = userGallery;
+                    
+                    
+                    UserService.getBlogger($scope.user._id).success(function (data, status, headers) {
+                        
+                        if(data.blogger && data.blogger.active){
+                            $scope.blogGallery = data.blogger.gallery;
+                            blogpostService.getUserBlogposts($scope.user._id).success(function (blogData, status, headers) {
+                                $scope.userBlogs = blogData;
+                                $scope.allBloggers = allBloggers.data;
+
+
+                                var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
+                                $scope.userBlogs.forEach(function(thisBlog, index){
+                                    var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+                                    thisBlog.fullurl = "https://www.exambazaar.com/blogpost/" + thisBlog.urlslug;
+
+                                    if(bIndex == -1){
+                                        thisBlog.upvotes = 0;
+                                    }else{
+                                        thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+                                    }
+                                });
+
+
+
+
+
+                            })
+                            .error(function (data, status, header, config) {
+                                console.log("Error ");
+                            });
+                            
+                        }else{
+                            $scope.bloggingNotActive = true;
+                            Notification.warning("Blogging has not been activated for you yet!");
+                        }
+                        
+                        
+                        
+                        
                     })
                     .error(function (data, status, header, config) {
                         console.log("Error ");
@@ -16240,7 +16276,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
             }
          };
-            //console.log($scope.user);
             
             $scope.blogRowClass = function(thisblog){
                 var className = "inactiveBlog";
@@ -16263,23 +16298,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.updateConfirm(thisblog);
             };
             
-            $scope.allBloggers = allBloggers.data;
-            $scope.userBlogs = userBlogs.data;
-            
-            var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
-            var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
-            $scope.userBlogs.forEach(function(thisBlog, index){
-                var bIndex = blogUpvotesId.indexOf(thisBlog._id);
-                thisBlog.fullurl = "https://www.exambazaar.com/blogpost/" + thisBlog.urlslug;
-                
-                if(bIndex == -1){
-                    thisBlog.upvotes = 0;
-                }else{
-                    thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
-                }
-            });
             
             
+            $rootScope.pageTitle ='Write Blog Post at Exambazaar';
             $scope.refreshVoteCount = function(){
                 upvoteService.allBlogsUpvotesCount().success(function (data, status, headers) {
                     var allBlogsUpvotesCount = data;
@@ -16466,7 +16487,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
             $scope.updateConfirm = function(thisblog){
-                
+                if(!thisblog.user || thisblog.user.basic){
+                    thisblog.user = {
+                        basic: {
+                            name: 'User'
+                        }
+                    }
+                }
                 var confirm = $mdDialog.confirm()
                 .title('Would you like to update changes to post titled "' + thisblog.title + '"?')
                 .textContent('It was authored by ' + thisblog.user.basic.name +"!" )
@@ -16790,204 +16817,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 },1000)
             };
             
-            $rootScope.pageTitle ='Write Blog Post at Exambazaar';
-            
-            $scope.fbLoginStatus = {};
-            
-            $scope.loggedIn = false;
-            
-            $facebook.getLoginStatus().then(function(response) {
-                $scope.fbLoginStatus = response;
-            });
-            if($scope.user && $scope.user.userId){
-                $scope.loggedIn = true; 
-                refresh();
-            }else{
-                $scope.loggedIn = false;
-            }
-            
-            $scope.fblogin = function() {
-                //console.log('Loggin into fb');
-                $facebook.login().then(function(response) {
-                    $scope.fbLoginStatus = response;
-                    refresh();
-                });   
-            };
-            var currURL = $location.absUrl();
-            currURL = currURL.replace("localhost:8000", "exambazaar.com");
-            currURL = "www.exambazaar.com/review";
-            //console.log(currURL);
-            $scope.fbshare = function() {
-                $facebook.ui(
-                     {
-                      method: 'share',
-                      href: currURL,
-                      redirect_uri: 'https://www.exambazaar.com/', 
-                      hashtag: '#exambazaar',
-                      quote: 'Exambazaar: Find best coaching classes in your city for more than 50 exams',
-                      display: 'iframe',
-                      mobile_iframe: true
-                    }, function(response){
-                        console.log("Response is: " + response);
-                        if(response){
-                            alert('Done');
-                        }else{
-                            alert('Error');
-                        }
-                    });
-            };
-            $scope.fbshare2 = function() {
-                $http.get('https://www.facebook.com/dialog/share?app_id=1236747093103286&display=popup&href=http%3A%2F%2Fwww.exambazaar.com/review%2F&redirect_uri=http%3A%2F%2Fwww.exambazaar.com/reviewed')
-                .success(function(data) {
-                    console.log(data)
-                })
-                .error(function(data) {
-                    alert(data);
-                    console.log('Error: ' + data);
-                });
-            };
-            $scope.fbfeed = function() {
-                $facebook.ui(
-                     {
-                      method: 'feed',
-                      link: 'https://www.exambazaar.com',
-                      //redirect_uri: 'https://www.exambazaar.com', 
-                      source: 'https://www.exambazaar.com/images/logo/cover.png',
-                      //display: 'iframe',
-                      //mobile_iframe: true
-                    }, function(response){
-                        alert(response);
-                        console.log("Response is: ");
-                        console.log(response);
-                        if(response){
-                            alert('Done');
-                        }else{
-                            alert('Error');
-                        }
-                    });
-            };
-            $scope.fbInvite = function(){
-                
-                
-                $facebook.ui({
-                    method: 'send',
-                    name: 'Review your coaching institute at Exambazaar.com',
-                    description: 'Be heard and help others by reviewing your coaching institute! As a goodie, unlock discounts from Exambazaar.com',
-                    display: 'popup',
-                    link: currURL
-                },function(response) {
-                    if (response) {
-                        alert('Successfully Invited');
-                    } else {
-                        alert('Failed To Invite');
-                    }
-                });
-            };
-            
-            function refresh() {
-                $facebook.api("/me", {fields: 'id, name, age_range, link, gender, picture, email'}).then(
-                    function(response) {
-                        //console.log($scope.user);
-                        
-                        if($scope.user && $scope.user.userId){
-                            //link the user's fb id to the current user
-                            $scope.user.fbuser = {
-                                name: response.name,
-                                gender: response.gender,
-                                image: response.picture.data.url,
-                                email: response.email,
-                                facebook: {
-                                    link: response.link,
-                                    id: response.id,
-                                }
-                            };
-                            
-                            
-                        }else{
-                            $scope.user = {};
-                            $scope.user.fbuser = {
-                                name: response.name,
-                                gender: response.gender,
-                                image: response.picture.data.url,
-                                email: response.email,
-                                facebook: {
-                                    link: response.link,
-                                    id: response.id,
-                                }
-                            };
-                            //add a new user with facebook id
-                        }
-                        
-                    },
-                    function(err) {
-                        $scope.welcomeMsg = "Please log in";
-                        $scope.isLoggedIn = false;
-                });
-                $facebook.api("/me/permissions").then(
-                    function(response) {
-                        //console.log(response);
-                        $scope.permissions = response;
-                    },
-                    function(err) {
-                    $scope.welcomeMsg = "Permissions Error";
-                });
-                
-            };
-
-            //console.log($scope.user);
-            
-            $scope.$watch('[fbLoginStatus.status, user.fbuser.facebook.id]', function (newValue, oldValue, scope) {
-                //console.log(newValue);
-            if(newValue[0] == 'connected' && newValue[1]){
-                $scope.fbUser = true;
-                $scope.user.fbuser.facebook.accessToken = $scope.fbLoginStatus.authResponse.accessToken;
-                if(!$scope.user.facebookId){
-                    UserService.fbSave($scope.user).success(function (data, status, headers) {
-                        
-                        var fulluser = data;
-                        console.log(fulluser);
-                        var sessionuser = {
-                            userId: fulluser._id,
-                            facebookId: fulluser.facebookId,
-                            userType: fulluser.userType,
-                            basic: fulluser.basic,
-                            image: fulluser.image,
-                            mobile: fulluser.mobile,
-                            email: fulluser.email,
-
-                        };
-                        $cookies.putObject('sessionuser', sessionuser);
-                        $scope.user = sessionuser;
-                        
-                        console.log(sessionuser.userType);
-                        
-                        if(sessionuser.userType =='Master'){  
-                            $state.go('master-dashboard', {masterId: sessionuser.userId});
-                        }
-                        if(sessionuser.userType =='Intern - Business Development'){
-                             $state.go('assigned', {userId: sessionuser.userId});
-                        }
-                        if(sessionuser.userType =='Student'){
-                            $state.reload();
-                        }
-                        if(sessionuser.userType =='Partner'){
-                            $state.go('partner-dashboard', {userId: sessionuser.userId});
-                        }
-                        
-                        
-                        //$state.reload();
-                    })
-                    .error(function (data, status, header, config) {
-                        console.log("Error ");
-                    });
-                }
-                
-                
-                
-                
-            }
-
-            }, true);
             
             
             
@@ -33576,9 +33405,7 @@ function getLatLng(thisData) {
             
             ];*/
             var internshipEmailList = [
-                "Ashima5feb95@gmail.com",
-            "dubeysachin752@gmail.com",
-            "suhailfkhan786@gmail.com",
+                "gaurav@exambazaar.com"
 
 
 
@@ -36766,7 +36593,7 @@ function getLatLng(thisData) {
             
         })
         .state('postBlog', {
-            url: '/ebinternal/postBlog/:userId',
+            url: '/ebinternal/postBlog',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -36781,18 +36608,11 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisuser: ['UserService', '$stateParams',
-                    function(UserService,$stateParams){
-                    return UserService.getUser($stateParams.userId);
-                }],
                 allBloggers: ['UserService',
                     function(UserService){
                     return UserService.allBloggers();
                 }],
-                userBlogs: ['blogpostService', '$stateParams',
-                    function(blogpostService, $stateParams) {   
-                    return blogpostService.getUserBlogposts($stateParams.userId);
-                }],
+                
                 allBlogsUpvotesCount: ['upvoteService',
                     function(upvoteService) {
                     return upvoteService.allBlogsUpvotesCount();

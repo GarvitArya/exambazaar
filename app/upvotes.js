@@ -116,7 +116,6 @@ router.get('/allBlogsUpvotesCount', function(req, res) {
 
     ],function(err, blogUpvotes) {
     if (!err){
-        
         var allUpvotes = [];
         blogUpvotes.forEach(function(thisBlog, index){
             var bUpvote = {

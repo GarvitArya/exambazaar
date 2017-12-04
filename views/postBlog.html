@@ -128,6 +128,15 @@
                 Flipboard
             </div>
         </div>
+        
+        <div layout="row" layout-align="center center" class="width100 min20vh" ng-if="!userBlogs">
+            <img src="images/loader/30.gif" ng-if="!bloggingNotActive"/>
+            <div ng-if="bloggingNotActive">
+                Blogging has not been activated for you. Please reach out to team@exambazaar.com for more!
+            </div>
+            
+        </div>
+        
         <!--'-active','blogSeries','-_created', '-upvotes'-->
         <div layout="row" layout-align="start center" ng-repeat="thisblog in userBlogs | orderBy: ['active','blogSeries','-_created', '-upvotes']" class="width100 greyDashedBottomBorder paddingTB2" ng-class="blogRowClass(thisblog)">
             <div layout="row" layout-align="start center" flex="5">
@@ -190,7 +199,7 @@
         </div>
         
     </div>
-    <div layout="row" layout-align="start center" class="width100 marginB10 paddingB10">
+    <div layout="row" layout-align="start center" class="width100 marginB10 paddingB10" ng-if="userBlogs">
         <div layout="row" layout-align="end center" flex class="font14 marginR10">
             Inspire others by writing amazing blog posts for the Exambazaar community
         </div>
@@ -208,7 +217,7 @@
 <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="paddingTB20 width100" ng-if="!user">
     <div layout="column" layout-align="center center" class="width100 paddingTB10 marginB10 gainsboroBottomBorder">
         <div layout="row" layout-align="center center" class="width100 font20 danger">
-            You need to be logged in to be able to post!
+            You need to be logged in to be able to post blogs!
         </div>
     </div>
     

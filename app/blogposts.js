@@ -548,10 +548,10 @@ router.get('/userblogs/:userId', function(req, res) {
         if (!err){
             var thisUserType = thisUser.userType;
             var thisUserId = thisUser._id.toString();
-            var internIds = ['594ac4d15b78f012b45cc2a3', '59c7c2dc0a239d4416c2473f'];
+            var internIds = [];
             if(thisUserType =='Master' || internIds.indexOf(thisUserId) != -1){
                 var blogposts = blogpost
-                .find({})
+                .find({},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1})
                 .exec(function (err, blogposts) {
                     if (!err){
                     var allBlogposts = [];
@@ -580,7 +580,7 @@ router.get('/userblogs/:userId', function(req, res) {
                 });
             }else{
                 var blogposts = blogpost
-                .find({user: userId})
+                .find({user: userId},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1})
                 .exec(function (err, blogposts) {
                     if (!err){
                         var allBlogposts = [];
