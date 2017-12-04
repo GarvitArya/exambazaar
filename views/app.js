@@ -16398,9 +16398,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 for (var property in blogpost) {
                     blogpostForm[property] = blogpost[property];
                 }
+                console.log(blogpostForm);
                 blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                     var blogpostId = data._id;
-                    blogpostService.getUserBlogposts($stateParams.userId).success(function (data, status, headers) {
+                    blogpostService.getUserBlogposts($scope.user._id).success(function (data, status, headers) {
                         $scope.userBlogs = data;
                         $scope.refreshVoteCount();
                         //var url = $state.href('editblog', {blogpostId: blogpostId});
