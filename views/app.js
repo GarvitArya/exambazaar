@@ -10400,7 +10400,31 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Silvassa",
             "Chittorgarh",
             "Bahraich",
-            "Madurai"
+            "Chennai",
+            "Coimbatore",
+            "Salem",
+            "Tirunelveli",
+            "Tiruppur",
+            "Tiruchirappalli",
+            "Vellore",
+            "Hosur",
+            "Madurai",
+            "Erode",
+            "Tuticorin",
+            "Dindigul",
+            "Thanjavur",
+            "Nagarcoil",
+            "Kanchipuram",
+            "Tiruvavur",
+            "Virudhunagar",
+            "Karur",
+            "Paramakudi",
+            "Cuddalore",
+            "Villupuram",
+            "Kancheepuram",
+            "Karaikudi",
+            "Tiruvanmalai",
+
         ];
         
         if($cookies.getObject('sessionuser')){
