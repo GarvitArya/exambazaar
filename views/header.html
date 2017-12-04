@@ -264,7 +264,7 @@
                 <li><a ui-sref="postBlog({ userId:{{'sessionuser.userId'}} })">Post Blog</a></li>
                 <li><a ui-sref="eligibility({ userId:{{'sessionuser.userId'}}} )">Eligibility</a></li>
                 <li><a ui-sref="aroundme">Around Me</a></li>
-                
+                <li><a ui-sref="allTests({ userId:{{'sessionuser.userId'}} })"  ng-if="sessionuser.userId=='5a1831f0bd2adb260055e352'">All Tests</a></li>
               </ul>
             </li>
             <li class="dropdown">
@@ -276,6 +276,8 @@
                 <li ng-if="permittedToDisable.indexOf(sessionuser.userId)!=-1"><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
                 <li><a ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })" ng-if="sessionuser.userId=='5a1831f0bd2adb260055e352'">Added Institutes</a></li>
                 <li><a ui-sref="addedQuestions({ userId:{{'sessionuser.userId'}} })" ng-if="sessionuser.userId=='5a1831f0bd2adb260055e352'">Added Questions</a></li>
+                  
+                  
                 <!--<li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>-->
               </ul>
             </li>
