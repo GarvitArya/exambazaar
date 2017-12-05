@@ -210,8 +210,8 @@
         padding: 10px;
     }
     #logo{
-        max-width: 100%;
-        max-height: 100%;
+        max-width: 90%;
+        max-height: 90%;
     }
     #examBox{
         
@@ -230,6 +230,9 @@
     /*.streamBoxBorder{
         border-right: 1px solid lightgray;
     }*/
+    #blogTags:{
+        overflow-y: auto;
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -610,13 +613,13 @@
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="examEligDialog">
-    <md-dialog class="halfscreen-dialog2">
+    <md-dialog class="blog-dialog" >
     <div class="width100" id="examinfo">
         
     </div>
-    <div class="paddingTB20 paddingLR40" layout="column" layout-align="start center" layout-fill>
+    <div class="paddingTB20 paddingLR40" layout="column" layout-align="start center" id="blogTags">
         
-        <div flex layout="row" id="examEligBox" class="width100 greyBottomBorder paddingTB10">
+        <div flex layout="row" id="examEligBox" class="width100 greyBottomBorder">
             <div flex ="25" layout="column" layout-align="start start" class="paddingLR10">
                 <img ng-src="{{activeExamEligibility.exam.logo}}" id="logo"/>
             </div>
