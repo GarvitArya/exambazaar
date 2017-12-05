@@ -2939,6 +2939,36 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.user.eligibility.age = age;
             }
         };
+            
+        $scope.sanitizeEligibility = function(eligibility){
+            if(eligibility && eligibility.educationLevel){
+                var eLevel = eligibility.educationLevel.level;
+                if(eLevel == 0){
+                    if(eligibility.class12Subjects){
+                        for (var property in eligibility.class12Subjects) {
+                            eligibility.class12Subjects[property] = null;
+                        }
+                    }
+                    eligibility.class12Percentage = '';
+                }
+                if(eLevel < 3){
+                    if(eligibility.undergradMajor){
+                        for (var property in eligibility.undergradMajor) {
+                            eligibility.undergradMajor[property] = null;
+                        }
+                    }
+                    eligibility.undergradPercentage = '';
+                }
+                if(eLevel < 5){
+                    if(eligibility.postgradMajor){
+                        for (var property in eligibility.postgradMajor) {
+                            eligibility.postgradMajor[property] = null;
+                        }
+                    }
+                    eligibility.postgradPercentage = '';
+                }
+            }
+        }; 
         $scope.setEducationLevel = function(educationLevel){
             if(!$scope.user.eligibility){
                 $scope.user.eligibility = {};
@@ -2948,6 +2978,27 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
             
             $scope.user.eligibility.educationLevel = educationLevel;
+            $scope.sanitizeEligibility($scope.user.eligibility);
+            /*if($scope.user.eligibility.educationLevel.name == 'I-X'){
+                console.log('I am here');
+                $scope.components[0].subcategories = [];
+            }
+            if($scope.user.eligibility.educationLevel.name == 'XI / XII / After XII'){
+                $scope.components[0].subcategories = [];
+                $scope.components[0].subcategories.push({name: 'School Class XII'});
+            }
+            if($scope.user.eligibility.educationLevel.name == 'In UG or equivalent' || $scope.user.eligibility.educationLevel.name == 'During or After Final Year of UG'){
+                $scope.components[0].subcategories = [];
+                $scope.components[0].subcategories.push({name: 'School Class XII'});
+                $scope.components[0].subcategories.push({name: 'Undergraduate'});
+            }
+            if($scope.user.eligibility.educationLevel.name == 'During or After Final Year of PG'){
+                $scope.components[0].subcategories = [];
+                $scope.components[0].subcategories.push({name: 'School Class XII'});
+                $scope.components[0].subcategories.push({name: 'Undergraduate'});
+                $scope.components[0].subcategories.push({name: 'Postgraduate'});
+            }*/
+            
             
             /*if($scope.user.eligibility.educationLevel.name == 'I-X'){
                 console.log('I am here');
@@ -3297,7 +3348,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }
                 });
 
-                console.log($scope.validStreamExams);
+                //console.log($scope.validStreamExams);
                 $scope.scrollTop(); 
                 
                 
@@ -29949,6 +30000,7 @@ function getLatLng(thisData) {
             }
             
             $scope.contactoptions = [
+                "I would like to feature Expert Review of a coaching",
                 "I found incorrect/outdated information on a page",
                 "There is a photo/review that is bothering me and I would like to report it",
                 "The website is not working the way it should",
@@ -33439,7 +33491,7 @@ function getLatLng(thisData) {
             
             ];*/
             var internshipEmailList = [
-                "bhoomi93.pandya@gmail.com"
+                "adarsh@jnujaipur.ac.in"
 
 
 

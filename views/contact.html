@@ -116,10 +116,11 @@
             
         </div>
         
-        <div layout="column" layout-align="center center" class="textBlack width80 marginT40 subhheadingBottomBorder2 font24 bold">
+        <div layout="column" layout-align="center center" class="width100 marginT40" ng-if="masterUser">
+        <div layout="column" layout-align="center center" class="textBlack width80 subhheadingBottomBorder2 font24 bold">
             Send Email to Colleges
         </div>    
-        <div layout="column" layout-align="center center" class="min50vh width80 marginTB20 font20 textDarkGrey" ng-if="!collegeMessageSent">
+        <div layout="column" layout-align="center center" class="min50vh width80 marginTB10 font20 textDarkGrey" ng-if="!collegeMessageSent">
             <div class="width100 paddingR10 marginTB10"><input type="text" class="text-center width100" ng-model="collegeForm.collegename"  placeholder="College Name"></div>
             <div class="width100 paddingR10 marginTB10"><input type="email" class=" text-center width100" ng-model="collegeForm.email"  placeholder="College Email"></div>
             <div class="marginTB10 width100">
@@ -131,6 +132,7 @@
         <div layout="column" layout-align="center center" class="min50vh width80 marginB20 font20 textDarkGrey  bold" ng-if="collegeMessageSent">
             <i class="fa fa-check-circle font32 text-primary" aria-hidden="true"></i>
             <div>Recruitment Message Sent</div>
+        </div>
         </div>
     </div>
     
