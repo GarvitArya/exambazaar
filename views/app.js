@@ -3036,6 +3036,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         var checkEligibility = function(thisIndex){
             //console.log($scope.elgInput);
             $scope.elgInput = $scope.user.eligibility;
+            console.log($scope.elgInput);
             var error = false;
             var errorClass12Subjects = true;
             var errorUnderGradMajor = true;
@@ -3130,7 +3131,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.uniqueValidEligibilities = [];
                 var checkExamIds = ['58ad20045401f52440af6f24'];
                 $scope.eligibilityList.forEach(function(thisEligibility, index){
-
+                
                 var checkCategory = thisEligibility.category.applicable;
                 var checkAge = thisEligibility.age.applicable;
                 var checkClass12Subjects = thisEligibility.class12Subjects.applicable;
@@ -3139,6 +3140,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var checkUndergradPercentage = thisEligibility.undergradPercentage.applicable;
                 var checkPostgradMajor = thisEligibility.postgradMajor.applicable;
                 var checkPostgradPercentage = thisEligibility.postgradPercentage.applicable;
+                    
+                
                 var valid = true;
                 if(checkCategory){
                     var categoryBool = false;
@@ -3220,7 +3223,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         valid = false;
                     }
                     $scope.postgradMajors.forEach(function(thisItem, itemIndex){
-                        if(thisEligibility.postgradMajor[thisItem.name] && $scope.elgInput.postgradMajor[thisItem.name]){
+                       
+                        if(thisEligibility.postgradMajor && thisEligibility.postgradMajor[thisItem.name] && $scope.elgInput.postgradMajor &&  $scope.elgInput.postgradMajor[thisItem.name]){
                             postgradBool = true;
                         }
                     });
@@ -33435,7 +33439,7 @@ function getLatLng(thisData) {
             
             ];*/
             var internshipEmailList = [
-                "gaurav@exambazaar.com"
+                "bhoomi93.pandya@gmail.com"
 
 
 
