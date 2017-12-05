@@ -161,6 +161,7 @@
             </li>
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="aroundme">Around Me</a></li>
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="review">Review a Coaching</a></li>
+            <li><a ui-sref="eligibility" >Exam Eligibility&nbsp;<i class="fa fa-star" aria-hidden="true"></i></a></li>
             <!--<li ng-if="sessionuser.userType=='Student'"><a ui-sref="k21">K21 Test</a></li>-->
         </ul>
         
@@ -262,7 +263,7 @@
               <ul class="dropdown-menu">
                 <li><a ui-sref="search">Quick Search</a></li>
                 <li><a ui-sref="postBlog">Post Blog</a></li>
-                <li><a ui-sref="eligibility({ userId:{{'sessionuser.userId'}}} )">Eligibility</a></li>
+                <li><a ui-sref="eligibility">Eligibility</a></li>
                 <li><a ui-sref="aroundme">Around Me</a></li>
                 <li><a ui-sref="allTests({ userId:{{'sessionuser.userId'}} })"  ng-if="sessionuser.userId=='5a1831f0bd2adb260055e352'">All Tests</a></li>
               </ul>
