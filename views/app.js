@@ -3421,8 +3421,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         });
             //console.log($scope.coachingGroup);
         $scope.setPage = function(pageName){
-            console.log(pageName);
-            $scope.components.forEach(function(thisCategory, index){
+             $scope.components.forEach(function(thisCategory, index){
                 if(thisCategory.name == pageName){
                     thisCategory.active = true;
                     $scope.activeCategory = thisCategory;
@@ -3798,7 +3797,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //console.log(emailForm);
                 EmailService.availDiscountEmail(emailForm).success(function (thisData, status, headers) {
                     
-                    Notification.primary({message: "Great we will reach out to " + $scope.groupName + ' for you!',  positionY: 'top', positionX: 'right', delay: 1000});
+                    Notification.primary({message: "Great we will reach out to " + $scope.groupName + ' for you!',  positionY: 'top', positionX: 'right', delay: 10000});
 
                 })
                 .error(function (data, status, header, config) {
@@ -3880,6 +3879,29 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         }
                         if(!$scope.user.basic.name){
                             validTransition = false;
+                            Notification.warning({message: "Please mention your name!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        }
+                        if(!$scope.user.mobile){
+                            validTransition = false;
+                            Notification.warning({message: "Please mention your mobile number!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        }
+                        if(!$scope.user.email){
+                            validTransition = false;
+                            Notification.warning({message: "Please mention your email address!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        }
+                    }
+                    
+                    
+                    
+                    if(thisIndex == 2){
+                        if($scope.user.newemail && $scope.user.newemail != ''){
+                            $scope.user.email = $scope.user.newemail;
+                        }
+                        if($scope.user.newmobile && $scope.user.newmobile != ''){
+                            $scope.user.mobile = $scope.user.newmobile;
+                        }
+                        if(!$scope.user.basic.name){
+                            validTransition = false;
                         }
                         if(!$scope.user.mobile){
                             validTransition = false;
@@ -3890,19 +3912,40 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }
                     
                     if(validTransition){
+                        var nextMove = false;
                         if(thisIndex == 0){
+                            nextMove = true;
                             $scope.saveUser(thisIndex);
                         }
                         if(thisIndex == 1){
-                            checkEligibility(thisIndex);
+                            if(checkEligibility(thisIndex)){
+                                nextMove = true;
+                            }
                         }
                         if(thisIndex == 2){
-                            $scope.saveAvailDiscount();
+                            nextMove = true;
+                            if(!$scope.availDiscount.course.name || $scope.availDiscount.course.name.length < 2){
+                                nextMove = false;
+                            }
+                            if(!$scope.availDiscount.course.duration || $scope.availDiscount.course.duration.length < 2){
+                                nextMove = false;
+                            }
+                            if(nextMove){
+                                $scope.saveAvailDiscount();
+                            }else{
+                                Notification.warning({message: "Please fill the course details at " + $scope.groupName + ", you want to buy!" ,  positionY: 'top', positionX: 'right', delay: 10000});
+                            }
+                            
                         }
-                        $scope.activeCategory = $scope.components[thisIndex + 1];
+                        
+                        if(nextMove){
+                            $scope.activeCategory = $scope.components[thisIndex + 1];
 
-                        $scope.currentSubcategories = $scope.activeCategory.subcategories;
-                        $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
+                            $scope.currentSubcategories = $scope.activeCategory.subcategories;
+                            $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
+                            
+                        }
+                        
                     }
                     
                 }
@@ -4139,7 +4182,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
             
         var checkEligibility = function(thisIndex){
-            //console.log($scope.elgInput);
+            if(!$scope.user.eligibility){
+                 $scope.user.eligibility = $scope.elgInput;
+            }
             $scope.elgInput = $scope.user.eligibility;
             var error = false;
             var errorClass12Subjects = true;
@@ -4152,16 +4197,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 errorMessages.push("Please select your age");
             }
             
+            if($scope.elgInput.educationLevel){
             if($scope.elgInput.educationLevel.level == null){
                 error = true;
                 errorMessages.push("Please select your current education level");
             }
            
             
-            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=1){
+                
+            
+            if($scope.elgInput.educationLevel.level>=1){
                 
                 $scope.class12Subjects.forEach(function(thisSubject, index){
-                    if($scope.elgInput.class12Subjects[thisSubject.name]){
+                    if($scope.elgInput.class12Subjects && $scope.elgInput.class12Subjects[thisSubject.name]){
                         errorClass12Subjects = false;
                     }
                     
@@ -4182,7 +4230,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=3){
                 $scope.undergradMajors.forEach(function(thisMajor, index){
-                    if($scope.elgInput.undergradMajor[thisMajor.name]){
+                    if($scope.elgInput.undergradMajor && $scope.elgInput.undergradMajor[thisMajor.name]){
                         errorUnderGradMajor = false;
                     }
                     if(index == $scope.undergradMajors.length - 1 && errorUnderGradMajor){
@@ -4216,7 +4264,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             }
             
-            console.log(error);
+            }else{
+                error = true;
+                errorMessages.push("Please select your current education level");
+            }
+            
+            
+            //console.log(error);
+            //console.log(errorMessages);
             if(error){
                 
                 Notification.warning({message: "Please fill all academic details to proceed ahead!",  positionY: 'top', positionX: 'right', delay: 1000});
@@ -33490,7 +33545,7 @@ function getLatLng(thisData) {
             
             ];*/
             var internshipEmailList = [
-                "adarsh@jnujaipur.ac.in"
+                "gaurav@exambazaar.com"
 
 
 
@@ -38815,7 +38870,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
             }
             
         }else{
-            console.log('Not EB Internal');
+            //console.log('Not EB Internal');
         }
         if(stateTo == 'aptitude'){
             if($cookies.getObject('sessionuser')){
