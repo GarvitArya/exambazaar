@@ -33617,9 +33617,8 @@ function getLatLng(thisData) {
             
             ];*/
             var internshipEmailList = [
-                "subhamsharma78@gmail.com",
-                "nisha9127.singh@gmail.com",
-                "thakreshivam@gmail.com",
+                "ayushjn1995@gmail.com",
+                
 
 
 
