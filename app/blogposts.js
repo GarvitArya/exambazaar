@@ -475,6 +475,98 @@ router.post('/suggestedblogstream', function(req, res) {
     
 });
 
+
+router.post('/streamblogstream', function(req, res) {
+    var streamInfo = req.body;
+    //console.log(streamInfo);
+    //var streamName = streamInfo.streamName;
+    var streamId = streamInfo.streamId.toString();
+    
+    var skip = 0;
+    var limit = 10;
+    if(streamInfo && streamInfo.skip){
+        skip = streamInfo.skip;
+    }
+    var excluded = ['EdBites','Expert Reviews'];
+    
+    var allExams = exam
+        .find({'stream': streamId}, {_id:1})
+        .exec(function (err, allExams) {
+        if (!err){
+            if(allExams){
+                var allExamIds =  allExams.map(function(a) {return a._id;});
+                console.log(allExamIds);
+                var blogposts = blogpost
+                .find({active: true, exams: { $in : allExamIds }, blogSeries: {$nin: excluded}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
+                .sort({_published: -1})
+                .limit(limit)
+                .skip(skip)
+                .exec(function (err, blogposts) {
+                    if (!err){
+                        //var allBlogposts = [];
+                        var nBlogposts = blogposts.length;
+                        console.log(nBlogposts);
+                        var counter = 0;
+                        if(nBlogposts == 0){
+                            res.json([]);
+                        }
+
+
+                        blogposts.forEach(function(thisBlogpost, rindex){
+                            var thisBlogUser = thisBlogpost.user;
+                            var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                                if (!err){
+                                    thisBlogpost.user = thisBlogUserInfo;
+                                    counter += 1;
+                                    //allBlogposts.push(thisBlogpost);
+                                    if(counter == nBlogposts){
+                                        res.json(blogposts);   
+                                    }
+                                }
+                            });
+                        });
+                    } else {throw err;}
+                });
+                
+                
+            }else{
+                var blogposts = blogpost
+                .find({active: true}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
+                .sort({_published: -1})
+                .limit(limit)
+                .skip(skip)
+                .exec(function (err, blogposts) {
+                    if (!err){
+                        //var allBlogposts = [];
+                        var nBlogposts = blogposts.length;
+                        var counter = 0;
+                        if(nBlogposts == 0){
+                            res.json([]);
+                        }
+
+
+                        blogposts.forEach(function(thisBlogpost, rindex){
+                            var thisBlogUser = thisBlogpost.user;
+                            var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                                if (!err){
+                                    thisBlogpost.user = thisBlogUserInfo;
+                                    counter += 1;
+                                    //allBlogposts.push(thisBlogpost);
+                                    if(counter == nBlogposts){
+                                        res.json(blogposts);   
+                                    }
+                                }
+                            });
+                        });
+                    } else {throw err;}
+                });
+            }  
+        } else {throw err;}
+    });
+    
+    
+});
+
 router.get('/headerBlogs', function(req, res) {
     var excluded = ['EdBites','Expert Reviews'];
     
@@ -548,7 +640,7 @@ router.get('/userblogs/:userId', function(req, res) {
         if (!err){
             var thisUserType = thisUser.userType;
             var thisUserId = thisUser._id.toString();
-            var internIds = [];
+            var internIds = ['5a1831f0bd2adb260055e352'];
             if(thisUserType =='Master' || internIds.indexOf(thisUserId) != -1){
                 var blogposts = blogpost
                 .find({},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1})

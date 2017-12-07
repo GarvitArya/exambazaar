@@ -1017,6 +1017,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.suggestedblogstream = function(streamInfo) {
             return $http.post('/api/blogposts/suggestedblogstream', streamInfo);
         };
+        this.streamblogstream = function(streamInfo) {
+            return $http.post('/api/blogposts/streamblogstream', streamInfo);
+        };
         this.suggestedblogs = function(examName) {
             return $http.get('/api/blogposts/suggestedblogs/'+examName, {examName: examName});
         };
@@ -13466,6 +13469,43 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       return SuggestedBlogStream;
     });
     
+    
+    exambazaar.factory('StreamBlogStream', function(blogpostService) {
+      var StreamBlogStream = function(streamInfo) {
+        this.items = [];
+        this.busy = false;
+        this.finished = false;
+        this.skip = 0;
+        //this.streamName = streamInfo.streamName;
+        this.streamId = streamInfo.streamId;
+      };
+
+      StreamBlogStream.prototype.nextPage = function() {
+        if (this.busy) return;
+        if (this.finished) return;
+        this.busy = true;
+        var streamInfo = {
+            skip: this.skip,
+            //streamName: this.streamName,
+            streamId: this.streamId,
+        };
+        blogpostService.streamblogstream(streamInfo).success(function (data, status, headers) {
+            var items = data;
+            if(!items || (items && items.length == 0)){
+                this.finished = true;
+            }
+            //console.log(items);
+            this.items = this.items.concat(items);
+            this.skip += items.length;
+            this.busy = false;
+        }.bind(this))
+        .error(function (data, status, header, config) {
+            console.log("Error ");
+        });  
+      };
+
+      return StreamBlogStream;
+    });    
         
     exambazaar.controller("socialLoginController", 
         [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'BlogStream', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, BlogStream){
@@ -14325,7 +14365,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("blogController", 
         [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', 'BlogStream', 'EdBitesStream', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, Socialshare, viewService, upvoteService, allBlogsUpvotesCount, BlogStream, EdBitesStream){
             //$scope.allBlogs = allBlogs.data;
+            /*$scope.filterStream = null;
+            var streamInfo = {
+                //streamName: 'Engineering',
+                streamId: null//'58ac21ec144a140ee0fe62f1',
+            };*/
             $scope.allBlogs = new BlogStream();
+            
+            
             $scope.allEdbites = new EdBitesStream();
             
             var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
@@ -14845,6 +14892,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
         $scope.instructions = [
             "The question paper consists of 40 questions, which are a mix of English, Reasoning and Mathematics questions",
+            "You can only take this test once",
             "You are required to attempt all questions",
             "Time allowed: 30 Minutes",
             "Every correct answer will fetch you +3 marks and incorrect answer will fetch you -1 marks Unattempted answer will fetch you 0 marks",
@@ -30968,7 +31016,7 @@ function getLatLng(thisData) {
                         }
                         targetStudyProviderService.suggestedcoachings(examUserinfo).success(function (data, status, headers) {
                             $scope.suggestedcoachings = data;
-                            console.log(data);
+                            //console.log(data);
                         })
                         .error(function (data, status, header, config) {
                             console.log("Error ");
@@ -31032,7 +31080,7 @@ function getLatLng(thisData) {
                         var dateRange = thisStep.stepDate.dateRange;
                         var timeRanges = thisStep.stepDate.timeRange;
                         var dateRanges = thisStep.stepDate.dates;
-                        //console.log(dateRanges);
+                        
                         var allDay = false;
                         var dateString = '';
                         var timeString = '';
@@ -31053,14 +31101,21 @@ function getLatLng(thisData) {
                                 allDay = true;
                             }
                         });
+                        
                         if(dateRange && dateRange.startDate && dateRange.endDate){
                             var startDate = moment(dateRange.startDate);
                             var endDate = moment(dateRange.endDate);
                             dateString = "" + moment(startDate).format('DD MMM YY');
-                            //console.log(compareDates(startDate, endDate));
+                           
+                            
                             if(compareDates(startDate, endDate) == -1){
                                 dateString += " to " + moment(dateRange.endDate).format('DD MMM YY');
                             }
+                            
+                        }
+                        
+                        if(index == 2){
+                            console.log(dateString);
                         }
                         if(allDay){
                             timeString = "All Day ";
@@ -33556,7 +33611,7 @@ function getLatLng(thisData) {
                     var marketingUser = data;
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
-                            //body: 'Dear Candidate, we like your profile and would like to meet you / speak over the phone to discuss any internship opportunity at Exambazaar. Please reach out to us by replying to this email :)',
+                            body: "Dear Candidate, Saturday 9th December 11 am is the final deadline for your application to Exambazaar Internship. Please complete the steps mentioned, if you haven't already. If you have finished all steps, thanks and good luck! We will process your application soon.",
                             emailList: internshipEmailList,
                             templateName: 'Internship at Exambazaar',
                         };
