@@ -14363,14 +14363,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
     exambazaar.controller("blogController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', 'BlogStream', 'EdBitesStream', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, Socialshare, viewService, upvoteService, allBlogsUpvotesCount, BlogStream, EdBitesStream){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', 'StreamBlogStream', 'EdBitesStream', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, Socialshare, viewService, upvoteService, allBlogsUpvotesCount, StreamBlogStream, EdBitesStream){
             //$scope.allBlogs = allBlogs.data;
-            /*$scope.filterStream = null;
+            $scope.filterStream = null;
             var streamInfo = {
                 //streamName: 'Engineering',
                 streamId: null//'58ac21ec144a140ee0fe62f1',
-            };*/
-            $scope.allBlogs = new BlogStream();
+            };
+            $scope.allBlogs = new StreamBlogStream(streamInfo);
             
             
             $scope.allEdbites = new EdBitesStream();
@@ -15639,7 +15639,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.startAssessment = function(ev) {
             $scope.startErrors = [];
             var valid = true;
-            $scope.assessmentInfo.mobile = $scope.assessmentInfo.mobile.toString();
+            console.log($scope.assessmentInfo);
+            if($scope.assessmentInfo && $scope.assessmentInfo.mobile){
+                $scope.assessmentInfo.mobile = $scope.assessmentInfo.mobile.toString();
+            }
+            
             if(!$scope.assessmentInfo.agree){
                 valid = false;
                 console.log('1');
@@ -33600,7 +33604,10 @@ function getLatLng(thisData) {
             
             ];*/
             var internshipEmailList = [
-                "gaurav@exambazaar.com"
+                "subhamsharma78@gmail.com",
+                "nisha9127.singh@gmail.com",
+                "thakreshivam@gmail.com",
+
 
 
 
@@ -33611,7 +33618,7 @@ function getLatLng(thisData) {
                     var marketingUser = data;
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
-                            body: "Dear Candidate, Saturday 9th December 11 am is the final deadline for your application to Exambazaar Internship. Please complete the steps mentioned, if you haven't already. If you have finished all steps, thanks and good luck! We will process your application soon.",
+                            body: "Dear Candidate, Saturday 9th December 11am is the final deadline for your application to Exambazaar Internship for the position of Digital Curation (https://internshala.com/internship/detail/digital-curation-work-from-home-internship-at-exambazaar1512028494). Please complete the steps mentioned below, if you haven't already. If you have finished all steps, thanks and good luck! We will reach out to you based on your submission.",
                             emailList: internshipEmailList,
                             templateName: 'Internship at Exambazaar',
                         };

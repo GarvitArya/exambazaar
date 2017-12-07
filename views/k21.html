@@ -212,7 +212,7 @@
             <div flex="80" layout="column" layout-align="center center" class="blogFont">
                 <div class="bold">Aptitude Test</div>
                 <div class="font14" ng-click="showInstructionDialog()">Read Instructions</div>
-                <div class="font10" ng-click="userevaluate()" ng-if="user.userType = 'Master'">Evaluate</div>
+                <div class="font10" ng-click="userevaluate()" ng-if="user.userType == 'Master'">Evaluate</div>
             </div>
             <div layout="row" layout-align="end center" flex="20">
                 <md-button class="md-danger md-large tolowercase margin0 min10vh " ng-click="submitAssessment()" ng-if="testStarted && !testOver">
