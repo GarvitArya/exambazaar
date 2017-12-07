@@ -15290,6 +15290,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("k21Controller", 
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
+        
+        $scope.assessmentInfo = {
+            name: '',
+            mobile: '',
+            email: '',
+            address: '',
+            degree: '',
+            otherdegree: '',
+            stream: '',
+            otherstream: '',
+            agree: false,
+        };
         $scope.disabled = false;
         $scope.testStarted = false;
         $scope.testOver = false;
