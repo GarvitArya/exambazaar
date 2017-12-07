@@ -678,7 +678,7 @@ router.get('/userblogs/:userId', function(req, res) {
         if (!err){
             var thisUserType = thisUser.userType;
             var thisUserId = thisUser._id.toString();
-            var internIds = ['5a1831f0bd2adb260055e352'];
+            var internIds = ['5a1831f0bd2adb260055e352', '59c8a3683bee001b2643fa18'];
             if(thisUserType =='Master' || internIds.indexOf(thisUserId) != -1){
                 var blogposts = blogpost
                 .find({},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1})

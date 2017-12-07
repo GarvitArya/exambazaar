@@ -14363,8 +14363,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
     exambazaar.controller("blogController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', 'StreamBlogStream', 'EdBitesStream', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, Socialshare, viewService, upvoteService, allBlogsUpvotesCount, StreamBlogStream, EdBitesStream){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', 'StreamBlogStream', 'EdBitesStream', 'streamList', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, Socialshare, viewService, upvoteService, allBlogsUpvotesCount, StreamBlogStream, EdBitesStream, streamList){
             //$scope.allBlogs = allBlogs.data;
+            $scope.allStreams = streamList.data;
             $scope.filterStream = null;
             var streamInfo = {
                 //streamName: 'Engineering',
@@ -37310,6 +37311,10 @@ function getLatLng(thisData) {
                     function(blogpostService) {   
                     return blogpostService.blogstream({skip:0});
                 }],*/
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
                 loadInfiniteScroll: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['infiniteScroll'], {serie: true});
                 }],
