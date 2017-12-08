@@ -122,8 +122,9 @@
             <div layout="column"  flex="10" class=" font8">
                 {{assessment._end | date:'medium'}}
             </div>
-            <div layout="column"  flex="10" class=" bold">
-                {{assessment.evaluation.score}}
+            <div layout="column"  flex="10" class="">
+                <span ng-if="assessment.evaluation.score || assessment.evaluation.score == 0" class="bold">{{assessment.evaluation.score}}</span>
+                <span ng-if="!assessment.evaluation.score && assessment.evaluation.score != 0" ng-click="userevaluate(assessment.user)" class="font10 danger">Evaluate</span>
             </div>
             <div layout="row"  flex="10" class="font10">
                 {{assessment.evaluation.questions.attemped}} | 

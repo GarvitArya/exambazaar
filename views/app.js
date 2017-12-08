@@ -15173,7 +15173,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
                 console.log('Error ' + data + ' ' + status);
             });
-        }
+        };
 
 
         $scope.$watch('question', function (newValue, oldValue, scope) {
@@ -27739,7 +27739,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
     
      exambazaar.controller("aptitudeTestResultController", 
-        [ '$scope', '$http', '$rootScope','UserService','assessments','$state', '$mdDialog', function($scope, $http, $rootScope, UserService, assessments, $state, $mdDialog){
+        [ '$scope', '$http', '$rootScope','UserService','assessments','$state', '$mdDialog', 'assessmentService', function($scope, $http, $rootScope, UserService, assessments, $state, $mdDialog, assessmentService){
             $scope.assessments = assessments.data;
             console.log($scope.assessments);
             $scope.assessments.forEach(function(thisAssessment, aindex){
@@ -27748,6 +27748,22 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
                 
             });
+            
+            $scope.userevaluate = function(userId){
+                var assessmentForm = {
+                    user: userId,
+                    test: '5a17f5f617cb4c07c5dd7f5b',
+                };
+
+                assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
+                    console.log(edata);
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
             
             $rootScope.pageTitle = 'All Assessments';
             
@@ -33728,34 +33744,9 @@ function getLatLng(thisData) {
             
             ];*/
             var internshipEmailList = [
-                "abhinayr68@gmail.com",
-"ADITYADEVGAN1@GMAIL.COM",
-"adityakumar221097@gmail.com",
-"akshaykv@gmail.com",
-"aniket.raj1947@gmail.com",
-"apurvagarg05@gmail.com",
-"bhavyajuneja09@gmail.com",
-"diasshaji@gmail.com",
-"dwitiyahimanshu@gmail.com",
-"16bcs3074@gmail.com",
-"sayedmantasha1998@gmail.com",
-"sarahafreen5@gmail.com",
-"mrityunjay100.thakur@gmail.com",
-"sabir.alwanz@gmail.com",
-"denayasenogawa16@gmail.com",
-"praveens0808@gmail.com",
-"pujamedhi2009@gmail.com",
-"sagarpsfriend@gmail.com",
-"shivangifs@gmail.com",
-"shuvampandey909@gmail.com",
-"shweta.govila93@gmail.com",
-"shwetapatil6116@gmail.com",
-"subratsahu405@gmail.com",
-"thkulkarni16@gmail.com",
-"umerariyaz@gmail.com",
-"viyan.adithi@gmail.com",
-"vivektumulu@gmail.com",
-"ashargarg999@gmail.com",
+                "ishitadixit14@gmail.com",
+                "coolgirlgg786@gmail.com",
+
 
                 
 
