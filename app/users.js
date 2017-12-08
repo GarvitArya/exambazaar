@@ -63,16 +63,17 @@ router.get('/properNames', function(req, res) {
     });
 });
 
-function sendWelcome(user){
-    console.log("User is: " + user);
+function sendVerification(user){
+    //console.log("User is: " + user);
     if(user.email){
-    var templateName = 'Welcome Email';
+    var templateName = 'Verification Email';
     var fromEmail = {
         email: 'always@exambazaar.com',
         name: 'Always Exambazaar'
     };
     var to = user.email;
     var username = user.basic.name;
+    var userid = user._id;
     var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
         if (err) return handleError(err);
         if(existingSendGridCredential){
@@ -96,6 +97,7 @@ function sendWelcome(user){
                     var mail = new helper.Mail(fromEmail, subject, to_email, content);
                     mail.setTemplateId(templateId);
                     mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-userid-', userid));
                     var emailrequest = sg.emptyRequest({
                       method: 'POST',
                       path: '/v3/mail/send',
@@ -567,7 +569,7 @@ router.post('/save', function(req, res) {
                 console.log(JSON.stringify(this_user));
                 this_user.save(function(err, this_user) {
                     if (err) return console.error(err);
-                    sendWelcome(this_user);
+                    sendVerification(this_user);
                     console.log(this_user._id);
                     res.json(this_user);
                 });
@@ -715,7 +717,7 @@ router.post('/fbSave', function(req, res) {
             console.log(JSON.stringify(existingUser));
             existingUser.save(function(err, existingUser) {
                 if (err) return console.error(err);
-                sendWelcome(existingUser);
+                sendVerification(existingUser);
                 res.json(existingUser);
             });
 
