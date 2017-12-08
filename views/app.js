@@ -10652,6 +10652,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Kancheepuram",
             "Karaikudi",
             "Tiruvanmalai",
+            "Chittoor",
+            "Tezpur",
+            "Bhaglpur",
+            "Gaya",
+            "Bettiah",
 
         ];
         
