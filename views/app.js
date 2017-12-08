@@ -296,6 +296,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.hourlyHeatmap = function() {
             return $http.get('/api/users/hourlyHeatmap');
         };
+        
         this.deliverVoucher = function(voucherForm) {
             
             return $http.post('/api/users/deliverVoucher', voucherForm);
@@ -312,9 +313,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             return $http.post('/api/users/fbSave', user);
         };
+        this.verifyEmail = function(userId) {
+            return $http.get('/api/users/verifyEmail/'+userId, {userId: userId});
+        };
+        this.markVerifiedEmail = function(userId) {
+            return $http.get('/api/users/markVerifiedEmail/'+userId, {userId: userId});
+        };
         this.getBlogger = function(userId) {
             return $http.get('/api/users/blogger/'+userId, {userId: userId});
         };
+        
         this.activateBlogger = function(userId) {
             return $http.get('/api/users/activateBlogger/'+userId, {userId: userId});
         };
@@ -455,6 +463,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.welcomeEmail = function(email) {
             return $http.post('/api/emails/welcomeEmail', email);
+        };
+        this.verifyEmail = function(email) {
+            return $http.post('/api/emails/verifyEmail', email);
         };
         this.availDiscountEmail = function(email) {
             return $http.post('/api/emails/availDiscountEmail', email);
@@ -2267,6 +2278,103 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       }
     }
     
+    exambazaar.controller("verifyEmailController", 
+    [ '$scope', '$rootScope', 'EmailService','UserService', '$stateParams', '$cookies', 'Notification', 'thisUserEmailVerification', function($scope, $rootScope, EmailService, UserService, $stateParams, $cookies, Notification, thisUserEmailVerification){
+        $rootScope.pageTitle = 'Verify Email';
+        $scope.userId = $stateParams.userId;
+        console.log($scope.userId);
+        $scope.thisUserEmailVerification = thisUserEmailVerification.data;
+        
+        $scope.verifyEmail = function(){ 
+            UserService.markVerifiedEmail($scope.userId).success(function (data, status, headers) {
+                var done = data;
+                $scope.thisUserEmailVerification = done;
+                if(done){
+                    
+                    UserService.getUserBasic($scope.userId).success(function (data, status, headers) {
+                        var thisUser = data;
+                        console.log(thisUser);
+                        if(thisUser.email){
+                            /*$scope.email = {
+                                to: thisUser.email,
+                                templateName: 'Welcome Email',
+                                username: thisUser.basic.name
+                            };
+                            EmailService.welcomeEmail($scope.email).success(function (data, status, headers) {
+                            var response = data;
+                                Notification.primary({message: "Great! Your email has been verified. Login to start using EB!",  positionY: 'top', positionX: 'right', delay: 5000});
+
+                            })
+                            .error(function (data, status, header, config) {
+                                console.log('Error ' + data + ' ' + status);
+                                Notification.warning({message: "Oops! Something went wrong. Please retry.",  positionY: 'top', positionX: 'right', delay: 5000});
+                            });*/
+                            $scope.email = {
+                                to: thisUser.email,
+                                templateName: 'Welcome Email',
+                                username: thisUser.basic.name,
+                            };
+                            EmailService.welcomeEmail($scope.email).success(function (data, status, headers) {
+                            var response = data;
+                                Notification.primary({message: "Great! We have sent you a welcome email at " + thisUser.email,  positionY: 'top', positionX: 'right', delay: 5000});
+
+                            })
+                            .error(function (data, status, header, config) {
+                                console.log('Error ' + data + ' ' + status);
+                                Notification.warning({message: "Oops! Something went wrong. Please retry.",  positionY: 'top', positionX: 'right', delay: 5000});
+                            });
+                        }
+                        
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                    
+                    
+                }else{
+                    Notification.warning({message: "Oops! Something went wrong. Please retry.",  positionY: 'top', positionX: 'right', delay: 5000});
+                }
+
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });
+                
+        };
+        $scope.resendVerifyEmail = function(){ 
+            UserService.getUserBasic($scope.userId).success(function (data, status, headers) {
+                var thisUser = data;
+                console.log(thisUser);
+                if(thisUser.email){
+                    
+                    $scope.email = {
+                        to: thisUser.email,
+                        templateName: 'Verification Email',
+                        username: thisUser.basic.name,
+                        userid: thisUser._id
+                    };
+                    EmailService.verifyEmail($scope.email).success(function (data, status, headers) {
+                    var response = data;
+                        Notification.primary({message: "Great! We have resent you a verification email at " + thisUser.email,  positionY: 'top', positionX: 'right', delay: 5000});
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                        Notification.warning({message: "Oops! Something went wrong. Please retry.",  positionY: 'top', positionX: 'right', delay: 5000});
+                    });
+                }
+
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });
+                
+        };
+        if(!$scope.thisUserEmailVerification){
+            $scope.verifyEmail();
+        }
+        
+    }]);
     
     
     exambazaar.controller("verifyClaimController", 
@@ -9500,10 +9608,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if($scope.user && $scope.user.email){
                     $scope.email = {
                         to: $scope.user.email,
-                        templateName: 'Welcome Email',
-                        username: $scope.user.basic.name
+                        templateName: 'Verification Email',
+                        username: $scope.user.basic.name,
+                        userid: $scope.user._id
                     };
-                    EmailService.welcomeEmail($scope.email).success(function (data, status, headers) {
+                    EmailService.verifyEmail($scope.email).success(function (data, status, headers) {
                         var response = data;
                         console.log(JSON.stringify(response));
 
@@ -10376,7 +10485,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
     
     exambazaar.controller("getTargetStudyCoachingController", 
-    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', 'emailList', 'FileSaver', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList, emailList, FileSaver){
+    [ '$scope', 'targetStudyProviderService', 'targetStudyProvidersList','targetStudyCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', 'emailList', 'FileSaver', '$rootScope', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList, emailList, FileSaver, $rootScope){
+        $rootScope.pageTitle = 'Exambazaar City Database';
         $scope.providersList = targetStudyProvidersList.data;
         $scope.emailsList = emailList.data;
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
@@ -10513,6 +10623,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         $scope.showLevel = 0;
         var allowedCities = [
+            "Jaipur",
             "Barmer",
             "Silvassa",
             "Chittorgarh",
@@ -33617,7 +33728,35 @@ function getLatLng(thisData) {
             
             ];*/
             var internshipEmailList = [
-                "ayushjn1995@gmail.com",
+                "abhinayr68@gmail.com",
+"ADITYADEVGAN1@GMAIL.COM",
+"adityakumar221097@gmail.com",
+"akshaykv@gmail.com",
+"aniket.raj1947@gmail.com",
+"apurvagarg05@gmail.com",
+"bhavyajuneja09@gmail.com",
+"diasshaji@gmail.com",
+"dwitiyahimanshu@gmail.com",
+"16bcs3074@gmail.com",
+"sayedmantasha1998@gmail.com",
+"sarahafreen5@gmail.com",
+"mrityunjay100.thakur@gmail.com",
+"sabir.alwanz@gmail.com",
+"denayasenogawa16@gmail.com",
+"praveens0808@gmail.com",
+"pujamedhi2009@gmail.com",
+"sagarpsfriend@gmail.com",
+"shivangifs@gmail.com",
+"shuvampandey909@gmail.com",
+"shweta.govila93@gmail.com",
+"shwetapatil6116@gmail.com",
+"subratsahu405@gmail.com",
+"thkulkarni16@gmail.com",
+"umerariyaz@gmail.com",
+"viyan.adithi@gmail.com",
+"vivektumulu@gmail.com",
+"ashargarg999@gmail.com",
+
                 
 
 
@@ -36487,6 +36626,30 @@ function getLatLng(thisData) {
                 thisProvider: ['targetStudyProviderService','$stateParams',
                     function(targetStudyProviderService,$stateParams) {  
                     return targetStudyProviderService.getProvider($stateParams.coachingId);
+                }],
+                
+                
+            }
+        })
+        .state('verifyEmail', {
+            url: '/verifyEmail/:userId',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'verifyEmail.html',
+                    controller: 'verifyEmailController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisUserEmailVerification: ['UserService','$stateParams',
+                    function(UserService,$stateParams) {  
+                    return UserService.verifyEmail($stateParams.userId);
                 }],
                 
                 

@@ -101,6 +101,7 @@ var userSchema = mongoose.Schema({
     fbemail : { type: String},
     fbimage : { type: String},
     verified : { type: Boolean, default: false},
+    emailverified : { type: Boolean, default: false},
     active : { type: Boolean, default: true},
     _created: { type: Date, default: Date.now },
     logins:[{

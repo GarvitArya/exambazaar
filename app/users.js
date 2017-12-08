@@ -1042,6 +1042,50 @@ router.get('/userexists/:mobile', function(req, res) {
     
 });
 
+router.get('/verifyEmail/:userId', function(req, res) {
+    var userId = req.params.userId;
+    var thisUser = user
+        .findOne({ '_id': userId },{emailverified:1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            if(!thisUser){
+                res.send(false);
+            }else{
+                if(thisUser.emailverified){
+                    res.send(true);
+                }else{
+                    res.send(false);
+                }
+                
+            }
+        } else {throw err;}
+    });
+});
+
+router.get('/markVerifiedEmail/:userId', function(req, res) {
+    var userId = req.params.userId;
+    var thisUser = user
+        .findOne({ '_id': userId },{emailverified:1})
+        .exec(function (err, thisUser) {
+        if (!err){
+            if(!thisUser){
+                res.json(null);
+            }else{
+                if(thisUser.emailverified){
+                    res.json(true);
+                }else{
+                    thisUser.emailverified = true;
+                    thisUser.save(function(err, thisUser) {
+                        if (err) return console.error(err);
+                        console.log('User email verified: ' + thisUser.basic.name);
+                        res.json(true);
+                    });
+                }
+                
+            }
+        } else {throw err;}
+    });
+});
 router.get('/referexists/:mobile', function(req, res) {
     var mobile = req.params.mobile;
     var thisUser = user

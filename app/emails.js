@@ -448,6 +448,72 @@ router.post('/welcomeEmail', function(req, res) {
     
 });
 
+
+router.post('/verifyEmail', function(req, res) {
+    var thisEmail = req.body;
+    var templateName = thisEmail.templateName;
+    var fromEmail = {
+        email: 'always@exambazaar.com',
+        name: 'Always Exambazaar'
+    };
+    var to = thisEmail.to;
+    var username = thisEmail.username;
+    var userid = thisEmail.userid.toString();
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+                if(thisEmailTemplate.name == templateName){
+                    templateFound = true;
+                    templateId = thisEmailTemplate.templateKey;
+                    console.log(templateId);
+                    var from_email = new helper.Email(fromEmail);
+                    var to_email = new helper.Email(to);
+                    var html = ' ';
+                    var subject = ' ';
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-userid-', userid));
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+                    sg.API(request, function(error, response) {
+                        if(error){
+                            res.json('Could not send email! ' + error);
+                        }else{
+                            res.json(response);
+                        }
+                    });
+                }
+                if(counter == nLength){
+                    if(!templateFound){
+                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    }
+                }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+    
+    
+});
 router.post('/contactEmail', function(req, res) {
     var thisEmail = req.body;
     var templateName = thisEmail.templateName;

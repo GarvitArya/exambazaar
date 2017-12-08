@@ -129,10 +129,20 @@
     </div>
 
 </div>
-<div class="whiteBackground mainContent" ng-if="showLevel>0">
+<div class="whiteBackground mainContent paddingLR40" ng-if="showLevel>0">
     <div id="spacer" class="whiteBackground">
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font11 whiteBackground" ng-if="showLevel>5">
+    <div layout="row" layout-align="start start" ng-repeat="state in states | orderBy: 'state'" layout-wrap class="paddingB5" ng-if="showLevel>5">
+        <div flex="15">
+            {{state}}
+        </div>
+        <div flex>
+            <span ng-repeat="cityState in cityStates | orderBy: 'city'" ng-if="cityState.state == state">
+                <a ui-sref="targetStudyProviders({ city:{{'cityState.city'}} })">{{cityState.city}} | </a>
+            </span>
+        </div>
+    </div>
+    <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font11 whiteBackground" ng-if="showLevel>5">
         <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2" ng-repeat="state in states">
             <div>{{state}}</div>
             <span ng-repeat="cityState in cityStates | orderBy: 'city'" ng-if="cityState.state == state">
@@ -140,7 +150,7 @@
             </span>
             
         </div>
-    </div>
+    </div>-->
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font10 whiteBackground paddingTB10" ng-if="showLevel>5">
         <!---->
         <md-button class="md-cancel md-small font10" ng-click="removeDuplicates()">Remove Duplicates</md-button>

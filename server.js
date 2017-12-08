@@ -297,6 +297,7 @@ var allStates = [
 '/stream/:categoryName/:subCategoryName/:cityName/:coachingId',
 '/thankyou',
 '/verifyClaim/:coachingId',
+'/verifyEmail/:userId',
 ];
 
 var errorStates =['/ebinternal/error'];
