@@ -9515,7 +9515,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 '59085f0fc7289d0011d6ea8c',
                 '59a7eb973d71f10170dbb468',
                 '5a1831f0bd2adb260055e352',
-                '5a20ab026740556f2a36c7c0'
+                '5a20ab026740556f2a36c7c0',
+                '5a239c17783f96589525bfc2',
+                '5a29000d2742b6164f1a7024',
             ];
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
@@ -10624,6 +10626,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.showLevel = 0;
         var allowedCities = [
             "Jaipur",
+            "Kota",
             "Barmer",
             "Silvassa",
             "Chittorgarh",
@@ -10657,6 +10660,35 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Bhaglpur",
             "Gaya",
             "Bettiah",
+            "Raipur",
+            "Durg-bhilai",
+            "Mehasana ",
+            "Gurgaon",
+            "Yamunanagar",
+            "Faridabad",
+            "Panipat",
+            "Kangra",
+            "Solan",
+            "Deoghar",
+            "Jamshedpur",
+            "Dhanbad",
+            "Mangalore",
+            "Bellairy",
+            "Bijapur",
+            "Kozikode",
+            "Kannur",
+            "Kollam",
+            "Ujjain",
+            "Ratlam",
+            "Mandsaur",
+            "Jabalpur",
+            "Bhind",
+            "Guna",
+            "Neemuch",
+            "Nagpur",
+            "Aurangabad",
+            "Navi Mumbai",
+            "Nashik",
 
         ];
         
@@ -33749,9 +33781,7 @@ function getLatLng(thisData) {
             
             ];*/
             var internshipEmailList = [
-                "ishitadixit14@gmail.com",
-                "coolgirlgg786@gmail.com",
-
+                "team@exambazaar.com"
 
                 
 
