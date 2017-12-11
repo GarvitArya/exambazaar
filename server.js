@@ -272,6 +272,7 @@ var allStates = [
 '/ebinternal/academics',
 '/ebinternal/eqad/:examName/:eqadDate',
 '/career/aptitude',
+'/career/coding',
 '/ebinternal/aptitudeTestResult',
 '/k21Test',
 

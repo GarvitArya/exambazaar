@@ -187,6 +187,20 @@
     .questionBorder{
         border: 1px solid whitesmoke;
     }
+    
+    
+    pre {
+        background: orange;
+        border: orange;
+        margin-left: 40px;
+        padding-left: 40px;
+        padding-right: 40px;
+        width: 80%;
+    }       
+    
+    code {
+        
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -194,7 +208,7 @@
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 
-<div class="textBlack whiteBackground secondFont font14" ng-if="user && !disabled">
+<div class="textBlack whiteBackground secondFont font14" ng-if="user && !disabled" www.exambazaar.com>
     
     <div layout="column" layout-align="center center" class="marginTB10">
         <div layout="row" layout-align="center center" class="min10vh width100 headingBottomBorder2 marginB20">
@@ -210,9 +224,8 @@
             
             </div>
             <div flex="80" layout="column" layout-align="center center" class="blogFont">
-                <div class="bold">Aptitude Test</div>
+                <div class="bold">Exambazaar Test</div>
                 <div class="font14" ng-click="showInstructionDialog()">Read Instructions</div>
-                <div class="font10" ng-click="userevaluate()" ng-if="user.userType == 'Master'">Evaluate</div>
             </div>
             <div layout="row" layout-align="end center" flex="20">
                 <md-button class="md-danger md-large tolowercase margin0 min10vh " ng-click="submitAssessment()" ng-if="testStarted && !testOver">
@@ -247,15 +260,15 @@
             <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
             <div layout="column" layout-align="start start" class="width100 min100vh" flex>
                 
-                <div layout="column" layout-align="center start" class="width100">
+                <div layout="column" layout-align="center start" class="width100" >
                     <div layout="column" layout-align="start start" class="width100 min50vh marginB40" flex>
                         <div layout="column" layout-align="start start" class="width100" ng-if="question">
                         <div layout="column" layout-align="start start" class="width100" ng-if="question.questions">
                         <div class="width100 blogFont bold marginB10 paddingL10">Question {{activeQuestionNo}}</div>
                         <div layout="column" layout-align="start start" class="width100 blogContent questionBorder padding10"  ng-repeat="thisQuestion in question.questions">
                             <div layout="column" layout-align="start start" class="width100">
-
-                                <div ng-bind-html="thisQuestion.question" class="marginB10">
+                                
+                                <div ng-bind-html="thisQuestion.question" class="marginB10 width100">
                                 </div>
                             </div>
                             <md-radio-group ng-model="question.userAnswer">
@@ -315,6 +328,9 @@
             <div class="textGray font12">
                 You have attempted {{answered}} out of {{testQuestions.length}} questions!
             </div>
+            <div class="" ng-if="userAssessment.evaluation.score">
+                Score: {{userAssessment.evaluation.score}} out of {{testQuestions.length * 3}}
+            </div>
         </div>
         
     </div>
@@ -322,7 +338,7 @@
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB10 blogFont" ng-if="!testStarted">
         <div flex layout="column" layout-align="start center" class="min100vh paddingLR20">
         <div layout="column" layout-align="start center" class="width100 paddingLR40" ng-if="user">
-            <div layout="row" layout-align="start center" class="width100 bold marginB10">
+            <div layout="row" layout-align="start center" class="width100 bold marginB20">
                 Complete the information below:
             </div>
             <div layout="row" layout-align="start center" class="width100 marginB5">
@@ -380,7 +396,7 @@
         </div>
         <div flex layout="column" layout-align="start center" class="min100vh paddingLR20">
             <div layout="column" layout-align="start center" class="width100 editFont" >
-                <div layout="row" layout-align="start center" class="blogFont bold font20 width100">
+                <div layout="row" layout-align="start center" class="blogFont bold font20 width100 marginB20">
                 Instructions for taking the test:
                 </div>
                 <div ng-repeat="instruction in  instructions" class="width100">
@@ -431,7 +447,7 @@
         
         <div layout="column" layout-align="start center" class="width100 editFont" >
             <div layout="row" layout-align="start center" class="blogFont bold font20 width100">
-            Instructions for Aptitude Test:
+            Instructions for Exambazaar Test:
             </div>
             <div ng-repeat="instruction in  instructions" class="width100">
                 <div class="blogFont font14">
