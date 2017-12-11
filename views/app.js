@@ -10657,7 +10657,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Tiruvanmalai",
             "Chittoor",
             "Tezpur",
-            "Bhaglpur",
+            "Bhagalpur",
             "Gaya",
             "Bettiah",
             "Raipur",
@@ -14755,6 +14755,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.allExams = allExams;
             //console.log($scope.allTests);
             if($scope.user && $scope.user.userType=='Master'){
+                $scope.masterUser = true;
+            }
+            if($scope.user && $scope.user._id=='5a1831f0bd2adb260055e352'){
                 $scope.masterUser = true;
             }
             
@@ -33680,112 +33683,8 @@ function getLatLng(thisData) {
             };
             
             
-            /*var internshipEmailList = [
-                "shoaibrashid887@gmail.com",
-                "mehulag95@gmail.com",
-                "rj250596@gmail.com",
-                "anishamohanka@gmail.com",
-                "sk221996@gmail.com",
-                "adi.yadav30@gmail.com",
-                "yash.hnd@gmail.com",
-                "shivikasrvstv@gmail.com",
-                "prateekmathur005@gmail.com",
-                "itsjainrohit@gmail.com",
-                "may17harsh@gmail.com",
-                "sangeetakumawat420@gmail.com",
-                "sonalisetiajecrc@gmail.com",
-                "pratishtha.sharma@outlook.com",
-                "kajoljaswani@gmail.com",
-                "adityajain3008@gmail.com",
-                "amreenpathan014@gmail.com",
-                "mathurshub00@gmail.com",
-                "nehajain.nj2310@gmail.com",
-                "shubujain21@gmail.com",
-                "kumawat.nh15@gmail.com",
-                "abhinavbhargava1995@gmail.com",
-                "agrawal27aditi@gmail.com",
-                "madhavkhandelwal17@gmail.com",
-                "arpitchordia9@gmail.com",
-                "cjain0345gmail.com",
-                "karandaryani19@gmail.com",
-                "abhisheknirania25@gmail.com",
-                "utk13596@gmail.com",
-                "keshavjecrcu@gmail.com",
-                "gagan.jaiswal2@gmail.com",
-                "amit0709yadav@gmail.com",
-                "utkarshagrawal855@gmail.com",
-                "sajalsaxena93@gmail.com",
-                "nehanagda1995@gmail.com",
-                "ankitsingh8696@gmail.com",
-                "nilesh.singariya561@gmail.com",
-                "panwarmayank448@gmail.com",
-                "harshaljain003@gmail.com",
-                "nikhilkhatri22@gmail.com",
-                "chhayanks79@gmail.com",
-                "gunjankhandal05@gmail.com",
-                "thenaveen008@gmail.com",
-                "sahil.banthodiya@gmail.com",
-                "ayushshrimali2011@gmail.com",
-                "jchandwani27896@gmail.com",
-                "a7vi1912@gmail.com",
-                "narendrahada04@gmail.com",
-                "njain1768@gmail.com",
-                "karan21deep@gmail.com",
-                "mathurmohit1312@gmail.com",
-                "shoaibrashid887@gmail.com",
-                "srakesh95@gmail.com",
-                "divyajyotisharma20@gmail.com",
-                "iamsonikamal@gmail.com",
-                "meankitroy22@gmail.com",
-                "yogeshkumawat121@gmail.com",
-                "shubham.gupta130@gmail.com",
-                "nishaagarwal713@gmail.com",
-                "ssmtr29@gmail.com",
-                "shristitulsyan1995@gmail.com",
-                "arsh.chhabra4@gmail.com",
-                "somya94shah@gmail.com",
-                "abhiruchik64@gmail.com",
-                "akankshaajmera92@gmail.com",
-                "gyanchandprajapati65@gmail.com",
-                "kjha7111@gmail.com",
-                "bhairusingh101@gamail.com",
-                "vinaysainitruthandcare60@gmail.com",
-                "dheerajsh06@gmail.com",
-                "nishthapurohit1805@gmail.com",
-                "rahulgothwal5@gmail.com",
-                "piyushvijay92@gmail.com",
-                "choudhary.niket21@gmail.com",
-                "lalitaagarwal2211@gmail.com",
-                "sushil.kumar4889@gmail.com",
-                "goyalpayal1995@gmail.com",
-                "siddharthsoni020@gmail.com",
-                "lodhaarpit@outlook.com",
-                "kdost1995@gmail.com",
-                "hunnymeghnani1@gmail.com",
-                "saurabh.bhatteja@gmail.com",
-                "nkkumawat8@gmail.com",
-                "smriti2807singh@gmail.com",
-                "lakshitabhawnani@gmail.com",
-                "anshulgoyal1996@gmail.com",
-                "anjalishyam7895@gmail.com",
-                "jain.deepankshee190@gmail.com",
-                "naveendhupar@gmail.com",
-                "sasopa32@gmail.com",
-                "meghaur20@gmail.com",
-                "omnarayankhatri6@gmail.com",
-                "kunalbyn@gmail.com",
-                "hemantdadheech20@gmail.com",
-                "raghuwansi.shubham4@gmail.com",
-                "naveenkkumawat1995@gmail.com",
-
-            
-            ];*/
             var internshipEmailList = [
-                "team@exambazaar.com"
-
-                
-
-
+                "sarita.tpo@jnujaipur.ac.in"
 
 
             ];
@@ -33795,7 +33694,7 @@ function getLatLng(thisData) {
                     var marketingUser = data;
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
-                            body: "Dear Candidate, Saturday 9th December 11am is the final deadline for your application to Exambazaar Internship for the position of Digital Curation (https://internshala.com/internship/detail/digital-curation-work-from-home-internship-at-exambazaar1512028494). Please complete the steps mentioned below, if you haven't already. If you have finished all steps, thanks and good luck! We will reach out to you based on your submission.",
+                            body: "We are currently offering internship to students in Jaipur across 3 domains - Business Development, Design and Business Analyst. The interns will work out of our office in Jaipur. Kindly inform your students about this opportunity and let us know if we need to follow any steps/protocol to reach out to them.",
                             emailList: internshipEmailList,
                             templateName: 'Internship at Exambazaar',
                         };
