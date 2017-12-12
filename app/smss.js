@@ -10,7 +10,7 @@ router.post('/send', function(req, res) {
     var message = thisSMS.message;
     console.log("To: " + to + " Message: " + message);
     
-    var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=eb@2017&mobile=";
+    var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=exambazaar@2017&mobile=";
     url += to;
     url += "&message=";
     url += message;

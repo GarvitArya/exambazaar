@@ -2284,7 +2284,7 @@ router.post('/userMarketing', function(req, res) {
                 var message = "Hi " + sentName + "\nReview your coaching institute to get discounts on courses of " + partnerOffers[randomNumber] + " and many others. Get upto 80% off!\nwww.exambazaar.com";
 
                 console.log(message.length + " " + message);
-                var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=eb@2017&mobile=";
+                var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=exambazaar@2017&mobile=";
                 url += existingUser.mobile;
                 url += "&message=";
                 url += message;

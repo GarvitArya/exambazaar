@@ -46,7 +46,7 @@ router.post('/generate', function(req, res) {
         var message = this_OTP.otp + " is the OTP for your user verification. It expires in 30 mins.\nExamBazaar.com";
         
         //console.log(message.length + " " + message);
-        var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=eb@2017&mobile=";
+        var url = "http://login.bulksmsgateway.in/sendmessage.php?user=gaurav19&password=exambazaar@2017&mobile=";
         url += this_OTP.mobile;
         url += "&message=";
         url += message;
