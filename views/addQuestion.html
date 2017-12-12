@@ -285,6 +285,27 @@
             </div>
             
         </div>
+        
+        <div layout="column" layout-align="start start" class="width100 font14 marginTB10" ng-if="user.userType=='Master'">
+            <div class="font16 marginB20">Test Instructions</div>
+            <div layout="column" layout-align="start start" class="width100" ng-repeat="instruction in test.instructions" >
+                <div layout="row" layout-align="start start" class="width100 marginB5">
+                    <div flex="5">{{$index + 1}}</div>
+                    <div flex><input type="text" class="width100"  placeholder="Instruction goes here" ng-model="test.instructions[$index]"></div>
+                </div>
+                
+            </div>
+            <div layout="row" layout-align="center center" id="upload3" ng-click="addTestInstruction()" class="width100 marginT10">
+                <span>
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add Instruction
+                </span>
+            </div>
+            <div layout="row" layout-align="end center" class="width100">
+                <md-button class="md-next md-small font10" ng-click="saveTest()">
+                Save Test Instructions
+                </md-button>
+            </div>
+        </div>
     </div>
     <div layout="column" layout-align="start start" class="padded width100 font20 danger" ng-if="!user">
         You are not permitted to access this without logging in! Please login and try again!

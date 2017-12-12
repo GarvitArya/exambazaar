@@ -75,6 +75,12 @@
         All Assessments&nbsp;<span class="badge" id="badge">{{assessments.length}}</span>
     </div>
     <div layout="row" layout-align="center center" class="width100">
+        <md-button class="md-next md-small tolowercase" ng-click="filterByTest('5a17f5f617cb4c07c5dd7f5b')">
+            Aptitude Test Old
+        </md-button>
+        <md-button class="md-next md-small tolowercase" ng-click="filterByTest('5a2e5d007a7d9659d7c4537d')">
+            Coding Test
+        </md-button>
         <md-button class="md-black md-small tolowercase" ng-click="sortByScore()">
             Sort by Score
         </md-button>
@@ -124,7 +130,7 @@
             </div>
             <div layout="column"  flex="10" class="">
                 <span ng-if="assessment.evaluation.score || assessment.evaluation.score == 0" class="bold">{{assessment.evaluation.score}}</span>
-                <span ng-if="!assessment.evaluation.score && assessment.evaluation.score != 0" ng-click="userevaluate(assessment.user)" class="font10 danger">Evaluate</span>
+                <span ng-if="!assessment.evaluation.score && assessment.evaluation.score != 0" ng-click="userevaluate(assessment)" class="font10 danger">Evaluate</span>
             </div>
             <div layout="row"  flex="10" class="font10">
                 {{assessment.evaluation.questions.attemped}} | 

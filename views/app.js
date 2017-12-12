@@ -15440,7 +15440,31 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
 }]);     
     
-    exambazaar.controller("codingTestController", 
+    exambazaar.controller("careertestController", 
+    [ '$scope', '$state', '$stateParams', 'screenSize', function($scope, $state, $stateParams, screenSize ){
+        
+            
+            if (screenSize.is('xs, sm')){
+                $scope.disabled = true;
+            }else{
+                $scope.disabled = false;
+                var domainName = '';
+                if($stateParams.domainName){
+                    domainName = $stateParams.domainName.toLowerCase();
+                }
+                if(domainName == 'aptitude'){
+                    $state.go('takeassessment', {testId: '5a17f5f617cb4c07c5dd7f5b'});
+                }else if(domainName == 'coding'){
+                    $state.go('takeassessment', {testId: '5a2e5d007a7d9659d7c4537d'});
+                }else{
+                    $scope.errorText = "Something's not right in the url! Please write to us at team@exambazaar.com for any queries!";
+                }
+                
+            }
+
+            
+    }]);   
+    exambazaar.controller("takeassessmentController", 
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
         
             $scope.assessmentInfo = {
@@ -15532,18 +15556,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.streams = ["CS", "IT", "EC", "Others"];
 
             $scope.instructions = [
-                "The question paper consists of 45 questions, which are a coding & web development",
-                "You are required to attempt all questions",
-                "Time allowed: 60 Minutes",
-                "Every correct answer will fetch you +3 marks and incorrect answer will fetch you -1 marks Unattempted answer will fetch you 0 marks",
-                "Candidates are not allowed to access any other program or open new tab during the test",
-                "Click on Press Start button to start your test",
+                "Welcome to Exambazaar!",
+                "Exambazaar is India's largest education discovery platform which provides comprehensive information for test preparation for entrance exams, colleges, courses, universities and career options in India. You can find information about more than 100 exams and how to prepare for them. Students can also find exclusive videos and photographs of thousands of coaching institutes in every nook and corner of India. We currently cover 93 cities across India with over 26,000 education providers",
 
             ];
+            
             $scope.user = {};
             if($cookies.getObject('sessionuser')){
                 var sessionuser = $cookies.getObject( 'sessionuser');
                 $scope.test = thistest.data;
+                if($scope.test.instructions){
+                    $scope.instructions = $scope.test.instructions;    
+                }
+                
                 $scope.testQuestions = thisTestQuestions.data;
                 $rootScope.pageTitle = "Coding Test";
                 var nQuestions = $scope.testQuestions.length;
@@ -15569,7 +15594,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
                     var assessmentForm = {
                         user: $scope.user._id,
-                        test: '5a2e5d007a7d9659d7c4537d',
+                        test: $stateParams.testId,
                     }; assessmentService.getAssessment(assessmentForm).success(function (adata, status, headers) {
                         $scope.userAssessment = adata;
                         $scope.testOver = false;
@@ -15627,7 +15652,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.submitAssessmentHelper = function(){
                 var assessmentForm = {
                     user: $scope.user._id,
-                    test: '5a2e5d007a7d9659d7c4537d',
+                    test: $stateParams.testId,
                 };
                 assessmentService.submitAssessment(assessmentForm).success(function (adata, status, headers) {
                     Notification.success({message: "Thank you, all done!",  positionY: 'top', positionX: 'right', delay: 1000});
@@ -15690,7 +15715,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.userevaluate = function(){
                 var assessmentForm = {
                     user: $scope.user._id,
-                    test: '5a2e5d007a7d9659d7c4537d',
+                    test: $stateParams.testId,
                 };
 
                 assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
@@ -15736,7 +15761,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
                 var questionId = question._id;
                 var uIndex = userResponseQuestionIds.indexOf(questionId);
-                console.log(uIndex);
                 if(uIndex != -1){
                     var thisUserResponse = $scope.userResponses[uIndex];
                     questionresponseService.removeQuestionResponse(thisUserResponse._id).success(function (data, status, headers) {
@@ -15857,9 +15881,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if(valid){
                     var assessmentForm = {
                         user: $scope.user._id,
-                        test: '5a2e5d007a7d9659d7c4537d',
+                        test: $stateParams.testId,
                         info: $scope.assessmentInfo,
-                        time: 60,
+                        //time: 60,
+                        time: $scope.test.duration,
                     };
                     assessmentService.saveAssessment(assessmentForm).success(function (adata, status, headers) {
                         $scope.userAssessment = adata;
@@ -16351,7 +16376,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     user: $scope.user._id,
                     test: '5a17f5f617cb4c07c5dd7f5b',
                     info: $scope.assessmentInfo,
-                    time: 30,
+                    //time: 30,
                 };
                 assessmentService.saveAssessment(assessmentForm).success(function (adata, status, headers) {
                     $scope.userAssessment = adata;
@@ -28271,23 +28296,28 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     
-     exambazaar.controller("aptitudeTestResultController", 
+     exambazaar.controller("testAssessmentResultController", 
         [ '$scope', '$http', '$rootScope','UserService','assessments','$state', '$mdDialog', 'assessmentService', function($scope, $http, $rootScope, UserService, assessments, $state, $mdDialog, assessmentService){
             $scope.assessments = assessments.data;
-            console.log($scope.assessments);
-            $scope.assessments.forEach(function(thisAssessment, aindex){
+            var allAssessments = [];
+            var assessmentTestIds = [];
+             $scope.assessments.forEach(function(thisAssessment, aindex){
                 if(thisAssessment.evaluation && thisAssessment.evaluation.score){
                     thisAssessment.evaluation.score = Number(thisAssessment.evaluation.score);
                 }
-                
+                if(aindex == $scope.assessments.length - 1){
+                    allAssessments = $scope.assessments;
+                    assessmentTestIds = $scope.assessments.map(function(a) {return a.test.toString();});
+                }
             });
             
-            $scope.userevaluate = function(userId){
+            
+            $scope.userevaluate = function(thisAssessment){
+                
                 var assessmentForm = {
-                    user: userId,
-                    test: '5a17f5f617cb4c07c5dd7f5b',
+                    user: thisAssessment.user,
+                    test: thisAssessment.test,
                 };
-
                 assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
                     console.log(edata);
                     $state.reload();
@@ -28298,13 +28328,29 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });
             };
             
+            $scope.filterByTest = function(testId){
+                var testAssessments = [];
+                assessmentTestIds.forEach(function(thisAssessment, aindex){
+                    if(thisAssessment == testId){
+                        testAssessments.push(allAssessments[aindex]);
+                    }
+                });
+                
+                $scope.assessments = testAssessments;
+                
+            };
+            
             $rootScope.pageTitle = 'All Assessments';
             
             $scope.sortByScore = function(){
                 $scope.assessments.sort(function(a,b) {return (a.evaluation.score > b.evaluation.score) ? -1 : ((b.evaluation.score > a.evaluation.score) ? 1 : 0);} );  
+                allAssessments = $scope.assessments;
+                assessmentTestIds = $scope.assessments.map(function(a) {return a.test.toString();});
             };
             $scope.sortByDate = function(){
                 $scope.assessments.sort(function(a,b) {return (a._start > b._start) ? -1 : ((b._start > a._start) ? 1 : 0);} );  
+                allAssessments = $scope.assessments;
+                assessmentTestIds = $scope.assessments.map(function(a) {return a.test.toString();});
             };
             $scope.sortByDate();
     }]); 
@@ -31164,6 +31210,22 @@ function getLatLng(thisData) {
                         console.log("Error ");
                     }); 
                 }
+            };
+            
+            $scope.addTestInstruction = function(){
+                if(!$scope.test.instructions){
+                    $scope.test.instructions = [];
+                }
+                $scope.test.instructions.push('');
+            };
+            $scope.saveTest = function(){
+                console.log($scope.test);
+                testService.saveTest($scope.test).success(function (data, status, headers) {
+                    $scope.test = data;
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
             };
             $scope.removeQuestionDialog = function(){
                 var questionSet = $scope.toAddQuestion;
@@ -34177,8 +34239,7 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-                "sarita.tpo@jnujaipur.ac.in"
-
+"team@exambazaar.com"
 
             ];
             $scope.internshipEmail = function(userId){
@@ -34187,7 +34248,7 @@ function getLatLng(thisData) {
                     var marketingUser = data;
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
-                            body: "We are currently offering internship to students in Jaipur across 3 domains - Business Development, Design and Business Analyst. The interns will work out of our office in Jaipur. Kindly inform your students about this opportunity and let us know if we need to follow any steps/protocol to reach out to them.",
+                            //body: "We are currently offering internship to students in Jaipur across 3 domains - Business Development, Design and Business Analyst. The interns will work out of our office in Jaipur. Kindly inform your students about this opportunity and let us know if we need to follow any steps/protocol to reach out to them.",
                             emailList: internshipEmailList,
                             templateName: 'Internship at Exambazaar',
                         };
@@ -37298,7 +37359,7 @@ function getLatLng(thisData) {
                 }],
             }
         })
-        .state('aptitude', {
+        /*.state('aptitude', {
             url: '/career/aptitude',
             views: {
                 'header':{
@@ -37314,10 +37375,10 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                /*thistest: ['testService',
+                thistest: ['testService',
                     function(testService) {
                     return testService.getk21Test();    
-                }],*/
+                }],
                 thistest: ['testService','$stateParams',
                     function(testService, $stateParams){
                     return testService.getTest('5a17f5f617cb4c07c5dd7f5b');
@@ -37331,17 +37392,33 @@ function getLatLng(thisData) {
                      return $ocLazyLoad.load(['angularTimer'], {serie: true});
                 }],
             }
-        })
-        .state('coding', {
-            url: '/career/coding',
+        })*/
+        .state('careertest', {
+            url: '/career/:domainName',
             views: {
                 'header':{
                     templateUrl: 'header.html',
                     
                 },
                 'body':{
-                    templateUrl: 'k21.html',
-                    controller: 'codingTestController',
+                    templateUrl: 'careertest.html',
+                    controller: 'careertestController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+        })
+        .state('takeassessment', {
+            url: '/takeassessment/:testId',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'takeassessment.html',
+                    controller: 'takeassessmentController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -37350,12 +37427,11 @@ function getLatLng(thisData) {
             resolve: {
                 thistest: ['testService','$stateParams',
                     function(testService, $stateParams){
-                    return testService.getTest('5a2e5d007a7d9659d7c4537d');
+                    return testService.getTest($stateParams.testId);
                 }],
                 thisTestQuestions: ['questionService','$stateParams',
                     function(questionService, $stateParams){
-                        var testId = '5a2e5d007a7d9659d7c4537d';
-                    return questionService.getTestQuestions(testId);
+                        return questionService.getTestQuestions($stateParams.testId);
                 }],
                 angularTimer: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularTimer'], {serie: true});
@@ -37503,16 +37579,16 @@ function getLatLng(thisData) {
                 
             }
         })
-        .state('aptitudeTestResult', {
-            url: '/ebinternal/aptitudeTestResult',
+        .state('testAssessmentResult', {
+            url: '/ebinternal/testAssessment',
             views: {
                 'header':{
                     templateUrl: 'header.html',
                     
                 },
                 'body':{
-                    templateUrl: 'aptitudeTestResult.html',
-                    controller: 'aptitudeTestResultController',
+                    templateUrl: 'testAssessmentResult.html',
+                    controller: 'testAssessmentResultController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -39565,7 +39641,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         }else{
             //console.log('Not EB Internal');
         }
-        if(stateTo == 'aptitude'){
+        if(stateTo == 'takeassessment'){
             if($cookies.getObject('sessionuser')){
                 
                 

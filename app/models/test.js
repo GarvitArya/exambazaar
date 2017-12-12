@@ -7,6 +7,8 @@ var testSchema = mongoose.Schema({
     description: {type: String},
     year: {type: String},
     nQuestions: {type: String},
+    duration: {type: String}, //in minutes
+    instructions: [{type: String}],
     url: {
         question: {type: String, required:true},
         answer: {type: String},

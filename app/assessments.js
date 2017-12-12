@@ -162,7 +162,10 @@ router.post('/userevaluate', function(req, res) {
                     .exec(function (err, testQuestions) {
                     if(testQuestions){
                     var nQuestions = testQuestions.length;    
+                    var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
+                        
                     var counter = 0;
+                    console.log(nQuestions);
                     testQuestions.forEach(function(thisQuesiton, qIndex){
                         var questionId = thisQuesiton._id;
                         var subQuestion = thisQuesiton.questions[0];
@@ -182,8 +185,9 @@ router.post('/userevaluate', function(req, res) {
                         counter += 1;
                         
                     if(counter == nQuestions){
+                        console.log(testQuestionsIds);
                             
-                    var userresponses = questionresponse.find({user: thisAssessment.user},function (err, userresponses) {
+                    var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
                         if(userresponses){
                         var attempted = userresponses.length;
                         var unattempted = nQuestions - attempted;
