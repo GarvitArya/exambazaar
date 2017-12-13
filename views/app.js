@@ -12775,8 +12775,57 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
         
     exambazaar.controller("collegesController", 
-        [ '$scope', '$http','$state','$rootScope', 'collegeService', 'allColleges', function($scope, $http, $state, $rootScope, collegeService, allColleges){
-            $scope.colleges = allColleges.data;
+        [ '$scope', '$http','$state','$rootScope', 'collegeService', '$cookies', function($scope, $http, $state, $rootScope, collegeService, $cookies){
+            $scope.disabled = null;
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+                
+                if($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development'){
+                    $scope.disabled = false;
+                }
+                
+            }else{
+                $scope.disabled = true;
+            }
+            
+            $scope.collegesForm = {
+                limit: 10,
+                skip: 0
+            };
+            
+            var loadColleges = function(){
+                collegeService.getColleges($scope.collegesForm).success(function (data, status, headers) {
+                    console.log(data);
+                    $scope.colleges = data;
+                    
+                    $scope.colleges.forEach(function(thisCollege, index){
+                        thisCollege.district = thisCollege.Institute["Correspondence Details"]["District"];
+                        thisCollege.state = thisCollege.Institute["Correspondence Details"]["State"];
+                        thisCollege.website = thisCollege.Institute["Correspondence Details"]["Website"];
+                        if(thisCollege.website.indexOf('http') == -1){
+                            thisCollege.website = "http://" + thisCollege.website;
+                        }
+                    });
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
+            loadColleges();
+            
+            $scope.nextPage = function(){
+                $scope.colleges = null;
+                $scope.collegesForm.skip = $scope.collegesForm.skip + $scope.collegesForm.limit;
+                loadColleges();
+            };
+            $scope.prevPage = function(){
+                if($scope.collegesForm.skip >= $scope.collegesForm.limit){
+                    $scope.colleges = null;
+                    $scope.collegesForm.skip = $scope.collegesForm.skip - $scope.collegesForm.limit;
+                    loadColleges();
+                }
+                
+            };
             
     }]);    
     exambazaar.controller("coachingGroupController", 
@@ -34246,7 +34295,28 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"team@exambazaar.com",
+"afnanrafeek5@gmail.com",
+"akhil10jakkula@gmail.com",
+"kiyanag@gmail.com",
+"sunathithya@gmail.com",
+"bharattenani@gmail.com",
+"dhruv.kalra@siib.ac.in",
+"kuncheysai@gmail.com",
+"sujalajobs@gmail.com",
+"manalishah8155@gmail.com",
+"amanthan2208@gmail.com",
+"md.zaid.1007@gmail.com",
+"njaiswal817@gmail.com",
+"maliknisha8@gmail.com",
+"niviji@gmail.com",
+"pavaniyasarapu.nitw@gmail.com",
+"praju555chaudhari@gmail.com",
+"priyalbinani@gmail.com",
+"shruti0396@gmail.com",
+"snehasubhas96@gmail.com",
+"snehalmakhecha3101@gmail.com",
+"tarnnumpathan1996@gmail.com",
+
 
 
 
@@ -37785,17 +37855,7 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                allColleges: ['collegeService',
-                    function(collegeService){
-                    var collegesForm = {
-                        limit: 500,
-                        skip: 0
-                    };
-                    return collegeService.getColleges(collegesForm);
-                }],
-                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
-                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
-                }],
+                
                 
             }
         })
@@ -39599,6 +39659,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
 
     ];
     var atleastInternState = [
+        "colleges",
         "addExam",
         "scheduleQAD",
         "suggestCoaching",

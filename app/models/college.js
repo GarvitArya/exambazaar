@@ -23,7 +23,7 @@ var collegeSchema = mongoose.Schema({
     Ombudsman
     Anti Ragging
     Student Count*/
-
+    website2: {type: String},
     _created: { type: Date, default: Date.now }
 });
 collegeSchema.plugin(deepPopulate);

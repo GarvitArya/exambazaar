@@ -85,23 +85,69 @@
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 <div flex layout="row" layout-align="center start" class="whiteBackground width100" id="fullHeightPage">
-    <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center start" class="marginTB40 paddingTB10 height100 width100">
-        <div layout="row" layout-align="start center" ng-repeat="college in colleges" class="font12 width100 marginTB5 gainsboroBottomBorder">
-            <div layout="column" layout-align="start center" flex="25">
+    <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center start" class="marginTB40 paddingTB10 height100 width100" ng-if="!disabled">
+        <div layout="row" layout-align="start center" class="font10 bold width100 marginTB5 gainsboroBottomBorder">
+            <div flex="5" class="paddingLR10">
+                No
+            </div>
+            <div flex="25" class="paddingLR10">
+                College Name
+            </div>
+            <div flex="10" class="paddingLR10">
+                District
+            </div>
+            <div flex="10" class="paddingLR10">
+                State
+            </div>
+            <div flex="10" class="paddingLR10">
+                Website
+            </div>
+        </div>
+        <div layout="row" layout-align="start center" ng-repeat="college in colleges" class="font10 width100 marginTB5 gainsboroBottomBorder" ng-if="colleges">
+            <div flex="5" class="paddingLR10">
+                {{collegesForm.skip + $index + 1}}
+            </div>
+            <div flex="25" class="paddingLR10">
                 <div class="width100">{{college.inst_name}}</div>
                 <!--<div class="width100 font10">{{college.Institute["Institute Type"]}}</div>-->
             </div>
-            <div flex="10">
-                {{college.Institute["Correspondence Details"]["District"]}}
+            <div flex="10" class="paddingLR10">
+                {{college.district}}
             </div>
-            <div flex="10">
-                {{college.Institute["Correspondence Details"]["State"]}}
+            <div flex="10" class="paddingLR10">
+                {{college.state}}
             </div>
-            <div flex="10">
-                {{college.Institute["Correspondence Details"]["Website"]}}
+            <div flex="10" class="paddingLR10" www.exambazaar.com>
+                <a ng-href="{{college.website}}" target="_blank" id="linkFont">{{college.website}}</a>
             </div>
         </div>
 
-
+        <div layout="row" layout-align="center center" class="width100 min50vh" ng-if="!colleges">
+            <img src="images/loader/30.gif"/>
+            
+        </div>
     </div>
+    <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center start" class="marginTB40 paddingTB10 height100 width100 min80vh font16 danger" ng-if="disabled">
+        You are not allowed to access this page!
+    </div>
+</div>
+
+<div layout="row" layout-align="start center" class="bottomBar">
+    <div flex ="60">
+        <span ng-if="colleges">
+         Showing {{colleges.length}} colleges:
+        </span>
+    </div>
+    <div layout="row" layout-align="end center" flex>
+        <div class="paddingLR20 bold">
+            Page {{collegesForm.skip/collegesForm.limit + 1}}
+        </div>
+        <md-button class="md-next md-small font10" ng-click="prevPage()" ng-if="collegesForm.skip >= collegesForm.limit">
+            Previous
+        </md-button>
+        <md-button class="md-next md-small font10" ng-click="nextPage()">
+            Next
+        </md-button>
+    </div>
+
 </div>
