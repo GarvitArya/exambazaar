@@ -270,6 +270,8 @@
                                 
                                 <div ng-bind-html="thisQuestion.question" class="marginB10 width100">
                                 </div>
+                                
+                                <img ng-src="{{question.images[0]}}" class="marginTB10" ng-if="question.images[0]"/>
                             </div>
                             <md-radio-group ng-model="question.userAnswer">
 
@@ -384,14 +386,14 @@
                 <div flex="30" class="font10 danger">Specify Stream Name</div>
                 <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.otherstream"></div>
             </div>
-            <div layout="column" layout-align="start start" class="width100 marginB5">
+            <!--<div layout="column" layout-align="start start" class="width100 marginB5">
                 <div class="width100">Permanent Address</div>
                 <div class="width100">
                     <textarea class="width100 font14" ng-model="assessmentInfo.address" placeholder="Type in your permanent Address" rows="3"></textarea>
                     
                 
                 </div>
-            </div>
+            </div>-->
         </div>
         </div>
         <div flex layout="column" layout-align="start center" class="min100vh paddingLR20">

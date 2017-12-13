@@ -10049,7 +10049,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if($state.current.name == 'profile'){
                     $state.reload();
                 }
-                if($state.current.name == 'k21'){
+                if($state.current.name == 'takeassessmentController'){
                     $state.reload();
                 }
                 //$state.reload();
@@ -15572,7 +15572,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
                 
                 $scope.testQuestions = thisTestQuestions.data;
-                $rootScope.pageTitle = "Coding Test";
+                $rootScope.pageTitle = "Exambazaar Test";
                 var nQuestions = $scope.testQuestions.length;
                 $scope.setQuestion($scope.testQuestions[0]);
                  $scope.testQuestions.forEach(function(thisQuestion, index){
@@ -34241,7 +34241,11 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"team@exambazaar.com"
+"chanddharmendra@bitmesra.ac.in",
+"deanair@bitmesra.ac.in",
+"placement@bitmesra.ac.in",
+
+
 
             ];
             $scope.internshipEmail = function(userId){

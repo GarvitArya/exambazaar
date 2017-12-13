@@ -7,4 +7,14 @@
     <img src="images/logo/logo - EB.PNG"/>
     
     <div class="blogFont textLightGrey font12 marginT20">{{errorText}}</div>
+    
+    <div class="textBlack whiteBackground secondFont font14" ng-if="!user || disabled">
+    
+        <div layout="column" layout-align="center center" class="width100 min50vh blogFont">
+            <div class="font24 paddingLR20 text-center">
+                You need to be logged in on a laptop to access this page.
+            </div>
+        </div>
+
+    </div>
 </div>
