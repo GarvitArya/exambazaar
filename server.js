@@ -34,6 +34,7 @@ prerender.crawlerUserAgents.push('dotbot');
 prerender.crawlerUserAgents.push('ia_archiver');
 app.use(prerender);
 
+
 app.get('/*', function (req, res, next) {
     /*req.url.indexOf("/images/") === 0 || req.url.indexOf("/css/") === 0 || req.url.indexOf("https://exambazaar.s3.amazonaws.com/") === 0 || req.url.indexOf('.js') != -1 ||*/
     
