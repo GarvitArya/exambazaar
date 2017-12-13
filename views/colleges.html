@@ -85,9 +85,21 @@
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 <div flex layout="row" layout-align="center start" class="whiteBackground width100" id="fullHeightPage">
-    <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center start" class="paddingTB10 height100 width100">
-        <div layout="row" layout-align="start center" ng-repeat="college in colleges" class="font16 width100 marginTB5 gainsboroBottomBorder">
-            {{college}}
+    <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center start" class="marginTB40 paddingTB10 height100 width100">
+        <div layout="row" layout-align="start center" ng-repeat="college in colleges" class="font12 width100 marginTB5 gainsboroBottomBorder">
+            <div layout="column" layout-align="start center" flex="25">
+                <div class="width100">{{college.inst_name}}</div>
+                <!--<div class="width100 font10">{{college.Institute["Institute Type"]}}</div>-->
+            </div>
+            <div flex="10">
+                {{college.Institute["Correspondence Details"]["District"]}}
+            </div>
+            <div flex="10">
+                {{college.Institute["Correspondence Details"]["State"]}}
+            </div>
+            <div flex="10">
+                {{college.Institute["Correspondence Details"]["Website"]}}
+            </div>
         </div>
 
 

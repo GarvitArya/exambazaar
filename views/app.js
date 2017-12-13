@@ -10052,6 +10052,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if($state.current.name == 'takeassessmentController'){
                     $state.reload();
                 }
+                if($state.current.name == 'claim'){
+                    $state.reload();
+                }
                 //$state.reload();
             }
         };
@@ -34257,7 +34260,7 @@ function getLatLng(thisData) {
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
                             //body: "We are currently offering internship to students in Jaipur across 3 domains - Business Development, Design and Business Analyst. The interns will work out of our office in Jaipur. Kindly inform your students about this opportunity and let us know if we need to follow any steps/protocol to reach out to them.",
-                            body: "Please complete the steps below by Friday 15th December 11 pm, if you haven't already. Any submissions after that will not be entertained! Good luck!",
+                            //body: "Please complete the steps below by Friday 15th December 11 pm, if you haven't already. Any submissions after that will not be entertained! Good luck!",
                             emailList: internshipEmailList,
                             templateName: 'Internship at Exambazaar',
                         };
