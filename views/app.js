@@ -437,7 +437,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveUserLocation = function(locationForm) {
             return $http.post('/api/users/saveUserLocation', locationForm);
         };
-        this.makePartner = function(partnerUser) {
+        this.makePartner = function(locationForm) {
             return $http.post('/api/users/makePartner',locationForm);
         };
         this.unmakePartner = function(partnerUser) {
