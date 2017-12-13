@@ -42,12 +42,22 @@ router.post('/save', function(req, res) {
 });
 
 //to get all colleges
-router.get('/', function(req, res) {
+router.post('/', function(req, res) {
+    var collegesForm = req.body;
+    var limit = 100;
+    var skip = 0;
+    if(collegesForm.limit){
+        limit = collegesForm.limit;
+    }
+    if(collegesForm.skip){
+        skip = collegesForm.skip;
+    }
     college
-        .find({ })
-        .deepPopulate('stream')
+        .find({}, {inst_name: 1, Institute: 1})
+        .limit(limit).skip(skip)
         .exec(function (err, docs) {
         if (!err){
+            console.log(docs);
             res.json(docs);
         } else {throw err;}
     });

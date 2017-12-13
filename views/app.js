@@ -1401,8 +1401,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
     }]);
     exambazaar.service('collegeService', ['$http', function($http) {
-        this.getColleges = function(city) {
-            return $http.get('/api/colleges/'+city, {city: city});
+        this.getColleges = function(collegesForm) {
+            return $http.post('/api/colleges/', collegesForm);
         };
         this.getCount = function() {
             return $http.get('/api/colleges/count');
@@ -12770,6 +12770,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
     }]);    */
     
+        
+    exambazaar.controller("collegesController", 
+        [ '$scope', '$http','$state','$rootScope', 'collegeService', 'allColleges', function($scope, $http, $state, $rootScope, collegeService, allColleges){
+            $scope.colleges = allColleges.data;
+            
+    }]);    
     exambazaar.controller("coachingGroupController", 
         [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $timeout,thisuser, examList, streamList){
             
@@ -15849,11 +15855,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('3');
                     $scope.startErrors.push('Please enter email');
                 }
-                if($scope.assessmentInfo.address.length < 2){
-                    valid = false;
-                    console.log('4');
-                    $scope.startErrors.push('Please enter permanent address');
-                }
+                
                 if(!$scope.assessmentInfo.degree){
                     valid = false;
                     console.log('5');
@@ -34241,9 +34243,9 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"chanddharmendra@bitmesra.ac.in",
-"deanair@bitmesra.ac.in",
-"placement@bitmesra.ac.in",
+"team@exambazaar.com",
+
+
 
 
 
@@ -34255,6 +34257,7 @@ function getLatLng(thisData) {
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
                             //body: "We are currently offering internship to students in Jaipur across 3 domains - Business Development, Design and Business Analyst. The interns will work out of our office in Jaipur. Kindly inform your students about this opportunity and let us know if we need to follow any steps/protocol to reach out to them.",
+                            body: "Please complete the steps below by Friday 15th December 11 pm, if you haven't already. Any submissions after that will not be entertained! Good luck!",
                             emailList: internshipEmailList,
                             templateName: 'Internship at Exambazaar',
                         };
@@ -37759,6 +37762,37 @@ function getLatLng(thisData) {
                     return suggestCoachingService.getsuggestCoachings();
                 }],
                 
+                
+            }
+        })
+    
+        .state('colleges', {
+            url: '/ebinternal/colleges',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'colleges.html',
+                    controller: 'collegesController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                allColleges: ['collegeService',
+                    function(collegeService){
+                    var collegesForm = {
+                        limit: 500,
+                        skip: 0
+                    };
+                    return collegeService.getColleges(collegesForm);
+                }],
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
                 
             }
         })

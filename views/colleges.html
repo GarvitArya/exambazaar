@@ -1,0 +1,95 @@
+<style>
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #upload2{
+        background: white;
+        color: black;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    #upload2:hover {
+        background: #ccc;
+        cursor: pointer;
+    }
+    #copyLink{
+        cursor: pointer;
+    }
+    #fullHeightPage{
+        min-height: 90vh;
+    }
+    #instituteSection{
+        min-height: 30vh;
+    }
+    .min30vh{
+        min-height: 30vh;
+    }
+    .min50vh{
+        min-height: 50vh;
+    }
+    #partner{
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
+    }
+    #loginInput{
+        border: 0;
+        outline: 0;
+        background: transparent;
+        padding: 5px;
+        margin-bottom: 2px;
+        text-align: left;
+        font-family: "Open Sans";
+        color: black;
+        border: 1px solid gainsboro;
+        font-size:12px;
+    }
+    #examTagHolder{
+        padding:5px;
+        color: #333333;
+        background: white;
+        border: 1px solid #FF5A5F;
+    }
+    #examTagHolder:hover{
+        color: white;
+        
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+    #existingExamTagHolder{
+        padding:5px;
+        color: white;
+        background: #FF5A5F;
+        border: 1px solid #fff;
+    }
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center start" class="whiteBackground width100" id="fullHeightPage">
+    <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center start" class="paddingTB10 height100 width100">
+        <div layout="row" layout-align="start center" ng-repeat="college in colleges" class="font16 width100 marginTB5 gainsboroBottomBorder">
+            {{college}}
+        </div>
+
+
+    </div>
+</div>

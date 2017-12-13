@@ -231,6 +231,7 @@ var allStates = [
 '/ebinternal/coaching/database2/:city',
 '/ebinternal/coaching/providersWithAreas',
 '/ebinternal/coachingGroupSummary',
+'/ebinternal/colleges',
 '/ebinternal/contacts',
 '/ebinternal/edit/database1/:coachingId',
 '/ebinternal/editblog/:blogpostId',
