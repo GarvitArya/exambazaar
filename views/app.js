@@ -10693,7 +10693,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Aurangabad",
             "Navi Mumbai",
             "Nashik",
-
+            "Kozhikode", 
+            "Ujjain",
+            "Rourkela",
         ];
         
         if($cookies.getObject('sessionuser')){
@@ -34296,32 +34298,8 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"afnanrafeek5@gmail.com",
-"akhil10jakkula@gmail.com",
-"kiyanag@gmail.com",
-"sunathithya@gmail.com",
-"bharattenani@gmail.com",
-"dhruv.kalra@siib.ac.in",
-"kuncheysai@gmail.com",
-"sujalajobs@gmail.com",
-"manalishah8155@gmail.com",
-"amanthan2208@gmail.com",
-"md.zaid.1007@gmail.com",
-"njaiswal817@gmail.com",
-"maliknisha8@gmail.com",
-"niviji@gmail.com",
-"pavaniyasarapu.nitw@gmail.com",
-"praju555chaudhari@gmail.com",
-"priyalbinani@gmail.com",
-"shruti0396@gmail.com",
-"snehasubhas96@gmail.com",
-"snehalmakhecha3101@gmail.com",
-"tarnnumpathan1996@gmail.com",
-
-
-
-
-
+"ashwassup@gmail.com",
+//"team@exambazaar.com"
 
             ];
             $scope.internshipEmail = function(userId){
