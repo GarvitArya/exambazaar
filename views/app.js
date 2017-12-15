@@ -9521,6 +9521,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 '5a2bf98207932b2309259431',
                 '5a20e929799c4c2e6d4e120a',
             ];
+            
             $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
             
             if(!$rootScope.headerBlogs){
