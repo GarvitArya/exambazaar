@@ -10110,8 +10110,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if(newValue && newValue.length == 10){
                 $scope.showVerifyOTP = true;
                 //Change this back
-                //$scope.showVerifyOTP = false;
-                //$scope.OTPVerified = true;
+                $scope.showVerifyOTP = false;
+                $scope.OTPVerified = true;
                 //$scope.userExistMessage = null;
             }
 
@@ -34298,8 +34298,7 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"ashwassup@gmail.com",
-//"team@exambazaar.com"
+                "team@exambazaar.com"
 
             ];
             $scope.internshipEmail = function(userId){
