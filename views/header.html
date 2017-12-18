@@ -274,7 +274,7 @@
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
                 <li><a ui-sref="colleges">Colleges</a></li>
-                <li><a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">To fill Colleges</a></li>
+                
                 <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Default Dataset</a></li>
                 <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
                 <li ng-if="permittedToAdd.indexOf(sessionuser.userId)!=-1"><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
@@ -290,6 +290,7 @@
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Your Work<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
                 <li ng-if="sessionuser.userType=='Intern - Business Development'">
+                    <li><a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">To fill Colleges</a></li>
                     <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>
                     <a ui-sref="assignedToVerify({ userId:{{'sessionuser.userId'}} })">To Verify Institutes</a>
                     <a ui-sref="assignedToAddContactInfo({ userId:{{'sessionuser.userId'}} })">To Add Contact Info Institutes</a>
