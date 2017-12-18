@@ -34548,6 +34548,7 @@ function getLatLng(thisData) {
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
         }
+        console.log($rootScope.permittedToDisable.indexOf($scope.user._id));
         if($rootScope.permittedToDisable.indexOf($scope.user._id) != -1){
             $scope.showLevel = 10;
         }
@@ -39549,6 +39550,10 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
                 }],
+                loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
+                
                 user: function() { return {}; }
             }
         })
