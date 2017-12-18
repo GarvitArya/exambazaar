@@ -165,6 +165,9 @@
         color: white;
         border: 1px solid #FF5A5F;
     }
+    .badge{
+        background: #FF5A5F;
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -190,14 +193,18 @@
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB10">
         <div layout="column" layout-align="start center" flex="30" class="height100 paddingL20R40 leftBar">
-            <div layout="column" layout-align="center center" ng-repeat="subcategory in subcategories" class="paddingTB5 paddingLR20 min5vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory)" id="leftBarButton">
-                {{subcategory.displayname}}
+            <div layout="row" layout-align="center center" ng-repeat="subcategory in subcategories" class="paddingTB5 paddingLR20 min5vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory)" id="leftBarButton">
+                <div>
+                    {{subcategory.displayname}}
+                </div>
+                <span class="badge marginL10" ng-if="college.studentbody[subcategory.name].length > 0">{{college.studentbody[subcategory.name].length}}
+                </span>
             </div>
         </div>
         <div flex layout="row" layout-align="center center">
             <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
             <div layout="column" layout-align="start start" class="width100 min100vh" flex>
-                <div layout="column" layout-align="center start" class="width100 blogFont bold  marginB20">
+                <div layout="column" layout-align="center start" class="width100 blogFont bold  marginB10">
                     {{activeSubcategory.displayname}}
                 </div>
                 <div layout="column" layout-align="center start" class="width100">

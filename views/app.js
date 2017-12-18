@@ -9529,7 +9529,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             ];
             
             $rootScope.permittedToDisable = [
-                '59899631a68cea0154b49502',
                 '5a1831f0bd2adb260055e352',
                 
             ];
@@ -13006,7 +13005,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if($scope.user.userType =='Master'){
                 $scope.spreadsheetMode = true;
             }
-            if($scope.user._id =='59899631a68cea0154b49502'){
+            if($scope.user._id =='5a1831f0bd2adb260055e352'){
                 $scope.spreadsheetMode = true;
             }
             
@@ -34701,7 +34700,7 @@ function getLatLng(thisData) {
         if($rootScope.permittedToDisable.indexOf($scope.user._id) != -1){
             $scope.showLevel = 10;
         }
-        /*if($scope.user._id == '59899631a68cea0154b49502'){
+        /*if($scope.user._id == '5a1831f0bd2adb260055e352'){
             $scope.showLevel = 10;
         }*/
         $scope.disableinstitutes =[];
@@ -39852,8 +39851,6 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         "allreviews",
         "allblogtags",
         "extractEmails",
-        "coachingGroupSummary",
-        "coachingGroup",
         "sandbox2",
         "sendEmail",
         "userMarketing",
@@ -39880,6 +39877,9 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
 
     ];
     var atleastInternState = [
+        
+        "coachingGroupSummary",
+        "coachingGroup",
         "colleges",
         "addExam",
         "scheduleQAD",
