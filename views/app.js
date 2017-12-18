@@ -40264,6 +40264,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         "bulkDisable",
         "k21Test",
         "editCollege",
+        "filledColleges",
 
     ];
     $transitions.onStart( {}, function($transition$) {
