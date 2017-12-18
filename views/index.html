@@ -977,7 +977,7 @@
             font-size:12px;
             font-family: "Open Sans";
         }
-        #loginInput{
+        input.loginInput{
             border: 0;
             outline: 0;
             background: transparent;
@@ -2421,10 +2421,10 @@
                 <form  ng-submit="login()" name="loginForm" ng-if="!resetMode">
                 <div layout="column" class="">
                     <div class="paddingTB5 ">
-                    <input type="text" placeholder="Mobile" class="width100" ng-model="userlogin.mobile"  ng-minlength="10" ng-maxlength="10" only-digits id="loginInput">
+                    <input type="text" placeholder="Mobile" class="width100 loginInput" ng-model="userlogin.mobile"  ng-minlength="10" ng-maxlength="10" only-digits id="">
                     </div>
                     <div class="paddingB5">
-                    <input type="password" placeholder="Password" class="width100" ng-model="userlogin.password" id="loginInput">
+                    <input type="password" placeholder="Password" class="width100 loginInput" ng-model="userlogin.password" >
                     </div>
                     <div class="text-center" ng-if="loginErrorMessage">
                         <span class="danger font10" >{{loginErrorMessage}}</span>
@@ -2453,12 +2453,12 @@
                 <div layout="column" class="">
                     <div layout="row" layout-align="start center" class="paddingTB5 ">
                     <div layout="column" flex>
-                        <input type="text" placeholder="Enter your login Mobile" class="width100" ng-model="reset.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput" required>
+                        <input type="text" placeholder="Enter your login Mobile" class="width100 loginInput" ng-model="reset.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits  required>
                     </div>
                     <div layout="row" layout-align="end center" flex-gt-xs="50" flex-xs="40" ng-if="showResetVerifyOTP">
                         <md-button class="md-green2 md-small font10 width80" ng-click="resetPhone()" ng-if="!ResetOTPsent">Verify by OTP</md-button>
 
-                        <input ng-if="ResetOTPsent && !ResetOTPVerified" type="text" placeholder="4 digit OTP" class="width80" ng-model="reset.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits id="loginInput" required >
+                        <input ng-if="ResetOTPsent && !ResetOTPVerified" type="text" placeholder="4 digit OTP" class="width80" ng-model="reset.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits  required >
 
 
                         <div ng-if="ResetOTPsent && ResetOTPVerified" class="text-primary font20 bold">
@@ -2471,10 +2471,10 @@
                     <span ng-if="ResetOTPsent && !ResetOTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="resetPhone()" id="dangerLink">Resend it</a></span>
 
                     <div class="paddingB5">
-                    <input type="password" placeholder="Enter your new Password" class="width100" ng-model="reset.password" id="loginInput" ng-if="ResetOTPVerified">
+                    <input type="password" placeholder="Enter your new Password" class="width100 loginInput" ng-model="reset.password"  ng-if="ResetOTPVerified">
                     </div>
                     <!--<div class="paddingB5">
-                    <input type="password" placeholder="Verify your new Password" class="width100" ng-model="reset.verifypassword" id="loginInput" ng-if="ResetOTPVerified">
+                    <input type="password" placeholder="Verify your new Password" class="width100 loginInput" ng-model="reset.verifypassword"  ng-if="ResetOTPVerified">
                     </div>-->
                     <div ng-messages="resetForm.reset.password.$error" class="danger font8 text-right" ng-if="ResetOTPVerified">
                         Password should be at least 6 characters long
@@ -2513,20 +2513,20 @@
                 <form  ng-submit="signupUser()" name="signupForm">
                 <div layout="column" class="">
                     <div class="paddingTB5 ">
-                    <input type="text" placeholder="Name" class="width100" ng-model="signup.name" id="loginInput" only-letters required>
+                    <input type="text" placeholder="Name" class="width100 loginInput" ng-model="signup.name"  only-letters required>
                     </div>
                     <div class="paddingTB5 ">
-                    <input type="email" placeholder="Email" class="width100" ng-model="signup.email" id="loginInput" required>
+                    <input type="email" placeholder="Email" class="width100 loginInput" ng-model="signup.email"  required>
                     </div>
                     <div layout="row"  class="paddingTB5 ">
                     <div layout="column" flex>
-                        <input type="text" placeholder="Mobile" class="width100" ng-model="signup.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits id="loginInput" required>
+                        <input type="text" placeholder="Mobile" class="width100 loginInput" ng-model="signup.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits  required>
 
                     </div>
                     <div layout="row" layout-align="end center" flex-gt-xs="50" flex-xs="40" ng-if="showVerifyOTP">
                         <md-button class="md-green2 md-small font10 width80" ng-click="verifyPhone()" ng-if="!OTPsent">Verify by OTP</md-button>
 
-                        <input ng-if="OTPsent && !OTPVerified" type="text" placeholder="4 digit OTP" class="width80" ng-model="signup.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits id="loginInput" required >
+                        <input ng-if="OTPsent && !OTPVerified" type="text" placeholder="4 digit OTP" class="width80 loginInput" ng-model="signup.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits  required >
 
 
                         <div ng-if="OTPsent && OTPVerified" class="text-primary font20 bold">
@@ -2539,13 +2539,13 @@
                     <span ng-if="OTPsent && !OTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="verifyPhone()" id="dangerLink">Resend it</a></span>
 
                     <div class="paddingTB5">
-                    <input type="password" placeholder="Password" class="width100" ng-model="signup.password" id="loginInput" ng-minlength="6" required>
+                    <input type="password" placeholder="Password" class="width100 loginInput" ng-model="signup.password"  ng-minlength="6" required>
                     <div ng-messages="signupForm.signup.password.$error" class="danger font8 text-right">
                         Password should be at least 6 characters long
                     </div>
                     </div>
                     <!--<div class="paddingB5">
-                    <input type="password" placeholder="Password" class="width100" ng-model="signup.verifypassword" id="loginInput">
+                    <input type="password" placeholder="Password" class="width100 loginInput" ng-model="signup.verifypassword" >
                     </div>-->
                 </div>
 

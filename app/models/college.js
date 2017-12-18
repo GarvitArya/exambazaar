@@ -23,7 +23,7 @@ var collegeSchema = mongoose.Schema({
     Ombudsman
     Anti Ragging
     Student Count*/
-    
+    websitenotworking: {type: Boolean, default: false},
     studentbody:{
         placement: [{
             title: {type: String},

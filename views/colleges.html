@@ -108,7 +108,11 @@
                 {{collegesForm.skip + $index + 1}}
             </div>
             <div flex="25" class="paddingLR10">
-                <div class="width100">{{college.inst_name}}</div>
+                <div class="width100">
+                    
+                    <a ui-sref="editCollege({ collegeId:{{'college._id'}} })" target="_blank">{{college.inst_name}}
+                    </a>
+                </div>
                 <!--<div class="width100 font10">{{college.Institute["Institute Type"]}}</div>-->
             </div>
             <div flex="10" class="paddingLR10">

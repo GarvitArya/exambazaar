@@ -58,7 +58,6 @@ router.post('/', function(req, res) {
         //.sort("Faculty"."Faculty Details.length")
         .exec(function (err, docs) {
         if (!err){
-            console.log(docs);
             res.json(docs);
         } else {throw err;}
     });
@@ -118,7 +117,7 @@ router.get('/getEmails/:collegeId', function(req, res) {
 router.get('/edit/:collegeId', function(req, res) {
     var collegeId = req.params.collegeId;
     var thisCollege = college
-        .findOne({ 'insti_id': collegeId },{})
+        .findOne({ '_id': collegeId },{})
         .exec(function (err, thisCollege) {
         if (!err){
             res.json(thisCollege);

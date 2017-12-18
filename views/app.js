@@ -1419,6 +1419,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getEmails = function(collegeId) {
             return $http.get('/api/colleges/getEmails/'+collegeId, {collegeId: collegeId});
         };
+        this.saveCollege = function(college) {
+            return $http.post('/api/colleges/save',college);
+        };
     }]); 
     exambazaar.service('targetStudyProviderService', ['$http', function($http) {
         this.getProviders = function(city) {
@@ -12786,10 +12789,156 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);    */
     
     exambazaar.controller("editCollegeController", 
-        [ '$scope', '$http','$state','$rootScope', 'collegeService', '$cookies', 'thisCollege', function($scope, $http, $state, $rootScope, collegeService, $cookies, thisCollege){
+        [ '$scope', '$http','$state','$rootScope', 'collegeService', '$cookies', 'thisCollege', 'Notification', function($scope, $http, $state, $rootScope, collegeService, $cookies, thisCollege, Notification){
             $scope.college = thisCollege.data;
+            $scope.college.website = $scope.college.Institute["Correspondence Details"]["Website"];
+            if($scope.college.website.indexOf('http')){
+                $scope.college.website = "http://" + $scope.college.website;
+            }
+            $scope.disabled = null;
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+                
+                if($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development'){
+                    $scope.disabled = false;
+                }
+                
+            }else{
+                $scope.disabled = true;
+            }
             
+            $scope.subcategories = [
+                {
+                    name: 'placement',    
+                    displayname: 'Placement Cell',    
+                },
+                {
+                    name: 'training_internship',    
+                    displayname: 'Training & Internship',    
+                },
+                {
+                    name: 'academic_council',    
+                    displayname: 'Academic Council',    
+                },
+                {
+                    name: 'class_representative',    
+                    displayname: 'Class Representative',    
+                },
+                {
+                    name: 'student_council',    
+                    displayname: 'Student Council',    
+                },
+                {
+                    name: 'student_welfare',    
+                    displayname: 'Student Welfare',    
+                },
+                {
+                    name: 'alumni_association',    
+                    displayname: 'Alumni Association',    
+                },
+                {
+                    name: 'hostel_affairs',    
+                    displayname: 'Hostel Affairs',    
+                },
+                {
+                    name: 'cultural',    
+                    displayname: 'Cultural',    
+                },
+                {
+                    name: 'sports',    
+                    displayname: 'Sports',    
+                },
+            ];
+            $scope.activeSubcategory = null;
+            $scope.activeSubcategoryObj = null;
+            $scope.setActiveSubcategory = function(subcategory){
+                $scope.activeSubcategory = subcategory;
+                
+                if($scope.college.studentbody[subcategory.name]){
+                    $scope.activeSubcategoryObj = $scope.college.studentbody[subcategory.name];
+                }else{
+                    $scope.activeSubcategoryObj = [];
+                }
+            };
             
+            $scope.setActiveSubcategory($scope.subcategories[0]);
+            
+            $scope.addContact = function(){
+                var newContact = {
+                    title: '',
+                    name: '',
+                    email: [],
+                    mobile: [],
+                    landline: [],
+                };
+                
+                $scope.activeSubcategoryObj.push(newContact);
+                $scope.college.studentbody[$scope.activeSubcategory.name] = $scope.activeSubcategoryObj;
+            };
+            $scope.flipwebsitenotworking = function(){
+                if(!$scope.college.websitenotworking){
+                    $scope.college.websitenotworking = true;
+                }else{
+                    $scope.college.websitenotworking = false;
+                }
+            };
+            $scope.deleteContact = function(contact, index){
+                if($scope.activeSubcategoryObj && $scope.activeSubcategoryObj.length > index){
+                    $scope.activeSubcategoryObj.splice(index, 1);
+                }
+            };
+            $scope.addEmail = function(contact){
+                if(!contact.email){
+                    contact.email = [];
+                }
+                contact.email.push('');
+            };
+            $scope.deleteEmail = function(contact, index){
+                if(!contact.email){
+                    contact.email = [];
+                }
+                if(contact.email.length > index){
+                    contact.email.splice(index, 1);
+                }
+            };
+            $scope.addMobile = function(contact){
+                if(!contact.mobile){
+                    contact.mobile = [];
+                }
+                contact.mobile.push('');
+            };
+            $scope.deleteMobile = function(contact, index){
+                if(!contact.mobile){
+                    contact.mobile = [];
+                }
+                if(contact.mobile.length > index){
+                    contact.mobile.splice(index, 1);
+                }
+            };
+            $scope.addLandline = function(contact){
+                if(!contact.landline){
+                    contact.landline = [];
+                }
+                contact.landline.push('');
+            };
+            $scope.deleteLandline = function(contact, index){
+                if(!contact.landline){
+                    contact.landline = [];
+                }
+                if(contact.landline.length > index){
+                    contact.landline.splice(index, 1);
+                }
+            };
+            
+            $scope.saveCollege = function(){
+                console.log($scope.college);
+                collegeService.saveCollege($scope.college).success(function (data, status, headers) {
+                    Notification.primary({message: "Great, changes saved!",  positionY: 'top', positionX: 'right', delay: 1000});
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                });
+            };
     }]);      
     exambazaar.controller("collegesController", 
         [ '$scope', '$http','$state','$rootScope', 'collegeService', '$cookies', function($scope, $http, $state, $rootScope, collegeService, $cookies){
@@ -12812,7 +12961,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             var loadColleges = function(){
                 collegeService.getColleges($scope.collegesForm).success(function (data, status, headers) {
-                    console.log(data);
+                    
                     $scope.colleges = data;
                     
                     $scope.colleges.forEach(function(thisCollege, index){
@@ -37904,8 +38053,8 @@ function getLatLng(thisData) {
                 
             }
         })
-        .state('editcollege', {
-            url: '/ebinternal/editcollege/:collegeId',
+        .state('editCollege', {
+            url: '/ebinternal/editCollege/:collegeId',
             views: {
                 'header':{
                     templateUrl: 'header.html',
