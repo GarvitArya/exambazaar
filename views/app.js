@@ -9525,7 +9525,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 '5a20e929799c4c2e6d4e120a',
             ];
             
-            $rootScope.permittedToDisable = ['59899631a68cea0154b49502'];
+            $rootScope.permittedToDisable = [
+                '59899631a68cea0154b49502',
+                '5a1831f0bd2adb260055e352',
+                
+            ];
             
             if(!$rootScope.headerBlogs){
                 blogpostService.headerBlogs().success(function (data, status, headers) {
@@ -12781,7 +12785,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
     }]);    */
     
-        
+    exambazaar.controller("editCollegeController", 
+        [ '$scope', '$http','$state','$rootScope', 'collegeService', '$cookies', 'thisCollege', function($scope, $http, $state, $rootScope, collegeService, $cookies, thisCollege){
+            $scope.college = thisCollege.data;
+            
+            
+    }]);      
     exambazaar.controller("collegesController", 
         [ '$scope', '$http','$state','$rootScope', 'collegeService', '$cookies', function($scope, $http, $state, $rootScope, collegeService, $cookies){
             $scope.disabled = null;
@@ -37894,6 +37903,29 @@ function getLatLng(thisData) {
                 
             }
         })
+        .state('editcollege', {
+            url: '/ebinternal/editcollege/:collegeId',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'editCollege.html',
+                    controller: 'editCollegeController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisCollege: ['collegeService', '$stateParams',
+                    function(collegeService,$stateParams){
+                    return collegeService.getCollege($stateParams.collegeId);
+                }],
+                
+            }
+        })
         .state('coachingGroup', {
             url: '/ebinternal/user/:userId/coachingGroup',
             views: {
@@ -39713,6 +39745,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         "addInstitute",
         "bulkDisable",
         "k21Test",
+        "editCollege",
 
     ];
     $transitions.onStart( {}, function($transition$) {

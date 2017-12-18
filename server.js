@@ -233,6 +233,7 @@ var allStates = [
 '/ebinternal/coaching/providersWithAreas',
 '/ebinternal/coachingGroupSummary',
 '/ebinternal/colleges',
+'/ebinternal/editcollege/:collegeId',
 '/ebinternal/contacts',
 '/ebinternal/edit/database1/:coachingId',
 '/ebinternal/editblog/:blogpostId',

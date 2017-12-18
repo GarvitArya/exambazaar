@@ -55,6 +55,7 @@ router.post('/', function(req, res) {
     college
         .find({}, {inst_name: 1, Institute: 1})
         .limit(limit).skip(skip)
+        //.sort("Faculty"."Faculty Details.length")
         .exec(function (err, docs) {
         if (!err){
             console.log(docs);
@@ -110,6 +111,17 @@ router.get('/getEmails/:collegeId', function(req, res) {
             console.log(facultyEmails);           
             
             res.json(true);
+        } else {throw err;}
+    });
+});
+
+router.get('/edit/:collegeId', function(req, res) {
+    var collegeId = req.params.collegeId;
+    var thisCollege = college
+        .findOne({ 'insti_id': collegeId },{})
+        .exec(function (err, thisCollege) {
+        if (!err){
+            res.json(thisCollege);
         } else {throw err;}
     });
 });

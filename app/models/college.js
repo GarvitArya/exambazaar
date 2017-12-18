@@ -23,8 +23,84 @@ var collegeSchema = mongoose.Schema({
     Ombudsman
     Anti Ragging
     Student Count*/
+    
+    studentbody:{
+        placement: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
+        training_internship: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
+        academic_council: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
+        class_representative: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
+        student_council: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
+        student_welfare: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
+        alumni_association: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
+        hostel_affairs: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
+        cultural: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
+        sports: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
+    },
     website2: {type: String},
-    _created: { type: Date, default: Date.now }
+    _created: { type: Date, default: Date.now },
+    
+    
+    
 });
 collegeSchema.plugin(deepPopulate);
 module.exports = mongoose.model('college', collegeSchema);
