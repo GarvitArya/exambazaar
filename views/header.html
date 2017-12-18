@@ -290,7 +290,7 @@
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Your Work<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
                 <li ng-if="sessionuser.userType=='Intern - Business Development'">
-                    <li><a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">To fill Colleges</a></li>
+                    <a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">To fill Colleges</a>
                     <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>
                     <a ui-sref="assignedToVerify({ userId:{{'sessionuser.userId'}} })">To Verify Institutes</a>
                     <a ui-sref="assignedToAddContactInfo({ userId:{{'sessionuser.userId'}} })">To Add Contact Info Institutes</a>
