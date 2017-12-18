@@ -175,7 +175,7 @@
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 
-<div class="textBlack whiteBackground secondFont font14" ng-if="user">
+<div class="textBlack whiteBackground secondFont font14 width100" ng-if="!disabled">
     <div layout="row" layout-align="center start" class="width100">
         <div layout="column" layout-align="center center" flex-xs="100" flex-gt-xs="90" class="marginT20 paddingB10 headingBottomBorder2">
             <div class="font18 bold">STUDENT BODIES AT {{college.inst_name}}</div>
@@ -193,7 +193,7 @@
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB10">
         <div layout="column" layout-align="start center" flex="30" class="height100 paddingL20R40 leftBar">
-            <div layout="row" layout-align="center center" ng-repeat="subcategory in subcategories" class="paddingTB5 paddingLR20 min5vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory)" id="leftBarButton">
+            <div layout="row" layout-align="center center" ng-repeat="subcategory in subcategories" class="paddingTB2 paddingLR20 min3vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory)" id="leftBarButton">
                 <div>
                     {{subcategory.displayname}}
                 </div>
@@ -283,101 +283,30 @@
         
             </div>
         </div>
-        <!--<div layout="column" layout-align="start start" class="width100 paddingLR20 min100vh" flex>
-            <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100" id="profileSection">
-                <div layout="row" layout-align="start center" ng-if="user.basic" class="width100">
-                    <div>
-                        Welcome, {{user.basic.name}}
-                    </div>
-                    <div layout="column" layout-align="start start" class="paddingL20 editFont">
-                        <div layout="column" layout-align="center center" ng-if="user.image">
-                            <img id="userPic" ng-src="{{user.image}}" class="img-circle" />
-                            <span ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.8, centerCrop: true}">Change</span>
-                        </div>
-                        <div layout="column" layout-align="center center" ng-if="!user.image" ngf-select="uploadPic(newPic)" ng-model="newPic" ngf-accept="'image/*'" ngf-resize="{width: 200, height:200, quality: 0.7, centerCrop: true}">
-                            <div layout="row" layout-align="center center" class="lightGreyBackground"  id="picHolder" >
-                                <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add Image
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-                <span ng-if="!user.facebookId" class="editFont marginB20">
-                    You can link Facebook to your existing account to enable seamless logging in.
-                </span>
-
-                <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase" ng-show="!user.facebookId">
-                    <span class="font14" hide-xs>
-                        Link with Facebook
-                    </span>
-                    <span class="font12" hide-gt-xs>
-                        Link with Facebook
-                    </span>
-                </md-button>
-
-
-                <div layout="column" ng-if="user.facebookId" class="marginT10">
-                    <div>
-                        Facebook Linked <i class="fa fa-facebook-official" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                    <span>
-                    <i class="fa fa-check font20 text-primary bold" aria-hidden="true"></i>
-                    </span>
-                    <span class="editFont marginB20">
-                        You are already linked to your Facebook account (id: {{user.facebookId}}). Enjoy seamless logging in with Facebook to your Exambazaar account.
-                    </span>
-                    </div>
-
-                </div>
-                <span ng-if="!user.basic">
-                Name: 
-                </span>
-
-
-            </div>
-            <div layout="column" layout-align="start start" class="padding20 secondFont gainsboroBorder width100 marginT20" id="profileSection" ng-if="user.blogger.active">
-
-                <div layout="row" layout-align="start start" class="width100">
-                    Credentials & Highlights
-                </div>
-                <div layout="row" layout-align="start center" class="width100 marginT20">
-                    <div flex="25" layout="column" layout-align="start start">
-                        <div>
-                            Add profile credential
-                        </div>
-                        <div class="editFont font10 ">
-                            Credentials also appear on blogs you write
-                        </div>
-                    </div>
-                    <div flex>
-                        <input type="text" class="font12 width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
-                    </div>
-                </div>
-                <div layout="row" layout-align="end center" class="width100">
-                    <md-button class="md-raised md-primary" ng-click="saveBlogger()">
-                         Save
-                    </md-button>
-                </div>
-            </div>
-
-        </div>-->
     </div>
     </div>
 </div>
 
 
-<div class="bottomBar">
+<div class="bottomBar" ng-if="!disabled">
     <div layout="row" layout-align="start center">
-        <div flex ="80">
-            <span>
-            Do you want to save changes to {{college.inst_name}}? 
-            </span>
+        <div layout="row" layout-align="start center" flex ="70">
+            <div>
+            Save changes to this college? 
+            </div>
+            <div ng-if="tofilluser" class="marginL20">
+                Assigned to you with deadline {{tofilluser._deadline | date:'MMM d, y'}}
+            </div>
+            
         </div>
-        <div layout="row" layout-align="end center" flex = "20">
-            <md-button class="md-danger md-small font10 width8" ng-click="saveCollege()">
+        <div layout="row" layout-align="end center" flex>
+            <md-button class="md-danger md-small font10" ng-click="markDoneConfirm()" ng-if="tofilluser.active">
+                Mark Done
+            </md-button>
+            <md-button class="md-green2 md-small font10" ng-click="markNotDoneConfirm()" ng-if="!tofilluser.active">
+                Mark Not Done
+            </md-button>
+            <md-button class="md-next md-small font10" ng-click="saveCollege()">
                 Save
             </md-button>
             <!--
@@ -388,4 +317,8 @@
         </div>
         
     </div>
+</div>
+
+<div layout="row" layout-align="center center" class="min80vh textBlack whiteBackground blogFont font18 width100" ng-if="disabled">
+    You do not have adequate permission to access this page. Please check with Team Exambazaar
 </div>

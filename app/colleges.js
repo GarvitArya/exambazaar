@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var college = require('../app/models/college');
+var tofillcollege = require('../app/models/tofillcollege');
 var mongoose = require('mongoose');
 
 var moment = require('moment');
@@ -61,6 +62,82 @@ router.post('/', function(req, res) {
             res.json(docs);
         } else {throw err;}
     });
+    
+});
+
+router.post('/assigned', function(req, res) {
+    var collegesForm = req.body;
+    var limit = 100;
+    var skip = 0;
+    if(collegesForm.limit){
+        limit = collegesForm.limit;
+    }
+    if(collegesForm.skip){
+        skip = collegesForm.skip;
+    }
+    
+    var tofillcolleges = tofillcollege
+        .find({},{college: 1, _id: 0})
+        .exec(function (err, tofillcolleges) {
+        if (!err){
+            var collegeIds = tofillcolleges.map(function(a) {return a.college;});
+            
+            college
+                .find({_id: {$in: collegeIds}}, {inst_name: 1, Institute: 1})
+                .limit(limit).skip(skip)
+                //.sort("Faculty"."Faculty Details.length")
+                .exec(function (err, docs) {
+                if (!err){
+                    res.json(docs);
+                } else {throw err;}
+            });
+            
+            
+            
+            
+        } else {throw err;}
+    });
+    
+    
+    
+    
+});
+
+router.post('/unassigned', function(req, res) {
+    var collegesForm = req.body;
+    var limit = 100;
+    var skip = 0;
+    if(collegesForm.limit){
+        limit = collegesForm.limit;
+    }
+    if(collegesForm.skip){
+        skip = collegesForm.skip;
+    }
+    
+    var tofillcolleges = tofillcollege
+        .find({},{college: 1, _id: 0})
+        .exec(function (err, tofillcolleges) {
+        if (!err){
+            var collegeIds = tofillcolleges.map(function(a) {return a.college;});
+            
+            college
+                .find({_id: {$nin: collegeIds}}, {inst_name: 1, Institute: 1})
+                .limit(limit).skip(skip)
+                //.sort("Faculty"."Faculty Details.length")
+                .exec(function (err, docs) {
+                if (!err){
+                    res.json(docs);
+                } else {throw err;}
+            });
+            
+            
+            
+            
+        } else {throw err;}
+    });
+    
+    
+    
     
 });
 router.get('/count', function(req, res) {

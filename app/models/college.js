@@ -95,6 +95,13 @@ var collegeSchema = mongoose.Schema({
             mobile: [{type: String}],
             landline: [{type: String}],
         }],
+        others: [{
+            title: {type: String},
+            name: {type: String},
+            email: [{type: String}],
+            mobile: [{type: String}],
+            landline: [{type: String}],
+        }],
     },
     website2: {type: String},
     _created: { type: Date, default: Date.now },

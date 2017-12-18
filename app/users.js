@@ -5,8 +5,10 @@ var request = require("request");
 var config = require('../config/mydatabase.js');
 var user = require('../app/models/user');
 var view = require('../app/models/view');
+var college = require('../app/models/college');
 var tofillci = require('../app/models/tofillci');
 var toverifyci = require('../app/models/toverifyci');
+var tofillcollege = require('../app/models/tofillcollege');
 var addContactInfo = require('../app/models/addContactInfo');
 var coupon = require('../app/models/coupon');
 var userrefer = require('../app/models/userrefer');
@@ -1906,6 +1908,98 @@ router.get('/addedQuestions/:userId', function(req, res) {
                 .exec(function (err, addedQuestions) {
                 if (!err){
                     res.json(addedQuestions);
+                } else {throw err;}
+                });
+            }
+        }else{
+            res.json(null);
+        }
+
+
+    } else {throw err;}
+});
+    
+    
+});
+
+router.get('/filledColleges/:userId', function(req, res) {
+    var userId = req.params.userId.toString();
+    var limit = 1000;
+    console.log('Finding Filled Colleges for: ' + userId);
+    
+    var thisUser = user
+    .findOne({'_id': userId},{basic:1, userType:1})
+    .exec(function (err, thisUser) {
+    if (!err){
+        if(thisUser){
+            var fullUserScope = false;
+            if(thisUser.userType == 'Master' || thisUser._id == '5a1831f0bd2adb260055e352' || thisUser._id == '58c8e895bbaebf3560545f19'){
+               fullUserScope = true; 
+            }
+            
+            if(fullUserScope){
+                var filledColleges = tofillcollege
+                .find({})
+                .limit(limit)
+                .exec(function (err, filledColleges) {
+                if (!err){
+                    if(!filledColleges || filledColleges.length == 0){
+                        res.json(null);
+                    }
+                    var filledCollegeIds = filledColleges.map(function(a) {return a.college.toString();});
+                    var filledCollegeNames = college
+                    .find({_id: {$in: filledCollegeIds}}, {inst_name:1, _id: 1, studentbody: 1, websitenotworking: 1})
+                    .exec(function (err, filledCollegeNames) {
+                    if (!err){
+
+                        var filledCollegeNameIds = filledCollegeNames.map(function(a) {return a._id.toString();});
+                         filledColleges.forEach(function(thisCollege, thisindex){
+                            var fIndex = filledCollegeNameIds.indexOf(thisCollege.college.toString());
+                            if(fIndex != -1){
+                                filledColleges[thisindex].college = filledCollegeNames[fIndex];
+                            }
+                            
+                            if(thisindex == filledColleges.length - 1){
+                                res.json(filledColleges);
+                            }
+                        });
+                    } else {throw err;}
+                    });
+                    
+                } else {throw err;}
+                });
+            }else{
+                
+                
+                var filledColleges = tofillcollege
+                .find({user: thisUser._id})
+                .limit(limit)
+                .exec(function (err, filledColleges) {
+                if (!err){
+                    if(!filledColleges || filledColleges.length == 0){
+                        res.json(null);
+                    }
+                    var filledCollegeIds = filledColleges.map(function(a) {return a.college.toString();});
+                    var filledCollegeNames = college
+                    .find({_id: {$in: filledCollegeIds}}, {inst_name:1, _id: 1, studentbody: 1, websitenotworking: 1})
+                    .exec(function (err, filledCollegeNames) {
+                    if (!err){
+
+                        var filledCollegeNameIds = filledCollegeNames.map(function(a) {return a._id.toString();});
+                        
+                        filledColleges.forEach(function(thisCollege, thisindex){
+                            var fIndex = filledCollegeNameIds.indexOf(thisCollege.college.toString());
+                            if(fIndex != -1){
+                                filledColleges[thisindex].college = filledCollegeNames[fIndex];
+                            }
+                            
+                            if(thisindex == filledColleges.length - 1){
+                                res.json(filledColleges);
+                            }
+                        });
+                    } else {throw err;}
+                    });
+                    
                 } else {throw err;}
                 });
             }

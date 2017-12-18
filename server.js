@@ -144,6 +144,7 @@ var mediaTags = require('./app/mediaTags.js',mediaTags);
 var cisaveds = require('./app/cisaveds.js',cisaveds); 
 var views = require('./app/views.js',views); 
 var tofillcis = require('./app/tofillcis.js',tofillcis); 
+var tofillcolleges = require('./app/tofillcolleges.js',tofillcolleges); 
 var rateInstitutes = require('./app/rateInstitutes.js',rateInstitutes); 
 var toverifycis = require('./app/toverifycis.js',toverifycis); 
 var suggestCoachings = require('./app/suggestCoachings.js',suggestCoachings); 
@@ -191,6 +192,7 @@ app.use('/api/mediaTags', mediaTags);
 app.use('/api/cisaveds', cisaveds);
 app.use('/api/views', views);
 app.use('/api/tofillcis', tofillcis);
+app.use('/api/tofillcolleges', tofillcolleges);
 app.use('/api/rateInstitutes', rateInstitutes);
 app.use('/api/toverifycis', toverifycis);
 app.use('/api/suggestCoachings', suggestCoachings);
@@ -258,6 +260,7 @@ var allStates = [
 '/ebinternal/user/:userId/:reviewId/availoffer',
 '/ebinternal/user/:userId/addedInstitutes',
 '/ebinternal/user/:userId/addedQuestions',
+'/ebinternal/user/:userId/filledColleges',
 '/ebinternal/user/:userId/addIntern',
 '/ebinternal/user/:userId/assigned',
 '/ebinternal/user/:userId/assignedToAddContactInfo',

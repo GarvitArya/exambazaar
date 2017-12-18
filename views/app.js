@@ -348,6 +348,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getAddedInstitutes = function(userId) {
             return $http.get('/api/users/addedInstitutes/'+userId, {userId: userId});
         };
+        this.getFilledColleges = function(userId) {
+            return $http.get('/api/users/filledColleges/'+userId, {userId: userId});
+        };
         this.getAddedQuestions = function(userId) {
             return $http.get('/api/users/addedQuestions/'+userId, {userId: userId});
         };
@@ -846,6 +849,51 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             return $http.get('/api/views/institute/'+instituteId, {instituteId: instituteId});
         };
     }]);
+        
+    exambazaar.service('tofillcollegeService', ['$http', function($http) {
+       
+        this.save = function(toFillCollegesForm) {
+            return $http.post('/api/tofillcolleges/save', toFillCollegesForm);
+        };
+        this.tofilluser = function(toFillCollegesForm) {
+            return $http.post('/api/tofillcolleges/tofilluser', toFillCollegesForm);
+        };
+        this.getAllIds = function(tofillcollegeId) {
+            return $http.get('/api/tofillcolleges/AllIds');
+        };
+        this.markDone = function(tofillcollegeForm) {
+            return $http.post('/api/tofillcolleges/markDone', tofillcollegeForm);
+        };
+        
+        this.markNotDone = function(tofillcollegeForm) {
+            return $http.post('/api/tofillcolleges/markNotDone', tofillcollegeForm);
+        };
+        this.findAssigned = function(instituteIds) {
+            return $http.post('/api/tofillcolleges/findAssigned', instituteIds);
+        };
+        this.filledCount = function() {
+            return $http.get('/api/tofillcolleges/filledCount');
+        };
+        this.institutesFilled = function() {
+            return $http.get('/api/tofillcolleges/institutesFilled');
+        };
+        this.gettofillcollege = function(tofillcollegeId) {
+            return $http.get('/api/tofillcolleges/edit/'+tofillcollegeId, {tofillcollegeId: tofillcollegeId});
+        };
+        this.prevFilled = function(groupName) {
+            return $http.get('/api/tofillcolleges/prevFilled/'+groupName, {groupName: groupName});
+        };
+        this.removeAssigned = function(tofillcollegeId){
+            $http.get('/api/tofillcolleges/remove/'+tofillcollegeId, {tofillcollegeId: tofillcollegeId});
+        };
+        this.gettofillcolleges = function() {
+            return $http.get('/api/tofillcolleges');
+        };
+        this.getusertofillcolleges = function(userId) {
+            return $http.get('/api/tofillcolleges/user/'+userId, {userId: userId});
+        };
+    }]);
+        
     exambazaar.service('tofillciService', ['$http', function($http) {
        
         this.sendEmails = function() {
@@ -1404,6 +1452,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
     }]);
     exambazaar.service('collegeService', ['$http', function($http) {
+        this.getUnassignedColleges = function(collegesForm) {
+            return $http.post('/api/colleges/unassigned', collegesForm);
+        };
+        this.getAssignedColleges = function(collegesForm) {
+            return $http.post('/api/colleges/assigned', collegesForm);
+        };
         this.getColleges = function(collegesForm) {
             return $http.post('/api/colleges/', collegesForm);
         };
@@ -12303,6 +12357,89 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
     }]);
         
+    exambazaar.controller("filledCollegesController", 
+        [ '$scope', '$http','$state', '$rootScope','thisuser','tofillcollegeService', 'filledColleges', 'ebteam', function($scope, $http, $state, $rootScope, thisuser, tofillcollegeService, filledColleges, ebteam){
+            $scope.user = thisuser.data;
+            $scope.filledcolleges = filledColleges.data;
+            if(!$scope.filledcolleges){
+                $scope.filledcolleges = [];
+            }
+            //console.log($scope.filledcolleges);
+            
+            if($scope.user && ($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development')){
+                $scope.authorized = true;
+            }
+            
+            
+            var ebteam = ebteam.data;
+            var ebteamIds = ebteam.map(function(a) {return a._id;});
+            
+            var listedUsers = [];
+            
+            $scope.filledcolleges.forEach(function(thisFilledCollege, index){
+                var addedByUser = thisFilledCollege.user;
+                if(listedUsers.indexOf(addedByUser) == -1){
+                    listedUsers.push(addedByUser);
+                }
+                var uIndex = ebteamIds.indexOf(addedByUser);
+                thisFilledCollege.user = ebteam[uIndex];
+                
+            });
+            $scope.listedUsers = [];
+            listedUsers.forEach(function(thisUser, index){
+                var uIndex = ebteamIds.indexOf(thisUser);
+                $scope.listedUsers.push(ebteam[uIndex]);
+                
+            });
+            
+            $scope.subcategories = [
+                {
+                    name: 'placement',    
+                    displayname: 'Placement Cell',    
+                },
+                {
+                    name: 'training_internship',    
+                    displayname: 'Training & Internship',    
+                },
+                {
+                    name: 'academic_council',    
+                    displayname: 'Academic Council',    
+                },
+                {
+                    name: 'class_representative',    
+                    displayname: 'Class Representative',    
+                },
+                {
+                    name: 'student_council',    
+                    displayname: 'Student Council',    
+                },
+                {
+                    name: 'student_welfare',    
+                    displayname: 'Student Welfare',    
+                },
+                {
+                    name: 'alumni_association',    
+                    displayname: 'Alumni Association',    
+                },
+                {
+                    name: 'hostel_affairs',    
+                    displayname: 'Hostel Affairs',    
+                },
+                {
+                    name: 'cultural',    
+                    displayname: 'Cultural',    
+                },
+                {
+                    name: 'sports',    
+                    displayname: 'Sports',    
+                },
+                {
+                    name: 'others',    
+                    displayname: 'Others',    
+                },
+            ];
+    }]);
+        
     exambazaar.controller("addedQuestionsController", 
         [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedQuestions', 'ebteam', 'examList', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedQuestions, ebteam, examList){
             $scope.user = thisuser.data;
@@ -12788,7 +12925,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);    */
     
     exambazaar.controller("editCollegeController", 
-        [ '$scope', '$http','$state','$rootScope', 'collegeService', '$cookies', 'thisCollege', 'Notification', function($scope, $http, $state, $rootScope, collegeService, $cookies, thisCollege, Notification){
+        [ '$scope', '$http','$state','$rootScope', 'collegeService', '$cookies', 'thisCollege', 'Notification', 'tofillcollegeService', '$mdDialog', 'screenSize', function($scope, $http, $state, $rootScope, collegeService, $cookies, thisCollege, Notification, tofillcollegeService, $mdDialog, screenSize){
+            
+            if (screenSize.is('xs, sm')){
+                $scope.disabled = true;
+            }else{
+                $scope.disabled = false;
+            }
+
+            
             $scope.college = thisCollege.data;
             $scope.college.website = $scope.college.Institute["Correspondence Details"]["Website"];
             if($scope.college.website.indexOf('http')){
@@ -12800,6 +12945,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
                 if($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development'){
                     $scope.disabled = false;
+                    var toFillCollegesForm = {
+                        user: $scope.user._id,
+                        collegeId: $scope.college._id,
+                    };
+                    
+                    tofillcollegeService.tofilluser(toFillCollegesForm).success(function (filldata, status, headers) {
+                        $scope.tofilluser = filldata;
+                        console.log($scope.tofilluser);
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                    
                 }
                 
             }else{
@@ -12846,6 +13004,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 {
                     name: 'sports',    
                     displayname: 'Sports',    
+                },
+                {
+                    name: 'others',    
+                    displayname: 'Others',    
                 },
             ];
             $scope.activeSubcategory = null;
@@ -12930,7 +13092,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
             $scope.saveCollege = function(){
-                console.log($scope.college);
                 collegeService.saveCollege($scope.college).success(function (data, status, headers) {
                     Notification.primary({message: "Great, changes saved!",  positionY: 'top', positionX: 'right', delay: 1000});
                 })
@@ -12938,10 +13099,90 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
                 });
             };
+            
+            $scope.markDoneConfirm = function(){
+                var confirm = $mdDialog.confirm()
+                    .title('Would you like to mark ' + $scope.college.inst_name + ' as done?')
+                    .textContent('This will be saved in your report')
+                    .ariaLabel('Lucky day')
+                    .targetEvent()
+                    .clickOutsideToClose(true)
+                    .ok('Confirm')
+                    .cancel('Cancel');
+                    $mdDialog.show(confirm).then(function() {
+                        $scope.markDone();
+                    }, function() {
+                          //nothing
+                            
+                    });    
+            };
+            
+            $scope.markDone = function(){
+                var toFillCollegesForm = {
+                    user: $scope.user._id,
+                    college: $scope.college._id,
+                };
+
+                tofillcollegeService.markDone(toFillCollegesForm).success(function (taskdata, status, headers) {
+                    
+                    if(taskdata){
+                        Notification.primary({message: "Great, task marked as done!",  positionY: 'top', positionX: 'right', delay: 1000});
+                        $scope.tofilluser = taskdata;
+                    }else{
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    }
+                    
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                });
+            };
+            
+            $scope.markNotDoneConfirm = function(){
+                var confirm = $mdDialog.confirm()
+                    .title('Would you like to mark ' + $scope.college.inst_name + ' as NOT done?')
+                    .textContent('This will be saved in your report')
+                    .ariaLabel('Lucky day')
+                    .targetEvent()
+                    .clickOutsideToClose(true)
+                    .ok('Confirm')
+                    .cancel('Cancel');
+                    $mdDialog.show(confirm).then(function() {
+                        $scope.markNotDone();
+                    }, function() {
+                          //nothing
+                            
+                    });    
+            };
+            $scope.markNotDone = function(){
+                var toFillCollegesForm = {
+                    user: $scope.user._id,
+                    college: $scope.college._id,
+                };
+
+                tofillcollegeService.markNotDone(toFillCollegesForm).success(function (taskdata, status, headers) {
+                    
+                    if(taskdata){
+                        Notification.primary({message: "Great, task marked as not done!",  positionY: 'top', positionX: 'right', delay: 1000}); $scope.tofilluser = taskdata;
+                    }else{
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    }
+                    
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                });
+            };
     }]);      
     exambazaar.controller("collegesController", 
-        [ '$scope', '$http','$state','$rootScope', 'collegeService', '$cookies', function($scope, $http, $state, $rootScope, collegeService, $cookies){
+        [ '$scope', '$http','$state','$rootScope', 'collegeService', '$cookies', 'internList', 'AllIds', 'Notification', 'tofillcollegeService', function($scope, $http, $state, $rootScope, collegeService, $cookies, internList, AllIds, Notification, tofillcollegeService){
             $scope.disabled = null;
+            $scope.interns = internList.data;
+            $scope.AllIds = AllIds.data;
+            $scope.assigned = false;
+            $scope.deadline = moment();
+            $scope.assignedTo = null;
+            $scope.canAssign = false;
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
                 
@@ -12949,35 +13190,79 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.disabled = false;
                 }
                 
+                if($scope.user.userType == 'Master' || $scope.user._id == '58c8e895bbaebf3560545f19'){
+                    $scope.canAssign = true;
+                };
+                
+                
             }else{
                 $scope.disabled = true;
             }
             
+            $scope.limits = [1, 10, 20, 50, 100];
             $scope.collegesForm = {
-                limit: 10,
+                limit: 50,
                 skip: 0
+            };
+            $scope.buttonClass = function(collegesLength){
+                if($scope.collegesForm.limit == collegesLength){
+                    return 'md-danger';
+                }else{
+                    return 'md-next';
+                }
             };
             
             var loadColleges = function(){
-                collegeService.getColleges($scope.collegesForm).success(function (data, status, headers) {
+                if(!$scope.assigned){
+                    collegeService.getUnassignedColleges($scope.collegesForm).success(function (data, status, headers) {
                     
-                    $scope.colleges = data;
-                    
-                    $scope.colleges.forEach(function(thisCollege, index){
-                        thisCollege.district = thisCollege.Institute["Correspondence Details"]["District"];
-                        thisCollege.state = thisCollege.Institute["Correspondence Details"]["State"];
-                        thisCollege.website = thisCollege.Institute["Correspondence Details"]["Website"];
-                        if(thisCollege.website.indexOf('http') == -1){
-                            thisCollege.website = "http://" + thisCollege.website;
-                        }
+                        $scope.colleges = data;
+
+                        $scope.colleges.forEach(function(thisCollege, index){
+                            thisCollege.district = thisCollege.Institute["Correspondence Details"]["District"];
+                            thisCollege.state = thisCollege.Institute["Correspondence Details"]["State"];
+                            thisCollege.website = thisCollege.Institute["Correspondence Details"]["Website"];
+                            if(thisCollege.website.indexOf('http') == -1){
+                                thisCollege.website = "http://" + thisCollege.website;
+                            }
+                        });
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
                     });
-                })
-                .error(function (data, status, header, config) {
-                    console.log('Error ' + data + ' ' + status);
-                });
+                }else{
+                    collegeService.getAssignedColleges($scope.collegesForm).success(function (data, status, headers) {
+                    
+                        $scope.colleges = data;
+
+                        $scope.colleges.forEach(function(thisCollege, index){
+                            thisCollege.district = thisCollege.Institute["Correspondence Details"]["District"];
+                            thisCollege.state = thisCollege.Institute["Correspondence Details"]["State"];
+                            thisCollege.website = thisCollege.Institute["Correspondence Details"]["Website"];
+                            if(thisCollege.website.indexOf('http') == -1){
+                                thisCollege.website = "http://" + thisCollege.website;
+                            }
+                        });
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                }
             };
             loadColleges();
+            $scope.nColleges = function(collegesLength){
+                $scope.collegesForm.limit = collegesLength;
+                loadColleges();
+            };
             
+            $scope.flipAssigned = function(){
+                $scope.assigned = !$scope.assigned;
+                $scope.collegesForm = {
+                    limit: 50,
+                    skip: 0
+                };
+                loadColleges();
+            };
             $scope.nextPage = function(){
                 $scope.colleges = null;
                 $scope.collegesForm.skip = $scope.collegesForm.skip + $scope.collegesForm.limit;
@@ -12989,6 +13274,47 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.collegesForm.skip = $scope.collegesForm.skip - $scope.collegesForm.limit;
                     loadColleges();
                 }
+                
+            };
+            $scope.updateAssignedTo = function(intern){
+                $scope.assignedTo = intern;
+            };
+            
+            $scope.assignAll = function(){
+                
+                if(!$scope.assignedTo){
+                    Notification.warning({message: "Select an Intern to assign to!",  positionY: 'top', positionX: 'right', delay: 1000});
+                }else if(!$scope.deadline){
+                    Notification.warning({message: "Select an deadline!",  positionY: 'top', positionX: 'right', delay: 1000});
+                }else{
+                    var assignedIds = [];
+                    $scope.colleges.forEach(function(thisCollege, index){
+                        var aIndex = $scope.AllIds.indexOf(thisCollege._id);
+                        if(aIndex == -1){
+                            assignedIds.push(thisCollege._id);
+                        }
+                    });
+                    
+                    if(assignedIds.length == 0){
+                        Notification.warning({message: 'No assignable colleges!',  positionY: 'top', positionX: 'right', delay: 1000});
+                    }else{
+                        var toFillCollegesForm = {
+                            user: $scope.assignedTo._id,
+                            collegeIds: assignedIds,
+                            _deadline: $scope.deadline
+                        };
+
+                        tofillcollegeService.save(toFillCollegesForm).success(function (data, status, headers) {
+                            Notification.success({message: data + " colleges assigned to: " + $scope.assignedTo.basic.name,  positionY: 'top', positionX: 'right', delay: 1000});
+                        })
+                        .error(function (data, status, header, config) {
+                            Notification.warning({message: 'Something went wrong!',  positionY: 'top', positionX: 'right', delay: 1000});
+                        });
+                    }
+                    
+                    
+                }
+                
                 
             };
             
@@ -38048,6 +38374,14 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
+                internList: ['UserService',
+                    function(UserService) {
+                    return UserService.getInterns();
+                }],
+                AllIds: ['tofillcollegeService',
+                    function(tofillcollegeService) {
+                    return tofillcollegeService.getAllIds();
+                }],
                 
                 
             }
@@ -38297,6 +38631,36 @@ function getLatLng(thisData) {
                 examList: ['ExamService',
                     function(ExamService){
                     return ExamService.getExams();
+                }],
+            }
+        })
+        .state('filledColleges', {
+            url: '/ebinternal/user/:userId/filledColleges',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'filledColleges.html',
+                    controller: 'filledCollegesController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisuser: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getUser($stateParams.userId);
+                }],
+                ebteam: ['UserService',
+                    function(UserService){
+                    return UserService.getEBTeam();
+                }],
+                filledColleges: ['UserService', '$stateParams',
+                    function(UserService,$stateParams){
+                    return UserService.getFilledColleges($stateParams.userId);
                 }],
             }
         })

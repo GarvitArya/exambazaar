@@ -231,6 +231,8 @@
                 <li class="dropdown">
                   <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<!--<span class="caret"></span>--></a>
                   <ul class="dropdown-menu">
+                    <li><a ui-sref="colleges">Colleges</a></li>
+                    <li><a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">To fill Colleges</a></li>
                     <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Default Dataset</a></li>
                     <li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>
                     <li><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
@@ -271,7 +273,9 @@
             <li class="dropdown">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
-                <li><a ui-sref="targetStudyProviders({ city:'New Delhi' })">Default Dataset</a></li>
+                <li><a ui-sref="colleges">Colleges</a></li>
+                <li><a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">To fill Colleges</a></li>
+                <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Default Dataset</a></li>
                 <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
                 <li ng-if="permittedToAdd.indexOf(sessionuser.userId)!=-1"><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
                 <li ng-if="permittedToDisable.indexOf(sessionuser.userId)!=-1"><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>

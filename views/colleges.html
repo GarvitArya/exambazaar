@@ -85,7 +85,25 @@
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 <div flex layout="row" layout-align="center start" class="whiteBackground width100" id="fullHeightPage">
-    <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center start" class="marginTB40 paddingTB10 height100 width100" ng-if="!disabled">
+    <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center start" class="marginTB10 paddingTB10 height100 width100" ng-if="!disabled">
+        <div layout="row" layout-align="start center" class="font10 width100 marginTB5">
+            <div layout="row" layout-align="start center" flex>
+                <div layout="row" layout-align="start center" class="bold paddingR10">
+                    <span class="font16" ng-if="assigned">Assigned Colleges</span>
+                    <span class="font16" ng-if="!assigned">Unassigned Colleges</span>
+                </div>
+                <md-button class="md-danger md-small font10" ng-click="flipAssigned()">
+                    Flip
+                </md-button>
+            
+            </div>
+            <div layout="row" layout-align="start center" flex>
+                <div class="marginR10">Number of colleges on a page:</div>
+                <md-button class="md-small font10 marginR10" ng-click="nColleges(limit)" ng-class="buttonClass(limit)" ng-repeat="limit in limits">
+                    {{limit}}
+                </md-button>
+            </div>
+        </div>
         <div layout="row" layout-align="start center" class="font10 bold width100 marginTB5 gainsboroBottomBorder">
             <div flex="5" class="paddingLR10">
                 No
@@ -104,8 +122,8 @@
             </div>
         </div>
         <div layout="row" layout-align="start center" ng-repeat="college in colleges" class="font10 width100 marginTB5 gainsboroBottomBorder" ng-if="colleges">
-            <div flex="5" class="paddingLR10">
-                {{collegesForm.skip + $index + 1}}
+            <div layout="row" layout-align="start center" flex="5" class="paddingLR10">
+                {{collegesForm.skip + $index + 1}}&nbsp;&nbsp;<i class="fa fa-check-circle text-primary" aria-hidden="true" ng-if="AllIds.indexOf(college._id) != -1"></i>
             </div>
             <div flex="25" class="paddingLR10">
                 <div class="width100">
@@ -137,10 +155,24 @@
 </div>
 
 <div layout="row" layout-align="start center" class="bottomBar">
-    <div flex ="60">
-        <span ng-if="colleges">
-         Showing {{colleges.length}} colleges:
-        </span>
+    <div layout="row" layout-align="start center" flex ="70" class="">
+        <div ng-if="colleges" class="marginR10">
+         {{colleges.length}} colleges:
+        </div>
+        <div ng-if="colleges && !assigned && canAssign" flex layout="row" layout-align="start center" class="marginL10">
+            <md-select flex ng-model="assignedTo" placeholder="Intern" class="margin0">
+                <md-option ng-value="intern._id" ng-repeat="intern in interns" class="margin0" ng-click="updateAssignedTo(intern)">
+                  {{intern.basic.name}}
+                </md-option>
+            </md-select>
+            
+            <md-datepicker ng-model="deadline" md-placeholder="Deadline" flex></md-datepicker>
+            
+            <md-button class="md-danger md-small font10" ng-click="assignAll()">
+                Assign All
+            </md-button>
+        </div>
+        
     </div>
     <div layout="row" layout-align="end center" flex>
         <div class="paddingLR20 bold">
