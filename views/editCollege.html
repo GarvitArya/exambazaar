@@ -210,17 +210,17 @@
                 <div layout="column" layout-align="center start" class="width100">
                      
                     <div layout="column" layout-align="center start" class="width100 font14">
-                        <div layout="column" layout-align="start start" class="fieldRow paddingLR20 paddingTB10 width100 lightGreyBackground greyBorder" ng-repeat="contact in activeSubcategoryObj">
+                        <div layout="column" layout-align="start start" class="fieldRow paddingLR20 paddingTB10 width100 lightGreyBackground greyBorder" ng-repeat="contact in activeSubcategoryObj track by $index" ng-init="outerIndex = $index">
                             <div layout="row" layout-align="start center" class="width100 marginTB10">
-                                <input type="text" placeholder="Name" class="text-center width100 marginR10" ng-model="activeSubcategoryObj[$index].name">
-                                <input type="text" class="text-center width100 marginL10" placeholder="Title" ng-model="activeSubcategoryObj[$index].title">
+                                <input type="text" placeholder="Name" class="text-center width100 marginR10" ng-model="activeSubcategoryObj[outerIndex].name">
+                                <input type="text" class="text-center width100 marginL10" placeholder="Title" ng-model="activeSubcategoryObj[outerIndex].title">
                                 
                             </div>
                             <div layout="row" layout-align="start center" class="width100" layout-wrap>
                                 <div flex="15" class="marginTB10">Email</div>
-                                <div layout="row" layout-align="start center" flex="40" ng-repeat="email in activeSubcategoryObj[$index].email track by $index" class="paddingLR10 marginTB10" ng-init="firstIndex = $index">
+                                <div layout="row" layout-align="start center" flex="40" ng-repeat="email in activeSubcategoryObj[outerIndex].email track by $index" class="paddingLR10 marginTB10" ng-init="firstIndex = $index">
                                     <div flex>
-                                        <input type="text" placeholder="Email" class="text-center width100" ng-model="activeSubcategoryObj[$index].email[firstIndex]">
+                                        <input type="text" placeholder="Email" class="text-center width100" ng-model="activeSubcategoryObj[outerIndex].email[firstIndex]">
                                     </div>
                                     <div class="paddingLR5">
                                         <i class="fa fa-trash danger" aria-hidden="true" ng-click="deleteEmail(contact, firstIndex)"></i>
@@ -234,9 +234,9 @@
                             </div>
                             <div layout="row" layout-align="start center" class="width100" layout-wrap>
                                 <div flex="15" class="marginTB10">Mobile</div>
-                                <div layout="row" layout-align="start center" flex="40" ng-repeat="mobile in activeSubcategoryObj[$index].mobile track by $index" class="paddingLR10 marginTB10" ng-init="firstIndex = $index">
+                                <div layout="row" layout-align="start center" flex="40" ng-repeat="mobile in activeSubcategoryObj[outerIndex].mobile track by $index" class="paddingLR10 marginTB10" ng-init="firstIndex = $index">
                                     <div flex>
-                                        <input type="text" placeholder="Mobile" class="text-center width100" ng-model="activeSubcategoryObj[$index].mobile[firstIndex]">
+                                        <input type="text" placeholder="Mobile" class="text-center width100" ng-model="activeSubcategoryObj[outerIndex].mobile[firstIndex]">
                                     </div>
                                     <div class="paddingLR5">
                                         <i class="fa fa-trash danger" aria-hidden="true" ng-click="deleteMobile(contact, firstIndex)"></i>
@@ -250,9 +250,9 @@
                             </div>
                             <div layout="row" layout-align="start center" class="width100" layout-wrap>
                                 <div flex="15" class="marginTB10">Landline</div>
-                                <div layout="row" layout-align="start center" flex="40" ng-repeat="landline in activeSubcategoryObj[$index].landline track by $index" class="paddingLR10 marginTB10" ng-init="firstIndex = $index">
+                                <div layout="row" layout-align="start center" flex="40" ng-repeat="landline in activeSubcategoryObj[outerIndex].landline track by $index" class="paddingLR10 marginTB10" ng-init="firstIndex = $index">
                                     <div flex>
-                                        <input type="text" placeholder="Landline" class="text-center width100" ng-model="activeSubcategoryObj[$index].landline[firstIndex]">
+                                        <input type="text" placeholder="Landline" class="text-center width100" ng-model="activeSubcategoryObj[outerIndex].landline[firstIndex]">
                                     </div>
                                     <div class="paddingLR5">
                                         <i class="fa fa-trash danger" aria-hidden="true" ng-click="deleteLandline(contact, firstIndex)"></i>
@@ -265,7 +265,7 @@
                                 </div>
                             </div>
                             <div layout="row" layout-align="end center" class="width100 marginT10">
-                                <div class="font12 danger" ng-click="deleteContact(contact, $index)">
+                                <div class="font12 danger" ng-click="deleteContact(contact, outerIndex)">
                                 Delete Contact
                                 </div>
                             </div>
