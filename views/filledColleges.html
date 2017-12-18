@@ -42,7 +42,7 @@
             <div layout="row" layout-align="center center" >
                 <md-select ng-model="filteredUser"  placeholder="Select EB Team Member" class="font12 width100 margin0 padding0">
 
-                    <md-option ng-value="user" ng-repeat="user in listedUsers" ng-click="updateAddedQuestions(user)" class="text-primary font11">
+                    <md-option ng-value="user" ng-repeat="user in listedUsers" ng-click="updateFilledColleges(user)" class="text-primary font11">
                       {{user.basic.name}}
                     </md-option>
                 </md-select>

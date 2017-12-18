@@ -12361,6 +12361,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         [ '$scope', '$http','$state', '$rootScope','thisuser','tofillcollegeService', 'filledColleges', 'ebteam', function($scope, $http, $state, $rootScope, thisuser, tofillcollegeService, filledColleges, ebteam){
             $scope.user = thisuser.data;
             $scope.filledcolleges = filledColleges.data;
+            $scope.allFilledcolleges = filledColleges.data;
             if(!$scope.filledcolleges){
                 $scope.filledcolleges = [];
             }
@@ -12438,6 +12439,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     displayname: 'Others',    
                 },
             ];
+            
+            $scope.updateFilledColleges = function(user){
+                
+                var userId = user._id;
+                $scope.filledcolleges = [];
+                $scope.allFilledcolleges.forEach(function(thisFilledCollege, index){
+                    var thisUser = thisFilledCollege.user;
+                    if(thisUser._id == userId){
+                        $scope.filledcolleges.push(thisFilledCollege);
+                    }
+                });
+            };
     }]);
         
     exambazaar.controller("addedQuestionsController", 
