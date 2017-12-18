@@ -616,6 +616,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getk21Test = function() {
             return $http.get('/api/tests/k21');
         };
+        this.markSimulate = function() {
+            return $http.get('/api/tests/markSimulate');
+        };
         this.getTest = function(testId) {
             return $http.get('/api/tests/edit/'+testId, {testId: testId});
         };
@@ -10112,8 +10115,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if(newValue && newValue.length == 10){
                 $scope.showVerifyOTP = true;
                 //Change this back
-                $scope.showVerifyOTP = false;
-                $scope.OTPVerified = true;
+                //$scope.showVerifyOTP = false;
+                //$scope.OTPVerified = true;
                 //$scope.userExistMessage = null;
             }
 
@@ -14799,6 +14802,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             var examIds = allExams.map(function(a) {return a._id;});
             
+            
+            
             allExams.forEach(function(thisExam, index){
                 if(!thisExam.tests){
                     thisExam.tests = [];
@@ -14823,7 +14828,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if($scope.user && $scope.user._id=='5a1831f0bd2adb260055e352'){
                 $scope.masterUser = true;
             }
-            
+            $scope.markSimulate = function(){
+                testService.markSimulate().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                }); 
+            };
             $scope.readTest = function(test){
                 var question = test.url.question;
                 var answer = test.url.question;
@@ -15067,29 +15079,36 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             questionresponseService.getUserQuestionResponses($scope.user._id).success(function (data, status, headers) {
 
             $scope.userResponses = data;
-            var userResponseQuestionIds = $scope.userResponses.map(function(a) {return a.question;});
+            console.log($scope.userResponses);
+            var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.subquestion;});
             if($scope.userResponses){
                 $scope.answered = 0;
+                console.log($scope.testQuestions);
                 $scope.testQuestions.forEach(function(thisQuestion, index){
-                    var thisQuestionId = thisQuestion._id;
-                    var qIndex = userResponseQuestionIds.indexOf(thisQuestionId);
-
-                    if(qIndex != -1){
-                        var thisQuestionResponse = $scope.userResponses[qIndex];
-                        thisQuestion.userAnswer = thisQuestionResponse.option.toString();
-                        $scope.answered += 1;
-
-                    }else{
-                        thisQuestion.userAnswer = null;
-                    }
-
-                    thisQuestion.questions.forEach(function(thisSubQuestion, index){
+                    
+                    
+                    thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
                         var thisSubQuestionId = thisSubQuestion._id.toString();
+                        //var thisQuestionId = thisQuestion._id;
+                        var qIndex = userResponseSubQuestionIds.indexOf(thisSubQuestionId);
 
+                        if(qIndex != -1){
+                            var thisQuestionResponse = $scope.userResponses[qIndex];
+                            $scope.testQuestions[index].questions[sindex].userAnswer = thisQuestionResponse.option.toString();
+                            $scope.answered += 1;
+
+                        }else{
+                            thisSubQuestion.userAnswer = null;
+                        }
+                        
+                        
                     });
+                    
 
                     thisQuestion = sanitizeQuestion(thisQuestion);
                 });
+                
+                console.log($scope.testQuestions);
             }
 
 
@@ -15307,10 +15326,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
         };
         $scope.clearAnswer = function(question){
-            var userResponseQuestionIds = $scope.userResponses.map(function(a) {return a.question;});
+            var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.question;});
 
             var questionId = question._id;
-            var uIndex = userResponseQuestionIds.indexOf(questionId);
+            var uIndex = userResponseSubQuestionIds.indexOf(questionId);
             console.log(uIndex);
             if(uIndex != -1){
                 var thisUserResponse = $scope.userResponses[uIndex];
@@ -15575,6 +15594,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 return question;
             };
             $scope.fullScreenMode = false;
+            
             $scope.examQuestions = [];
             $scope.answered = 0;
             var getUserResponses = function(){
@@ -15582,12 +15602,45 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 questionresponseService.getUserQuestionResponses($scope.user._id).success(function (data, status, headers) {
 
                 $scope.userResponses = data;
-                var userResponseQuestionIds = $scope.userResponses.map(function(a) {return a.question;});
+                var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.subquestion.toString();});
+                
                 if($scope.userResponses){
+                    $scope.answered = 0;
+                    $scope.totalQuestions = 0;
+                    $scope.testQuestions.forEach(function(thisQuestion, index){
+
+                        var anyAnswer = false;
+                        $scope.totalQuestions += thisQuestion.questions.length;
+                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                            
+                            var thisSubQuestionId = thisSubQuestion._id.toString();
+                            
+                            var qIndex = userResponseSubQuestionIds.indexOf(thisSubQuestionId);
+
+                            if(qIndex != -1){
+                                var thisQuestionResponse = $scope.userResponses[qIndex];
+                                anyAnswer = true;
+                                $scope.testQuestions[index].questions[sindex].userAnswer = thisQuestionResponse.option.toString();
+                                $scope.answered += 1;
+
+                            }else{
+                                thisSubQuestion.userAnswer = null;
+                            }
+
+                            
+                        });
+                        thisQuestion.anyAnswer = anyAnswer;
+
+                        thisQuestion = sanitizeQuestion(thisQuestion);
+                    });
+
+                    
+                }
+                    /*if($scope.userResponses){
                     $scope.answered = 0;
                     $scope.testQuestions.forEach(function(thisQuestion, index){
                         var thisQuestionId = thisQuestion._id;
-                        var qIndex = userResponseQuestionIds.indexOf(thisQuestionId);
+                        var qIndex = userResponseSubQuestionIds.indexOf(thisQuestionId);
 
                         if(qIndex != -1){
                             var thisQuestionResponse = $scope.userResponses[qIndex];
@@ -15605,7 +15658,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
                         thisQuestion = sanitizeQuestion(thisQuestion);
                     });
-                }
+                }*/
 
 
 
@@ -15800,8 +15853,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
 
                     var tIndex = testQuestionIds.indexOf(questionId);
-
-
+                    
                     $scope.activeQuestionNo = tIndex + 1;
 
                 }
@@ -15821,15 +15873,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.question = $scope.testQuestions[tIndex + 1];
                 }
             };
-            $scope.clearAnswer = function(question){
-                var userResponseQuestionIds = $scope.userResponses.map(function(a) {return a.question;});
+            $scope.clearAnswer = function(subquestion){
+                var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.subquestion.toString();});
 
-                var questionId = question._id;
-                var uIndex = userResponseQuestionIds.indexOf(questionId);
+                var subquestionId = subquestion._id;
+                var uIndex = userResponseSubQuestionIds.indexOf(subquestionId);
                 if(uIndex != -1){
                     var thisUserResponse = $scope.userResponses[uIndex];
                     questionresponseService.removeQuestionResponse(thisUserResponse._id).success(function (data, status, headers) {
-                        console.log('All done');
+                        //console.log('All done');
                         getUserResponses();
 
                     })
@@ -15863,6 +15915,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 };
 
                 questionresponseService.saveQuestionResponse(questionresponseForm).success(function (data, status, headers) {
+                    question.anyAnswer = true;
                     Notification.primary({message: "Your answer has been marked!",  positionY: 'top', positionX: 'left', delay: 2000});
                     getUserResponses();
 
@@ -16071,12 +16124,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             questionresponseService.getUserQuestionResponses($scope.user._id).success(function (data, status, headers) {
 
             $scope.userResponses = data;
-            var userResponseQuestionIds = $scope.userResponses.map(function(a) {return a.question;});
+            var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.question;});
             if($scope.userResponses){
                 $scope.answered = 0;
                 $scope.testQuestions.forEach(function(thisQuestion, index){
                     var thisQuestionId = thisQuestion._id;
-                    var qIndex = userResponseQuestionIds.indexOf(thisQuestionId);
+                    var qIndex = userResponseSubQuestionIds.indexOf(thisQuestionId);
 
                     if(qIndex != -1){
                         var thisQuestionResponse = $scope.userResponses[qIndex];
@@ -16310,10 +16363,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
         };
         $scope.clearAnswer = function(question){
-            var userResponseQuestionIds = $scope.userResponses.map(function(a) {return a.question;});
+            var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.question;});
 
             var questionId = question._id;
-            var uIndex = userResponseQuestionIds.indexOf(questionId);
+            var uIndex = userResponseSubQuestionIds.indexOf(questionId);
             console.log(uIndex);
             if(uIndex != -1){
                 var thisUserResponse = $scope.userResponses[uIndex];
@@ -17331,7 +17384,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 for (var property in blogpost) {
                     blogpostForm[property] = blogpost[property];
                 }
-                console.log(blogpostForm);
                 blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                     var blogpostId = data._id;
                     blogpostService.getUserBlogposts($scope.user._id).success(function (data, status, headers) {
@@ -17368,6 +17420,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
             $scope.cloneBlogPost = function(toCloneBlog){
+                console.log(toCloneBlog);
                 var blogpost = {
                     title: toCloneBlog.title + ' - Clone ' + moment().format("DD MMM YY HH:mm"),
                     content: toCloneBlog.content,
@@ -17388,7 +17441,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
                 blogpostService.saveblogpost(blogpostForm).success(function (data, status, headers) {
                     var blogpostId = data._id;
-                    blogpostService.getUserBlogposts($stateParams.userId).success(function (data, status, headers) {
+                    blogpostService.getUserBlogposts($scope.user._id).success(function (data, status, headers) {
                         $scope.userBlogs = data;
                         $scope.refreshVoteCount();
                         var url = $state.href('editblog', {blogpostId: blogpostId});
@@ -34300,7 +34353,9 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-                "team@exambazaar.com"
+                "team@exambazaar.com",
+
+
 
             ];
             $scope.internshipEmail = function(userId){
@@ -34310,7 +34365,7 @@ function getLatLng(thisData) {
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
                             //body: "We are currently offering internship to students in Jaipur across 3 domains - Business Development, Design and Business Analyst. The interns will work out of our office in Jaipur. Kindly inform your students about this opportunity and let us know if we need to follow any steps/protocol to reach out to them.",
-                            //body: "Please complete the steps below by Friday 15th December 11 pm, if you haven't already. Any submissions after that will not be entertained! Good luck!",
+                            body: "Dear Candidate, thank you for attending our campus drive yesterday. While we cannot extend you an offer to join us as a Web Developer, we will consider you for any of the below 6-month internships (January - June 2018). Do reach out to us after completing the steps below with your resume &  preferred Internship Programme - Business Development, Design or Business Analyst. In a short paragraph, do tell us why we should hire you for the role. Good luck!",
                             emailList: internshipEmailList,
                             templateName: 'Internship at Exambazaar',
                         };

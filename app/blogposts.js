@@ -681,7 +681,7 @@ router.get('/userblogs/:userId', function(req, res) {
             var internIds = ['5a1831f0bd2adb260055e352', '59c8a3683bee001b2643fa18'];
             if(thisUserType =='Master' || internIds.indexOf(thisUserId) != -1){
                 var blogposts = blogpost
-                .find({},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1})
+                .find({},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1, content: 1})
                 .exec(function (err, blogposts) {
                     if (!err){
                     var allBlogposts = [];
@@ -710,7 +710,7 @@ router.get('/userblogs/:userId', function(req, res) {
                 });
             }else{
                 var blogposts = blogpost
-                .find({user: userId},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1})
+                .find({user: userId},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1, content: 1})
                 .exec(function (err, blogposts) {
                     if (!err){
                         var allBlogposts = [];
@@ -1309,6 +1309,7 @@ router.post('/save', function(req, res) {
         if(savedBy){
             var timeNow = new Date();
             var newblogpost = new blogpost({});
+            console.log(blogpostForm);
             for (var property in blogpostForm) {
                 newblogpost[property] = blogpostForm[property];
             }

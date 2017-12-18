@@ -25,6 +25,11 @@ var testSchema = mongoose.Schema({
     verified : { type: Boolean, default: false},
     active : { type: Boolean, default: true},
     watermarked : { type: Boolean, default: false},
+    simulate: {
+        allAnsweredMarked: { type: Boolean, default: false},
+        allSolutionMarked: { type: Boolean, default: false},
+        
+    },
     _created: { type: Date, default: Date.now },
 });
 testSchema.plugin(deepPopulate);

@@ -66,6 +66,109 @@ router.get('/', function(req, res) {
     
 });
 
+router.get('/markSimulate', function(req, res) {
+    
+    var allTests = test
+        .find({},{_id: 1})
+        //.deepPopulate('exam')
+        .exec(function (err, allTests) {
+        if (!err){
+            res.json(true);
+            
+            allTests.forEach(function(existingTest, index){
+                var testId = existingTest.toString();
+                var solutionKey = [];
+                var testQuestions = question
+                .find({test: testId}, {questions: 1})
+                .deepPopulate('questions')
+                .exec(function (err, testQuestions) {
+                if(testQuestions){
+                var nQuestions = 0;    
+                var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
+
+                var counter = 0;
+
+                testQuestions.forEach(function(thisQuesiton, qIndex){
+                    nQuestions += thisQuesiton.questions.length;
+                });
+                testQuestions.forEach(function(thisQuesiton, qIndex){
+                var questionId = thisQuesiton._id;
+                thisQuesiton.questions.forEach(function(subQuestion, sIndex){
+                    var subQuestionId = subQuestion._id;
+                    var correctOptionId = null;
+                    subQuestion.options.forEach(function(thisOption, oIndex){
+                        if(thisOption._correct){
+                            correctOptionId = thisOption._id;
+
+                            var thisKey = {
+                                question: questionId.toString(),
+                                subquestion: subQuestionId.toString(),
+                                option: correctOptionId.toString(),
+                            };
+                            //solutionKey.push(thisKey);
+                            counter += 1;
+                        }
+                        
+                        if(counter == nQuestions){
+
+                            console.log('Test Ready: ' + testId);
+
+                        }
+
+                    });
+
+
+                    
+                });
+
+
+
+
+
+
+
+                });
+
+
+
+                }else{
+                    res.json(false);
+                }     
+            });
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                console.log(testId);
+            });
+        } else {throw err;}
+    });
+    
+});
+
 router.get('/exam/:examId', function(req, res) {
     var examId = req.params.examId;
     var allTests = test

@@ -161,101 +161,110 @@ router.post('/userevaluate', function(req, res) {
                     .deepPopulate('questions')
                     .exec(function (err, testQuestions) {
                     if(testQuestions){
-                    var nQuestions = testQuestions.length;    
+                    var nQuestions = 0;    
                     var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
                         
                     var counter = 0;
+                        
+                    testQuestions.forEach(function(thisQuesiton, qIndex){
+                        nQuestions += thisQuesiton.questions.length;
+                    });
                     console.log(nQuestions);
                     testQuestions.forEach(function(thisQuesiton, qIndex){
-                        var questionId = thisQuesiton._id;
-                        var subQuestion = thisQuesiton.questions[0];
+                    var questionId = thisQuesiton._id;
+                    thisQuesiton.questions.forEach(function(subQuestion, sIndex){
                         var subQuestionId = subQuestion._id;
                         var correctOptionId = null;
                         subQuestion.options.forEach(function(thisOption, oIndex){
                             if(thisOption._correct){
                                 correctOptionId = thisOption._id;
+                                
+                                var thisKey = {
+                                    question: questionId.toString(),
+                                    subquestion: subQuestionId.toString(),
+                                    option: correctOptionId.toString(),
+                                };
+                                solutionKey.push(thisKey);
+                                counter += 1;
                             }
+                            
+
                         });
-                        var thisKey = {
-                            question: questionId.toString(),
-                            subquestion: subQuestionId.toString(),
-                            option: correctOptionId.toString(),
-                        };
-                        solutionKey.push(thisKey);
-                        counter += 1;
                         
-                    if(counter == nQuestions){
-                        console.log(testQuestionsIds);
+                        
+                        if(counter == nQuestions){
                             
-                    var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
-                        if(userresponses){
-                        var attempted = userresponses.length;
-                        var unattempted = nQuestions - attempted;
-                        var correct = [];    
-                        var incorrect = [];    
+                        var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
+                            if(userresponses){
+                            var attempted = userresponses.length;
+                            var unattempted = nQuestions - attempted;
+                            var correct = [];    
+                            var incorrect = [];    
 
-                        var solutionKeyQuestionIds =  solutionKey.map(function(a) {return a.question;});
-                        var solutionKeySubQuestionIds =  solutionKey.map(function(a) {return a.subquestion;});
-                        userresponses.forEach(function(thisResponse, rIndex){
-                            var thisQuestionId = thisResponse.question.toString();
-                            var thisSubQuestionId = thisResponse.subquestion.toString();
-                            var thisOptionId = thisResponse.option.toString();
-                            var thisPair = {
-                                question: thisQuestionId,
-                                subquestion: thisSubQuestionId,
-                                option: thisOptionId,
-                            };
+                            var solutionKeyQuestionIds =  solutionKey.map(function(a) {return a.question;});
+                            var solutionKeySubQuestionIds =  solutionKey.map(function(a) {return a.subquestion;});
+                            userresponses.forEach(function(thisResponse, rIndex){
+                                var thisQuestionId = thisResponse.question.toString();
+                                var thisSubQuestionId = thisResponse.subquestion.toString();
+                                var thisOptionId = thisResponse.option.toString();
+                                var thisPair = {
+                                    question: thisQuestionId,
+                                    subquestion: thisSubQuestionId,
+                                    option: thisOptionId,
+                                };
 
-                            var k1Index = solutionKeyQuestionIds.indexOf(thisQuestionId);
-                            var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
+                                var k1Index = solutionKeyQuestionIds.indexOf(thisQuestionId);
+                                var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
 
-                            if(k1Index != -1){
-                                if(thisOptionId == solutionKey[k1Index].option){
-                                    correct.push(thisPair);
-                                }else{
-                                    incorrect.push(thisPair);
+                                if(k1Index != -1){
+                                    if(thisOptionId == solutionKey[k1Index].option){
+                                        correct.push(thisPair);
+                                    }else{
+                                        incorrect.push(thisPair);
+                                    }
                                 }
-                            }
 
-                        });
-                            var correctAnswers = correct.length;
-                            var incorrectAnswers = incorrect.length;
-                            
-                            console.log('Attempted: ' + attempted);
-                            console.log('Unattempted: ' + unattempted);
-                            console.log('Correct: ' + correctAnswers);
-                            console.log('Incorrect: ' + incorrectAnswers);
-                            var score = 3* correctAnswers - 1* incorrectAnswers;
-                            var evaluation = {
-                                questions:{
-                                    attemped: attempted,
-                                    unattemped: unattempted,
-                                    correct: correctAnswers,
-                                    incorrect: incorrectAnswers
-                                },
-                                score: score
-                            };
-                            
-                            existingAssessment.evaluation = evaluation;
-                            existingAssessment.save(function(err, existingAssessment){
-                                if (err) return console.error(err);
-                                console.log('Assessment saved: ' + existingAssessment._id);
-                                res.json(existingAssessment);
                             });
-                            
+                                var correctAnswers = correct.length;
+                                var incorrectAnswers = incorrect.length;
 
-                        }else{
-                            res.json(false);
+                                console.log('Attempted: ' + attempted);
+                                console.log('Unattempted: ' + unattempted);
+                                console.log('Correct: ' + correctAnswers);
+                                console.log('Incorrect: ' + incorrectAnswers);
+                                var score = 3* correctAnswers - 1* incorrectAnswers;
+                                var evaluation = {
+                                    questions:{
+                                        attemped: attempted,
+                                        unattemped: unattempted,
+                                        correct: correctAnswers,
+                                        incorrect: incorrectAnswers
+                                    },
+                                    score: score
+                                };
+
+                                existingAssessment.evaluation = evaluation;
+                                existingAssessment.save(function(err, existingAssessment){
+                                    if (err) return console.error(err);
+                                    console.log('Assessment saved: ' + existingAssessment._id);
+                                    res.json(existingAssessment);
+                                });
+
+
+                            }else{
+                                res.json(false);
+                            }
+                        });
+
                         }
                     });
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                    }
+                        
+                        
+                    
+                        
+                        
+                        
+                        
                     });
 
 

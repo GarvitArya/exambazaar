@@ -99,7 +99,7 @@
         
     }
     .emptyTag{
-        width:30px;
+        width:50px;
         height:30px;
         color: gray;
         background: white;
@@ -112,14 +112,14 @@
     }
     
     .answeredTag{
-        width:30px;
+        width:50px;
         height:30px;
         color: black;
         background: #20C39A;
         border: 1px solid black;
     }
     .activeTag{
-        width:30px;
+        width:50px;
         height:30px;
         color: white;
         background: #009EE3;
@@ -244,15 +244,15 @@
         <div flex="25" layout="column" layout-align="start start"  class="height100 leftBar">
             <div layout="row" layout-align="start start" class="width100"  layout-wrap>
                 <div flex="20" layout="row" layout-align="center center" ng-repeat="myquestion in testQuestions" class="paddingTB5" >
-                    <div class="emptyTag" layout="row" layout-align="center center" ng-class="{ answeredTag: myquestion.userAnswer, activeTag: myquestion._id == question._id}" ng-click="setQuestion(myquestion)">
-                    {{$index+1}}
-                    </div>
+                    <span class="emptyTag" layout="row" layout-align="center center" ng-class="{ answeredTag: myquestion.anyAnswer, activeTag: myquestion._id == question._id}" ng-click="setQuestion(myquestion)">
+                    {{myquestion._startnumber}}<span ng-if="myquestion._endnumber">&nbsp;-&nbsp;{{myquestion._endnumber}}</span>
+                    </span>
 
 
                 </div>
             </div>
             <div layout="row" layout-align="center center" class="width100 textGray marginT20 font12">
-                {{answered}} out of {{testQuestions.length}} attempted
+                {{answered}} out of {{totalQuestions}} attempted
                 
             </div>
         </div>
@@ -264,16 +264,21 @@
                     <div layout="column" layout-align="start start" class="width100 min50vh marginB40" flex>
                         <div layout="column" layout-align="start start" class="width100" ng-if="question">
                         <div layout="column" layout-align="start start" class="width100" ng-if="question.questions">
-                        <div class="width100 blogFont bold marginB10 paddingL10">Question {{activeQuestionNo}}</div>
+                            <div class="width100 blogFont bold marginB10 paddingL10">Question {{question._startnumber}}<span ng-if="question._endnumber">&nbsp;-&nbsp;{{question._endnumber}}</span></div>
+                        
+                        <div layout="column" layout-align="start start" class="width100 blogContent questionBorder padding10" ng-if="question.context">
+                            {{question.context}}
+                            
+                        </div>
+                             
                         <div layout="column" layout-align="start start" class="width100 blogContent questionBorder padding10"  ng-repeat="thisQuestion in question.questions">
                             <div layout="column" layout-align="start start" class="width100">
                                 
                                 <div ng-bind-html="thisQuestion.question" class="marginB10 width100">
                                 </div>
-                                
                                 <img ng-src="{{question.images[0]}}" class="marginTB10" ng-if="question.images[0]"/>
                             </div>
-                            <md-radio-group ng-model="question.userAnswer">
+                            <md-radio-group ng-model="thisQuestion.userAnswer">
 
                             <md-radio-button value="{{option._id}}" ng-model="userAnswer" ng-repeat="option in thisQuestion.options" class="marginTB5" ng-click="markAnswer(question, thisQuestion, option)">
                                 {{option.option}}
@@ -281,6 +286,14 @@
                             </md-radio-button>
 
                             </md-radio-group>
+                            
+                            <div flex layout="row" layout-align="center center" class="width100">
+                                <md-button class="md-signup md-large tolowercase margin0 nextButton" ng-click="clearAnswer(thisQuestion)" ng-if="thisQuestion.userAnswer">
+                                    Clear your response
+                                </md-button>
+                            </div>
+                            
+                            
                         </div>
                         <div layout="row" layout-align="start center" class="width100">
                             <div flex layout="row" layout-align="start center">
@@ -289,17 +302,7 @@
                                 </md-button>
                             
                             </div>
-                            <div flex layout="row" layout-align="center center">
-                                <div >
-                                
-                                    <md-button class="md-signup md-large tolowercase margin0 nextButton" ng-click="clearAnswer(question)" ng-if="question.userAnswer">
-                                        Clear your response
-                                    </md-button>
-                                    
-                                    
-                                </div>
                             
-                            </div>
                             <div flex layout="row" layout-align="end center">
                                 <md-button class="md-next md-large tolowercase margin0 nextButton" ng-click="setNextQuestion(question)" ng-if="question._id != testQuestions[testQuestions.length - 1]._id">
                                     Next
@@ -328,7 +331,7 @@
                 Thank you, your responses have been auto-saved!
             </div>
             <div class="textGray font12">
-                You have attempted {{answered}} out of {{testQuestions.length}} questions!
+                You have attempted {{answered}} out of {{totalQuestions}} questions!
             </div>
             <div class="" ng-if="userAssessment.evaluation.score">
                 Score: {{userAssessment.evaluation.score}} out of {{testQuestions.length * 3}}
