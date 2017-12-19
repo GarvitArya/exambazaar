@@ -1436,6 +1436,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getStreams = function() {
             return $http.get('/api/streams');
         };
+        this.getAllStreams = function() {
+            return $http.get('/api/streams/all');
+        };
         this.getStreamByName = function(streamName) {
             return $http.get('/api/streams/stream/'+streamName, {streamName: streamName});
         };
@@ -34880,7 +34883,7 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-                "team@exambazaar.com",
+                "saloni@exambazaar.com",
 
 
 
@@ -36105,10 +36108,8 @@ function getLatLng(thisData) {
             $scope.showBlogExamDialog = function(ev) {
                 if(!$scope.allExams || !$scope.allStreams){
                     ExamService.getExams().success(function (examdata, status, headers) {
-                        console.log('Exams loaded!');
                         $scope.allExams = examdata;
-                        StreamService.getStreams().success(function (streamdata, status, headers) {
-                            console.log('Streams loaded!');
+                        StreamService.getAllStreams().success(function (streamdata, status, headers) {
                             $scope.allStreams = streamdata;
                             $mdDialog.show({
                               contentElement: '#examDialog',

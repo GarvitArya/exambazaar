@@ -53,6 +53,14 @@ router.get('/', function(req, res) {
     });
 });
 
+router.get('/all', function(req, res) {
+    stream.find({}, function(err, docs) {
+    if (!err){
+        res.json(docs);
+    } else {throw err;}
+    });
+});
+
 router.get('/count', function(req, res) {
     stream.count({}, function(err, docs) {
     if (!err){ 
