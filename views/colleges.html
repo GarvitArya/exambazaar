@@ -78,6 +78,7 @@
         background: #FF5A5F;
         border: 1px solid #fff;
     }
+    
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -103,6 +104,22 @@
                     {{limit}}
                 </md-button>
             </div>
+        </div>
+        <div ng-if="colleges && !assigned && canAssign" flex layout="row" layout-align="start center" class="width100 marginTB20">
+            <div flex ng-if="colleges" class="marginR10">
+             Assigning {{colleges.length}} colleges
+            </div>
+            <md-select flex ng-model="assignedTo" placeholder="Intern" class="margin0">
+                <md-option ng-value="intern._id" ng-repeat="intern in interns" class="margin0" ng-click="updateAssignedTo(intern)">
+                  {{intern.basic.name}}
+                </md-option>
+            </md-select>
+
+            <md-datepicker ng-model="deadline" md-placeholder="Deadline" flex></md-datepicker>
+
+            <md-button class="md-danger md-small font10" ng-click="assignAll()">
+                Assign All
+            </md-button>
         </div>
         <div layout="row" layout-align="start center" class="font10 bold width100 marginTB5 gainsboroBottomBorder">
             <div flex="5" class="paddingLR10">
@@ -157,21 +174,9 @@
 <div layout="row" layout-align="start center" class="bottomBar">
     <div layout="row" layout-align="start center" flex ="70" class="">
         <div ng-if="colleges" class="marginR10">
-         {{colleges.length}} colleges:
+         Showing {{colleges.length}} colleges:
         </div>
-        <div ng-if="colleges && !assigned && canAssign" flex layout="row" layout-align="start center" class="marginL10">
-            <md-select flex ng-model="assignedTo" placeholder="Intern" class="margin0">
-                <md-option ng-value="intern._id" ng-repeat="intern in interns" class="margin0" ng-click="updateAssignedTo(intern)">
-                  {{intern.basic.name}}
-                </md-option>
-            </md-select>
-            
-            <md-datepicker ng-model="deadline" md-placeholder="Deadline" flex></md-datepicker>
-            
-            <md-button class="md-danger md-small font10" ng-click="assignAll()">
-                Assign All
-            </md-button>
-        </div>
+        
         
     </div>
     <div layout="row" layout-align="end center" flex>

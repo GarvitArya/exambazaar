@@ -13234,7 +13234,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.disabled = false;
                 }
                 
-                if($scope.user.userType == 'Master' || $scope.user._id == '58c8e895bbaebf3560545f19'){
+                if($scope.user.userType == 'Master' || $scope.user._id == '58c8e895bbaebf3560545f19' || $scope.user._id == '5a1831f0bd2adb260055e352'){
                     $scope.canAssign = true;
                 };
                 
@@ -13245,7 +13245,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             $scope.limits = [1, 10, 20, 50, 100];
             $scope.collegesForm = {
-                limit: 50,
+                limit: 20,
                 skip: 0
             };
             $scope.buttonClass = function(collegesLength){
