@@ -32,7 +32,7 @@
         background: white;*/
     }
     .blogHeader{
-        min-height: 60vh;
+        min-height: 45vh;
         width:100%;
         position: relative;
         background-size: cover;
@@ -73,8 +73,22 @@
         </div>
         </div>
     </div>
-    <div layout="row" layout-align="center center" class="width100 marginT40">
-        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="font22 bold paddingLR10">
+    <div layout="row" layout-align="center center" flex-xs="100" flex-gt-xs="90" class="font14 width100">
+        <div layout="row" layout-align="start start"  flex-xs="100" flex-gt-xs="90" layout-wrap class="paddingLR10">
+        Filter by Stream
+        </div>
+    </div>
+    <div layout="row" layout-align="center center" class="width100 font14">
+        <div layout="row" layout-align="start start"  flex-xs="100" flex-gt-xs="90" layout-wrap class="paddingLR10">
+            <div ng-repeat="stream in allStreams" class=" paddingR5 paddingB5">
+                <md-button  class="md-small font11 tolowercase margin0" ng-click="setStream(stream)" ng-class="buttonCSS(stream)">
+                    {{stream.displayname}}
+                </md-button>
+            </div>
+        </div>
+    </div>
+    <div layout="row" layout-align="center center" class="width100 marginT20">
+        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="font18 bold paddingLR10">
             <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="70">
                 Recommended Posts
             </div>
@@ -86,12 +100,13 @@
             </div>
         </div>
     </div>
+    
     <div layout="row" layout-align="center center" class="width100 font14">
-    <div layout="row" layout-xs="column"  layout-align="start start"  flex-xs="100" flex-gt-xs="90" class="">    
+    <div layout="row" layout-xs="column"  layout-align="start start"  flex-xs="100" flex-gt-xs="90" class="">
     <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="70" >
     <div infinite-scroll='allBlogs.nextPage()' infinite-scroll-disabled='allBlogs.busy' infinite-scroll-distance='1' layout="row" layout-align="start start" class="width100" layout-wrap>
         
-        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20 " ng-repeat='blogpost in allBlogs.items'>
+        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20" ng-repeat='blogpost in allBlogs.items'>
           
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
                 <div layout="column" layout-align="center center" class="blogpostImage2 width100 ">
@@ -130,8 +145,11 @@
                 
                 <div layout="column" layout-align="start center" class="min30vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
                     <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
-                        <div flex-gt-xs layout="column" layout-align="start start" class="font18 bold wideLine2 marginR10 marginT10" ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })">
+                        <div flex-gt-xs layout="column" layout-align="start start" class="font18 bold wideLine2 marginR10 marginT10" >
+                            <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
                             {{blogpost.title}}
+                            </a>
+                            
                         </div>
                         
                         
@@ -203,9 +221,9 @@
     </div>
     <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5" class="">
     </div>
-    <div layout="row" layout-align="start start" hide-xs flex-gt-xs="25">
+    <div layout="row" layout-align="start start" hide-xs flex-gt-xs="25"  >
     <div infinite-scroll='allEdbites.nextPage()' infinite-scroll-disabled='allEdbites.busy' infinite-scroll-distance='1' layout="row" layout-align="start start" class="width100" layout-wrap>
-        <div layout="column" layout-align="center center"  class="width100 paddingTB20 marginT20" ng-repeat="blogpost in allEdbites.items">
+        <div layout="column" layout-align="center center"  class="width100 paddingTB20" ng-repeat="blogpost in allEdbites.items">
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
             <div layout="column" layout-align="center center" class="edBitesImage2 width100">
                 <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">

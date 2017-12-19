@@ -311,13 +311,13 @@ router.get('/getblogs', function(req, res) {
 router.post('/blogstream', function(req, res) {
     var streamInfo = req.body;
     var skip = 0;
-    var limit = 10;
+    var limit = 4;
     if(streamInfo && streamInfo.skip){
         skip = streamInfo.skip;
     }
     
     var blogposts = blogpost
-    .find({active: true, $nor: [{blogSeries: 'EdBites'}, {blogSeries: 'Expert Reviews'}]}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
+    .find({active: true, $nor: [{blogSeries: 'EdBites'}, {blogSeries: 'Expert Reviews'}]}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1, readingTime: 1})
     .sort({_published: -1})
     .limit(limit)
     .skip(skip)
@@ -348,44 +348,7 @@ router.post('/blogstream', function(req, res) {
     });
 });
 
-router.post('/EdBitesstream', function(req, res) {
-    var streamInfo = req.body;
-    var skip = 0;
-    var limit = 10;
-    if(streamInfo && streamInfo.skip){
-        skip = streamInfo.skip;
-    }
-    
-    var blogposts = blogpost
-    .find({active: true, blogSeries: 'EdBites'}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
-    .sort({_published: -1})
-    .limit(limit)
-    .skip(skip)
-    .exec(function (err, blogposts) {
-        if (!err){
-            var allBlogposts = [];
-            var nBlogposts = blogposts.length;
-            var counter = 0;
-            if(nBlogposts == 0){
-                res.json([]);
-            }
-            
-            blogposts.forEach(function(thisBlogpost, rindex){
-                var thisBlogUser = thisBlogpost.user;
-                var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
-                    if (!err){
-                        thisBlogpost.user = thisBlogUserInfo;
-                        counter += 1;
-                        allBlogposts.push(thisBlogpost);
-                        if(counter == nBlogposts){
-                            res.json(blogposts);   
-                        }
-                    }
-                });
-            });
-        } else {throw err;}
-    });
-});
+
 
 router.post('/suggestedblogstream', function(req, res) {
     var streamInfo = req.body;
@@ -394,7 +357,7 @@ router.post('/suggestedblogstream', function(req, res) {
     
     var streamInfo = req.body;
     var skip = 0;
-    var limit = 10;
+    var limit = 4;
     if(streamInfo && streamInfo.skip){
         skip = streamInfo.skip;
     }
@@ -475,8 +438,46 @@ router.post('/suggestedblogstream', function(req, res) {
     
 });
 
+/*router.post('/EdBitesstream', function(req, res) {
+    var streamInfo = req.body;
+    var skip = 0;
+    var limit = 4;
+    if(streamInfo && streamInfo.skip){
+        skip = streamInfo.skip;
+    }
+    
+    var blogposts = blogpost
+    .find({active: true, blogSeries: 'EdBites'}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
+    .sort({_published: -1})
+    .limit(limit)
+    .skip(skip)
+    .exec(function (err, blogposts) {
+        if (!err){
+            var allBlogposts = [];
+            var nBlogposts = blogposts.length;
+            var counter = 0;
+            if(nBlogposts == 0){
+                res.json([]);
+            }
+            
+            blogposts.forEach(function(thisBlogpost, rindex){
+                var thisBlogUser = thisBlogpost.user;
+                var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                    if (!err){
+                        thisBlogpost.user = thisBlogUserInfo;
+                        counter += 1;
+                        allBlogposts.push(thisBlogpost);
+                        if(counter == nBlogposts){
+                            res.json(blogposts);   
+                        }
+                    }
+                });
+            });
+        } else {throw err;}
+    });
+});*/
 
-router.post('/streamblogstream', function(req, res) {
+router.post('/EdBitesstream', function(req, res) {
     var streamInfo = req.body;
     //console.log(streamInfo);
     //var streamName = streamInfo.streamName;
@@ -484,13 +485,13 @@ router.post('/streamblogstream', function(req, res) {
     if(streamInfo.streamId && mongoose.Types.ObjectId.isValid(streamInfo.streamId)){
         streamId = streamInfo.streamId.toString();
     }
-    
+    console.log(streamId);
     var skip = 0;
-    var limit = 10;
+    var limit = 4;
     if(streamInfo && streamInfo.skip){
         skip = streamInfo.skip;
     }
-    var excluded = ['EdBites','Expert Reviews'];
+    var included = ['EdBites'];
     
     if(streamId){
         var allExams = exam
@@ -501,7 +502,7 @@ router.post('/streamblogstream', function(req, res) {
                     var allExamIds =  allExams.map(function(a) {return a._id;});
                     console.log(allExamIds);
                     var blogposts = blogpost
-                    .find({active: true, exams: { $in : allExamIds }, blogSeries: {$nin: excluded}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
+                    .find({active: true, exams: { $in : allExamIds }, blogSeries: {$in: included}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1, readingTime: 1})
                     .sort({_published: -1})
                     .limit(limit)
                     .skip(skip)
@@ -535,7 +536,7 @@ router.post('/streamblogstream', function(req, res) {
 
                 }else{
                     var blogposts = blogpost
-                    .find({active: true, blogSeries: {$nin: excluded}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
+                    .find({active: true, blogSeries: {$in: included}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1, readingTime: 1})
                     .sort({_published: -1})
                     .limit(limit)
                     .skip(skip)
@@ -569,7 +570,135 @@ router.post('/streamblogstream', function(req, res) {
         });
     }else{
         var blogposts = blogpost
-        .find({active: true, blogSeries: {$nin: excluded}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1})
+        .find({active: true, blogSeries: {$in: included}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1, readingTime: 1})
+        .sort({_published: -1})
+        .limit(limit)
+        .skip(skip)
+        .exec(function (err, blogposts) {
+            if (!err){
+                //var allBlogposts = [];
+                var nBlogposts = blogposts.length;
+                var counter = 0;
+                if(nBlogposts == 0){
+                    res.json([]);
+                }
+
+
+                blogposts.forEach(function(thisBlogpost, rindex){
+                    var thisBlogUser = thisBlogpost.user;
+                    var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                        if (!err){
+                            thisBlogpost.user = thisBlogUserInfo;
+                            counter += 1;
+                            //allBlogposts.push(thisBlogpost);
+                            if(counter == nBlogposts){
+                                res.json(blogposts);   
+                            }
+                        }
+                    });
+                });
+            } else {throw err;}
+        });
+    }
+    
+    
+    
+    
+});
+router.post('/streamblogstream', function(req, res) {
+    var streamInfo = req.body;
+    //console.log(streamInfo);
+    //var streamName = streamInfo.streamName;
+    var streamId = null;
+    if(streamInfo.streamId && mongoose.Types.ObjectId.isValid(streamInfo.streamId)){
+        streamId = streamInfo.streamId.toString();
+    }
+    console.log(streamId);
+    var skip = 0;
+    var limit = 4;
+    if(streamInfo && streamInfo.skip){
+        skip = streamInfo.skip;
+    }
+    var excluded = ['EdBites','Expert Reviews'];
+    
+    if(streamId){
+        var allExams = exam
+            .find({'stream': streamId}, {_id:1})
+            .exec(function (err, allExams) {
+            if (!err){
+                if(allExams){
+                    var allExamIds =  allExams.map(function(a) {return a._id;});
+                    console.log(allExamIds);
+                    var blogposts = blogpost
+                    .find({active: true, exams: { $in : allExamIds }, blogSeries: {$nin: excluded}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1, readingTime: 1})
+                    .sort({_published: -1})
+                    .limit(limit)
+                    .skip(skip)
+                    .exec(function (err, blogposts) {
+                        if (!err){
+                            //var allBlogposts = [];
+                            var nBlogposts = blogposts.length;
+                            console.log(nBlogposts);
+                            var counter = 0;
+                            if(nBlogposts == 0){
+                                res.json([]);
+                            }
+
+
+                            blogposts.forEach(function(thisBlogpost, rindex){
+                                var thisBlogUser = thisBlogpost.user;
+                                var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                                    if (!err){
+                                        thisBlogpost.user = thisBlogUserInfo;
+                                        counter += 1;
+                                        //allBlogposts.push(thisBlogpost);
+                                        if(counter == nBlogposts){
+                                            res.json(blogposts);   
+                                        }
+                                    }
+                                });
+                            });
+                        } else {throw err;}
+                    });
+
+
+                }else{
+                    var blogposts = blogpost
+                    .find({active: true, blogSeries: {$nin: excluded}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1, readingTime: 1})
+                    .sort({_published: -1})
+                    .limit(limit)
+                    .skip(skip)
+                    .exec(function (err, blogposts) {
+                        if (!err){
+                            //var allBlogposts = [];
+                            var nBlogposts = blogposts.length;
+                            var counter = 0;
+                            if(nBlogposts == 0){
+                                res.json([]);
+                            }
+
+
+                            blogposts.forEach(function(thisBlogpost, rindex){
+                                var thisBlogUser = thisBlogpost.user;
+                                var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
+                                    if (!err){
+                                        thisBlogpost.user = thisBlogUserInfo;
+                                        counter += 1;
+                                        //allBlogposts.push(thisBlogpost);
+                                        if(counter == nBlogposts){
+                                            res.json(blogposts);   
+                                        }
+                                    }
+                                });
+                            });
+                        } else {throw err;}
+                    });
+                }  
+            } else {throw err;}
+        });
+    }else{
+        var blogposts = blogpost
+        .find({active: true, blogSeries: {$nin: excluded}}, {title:1, urlslug:1, user: 1, coverPhoto:1, _published:1, seoDescription: 1, blogSeries: 1, readingTime: 1})
         .sort({_published: -1})
         .limit(limit)
         .skip(skip)

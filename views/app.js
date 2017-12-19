@@ -14079,33 +14079,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     
-    exambazaar.factory('EdBitesStream', function(blogpostService) {
-      var EdBitesStream = function() {
-        this.items = [];
-        this.busy = false;
-        this.skip = 0;
-      };
-
-      EdBitesStream.prototype.nextPage = function() {
-        if (this.busy) return;
-        this.busy = true;
-        var streamInfo = {
-            skip: this.skip
-        };
-        blogpostService.EdBitesstream(streamInfo).success(function (data, status, headers) {
-            var items = data;
-            this.items = this.items.concat(items);
-            this.skip += items.length;
-            this.busy = false;
-        }.bind(this))
-        .error(function (data, status, header, config) {
-            console.log("Error ");
-        });  
-      };
-
-      return EdBitesStream;
-    });
-        
+    
     
     exambazaar.factory('CoachingStream', function(targetStudyProviderService) {
       var CoachingStream = function(streamInfo) {
@@ -14213,6 +14187,61 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       return SuggestedBlogStream;
     });
     
+    /*exambazaar.factory('EdBitesStream', function(blogpostService) {
+      var EdBitesStream = function() {
+        this.items = [];
+        this.busy = false;
+        this.skip = 0;
+      };
+
+      EdBitesStream.prototype.nextPage = function() {
+        if (this.busy) return;
+        this.busy = true;
+        var streamInfo = {
+            skip: this.skip
+        };
+        blogpostService.EdBitesstream(streamInfo).success(function (data, status, headers) {
+            var items = data;
+            this.items = this.items.concat(items);
+            this.skip += items.length;
+            this.busy = false;
+        }.bind(this))
+        .error(function (data, status, header, config) {
+            console.log("Error ");
+        });  
+      };
+
+      return EdBitesStream;
+    });
+        */    
+    exambazaar.factory('EdBitesStream', function(blogpostService) {
+      var EdBitesStream = function(streamInfo) {
+        this.items = [];
+        this.busy = false;
+        this.skip = 0;
+        this.streamId = streamInfo.streamId;
+      };
+
+      EdBitesStream.prototype.nextPage = function() {
+        if (this.busy) return;
+        this.busy = true;
+        var streamInfo = {
+            skip: this.skip,
+            streamId: this.streamId,
+        };
+        blogpostService.EdBitesstream(streamInfo).success(function (data, status, headers) {
+            var items = data;
+            this.items = this.items.concat(items);
+            this.skip += items.length;
+            this.busy = false;
+        }.bind(this))
+        .error(function (data, status, header, config) {
+            console.log("Error ");
+        });  
+      };
+
+      return EdBitesStream;
+    });
     
     exambazaar.factory('StreamBlogStream', function(blogpostService) {
       var StreamBlogStream = function(streamInfo) {
@@ -15117,15 +15146,28 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             $scope.allBlogs = new StreamBlogStream(streamInfo);
             
+            $scope.setStream = function(stream){
+                streamInfo.streamId = stream._id;
+                $scope.allBlogs = new StreamBlogStream(streamInfo);
+                $scope.allEdbites = new EdBitesStream(streamInfo);
+            };
             
-            $scope.allEdbites = new EdBitesStream();
+            $scope.buttonCSS = function(stream){
+                if(streamInfo.streamId && stream._id == streamInfo.streamId){
+                    return('md-danger');
+                }else{
+                    return('md-next');
+                }
+            };
+            
+            $scope.allEdbites = new EdBitesStream(streamInfo);
             
             var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
             var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
             
             $scope.$watch('allBlogs.items', function (newValue, oldValue, scope) {
                 if(newValue != null && newValue.length > 0){
-                    $scope.allBlogs.items.forEach(function(thisBlog, index){
+                     $scope.allBlogs.items.forEach(function(thisBlog, index){
                         var bIndex = blogUpvotesId.indexOf(thisBlog._id);
                         //console.log(bIndex);
 
