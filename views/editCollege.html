@@ -168,6 +168,22 @@
     .badge{
         background: #FF5A5F;
     }
+    
+    textarea{
+        width:100%;
+        padding: 5px 5px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 10px;
+    }
+    textarea:hover {
+        border: 1px solid #FF5A5F;
+    }
+    textarea:focus {
+        border: 1px solid #FF5A5F;
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -178,11 +194,14 @@
 <div class="textBlack whiteBackground secondFont font14 width100" ng-if="!disabled">
     <div layout="row" layout-align="center start" class="width100">
         <div layout="column" layout-align="center center" flex-xs="100" flex-gt-xs="90" class="marginT20 paddingB10 headingBottomBorder2">
-            <div class="font18 bold">STUDENT BODIES AT {{college.inst_name}}</div>
+            <div class="font18 bold">{{college.inst_name}}</div>
             <div layout="row" layout-align="start center">
                 <a ng-href="{{college.website}}" target="_blank">{{college.website}}</a>
                 <div class="font10 danger marginL20" ng-if="!college.websitenotworking" ng-click="flipwebsitenotworking()">
                 (website not working?)
+                </div>
+                <div class="font10 bold marginL20" ng-if="college.websitenotworking" ng-click="addwebsite2()">
+                (add new website)
                 </div>
                 <div class="font10 text-primary marginL20" ng-if="college.websitenotworking" ng-click="flipwebsitenotworking()">
                 (website working?)
@@ -210,7 +229,7 @@
                 <div layout="column" layout-align="center start" class="width100">
                      
                     <div layout="column" layout-align="center start" class="width100 font14">
-                        <div layout="column" layout-align="start start" class="fieldRow paddingLR20 paddingTB10 width100 lightGreyBackground greyBorder" ng-repeat="contact in activeSubcategoryObj track by $index" ng-init="outerIndex = $index">
+                        <div layout="column" layout-align="start start" class="fieldRow paddingLR20 paddingTB10 width100 lightGreyBackground greyBorder" ng-repeat="contact in activeSubcategoryObj track by $index" ng-init="outerIndex = $index" ng-if="activeSubcategory.name != 'ebNote'">
                             <div layout="row" layout-align="start center" class="width100 marginTB10">
                                 <input type="text" placeholder="Name" class="text-center width100 marginR10" ng-model="activeSubcategoryObj[outerIndex].name">
                                 <input type="text" class="text-center width100 marginL10" placeholder="Title" ng-model="activeSubcategoryObj[outerIndex].title">
@@ -270,6 +289,18 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <div layout="column" layout-align="start start" class="fieldRow padding10 width100 lightGreyBackground greyBorder" ng-repeat="contact in activeSubcategoryObj track by $index" ng-init="outerIndex = $index" ng-if="activeSubcategory.name == 'ebNote'">
+                            <div layout="row" layout-align="start center" class="width100">
+                                
+                                <textarea class="font11 width100" ng-model="activeSubcategoryObj[outerIndex].note" placeholder="Add internal notes for EB team" rows="4"></textarea>
+                            </div>
+                            <div layout="row" layout-align="end center" class="width100 marginT10">
+                                <div class="font12 danger" ng-click="deleteContact(contact, outerIndex)">
+                                Delete Contact
+                                </div>
+                            </div>
+                        </div>
                         <div layout="row" layout-align="center center" id="upload2" ng-click="addContact(activeSubcategory)" class="marginB10 secondFont textLightGrey width100">
                             <span class="">
                                 <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add
@@ -321,4 +352,25 @@
 
 <div layout="row" layout-align="center center" class="min80vh textBlack whiteBackground blogFont font18 width100" ng-if="disabled">
     You do not have adequate permission to access this page. Please check with Team Exambazaar
+</div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="website2Dialog">
+      <md-dialog class="blog-dialog">
+        <div layout="column" layout-align="center center" class="width100 min50vh">
+            <div class="width80 blogFont text-center">
+                Add the new website of {{college.inst_name}}:
+            </div>
+            <div layout="column" layout-align="center center" class="width80 marginTB10">
+                <input type="text" placeholder="Website" class="text-center width100" ng-model="college.website2">
+            </div>
+            <div layout="column" layout-align="center center" class="width80 marginTB10">
+                <md-button class="md-next md-small font10" ng-click="closeDialog()">
+                    Close
+                </md-button>
+            </div>
+        </div>
+      </md-dialog>
+</div>    
 </div>

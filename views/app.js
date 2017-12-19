@@ -12438,6 +12438,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     name: 'others',    
                     displayname: 'Others',    
                 },
+                
+                {
+                    name: 'ebNote',    
+                    displayname: 'EB Notes',    
+                },
             ];
             
             $scope.updateFilledColleges = function(user){
@@ -12949,6 +12954,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             $scope.college = thisCollege.data;
             $scope.college.website = $scope.college.Institute["Correspondence Details"]["Website"];
+            
+            if($scope.college.website2){
+                $scope.college.website = $scope.college.website2;
+            }
             if($scope.college.website.indexOf('http')){
                 $scope.college.website = "http://" + $scope.college.website;
             }
@@ -13022,6 +13031,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     name: 'others',    
                     displayname: 'Others',    
                 },
+                {
+                    name: 'ebNote',    
+                    displayname: 'EB Notes',    
+                },
+                
             ];
             $scope.activeSubcategory = null;
             $scope.activeSubcategoryObj = null;
@@ -13035,9 +13049,21 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             };
             
+            $scope.addwebsite2 = function(ev){
+                $mdDialog.show({
+                  contentElement: '#website2Dialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });    
+            };
+            $scope.closeDialog = function(ev){
+                $mdDialog.hide();   
+            };
+            
             $scope.setActiveSubcategory($scope.subcategories[0]);
             
-            $scope.addContact = function(){
+            $scope.addContact = function(activeSubcategory){
                 var newContact = {
                     title: '',
                     name: '',
@@ -13045,7 +13071,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     mobile: [],
                     landline: [],
                 };
-                
+                if(activeSubcategory.name == 'ebNote'){
+                    newContact = {
+                        note: '',
+                        user: $scope.user._id,
+                    };
+                }
                 $scope.activeSubcategoryObj.push(newContact);
                 $scope.college.studentbody[$scope.activeSubcategory.name] = $scope.activeSubcategoryObj;
             };

@@ -24,6 +24,7 @@ var collegeSchema = mongoose.Schema({
     Anti Ragging
     Student Count*/
     websitenotworking: {type: Boolean, default: false},
+    
     studentbody:{
         placement: [{
             title: {type: String},
@@ -101,6 +102,11 @@ var collegeSchema = mongoose.Schema({
             email: [{type: String}],
             mobile: [{type: String}],
             landline: [{type: String}],
+        }],
+        ebNote: [{
+            note: String,
+            user: { type: Schema.ObjectId, ref: 'User' },
+            _added: { type: Date, default: Date.now }
         }],
     },
     website2: {type: String},
