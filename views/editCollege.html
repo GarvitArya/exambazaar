@@ -53,9 +53,8 @@
         color: #20C39A;
     }
     .active{
-        color: white;
+        color: #29335C;
         font-weight: bold;
-        border-bottom: 2px solid white;
     }
     #topBar{
         color: white;
@@ -194,7 +193,7 @@
 <div class="textBlack whiteBackground secondFont font14 width100" ng-if="!disabled">
     <div layout="row" layout-align="center start" class="width100">
         <div layout="column" layout-align="center center" flex-xs="100" flex-gt-xs="90" class="marginT20 paddingB10 headingBottomBorder2">
-            <div class="font18 bold">{{college.inst_name}}</div>
+            <div class="font18 bold">{{college.inst_name}}, {{college.Institute["Correspondence Details"]["District"] }}, {{college.Institute["Correspondence Details"]["State"] }}</div>
             <div layout="row" layout-align="start center">
                 <a ng-href="{{college.website}}" target="_blank">{{college.website}}</a>
                 <div class="font10 danger marginL20" ng-if="!college.websitenotworking" ng-click="flipwebsitenotworking()">
@@ -213,7 +212,7 @@
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB10">
         <div layout="column" layout-align="start center" flex="30" class="height100 paddingL20R40 leftBar">
             <div layout="row" layout-align="center center" ng-repeat="subcategory in subcategories" class="paddingTB2 paddingLR20 min3vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory)" id="leftBarButton">
-                <div>
+                <div ng-class="{ active: subcategory.name == activeSubcategory.name }" >
                     {{subcategory.displayname}}
                 </div>
                 <span class="badge marginL10" ng-if="college.studentbody[subcategory.name].length > 0">{{college.studentbody[subcategory.name].length}}

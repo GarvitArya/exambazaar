@@ -51,7 +51,9 @@
     a:link, a:visited, a:hover, a:active{
         color: #20C39A;
     }
-    
+    .blogSubTitle{
+        color: gainsboro;
+    }
 </style>
 
 <div id="spacerXS" class="whiteBackground">
@@ -62,10 +64,10 @@
         <div layout="row" layout-align="center center" class="width100">
         <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 marginT20 padding20 textWhite padding10  text-center">
             <div layout="column" layout-align="center center" id="blogPostHeader" class="">
-                <div class="bold font48 blogHeaderFont2 textShadow5 spacedLetter2 margin10">
+                <div class="bold font40 blogHeaderFont2 textShadow5 spacedLetter2 margin10">
                     Exambazaar Blog
                 </div>
-                <div class="font16 margin10">
+                <div class="font16 margin10 blogSubTitle">
                     Resources, tips & material to help you ace your exam preparation
                 </div>
             </div>
@@ -73,50 +75,64 @@
         </div>
         </div>
     </div>
-    <div layout="row" layout-align="center center" flex-xs="100" flex-gt-xs="90" class="font14 width100">
-        <div layout="row" layout-align="start start"  flex-xs="100" flex-gt-xs="90" layout-wrap class="paddingLR10">
-        Filter by Stream
+    
+    <div layout="row" layout-align="center center" flex-xs="100" flex-gt-xs="90" class="font14 width100 marginB5">
+        <div layout="row" layout-align="start center"  flex-xs="100" flex-gt-xs="90" layout-wrap class="paddingLR10">
+        <div layout="row" layout-align="start center">Filter blog by Stream</div>
+        <div layout="row" layout-align="start center" class="font12 danger marginL10" ng-click="clearStream()" ng-if="blogStream">
+            Clear
+        </div>
         </div>
     </div>
     <div layout="row" layout-align="center center" class="width100 font14">
-        <div layout="row" layout-align="start start"  flex-xs="100" flex-gt-xs="90" layout-wrap class="paddingLR10">
+        <div layout="row" layout-align="start center"  flex-xs="100" flex-gt-xs="90" layout-wrap class="paddingLR10">
             <div ng-repeat="stream in allStreams" class=" paddingR5 paddingB5">
                 <md-button  class="md-small font11 tolowercase margin0" ng-click="setStream(stream)" ng-class="buttonCSS(stream)">
                     {{stream.displayname}}
                 </md-button>
             </div>
+            
         </div>
     </div>
-    <div layout="row" layout-align="center center" class="width100 marginT20">
-        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="font18 bold paddingLR10">
-            <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="70">
-                Recommended Posts
+    <!--<div layout="row" layout-align="center center" class="width100 marginT20">
+        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="font18 bold">
+            <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="75" class="paddingLR10">
+                Inspiration
             </div>
             <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5">
                 
             </div>
-            <div layout="row" layout-align="start start" hide-xs flex-gt-xs="25">
+            <div layout="row" layout-align="start start" hide-xs flex-gt-xs="20" class="">
                 EdBites
             </div>
         </div>
-    </div>
+    </div>-->
     
     <div layout="row" layout-align="center center" class="width100 font14">
     <div layout="row" layout-xs="column"  layout-align="start start"  flex-xs="100" flex-gt-xs="90" class="">
-    <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="70" >
-    <div infinite-scroll='allBlogs.nextPage()' infinite-scroll-disabled='allBlogs.busy' infinite-scroll-distance='1' layout="row" layout-align="start start" class="width100" layout-wrap>
+    <div layout="column" layout-align="start start" flex-xs="100" flex-gt-xs="75" >
         
-        <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20" ng-repeat='blogpost in allBlogs.items'>
+    <!-- Start of Inspiration -->
+    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10">
+        {{blogStream.displayname}} Inspiration
+    </div>
+    <div layout="row" layout-align="start start" class="width100" layout-wrap>
+        <!--infinite-scroll='InspirationBlogs.nextPage()' infinite-scroll-disabled='InspirationBlogs.busy' infinite-scroll-distance='1'-->
+        
+        <div flex-xs="100" flex-gt-xs="33" layout="column" layout-align="center center"  class="paddingLR10 paddingTB10" ng-repeat='blogpost in InspirationBlogs.items'>
           
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
-                <div layout="column" layout-align="center center" class="blogpostImage2 width100 ">
-                <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">
+                <div layout="column" layout-align="center center" class="blogpostImage2 width100 font12" id="" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
                     
-                <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
-                    <div flex layout="row" layout-align="start center">
+                <!--<div class="exact30h width100">
+                    <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}" >    
+                </div>-->
+                    
+                <div layout="row" layout-align="start end" id="blogPostRead" class="width100 paddingLR20">
+                    <div flex layout="row" layout-align="start end">
                         {{blogpost.readingTime.text}}
                     </div>
-                    <div flex layout="row" layout-align="end center" class="width100">
+                    <div flex layout="row" layout-align="end end" class="width100">
                         <div class="">
                             <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
                                 <div layout="row" layout-align="start center">
@@ -143,91 +159,455 @@
                 </div>
                 </div>
                 
-                <div layout="column" layout-align="start center" class="min30vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
-                    <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
-                        <div flex-gt-xs layout="column" layout-align="start start" class="font18 bold wideLine2 marginR10 marginT10" >
-                            <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
-                            {{blogpost.title}}
-                            </a>
-                            
-                        </div>
-                        
-                        
-                        <div layout="row" layout-align="end start" class="font12 paddingT5 marginT10" hide-xs>
-                            <div hide-gt-xs class="marginR10 ">
-                                <a href="#"
-                                socialshare 
-                                socialshare-provider="whatsapp"
-                                socialshare-text="{{shareBlogText(blogpost)}}" 
-                                socialshare-url="{{shareURL(blogpost)}}">
-                                <img src="icons/whatsapp.png" class="socialIconBlog"/>    
-                                </a>
-                            </div>
-                            <div hide-xs class="marginR10 ">
-                                <a ng-click="postFacebook(blogpost)">
-                                    <img src="icons/facebook.png" class="socialIconBlog"/>
-                                </a>
-                            </div>
-                            <div hide-gt-xs class="marginR10 ">
-                                <a href="#"
-                                socialshare
-                                socialshare-provider="facebook-messenger"
-                                socialshare-url="shareURL(blogpost)">
-                                    <img src="icons/facebook.png" class="socialIconBlog"/>
-                                </a>
-                            </div>
-                            <div class="marginR10 ">
-                                <a href="#"
-                                socialshare
-                                socialshare-provider="twitter"
-                                socialshare-text="{{shareBlogText(blogpost)}}"
-                                socialshare-hashtags="{{hashtags}}"
-                                socialshare-url="{{shareURL(blogpost)}}">
-                                <img src="icons/twitter.png" class="socialIconBlog"/>
-                                </a>
-                            </div>
+                <div layout="column" layout-align="start center" class="min20vh paddingLR10 width100 blogpostBorder ">
+                    <div layout="column" layout-align="start start" class="font14 bold wideLine2 width100 marginT20 min10vh" >
+                        <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
+                        {{blogpost.title}}
+                        </a>
 
-                        </div>
                     </div>
-                    <div flex layout="row" layout-align="start center" class="width100 font14 textLightGrey marginT10">
+                    
+                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey marginTB10">
                         <div flex layout="column" layout-align="start start" class="">
                             <div class="narrowLine">
                                 By {{blogpost.user.basic.name}}
                             </div>
                         </div>
                         <div layout="column" layout-align="center start" class="">
-                            {{blogpost._published | date: "MMMM dd"}}
+                            {{blogpost._published | date: "MMMM dd, yyyy"}}
                         </div>
                     </div>
-                    <div flex layout="row" layout-align="start center" class="width100 sixthFont font14 textBlack marginTB15 wideLine textDarkGrey">
+                    
+                    
+                    <div flex layout="row" layout-align="start center" class="width100 sixthFont font11 marginTB10 wideLine textDarkGrey text-justify" ng-if="blogStream">
                         {{blogpost.seoDescription}}
                         
+                    </div>
+                    <div layout="row" layout-align="start center" class="font12 marginT10 marginB20 width100" hide-xs  ng-if="blogStream">
+                        <div hide-gt-xs class="marginR10 ">
+                            <a href="#"
+                            socialshare 
+                            socialshare-provider="whatsapp"
+                            socialshare-text="{{shareBlogText(blogpost)}}" 
+                            socialshare-url="{{shareURL(blogpost)}}">
+                            <img src="icons/whatsapp.png" class="socialIconBlog"/>    
+                            </a>
+                        </div>
+                        <div hide-xs class="marginR10 ">
+                            <a ng-click="postFacebook(blogpost)">
+                                <img src="icons/facebook.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+                        <div hide-gt-xs class="marginR10 ">
+                            <a href="#"
+                            socialshare
+                            socialshare-provider="facebook-messenger"
+                            socialshare-url="shareURL(blogpost)">
+                                <img src="icons/facebook.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+                        <div class="marginR10 ">
+                            <a href="#"
+                            socialshare
+                            socialshare-provider="twitter"
+                            socialshare-text="{{shareBlogText(blogpost)}}"
+                            socialshare-hashtags="{{hashtags}}"
+                            socialshare-url="{{shareURL(blogpost)}}">
+                            <img src="icons/twitter.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+
                     </div>
                 </div>    
             </div>
             
         </div>
-        <div layout="column" layout-align="center center" class="width100 marginTB20" ng-show='allBlogs.busy'>
+        
+        <div layout="row" layout-align="end end"  class="width100 padding10 marginB20" ng-if="!InspirationBlogs.finished">
+            <a id="reviewLink" ng-click="loadNextInspirationBlogs()">More in Inspiration ></a>
+        </div>
+        <div layout="column" layout-align="center center" class="width100 marginTB40 min20vh" ng-show='InspirationBlogs.busy'>
             <img src='ebloader2.gif' />
             <div>Loading data...</div>
         
         </div>
         
-        
-        
-        
-        
     </div>
+    
+    <!-- Start of Exam preparation -->
+    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10" ng-if="ExamPreparationBlogs.items.length > 0">
+        <span ng-if="blogStream">{{blogStream.displayname}}</span><span ng-if="!blogStream">Exam</span>&nbsp;Preparation
+    </div>
+    <div layout="row" layout-align="start start" class="width100" layout-wrap  ng-if="ExamPreparationBlogs.items.length > 0">
+        <div flex-xs="100" flex-gt-xs="33" layout="column" layout-align="center center"  class="paddingLR10 paddingTB10" ng-repeat='blogpost in ExamPreparationBlogs.items'>
+          
+            <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
+                <div layout="column" layout-align="center center" class="blogpostImage2 width100 font12" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+                <!--<div class="exact30h width100">
+                    <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}" >    
+                </div>-->
+                    
+                <div layout="row" layout-align="start end" id="blogPostRead" class="width100 paddingLR20">
+                    <div flex layout="row" layout-align="start end">
+                        {{blogpost.readingTime.text}}
+                    </div>
+                    <div flex layout="row" layout-align="end end" class="width100">
+                        <div class="">
+                            <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
+                                <div layout="row" layout-align="start center">
+                                    <div>
+                                    Upvote
+                                    </div>
+                                    <div>
+                                    &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                    </div>
+                                </div>
+                            </md-button>
+                            <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
+                                <div layout="row" layout-align="start center">
+                                    <div>
+                                    Upvote
+                                    </div>
+                                    <div>
+                                    &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                    </div>
+                                </div>
+                            </md-button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+                <div layout="column" layout-align="start center" class="min20vh paddingLR10 width100 blogpostBorder ">
+                    <div layout="column" layout-align="start start" class="font14 bold wideLine2 width100 marginT20 min10vh" >
+                        <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
+                        {{blogpost.title}}
+                        </a>
+
+                    </div>
+                    
+                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey marginTB10">
+                        <div flex layout="column" layout-align="start start" class="">
+                            <div class="narrowLine">
+                                By {{blogpost.user.basic.name}}
+                            </div>
+                        </div>
+                        <div layout="column" layout-align="center start" class="">
+                            {{blogpost._published | date: "MMMM dd, yyyy"}}
+                        </div>
+                    </div>
+                    
+                    
+                    <div flex layout="row" layout-align="start center" class="width100 sixthFont font11 marginTB10 wideLine textDarkGrey text-justify" ng-if="blogStream">
+                        {{blogpost.seoDescription}}
+                        
+                    </div>
+                    <div layout="row" layout-align="start center" class="font12 marginT10 marginB20 width100" hide-xs  ng-if="blogStream">
+                        <div hide-gt-xs class="marginR10 ">
+                            <a href="#"
+                            socialshare 
+                            socialshare-provider="whatsapp"
+                            socialshare-text="{{shareBlogText(blogpost)}}" 
+                            socialshare-url="{{shareURL(blogpost)}}">
+                            <img src="icons/whatsapp.png" class="socialIconBlog"/>    
+                            </a>
+                        </div>
+                        <div hide-xs class="marginR10 ">
+                            <a ng-click="postFacebook(blogpost)">
+                                <img src="icons/facebook.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+                        <div hide-gt-xs class="marginR10 ">
+                            <a href="#"
+                            socialshare
+                            socialshare-provider="facebook-messenger"
+                            socialshare-url="shareURL(blogpost)">
+                                <img src="icons/facebook.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+                        <div class="marginR10 ">
+                            <a href="#"
+                            socialshare
+                            socialshare-provider="twitter"
+                            socialshare-text="{{shareBlogText(blogpost)}}"
+                            socialshare-hashtags="{{hashtags}}"
+                            socialshare-url="{{shareURL(blogpost)}}">
+                            <img src="icons/twitter.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>    
+            </div>
+            
+        </div>
+        
+        <div layout="row" layout-align="end end"  class="width100 padding10 marginB20" ng-if="!ExamPreparationBlogs.finished">
+            <a id="reviewLink" ng-click="loadNextExamPreparationBlogs()">More in Exam Preparation ></a>
+        </div>
+        <div layout="column" layout-align="center center" class="width100 marginTB40 min20vh" ng-show='ExamPreparationBlogs.busy'>
+            <img src='ebloader2.gif' />
+            <div>Loading data...</div>
+        
+        </div>    
+        
+    </div>    
+    
+        
+    <!-- Start of Information -->
+    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10" ng-if="InformationBlogs.items.length > 0">
+        <span ng-if="blogStream">{{blogStream.displayname}}</span>&nbsp;Exam Information
+    </div>
+    <div layout="row" layout-align="start start" class="width100" layout-wrap  ng-if="InformationBlogs.items.length > 0">
+        <div flex-xs="100" flex-gt-xs="33" layout="column" layout-align="center center"  class="paddingLR10 paddingTB10" ng-repeat='blogpost in InformationBlogs.items'>
+          
+            <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
+                <div layout="column" layout-align="center center" class="blogpostImage2 width100 font12" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+                <!--<div class="exact30h width100">
+                    <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}" >    
+                </div>-->
+                    
+                <div layout="row" layout-align="start end" id="blogPostRead" class="width100 paddingLR20">
+                    <div flex layout="row" layout-align="start end">
+                        {{blogpost.readingTime.text}}
+                    </div>
+                    <div flex layout="row" layout-align="end end" class="width100">
+                        <div class="">
+                            <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
+                                <div layout="row" layout-align="start center">
+                                    <div>
+                                    Upvote
+                                    </div>
+                                    <div>
+                                    &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                    </div>
+                                </div>
+                            </md-button>
+                            <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
+                                <div layout="row" layout-align="start center">
+                                    <div>
+                                    Upvote
+                                    </div>
+                                    <div>
+                                    &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                    </div>
+                                </div>
+                            </md-button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+                <div layout="column" layout-align="start center" class="min20vh paddingLR10 width100 blogpostBorder ">
+                    <div layout="column" layout-align="start start" class="font14 bold wideLine2 width100 marginT20 min10vh" >
+                        <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
+                        {{blogpost.title}}
+                        </a>
+
+                    </div>
+                    
+                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey marginTB10">
+                        <div flex layout="column" layout-align="start start" class="">
+                            <div class="narrowLine">
+                                By {{blogpost.user.basic.name}}
+                            </div>
+                        </div>
+                        <div layout="column" layout-align="center start" class="">
+                            {{blogpost._published | date: "MMMM dd, yyyy"}}
+                        </div>
+                    </div>
+                    
+                    
+                    <div flex layout="row" layout-align="start center" class="width100 sixthFont font11 marginTB10 wideLine textDarkGrey text-justify" ng-if="blogStream">
+                        {{blogpost.seoDescription}}
+                        
+                    </div>
+                    <div layout="row" layout-align="start center" class="font12 marginT10 marginB20 width100" hide-xs  ng-if="blogStream">
+                        <div hide-gt-xs class="marginR10 ">
+                            <a href="#"
+                            socialshare 
+                            socialshare-provider="whatsapp"
+                            socialshare-text="{{shareBlogText(blogpost)}}" 
+                            socialshare-url="{{shareURL(blogpost)}}">
+                            <img src="icons/whatsapp.png" class="socialIconBlog"/>    
+                            </a>
+                        </div>
+                        <div hide-xs class="marginR10 ">
+                            <a ng-click="postFacebook(blogpost)">
+                                <img src="icons/facebook.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+                        <div hide-gt-xs class="marginR10 ">
+                            <a href="#"
+                            socialshare
+                            socialshare-provider="facebook-messenger"
+                            socialshare-url="shareURL(blogpost)">
+                                <img src="icons/facebook.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+                        <div class="marginR10 ">
+                            <a href="#"
+                            socialshare
+                            socialshare-provider="twitter"
+                            socialshare-text="{{shareBlogText(blogpost)}}"
+                            socialshare-hashtags="{{hashtags}}"
+                            socialshare-url="{{shareURL(blogpost)}}">
+                            <img src="icons/twitter.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>    
+            </div>
+            
+        </div>
+        
+        <div layout="row" layout-align="end end"  class="width100 padding10 marginB20" ng-if="!InformationBlogs.finished">
+            <a id="reviewLink" ng-click="loadNextInformationBlogs()">More in Information ></a>
+        </div>
+        <div layout="column" layout-align="center center" class="width100 marginTB40 min20vh" ng-show='InformationBlogs.busy'>
+            <img src='ebloader2.gif' />
+            <div>Loading data...</div>
+        
+        </div>    
+        
+    </div>     
+    
+        
+        
+    <!-- Start of Best Coaching -->
+    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10" ng-if="BestCoachingBlogs.items.length > 0">
+        Best Coaching&nbsp;<span ng-if="blogStream">for {{blogStream.displayname}} Exams</span>
+    </div>
+    <div layout="row" layout-align="start start" class="width100" layout-wrap  ng-if="BestCoachingBlogs.items.length > 0">
+        <div flex-xs="100" flex-gt-xs="33" layout="column" layout-align="center center"  class="paddingLR10 paddingTB10" ng-repeat='blogpost in BestCoachingBlogs.items'>
+          
+            <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
+                <div layout="column" layout-align="center center" class="blogpostImage2 width100 font12" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+                <!--<div class="exact30h width100">
+                    <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}" >    
+                </div>-->
+                    
+                <div layout="row" layout-align="start end" id="blogPostRead" class="width100 paddingLR20">
+                    <div flex layout="row" layout-align="start end">
+                        {{blogpost.readingTime.text}}
+                    </div>
+                    <div flex layout="row" layout-align="end end" class="width100">
+                        <div class="">
+                            <md-button class="md-upvote md-small font10 tolowercase" ng-click="saveupvote(blogpost)" ng-if="!upvoteExists(blogpost)">
+                                <div layout="row" layout-align="start center">
+                                    <div>
+                                    Upvote
+                                    </div>
+                                    <div>
+                                    &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                    </div>
+                                </div>
+                            </md-button>
+                            <md-button class="md-existingupvote md-small font10 tolowercase" ng-click="removeupvote(blogpost)" ng-if="upvoteExists(blogpost)">
+                                <div layout="row" layout-align="start center">
+                                    <div>
+                                    Upvote
+                                    </div>
+                                    <div>
+                                    &nbsp;|&nbsp;{{blogpost.upvotes}}
+                                    </div>
+                                </div>
+                            </md-button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+                <div layout="column" layout-align="start center" class="min20vh paddingLR10 width100 blogpostBorder ">
+                    <div layout="column" layout-align="start start" class="font14 bold wideLine2 width100 marginT20 min10vh" >
+                        <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
+                        {{blogpost.title}}
+                        </a>
+
+                    </div>
+                    
+                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey marginTB10">
+                        <div flex layout="column" layout-align="start start" class="">
+                            <div class="narrowLine">
+                                By {{blogpost.user.basic.name}}
+                            </div>
+                        </div>
+                        <div layout="column" layout-align="center start" class="">
+                            {{blogpost._published | date: "MMMM dd, yyyy"}}
+                        </div>
+                    </div>
+                    
+                    
+                    <div flex layout="row" layout-align="start center" class="width100 sixthFont font11 marginTB10 wideLine textDarkGrey text-justify" ng-if="blogStream">
+                        {{blogpost.seoDescription}}
+                        
+                    </div>
+                    <div layout="row" layout-align="start center" class="font12 marginT10 marginB20 width100" hide-xs  ng-if="blogStream">
+                        <div hide-gt-xs class="marginR10 ">
+                            <a href="#"
+                            socialshare 
+                            socialshare-provider="whatsapp"
+                            socialshare-text="{{shareBlogText(blogpost)}}" 
+                            socialshare-url="{{shareURL(blogpost)}}">
+                            <img src="icons/whatsapp.png" class="socialIconBlog"/>    
+                            </a>
+                        </div>
+                        <div hide-xs class="marginR10 ">
+                            <a ng-click="postFacebook(blogpost)">
+                                <img src="icons/facebook.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+                        <div hide-gt-xs class="marginR10 ">
+                            <a href="#"
+                            socialshare
+                            socialshare-provider="facebook-messenger"
+                            socialshare-url="shareURL(blogpost)">
+                                <img src="icons/facebook.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+                        <div class="marginR10 ">
+                            <a href="#"
+                            socialshare
+                            socialshare-provider="twitter"
+                            socialshare-text="{{shareBlogText(blogpost)}}"
+                            socialshare-hashtags="{{hashtags}}"
+                            socialshare-url="{{shareURL(blogpost)}}">
+                            <img src="icons/twitter.png" class="socialIconBlog"/>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>    
+            </div>
+            
+        </div>
+        
+        <div layout="row" layout-align="end end"  class="width100 padding10 marginB20" ng-if="!BestCoachingBlogs.finished">
+            <a id="reviewLink" ng-click="loadNextBestCoachingBlogs()">More in Best Coaching ></a>
+        </div>
+        <div layout="column" layout-align="center center" class="width100 marginTB40 min20vh" ng-show='BestCoachingBlogs.busy'>
+            <img src='ebloader2.gif' />
+            <div>Loading data...</div>
+        
+        </div>    
+        
+    </div>    
+        
     </div>
     <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5" class="">
     </div>
-    <div layout="row" layout-align="start start" hide-xs flex-gt-xs="25"  >
-    <div infinite-scroll='allEdbites.nextPage()' infinite-scroll-disabled='allEdbites.busy' infinite-scroll-distance='1' layout="row" layout-align="start start" class="width100" layout-wrap>
-        <div layout="column" layout-align="center center"  class="width100 paddingTB20" ng-repeat="blogpost in allEdbites.items">
+    <div layout="column" layout-align="start start" hide-xs flex-gt-xs="20"  >
+    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 subhheadingBottomBorder3 paddingB10 marginB10">
+        <span ng-if="blogStream">{{blogStream.displayname}}&nbsp;</span>EdBites
+    </div>    
+    <div layout="row" layout-align="start start" class="width100" layout-wrap>
+        <!--infinite-scroll='allEdbites.nextPage()' infinite-scroll-disabled='allEdbites.busy' infinite-scroll-distance='1'-->
+        <div layout="column" layout-align="center center"  class="width100 paddingTB10" ng-repeat="blogpost in allEdbites.items">
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
-            <div layout="column" layout-align="center center" class="edBitesImage2 width100">
-                <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">
-                <div layout="row" layout-align="start center" id="blogPostRead" class="width100 padding20">
+            <div layout="column" layout-align="center center" class="edBitesImage2 width100" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+                <!--<img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">-->
+                <div layout="row" layout-align="start center" id="blogPostRead" class="width100 paddingLR20 paddingTB10">
 
                     <div flex layout="row" layout-align="start center">
                         {{blogpost.readingTime.text}}
@@ -259,9 +639,9 @@
                 </div>
             </div>
                 
-                <div layout="column" layout-align="start center" class="min10vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
+                <div layout="column" layout-align="start center" class="min10vh paddingLR10 paddingTB10 width100 blogpostBorder ">
                     <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
-                        <div flex layout="column" layout-align="start start" flex class="font14 wideLine2 marginR10" ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })">
+                        <div flex layout="column" layout-align="start start" flex class="font12 wideLine2 marginR10" ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })">
                             {{blogpost.title}}
                         </div>
                         
@@ -302,7 +682,7 @@
 
                         </div>-->
                     </div>
-                    <div flex layout="row" layout-align="start center" class="width100 font12 textLightGrey">
+                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey">
                         <div flex layout="column" layout-align="start start" class="">
                             <div class="narrowLine">
                                 By {{blogpost.user.basic.name}}
@@ -316,7 +696,10 @@
                 </div>    
             </div>
         </div>
-        <div layout="column" layout-align="center center" class="width100 marginTB20" ng-show='allBlogs.busy'>
+        <div layout="row" layout-align="end end"  class="width100 padding10 marginB20">
+            <a id="reviewLink" ng-click="loadNextEdBitesBlogs()">More in EdBites ></a>
+        </div>
+        <div layout="column" layout-align="center center" class="width100 marginTB40 min20vh" ng-show='InspirationBlogs.busy'>
             <img src='ebloader2.gif' />
             <div>Loading data...</div>
         

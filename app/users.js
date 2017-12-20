@@ -1351,13 +1351,44 @@ function closeVerifyCI(userId, pastInternId, res){
                 if(eCounter == nElements){
                     res.toverifyci = true;
                     res.toverifyciCount = nElements;
-                    closeContactCI(userId, pastInternId, res);
+                    closeFillCollege(userId, pastInternId, res);
                 }
             });
         });
         if(nElements == 0){
             res.toverifyci = true;
             res.toverifyciCount = 0;
+            closeCreatedCI(userId, pastInternId, res);
+        }
+    } else {throw err;}
+    });
+};
+
+function closeFillCollege(userId, pastInternId, res){
+    console.log('Starting close fill college process:');
+    var allElements = tofillcollege
+    .find({user: userId, active: false},{user:1})
+    .exec(function (err, allElements) {
+    if (!err){
+        var nElements = allElements.length;
+        var eCounter = 0;
+        allElements.forEach(function(thisElement, index){
+            thisElement.user = pastInternId;
+            thisElement.save(function(err, thisElement) {
+                if (err) return console.error(err);
+                console.log('To verify CI closed: ' + thisElement._id);
+                eCounter += 1;
+
+                if(eCounter == nElements){
+                    res.toverifyci = true;
+                    res.toverifyciCount = nElements;
+                    closeContactCI(userId, pastInternId, res);
+                }
+            });
+        });
+        if(nElements == 0){
+            res.tofillcollege = true;
+            res.tofillcollegeCount = 0;
             closeCreatedCI(userId, pastInternId, res);
         }
     } else {throw err;}

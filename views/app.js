@@ -1082,6 +1082,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.streamblogstream = function(streamInfo) {
             return $http.post('/api/blogposts/streamblogstream', streamInfo);
         };
+        this.inspirationblogstream = function(streamInfo) {
+            return $http.post('/api/blogposts/inspirationblogstream', streamInfo);
+        };
         this.suggestedblogs = function(examName) {
             return $http.get('/api/blogposts/suggestedblogs/'+examName, {examName: examName});
         };
@@ -14122,34 +14125,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       return CoachingStream;
     });    
         
-    exambazaar.factory('BlogStream', function(blogpostService) {
-      var BlogStream = function() {
-        this.items = [];
-        this.busy = false;
-        this.skip = 0;
-      };
-
-      BlogStream.prototype.nextPage = function() {
-        if (this.busy) return;
-        this.busy = true;
-        var streamInfo = {
-            skip: this.skip
-        };
-        blogpostService.blogstream(streamInfo).success(function (data, status, headers) {
-            var items = data;
-            console.log(items);
-            this.items = this.items.concat(items);
-            this.skip += items.length;
-            this.busy = false;
-        }.bind(this))
-        .error(function (data, status, header, config) {
-            console.log("Error ");
-        });  
-      };
-
-      return BlogStream;
-    });
-        
+    
     exambazaar.factory('SuggestedBlogStream', function(blogpostService) {
       var SuggestedBlogStream = function(streamInfo) {
         this.items = [];
@@ -14278,7 +14254,48 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       };
 
       return StreamBlogStream;
+    });
+    exambazaar.factory('BlogStream', function(blogpostService) {
+      var BlogStream = function(streamInfo) {
+        this.items = [];
+        this.busy = false;
+        this.finished = false;
+        this.skip = 0;
+        this.limit = streamInfo.limit;
+        this.streamId = streamInfo.streamId;
+        this.included = streamInfo.included;
+        this.excluded = streamInfo.excluded;
+      };
+
+      BlogStream.prototype.nextPage = function() {
+        if (this.busy) return;
+        if (this.finished) return;
+        this.busy = true;
+        var streamInfo = {
+            skip: this.skip,
+            limit: this.limit,
+            streamId: this.streamId,
+            included: this.included,
+            excluded: this.excluded,
+        };
+        blogpostService.blogstream(streamInfo).success(function (data, status, headers) {
+            var items = data;
+            if(!items || (items && items.length == 0)){
+                this.finished = true;
+            }
+            //console.log(items);
+            this.items = this.items.concat(items);
+            this.skip += items.length;
+            this.busy = false;
+        }.bind(this))
+        .error(function (data, status, header, config) {
+            console.log("Error ");
+        });  
+      };
+
+      return BlogStream;
     });    
+        
         
     exambazaar.controller("socialLoginController", 
         [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'BlogStream', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, BlogStream){
@@ -15136,38 +15153,119 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
     exambazaar.controller("blogController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', 'StreamBlogStream', 'EdBitesStream', 'streamList', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, Socialshare, viewService, upvoteService, allBlogsUpvotesCount, StreamBlogStream, EdBitesStream, streamList){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', 'BlogStream', 'EdBitesStream', 'streamList', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, Socialshare, viewService, upvoteService, allBlogsUpvotesCount, BlogStream, EdBitesStream, streamList){
             //$scope.allBlogs = allBlogs.data;
-            $scope.allStreams = streamList.data;
+            var allStreams = streamList.data;
+            $scope.allStreams = [];
+            var excludedStreams = ['other', 'insurance'];
+            allStreams.forEach(function(thisStream, index){
+                if(excludedStreams.indexOf(thisStream.name) == -1){
+                    $scope.allStreams.push(thisStream);
+                }
+            });
+            
             $scope.filterStream = null;
             var streamInfo = {
                 //streamName: 'Engineering',
                 streamId: null//'58ac21ec144a140ee0fe62f1',
             };
-            $scope.allBlogs = new StreamBlogStream(streamInfo);
             
+            var InspirationStreamInfo = {
+                streamId: null,
+                excluded: ['Top 10 Online', 'Best Books', 'Exam Page', 'Best Schools', 'Degrees', 'Expert Reviews', 'EdBites' ],
+                limit: 3,
+            };
+            var ExamPreparationStreamInfo = {
+                streamId: null,
+                included: ['Top 10 Online', 'Best Books', 'Exam Page' ],
+                limit: 3,
+            };
+            var InformationStreamInfo = {
+                streamId: null,
+                included: ['Best Schools', 'Degrees'],
+                limit: 3,
+            };
+            var BestCoachingStreamInfo = {
+                streamId: null,
+                included: ['Expert Reviews'],
+                limit: 3,
+            };
+            var EdbitesStreamInfo = {
+                streamId: null,
+                included: ['EdBites'],
+                limit: 3,
+            };
+            
+            
+            var refreshAll = function(){
+                $scope.InspirationBlogs = new BlogStream(InspirationStreamInfo);
+                $scope.ExamPreparationBlogs = new BlogStream(ExamPreparationStreamInfo);
+                $scope.InformationBlogs = new BlogStream(InformationStreamInfo);
+                $scope.BestCoachingBlogs = new BlogStream(BestCoachingStreamInfo);
+                
+                $scope.allEdbites = new BlogStream(EdbitesStreamInfo);
+
+                $scope.InspirationBlogs.nextPage();
+                $scope.ExamPreparationBlogs.nextPage();
+                $scope.InformationBlogs.nextPage();
+                $scope.BestCoachingBlogs.nextPage();
+                $scope.allEdbites.nextPage();
+            };
+            refreshAll();
             $scope.setStream = function(stream){
-                streamInfo.streamId = stream._id;
-                $scope.allBlogs = new StreamBlogStream(streamInfo);
-                $scope.allEdbites = new EdBitesStream(streamInfo);
+                $scope.blogStream = stream;
+                
+                EdbitesStreamInfo.streamId = stream._id;
+                InspirationStreamInfo.streamId = stream._id;
+                ExamPreparationStreamInfo.streamId = stream._id;
+                InformationStreamInfo.streamId = stream._id;
+                BestCoachingStreamInfo.streamId = stream._id;
+                
+                refreshAll();
+            };
+            $scope.clearStream = function(){
+                $scope.blogStream = null;
+                InspirationStreamInfo.streamId = null;
+                ExamPreparationStreamInfo.streamId = null;
+                InformationStreamInfo.streamId = null;
+                BestCoachingStreamInfo.streamId = null;
+                EdbitesStreamInfo.streamId = null;
+                
+                refreshAll();
+            };
+            
+            $scope.loadNextEdBitesBlogs = function(){
+                $scope.allEdbites.nextPage();
+            };
+            $scope.loadNextInspirationBlogs = function(){
+                $scope.InspirationBlogs.nextPage();
+            };
+            $scope.loadNextExamPreparationBlogs = function(){
+                $scope.ExamPreparationBlogs.nextPage();
+            };
+            $scope.loadNextInformationBlogs = function(){
+                $scope.InformationBlogs.nextPage();
+            };
+            $scope.loadNextBestCoachingBlogs = function(){
+                $scope.BestCoachingBlogs.nextPage();
             };
             
             $scope.buttonCSS = function(stream){
-                if(streamInfo.streamId && stream._id == streamInfo.streamId){
+                if(InspirationStreamInfo.streamId && stream._id == InspirationStreamInfo.streamId){
                     return('md-danger');
                 }else{
                     return('md-next');
                 }
             };
             
-            $scope.allEdbites = new EdBitesStream(streamInfo);
+            
             
             var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
             var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
             
-            $scope.$watch('allBlogs.items', function (newValue, oldValue, scope) {
+            $scope.$watch('InspirationBlogs.items', function (newValue, oldValue, scope) {
                 if(newValue != null && newValue.length > 0){
-                     $scope.allBlogs.items.forEach(function(thisBlog, index){
+                     $scope.InspirationBlogs.items.forEach(function(thisBlog, index){
                         var bIndex = blogUpvotesId.indexOf(thisBlog._id);
                         //console.log(bIndex);
 
@@ -15184,8 +15282,63 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
 
             }, true);
-            
-            
+            $scope.$watch('ExamPreparationBlogs.items', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue.length > 0){
+                     $scope.ExamPreparationBlogs.items.forEach(function(thisBlog, index){
+                        var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+                        //console.log(bIndex);
+
+                        if(!thisBlog.upvotes){
+                            if(bIndex == -1){
+                                thisBlog.upvotes = 0;
+                            }else{
+                                thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+                            }
+                        }
+
+                    });
+                    
+                }
+
+            }, true);
+            $scope.$watch('InformationBlogs.items', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue.length > 0){
+                     $scope.InformationBlogs.items.forEach(function(thisBlog, index){
+                        var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+                        //console.log(bIndex);
+
+                        if(!thisBlog.upvotes){
+                            if(bIndex == -1){
+                                thisBlog.upvotes = 0;
+                            }else{
+                                thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+                            }
+                        }
+
+                    });
+                    
+                }
+
+            }, true);
+            $scope.$watch('BestCoachingBlogs.items', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue.length > 0){
+                     $scope.BestCoachingBlogs.items.forEach(function(thisBlog, index){
+                        var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+                        //console.log(bIndex);
+
+                        if(!thisBlog.upvotes){
+                            if(bIndex == -1){
+                                thisBlog.upvotes = 0;
+                            }else{
+                                thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+                            }
+                        }
+
+                    });
+                    
+                }
+
+            }, true);
             
             $scope.addedUpvoteIds = [];
             $scope.userUpvotes = [];
@@ -15260,7 +15413,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             };
             
-            var defaultBlogCovers = ["images/blog/eb-blog-cover-1.jpg"];
+            //var defaultBlogCovers = ["images/blog/blogcover2.jpg"];
+            //var defaultBlogCovers = ["images/blog/eb-blog-cover-1.jpg"];
+            var defaultBlogCovers = ["images/blog/cover-20dec.jpg"];
+            //var defaultBlogCovers = ["images/blog/cover2.jpg"];
             //"images/blog/blog-cover-7.jpg","images/blog/background.jpg"
             var rIndex = getRandomInt(0, defaultBlogCovers.length);
             var defaultBlogCover = defaultBlogCovers[rIndex];
@@ -15298,7 +15454,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
            
             
-            $rootScope.pageTitle = "Blog - Exambazaar resources for all exams in India";
+            $rootScope.pageTitle = "Blog | Exambazaar resources for all exams in India";
             $rootScope.pageImage = $scope.thisBlogCover;
             
             $scope.goToBlog = function(blog){
@@ -37126,8 +37282,7 @@ function getLatLng(thisData) {
                 }else{
                     commentService.savecomment(commentForm).success(function (savedata, status, headers) { 
                         $scope.thisUserComment = savedata;
-                        console.log($scope.thisUserComment);
-                    
+                       
                         commentService.blogpostComments($stateParams.blogpostSlug).success(function (data, status, headers) {
                             $scope.blogComments = data;
                         })
