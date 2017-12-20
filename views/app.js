@@ -13249,7 +13249,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.disabled = true;
             }
             
-            $scope.limits = [1, 10, 20, 50, 100];
+            $scope.newlimit = null;
+            $scope.limits = [1, 10, 20, 50];
             $scope.collegesForm = {
                 limit: 20,
                 skip: 0
