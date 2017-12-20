@@ -15415,7 +15415,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             //var defaultBlogCovers = ["images/blog/blogcover2.jpg"];
             //var defaultBlogCovers = ["images/blog/eb-blog-cover-1.jpg"];
-            var defaultBlogCovers = ["images/blog/cover-20dec.jpg"];
+            var defaultBlogCovers = ["images/blog/cover20dec.jpg"];
             //var defaultBlogCovers = ["images/blog/cover2.jpg"];
             //"images/blog/blog-cover-7.jpg","images/blog/background.jpg"
             var rIndex = getRandomInt(0, defaultBlogCovers.length);
