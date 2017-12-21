@@ -224,7 +224,7 @@
                 <div class="width100 marginT20 blogContent" ng-bind-html="blogpost.content" >
                 </div>
                 
-                <div layout="column" layout-align="center center" ng-if="!user" class="marginTB20 width100 dangerBorder padding20">
+                <div layout="column" layout-align="center center" ng-if="!user && lockContent" class="marginTB20 width100 dangerBorder padding20">
                     <div layout="column" layout-align="center center" class="marginTB20 width100">
                     <md-button class="md-danger md-small tolowercase" ng-click="continueReading()">
                         <i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;Continue Reading

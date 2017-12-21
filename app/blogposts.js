@@ -569,21 +569,35 @@ router.post('/EdBitesstream', function(req, res) {
     
 });
 
+router.get('/allblogsbasic', function(req, res) {
+    var allBlogs = blogpost
+        .find({}, {title: 1, urlslug:1, active: 1, _published: 1})
+        .exec(function (err, allBlogs) {
+            
+        if (!err){
+            if(allBlogs){
+                res.json(allBlogs);
+            }else{
+                res.json(null);
+            }
+        } else {throw err;}
+    });
+    
+    
+});
+
 router.post('/blogAnalytics', function(req, res) {
     var analyticsForm = req.body;
-    /*var start = analyticsForm.start;
-    var end = analyticsForm.end;*/
+    var start = analyticsForm.start;
+    var end = analyticsForm.end;
     
-    var start = new Date();
-    start.setHours(0,0,0,0);
-    var end = new Date();
-    end.setHours(23,59,59,999);
-    
+    start = moment(start).startOf('day').toDate();
+    end = moment(end).endOf('day').toDate();
     
     var blogAnalytics = view.aggregate(
     [
         {$match: { state: 'showblog', _date: {$gte: start, $lt: end} }},
-        {"$group": { "_id": { url: "$url" }, count:{$sum:1} } },
+        {"$group": { "_id": { url: "$url", title: "$title" }, count:{$sum:1} } },
     ],function(err, blogAnalytics) {
     if (!err){
         var blogViews = [];

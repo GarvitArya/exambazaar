@@ -37,25 +37,60 @@
         <div layout="row" layout-align="center center" class="font20 text-primary bold width100">
             Blog Analytics - Report for {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{filledcolleges.length}}</span>
         </div>
-        
-        <div flex layout="row" layout-align="start center" class="width100 greyBottomBorder marginT20 font10 bold">
+        <div layout="row" layout-align="start center" class="width100 marginTB40">
+            <div flex layout="row" layout-align="start center">
+                <div class="marginR10">Start & End Dates: </div>
+                <div class="marginR10">
+                    <md-datepicker ng-model="start" md-placeholder="Start Date" class="font10"></md-datepicker>
+                </div>
+                <div class="marginR10">
+                    <md-datepicker ng-model="end" md-placeholder="End Date" class="font10"></md-datepicker>
+                </div>
+                <md-button class="md-next md-small font10 marginR10" ng-click="setCustomDates()">
+                    Go
+                </md-button>
+            </div>
+            <div flex layout="row" layout-align="end center">
+                <div class="marginR10">Last N Days: </div>
+                <md-button class="md-small font10 marginR10" ng-click="lastNDays(limit)" ng-class="buttonClass(limit)" ng-repeat="limit in limits">
+                    {{limit}}
+                </md-button>
+            </div>
+            
+        </div>
+        <div layout="row" layout-align="end center" ng-if="totalViews" class="width100 font10">
+            Days: {{nDays}} | Total Views: {{totalViews}} | {{totalViews/nDays | number:1 }} views per day
+        </div>
+        <div layout="row" layout-align="start center" class="width100 greyBottomBorder font10 bold">
             <div flex="5">
                 S. No.
             </div>
             <div flex="50">
                 Blog
             </div>
-            
+            <div flex="20" class="">
+                Published
+            </div>
+            <div flex="20" class="">
+                Views
+            </div>
         </div>
-        <div flex layout="row" layout-align="start center" ng-repeat="blog in blogAnalytics" class="width100 greyDashedBottomBorder font10">
+        <div flex layout="row" layout-align="start center" ng-repeat="blog in blogAnalytics | orderBy:['-views']" class="width100 greyDashedBottomBorder font10" ng-if="blog.show">
             <div flex="5">
                 {{$index+1}}
             </div>
             <div flex="50" class="">
-                {{blog}}
+                <a ui-sref="showblog({ blogpostSlug:{{'blog.urlslug'}} })" target="_blank">
+                    {{blog.title}}
+                </a>
+            </div>
+            <div flex="20" class="">
+                {{blog._published_ago}}
+            </div>
+            <div flex="20" class="">
+                {{blog.views}}
                 
             </div>
-            
         </div>
         
         

@@ -1035,7 +1035,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.blogAnalytics = function(analyticsForm) {
             return $http.post('/api/blogposts/blogAnalytics', analyticsForm);
         };
-        
+        this.allblogsbasic = function(analyticsForm) {
+            return $http.get('/api/blogposts/allblogsbasic');
+        };
         this.saveblogpost = function(blogpostForm) {
             return $http.post('/api/blogposts/save', blogpostForm);
         };
@@ -12379,13 +12381,56 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("blogAnalyticsController", 
-        [ '$scope', '$http', '$state', '$rootScope', '$cookies','blogAnalytics', function($scope, $http, $state, $rootScope, $cookies, blogAnalytics){
+        [ '$scope', '$http', '$state', '$rootScope', '$cookies', 'blogpostService', 'allblogsbasic', function($scope, $http, $state, $rootScope, $cookies, blogpostService, allblogsbasic){
+            var allblogsbasic = allblogsbasic.data;
+            var allblogsbasicIds = allblogsbasic.map(function(a) {return ("/blogpost/" + a.urlslug);});
+            //console.log(allblogsbasicIds);
+            $rootScope.pageTitle = "Blog Analytics";
             $scope.authorized = false;
+            $scope.start = moment().subtract(1, 'days');
+            $scope.end = moment();
+            $scope.limits = ["0", "1", "7", "14", "30", "180", "365"];
+            $scope.nDays = 1;
+            $scope.lastNDays = function(days){
+                $scope.nDays = days;
+                $scope.end = moment();
+                $scope.start = moment().subtract(days, 'days');
+                loadBlogs();
+            };
+            $scope.setCustomDates = function(){
+                $scope.nDays = $scope.end.diff($scope.start, 'days');
+                loadBlogs();
+            };
+            $scope.buttonClass = function(limit){
+                if($scope.nDays == limit){
+                    return "md-danger";
+                }else{
+                    return "md-next";
+                }
+            };
+            var loadBlogs = function(){
+                var analyticsForm = {
+                    start: $scope.start,
+                    end: $scope.end,
+                };
+                blogpostService.blogAnalytics(analyticsForm).success(function (data, status, headers) {
+                    $scope.blogAnalytics = data;
+                    initiateBlogs();
+                    //console.log($scope.blogAnalytics);
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
                 
+                    
+                
                 if($scope.user.userType == 'Master'){
                     $scope.authorized = true;
+                    loadBlogs();
+                    
                 }
                 
             }else{
@@ -12394,11 +12439,26 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $cookies.remove('sessionuser');
                 $rootScope.$emit("ForcedLogin", {});
                 
-            }
+            };
             
+            var initiateBlogs = function(){
+                $scope.totalViews = 0;
+                $scope.blogAnalytics.forEach(function(thisBlog, bindex){
+                    $scope.totalViews += thisBlog.views;
+                    var bIndex = allblogsbasicIds.indexOf(thisBlog.blogurl);
+                    
+                    if(bIndex != -1){
+                        thisBlog.show = true;
+                        thisBlog.active = allblogsbasic[bIndex].active;
+                        thisBlog.title = allblogsbasic[bIndex].title;
+                        thisBlog.urlslug = allblogsbasic[bIndex].urlslug;
+                        thisBlog._id = allblogsbasic[bIndex]._id;
+                        thisBlog._published = allblogsbasic[bIndex]._published;
+                        thisBlog._published_ago = moment(allblogsbasic[bIndex]._published).fromNow();
+                    }
+                });
+            };
             
-            $scope.blogAnalytics = blogAnalytics.data;
-            console.log($scope.blogAnalytics);
             
     }]);
         
@@ -37132,7 +37192,7 @@ function getLatLng(thisData) {
             $scope.blogComments = thisblogComments.data;
             $scope.blogpost.upvotes = upvoteCount.data;
             
-            
+            $scope.lockContent = false;
             $scope.addedUpvoteIds = [];
             $scope.userUpvotes = [];
             
@@ -37171,19 +37231,22 @@ function getLatLng(thisData) {
                 
                 
             }else{
-                var nContent = $scope.blogpost.content.length;
-                var cutoff = Math.round(nContent/4);
-                var cutoff2 = Math.round(2*nContent/4);
-                var cutoff3 = Math.round(3*nContent/4);
-                $scope.blogpost.lockedcontent1 = $scope.blogpost.content.substring(cutoff, cutoff2);
-                
-                $scope.blogpost.lockedcontent2 = $scope.blogpost.content.substring(cutoff2, cutoff3);
-                $scope.blogpost.lockedcontent3 = $scope.blogpost.content.substring(cutoff3, nContent);
-                
-                $scope.blogpost.content = $scope.blogpost.content.substring(0, cutoff);
-                
-                //console.log($scope.blogpost.lockedcontent);
-                
+                if($scope.lockContent){
+                    var nContent = $scope.blogpost.content.length;
+                    var cutoff = Math.round(nContent/4);
+                    var cutoff2 = Math.round(2*nContent/4);
+                    var cutoff3 = Math.round(3*nContent/4);
+                    $scope.blogpost.lockedcontent1 = $scope.blogpost.content.substring(cutoff, cutoff2);
+
+                    $scope.blogpost.lockedcontent2 = $scope.blogpost.content.substring(cutoff2, cutoff3);
+                    $scope.blogpost.lockedcontent3 = $scope.blogpost.content.substring(cutoff3, nContent);
+
+                    $scope.blogpost.content = $scope.blogpost.content.substring(0, cutoff);
+
+                    //console.log($scope.blogpost.lockedcontent);
+
+                    
+                }
                 if(!$scope.thisUserComment){
                     $scope.thisUserComment = $scope.newComment;
                 }
@@ -39057,11 +39120,15 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                blogAnalytics: ['blogpostService',
+                
+                allblogsbasic: ['blogpostService',
                     function(blogpostService) {
-                    return blogpostService.blogAnalytics(null);
+                    return blogpostService.allblogsbasic();
                 }],
+                
+                
             }
+        
         })
         .state('blog', {
             url: '/blog',
