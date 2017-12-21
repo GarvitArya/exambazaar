@@ -1032,6 +1032,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveblogpost = function(blogpostForm) {
             return $http.post('/api/blogposts/save', blogpostForm);
         };
+        this.cloneblogpost = function(cloneForm) {
+            return $http.post('/api/blogposts/clone', cloneForm);
+        };
         this.existingBlogpost = function(userInstituteForm) {
             return $http.post('/api/blogposts/existingBlogpost', userInstituteForm);
         };
@@ -12236,7 +12239,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.masterUser = true;
             }
             $scope.allAddedInstitutes = addedInstitutes.data;
-            console.log($scope.allAddedInstitutes.map(function(a) {return a._createdBy;}));
+            
             $scope.$watch('allAddedInstitutes', function (newValue, oldValue, scope) {
                 if(newValue != null && newValue.length > 0){
                     var instituteIds = newValue.map(function(a) {return a._id;});
@@ -17874,6 +17877,22 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("postBlogController", 
         [ '$scope', '$http','$state', '$stateParams','$rootScope', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', 's3UtilsService', 'Notification', function($scope, $http, $state, $stateParams, $rootScope, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, upvoteService, allBlogsUpvotesCount, allBloggers, s3UtilsService, Notification){
             var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
+            $scope.allBloggers = allBloggers.data;
+            
+            var processBlogs = function(){
+                var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
+                    $scope.userBlogs.forEach(function(thisBlog, index){
+                        var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+                        thisBlog.fullurl = "https://www.exambazaar.com/blogpost/" + thisBlog.urlslug;
+
+                        if(bIndex == -1){
+                            thisBlog.upvotes = 0;
+                        }else{
+                            thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+                        }
+
+                    });    
+            };
             if(!$scope.user){
                 if($cookies.getObject('sessionuser')){
                     $scope.user = $cookies.getObject('sessionuser');
@@ -17883,24 +17902,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         
                         if(data.blogger && data.blogger.active){
                             $scope.blogGallery = data.blogger.gallery;
+                            
                             blogpostService.getUserBlogposts($scope.user._id).success(function (blogData, status, headers) {
                                 $scope.userBlogs = blogData;
-                                $scope.allBloggers = allBloggers.data;
-
-
-                                var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
-                                $scope.userBlogs.forEach(function(thisBlog, index){
-                                    var bIndex = blogUpvotesId.indexOf(thisBlog._id);
-                                    thisBlog.fullurl = "https://www.exambazaar.com/blogpost/" + thisBlog.urlslug;
-
-                                    if(bIndex == -1){
-                                        thisBlog.upvotes = 0;
-                                    }else{
-                                        thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
-                                    }
-                                });
-
-
+                                processBlogs();
 
 
 
@@ -18177,8 +18182,22 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
             $scope.cloneBlogPost = function(toCloneBlog){
-                console.log(toCloneBlog);
-                var blogpost = {
+                var newtitle = toCloneBlog.title + ' - Clone ' + moment().format("DD MMM YY HH:mm");
+                var cloneForm = {
+                    from: toCloneBlog._id,
+                    userId: $scope.user._id,
+                    title: newtitle,
+                    urlslug: slugify(newtitle)
+                };
+                blogpostService.cloneblogpost(cloneForm).success(function (data, status, headers) {
+                    $scope.userBlogs.push(data);
+                    processBlogs();
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+                
+                /*var blogpost = {
                     title: toCloneBlog.title + ' - Clone ' + moment().format("DD MMM YY HH:mm"),
                     content: toCloneBlog.content,
                     savedBy: $scope.user._id,
@@ -18210,7 +18229,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 })
                 .error(function (data, status, header, config) {
                     console.log("Error ");
-                });
+                });*/
             };
             
             $scope.removeConfirm = function(thisblog){
@@ -18231,7 +18250,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
             $scope.updateConfirm = function(thisblog){
-                if(!thisblog.user || thisblog.user.basic){
+                if(!thisblog.user || !thisblog.user.basic){
                     thisblog.user = {
                         basic: {
                             name: 'User'
@@ -18254,6 +18273,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
             $scope.updateBlogPost = function(thisblog){
+                
                  thisblog.savedBy = $scope.user._id;
                  thisblog.autosave = false;
                 blogpostService.saveblogpost(thisblog).success(function (data, status, headers) {
@@ -35110,7 +35130,7 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-                "saloni@exambazaar.com",
+                "team@exambazaar.com",
 
 
 
@@ -35122,7 +35142,7 @@ function getLatLng(thisData) {
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
                             //body: "We are currently offering internship to students in Jaipur across 3 domains - Business Development, Design and Business Analyst. The interns will work out of our office in Jaipur. Kindly inform your students about this opportunity and let us know if we need to follow any steps/protocol to reach out to them.",
-                            body: "Dear Candidate, thank you for attending our campus drive yesterday. While we cannot extend you an offer to join us as a Web Developer, we will consider you for any of the below 6-month internships (January - June 2018). Do reach out to us after completing the steps below with your resume &  preferred Internship Programme - Business Development, Design or Business Analyst. In a short paragraph, do tell us why we should hire you for the role. Good luck!",
+                            //body: "Dear Candidate, thank you for attending our campus drive yesterday. While we cannot extend you an offer to join us as a Web Developer, we will consider you for any of the below 6-month internships (January - June 2018). Do reach out to us after completing the steps below with your resume &  preferred Internship Programme - Business Development, Design or Business Analyst. In a short paragraph, do tell us why we should hire you for the role. Good luck!",
                             emailList: internshipEmailList,
                             templateName: 'Internship at Exambazaar',
                         };

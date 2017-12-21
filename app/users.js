@@ -1857,7 +1857,7 @@ router.get('/editFilled/:userId', function(req, res) {
 router.get('/addedInstitutes/:userId', function(req, res) {
     var userId = req.params.userId.toString();
     console.log('Finding Added Institutes for: ' + userId);
-    var limit = 500;
+    var limit = 2000;
     var thisUser = user
     .findOne({'_id': userId},{basic:1, userType:1})
     .exec(function (err, thisUser) {
@@ -1870,7 +1870,7 @@ router.get('/addedInstitutes/:userId', function(req, res) {
             
             if(fullUserScope){
                 var addedInstitutes = targetStudyProvider
-                .find({_createdBy: {$exists: true}},{name:1, website: 1, address:1, city:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1})
+                .find({_createdBy: {$exists: true}, disabled: false},{name:1, website: 1, address:1, city:1, state:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1})
                 .sort( { _created: -1 } )
                 .limit(limit)
                 .exec(function (err, addedInstitutes) {

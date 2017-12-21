@@ -8,9 +8,7 @@
     .inactiveBlog{
         background-color: #fff;
     }
-    #seriesName{
-        font: 12px;
-    }
+    
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -190,7 +188,7 @@
             </div>
             
             <div layout="row" layout-align="start center" flex="10" ng-if="masterUser">
-                <input type="text" class="editFont width100" ng-model="thisblog.blogSeries"  placeholder="Blog Series" id="seriesName">
+                <input type="text" class="editFont width100 font12" ng-model="thisblog.blogSeries"  placeholder="Blog Series" >
             </div>
             <div layout="row" layout-align="center center" flex="10" ng-if="masterUser || user._id == '59085f0fc7289d0011d6ea8c'">
                 <div ng-click="showFlipboardDialog(thisblog)" ng-if="!thisblog.flipboard.published">Flipboard</div>

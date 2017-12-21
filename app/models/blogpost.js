@@ -27,7 +27,7 @@ var blogpostSchema = mongoose.Schema({
     _published: { type: Date },
     _saved: [{
         autosave: { type: Boolean, default: false },
-        user: { type: Schema.ObjectId, required: true, ref: 'User' },
+        user: { type: Schema.ObjectId, ref: 'User' }, //required: true, 
         title: String,
         content: String,
         coverPhoto: String,
@@ -40,7 +40,7 @@ var blogpostSchema = mongoose.Schema({
     }],
     _autosaved: {
         autosave: { type: Boolean, default: false },
-        user: { type: Schema.ObjectId, required: true, ref: 'User' },
+        user: { type: Schema.ObjectId, ref: 'User' }, //required: true,
         title: String,
         content: String,
         coverPhoto: String,

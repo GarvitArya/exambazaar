@@ -1134,7 +1134,7 @@ router.get('/userblogs/:userId', function(req, res) {
             var internIds = ['5a1831f0bd2adb260055e352', '59c8a3683bee001b2643fa18'];
             if(thisUserType =='Master' || internIds.indexOf(thisUserId) != -1){
                 var blogposts = blogpost
-                .find({},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1, content: 1})
+                .find({},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1})
                 .exec(function (err, blogposts) {
                     if (!err){
                     var allBlogposts = [];
@@ -1146,7 +1146,7 @@ router.get('/userblogs/:userId', function(req, res) {
                     blogposts.forEach(function(thisBlogpost, rindex){
                         
                     var thisBlogUser = thisBlogpost.user;
-                    var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1},function (err, thisBlogUserInfo) {
+                    var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{basic:1},function (err, thisBlogUserInfo) {
                         if (!err){
                             thisBlogpost.user = thisBlogUserInfo;
                             counter += 1;
@@ -1163,7 +1163,7 @@ router.get('/userblogs/:userId', function(req, res) {
                 });
             }else{
                 var blogposts = blogpost
-                .find({user: userId},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1, content: 1})
+                .find({user: userId},{title: 1, user: 1, _created: 1, _published: 1, active: 1, blogSeries: 1, urlslug:1})
                 .exec(function (err, blogposts) {
                     if (!err){
                         var allBlogposts = [];
@@ -1669,8 +1669,60 @@ router.get('/setToLastSavedVersion/:blogpostId', function(req, res) {
     });
 });
 
+router.post('/clone', function(req, res) {
+    
+    var cloneForm = req.body;
+    console.log(cloneForm);
+    var fromId = cloneForm.from.toString();
+    var userId = cloneForm.userId.toString();
+    var title = cloneForm.title;
+    var urlslug = cloneForm.urlslug;
+    
+    
+    
+    
+    if(fromId && userId && title){
+        var existingBlogpost = blogpost
+        .findOne({_id: fromId})
+        .exec(function (err, existingBlogpost) {
+            if (!err){
+            if(existingBlogpost){
+                var newBlogPost = new blogpost({});
+                var excludedList = ['_id', 'upvotes','_v', '_created', '_published', '_saved', '_autosaved', 'flipboard', 'title' ];
+                var includedList = ["readingTime", "coverPhoto", "infographic", "content", "blogTags", "blogSeries", "exams", "coachingGroups", "seoKeywords", "seoDescription"];
+                for (var property in existingBlogpost) {
+                     if(includedList.indexOf(property.toString()) != -1){
+                        newBlogPost[property] = existingBlogpost[property];
+                    }
+                }
+                newBlogPost.active = false;
+                newBlogPost.user = userId;
+                newBlogPost.title = title;
+                newBlogPost.urlslug = urlslug;
+                newBlogPost.save(function(err, newBlogPost) {
+                    if (err) return console.error(err);
+                    console.log('New Blog saved with Id: ' + newBlogPost._id);
+                    res.json(newBlogPost);
+                });
+                
+            }else{
+                res.json(null);
+            }
+            } else {throw err;}
+        });
+        
+        
+    }else{
+        res.json(null);
+    }
+    
+    
+    
+});
+
 router.post('/save', function(req, res) {
     var blogpostForm = req.body;
+    
     
     var blogpostId = null;
     if(blogpostForm._id){
@@ -1680,8 +1732,9 @@ router.post('/save', function(req, res) {
     var savedBy = blogpostForm.savedBy.toString();
     var autosave = blogpostForm.autosave; 
     var user = blogpostForm.user;
+    
     if(blogpostForm.user && blogpostForm.user._id){
-        user = blogpostForm.user._id.toString();
+        blogpostForm.user = blogpostForm.user._id.toString();
     }
     
     if(blogpostId){
@@ -1693,6 +1746,9 @@ router.post('/save', function(req, res) {
             if(existingBlogpost){
                 
                 if(savedBy){
+                    if(!blogpostForm.user){
+                        blogpostForm.user = savedBy;
+                    }
                     var timeNow = new Date();
                     for (var property in blogpostForm) {
                         if(property != '_id' && property != 'upvotes' && property != '_v'){

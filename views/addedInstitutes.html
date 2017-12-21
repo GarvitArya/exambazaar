@@ -32,14 +32,14 @@
     }
 </style>
 
-<div class="whiteBackground mainContent" id="filled">
+<div class="whiteBackground mainContent blogFont font10 paddingLR40">
     <div id="spacer">
     </div>
     <div layout="column" layout-align="start start" ng-if="authorized">
         <div layout="row" layout-align="center center" class="font20 text-primary bold width100">
             Institutes Added - Report for {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{addedInstitutes.length}}</span>
         </div>
-        <div layout="row" layout-align="center center" class="width100 marginTB10 font12">
+        <div layout="row" layout-align="center center" class="width100 marginTB10 font14">
             <div layout="row" layout-align="center center" class="marginR10">
                 See report for user:
             </div>
@@ -52,15 +52,21 @@
                 </md-select>
             </div>
         </div>
-        <div flex layout="row" layout-align="start center" class="width100 greyBottomBorder marginT20 font10 bold">
+        <div flex layout="row" layout-align="start center" class="width100 greyBottomBorder marginT20  bold">
             <div flex="5">
                 S. No.
             </div>
-            <div flex="30">
+            <div flex="20">
                 Institute
             </div>
-            <div flex="10">
+            <div flex="5" class="">
+                Logo
+            </div>
+            <div flex="5">
                 City
+            </div>
+            <div flex="5">
+                State
             </div>
             <div flex="10">
                 Added By
@@ -68,7 +74,7 @@
             <div flex="10">
                 Created on
             </div>
-            <div flex="10">
+            <div flex="5">
                 #Exams
             </div>
             <div flex="10">
@@ -80,39 +86,51 @@
             
         </div>
          <!--| orderBy:['-_created']-->
-        <div flex layout="row" layout-align="start center" ng-repeat="institute in addedInstitutes | orderBy:['-_created']" class="width100 greyDashedBottomBorder font10" ng-class="{ cidone: institute.cifilled }">
+        <div flex layout="row" layout-align="start center" ng-repeat="institute in addedInstitutes | orderBy:['-_created']" class="width100 greyDashedBottomBorder " ng-class="{ cidone: institute.cifilled }">
             <div flex="5">
                 {{$index+1}}
             </div>
-            <div layout="row" layout-align="start center" flex="30" class="font12">
-                <a ui-sref="claim({ coachingId:{{'institute._id'}} })" target="_blank" id="link" class="">
-                <strong>{{institute.name}}</strong>
-                </a>
-                <i class="fa fa-header text-primary marginL10" aria-hidden="true" ng-click="titleCaseName(institute, $index)"></i>
-                <i class="fa fa-trash-o danger marginL10" aria-hidden="true" ng-click="removeProviderConfirm(institute)"></i>
-                
-                <i class="fa fa-check-circle text-primary marginL10" aria-hidden="true" ng-if="institute.cifilled"></i>
+            <div layout="row" layout-align="start center" flex="20" class="">
+                <div flex>
+                    <a ui-sref="claim({ coachingId:{{'institute._id'}} })" target="_blank" id="link" class="bold">
+                    {{institute.name}}
+                    </a>
+                </div>
+                <div flex="30">
+                    <i class="fa fa-header text-primary marginL10" aria-hidden="true" ng-click="titleCaseName(institute, $index)"></i>
+                    <i class="fa fa-trash-o danger marginL10" aria-hidden="true" ng-click="removeProviderConfirm(institute)"></i>
+
+                    <i class="fa fa-check-circle text-primary marginL10" aria-hidden="true" ng-if="institute.cifilled"></i>
+                </div>
                 
                 
             </div>
-            <div flex="10" class="font10">
-                <a ui-sref="targetStudyProviders({ city:{{'institute.city'}} })" target="_blank" id="link">
-                <strong>{{institute.city}}</strong>
+            <div flex="5" class="">
+                <i class="fa fa-check-circle text-primary marginLR10" aria-hidden="true" ng-if="institute.logo && institute.logo!=''"></i>
+                <i class="fa fa-times-circle danger marginLR10" aria-hidden="true" ng-if="!institute.logo || institute.logo==''"></i>
+            </div>
+            <div flex="5">
+                <a ui-sref="targetStudyProviders({ city:{{'institute.city'}} })" class="bold" target="_blank" id="link">
+                {{institute.city}}
                 </a>
             </div>
-            <div flex="10" class="font10">
+            <div flex="5" class="">
+                {{institute.state}}
+            </div>
+            <div flex="10" class="">
                 {{institute._createdBy.basic.name}}
             </div>
-            <div flex="10" class="font10">
+            
+            <div flex="10" class="">
                 {{institute._created | date: "dd-MMM-yy HH:mm"}}
             </div>
-            <div flex="10" class="font10">
+            <div flex="5" class="">
                 {{institute.exams.length}}
             </div>
-            <div flex="10" class="font10">
+            <div flex="10" class="">
                 {{institute.phone.length}} | {{institute.mobile.length}}
             </div>
-            <div flex="10" class="font10" ng-class="{ ciwebsite: websiteExists(institute) }">
+            <div flex="10" class="" ng-class="{ ciwebsite: websiteExists(institute) }">
                 {{institute.email.length}} | {{institute.website.length}}
             </div>
             
