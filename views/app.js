@@ -622,6 +622,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.markSimulate = function() {
             return $http.get('/api/tests/markSimulate');
         };
+        this.testsWithQuestions = function() {
+            return $http.get('/api/tests/testsWithQuestions');
+        };
+        
         this.getTest = function(testId) {
             return $http.get('/api/tests/edit/'+testId, {testId: testId});
         };
@@ -15524,9 +15528,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     exambazaar.controller("allTestsController", 
-        [ '$scope', 'thisuser','examList','testList', 'testService', 's3UtilsService', function($scope, thisuser, examList, testList, testService, s3UtilsService){
+        [ '$scope', 'thisuser','examList','testList', 'testService', 's3UtilsService', 'testswithQuestions', function($scope, thisuser, examList, testList, testService, s3UtilsService, testswithQuestions){
             $scope.user = thisuser.data;
             $scope.allTests = testList.data;
+            var testswithQuestions = testswithQuestions.data;
+            var testswithQuestionIds = testswithQuestions.map(function(a) {return a._id.toString();});
             var allExams = examList.data;
             
             var examIds = allExams.map(function(a) {return a._id;});
@@ -15537,15 +15543,27 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if(!thisExam.tests){
                     thisExam.tests = [];
                 }
+                thisExam.nTyped = 0;
             });
-            
             $scope.allTests.forEach(function(thisTest, index){
                 var eIndex = examIds.indexOf(thisTest.exam);
+                var qIndex = testswithQuestionIds.indexOf(thisTest._id.toString());
+                
+                
                 if(eIndex != -1){
                     if(!allExams[eIndex].tests){
                         allExams[eIndex].tests = [];
                     }
                     allExams[eIndex].tests.push(thisTest);
+                }
+                if(qIndex != -1){
+                    thisTest.nTyped = testswithQuestions[qIndex].count;
+                    if(eIndex != -1){
+                        allExams[eIndex].nTyped += testswithQuestions[qIndex].count;
+                    }
+                    
+                }else{
+                    thisTest.nTyped = 0;
                 }
             });
             
@@ -15565,6 +15583,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log("Error ");
                 }); 
             };
+            /*$scope.testsWithQuestions = function(){
+                testService.testsWithQuestions().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                }); 
+            };*/
+            
+            
             $scope.readTest = function(test){
                 var question = test.url.question;
                 var answer = test.url.question;
@@ -38124,7 +38152,13 @@ function getLatLng(thisData) {
                 testList: ['testService',
                     function(testService){
                     return testService.getTests();
-                }]
+                }],
+                testswithQuestions: ['testService',
+                    function(testService){
+                    return testService.testsWithQuestions();
+                }],
+                
+                
             }
         })
         .state('scheduleQAD', {

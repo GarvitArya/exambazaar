@@ -4,6 +4,7 @@ var router = express.Router();
 var config = require('../config/mydatabase.js');
 var exam = require('../app/models/exam');
 var test = require('../app/models/test');
+var question = require('../app/models/question');
 var mongoose = require('mongoose');
 
 var moment = require('moment');
@@ -67,36 +68,47 @@ router.get('/', function(req, res) {
 });
 
 router.get('/markSimulate', function(req, res) {
-    
+    res.json(true);
     var allTests = test
         .find({},{_id: 1})
+        .limit(1000)
         //.deepPopulate('exam')
         .exec(function (err, allTests) {
         if (!err){
-            res.json(true);
+            var theseTests = allTests.map(function(a) {return a._id.toString();});
             
-            allTests.forEach(function(existingTest, index){
+            
+            theseTests.forEach(function(existingTest, index){
                 var testId = existingTest.toString();
+                
                 var solutionKey = [];
                 var testQuestions = question
                 .find({test: testId}, {questions: 1})
                 .deepPopulate('questions')
                 .exec(function (err, testQuestions) {
-                if(testQuestions){
+                    
+                if(testQuestions && testQuestions.length > 0){
                 var nQuestions = 0;    
                 var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
-
+                var valid = true;
                 var counter = 0;
 
                 testQuestions.forEach(function(thisQuesiton, qIndex){
                     nQuestions += thisQuesiton.questions.length;
                 });
+                
                 testQuestions.forEach(function(thisQuesiton, qIndex){
                 var questionId = thisQuesiton._id;
                 thisQuesiton.questions.forEach(function(subQuestion, sIndex){
                     var subQuestionId = subQuestion._id;
                     var correctOptionId = null;
+                    if(subQuestion.question.length < 10 ){
+                        valid = false;
+                    }
                     subQuestion.options.forEach(function(thisOption, oIndex){
+                        if(thisOption.option.length < 1 ){
+                            valid = false;
+                        }
                         if(thisOption._correct){
                             correctOptionId = thisOption._id;
 
@@ -109,9 +121,9 @@ router.get('/markSimulate', function(req, res) {
                             counter += 1;
                         }
                         
-                        if(counter == nQuestions){
+                        if(counter == nQuestions && valid){
 
-                            console.log('Test Ready: ' + testId);
+                            console.log(testId);
 
                         }
 
@@ -132,39 +144,35 @@ router.get('/markSimulate', function(req, res) {
 
 
                 }else{
-                    res.json(false);
+                    
                 }     
             });
                 
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                console.log(testId);
             });
         } else {throw err;}
+    });
+    
+});
+
+router.get('/testsWithQuestions', function(req, res) {
+    var testSummary = question.aggregate(
+    [
+        {$match: {} },
+        {"$group": { "_id": { test: "$test" }, count:{$sum:1} } },
+        {$sort:{"count":-1}}
+    ],function(err, testSummary) {
+    if (!err){
+        var finalTestSummary = [];
+        testSummary.forEach(function(existingTest, index){
+            var newItem = {
+                _id: existingTest._id.test,
+                count: existingTest.count
+            };
+            finalTestSummary.push(newItem);
+        });
+        res.json(finalTestSummary);
+        
+    } else {throw err;}
     });
     
 });
