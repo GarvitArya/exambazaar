@@ -1358,7 +1358,7 @@ function closeVerifyCI(userId, pastInternId, res){
         if(nElements == 0){
             res.toverifyci = true;
             res.toverifyciCount = 0;
-            closeCreatedCI(userId, pastInternId, res);
+            closeFillCollege(userId, pastInternId, res);
         }
     } else {throw err;}
     });
@@ -1366,6 +1366,7 @@ function closeVerifyCI(userId, pastInternId, res){
 
 function closeFillCollege(userId, pastInternId, res){
     console.log('Starting close fill college process:');
+    
     var allElements = tofillcollege
     .find({user: userId, active: false},{user:1})
     .exec(function (err, allElements) {
@@ -1373,16 +1374,17 @@ function closeFillCollege(userId, pastInternId, res){
         var nElements = allElements.length;
         var eCounter = 0;
         allElements.forEach(function(thisElement, index){
+            console.log(allElements.length);
             thisElement.user = pastInternId;
             thisElement.save(function(err, thisElement) {
                 if (err) return console.error(err);
-                console.log('To verify CI closed: ' + thisElement._id);
+                console.log('To fill college closed: ' + thisElement._id);
                 eCounter += 1;
 
                 if(eCounter == nElements){
                     res.toverifyci = true;
                     res.toverifyciCount = nElements;
-                    closeContactCI(userId, pastInternId, res);
+                    closeCreatedCI(userId, pastInternId, res);
                 }
             });
         });

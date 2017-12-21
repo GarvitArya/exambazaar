@@ -96,6 +96,25 @@ router.get('/dailySummary', function(req, res) {
     });
 });
 
+router.get('/blogDailySummary', function(req, res) {
+    var viewSummary = view.aggregate(
+    [
+        {$match: {state: 'showblog'}},
+        {$group: { _id : {
+            year:{$year:"$_date"},
+            month:{$month:"$_date"},
+            day:{$dayOfMonth:"$_date"}
+        },count:{$sum: 1 }},
+        }/*,
+        {$sort:{"_date":-1}}*/
+
+    ],function(err, viewSummary) {
+    if (!err){
+        res.json(viewSummary);
+    } else {throw err;}
+    });
+});
+
 router.get('/hourlyHeatmap', function(req, res) {
     
     var viewSummary = view.aggregate(

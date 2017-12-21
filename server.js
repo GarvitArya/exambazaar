@@ -212,6 +212,7 @@ var allStates = [
 '/claim/:coachingId',
 '/about',
 '/contact',
+'/ebinternal/blogAnalytics',
 '/ebinternal/activeUsers/:userId',
 '/ebinternal/addAwsCredential',
 '/ebinternal/addEligibility',

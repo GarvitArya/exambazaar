@@ -5,6 +5,7 @@ var config = require('../config/mydatabase.js');
 var blogpost = require('../app/models/blogpost');
 var targetStudyProvider = require('../app/models/targetStudyProvider');
 var user = require('../app/models/user');
+var view = require('../app/models/view');
 var email = require('../app/models/email');
 var exam = require('../app/models/exam');
 var moment = require('moment');
@@ -567,6 +568,47 @@ router.post('/EdBitesstream', function(req, res) {
     
     
 });
+
+router.post('/blogAnalytics', function(req, res) {
+    var analyticsForm = req.body;
+    /*var start = analyticsForm.start;
+    var end = analyticsForm.end;*/
+    
+    var start = new Date();
+    start.setHours(0,0,0,0);
+    var end = new Date();
+    end.setHours(23,59,59,999);
+    
+    
+    var blogAnalytics = view.aggregate(
+    [
+        {$match: { state: 'showblog', _date: {$gte: start, $lt: end} }},
+        {"$group": { "_id": { url: "$url" }, count:{$sum:1} } },
+    ],function(err, blogAnalytics) {
+    if (!err){
+        var blogViews = [];
+        var counter = 0;
+        var nBlogs = blogAnalytics.length;
+        blogAnalytics.forEach(function(thisBlog, bindex){
+            var newView = {
+                blogurl: thisBlog._id.url,
+                views: thisBlog.count
+            };
+            blogViews.push(newView);
+            counter += 1;
+            if(counter == nBlogs){
+                res.json(blogViews);
+            }
+        });
+    } else {throw err;}
+    });
+    
+    
+    
+});
+
+
+
 router.post('/streamblogstream', function(req, res) {
     var streamInfo = req.body;
     var streamId = null;

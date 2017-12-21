@@ -834,6 +834,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.dailySummary = function() {
             return $http.get('/api/views/dailySummary');
         };
+        this.blogDailySummary = function() {
+            return $http.get('/api/views/blogDailySummary');
+        };
         this.hourlyHeatmap = function() {
             return $http.get('/api/views/hourlyHeatmap');
         };
@@ -1027,6 +1030,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.service('blogpostService', ['$http', function($http) {
         this.slugExists = function(query) {
             return $http.get('/api/blogposts/slugExists/'+query, {query: query});
+        };
+        
+        this.blogAnalytics = function(analyticsForm) {
+            return $http.post('/api/blogposts/blogAnalytics', analyticsForm);
         };
         
         this.saveblogpost = function(blogpostForm) {
@@ -10706,7 +10713,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }
         
         $scope.showLevel = 0;
-        var allowedCities = [
+        var permittedCities = [
             "Jaipur",
             "Kota",
             "Barmer",
@@ -10774,6 +10781,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Kozhikode", 
             "Ujjain",
             "Rourkela",
+            "Bangalore",
         ];
         
         if($cookies.getObject('sessionuser')){
@@ -10784,7 +10792,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
             if($scope.user.userType=='Intern - Business Development'){
                 
-                if(allowedCities.indexOf($scope.city) != -1){
+                if(permittedCities.indexOf($scope.city) != -1){
                     $scope.showLevel = 1;
                 }else{
                     $scope.showLevel = 0; 
@@ -12368,6 +12376,30 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 console.log('Error ' + data + ' ' + status);
                 });  
             };
+    }]);
+        
+    exambazaar.controller("blogAnalyticsController", 
+        [ '$scope', '$http', '$state', '$rootScope', '$cookies','blogAnalytics', function($scope, $http, $state, $rootScope, $cookies, blogAnalytics){
+            $scope.authorized = false;
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+                
+                if($scope.user.userType == 'Master'){
+                    $scope.authorized = true;
+                }
+                
+            }else{
+                console.log('Could not find user');
+                $scope.authorized = false;
+                $cookies.remove('sessionuser');
+                $rootScope.$emit("ForcedLogin", {});
+                
+            }
+            
+            
+            $scope.blogAnalytics = blogAnalytics.data;
+            console.log($scope.blogAnalytics);
+            
     }]);
         
     exambazaar.controller("filledCollegesController", 
@@ -14899,7 +14931,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
     
     exambazaar.controller("chartingController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'viewSummary', 'viewHourlyHeatmap', 'userSummary', 'userHourlyHeatmap', 'providerSummary', 'reviewSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, viewSummary, viewHourlyHeatmap, userSummary, userHourlyHeatmap, providerSummary, reviewSummary){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'viewSummary', 'viewHourlyHeatmap', 'userSummary', 'userHourlyHeatmap', 'providerSummary', 'reviewSummary', 'blogDailySummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, viewSummary, viewHourlyHeatmap, userSummary, userHourlyHeatmap, providerSummary, reviewSummary, blogDailySummary){
+            $scope.blogAnalytics = blogAnalytics.data;
+            console.log($scope.blogAnalytics);
             
             $rootScope.pageTitle ='Charting Sandbox';
             if($cookies.getObject('sessionuser')){
@@ -15151,6 +15185,45 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 data: [users],
                 datasetOverride: [{ yAxisID: 'y-axis-1' }],
                 options: $scope.useroptions
+            };
+            $scope.charts.push(newChart);
+            
+            
+            var blogSummaryData = blogDailySummary.data;
+            $scope.blogSummaryData = [];
+            blogSummaryData.forEach(function(thisDay, vindex){
+                var newDayData = {
+                    date: new Date(thisDay._id.year, thisDay._id.month-1, thisDay._id.day),
+                    views: thisDay.count,
+                };
+                $scope.blogSummaryData.push(newDayData);
+            });
+            $scope.blogSummaryData.sort(function(a,b){
+              return new Date(a.date) - new Date(b.date);
+            });
+            var views = $scope.blogSummaryData.map(function(a) {return a.views;});
+            $scope.viewoptions = {
+                scales: {
+                  yAxes: [
+                    {
+                      id: 'y-axis-1',
+                      type: 'linear',
+                      display: true,
+                      position: 'right'
+                    },
+                  ]
+                },
+                title: {
+                    display: true,
+                    text: 'Blog Views per day'
+                }
+            };
+            var newChart = {
+                labels: $scope.blogSummaryData.map(function(a) {return moment(a.date).format('DD MMM YY');}),
+                series: ['Views'],
+                data: [views],
+                datasetOverride: [{ yAxisID: 'y-axis-1' }],
+                options: $scope.viewoptions
             };
             $scope.charts.push(newChart);
             
@@ -15639,7 +15712,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     
                     
                 }
-                console.log(test);
                 var fileInfo = {
                     test: test,
                 };
@@ -38087,10 +38159,16 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
+                
                 viewSummary: ['viewService',
                     function(viewService) {
                     return viewService.dailySummary();
                 }],
+                blogDailySummary: ['viewService',
+                    function(viewService) {
+                    return viewService.blogDailySummary();
+                }],
+                
                 viewHourlyHeatmap: ['viewService',
                     function(viewService) {
                     return viewService.hourlyHeatmap();
@@ -38114,6 +38192,8 @@ function getLatLng(thisData) {
                 loadCharting: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['charting'], {serie: true});
                 }],
+                
+                
                 
             }
         })
@@ -38958,6 +39038,28 @@ function getLatLng(thisData) {
                 filledColleges: ['UserService', '$stateParams',
                     function(UserService,$stateParams){
                     return UserService.getFilledColleges($stateParams.userId);
+                }],
+            }
+        })
+        .state('blogAnalytics', {
+            url: '/ebinternal/blogAnalytics',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'blogAnalytics.html',
+                    controller: 'blogAnalyticsController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                blogAnalytics: ['blogpostService',
+                    function(blogpostService) {
+                    return blogpostService.blogAnalytics(null);
                 }],
             }
         })
@@ -40535,6 +40637,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         "addIntern",
         "sitemap",
         "blogsitemap",
+        "blogAnalytics",
 
     ];
     var atleastInternState = [
