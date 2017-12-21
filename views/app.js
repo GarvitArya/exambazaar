@@ -14992,8 +14992,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("chartingController", 
         [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'viewSummary', 'viewHourlyHeatmap', 'userSummary', 'userHourlyHeatmap', 'providerSummary', 'reviewSummary', 'blogDailySummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, viewSummary, viewHourlyHeatmap, userSummary, userHourlyHeatmap, providerSummary, reviewSummary, blogDailySummary){
-            $scope.blogAnalytics = blogAnalytics.data;
-            console.log($scope.blogAnalytics);
             
             $rootScope.pageTitle ='Charting Sandbox';
             if($cookies.getObject('sessionuser')){
