@@ -1038,6 +1038,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.allblogsbasic = function(analyticsForm) {
             return $http.get('/api/blogposts/allblogsbasic');
         };
+        this.oneOff = function() {
+            return $http.get('/api/blogposts/oneOff');
+        };
         this.saveblogpost = function(blogpostForm) {
             return $http.post('/api/blogposts/save', blogpostForm);
         };
@@ -15390,7 +15393,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             var ResumeStreamInfo = {
                 streamId: null,
-                included: ['Resume'],
+                included: ['Build Resume', 'Job', 'Career'],
                 limit: 3,
             };
             var EdbitesStreamInfo = {
@@ -18099,6 +18102,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         [ '$scope', '$http','$state', '$stateParams','$rootScope', '$cookies', 'UserService', 'Upload', 'ImageService','$mdDialog', '$timeout', 'blogpostService', 'upvoteService', 'allBlogsUpvotesCount', 'allBloggers', 's3UtilsService', 'Notification', function($scope, $http, $state, $stateParams, $rootScope, $cookies, UserService, Upload, ImageService, $mdDialog, $timeout, blogpostService, upvoteService, allBlogsUpvotesCount, allBloggers, s3UtilsService, Notification){
             var allBlogsUpvotesCount = allBlogsUpvotesCount.data;
             $scope.allBloggers = allBloggers.data;
+            
+            $scope.oneOff = function(){
+                blogpostService.oneOff().success(function (blogData, status, headers) {
+                    console.log(blogData);
+
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });    
+            };
             
             var processBlogs = function(){
                 var blogUpvotesId = allBlogsUpvotesCount.map(function(a) {return a.blogpost;});
