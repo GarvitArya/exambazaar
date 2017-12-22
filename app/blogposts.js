@@ -603,6 +603,10 @@ router.post('/blogAnalytics', function(req, res) {
         var blogViews = [];
         var counter = 0;
         var nBlogs = blogAnalytics.length;
+        
+        if(nBlogs == 0){
+            res.json([]);
+        }
         blogAnalytics.forEach(function(thisBlog, bindex){
             var newView = {
                 blogurl: thisBlog._id.url,

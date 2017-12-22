@@ -9,9 +9,12 @@ var email = require('../app/models/email');
 var disableProvider = require('../app/models/disableProvider');
 var oldtargetStudyProvider = require('../app/models/oldtargetStudyProvider');
 var exam = require('../app/models/exam');
+var view = require('../app/models/view');
 var result = require('../app/models/result');
 var group = require('../app/models/group');
 var logourl = require('../app/models/logourl');
+var moment = require('moment');
+
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 db.on('error', console.error);
@@ -1167,6 +1170,68 @@ router.get('/dailySummary', function(req, res) {
         res.json(targetStudyProviderSummary);
     } else {throw err;}
     });
+});
+
+router.post('/p5Analytics', function(req, res) {
+    var analyticsForm = req.body;
+    var start = analyticsForm.start;
+    var end = analyticsForm.end;
+    
+    start = moment(start).startOf('day').toDate();
+    end = moment(end).endOf('day').toDate();
+    
+    var p5Analytics = view.aggregate(
+    [
+        {$match: { institute: {$exists: true}, state: 'showGroup', _date: {$gte: start, $lt: end} }},
+        {"$group": { "_id": { institute: "$institute" }, count:{$sum:1} } },
+    ],function(err, p5Analytics) {
+    if (!err){
+        var p5InstituteIds = [];
+        var p5Views = [];
+        var counter = 0;
+        var nInstitutes = p5Analytics.length;
+        if(nInstitutes == 0){
+            res.json([]);
+        }else{
+            p5InstituteIds = p5Analytics.map(function(a) {return a._id.institute.toString();});
+                        
+            var allInstitutes = targetStudyProvider.find({_id:{$in: p5InstituteIds}}, {name:1, city: 1, state: 1},function(err, allInstitutes) {
+            if (!err){
+                var nInstitutes2 = allInstitutes.length;
+                console.log(nInstitutes2);
+                allInstitutes.forEach(function(thisInstitute, index){
+                    var pIndex = p5InstituteIds.indexOf(thisInstitute._id.toString());
+                    
+                    if(pIndex != -1){
+                        var newView = {
+                            _id: thisInstitute._id,
+                            name: thisInstitute.name,
+                            city: thisInstitute.city,
+                            state: thisInstitute.state,
+                            views: p5Analytics[pIndex].count
+                        };
+                        if(newView._id && newView._id != ''){
+                            p5Views.push(newView);
+                        }
+                    }
+                    counter += 1;
+                    if(counter == nInstitutes2){
+                        res.json(p5Views);
+                    }
+                });
+            } else {throw err;}
+            });
+            
+            
+            
+            
+        }
+        
+    } else {throw err;}
+    });
+    
+    
+    
 });
 
 router.get('/blogCoachingGroupQuery/:query', function(req, res) {

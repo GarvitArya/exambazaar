@@ -1512,6 +1512,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.dailySummary = function() {
             return $http.get('/api/targetStudyProviders/dailySummary');
         };
+        this.p5Analytics = function(analyticsForm) {
+            return $http.post('/api/targetStudyProviders/p5Analytics', analyticsForm);
+        };
         this.allResults = function(examId) {
             return $http.get('/api/targetStudyProviders/allResults/'+examId, {examId: examId});
         };
@@ -12380,26 +12383,48 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
     }]);
         
-    exambazaar.controller("blogAnalyticsController", 
-        [ '$scope', '$http', '$state', '$rootScope', '$cookies', 'blogpostService', 'allblogsbasic', function($scope, $http, $state, $rootScope, $cookies, blogpostService, allblogsbasic){
-            var allblogsbasic = allblogsbasic.data;
-            var allblogsbasicIds = allblogsbasic.map(function(a) {return ("/blogpost/" + a.urlslug);});
-            //console.log(allblogsbasicIds);
-            $rootScope.pageTitle = "Blog Analytics";
+    exambazaar.controller("analyticsController", 
+        [ '$scope', '$http', '$state', '$rootScope', '$cookies', 'blogpostService', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, $cookies, blogpostService, targetStudyProviderService){
+            var allblogsbasic = null;
+            var allblogsbasicIds = null;
+            $scope.analyticsOptions = ["Blog Analytics", "P5 Analytics"];
+            $scope.activeAnalytics = "Blog Analytics";
+            $scope.setOption = function(analyticsOption){
+                $scope.activeAnalytics = analyticsOption;
+                setPage();
+            };
+            
+            
             $scope.authorized = false;
+            var setPage = function(){
+                if($scope.activeAnalytics == 'Blog Analytics'){
+                    loadBlogs();
+                }
+                if($scope.activeAnalytics == 'P5 Analytics'){
+                    loadP5Views();
+                }    
+                $rootScope.pageTitle = $scope.activeAnalytics;
+            };
             $scope.start = moment().subtract(1, 'days');
             $scope.end = moment();
             $scope.limits = ["0", "1", "7", "14", "30", "180", "365"];
             $scope.nDays = 1;
             $scope.lastNDays = function(days){
+                $scope.blogAnalytics = null;
+                $scope.p5Analytics = null;
+                
                 $scope.nDays = days;
                 $scope.end = moment();
                 $scope.start = moment().subtract(days, 'days');
-                loadBlogs();
+                setPage();
             };
             $scope.setCustomDates = function(){
+                $scope.blogAnalytics = null;
+                $scope.p5Analytics = null;
+                
                 $scope.nDays = $scope.end.diff($scope.start, 'days');
-                loadBlogs();
+                
+                setPage();
             };
             $scope.buttonClass = function(limit){
                 if($scope.nDays == limit){
@@ -12408,39 +12433,28 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     return "md-next";
                 }
             };
+            
             var loadBlogs = function(){
                 var analyticsForm = {
                     start: $scope.start,
                     end: $scope.end,
                 };
                 blogpostService.blogAnalytics(analyticsForm).success(function (data, status, headers) {
-                    $scope.blogAnalytics = data;
-                    initiateBlogs();
-                    //console.log($scope.blogAnalytics);
+                    blogpostService.allblogsbasic().success(function (blogdata, status, headers) {
+                        $scope.blogAnalytics = data;
+                    
+                        allblogsbasic = blogdata;
+                        allblogsbasicIds = allblogsbasic.map(function(a) {return ("/blogpost/" + a.urlslug);});
+                        initiateBlogs();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log();
+                    });
                 })
                 .error(function (data, status, header, config) {
                     console.log();
                 });    
             };
-            if($cookies.getObject('sessionuser')){
-                $scope.user = $cookies.getObject('sessionuser');
-                
-                    
-                
-                if($scope.user.userType == 'Master'){
-                    $scope.authorized = true;
-                    loadBlogs();
-                    
-                }
-                
-            }else{
-                console.log('Could not find user');
-                $scope.authorized = false;
-                $cookies.remove('sessionuser');
-                $rootScope.$emit("ForcedLogin", {});
-                
-            };
-            
             var initiateBlogs = function(){
                 $scope.totalViews = 0;
                 $scope.blogAnalytics.forEach(function(thisBlog, bindex){
@@ -12458,6 +12472,43 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }
                 });
             };
+            
+            var loadP5Views = function(){
+                var analyticsForm = {
+                    start: $scope.start,
+                    end: $scope.end,
+                };
+                targetStudyProviderService.p5Analytics(analyticsForm).success(function (data, status, headers) {
+                    $scope.p5Analytics = data;
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });    
+            };
+            
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+                
+                    
+                
+                if($scope.user.userType == 'Master'){
+                    $scope.authorized = true;
+                    setPage();
+                    
+                    
+                }
+                
+            }else{
+                console.log('Could not find user');
+                $scope.authorized = false;
+                $cookies.remove('sessionuser');
+                $rootScope.$emit("ForcedLogin", {});
+                
+            };
+            
+            
+            
+            
             
             
     }]);
@@ -15311,7 +15362,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             var InspirationStreamInfo = {
                 streamId: null,
-                excluded: ['Top 10 Online', 'Best Books', 'Exam Page', 'Best Schools', 'Degrees', 'Expert Reviews', 'EdBites' ],
+                excluded: ['Top 10 Online', 'Best Books', 'Exam Page', 'Best Schools', 'Degrees', 'Expert Reviews', 'EdBites', 'Resume' ],
                 limit: 3,
             };
             var ExamPreparationStreamInfo = {
@@ -15329,6 +15380,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 included: ['Expert Reviews'],
                 limit: 3,
             };
+            var ResumeStreamInfo = {
+                streamId: null,
+                included: ['Resume'],
+                limit: 3,
+            };
             var EdbitesStreamInfo = {
                 streamId: null,
                 included: ['EdBites'],
@@ -15341,6 +15397,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.ExamPreparationBlogs = new BlogStream(ExamPreparationStreamInfo);
                 $scope.InformationBlogs = new BlogStream(InformationStreamInfo);
                 $scope.BestCoachingBlogs = new BlogStream(BestCoachingStreamInfo);
+                $scope.ResumeBlogs = new BlogStream(ResumeStreamInfo);
                 
                 $scope.allEdbites = new BlogStream(EdbitesStreamInfo);
 
@@ -15348,6 +15405,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.ExamPreparationBlogs.nextPage();
                 $scope.InformationBlogs.nextPage();
                 $scope.BestCoachingBlogs.nextPage();
+                $scope.ResumeBlogs.nextPage();
                 $scope.allEdbites.nextPage();
             };
             refreshAll();
@@ -15359,6 +15417,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 ExamPreparationStreamInfo.streamId = stream._id;
                 InformationStreamInfo.streamId = stream._id;
                 BestCoachingStreamInfo.streamId = stream._id;
+                //ResumeStreamInfo.streamId = stream._id;
                 
                 refreshAll();
             };
@@ -15368,6 +15427,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 ExamPreparationStreamInfo.streamId = null;
                 InformationStreamInfo.streamId = null;
                 BestCoachingStreamInfo.streamId = null;
+                //ResumeStreamInfo.streamId = null;
                 EdbitesStreamInfo.streamId = null;
                 
                 refreshAll();
@@ -15387,6 +15447,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             $scope.loadNextBestCoachingBlogs = function(){
                 $scope.BestCoachingBlogs.nextPage();
+            };
+            $scope.loadNextResumeBlogs = function(){
+                $scope.ResumeBlogs.nextPage();
             };
             
             $scope.buttonCSS = function(stream){
@@ -15462,6 +15525,26 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.$watch('BestCoachingBlogs.items', function (newValue, oldValue, scope) {
                 if(newValue != null && newValue.length > 0){
                      $scope.BestCoachingBlogs.items.forEach(function(thisBlog, index){
+                        var bIndex = blogUpvotesId.indexOf(thisBlog._id);
+                        //console.log(bIndex);
+
+                        if(!thisBlog.upvotes){
+                            if(bIndex == -1){
+                                thisBlog.upvotes = 0;
+                            }else{
+                                thisBlog.upvotes = allBlogsUpvotesCount[bIndex].upvotes;
+                            }
+                        }
+
+                    });
+                    
+                }
+
+            }, true);
+            
+            $scope.$watch('ResumeBlogs.items', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue.length > 0){
+                     $scope.ResumeBlogs.items.forEach(function(thisBlog, index){
                         var bIndex = blogUpvotesId.indexOf(thisBlog._id);
                         //console.log(bIndex);
 
@@ -39102,16 +39185,16 @@ function getLatLng(thisData) {
                 }],
             }
         })
-        .state('blogAnalytics', {
-            url: '/ebinternal/blogAnalytics',
+        .state('analytics', {
+            url: '/ebinternal/analytics',
             views: {
                 'header':{
                     templateUrl: 'header.html',
                     
                 },
                 'body':{
-                    templateUrl: 'blogAnalytics.html',
-                    controller: 'blogAnalyticsController',
+                    templateUrl: 'analytics.html',
+                    controller: 'analyticsController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -39119,10 +39202,7 @@ function getLatLng(thisData) {
             },
             resolve: {
                 
-                allblogsbasic: ['blogpostService',
-                    function(blogpostService) {
-                    return blogpostService.allblogsbasic();
-                }],
+                
                 
                 
             }
@@ -40702,7 +40782,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         "addIntern",
         "sitemap",
         "blogsitemap",
-        "blogAnalytics",
+        "analytics",
 
     ];
     var atleastInternState = [
