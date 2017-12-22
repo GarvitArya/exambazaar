@@ -15354,6 +15354,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             });
             
+            $scope.goToBlog = function(blog){
+                var url = $state.href('showblog', {blogpostSlug: blog.urlslug});
+                window.open(url,'_blank');  
+            };
             $scope.filterStream = null;
             var streamInfo = {
                 //streamName: 'Engineering',

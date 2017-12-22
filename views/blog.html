@@ -122,7 +122,7 @@
         <div flex-xs="100" flex-gt-xs="33" layout="column" layout-align="center center"  class="paddingLR10 paddingTB10" ng-repeat='blogpost in InspirationBlogs.items'>
           
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
-                <div layout="column" layout-align="center center" class="blogpostImage2 width100 font12" id="" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+                <div layout="column" layout-align="center center" class="blogpostImage2 width100 font12" id="" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}" ng-click="goToBlog(blogpost)">
                     
                 <!--<div class="exact30h width100">
                     <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}" >    
@@ -160,14 +160,14 @@
                 </div>
                 
                 <div layout="column" layout-align="start center" class="min20vh paddingLR10 width100 blogpostBorder ">
-                    <div layout="column" layout-align="start start" class="font14 bold wideLine2 width100 marginT20 min10vh" >
+                    <div layout="column" layout-align="start start" class="h3Font bold wideLine2 width100 marginT20 min10vh" >
                         <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
                         {{blogpost.title}}
                         </a>
 
                     </div>
                     
-                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey marginTB10">
+                    <div flex layout="row" layout-align="start center" class="width100 marginT15 marginB10 smallFont">
                         <div flex layout="column" layout-align="start start" class="">
                             <div class="narrowLine">
                                 By {{blogpost.user.basic.name}}
@@ -179,7 +179,7 @@
                     </div>
                     
                     
-                    <div flex layout="row" layout-align="start center" class="width100 sixthFont font11 marginTB10 wideLine textDarkGrey text-justify" ng-if="blogStream">
+                    <div flex layout="row" layout-align="start center" class="width100 marginTB10 wideLine subBaseFont" ng-if="blogStream">
                         {{blogpost.seoDescription}}
                         
                     </div>
@@ -279,14 +279,14 @@
                 </div>
                 
                 <div layout="column" layout-align="start center" class="min20vh paddingLR10 width100 blogpostBorder ">
-                    <div layout="column" layout-align="start start" class="font14 bold wideLine2 width100 marginT20 min10vh" >
+                    <div layout="column" layout-align="start start" class="h3Font bold wideLine2 width100 marginT20 min10vh" >
                         <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
                         {{blogpost.title}}
                         </a>
 
                     </div>
                     
-                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey marginTB10">
+                    <div flex layout="row" layout-align="start center" class="width100 marginT15 marginB10 smallFont">
                         <div flex layout="column" layout-align="start start" class="">
                             <div class="narrowLine">
                                 By {{blogpost.user.basic.name}}
@@ -298,7 +298,7 @@
                     </div>
                     
                     
-                    <div flex layout="row" layout-align="start center" class="width100 sixthFont font11 marginTB10 wideLine textDarkGrey text-justify" ng-if="blogStream">
+                    <div flex layout="row" layout-align="start center" class="width100 marginTB10 wideLine subBaseFont" ng-if="blogStream">
                         {{blogpost.seoDescription}}
                         
                     </div>
@@ -399,14 +399,14 @@
                 </div>
                 
                 <div layout="column" layout-align="start center" class="min20vh paddingLR10 width100 blogpostBorder ">
-                    <div layout="column" layout-align="start start" class="font14 bold wideLine2 width100 marginT20 min10vh" >
+                    <div layout="column" layout-align="start start" class="h3Font bold wideLine2 width100 marginT20 min10vh" >
                         <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
                         {{blogpost.title}}
                         </a>
 
                     </div>
                     
-                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey marginTB10">
+                    <div flex layout="row" layout-align="start center" class="width100 marginT15 marginB10 smallFont">
                         <div flex layout="column" layout-align="start start" class="">
                             <div class="narrowLine">
                                 By {{blogpost.user.basic.name}}
@@ -418,7 +418,7 @@
                     </div>
                     
                     
-                    <div flex layout="row" layout-align="start center" class="width100 sixthFont font11 marginTB10 wideLine textDarkGrey text-justify" ng-if="blogStream">
+                    <div flex layout="row" layout-align="start center" class="width100 marginTB10 wideLine subBaseFont" ng-if="blogStream">
                         {{blogpost.seoDescription}}
                         
                     </div>
@@ -520,14 +520,14 @@
                 </div>
                 
                 <div layout="column" layout-align="start center" class="min20vh paddingLR10 width100 blogpostBorder ">
-                    <div layout="column" layout-align="start start" class="font14 bold wideLine2 width100 marginT20 min10vh" >
+                    <div layout="column" layout-align="start start" class="h3Font bold wideLine2 width100 marginT20 min10vh" >
                         <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
                         {{blogpost.title}}
                         </a>
 
                     </div>
                     
-                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey marginTB10">
+                    <div flex layout="row" layout-align="start center" class="width100 marginT15 marginB10 smallFont">
                         <div flex layout="column" layout-align="start start" class="">
                             <div class="narrowLine">
                                 By {{blogpost.user.basic.name}}
@@ -539,7 +539,7 @@
                     </div>
                     
                     
-                    <div flex layout="row" layout-align="start center" class="width100 sixthFont font11 marginTB10 wideLine textDarkGrey text-justify" ng-if="blogStream">
+                    <div flex layout="row" layout-align="start center" class="width100 marginTB10 wideLine subBaseFont" ng-if="blogStream">
                         {{blogpost.seoDescription}}
                         
                     </div>
@@ -641,14 +641,14 @@
                 </div>
                 
                 <div layout="column" layout-align="start center" class="min20vh paddingLR10 width100 blogpostBorder ">
-                    <div layout="column" layout-align="start start" class="font14 bold wideLine2 width100 marginT20 min10vh" >
+                    <div layout="column" layout-align="start start" class="h3Font bold wideLine2 width100 marginT20 min10vh" >
                         <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
                         {{blogpost.title}}
                         </a>
 
                     </div>
                     
-                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey marginTB10">
+                    <div flex layout="row" layout-align="start center" class="width100 marginT15 marginB10 smallFont">
                         <div flex layout="column" layout-align="start start" class="">
                             <div class="narrowLine">
                                 By {{blogpost.user.basic.name}}
@@ -660,7 +660,7 @@
                     </div>
                     
                     
-                    <div flex layout="row" layout-align="start center" class="width100 sixthFont font11 marginTB10 wideLine textDarkGrey text-justify" ng-if="blogStream">
+                    <div flex layout="row" layout-align="start center" class="width100 marginTB10 wideLine subBaseFont" ng-if="blogStream">
                         {{blogpost.seoDescription}}
                         
                     </div>
@@ -705,7 +705,7 @@
         </div>
         
         <div layout="row" layout-align="end end"  class="width100 padding10 marginB20" ng-if="!ResumeBlogs.finished">
-            <a id="reviewLink" ng-click="loadNextBestCoachingBlogs()">More in Best Coaching ></a>
+            <a id="reviewLink" ng-click="loadNextResumeBlogs()">More in Resume Ideas ></a>
         </div>
         <div layout="column" layout-align="center center" class="width100 marginTB40 min20vh" ng-show='ResumeBlogs.busy'>
             <img src='ebloader2.gif' />
@@ -763,7 +763,7 @@
                 
                 <div layout="column" layout-align="start center" class="min10vh paddingLR10 paddingTB10 width100 blogpostBorder ">
                     <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
-                        <div flex layout="column" layout-align="start start" flex class="font12 wideLine2 marginR10" ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })">
+                        <div flex layout="column" layout-align="start start" flex class="baseFont wideLine2 marginR10" ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })">
                             {{blogpost.title}}
                         </div>
                         
@@ -804,7 +804,7 @@
 
                         </div>-->
                     </div>
-                    <div flex layout="row" layout-align="start center" class="width100 font10 textLightGrey">
+                    <div flex layout="row" layout-align="start center" class="width100 smallFont">
                         <div flex layout="column" layout-align="start start" class="">
                             <div class="narrowLine">
                                 By {{blogpost.user.basic.name}}
