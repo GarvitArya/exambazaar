@@ -727,7 +727,7 @@
         <!--infinite-scroll='allEdbites.nextPage()' infinite-scroll-disabled='allEdbites.busy' infinite-scroll-distance='1'-->
         <div layout="column" layout-align="center center"  class="width100 paddingTB10" ng-repeat="blogpost in allEdbites.items">
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
-            <div layout="column" layout-align="center center" class="edBitesImage2 width100" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}">
+            <div layout="column" layout-align="center center" class="edBitesImage2 width100" ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}" ng-click="goToBlog(blogpost)">
                 <!--<img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">-->
                 <div layout="row" layout-align="start center" id="blogPostRead" class="width100 paddingLR20 paddingTB10">
 
@@ -763,8 +763,10 @@
                 
                 <div layout="column" layout-align="start center" class="min10vh paddingLR10 paddingTB10 width100 blogpostBorder ">
                     <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginB10">
-                        <div flex layout="column" layout-align="start start" flex class="baseFont wideLine2 marginR10" ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })">
-                            {{blogpost.title}}
+                        <div flex layout="column" layout-align="start start" flex class="baseFont wideLine2 marginR10">
+                            <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
+                                {{blogpost.title}}
+                            </a>
                         </div>
                         
                         

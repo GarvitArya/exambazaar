@@ -776,7 +776,7 @@ router.post('/blogstream', function(req, res) {
     if(streamInfo && streamInfo.included && streamInfo.included.length > 0){
         included = streamInfo.included;
     }
-    console.log('Limit and skip are:');
+    /*console.log('Limit and skip are:');
     console.log(limit + " | " + skip);
     console.log('---------------------');
     console.log('Stream Id is:');
@@ -787,7 +787,7 @@ router.post('/blogstream', function(req, res) {
     console.log('---------------------');
     console.log('Excluded are:');
     console.log(excluded);
-    console.log('---------------------');
+    console.log('---------------------');*/
     
     
     if(included.length > 0){
@@ -1451,6 +1451,170 @@ router.get('/edit/:blogpostId', function(req, res) {
                     res.json(thisBlogpost);
                     } else {throw err;}
                 });
+            }else{
+                res.json(null);
+            }
+        } else {throw err;}
+    });
+});
+
+router.get('/recommenedBlogs/:blogpostSlug', function(req, res) {
+    // 25, 25, 25, 25
+    var recommenedBlogs = {
+        blogSeries: [],
+        blogAuthor: [],
+        examBlogs: [],
+        coachingBlogs: [],
+    };
+    var excludedList = ['EdBites'];
+    var examBlogsExcludedList = ['Expert Reviews', 'Degrees'];
+    var blogpostSlug = req.params.blogpostSlug;
+    
+    var thisBlogpost = blogpost
+        .findOne({ 'urlslug': blogpostSlug }, { blogSeries: 1, exams : 1, coachingGroups: 1, user: 1 })
+        //.deepPopulate('blogTags')
+        .exec(function (err, thisBlogpost) {
+            
+        if (!err){
+            if(thisBlogpost){
+            var examArray = [];
+            var coachingArray = [];
+            var blogSeries = null;
+            var blogAuthor = null;
+
+            if(thisBlogpost.blogSeries && thisBlogpost.blogSeries != ''){
+                blogSeries = thisBlogpost.blogSeries
+            }
+            if(thisBlogpost.user){
+                blogAuthor = thisBlogpost.user.toString();
+            }
+            if(thisBlogpost.exams && thisBlogpost.exams.length > 0){
+                examArray = thisBlogpost.exams;
+            }
+            if(thisBlogpost.coachingGroups && thisBlogpost.coachingGroups.length > 0){
+                coachingArray = thisBlogpost.coachingGroups;
+            }
+            
+
+            //console.log(blogSeries + " | " + blogAuthor + " | " + examArray.length  + " | " + coachingArray.length);
+
+            /**/
+            var blogposts = blogpost
+            .find({ _id: {$ne: thisBlogpost._id.toString() },active: true, blogSeries: {$nin: excludedList} , $or: [ {blogSeries : blogSeries}, { user: blogAuthor }, { exams: { $in: examArray } }, { coachingGroups: { $in: coachingArray } }  ] }, {title: 1, blogSeries: 1, exams: 1, coachingGroups: 1, user: 1, coverPhoto: 1, readingTime: 1, _published: 1, seoDescription: 1, urlslug: 1})
+            .sort( { _published: -1 } )
+            //.limit(50)
+            .exec(function (err, blogposts) {
+            if (!err){
+
+                if(blogposts && blogposts.length > 0){
+                    var nBlogs = blogposts.length;
+                    var counter = 0;
+                    if(nBlogs == 0){
+                        res.json(recommenedBlogs);
+                    }
+                    
+                    console.log(blogposts.length);
+                    if(!thisBlogpost.exams){
+                        thisBlogpost.exams = [];
+                    }
+                    if(!thisBlogpost.coachingGroups){
+                        thisBlogpost.coachingGroups = [];
+                    }
+                    blogposts.forEach(function(rBlogpost, bindex){
+                        var rUser = null;
+                        if(rBlogpost.user){
+                            rUser = rBlogpost.user.toString();
+                        }
+                        //console.log(rUser + " | " + blogAuthor);
+
+                        if(rUser == blogAuthor){
+                            recommenedBlogs.blogAuthor.push(rBlogpost);
+                        }else if(rBlogpost.blogSeries == blogSeries){
+                            recommenedBlogs.blogSeries.push(rBlogpost);
+                        }else if(rBlogpost.exams && thisBlogpost.exams && thisBlogpost.exams.length > 0 && (examBlogsExcludedList.indexOf(rBlogpost.blogSeries) == -1)){
+                            console.log("--- " + rBlogpost.blogSeries + " --- " + examBlogsExcludedList.indexOf(rBlogpost.blogSeries) );
+                            var commonElements = [];
+                           
+                            rBlogpost.exams.forEach(function(thisExam, eindex){
+                                if(thisBlogpost.exams.indexOf(thisExam) != -1){
+                                    commonElements.push(thisExam);
+                                }
+
+
+                            });
+                            if(commonElements.length > 0){
+                                recommenedBlogs.examBlogs.push(rBlogpost);
+                            }
+
+                        }else if(rBlogpost.coachingGroups && thisBlogpost.coachingGroups){
+                            var commonElements = [];
+                            rBlogpost.coachingGroups.forEach(function(thisCoaching, cindex){
+                                console.log(thisCoaching);
+                                if(thisBlogpost.coachingGroups.indexOf(thisCoaching) != -1){
+                                    commonElements.push(thisCoaching);
+                                }
+
+
+                            });
+                            console.log(commonElements);
+                            if(commonElements.length > 0){
+                                recommenedBlogs.coachingBlogs.push(rBlogpost);
+                            }
+
+                        }
+
+                        counter += 1;
+                        if(counter == nBlogs){
+                            var nLimit = 4;
+                            if(recommenedBlogs.blogSeries.length > nLimit){
+                                recommenedBlogs.blogSeries = recommenedBlogs.blogSeries.slice(0, nLimit);
+                            }
+                            if(recommenedBlogs.blogAuthor.length > nLimit){
+                                recommenedBlogs.blogAuthor = recommenedBlogs.blogAuthor.slice(0, nLimit);
+                            }
+                            if(recommenedBlogs.examBlogs.length > nLimit){
+                                recommenedBlogs.examBlogs = recommenedBlogs.examBlogs.slice(0, nLimit);
+                            }
+                            if(recommenedBlogs.coachingBlogs.length > nLimit){
+                                recommenedBlogs.coachingBlogs = recommenedBlogs.coachingBlogs.slice(0, nLimit);
+                            }
+                            
+                            res.json(recommenedBlogs);
+                        }
+                    });
+                }else{
+                    res.json([]);
+                }
+
+            } else {throw err;}
+            });
+
+            /*var blogposts = blogpost
+            .find({ active: true , $or: [ {blogSeries : blogSeries}, { user: blogAuthor }, { exams: { $in: examArray } }, { coachingGroups: { $in: coachingArray } }  ] }, {title: 1, blogSeries: 1, exams: 1, coachingGroups: 1})
+            .sort( { _published: -1 } )
+            .exec(function (err, blogposts) {
+            if (!err){
+
+                if(blogposts && blogposts.length > 0){
+                    console.log(blogposts.length);
+                    if(!thisBlogpost.exams){
+                        thisBlogpost.exams = [];
+                    }
+                    if(!thisBlogpost.coachingGroups){
+                        thisBlogpost.coachingGroups = [];
+                    }
+                    blogposts.forEach(function(thisBlogpost, bindex){
+                        console.log(thisBlogpost.blogSeries + " | " + thisBlogpost.title + " | " + thisBlogpost.exams.length + " | " + thisBlogpost.coachingGroups.length );
+                    });
+                }else{
+                    //res.json([]);
+                }
+
+            } else {throw err;}
+            });*/
+
+
+            //res.json(thisBlogpost);
             }else{
                 res.json(null);
             }

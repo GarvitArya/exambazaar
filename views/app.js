@@ -1059,6 +1059,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getblogpost = function(blogpostId) {
             return $http.get('/api/blogposts/edit/'+blogpostId, {blogpostId: blogpostId});
         };
+        this.recommenedBlogs = function(blogpostId) {
+            return $http.get('/api/blogposts/recommenedBlogs/'+blogpostId, {blogpostId: blogpostId});
+        };
         
         
         this.getblogpostFromSlug = function(blogpostSlug) {
@@ -15358,6 +15361,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var url = $state.href('showblog', {blogpostSlug: blog.urlslug});
                 window.open(url,'_blank');  
             };
+            
             $scope.filterStream = null;
             var streamInfo = {
                 //streamName: 'Engineering',
@@ -37272,8 +37276,16 @@ function getLatLng(thisData) {
     }]);
     
     exambazaar.controller("showblogController", 
-        [ '$scope','$http','$state', '$stateParams', '$document','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', '$window', 'pageTimer', 'viewService','$cookies', 'upvoteService', 'upvoteCount', 'commentService', 'thisblogComments', function($scope,$http, $state, $stateParams, $document, blogpostService, thisblog, $rootScope, Socialshare, $location, $window, pageTimer, viewService,$cookies, upvoteService, upvoteCount, commentService, thisblogComments){
+        [ '$scope','$http','$state', '$stateParams', '$document','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', '$window', 'pageTimer', 'viewService','$cookies', 'upvoteService', 'upvoteCount', 'commentService', 'thisblogComments', 'recommenedBlogs', function($scope,$http, $state, $stateParams, $document, blogpostService, thisblog, $rootScope, Socialshare, $location, $window, pageTimer, viewService,$cookies, upvoteService, upvoteCount, commentService, thisblogComments, recommenedBlogs){
             $scope.blogpost = thisblog.data;
+            $scope.recommenedBlogs = recommenedBlogs.data;
+            $scope.suggestedBlogs = [];
+            $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.examBlogs);
+            $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.blogSeries);
+            $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.coachingBlogs);
+            $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.blogAuthor);
+            $scope.suggestedBlogs = $scope.suggestedBlogs.slice(0, 6);
+            
             $scope.blogComments = thisblogComments.data;
             $scope.blogpost.upvotes = upvoteCount.data;
             
@@ -37347,6 +37359,11 @@ function getLatLng(thisData) {
                 window.location = "http://www.exambazaar.com/error";
             }
             
+            $scope.goToBlog = function(blog){
+                console.log(blog);
+                var url = $state.href('showblog', {blogpostSlug: blog.urlslug});
+                window.open(url,'_blank');  
+            };
             $scope.goToRankerWall = function(rankerWall){
                 window.open(rankerWall.link,'_blank');    
             };
@@ -39267,6 +39284,11 @@ function getLatLng(thisData) {
                     function(blogpostService,$stateParams){
                     return blogpostService.getblogpostFromSlug($stateParams.blogpostSlug);
                 }],
+                recommenedBlogs: ['blogpostService', '$stateParams',
+                    function(blogpostService,$stateParams){
+                    return blogpostService.recommenedBlogs($stateParams.blogpostSlug);
+                }],
+                
                 thisblogComments: ['commentService', '$stateParams',
                     function(commentService,$stateParams){
                     return commentService.blogpostComments($stateParams.blogpostSlug);

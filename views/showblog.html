@@ -336,36 +336,40 @@
                     </div>
                     <img ng-src="{{blogpost.infographic}}" class="padding10 width100"/>
                 </div>
-                <div layout="row" layout-align="start center" class="width100 marginT20 font22 bold padding10">
-                    Recommended Reading
+                
+                
+                <div layout="column" layout-align="start start" class="width100 marginT20" ng-if="suggestedBlogs.length > 0">    
+                <div layout="row" layout-align="start center" class="width100 font22 bold padding10" >
+                    You may also be interested in
                 </div>
                 <div layout="row" layout-align="start start" layout-wrap class="blogSeparator width100">
                     
-                <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="paddingLR10 paddingTB20 maringT20" ng-repeat="rankerWall in rankerWalls">
-                    <div layout="column" layout-align="center start" class="width100 boxShadow" id="rankerWall" ng-click="goToRankerWall(rankerWall)">
-                        <div layout="column" layout-align="center center" class="blogpostImage width100 rounderBorderTop" ng-style="{'background-image':'url({{rankerWall.coverPhoto}})'}">
-                        <div layout="row" layout-align="end center" id="blogPostRead" class="width100 paddingLR20 paddingB20">
+                <div flex-xs="100" flex-gt-xs="50" layout="column" layout-align="center center"  class="padding10 font12" ng-repeat="thisBlog in suggestedBlogs">
+                    <div layout="column" layout-align="center start" class="width100 boxShadow" ng-click="goToBlog(thisBlog)">
+                        <div layout="column" layout-align="center center" class="blogpostImage width100 rounderBorderTop" ng-style="{'background-image':'url({{thisBlog.coverPhoto}})'}">
+                        <div layout="row" layout-align="end center" id="blogPostRead" class="width100 padding20">
                             <div layout="row" layout-align="end center" class="padding5 darkTranslucentBackground">
-                                {{rankerWall.readingTime.text}}
+                                {{thisBlog.readingTime.text}}
                             </div>
                         </div>
                         </div>
-                        <div layout="column" layout-align="start center" class="min20vh paddingLR20 paddingTB10 width100 blogpostBorder rounderBorderBottom">
-                            <div flex layout="column" layout-align="center center" flex class="">
-                                <div class="bold wideLine2 paddingTB5 text-center">
-                                    {{rankerWall.title}}
-                                </div>
-                                <div flex class="blogFont textLightGrey font12 marginT5 text-center">
-                                    {{rankerWall.subtitle}}
-                                </div>
+                        <div layout="column" layout-align="start start" class="min20vh padding20 width100 blogpostBorder">
+                            <div class="h3Font bold wideLine2">
+                                {{thisBlog.title}}
+                            </div>
+                            <div flex class="marginTB10 wideLine subBaseFont">
+                                {{thisBlog.seoDescription}}
                             </div>
                         </div>    
                     </div>
                 </div>     
                 </div>
+                </div>
+                
+                
                 
                 <div layout="column" layout-align="start start" class="width100">
-                    <div layout="row" layout-align="start center" class="width100 marginT20 font22 bold padding10">
+                    <div layout="row" layout-align="start center" class="width100 font22 bold padding10">
                         Comments <span ng-if="blogComments.length> 0">&nbsp;&nbsp;[{{blogComments.length}}]</span>
                     </div>
                     <div layout="column" layout-align="start start" class="width100 blogSeparator" ng-repeat="comment in blogComments">
