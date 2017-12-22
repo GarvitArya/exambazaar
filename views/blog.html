@@ -42,12 +42,6 @@
     .blogContent{
         text-align: left;
     }
-    h1,h2,h3{
-        text-align: left;
-        line-height: 140%;
-        margin-top: 40px;
-        margin-bottom: 20px;
-    }
     a:link, a:visited, a:hover, a:active{
         color: #20C39A;
     }
@@ -59,7 +53,7 @@
 <div id="spacerXS" class="whiteBackground">
 </div>
 <div flex layout="row" layout-align="center center" class="whiteBackground">
-<div layout="column" layout-align="center center" class="blogFont paddingTB20 width100 marginB40">
+<div layout="column" layout-align="center center" class="baseFont paddingTB20 width100 marginB40">
     <div layout="row" layout-align="center center" class="width100 blogHeader  marginB20" ng-style="{'background-image':'url({{thisBlogCover}})'}">
         <div layout="row" layout-align="center center" class="width100">
         <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="h2 marginLR20 marginT20 padding20 textWhite padding10  text-center">
@@ -87,7 +81,7 @@
     <div layout="row" layout-align="center center" class="width100 font14">
         <div layout="row" layout-align="start center"  flex-xs="100" flex-gt-xs="90" layout-wrap class="paddingLR10">
             <div ng-repeat="stream in allStreams" class=" paddingR5 paddingB5">
-                <md-button  class="md-small font11 tolowercase margin0" ng-click="setStream(stream)" ng-class="buttonCSS(stream)">
+                <md-button  class="md-small tolowercase margin0" ng-click="setStream(stream)" ng-class="buttonCSS(stream)">
                     {{stream.displayname}}
                 </md-button>
             </div>
@@ -109,12 +103,13 @@
     </div>-->
     
     <div layout="row" layout-align="center center" class="width100 font14">
-    <div layout="row" layout-xs="column"  layout-align="start start"  flex-xs="100" flex-gt-xs="90" class="">
+    <div layout="row" layout-xs="column"  layout-align="start start"  flex-xs="100" flex-gt-xs="90" class="marginTB20">
     <div layout="column" layout-align="start start" flex-xs="100" flex-gt-xs="75" >
         
     <!-- Start of Inspiration -->
-    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10">
+    <div layout="row" layout-align="start start" class="width100 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10 h1Font">
         {{blogStream.displayname}} Inspiration
+        
     </div>
     <div layout="row" layout-align="start start" class="width100" layout-wrap>
         <!--infinite-scroll='InspirationBlogs.nextPage()' infinite-scroll-disabled='InspirationBlogs.busy' infinite-scroll-distance='1'-->
@@ -235,7 +230,7 @@
     </div>
     
     <!-- Start of Exam preparation -->
-    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10" ng-if="ExamPreparationBlogs.items.length > 0">
+    <div layout="row" layout-align="start start" class="width100 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10 h1Font" ng-if="ExamPreparationBlogs.items.length > 0">
         <span ng-if="blogStream">{{blogStream.displayname}}</span><span ng-if="!blogStream">Exam</span>&nbsp;Preparation
     </div>
     <div layout="row" layout-align="start start" class="width100" layout-wrap  ng-if="ExamPreparationBlogs.items.length > 0">
@@ -355,7 +350,7 @@
     
         
     <!-- Start of Information -->
-    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10" ng-if="InformationBlogs.items.length > 0">
+    <div layout="row" layout-align="start start" class="width100 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10 h1Font" ng-if="InformationBlogs.items.length > 0">
         <span ng-if="blogStream">{{blogStream.displayname}}</span>&nbsp;Exam Information
     </div>
     <div layout="row" layout-align="start start" class="width100" layout-wrap  ng-if="InformationBlogs.items.length > 0">
@@ -476,7 +471,7 @@
         
         
     <!-- Start of Best Coaching -->
-    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10" ng-if="BestCoachingBlogs.items.length > 0">
+    <div layout="row" layout-align="start start" class="width100 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10 h1Font" ng-if="BestCoachingBlogs.items.length > 0">
         Best Coaching&nbsp;<span ng-if="blogStream">for {{blogStream.displayname}} Exams</span>
     </div>
     <div layout="row" layout-align="start start" class="width100" layout-wrap  ng-if="BestCoachingBlogs.items.length > 0">
@@ -597,7 +592,7 @@
         
         
     <!-- Start of Resume -->
-    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10" ng-if="ResumeBlogs.items.length > 0">
+    <div layout="row" layout-align="start start" class="width100 bold marginT20 paddingLR10 subhheadingBottomBorder3 paddingB10 marginB10 h1Font" ng-if="ResumeBlogs.items.length > 0">
         Resume Ideas
     </div>
     <div layout="row" layout-align="start start" class="width100" layout-wrap  ng-if="ResumeBlogs.items.length > 0">
@@ -720,8 +715,8 @@
     <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5" class="">
     </div>
     <div layout="column" layout-align="start start" hide-xs flex-gt-xs="20"  >
-    <div layout="row" layout-align="start start" class="width100 font18 bold marginT20 subhheadingBottomBorder3 paddingB10 marginB10">
-        <span ng-if="blogStream">{{blogStream.displayname}}&nbsp;</span>EdBites
+    <div layout="row" layout-align="start start" class="width100 bold marginT20 subhheadingBottomBorder3 paddingB10 marginB10 h1Font">
+        EdBites
     </div>    
     <div layout="row" layout-align="start start" class="width100" layout-wrap>
         <!--infinite-scroll='allEdbites.nextPage()' infinite-scroll-disabled='allEdbites.busy' infinite-scroll-distance='1'-->
@@ -823,7 +818,7 @@
         <div layout="row" layout-align="end end"  class="width100 padding10 marginB20">
             <a id="reviewLink" ng-click="loadNextEdBitesBlogs()">More in EdBites ></a>
         </div>
-        <div layout="column" layout-align="center center" class="width100 marginTB40 min20vh" ng-show='InspirationBlogs.busy'>
+        <div layout="column" layout-align="center center" class="width100 marginTB40 min20vh" ng-show='allEdbites.busy'>
             <img src='ebloader2.gif' />
             <div>Loading data...</div>
         
