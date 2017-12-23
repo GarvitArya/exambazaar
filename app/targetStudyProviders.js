@@ -102,6 +102,198 @@ router.get('/providercities/:query', function(req, res) {
     });*/
 });
 
+router.get('/oneOff', function(req, res) {
+    var idStates = [
+        {id: "5a2f6e6dd12400511d9ddddb",state:"Andhra Pradesh",},
+{id: "5a2f9e3e5175d178b65bade6",state:"Andhra Pradesh",},
+{id: "5a2fa0e73bb1987945a113fb",state:"Andhra Pradesh",},
+{id: "5a2fa42b702b657dae9b40ad",state:"Andhra Pradesh",},
+{id: "5a314b0735ce2c653d8e57ec",state:"Andhra Pradesh",},
+{id: "5a314d25eb5a8866784d1a37",state:"Andhra Pradesh",},
+{id: "5a314d25eb5a8866784d1a39",state:"Andhra Pradesh",},
+{id: "5a314d25eb5a8866784d1a3b",state:"Andhra Pradesh",},
+{id: "5a31515c10100b69abf4e722",state:"Andhra Pradesh",},
+{id: "5a31515d10100b69abf4e724",state:"Andhra Pradesh",},
+{id: "5a31515d10100b69abf4e726",state:"Andhra Pradesh",},
+{id: "5a393c9b3cab5b665f808f5b",state:"Andhra Pradesh",},
+{id: "5a393c9b3cab5b665f808f59",state:"Andhra Pradesh",},
+{id: "5a3bda225f70465a0e730abb",state:"Andhra Pradesh",},
+{id: "5a2b691b66bbfb6ebd65198c",state:"Andhra Pradesh",},
+{id: "5a393c9b3cab5b665f808f53",state:"Assam",},
+{id: "5a3525ff86b8c2328a4aee83",state:"Chandigarh",},
+{id: "5a3bc02f0937b34e716816d6",state:"Chandigarh",},
+{id: "5a3bdbcedf36c15ac9b0cea5",state:"Chhattisgarh",},
+{id: "5a2e9455ff04cc7b25c17d3b",state:"Delhi",},
+{id: "5a2e9e894852d30604f6b4fd",state:"Delhi",},
+{id: "5a2ea71ca90f850bb0f6ed6f",state:"Delhi",},
+{id: "5a2ea71ca90f850bb0f6ed6d",state:"Delhi",},
+{id: "5a2ea71ca90f850bb0f6ed79",state:"Delhi",},
+{id: "5a2ea71ca90f850bb0f6ed71",state:"Delhi",},
+{id: "5a2ea71ca90f850bb0f6ed7d",state:"Delhi",},
+{id: "5a2ea71ca90f850bb0f6ed77",state:"Delhi",},
+{id: "5a2ea71ca90f850bb0f6ed73",state:"Delhi",},
+{id: "5a2ea71ca90f850bb0f6ed75",state:"Delhi",},
+{id: "5a2ea71ca90f850bb0f6ed7b",state:"Delhi",},
+{id: "5a2fa2bd9d503a7b542e4abc",state:"Delhi",},
+{id: "5a2fc1a1575d9e1e391cf16a",state:"Delhi",},
+{id: "5a2fc1a1575d9e1e391cf168",state:"Delhi",},
+{id: "5a2fc340575d9e1e391cf1a3",state:"Delhi",},
+{id: "5a3143424b3eae5eeb9ee9ad",state:"Delhi",},
+{id: "5a3378873c6ca87aacbdbb94",state:"Delhi",},
+{id: "5a337a4e2c44fa7cc1da0bbc",state:"Delhi",},
+{id: "5a337b2c1e917d7e47e8b3c6",state:"Delhi",},
+{id: "5a337e02ae7efb02643af1ac",state:"Delhi",},
+{id: "5a33878a275c7c12f8517685",state:"Delhi",},
+{id: "5a33881852b09b13891d8c1a",state:"Delhi",},
+{id: "5a3388a01934911494153c70",state:"Delhi",},
+{id: "5a3389dd91bf1915cbf259e4",state:"Delhi",},
+{id: "5a338aac9c5a09167f9086bc",state:"Delhi",},
+{id: "5a338c11f06a6c1722be7ccf",state:"Delhi",},
+{id: "5a338e0df572c018f45514b6",state:"Delhi",},
+{id: "5a339011ea558d1bfca8e598",state:"Delhi",},
+{id: "5a3390b8ea558d1bfca8e59b",state:"Delhi",},
+{id: "5a3391442e47961e83108c0c",state:"Delhi",},
+{id: "5a33cb914dbaf465e09c14b1",state:"Delhi",},
+{id: "5a33cc24c1f5c96626a8d289",state:"Delhi",},
+{id: "5a33cc99bfdb46668a8100f2",state:"Delhi",},
+{id: "5a33cd5ebfdb46668a8100ff",state:"Delhi",},
+{id: "5a33ce2322f66a67058fe842",state:"Delhi",},
+{id: "5a33cf23c37c3167ee43ef38",state:"Delhi",},
+{id: "5a33cfd4c37c3167ee43ef3b",state:"Delhi",},
+{id: "5a33d067c37c3167ee43ef5e",state:"Delhi",},
+{id: "5a33d15a84634168e38667ab",state:"Delhi",},
+{id: "5a33d40de350c46a55e0b8d7",state:"Delhi",},
+{id: "5a33d5c5e9085f6b40b09f92",state:"Delhi",},
+{id: "5a33d7b743e04c6c6caff8aa",state:"Delhi",},
+{id: "5a33d92443e04c6c6caff8b5",state:"Delhi",},
+{id: "5a33dababbe78e6db6a66870",state:"Delhi",},
+{id: "5a33dcee3d7c9a6f14086261",state:"Delhi",},
+{id: "5a33dda63d7c9a6f1408626a",state:"Delhi",},
+{id: "5a33dee13d7c9a6f14086274",state:"Delhi",},
+{id: "5a33df883d7c9a6f14086278",state:"Delhi",},
+{id: "5a33e0c03d7c9a6f14086286",state:"Delhi",},
+{id: "5a33e1903d7c9a6f14086294",state:"Delhi",},
+{id: "5a33e25d3d7c9a6f1408629a",state:"Delhi",},
+{id: "5a33e3e0cba36070e4e2d212",state:"Delhi",},
+{id: "5a33ee532ea08875a348aad2",state:"Delhi",},
+{id: "5a33f2308212c7776ee59cb6",state:"Delhi",},
+{id: "5a33f61adf8dea785d7f5244",state:"Delhi",},
+{id: "5a33f6f3df8dea785d7f524c",state:"Delhi",},
+{id: "5a33f9c92ed0657c2a83404c",state:"Delhi",},
+{id: "5a393c9b3cab5b665f808f4f",state:"Delhi",},
+{id: "5a3bbe29ec1a894e18d852f3",state:"Delhi",},
+{id: "5a2fc1a1575d9e1e391cf156",state:"Gujarat",},
+{id: "5a2fc1a1575d9e1e391cf14e",state:"Gujarat",},
+{id: "5a2fc1a1575d9e1e391cf174",state:"Gujarat",},
+{id: "5a2fc1a1575d9e1e391cf172",state:"Gujarat",},
+{id: "5a2fc1a1575d9e1e391cf16e",state:"Gujarat",},
+{id: "5a2fc1a1575d9e1e391cf170",state:"Gujarat",},
+{id: "5a3bb67a6c63ee491891e435",state:"Gujarat",},
+{id: "5a313d8b54d9145b21b9b962",state:"Haryana",},
+{id: "5a313d8b54d9145b21b9b964",state:"Haryana",},
+{id: "5a33d6d1e9085f6b40b09f9a",state:"Haryana",},
+{id: "5a3a6d319efe701bd960587d",state:"Himachal Pradesh",},
+{id: "5a3141abc497df5e2bb86844",state:"Jammu and Kashmir",},
+{id: "5a2ac1deb751ac2e0ef991d7",state:"Karnataka",},
+{id: "5a2ea71ca90f850bb0f6ed87",state:"Karnataka",},
+{id: "5a2eaa65a81a6e0d15c60ea1",state:"Karnataka",},
+{id: "5a2f7b374c048458036e4e6b",state:"Karnataka",},
+{id: "5a2fa1fecc992f7ab34f5185",state:"Karnataka",},
+{id: "5a2fc1a1575d9e1e391cf150",state:"Karnataka",},
+{id: "5a3139de79072b57f65cd9f1",state:"Karnataka",},
+{id: "5a393c9b3cab5b665f808f57",state:"Karnataka",},
+{id: "5a3d202704a1270bfada7ecc",state:"Karnataka",},
+{id: "5a2eb8f96428c32007465ee5",state:"Kerala",},
+{id: "5a2ebca753e8e925e97cd855",state:"Kerala",},
+{id: "5a2f92d9d79cb770e4dcb5ae",state:"Kerala",},
+{id: "5a2fa34e9d503a7b542e4ac2",state:"Kerala",},
+{id: "5a2fc1a1575d9e1e391cf152",state:"Madhya Pradesh",},
+{id: "5a39250d7297575597137dc2",state:"Madhya Pradesh",},
+{id: "5a2ea71ca90f850bb0f6ed83",state:"Maharashtra",},
+{id: "5a2ea71ca90f850bb0f6ed85",state:"Maharashtra",},
+{id: "5a2fa7b6264ad07f66671939",state:"Maharashtra",},
+{id: "5a2fc1a1575d9e1e391cf160",state:"Maharashtra",},
+{id: "5a2fc1a1575d9e1e391cf15e",state:"Maharashtra",},
+{id: "5a2fc1a1575d9e1e391cf166",state:"Maharashtra",},
+{id: "5a2fc1a1575d9e1e391cf162",state:"Maharashtra",},
+{id: "5a3a704edc41ae1d1d021d03",state:"Manipur",},
+{id: "5a2fc1a1575d9e1e391cf154",state:"Odisha",},
+{id: "5a3141abc497df5e2bb8683a",state:"Punjab",},
+{id: "5a2b92b0fc34430145ad1a54",state:"Rajasthan",},
+{id: "5a2fc1a1575d9e1e391cf158",state:"Rajasthan",},
+{id: "5a3bd99438fa9f58e06eb45a",state:"Rajasthan",},
+{id: "5a2b8aa0e317e47d3ea5218b",state:"Tamil Nadu",},
+{id: "5a2b8ceae317e47d3ea521d2",state:"Tamil Nadu",},
+{id: "5a2b9c20b431f9035c2c7a18",state:"Tamil Nadu",},
+{id: "5a2ba1e0b431f9035c2c7aad",state:"Tamil Nadu",},
+{id: "5a2ba36bb431f9035c2c7ac3",state:"Tamil Nadu",},
+{id: "5a2bae3ab431f9035c2c7be3",state:"Tamil Nadu",},
+{id: "5a2bb135b431f9035c2c7c5c",state:"Tamil Nadu",},
+{id: "5a2f9f023bb1987945a113a5",state:"Tamil Nadu",},
+{id: "5a2fa627e444af7ed45fe722",state:"Tamil Nadu",},
+{id: "5a2fa8a4fd68fd02d5e323a9",state:"Tamil Nadu",},
+{id: "5a2fa950886523033d0b7515",state:"Tamil Nadu",},
+{id: "5a2fc1a1575d9e1e391cf15a",state:"Uttar Pradesh",},
+{id: "5a313ad9fa065f58ab89b894",state:"Uttar Pradesh",},
+{id: "5a31578712f14e6f3799fa57",state:"Uttarakhand",},
+{id: "5a31578712f14e6f3799fa59",state:"Uttarakhand",},
+{id: "5a2fa4cfa119287e0a8bce5a",state:"West Bengal",},
+{id: "5a2fc1a1575d9e1e391cf15c",state:"West Bengal",},
+{id: "5a31515d10100b69abf4e728",state:"West Bengal",},
+{id: "5a3155da5c75896e15cf9250",state:"West Bengal",},
+{id: "5a3294a46603284acb4ef557",state:"West Bengal",},
+{id: "5a390f6e594f9145f869e99f",state:"West Bengal",},
+{id: "5a393c9b3cab5b665f808f4b",state:"West Bengal",},
+{id: "5a3bb9b711e0404b2a69bb4b",state:"West Bengal",},
+{id: "5a3bc3b7d610bc4fc33ca971",state:"West Bengal",},
+{id: "5a3bd3fcefcc8f571b7afa80",state:"West Bengal",},
+        
+    ];
+    res.json(true);
+    var allIds = idStates.map(function(a) {return a.id;});
+    
+    var changecounter = 0;
+    var counter = 0;
+    var allProviders = targetStudyProvider
+        .find({ '_id': { $in : allIds} }, { state: 1})
+        .exec(function (err, allProviders) {
+            
+        if (!err){
+            if(allProviders){
+                var nProviders = allProviders.length;
+                console.log(nProviders);
+                allProviders.forEach(function(rProvider, rindex){
+                    var bIndex = allIds.indexOf(rProvider.id.toString());
+                    
+                    if(bIndex != -1){
+                        
+                        var newState = idStates[bIndex].state;
+                        if(newState != rProvider.state){
+                            changecounter += 1;
+                            
+                            rProvider.state = newState;
+                            rProvider.save(function(err, rProvider) {
+                            if (err) return     console.error(err);
+                                console.log("Saved: " + rProvider._id + " " + rProvider.state + " to " + newState);
+                                //res.json(rProvider._id);
+                            });
+                        }
+                        counter += 1;
+                        if(counter == nProviders){
+                            console.log("Total " + changecounter + " changes!");
+                        }
+                        
+                    }
+                    
+                });
+                
+            }else{
+                //res.json(null);
+            }
+        } else {throw err;}
+    });
+});
+
 router.post('/bulkDisableProviders', function(req, res) {
     var disableForm = req.body;
     var instituteIds = disableForm.instituteIds;

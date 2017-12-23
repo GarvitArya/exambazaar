@@ -62,16 +62,22 @@
             <div flex="5" class="">
                 Logo
             </div>
+            <div flex="15" class="paddingLR10">
+                Address
+            </div>
             <div flex="5">
                 City
             </div>
             <div flex="5">
                 State
             </div>
-            <div flex="10">
+            <div flex="5">
+                Pincode
+            </div>
+            <div flex="5">
                 Added By
             </div>
-            <div flex="10">
+            <div flex="5">
                 Created on
             </div>
             <div flex="5">
@@ -80,13 +86,13 @@
             <div flex="10">
                 #Phone | Mobiles
             </div>
-            <div flex="10">
+            <div flex="5">
                 #Email | Websites
             </div>
             
         </div>
          <!--| orderBy:['-_created']-->
-        <div flex layout="row" layout-align="start center" ng-repeat="institute in addedInstitutes | orderBy:['-_created']" class="width100 greyDashedBottomBorder " ng-class="{ cidone: institute.cifilled }">
+        <div flex layout="row" layout-align="start center" ng-repeat="institute in addedInstitutes | orderBy:['state','-_created']" class="width100 greyDashedBottomBorder " ng-class="{ cidone: institute.cifilled }">
             <div flex="5">
                 {{$index+1}}
             </div>
@@ -109,19 +115,26 @@
                 <i class="fa fa-check-circle text-primary marginLR10" aria-hidden="true" ng-if="institute.logo && institute.logo!=''"></i>
                 <i class="fa fa-times-circle danger marginLR10" aria-hidden="true" ng-if="!institute.logo || institute.logo==''"></i>
             </div>
+            <div flex="15" class="font8 paddingLR10">
+                {{institute.address}}
+            </div>
             <div flex="5">
                 <a ui-sref="targetStudyProviders({ city:{{'institute.city'}} })" class="bold" target="_blank" id="link">
                 {{institute.city}}
                 </a>
             </div>
-            <div flex="5" class="">
+            <div flex="5" class="font8">
                 {{institute.state}}
             </div>
-            <div flex="10" class="">
+            <div flex="5" class="font8">
+                {{institute.pincode}}
+            </div>
+            <div flex="5" class="font8">
                 {{institute._createdBy.basic.name}}
             </div>
             
-            <div flex="10" class="">
+            <div flex="5" class="font8">
+                
                 {{institute._created | date: "dd-MMM-yy HH:mm"}}
             </div>
             <div flex="5" class="">
@@ -130,7 +143,7 @@
             <div flex="10" class="">
                 {{institute.phone.length}} | {{institute.mobile.length}}
             </div>
-            <div flex="10" class="" ng-class="{ ciwebsite: websiteExists(institute) }">
+            <div flex="5" class="" ng-class="{ ciwebsite: websiteExists(institute) }">
                 {{institute.email.length}} | {{institute.website.length}}
             </div>
             

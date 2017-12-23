@@ -150,6 +150,7 @@
                 <div layout="row" layout-align="start center" class="marginR10" ng-if="user.userType=='Master'" >
                     <a ng-click="splitQuestions()" class="marginR5" ng-if="toAddQuestion.questions.length > 1">Split Questions</a>
                     <a ng-click="removeQuestionDialog()" class="marginR5">Delete Question</a>
+                    <!--<a ng-click="markMCQs()" class="marginR5">Mark MCQs</a>-->
                 </div>
                 <!--<div layout="row" layout-align="start center" class="marginR10">
                     <md-switch ng-model="toAddQuestion._multipleCorrect" aria-label="Multiple Correct Answers?" class="margin0">
@@ -197,6 +198,7 @@
                 <div layout="row" layout-align="start center" class="width100 marginB10">
                     <div layout="row" layout-align="start center" class="font16">
                     Question {{$index + 1}} <span class="marginL20 font10">{{toAddQuestion._id}}</span>
+                    
                     </div>
                                     
                     <div flex layout="row" layout-align="start center" ng-click="removeQuestionFromSet(question, $index)" class="marginL20" ng-if="$index > 0">
@@ -207,12 +209,16 @@
                     
                     
                     <div flex layout="column" layout-align="start start" class="padding10 width100">
-                        <div layout="row" layout-align="start start" class="marginB10 width100">
-                            <textarea class="width100 font14 margin0" ng-model="question.question" placeholder="Add question here" rows="6"></textarea>
+                        <div layout="row" layout-align="end start" class="marginB10 width100">
+                            <span class="marginL20 badge" ng-click="numericalType(question)" ng-if="question.type =='mcq'">Flip to Numerical Type</span>
+                            <span class="marginL20 badge" ng-click="mcqType(question)" ng-if="question.type =='numerical'">Flip to MCQ</span>
                         </div>
                         
+                        <div layout="row" layout-align="start start" class="marginB10 width100">
+                            <textarea class="width100 font14 margin0" ng-model="question.question" placeholder="Add question here" rows="4"></textarea>
+                        </div>
                         
-                        <div layout="column" layout-align="start start" class="width100 marginB5" ng-repeat="option in question.options">
+                        <div layout="column" layout-align="start start" class="width100 marginB5" ng-repeat="option in question.options" ng-if="question.type=='mcq'">
                             <div layout="row" layout-align="start center" class="width100">
                                 <div layout="row" layout-align="start center" flex="40">
                                     <div class="font14 marginR20">
@@ -234,7 +240,28 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="center center" id="upload3" ng-click="addNewOption(question)" class="width100 marginT10">
+                        
+                        
+                        <div layout="column" layout-align="start start" class="width100 marginB5" ng-if="question.type=='numerical'">
+                            <div layout="row" layout-align="start center" class="width100">
+                                <div layout="row" layout-align="start center" flex="40">
+                                    <div class="font14 marginR20">
+                                        Answer
+                                    </div>
+                                    <span class="badge" ng-click="addNumericalAnswer(question)" ng-if="question.type =='numerical'">Add another answer</span>
+                                </div>
+                                <div layout="column" layout-align="start center" flex>
+                                <div layout="row" layout-align="start center" class="width100 marginB5" ng-repeat="numericalAnswer in question.numericalAnswers track by $index">
+                                    <textarea class="width100 font14 margin0" ng-model="question.numericalAnswers[$index]" placeholder="Add numerical answer here" rows="1"></textarea>
+                                    <div class="badge marginL10" id="removebadge" ng-click="removeNumericalAnswer(question, $index)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="center center" id="upload3" ng-click="addNewOption(question)" class="width100 marginT10"  ng-if="question.type=='mcq'">
                             <span>
                                 <i class="fa fa-plus" aria-hidden="true"></i> Add Option
                             </span>

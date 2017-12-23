@@ -120,6 +120,27 @@ router.get('/', function(req, res) {
     
 });
 
+router.get('/markMCQs', function(req, res) {
+    console.log('Marking MCQ subquestions');
+    var allQuestions = question
+        .find({ }, {type:1, questions: 1})
+        //.deepPopulate('exam')
+        .exec(function (err, allQuestions) {
+        if (!err){
+            allQuestions.forEach(function(thisQuestion, qIndex){
+                thisQuestion.questions.forEach(function(thisSubQuestion, sIndex){
+                    thisSubQuestion.type = 'mcq';
+                });
+                thisQuestion.save(function(err, thisQuestion) {
+                    if (err) return console.error(err);
+                    console.log('Question type marked: ' + thisQuestion._id);
+                });
+            });
+        } else {throw err;}
+    });
+    
+});
+
 router.get('/exam/:examId', function(req, res) {
     var examId = req.params.examId;
     var allQuestions = question

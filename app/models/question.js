@@ -8,10 +8,12 @@ var questionSchema = mongoose.Schema({
     _endnumber: {type: String}, //ending question number in the pdf
     _hascontext: { type: Boolean, default: false},
     //_multipleCorrect: { type: Boolean, default: false}, //if MCQ has more than 1 correct options
-    type: {type: String},
+    
     context: {type: String},
     images: [{type: String}],
     questions: [{
+        type: {type: String}, //mcq or numerical
+        numericalAnswers: [{type: String}], //all answers are correct
         question: {type: String},
         options: [{
             option: {type: String},

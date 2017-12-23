@@ -582,6 +582,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getQuestions = function() {
             return $http.get('/api/questions');
         };
+        this.markMCQs = function() {
+            return $http.get('/api/questions/markMCQs');
+        };
+        
         this.markAnswerExists = function() {
             return $http.get('/api/questions/markAnswerExists');
         };
@@ -1506,6 +1510,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
     }]); 
     exambazaar.service('targetStudyProviderService', ['$http', function($http) {
+        this.oneOff = function() {
+            return $http.get('/api/targetStudyProviders/oneOff');
+        };
         this.getProviders = function(city) {
             return $http.get('/api/targetStudyProviders/city/'+city, {city: city});
         };
@@ -10832,7 +10839,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $window.open(provider.targetStudyWebsite, '_newhtml');
             //$window.open('https://targetstudy.com/tools/ge.php', '_newhtml2');
         };
-        
+        $scope.oneOff = function(){
+            targetStudyProviderService.oneOff().success(function (data, status, headers) {
+                $scope.showSavedDialog();
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error ");
+            });
+        };
         $scope.locations = locationsList.data;
         $scope.currProvider = {};
         $scope.showLocationDialog = function(ev,provider) {
@@ -32380,6 +32394,16 @@ function getLatLng(thisData) {
                 }
                 
             };
+            
+            
+            $scope.markMCQs = function(){
+                questionService.markMCQs().success(function (data, status, headers) {
+                    Notification.primary({message: "All questions marked to MCQs successfully!",  positionY: 'top', positionX: 'right', delay: 1000});
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
             $scope.splitQuestions = function(){
                 var questionSet = $scope.toAddQuestion;
                 var nQuestions = questionSet.questions.length;
@@ -32439,6 +32463,7 @@ function getLatLng(thisData) {
             
             $scope.addNewQuestionSet = function(){
                 $scope.toAddQuestion = {
+                    
                     _groupOfQuestions: false,
                     //_multipleCorrect: false,
                     _startnumber: '',
@@ -32497,6 +32522,8 @@ function getLatLng(thisData) {
             $scope.addNewQuestion = function(){
                 if($scope.toAddQuestion){
                     var newQuestion = {
+                        type: 'mcq',
+                        
                         question: '',
                         options: [],
                         solution: {
@@ -32516,6 +32543,42 @@ function getLatLng(thisData) {
                 }
                 
                 $scope.sortQuestions();
+            };
+            $scope.numericalType = function(subquestion){
+                if(subquestion.type != 'numerical'){
+                    subquestion.type = 'numerical';
+                }
+                if(!subquestion.numericalAnswers){
+                    subquestion.numericalAnswers = [''];
+                }
+                subquestion.options = [];
+            };
+            $scope.addNumericalAnswer = function(subquestion){
+                
+                if(!subquestion.numericalAnswers){
+                    subquestion.numericalAnswers = [''];
+                }
+                subquestion.numericalAnswers.push('');
+            };
+            $scope.removeNumericalAnswer = function(subquestion, index){
+                
+                if(subquestion.numericalAnswers && subquestion.numericalAnswers.length > index){
+                    subquestion.numericalAnswers.splice(index, 1);
+                }
+            };
+            
+            $scope.mcqType = function(subquestion){
+                if(subquestion.type != 'mcq'){
+                    subquestion.type = 'mcq';
+                }
+                if(!subquestion.options || (subquestion.options && subquestion.options.length == 0)){
+                    subquestion.options = [];
+                    $scope.addNewOption(subquestion);
+                    $scope.addNewOption(subquestion);
+                    $scope.addNewOption(subquestion);
+                    $scope.addNewOption(subquestion);
+                }
+                subquestion.numericalAnswers = [];
             };
             $scope.removeQuestionFromSet = function(question, index){
                 console.log('I am here ' + index);
