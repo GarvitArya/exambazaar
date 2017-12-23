@@ -1877,11 +1877,11 @@ router.get('/addedInstitutes/:userId', function(req, res) {
                 .limit(limit)
                 .exec(function (err, addedInstitutes) {
                 if (!err){
-                    //console.log(addedInstitutes.map(function(a) {return a._createdBy;}));
                     res.json(addedInstitutes);
                 } else {throw err;}
                 });
             }else{
+                
                 var addedInstitutes = targetStudyProvider
                 .find({_createdBy: {$exists: true}, _createdBy: thisUser._id},{name:1, website: 1, address:1, city:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1, pincode:1})
                 .sort( { _created: -1 } )

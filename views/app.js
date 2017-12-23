@@ -12291,7 +12291,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         $scope.addedInstitutes = $scope.allAddedInstitutes;
                         $scope.addedInstitutes.forEach(function(thisInstitute, index){
                             var addedByUser = thisInstitute._createdBy;
-                            console.log(thisInstitute);
                             if(listedUsers.indexOf(addedByUser) == -1){
                                 listedUsers.push(addedByUser);
                             }

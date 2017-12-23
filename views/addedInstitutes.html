@@ -92,7 +92,7 @@
             
         </div>
          <!--| orderBy:['-_created']-->
-        <div flex layout="row" layout-align="start center" ng-repeat="institute in addedInstitutes | orderBy:['state','-_created']" class="width100 greyDashedBottomBorder " ng-class="{ cidone: institute.cifilled }">
+        <div flex layout="row" layout-align="start center" ng-repeat="institute in addedInstitutes | orderBy:['-_created']" class="width100 greyDashedBottomBorder " ng-class="{ cidone: institute.cifilled }">
             <div flex="5">
                 {{$index+1}}
             </div>
