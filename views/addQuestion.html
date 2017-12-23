@@ -267,6 +267,27 @@
                             </span>
                         </div>
                         
+                        
+                        
+                        <div layout="row" layout-align="start center" class="width100 min10vh marginTB20">
+                            <div layout="row" layout-align="start center" flex="40">
+                                <div class="font14 marginR20">
+                                    Marking for question
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" flex>
+                                <div flex layout="column" layout-align="center center">
+                                    <div class="text-primary">Correct Answer</div>
+                                    <input type="text" class="width60 text-center"  placeholder="Correct Answer" ng-model="question.marking.correct">
+                                </div>
+                                <div flex layout="column" layout-align="center center">
+                                    <div class="danger">Incorrect Answer</div>
+                                    <input type="text" class="width60 text-center"  placeholder="Correct Answer" ng-model="question.marking.incorrect">
+                                </div>
+                            </div>
+
+                        </div>
+                        
                         <div flex layout="row" layout-align="start start" class="marginB10 marginT20 width100">
                             <div flex class="width100">
                                 <textarea class="width100 font14 margin0" ng-model="question.solution.solution" placeholder="Add solution here (if available)" rows="3"></textarea>
@@ -310,6 +331,8 @@
                     <i class="fa fa-plus" aria-hidden="true"></i> Add another question to this set
                 </span>
             </div>
+            
+            
             
         </div>
         

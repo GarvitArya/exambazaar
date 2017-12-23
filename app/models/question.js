@@ -25,6 +25,10 @@ var questionSchema = mongoose.Schema({
             solution: {type: String},
             images: [{type: String}],
         },
+        marking: {
+            correct: {type: String},
+            incorrect: {type: String},
+        },
         //answer: {type: String},
         images: [{type: String}],
     }],

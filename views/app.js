@@ -32518,11 +32518,15 @@ function getLatLng(thisData) {
                 ready = !ready;
                 return ready;
             };
+            var standardMarking = {
+                correct: '3',
+                incorrect: '-1',
+            };
             $scope.addNewQuestion = function(){
                 if($scope.toAddQuestion){
                     var newQuestion = {
                         type: 'mcq',
-                        
+                        marking: standardMarking,
                         question: '',
                         options: [],
                         solution: {
@@ -32614,10 +32618,16 @@ function getLatLng(thisData) {
                     console.log('Error ' + data + ' ' + status);
                 });
             };
+            
             $scope.setQuestion = function(question){
                 $scope.toAddQuestion = question;
                 
+                
                 $scope.toAddQuestion.questions.forEach(function(thisQuestion, index){
+                    if(!thisQuestion.marking){
+                        thisQuestion.marking = standardMarking;
+                    }
+                    
                     if(!thisQuestion.solution){
                         thisQuestion.solution = {
                             solution: '',
