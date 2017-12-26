@@ -182,6 +182,7 @@
                             
                         </div>
                     </div>
+                    
                     <div flex layout="row" layout-align="end center" class="font12 marginTB10">
                     <div hide-gt-xs class="marginR10">
                         <a href="#"
@@ -219,7 +220,9 @@
                     </div>
                 </div>
                 
-                
+                <div layout="row" layout-align="end center" class="width100 font10 danger">
+                    Only for master users:&nbsp;&nbsp;<a ng-click="editBlogPost(blogpost)" ng-if="user.userType=='Master'">Go to Edit Page</a>
+                </div>
                 
                 <div class="width100 marginT20 blogContent" ng-bind-html="blogpost.content" >
                 </div>

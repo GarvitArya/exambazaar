@@ -37470,7 +37470,12 @@ function getLatLng(thisData) {
             $scope.goToRankerWall = function(rankerWall){
                 window.open(rankerWall.link,'_blank');    
             };
-            
+            $scope.editBlogPost = function(blogpost){
+                
+                var blogpostId = blogpost._id;
+                var url = $state.href('editblog', {blogpostId: blogpostId});
+                window.open(url,'_blank');
+            };
             $scope.rankerWalls = [
                 {
                     title: 'NEET 2017 Rankers Wall',
