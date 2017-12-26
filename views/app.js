@@ -12410,9 +12410,27 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.activeAnalytics = "Blog Analytics";
             $scope.setOption = function(analyticsOption){
                 $scope.activeAnalytics = analyticsOption;
+                $scope.blogAnalytics = null;
+                $scope.p5Analytics = null;
+                
                 setPage();
             };
             
+            
+            $scope.goToCoaching = function(provider){
+                var coachingForm = {
+                    _id: provider._id 
+                };
+                targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+                        var examStream = data;
+                        
+                        var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
+                        window.open(url,'_blank');
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+            };
             
             $scope.authorized = false;
             var setPage = function(){
