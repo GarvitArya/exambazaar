@@ -16963,7 +16963,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.startErrors.push('Please enter email');
                 }
                 
-                if(!$scope.assessmentInfo.degree){
+                /*if(!$scope.assessmentInfo.degree){
                     valid = false;
                     console.log('5');
                     $scope.startErrors.push('Please select degree');
@@ -16987,7 +16987,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     valid = false;
                     console.log('9');
                     $scope.startErrors.push('Please enter mobile');
-                }
+                }*/
 
                 if(valid){
                     var assessmentForm = {
@@ -35690,7 +35690,7 @@ function getLatLng(thisData) {
             if($scope.commonExams.indexOf(examId) == -1){
                 
                 $scope.commonExams.push(examId);
-                console.log($scope.commonExams);
+                //console.log($scope.commonExams);
             }
         };
         $scope.removeExam = function(examId){
@@ -35754,7 +35754,7 @@ function getLatLng(thisData) {
                     }
                     if(thisinstitute.website && thisinstitute.website != ''){
                         thisinstitute.website = thisinstitute.website.replace(/\s+/g, '');
-                        thisinstitute.email = thisinstitute.email.toLowerCase();
+                        thisinstitute.website = thisinstitute.website.toLowerCase();
                         
                         var find ="http";
                         var fIndex = thisinstitute.website.indexOf(find);

@@ -124,13 +124,27 @@ router.get('/markMCQs', function(req, res) {
     console.log('Marking MCQ subquestions');
     var allQuestions = question
         .find({ }, {type:1, questions: 1})
+        //.limit(1)
         //.deepPopulate('exam')
         .exec(function (err, allQuestions) {
         if (!err){
+            var standardMarking = {
+                correct: '3',
+                incorrect: '-1',
+            };
+            
             allQuestions.forEach(function(thisQuestion, qIndex){
                 thisQuestion.questions.forEach(function(thisSubQuestion, sIndex){
-                    thisSubQuestion.type = 'mcq';
+                    if(!thisSubQuestion.marking){
+                        //console.log('I am here');
+                        thisSubQuestion.marking = standardMarking;
+                    }
+                    /*if(!thisSubQuestion.type){
+                        thisSubQuestion.type = 'mcq';
+                    }*/
+                    
                 });
+                //console.log(thisQuestion);
                 thisQuestion.save(function(err, thisQuestion) {
                     if (err) return console.error(err);
                     console.log('Question type marked: ' + thisQuestion._id);
