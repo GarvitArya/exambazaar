@@ -464,6 +464,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.sendGrid = function(email) {
             return $http.post('/api/emails/sendGrid', email);
         };
+        this.blogInvite = function() {
+            return $http.post('/api/emails/blogInvite');
+        };
+        
         this.welcomeEmail = function(email) {
             return $http.post('/api/emails/welcomeEmail', email);
         };
@@ -15404,7 +15408,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             var InspirationStreamInfo = {
                 streamId: null,
-                excluded: ['Top 10 Online', 'Best Books', 'Exam Page', 'Best Schools', 'Degrees', 'Expert Reviews', 'EdBites', 'Resume' ],
+                excluded: ['Top 10 Online', 'Best Books', 'Exam Page', 'Best Schools', 'Degrees', 'Expert Reviews', 'EdBites', 'Build Resume', 'Job', 'Career' ],
                 limit: 3,
             };
             var ExamPreparationStreamInfo = {
@@ -18592,12 +18596,40 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });
             };
             
+            $scope.allRandomUpvotes = function(){
+                var nBlogs = $scope.userBlogs;
+                var counter = 0;
+                var totalVotes = 0;
+                
+                $scope.userBlogs.forEach(function(thisBlog, index){
+                    var randomUpvoteForm = {
+                        blogpost: thisBlog._id,
+                    };
+                    upvoteService.randomUpvotes(randomUpvoteForm).success(function (data, status, headers) {
+                        totalVotes += data;
+                        counter += 1;
+                        if(counter == nBlogs){
+                            Notification.primary("All blogs upvoted by: " + totalVotes);
+                        }
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log();
+                    });
+                    
+                });
+                
+                
+                
+            };
+            
             $scope.randomUpvotes = function(blogpost){
                 var randomUpvoteForm = {
                     blogpost: blogpost._id,
                 };
                 upvoteService.randomUpvotes(randomUpvoteForm).success(function (data, status, headers) {
                     console.log(data);
+                    Notification.primary("This blog upvoted by: " + data);
                     
                 })
                 .error(function (data, status, header, config) {
@@ -36343,6 +36375,17 @@ function getLatLng(thisData) {
                     console.log('Error ' + data + ' ' + status);
                 });  
             };
+            
+            $scope.blogInvite = function() {
+                
+                EmailService.blogInvite().success(function (data, status, headers) {
+                    console.log(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });  
+            };
+            
             
     }]);
     function extractContent(s) {

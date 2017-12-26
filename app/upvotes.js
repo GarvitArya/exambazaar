@@ -48,7 +48,7 @@ router.post('/randomUpvotes', function(req, res){
                             
                             nCounter += 1;
                             if(nCounter == nUpvotes){
-                                console.log(nCounter + ' upvotes added to ' + thisBlogpostInfo.title);
+                                //console.log(nCounter + ' upvotes added to ' + thisBlogpostInfo.title);
                                 res.json(nCounter);
                             }
                         });

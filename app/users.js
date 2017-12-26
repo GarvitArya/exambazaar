@@ -1646,6 +1646,7 @@ router.get('/emails/:userId', function(req, res) {
     email
         .find({ 'user': userId },{logins:0})
         .deepPopulate('institute')
+        .limit(100)
         .exec(function (err, allFullEmails) {
         if (!err){
             var nLength = allFullEmails.length;
