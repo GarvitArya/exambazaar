@@ -36185,7 +36185,7 @@ function getLatLng(thisData) {
             $scope.idsEnabled = ['58c8e895bbaebf3560545f19'];
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser'); 
-                if($scope.user && $scope.user.userType == 'Master' || idsEnabled.indexOf($scope.user._id)){
+                if($scope.user && $scope.user.userType == 'Master' || idsEnabled.indexOf($scope.user.userId)){
                     $scope.enabled = true;
                 }
                 
