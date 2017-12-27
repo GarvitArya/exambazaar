@@ -274,7 +274,7 @@
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
                 <li ng-if="sessionuser.userId == '58c8e895bbaebf3560545f19' || sessionuser.userId == '5a1831f0bd2adb260055e352'"><a ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Email to CI</a></li>
-                <li ng-if="sessionuser.userId == '58c8e895bbaebf3560545f19'"><a ui-sref="emailToPublications({ userId:{{'sessionuser.userId'}} })">Email to Publications</a></li>
+                <li ng-if="sessionuser.userId == '58c8e895bbaebf3560545f19' || sessionuser.userId == '59a7eb973d71f10170dbb468'"><a ui-sref="emailToPublications({ userId:{{'sessionuser.userId'}} })">Email to Publications</a></li>
                 <li><a ui-sref="group({ userId:{{'sessionuser.userId'}} })">Group</a></li>
                 <li><a ui-sref="addExam">Add Exam</a></li>
                 <li><a ui-sref="addStream">Add Stream</a></li>

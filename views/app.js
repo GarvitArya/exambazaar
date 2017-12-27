@@ -36182,10 +36182,13 @@ function getLatLng(thisData) {
             $rootScope.pageTitle = "Send Email to Publications";
             $scope.allEmails = allEmails.data;
             $scope.enabled = false;
-            $scope.idsEnabled = ['58c8e895bbaebf3560545f19'];
+            $scope.idsEnabled = ['58c8e895bbaebf3560545f19', '59a7eb973d71f10170dbb468'];
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser'); 
-                if($scope.user && $scope.user.userType == 'Master' || idsEnabled.indexOf($scope.user._id) != -1){
+                if($scope.user && $scope.user.userType == 'Master'){
+                    $scope.enabled = true;
+                }
+                if($scope.idsEnabled.indexOf($scope.user._id) != -1){
                     $scope.enabled = true;
                 }
                 
