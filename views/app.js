@@ -10610,7 +10610,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("getTargetStudyCoachingController", 
     [ '$scope', 'targetStudyProviderService', 'targetStudyProvidersList','targetStudyCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', 'emailList', 'FileSaver', '$rootScope', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList, emailList, FileSaver, $rootScope){
-        $rootScope.pageTitle = 'Exambazaar City Database';
+        $scope.city = $stateParams.city;
+        $rootScope.pageTitle = $scope.city + ' City Exambazaar Database';
         $scope.providersList = targetStudyProvidersList.data;
         $scope.emailsList = emailList.data;
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
@@ -10737,7 +10738,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
         });
         
-        $scope.city = $stateParams.city;
+        
         
         
         

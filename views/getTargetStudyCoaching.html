@@ -115,8 +115,10 @@
         background-color: #F5ECCD;
         color: black;
     }
-    .emailSent{
-        
+    .badge{
+        background: #FFF9FB;
+        border: 1px solid gray;
+        color: white;
     }
 </style>
 <div class="container" ng-if="showLevel==0">
@@ -137,8 +139,8 @@
             {{state}}
         </div>
         <div flex>
-            <span ng-repeat="cityState in cityStates | orderBy: 'city'" ng-if="cityState.state == state">
-                <a ui-sref="targetStudyProviders({ city:{{'cityState.city'}} })">{{cityState.city}} | </a>
+            <span ng-repeat="cityState in cityStates | orderBy: ['-count','city']" ng-if="cityState.state == state" class="badge marginR5">
+                <a ui-sref="targetStudyProviders({ city:{{'cityState.city'}} })">{{cityState.city}}&nbsp;&nbsp;{{cityState.count}}</a>
             </span>
         </div>
     </div>

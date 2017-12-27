@@ -27,11 +27,17 @@ mongoose.Promise = require('bluebird');
 //to get all providers
 router.get('/cities', function(req, res) {
     
+            
     targetStudyProvider.aggregate(
     [
-        {"$group": { "_id": { city: "$city", state: "$state" } } }
+        {$match: { disabled: false, type: 'Coaching'} },
+        {"$group": { "_id": { city: "$city", state: "$state" }, count:{$sum:1} } }
     ],function(err, docs) {
     if (!err){
+        //console.log(docs);
+        docs.forEach(function(thisCityState, cindex){
+            thisCityState._id.count = thisCityState.count;
+        });
         //console.log(docs);
         res.json(docs);
     } else {throw err;}
@@ -3341,19 +3347,49 @@ router.get('/cityStateService', function(req, res) {
 
 router.get('/cityStateService2', function(req, res) {
     console.log("City State 2 Service Starting now");
-    
+    var bCounter = 0;
     res.json('Done');
-    var allProviders = targetStudyProvider.find({type:'Coaching', city:'Bhubaneshwar'}, {name:1, city:1, state:1},function(err, allProviders) {
+    var allProviders = targetStudyProvider.find({type:'Coaching', disabled: false}, {name:1, city:1, state:1},function(err, allProviders) {
         if (!err){
             var nProviders = allProviders.length;
             var counter = 0;
             console.log("There are " + nProviders + " providers!");
             allProviders.forEach(function(thisprovider, index){
-                thisprovider.city = 'Bhubaneswar';
-                thisprovider.save(function(err, thisprovider) {
-                    if (err) return console.error(err);
-                    console.log(index + ' ' + thisprovider._id + " saved!");
-                });
+                
+                if(thisprovider.city && thisprovider.state){
+                    var thisCity = thisprovider.city.trim();
+                    var thisState = thisprovider.state.trim();
+
+                    if(thisCity != thisprovider.city){
+                        console.log(thisprovider._id);
+                        bCounter += 1;
+                        thisprovider.city = thisCity;
+                        thisprovider.save(function(err, thisprovider) {
+                            if (err) return console.error(err);
+                            console.log(index + ' ' + thisprovider._id + " saved!");
+                        });
+                    }
+                    if(thisState != thisprovider.state){
+                        console.log(thisprovider._id);
+                        thisprovider.state = thisState;
+                        thisprovider.save(function(err, thisprovider) {
+                            if (err) return console.error(err);
+                            console.log(index + ' ' + thisprovider._id + " saved!");
+                        });
+                        bCounter += 1;
+                    }
+                    
+                    
+                }else{
+                    console.log('Check ' + thisprovider._id);
+                }
+                
+                
+                /**/
+                counter += 1;
+                if(counter == nProviders){
+                    console.log('Total changes are: ' + bCounter);
+                }
             });
             
         }else{
