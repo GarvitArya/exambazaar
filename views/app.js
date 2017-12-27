@@ -495,7 +495,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.introductionofEB = function() {
             return $http.post('/api/emails/introductionofEB');
         };
-    }]);    
+    }]);  
+        
+    exambazaar.service('PublicationEmailService', ['$http', function($http) {
+        
+        this.publications = function(email) {
+            return $http.post('/api/publicationemails/publications', email);
+        };
+        this.getPublicationEmails = function() {
+            return $http.get('/api/publicationemails');
+        };
+        
+    }]); 
     
     exambazaar.service('EligibilityService', ['$http', function($http) {
         this.bulksaveEligibility = function(eligibility) {
@@ -2027,7 +2038,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Belgaum", 
             "Bhilwara", 
             "Bhopal", 
-            "Bhubaneshwar", 
+            /*"Bhubaneshwar", */
             "Bhubaneswar", 
             "Bikaner", 
             "Bilaspur", 
@@ -12792,7 +12803,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 "Belgaum", 
                 "Bhilwara", 
                 "Bhopal", 
-                "Bhubaneshwar", 
+                /*"Bhubaneshwar", */
                 "Bhubaneswar", 
                 "Bikaner", 
                 "Bilaspur", 
@@ -36166,7 +36177,82 @@ function getLatLng(thisData) {
             $scope.urls = urls;
             $rootScope.pageTitle = "Exambazaar Blog Sitemap";
     }]);
-        
+    exambazaar.controller("emailToPublicationsController", 
+        [ '$scope','$http','$state', '$cookies', 'PublicationEmailService', 'UserService','$mdDialog', '$timeout', '$rootScope', 'Notification', 'allEmails', function($scope, $http, $state, $cookies, PublicationEmailService, UserService, $mdDialog, $timeout, $rootScope, Notification, allEmails){
+            $rootScope.pageTitle = "Send Email to Publications";
+            $scope.allEmails = allEmails.data;
+            $scope.enabled = false;
+            $scope.idsEnabled = ['58c8e895bbaebf3560545f19'];
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser'); 
+                if($scope.user && $scope.user.userType == 'Master' || idsEnabled.indexOf($scope.user._id)){
+                    $scope.enabled = true;
+                }
+                
+            }else{
+                $scope.user = null;
+            }
+            
+            $scope.email = {
+                publication: '',
+                to: '',
+                contact:{
+                    name: '',
+                    mobile: ''
+                },
+                templateName: 'Press Coverage',
+                sender: $scope.user.basic.name,
+                senderId: $scope.user._id,
+                from: $scope.user.email,
+                subject: '[Press Release] Story coverage of Exambazaar (IIT-IIM alumni Jaipur based startup)',
+                html: '',
+            };
+            
+            $scope.checkEmail = function(){
+                var valid = true;
+                //validate email regex
+                var toCheck = validateEmail($scope.email.to);
+                var fromCheck = validateEmail($scope.email.from);
+                
+                
+                if(!toCheck){
+                    valid = false;
+                    Notification.warning({message: "Incorrect email To: " + $scope.email.to,  positionY: 'top', positionX: 'right', delay: 3000});
+                }
+                if(!fromCheck){
+                    valid = false;
+                    Notification.warning({message: "Incorrect email From: " + $scope.email.from,  positionY: 'top', positionX: 'right', delay: 3000});
+                }
+                if(!$scope.email.sender || $scope.email.sender.length < 5){
+                    valid = false;
+                    Notification.warning({message: "Sender Name too short: " + $scope.email.sender,  positionY: 'top', positionX: 'right', delay: 3000});
+                }
+                if(!$scope.email.subject || $scope.email.subject.length < 5){
+                    valid = false;
+                    Notification.warning({message: "Subject too short: " + $scope.email.subject,  positionY: 'top', positionX: 'right', delay: 3000});
+                }
+                
+                if(valid){
+                    $scope.sendEmail($scope.email);
+                }
+            };
+            $scope.sendEmail = function(email) {
+                PublicationEmailService.publications(email).success(function (data, status, headers) {
+                    alert('Here');
+                    Notification.primary({message: "Email sent to: " + email.to,  positionY: 'top', positionX: 'right', delay: 30000});
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });  
+            };
+            $scope.sendEmailToSelf = function() {
+                var selfEmail = $scope.email;
+                selfEmail.to = selfEmail.from;
+                $scope.sendEmail(selfEmail);
+            };
+            
+            
+    }]);    
     exambazaar.controller("sendEmailController", 
         [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'UserService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', function($scope,$http,$state,EmailService, targetStudyProviderService, UserService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope){
             $rootScope.pageTitle = "Send Emails via Sendgrid";
@@ -39706,6 +39792,31 @@ function getLatLng(thisData) {
                 'footer': {
                     templateUrl: 'footer.html'
                 }
+            }
+        })
+    
+        .state('emailToPublications', {
+            url: '/ebinternal/emailToPublications',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'emailToPublications.html',
+                    controller: 'emailToPublicationsController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                allEmails: ['PublicationEmailService',
+                    function(PublicationEmailService){
+                    return PublicationEmailService.getPublicationEmails();
+                }],
+                
+                
             }
         })
         .state('sendEmail', {

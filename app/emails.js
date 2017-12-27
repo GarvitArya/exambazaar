@@ -72,6 +72,115 @@ router.post('/send', function(req, res) {
 });
 
 
+router.post('/publications', function(req, res) {
+    var thisEmail = req.body;
+    var templateName = thisEmail.templateName;
+    var from = thisEmail.from;
+    var sender = thisEmail.sender;
+    var senderId = thisEmail.senderId;
+    //sender = 'Always Exambazaar';
+    var fromEmail = {
+        email: from,
+        name: sender
+    };
+    var to = thisEmail.to;
+    var subject = thisEmail.subject;
+    
+    if(!subject || subject == ''){
+        subject = 'Press release & story coverage of Exambazaar (IIT-IIM alumni Jaipur based startup)';
+    }
+    var html = thisEmail.html;
+    if(!html){
+        html = ' ';
+    }
+    console.log("To: " + to + " Subject: " + subject + " from: " + from);
+    
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            
+            
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+                if(thisEmailTemplate.name == templateName){
+                    templateFound = true;
+                    templateId = thisEmailTemplate.templateKey;
+                    console.log(templateId);
+                    var from_email = new helper.Email(fromEmail);
+                    var to_email = new helper.Email(to);
+                    //var subject = subject;
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                    
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+
+                    sg.API(request, function(error, response) {
+                        if(error){
+                            res.json('Could not send email! ' + error);
+                        }else{
+                                                        
+                            var this_email = new email({
+                                institute: instituteId,
+                                user: senderId,
+                                templateId: templateId,
+                                fromEmail: {
+                                    email: from,
+                                    name: sender
+                                },
+                                to: to,
+                                response: {
+                                    status: response.statusCode,
+                                    _date: response.headers.date,
+                                    xMessageId: response.headers["x-message-id"]
+                                }
+                                
+                            });
+                            console.log('This email is: ' + JSON.stringify(this_email));
+                            
+                            this_email.save(function(err, this_email) {
+                                if (err) return console.error(err);
+                                console.log('Email sent with id: ' + this_email._id);
+                            });
+                            res.json(response);
+                        }
+
+                    });
+                    
+                }
+                if(counter == nLength){
+                    if(!templateFound){
+                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    }
+                }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+            
+            
+            
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+    
+    
+});
+
 router.post('/sendGrid', function(req, res) {
     var thisEmail = req.body;
     var templateName = thisEmail.templateName;

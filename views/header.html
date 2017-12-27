@@ -48,6 +48,9 @@
     .headerTransparent.navbar-default .navbar-nav > li > a, .headerTransparent.navbar-default .navbar-nav > li > a:hover, .headerTransparent.navbar-default .navbar-nav > li > a:focus {
         color: white;
     }
+    
+    
+    
 </style>
 
 <nav class="navbar navbar-default navbar-fixed-top nav-justified secondFont font14 spacedLetter09" role="navigation" id="mainNav" ng-class="headerBackgroundCSS()" ng-if="!maintenance">
@@ -219,31 +222,24 @@
                 <li class="dropdown">
                   <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Exams</a>
                   <ul class="dropdown-menu">
+                        
                     <li class="dropdown">
-                      <a href="#">One more dropdown</a>
+                      <a href="#">Stream 1</a>
                       <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li class="dropdown">
-                          <a href="#">One more dropdown</a>
-                          <ul class="dropdown-menu">
-                          ABCD
-                          </ul>
-                        </li>
-                        <li><a href="#">Something else here</a></li>
-                        <li><a href="#">Separated link</a></li>
-                       </ul>
+                      <a href="#">Exam 1</a>
+                      <a href="#">Exam 2</a>
+                      </ul>
                     </li>
-                      
-                    
-                    
-                  </ul>
+                    <li><a href="#">Something else here</a></li>
+                    <li><a href="#">Separated link</a></li>
+                   </ul>
                 </li>
                 <li class="dropdown">
                   <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<!--<span class="caret"></span>--></a>
                   <ul class="dropdown-menu">
                     <li><a ui-sref="analytics">Analytics</a></li>
-                    <li><a ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Send Email</a></li>
+                    <li><a ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Email to CI</a></li>
+                    <li><a ui-sref="emailToPublications({ userId:{{'sessionuser.userId'}} })">Email to Publications</a></li>
                     <li><a ui-sref="userSurvey({ userId:{{'sessionuser.userId'}} })">User Survey</a></li>
                     <li><a ui-sref="userMarketing({ userId:{{'sessionuser.userId'}} })">User Marketing</a></li>
                     <li><a ui-sref="addMaster({ masterId:{{'sessionuser.userId'}} })">Add Master User</a></li>
@@ -277,7 +273,8 @@
             <li class="dropdown">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
-                <li ng-if="sessionuser.userId == '58c8e895bbaebf3560545f19' || sessionuser.userId == '59085f0fc7289d0011d6ea8c' || sessionuser.userId == '58e5fdd86c9be422e4820d7e'"><a ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Send Email</a></li>  
+                <li ng-if="sessionuser.userId == '58c8e895bbaebf3560545f19' || sessionuser.userId == '5a1831f0bd2adb260055e352'"><a ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Email to CI</a></li>
+                <li ng-if="sessionuser.userId == '58c8e895bbaebf3560545f19'"><a ui-sref="emailToPublications({ userId:{{'sessionuser.userId'}} })">Email to Publications</a></li>
                 <li><a ui-sref="group({ userId:{{'sessionuser.userId'}} })">Group</a></li>
                 <li><a ui-sref="addExam">Add Exam</a></li>
                 <li><a ui-sref="addStream">Add Stream</a></li>

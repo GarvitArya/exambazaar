@@ -1,0 +1,179 @@
+<style>
+    input[type="text"],input[type="email"]
+    {
+        font-size: 11px;
+        padding: 2px;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus{
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    textarea{
+        font-size: 11px;
+        width:100%;
+        padding: 5px 5px;
+        display: inline-block;
+        border: 1px solid #969696;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    textarea:hover {
+        border: 1px solid #969696;
+    }
+    textarea:focus {
+        border: 1px solid #969696;
+    }
+    .badge{
+        background: #29335C;
+        color: white;
+    }
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+
+<div class="textBlack whiteBackground smallFont" ng-if="enabled">
+    
+    <div layout="row" layout-align="center start" class="width100">
+        <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="min50vh marginTB10 ">
+            <div layout="row" layout-align="start center" class="h1Font width100 marginTB10">Email to Publications <span class="badge marginL20 bold">{{allEmails.length}}</span>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginTB2">
+                <div flex="25">Sender Name</div>
+                <div flex class="marginLR10">
+                    {{user.basic.name}}
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginTB2">
+                <div flex="25">Sender Email</div>
+                <div flex class="marginLR10">
+                    {{user.email}}
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginTB2">
+                <div flex="25">To (email address)</div>
+                <div flex class="marginLR10">
+                    <input type="text" placeholder="To email" class="width100" ng-model="email.to">
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginTB2">
+                <div flex="25">Publication Name (optional)</div>
+                <div flex class="marginLR10">
+                    <input type="text" placeholder="Publication Name" class="width100" ng-model="email.publication">
+                </div>
+            </div>
+            
+            <div layout="row" layout-align="start center" class="width100 marginTB2">
+                <div flex="25">Contact Person (optional)</div>
+                <div flex class="marginLR10">
+                    <input type="text" placeholder="Name of Person (if available)" class="width100" ng-model="email.contact.name">
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginTB2">
+                <div flex="25">Contact Mobile (optional)</div>
+                <div flex class="marginLR10">
+                    <input type="text" placeholder="Mobile of Person (if available)" class="width100" ng-model="email.contact.mobile">
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginTB2">
+                <div flex="25">Email Subject</div>
+                <div flex class="marginLR10">
+                    <input type="text" placeholder="Subject" class="width100" ng-model="email.subject">
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginTB2">
+                <div flex="25">Message</div>
+                <div flex class="marginLR10">
+                    <textarea class="width100" ng-model="email.html" placeholder="Add message if any (shown on the top of your email in blue)" rows="3"></textarea>
+                </div>
+            </div>
+            <div layout="row" layout-align="end center" class="width100 marginTB5">
+                <div class="marginLR5">
+                    <md-button class="md-next md-small font10" ng-click="sendEmailToSelf()">
+                        Send test Email to Self
+                    </md-button>
+                </div>
+                <div class="marginLR5">
+                    <md-button class="md-danger md-small font10" ng-click="checkEmail()">
+                        Send
+                    </md-button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div layout="row" layout-align="center start" class="width100 marginTB40">
+        <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="start start" class="min50vh marginTB10 ">
+            <div layout="row" layout-align="start start" class="h1Font width100 marginTB10">Email History
+            </div>
+            <div layout="column" layout-align="start start" class="smallFont width100 marginTB10">
+                <div layout="row" layout-align="start start" class="width100 gainsboroBottomBorder">
+                    <div flex="5">
+                        S. No.
+                    </div>
+                    <div flex="25">
+                        To Email
+                    </div>
+                    <div flex="15">
+                        Publication
+                    </div>
+                    <div layout="column" layout-align="center center" flex="15">
+                        Contact Person
+                    </div>
+                    <div flex="15">
+                        Date
+                    </div>
+                    <div layout="column" layout-align="center center" flex="15">
+                        By
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" class="width100 greyDashedBottomBorder" ng-repeat="thisEmail in allEmails">
+                    <div flex="5">
+                        {{$index+1}}
+                    </div>
+                    <div flex="25">
+                        {{thisEmail.to}}
+                    </div>
+                    <div flex="15">
+                        {{thisEmail.publication}}
+                    </div>
+                    <div layout="column" layout-align="center center" flex="15">
+                        <div>
+                            {{thisEmail.contact.name}}
+                        </div>
+                        <div>
+                            {{thisEmail.contact.mobile}}
+                        </div>
+                    </div>
+                    <div flex="15">
+                        {{thisEmail._date | date: "dd-MMM-yy HH:mm"}}
+                    </div>
+                    <div layout="column" layout-align="center center" flex="15">
+                        <div>
+                            {{thisEmail.fromEmail.name}}
+                        </div>
+                        <div>
+                            {{thisEmail.fromEmail.email}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="h3Font danger" ng-if="!enabled">
+    
+    <div layout="column" layout-align="center center" class="width100 min50vh blogFont">
+        <div class="font24 paddingLR20 text-center">
+            You do not have adequate permissions to access this page.
+        </div>
+    </div>
+    
+</div>
