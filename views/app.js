@@ -36364,10 +36364,10 @@ function getLatLng(thisData) {
                 $scope.email.senderId = $scope.user._id;
             }else{
                 if($scope.user.userType=='Intern - Business Development'){
-                    if($scope.user._id == '58c8e895bbaebf3560545f19' || $scope.user._id == '59085f0fc7289d0011d6ea8c' || $scope.user._id == '58e5fdd86c9be422e4820d7e'){
+                    if($scope.user._id == '58c8e895bbaebf3560545f19' || $scope.user._id == '5a1831f0bd2adb260055e352'){
                         $scope.showLevel = 10;
-                        $scope.email.from = 'always@exambazaar.com';
-                        $scope.email.sender = 'Exambazaar';
+                        $scope.email.from = $scope.user.email;
+                        $scope.email.sender = $scope.user.basic.name +" from Exambazaar";
                         $scope.email.senderId = $scope.user._id;
                     }
                 }
