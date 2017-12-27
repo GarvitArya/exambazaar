@@ -36238,7 +36238,6 @@ function getLatLng(thisData) {
             };
             $scope.sendEmail = function(email) {
                 PublicationEmailService.publications(email).success(function (data, status, headers) {
-                    alert('Here');
                     Notification.primary({message: "Email sent to: " + email.to,  positionY: 'top', positionX: 'right', delay: 30000});
                 })
                 .error(function (data, status, header, config) {

@@ -21,14 +21,14 @@ router.get('/', function(req, res) {
 
 router.post('/publications', function(req, res) {
     var thisEmail = req.body;
-    console.log(thisEmail);
+    //console.log(thisEmail);
     var templateName = thisEmail.templateName;
     var from = thisEmail.from;
     var sender = thisEmail.sender;
     if(sender){
-        console.log(sender);
+        //console.log(sender);
         var result = sender.split(" ");
-        console.log(result);
+        //console.log(result);
         sender = result[0] + " from Exambazaar";
     }else{
         sender = "Vikrant from Exambazaar";
@@ -52,7 +52,7 @@ router.post('/publications', function(req, res) {
     if(!html){
         html = ' ';
     }
-    console.log("To: " + to + " Subject: " + subject + " from: " + from);
+    //console.log("To: " + to + " Subject: " + subject + " from: " + from);
     
     var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
         if (err) return handleError(err);
@@ -71,14 +71,14 @@ router.post('/publications', function(req, res) {
                 if(thisEmailTemplate.name == templateName){
                     templateFound = true;
                     templateId = thisEmailTemplate.templateKey;
-                    console.log(templateId);
                     var from_email = new helper.Email(fromEmail);
                     var to_email = new helper.Email(to);
-                    var to_email2 = new helper.Email('team@exambazaar.com');
+                    var to_email2 = new helper.Email('gaurav@exambazaar.com');
                     //var subject = subject;
                     var content = new helper.Content('text/html', html);
                     var mail = new helper.Mail(fromEmail, subject, to_email, content);
-                    var mail2 = new helper.Mail(fromEmail, subject, to_email2, content);
+                    var subject2 = "Copy: " + subject;
+                    var mail2 = new helper.Mail(fromEmail, subject2, to_email2, content);
                     mail.setTemplateId(templateId);
                     mail2.setTemplateId(templateId);
                     
@@ -97,7 +97,7 @@ router.post('/publications', function(req, res) {
                             console.log('Could not send email! ' + error);
                         }else{
                             sg.API(request2, function(error, response) {
-                                if(error){
+                                if(!error){
                                     var this_email = new publicationemail({
                                     user: senderId,
                                     templateId: templateId,
@@ -127,6 +127,7 @@ router.post('/publications', function(req, res) {
                                     
                                     
                                 }else{
+                                    console.log('Could not send email! ' + error);
                                 }
                             });
                             
