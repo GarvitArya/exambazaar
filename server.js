@@ -129,6 +129,7 @@ var users = require('./app/users.js',users);
 var procmons = require('./app/procmons.js',procmons); 
 var subscribers = require('./app/subscribers.js',subscribers); 
 var notifications = require('./app/notifications.js',notifications); 
+var publicationemails = require('./app/publicationemails.js',publicationemails); 
 var emails = require('./app/emails.js',emails); 
 var smss = require('./app/smss.js',smss);
 var sitemaps = require('./app/sitemaps.js',sitemaps);
@@ -178,6 +179,7 @@ app.use('/api/procmons', procmons);
 app.use('/api/subscribers', subscribers);
 app.use('/api/notifications', notifications);
 app.use('/api/emails', emails);
+app.use('/api/publicationemails', publicationemails);
 app.use('/api/smss', smss);
 app.use('/api/sitemaps', sitemaps);
 app.use('/api/otps', otps);
@@ -284,7 +286,7 @@ var allStates = [
 '/career/:domainName',
 '/takeassessment/:testId',
 '/ebinternal/testAssessment',
-
+'/ebinternal/emailToPublications',
 '/ebinternal/user/:userId/sendEmail',
 '/ebinternal/user/:userId/shortlisted',
 '/ebinternal/user/:userId/suggestCoaching',
