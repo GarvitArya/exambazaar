@@ -37523,7 +37523,12 @@ function getLatLng(thisData) {
             $scope.blogpost = thisblog.data;
             $scope.blogAuthors= null;
             if($scope.blogpost.user.facebookId){
-                $rootScope.blogAuthors = "https://www.facebook.com/" + $scope.blogpost.user.facebookId;
+                var profileId = $scope.blogpost.user.facebookId;
+                
+                if(profileId == '1721194871277063'){
+                    profileId = "poulomi.mandal1";
+                }
+                $rootScope.blogAuthors = "https://www.facebook.com/" + profileId;
             }
             
             $scope.recommenedBlogs = recommenedBlogs.data;
