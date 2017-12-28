@@ -9614,6 +9614,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);     
     exambazaar.controller("headerController", 
         [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS','$timeout', '$window', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS,$timeout, $window){
+            
             $scope.maintenance = false;
             
             
@@ -9622,9 +9623,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
             
-            if($rootScope.stateName =="showblog"){
-                $rootScope.pageType = "article";
-            }
             $rootScope.loginState = $rootScope.stateName;
             $rootScope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
             
@@ -9663,6 +9661,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var stateName = $state.current.name;
                 var headerLogoCSS = "headerLogo";
                 var sIndex = -1;
+                
+                if(stateName =="showblog"){
+                    $rootScope.pageType = "article";
+                }
                 
                 sIndex = headerGreenStates.indexOf(stateName);
                 if(sIndex != -1){
