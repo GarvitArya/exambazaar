@@ -37540,8 +37540,13 @@ function getLatLng(thisData) {
                 suggestedBlogURLs[uIndex] = "https://www.exambazaar.com/blogpost/" + thisURL;
             });
             //console.log(suggestedBlogURLs);
+            
             if(suggestedBlogURLs && suggestedBlogURLs.length > 0){
-                $rootScope.pageSeeAlso = suggestedBlogURLs;
+                var seeAlso = '';
+                suggestedBlogURLs.forEach(function(thisURL, uIndex){
+                    seeAlso += thisURL+",";
+                });
+                $rootScope.pageSeeAlso = seeAlso;
             }
             
             
