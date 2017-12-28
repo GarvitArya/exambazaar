@@ -130,6 +130,7 @@ var userSchema = mongoose.Schema({
             _created: { type: Date, default: Date.now },
         }],
         profileCredential: String,
+        facebookProfile: String,
     }
 });
 userSchema.plugin(passportLocalMongoose);

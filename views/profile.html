@@ -512,6 +512,20 @@
                                 
                             </div>
                         </div>
+                        <div layout="row" layout-align="start start" class="fieldRow" ng-if="user.blogger.active">
+                            <div flex="{{col1Width}}" class="col1">
+                                <div>
+                                    Add Facebook Profile
+                                </div>
+                                <div class="editFont font10 ">
+                                    Your facebook profile will be shown in articles
+                                </div>
+                            </div>
+                            <div flex class="col2">
+                                <input type="text" class="width100" ng-model="user.blogger.facebookProfile"  placeholder="https://www.facebook.com/gparashar" >
+                                
+                            </div>
+                        </div>
                         <div layout="row" layout-align="start start" class="fieldRow" ng-if="!user.blogger.active">
                             <div layout="column" layout-align="start start" class="width100 font14">
                                 <div class="marginB20 font20">
