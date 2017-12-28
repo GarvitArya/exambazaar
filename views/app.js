@@ -37515,7 +37515,7 @@ function getLatLng(thisData) {
             $scope.blogpost = thisblog.data;
             $scope.blogAuthors=[];
             if($scope.blogpost.user.facebookId){
-                $scope.blogAuthors = [$scope.blogpost.user.facebookId];
+                $rootScope.blogAuthors = [$scope.blogpost.user.facebookId];
             }
             $scope.recommenedBlogs = recommenedBlogs.data;
             $scope.suggestedBlogs = [];
