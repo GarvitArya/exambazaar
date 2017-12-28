@@ -37528,18 +37528,19 @@ function getLatLng(thisData) {
             if($scope.blogpost.user.facebookId){
                 var profileId = $scope.blogpost.user.facebookId;
                 
-                if(profileId == '1721194871277063'){
+                /*if(profileId == '1721194871277063'){
                     profileId = "poulomi.mandal1";
                 }
                 if(profileId == '987472631384895'){
                     profileId = "Ayushjn1995";
-                }
+                }*/
                 if($scope.blogpost.user.blogger.facebookProfile){
                     $rootScope.blogAuthors = $scope.blogpost.user.blogger.facebookProfile;
                 }else{
                     $rootScope.blogAuthors = "https://www.facebook.com/" + profileId;
                 }
                 
+                $rootScope.blogAuthors = "https://www.facebook.com/" + profileId;
             }
             //$rootScope.blogAuthors = "https://www.facebook.com/exambazaar/";
             console.log($rootScope.blogAuthors);   
