@@ -8977,10 +8977,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             $scope.tofillciList.forEach( function(thisTask, index){
                
-                //console.log(JSON.stringify(thisTask.institute));
+                console.log(JSON.stringify(thisTask.user._id));
                 var iIndex = internIds.indexOf(thisTask.user._id);
                 
                 if($scope.compareDates(thisTask._deadline, $scope.days[0]) == 1){
+                    console.log($scope.internDueList[iIndex]);
                     $scope.internDueList[iIndex].taskList.push(thisTask);
                 }
                 
@@ -8988,7 +8989,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if(thisTask.active){
                     $scope.fillsAssigned += 1;
                     var internIndex = internIds.indexOf(thisTask.user._id);
-                    //console.log(internIndex);
+                    console.log(thisTask.user._id);
+                    console.log(internIndex);
                     $scope.internDueList[internIndex].assigned += 1;
                     
                     //console.log(thisTask._deadline + ' ' + rightNow + ' ' + compare(rightNow, new Date(thisTask._deadline)));
@@ -9005,7 +9007,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }else{
                         thisTask.noEmail = false;
                     }
-                    console.log(thisTask._id);
+                    //console.log(thisTask._id);
                     var internIndex = internIds.indexOf(thisTask.user._id);
                     $scope.internDueList[internIndex].done += 1;
                     if(compare(new Date(thisTask._finished), yesterday) == 1){
@@ -12586,9 +12588,29 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.filledcolleges = [];
             }
             //console.log($scope.filledcolleges);
-            
+            $scope.getRowClass = function(filledcollege){
+                var classname = "";
+                var nCount = 0;
+                if(!filledcollege.active && filledcollege.college.studentbody){
+                    for (var property in filledcollege.college.studentbody) {
+                        nCount += filledcollege.college.studentbody[property].length;
+                    }
+                    if(nCount == 0){
+                        classname = "error1";
+                    }else{
+                        classname = "correct";
+                    }
+                }else{
+                    
+                }
+                
+                
+                
+                return classname;
+            };
             if($scope.user && ($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development')){
                 $scope.authorized = true;
+                $rootScope.pageTitle = $scope.user.basic.name + " - Filled Colleges Report";
             }
             
             
