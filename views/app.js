@@ -37540,7 +37540,7 @@ function getLatLng(thisData) {
                     $rootScope.blogAuthors = "https://www.facebook.com/" + profileId;
                 }
                 
-                $rootScope.blogAuthors = "https://www.facebook.com/" + profileId;
+                //$rootScope.blogAuthors = "https://www.facebook.com/" + profileId;
             }
             //$rootScope.blogAuthors = "https://www.facebook.com/exambazaar/";
             console.log($rootScope.blogAuthors);   
