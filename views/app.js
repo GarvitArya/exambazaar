@@ -37541,7 +37541,7 @@ function getLatLng(thisData) {
                 }
                 
             }
-            $rootScope.blogAuthors = "https://www.facebook.com/exambazaar/";
+            //$rootScope.blogAuthors = "https://www.facebook.com/exambazaar/";
             console.log($rootScope.blogAuthors);   
             
             $scope.recommenedBlogs = recommenedBlogs.data;
