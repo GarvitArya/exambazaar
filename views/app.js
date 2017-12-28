@@ -9617,9 +9617,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.maintenance = false;
             
             
+            $rootScope.pageType = "website";
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
+            
+            if($rootScope.stateName =="showblog"){
+                $rootScope.pageType = "article";
+            }
             $rootScope.loginState = $rootScope.stateName;
             $rootScope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
             
