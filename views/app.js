@@ -37542,11 +37542,8 @@ function getLatLng(thisData) {
             //console.log(suggestedBlogURLs);
             
             if(suggestedBlogURLs && suggestedBlogURLs.length > 0){
-                var seeAlso = '';
-                suggestedBlogURLs.forEach(function(thisURL, uIndex){
-                    seeAlso += thisURL+",";
-                });
-                $rootScope.pageSeeAlso = seeAlso;
+                
+                $rootScope.pageSeeAlso = suggestedBlogURLs;
             }
             
             

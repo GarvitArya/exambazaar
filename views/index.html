@@ -17,7 +17,16 @@
     
     <meta property="og:title" content="{{pageTitle}}" />
     <meta property="og:description" content="{{pageDescription}}" />
-    <meta property="og:see_also" content="{{pageSeeAlso}}" ng-if="pageSeeAlso" />
+    <meta property="og:see_also" content="{{pageSeeAlso[0]}}" ng-if="pageSeeAlso.length > 0" />
+    <meta property="og:see_also" content="{{pageSeeAlso[1]}}" ng-if="pageSeeAlso.length > 1" />
+    <meta property="og:see_also" content="{{pageSeeAlso[2]}}" ng-if="pageSeeAlso.length > 2" />
+    <meta property="og:see_also" content="{{pageSeeAlso[3]}}" ng-if="pageSeeAlso.length > 3" />
+    <meta property="og:see_also" content="{{pageSeeAlso[4]}}" ng-if="pageSeeAlso.length > 4" />
+    <meta property="og:see_also" content="{{pageSeeAlso[5]}}" ng-if="pageSeeAlso.length > 5" />
+    
+    
+    
+    
     <meta property="article:author" content="{{blogAuthors}}" ng-if="blogAuthors" />
     <meta name="author" content="{{blogAuthors}}" ng-if="blogAuthors"/>
     <meta property="article:publisher" content="https://www.facebook.com/exambazaar/" />
