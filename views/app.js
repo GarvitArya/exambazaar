@@ -10824,6 +10824,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Ujjain",
             "Rourkela",
             "Bangalore",
+            "Hyderabdad",
+            "Mumbai",
+            "Kolkata",
         ];
         
         if($cookies.getObject('sessionuser')){
@@ -37531,7 +37534,12 @@ function getLatLng(thisData) {
                 if(profileId == '987472631384895'){
                     profileId = "Ayushjn1995";
                 }
-                $rootScope.blogAuthors = "https://www.facebook.com/" + profileId;
+                if($scope.blogpost.user.blogger.facebookProfile){
+                    $rootScope.blogAuthors = $scope.blogpost.user.blogger.facebookProfile;
+                }else{
+                    $rootScope.blogAuthors = "https://www.facebook.com/" + profileId;
+                }
+                console.log($rootScope.blogAuthors);   
             }
             
             $scope.recommenedBlogs = recommenedBlogs.data;
