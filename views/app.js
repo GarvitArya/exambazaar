@@ -37513,6 +37513,10 @@ function getLatLng(thisData) {
     exambazaar.controller("showblogController", 
         [ '$scope','$http','$state', '$stateParams', '$document','blogpostService', 'thisblog', '$rootScope', 'Socialshare', '$location', '$window', 'pageTimer', 'viewService','$cookies', 'upvoteService', 'upvoteCount', 'commentService', 'thisblogComments', 'recommenedBlogs', function($scope,$http, $state, $stateParams, $document, blogpostService, thisblog, $rootScope, Socialshare, $location, $window, pageTimer, viewService,$cookies, upvoteService, upvoteCount, commentService, thisblogComments, recommenedBlogs){
             $scope.blogpost = thisblog.data;
+            $scope.blogAuthors=[];
+            if($scope.blogpost.user.facebookId){
+                $scope.blogAuthors = [$scope.blogpost.user.facebookId];
+            }
             $scope.recommenedBlogs = recommenedBlogs.data;
             $scope.suggestedBlogs = [];
             $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.examBlogs);

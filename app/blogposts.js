@@ -1995,7 +1995,7 @@ router.get('/getblogpostFromSlug/:blogpostSlug', function(req, res) {
             if(thisBlogpost){
                 var userId = thisBlogpost.user;
                 var thisUser = user
-                .findOne({_id : userId},{basic:1, blogger:1, image:1})
+                .findOne({_id : userId},{basic:1, blogger:1, image:1, facebookId: 1})
                 //.deepPopulate('exams exams.stream')
                 .exec(function (err, thisUser) {
                 if (!err){
