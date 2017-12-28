@@ -9619,6 +9619,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             
             $rootScope.pageType = "website";
+            $rootScope.pageSeeAlso = null;
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
@@ -37532,6 +37533,17 @@ function getLatLng(thisData) {
             $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.coachingBlogs);
             $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.blogAuthor);
             $scope.suggestedBlogs = $scope.suggestedBlogs.slice(0, 6);
+            
+            var suggestedBlogURLs = $scope.suggestedBlogs.map(function(a) {return a.urlslug;});
+            
+            suggestedBlogURLs.forEach(function(thisURL, uIndex){
+                suggestedBlogURLs[uIndex] = "https://www.exambazaar.com/blogpost/" + thisURL;
+            });
+            //console.log(suggestedBlogURLs);
+            if(suggestedBlogURLs && suggestedBlogURLs.length > 0){
+                $rootScope.pageSeeAlso = suggestedBlogURLs;
+            }
+            
             
             $scope.blogComments = thisblogComments.data;
             $scope.blogpost.upvotes = upvoteCount.data;
