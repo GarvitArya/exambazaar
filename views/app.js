@@ -8977,7 +8977,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             $scope.tofillciList.forEach( function(thisTask, index){
                
-                console.log(JSON.stringify(thisTask.user._id));
+                console.log(JSON.stringify(thisTask));
                 var iIndex = internIds.indexOf(thisTask.user._id);
                 
                 if($scope.compareDates(thisTask._deadline, $scope.days[0]) == 1){
@@ -37562,10 +37562,10 @@ function getLatLng(thisData) {
                     $rootScope.blogAuthors = "https://www.facebook.com/" + profileId;
                 }
                 
-                $rootScope.blogAuthors = profileId;
+                //$rootScope.blogAuthors = profileId;
             }
             //$rootScope.blogAuthors = "https://www.facebook.com/exambazaar/";
-            console.log($rootScope.blogAuthors);   
+            //console.log($rootScope.blogAuthors);   
             
             $scope.recommenedBlogs = recommenedBlogs.data;
             $scope.suggestedBlogs = [];
