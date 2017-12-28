@@ -37528,6 +37528,9 @@ function getLatLng(thisData) {
                 if(profileId == '1721194871277063'){
                     profileId = "poulomi.mandal1";
                 }
+                if(profileId == '987472631384895'){
+                    profileId = "Ayushjn1995";
+                }
                 $rootScope.blogAuthors = "https://www.facebook.com/" + profileId;
             }
             
