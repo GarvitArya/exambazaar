@@ -12318,7 +12318,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         }
                         
                         $scope.addedInstitutes = $scope.allAddedInstitutes;
+                        
+                        
                         $scope.addedInstitutes.forEach(function(thisInstitute, index){
+                            
                             var addedByUser = thisInstitute._createdBy;
                             if(listedUsers.indexOf(addedByUser) == -1){
                                 listedUsers.push(addedByUser);
@@ -12335,6 +12338,76 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             $scope.listedUsers.push(ebteam[uIndex]);
 
                         });
+                        
+                        //Summary code starts here
+                        var reportSummary = [];
+                        var reportSummaryIds = []; 
+                         $scope.addedInstitutes.forEach(function(thisInstitute, index){
+                             var user = thisInstitute._createdBy;
+                             var userName = null;
+                             if(user.basic.name){
+                                 userName = user.basic.name;
+                             }
+                            var thisDateString = moment(thisInstitute._created).format("DD-MMM-YYYY");
+                            
+                            var thisIndex = -1;
+                            for(var i = 0; i < reportSummary.length; i++) {
+                                if (reportSummary[i].userName == userName && reportSummary[i].dateString == thisDateString) {
+                                    thisIndex = i;
+                                }
+                            }
+                            if(thisIndex != -1){
+                                reportSummary[thisIndex].count += 1;
+                            }else{
+                                var newSummary = {
+                                    
+                                    userName: userName,
+                                    dateString: thisDateString,
+                                    count: 1,
+                                };
+                                reportSummary.push(newSummary);
+                            }
+                             
+                        });
+                        var uniqueDateStrings = [];
+                        var uniqueUserNames = [];
+                        var finalSummary = {};
+                        
+                         reportSummary.forEach(function(thisElement, index){
+                            if(uniqueDateStrings.indexOf(thisElement.dateString) == -1){
+                               
+                                uniqueDateStrings.push(thisElement.dateString);
+                            }
+                        });
+                        reportSummary.forEach(function(thisElement, index){
+                            if(uniqueUserNames.indexOf(thisElement.userName) == -1){
+                                uniqueUserNames.push(thisElement.userName);
+                            }
+                        });
+                         uniqueDateStrings.forEach(function(thisElement, index){
+                            uniqueUserNames.forEach(function(thisSubElement, sindex){
+                                finalSummary[thisElement] = {};
+                                finalSummary[thisElement][thisSubElement] = 0;
+                                
+                            });
+                        });
+                        reportSummary.forEach(function(thisElement, index){
+                            finalSummary[thisElement.dateString][thisElement.userName] = thisElement.count;
+                        });
+                        var summaryStrings = [];
+                        for (var property in finalSummary) {
+                            var newString = "";
+                            newString += "Date: " +property + " | ";
+                            for (var property2 in finalSummary[property]) {
+                                newString += property2 +": " + finalSummary[property][property2] + " | ";
+                            }
+                            summaryStrings.push(newString);
+                        }
+                        $scope.summaryStrings = summaryStrings;
+                        //Summary code ends here
+                        
+                        
+                        
 
                     })
                     .error(function (data, status, header, config) {
@@ -12344,6 +12417,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
             }, true);
             
+            
+            $scope.showSummaryDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#summaryDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
             
             $scope.websiteExists = function(institute){
                 var exists = false;
@@ -12701,7 +12785,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("addedQuestionsController", 
-        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedQuestions', 'ebteam', 'examList', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedQuestions, ebteam, examList){
+        [ '$scope', '$http','$state','$rootScope', '$mdDialog','thisuser','targetStudyProviderService', 'addedQuestions', 'ebteam', 'examList', function($scope, $http, $state, $rootScope, $mdDialog, thisuser, targetStudyProviderService, addedQuestions, ebteam, examList){
             $scope.user = thisuser.data;
             var exams = examList.data;
             
@@ -12715,7 +12799,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             var examIds = exams.map(function(a) {return a._id;});
             
             var listedUsers = [];
-            
+            $scope.showSummaryDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#summaryDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
             $scope.addedQuestions.forEach(function(thisQuestion, index){
                 var addedByUser = thisQuestion._createdBy;
                 if(listedUsers.indexOf(addedByUser) == -1){
@@ -12781,6 +12874,78 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //console.log($scope.examQCount);
             };
             $scope.generateExamSummary();
+            
+            $scope.generateInternSummary = function(){
+                //Summary code starts here
+                var reportSummary = [];
+                var reportSummaryIds = []; 
+                 $scope.addedQuestions.forEach(function(thisQuestion, index){
+                     var user = thisQuestion._createdBy;
+                     
+                     var userName = null;
+                     if(user.basic.name){
+                         userName = user.basic.name;
+                     }
+                    var thisDateString = moment(thisQuestion._created).format("DD-MMM-YYYY");
+
+                    var thisIndex = -1;
+                    for(var i = 0; i < reportSummary.length; i++) {
+                        if (reportSummary[i].userName == userName && reportSummary[i].dateString == thisDateString) {
+                            thisIndex = i;
+                        }
+                    }
+                    if(thisIndex != -1){
+                        reportSummary[thisIndex].count += thisQuestion.questions.length;
+                    }else{
+                        var newSummary = {
+
+                            userName: userName,
+                            dateString: thisDateString,
+                            count: thisQuestion.questions.length,
+                        };
+                        reportSummary.push(newSummary);
+                    }
+
+                });
+                var uniqueDateStrings = [];
+                var uniqueUserNames = [];
+                var finalSummary = {};
+
+                 reportSummary.forEach(function(thisElement, index){
+                    if(uniqueDateStrings.indexOf(thisElement.dateString) == -1){
+
+                        uniqueDateStrings.push(thisElement.dateString);
+                    }
+                });
+                reportSummary.forEach(function(thisElement, index){
+                    if(uniqueUserNames.indexOf(thisElement.userName) == -1){
+                        uniqueUserNames.push(thisElement.userName);
+                    }
+                });
+                 uniqueDateStrings.forEach(function(thisElement, index){
+                    uniqueUserNames.forEach(function(thisSubElement, sindex){
+                        finalSummary[thisElement] = {};
+                        finalSummary[thisElement][thisSubElement] = 0;
+
+                    });
+                });
+                reportSummary.forEach(function(thisElement, index){
+                    finalSummary[thisElement.dateString][thisElement.userName] = thisElement.count;
+                });
+                var summaryStrings = [];
+                for (var property in finalSummary) {
+                    var newString = "";
+                    newString += "Date: " +property + " | ";
+                    for (var property2 in finalSummary[property]) {
+                        newString += property2 +": " + finalSummary[property][property2] + " | ";
+                    }
+                    summaryStrings.push(newString);
+                }
+                $scope.summaryStrings = summaryStrings;
+                console.log(summaryStrings);
+                //Summary code ends here    
+            };
+            $scope.generateInternSummary();
     }]);
         
     exambazaar.controller("cityGroupExamQueryController", 
