@@ -172,44 +172,73 @@ router.get('/stream/:streamName', function(req, res) {
 });
 
 router.get('/streamexam', function(req, res) {
-    var allActiveStreams = stream
-        .find({active: true}, {displayname: 1, rank: 1})
-        .sort("-rank")
-        .exec(function (err, allActiveStreams) {
+    
+    var allDegrees = blogpost
+        .find({'blogSeries': 'Degrees'}, {title: 1, urlslug: 1})
+        .exec(function (err, allDegrees) {
         if (!err){
-            var streamIds = allActiveStreams.map(function(a) {return a._id.toString();});
-            var streamNameRanks = allActiveStreams.map(function(a) {return {stream: a.displayname, rank: a.rank};});
+            var allDegreeIds = allDegrees.map(function(a) {return a._id.toString();});
             
-            var allActiveExams = exam
-                .find({active: true},{stream:1, seoname:1, rank: 1, name:1})
-                .sort("-rank")
-                .exec(function (err, allActiveExams) {
-                if (!err){
+            var allActiveStreams = stream
+            .find({active: true}, {displayname: 1, rank: 1})
+            .sort("-rank")
+            .exec(function (err, allActiveStreams) {
+            if (!err){
+                var streamIds = allActiveStreams.map(function(a) {return a._id.toString();});
+                var streamNameRanks = allActiveStreams.map(function(a) {return {stream: a.displayname, rank: a.rank, degreeblogs: []};});
+
+                var allActiveExams = exam
+                    .find({active: true},{stream:1, seoname:1, rank: 1, name:1, examdegrees: 1})
+                    .sort("-rank")
+                    .exec(function (err, allActiveExams) {
+                    if (!err){
                     var streamExams = {};
                     allActiveExams.forEach(function(thisExam, index){
                         var thisStreamId = thisExam.stream.toString();
-                        
+                        var thisDegrees = thisExam.examdegrees;
+
                         var sIndex = streamIds.indexOf(thisStreamId);
                         if(sIndex != -1){
                             var thisStreamName = streamNameRanks[sIndex].stream;
                             if(!streamExams[thisStreamName]){
                                 streamExams[thisStreamName] = [];
-                                
+
                             }
                             streamExams[thisStreamName].push(thisExam);
+
+                            thisDegrees.forEach(function(thisBlogId, index){
+                                var dIndex = allDegreeIds.indexOf(thisBlogId.toString());
+                                if(dIndex != -1){
+                                    var thisStreamBlogs = streamNameRanks[sIndex].degreeblogs.map(function(a) {return a._id.toString();});
+                                    var tIndex = thisStreamBlogs.indexOf(thisBlogId.toString());
+
+                                    if(tIndex == -1){
+                                        streamNameRanks[sIndex].degreeblogs.push(allDegrees[dIndex]);
+                                    }
+
+                                    //thisExam.examdegrees[index] = allDegrees[dIndex];
+                                }
+
+                            });
                         }
+
                     });
-                    
-                    var streamexams = {
+                    //console.log(streamExams);
+                    var streamExams = {
                         streamranks: streamNameRanks,   
                         streamexams: streamExams,   
                     };
-                    res.json(streamexams);
-                } else {throw err;}
-            });
+                    res.json(streamExams);
+                    } else {throw err;}
+                });
+
+            } else {throw err;}
+        });
+            
             
         } else {throw err;}
     });
+    
     
     
     

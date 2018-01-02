@@ -3318,7 +3318,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         var checkEligibility = function(thisIndex){
             //console.log($scope.elgInput);
             $scope.elgInput = $scope.user.eligibility;
-            console.log($scope.elgInput);
             var error = false;
             var errorClass12Subjects = true;
             var errorUnderGradMajor = true;
@@ -3445,7 +3444,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     if($scope.elgInput.age < thisEligibility.age.minage || $scope.elgInput.age > thisEligibility.age.maxage){
                         valid = false;
                         if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
-                            console.log(index + " " + valid + " " + thisEligibility._id);
+                            //console.log(index + " " + valid + " " + thisEligibility._id);
                         }
                         //console.log(index + " " + valid + " " + thisEligibility._id);
                     }
@@ -9668,6 +9667,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     if(data){
                         $rootScope.streamranks = data.streamranks;
                         $rootScope.streamexams = data.streamexams;
+                        console.log($rootScope.streamranks);
                     }
                     
                 })
