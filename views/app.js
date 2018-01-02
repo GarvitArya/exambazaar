@@ -29223,6 +29223,7 @@ function getLatLng(thisData) {
                 assignable = false;
             }
             if($scope.newAssign.deadline){
+                $scope.newAssign.deadline = moment($scope.newAssign.deadline);
                 $scope.newAssign.deadline = $scope.newAssign.deadline.endOf('day')
                
             }
