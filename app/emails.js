@@ -344,263 +344,7 @@ var fromEmail = {
     email: from,
     name: sender
 };
-/*var coachingIds = [
-    "58715c9cf9988f0011d9432d",
-"5871dada54dcbf2e48a7933d",
-"5871daed54dcbf2e48a7933f",
-"5871e924d2962f15b03e84b1",
-"587200b8a4e2f82b04510126",
-"587281a67714e50bfc305909",
-"5872fca38def9a37eccf52a9",
-"5873161c57f9f6322cc028e5",
-"587c6cc5d150930011f64d54",
-"587c7a95b635b90011b1e91c",
-"587cae3961bd2f1abca3833f",
-"587caf8e61bd2f1abca3834f",
-"587e1447b3e94f2bd8625b05",
-"587e20d66c163c0011c2467f",
-"587efbf137f77112e4ee501a",
-"587f01d06c163c0011c24772",
-"587f26aa68834500113e3f9a",
-"587f26b368834500113e3f9b",
-"587f82886b33dd19bcd63488",
-"587f82926b33dd19bcd63489",
-"5880f4ca3861c0001118a0a6",
-"5884654754226e23046e9477",
-"58846b7254226e23046e94c7",
-"5885a375c3ed5d0011199f91",
-"5886d2f9b154802d00bc7b70",
-"5886d552b154802d00bc7b8e",
-"5886d55cb154802d00bc7b8f",
-"5886d567b154802d00bc7b90",
-"5886d5abb154802d00bc7b91",
-"5886d5b5b154802d00bc7b92",
-"5886d5d4b154802d00bc7b95",
-"58885132226dd10011180be0",
-"588adf84b622727714a72713",
-"5888c118c019b96a88de4872",
-"587f06ff6c163c0011c24b0f",
-"5871d79254dcbf2e48a79313",
-"5871d79b54dcbf2e48a79314",
-"5871d7a554dcbf2e48a79315",
-"5871d7b054dcbf2e48a79316",
-"5871d80a54dcbf2e48a79319",
-"5870f159b2a1c11da874022d",
-"5871015fb2a1c11da87402fa",
-"5872fe8d8def9a37eccf52c2",
-"5872fe978def9a37eccf52c3",
-"5872fe838def9a37eccf52c1",
-"587cb01061bd2f1abca38356",
-"5871544ff9988f0011d9427b",
-"58715586f9988f0011d94298",
-"588ad35ae5d5206b6c04c8ed",
-"5871fdcaa4e2f82b045100ff",
-"5871e92ed2962f15b03e84b2",
-"5871fdd3a4e2f82b04510100",
-"5871fe40a4e2f82b04510105",
-"58787d593293df001181e20f",
-"587c6da5d150930011f64d69",
-"587e07ff70fbf52dc8d74e37",
-"587e257d6c163c0011c246f6",
-"587c6d86d150930011f64d66",
-"587c6dc5d150930011f64d6c",
-"587c6db0d150930011f64d6a",
-"58802b60b0ee163ba085b4bc",
-"587e145cb3e94f2bd8625b07",
-"587c6d91d150930011f64d67",
-"587c6dd0d150930011f64d6d",
-"58802b56b0ee163ba085b4bb",
-"58720125a4e2f82b0451012b",
-"58726c2a89517d2a6c260d0a",
-"5871fddfa4e2f82b04510101",
-"587c6dbad150930011f64d6b",
-"58805d2868834500113e4111",
-"5880f5813861c0001118a0b7",
-"588228f672f54a065cfb1d7a",
-"588214b5fe400914343a5091",
-"5884674454226e23046e9492",
-"5885a3ffc3ed5d0011199f9e",
-"58852dc9d50e9f001181043f",
-"5886d6c4b154802d00bc7ba1",
-"5871d91754dcbf2e48a79328",
-"58726c1f89517d2a6c260d07",
-"587c6d9bd150930011f64d68",
-"58805d1d68834500113e4110",
-"5886c9aeb154802d00bc7afa",
-"5885a3f4c3ed5d0011199f9d",
-"5886d642b154802d00bc7b9a",
-"588adfd5b622727714a72715",
-"58720110a4e2f82b04510129",
-"587e143eb3e94f2bd8625b04",
-"5884673b54226e23046e9491",
-"5871fde9a4e2f82b04510102",
-"587e20ea6c163c0011c24681",
-"58726c2389517d2a6c260d09",
-"5872017da4e2f82b0451012e",
-"58720105a4e2f82b04510128",
-"58720131a4e2f82b0451012c",
-"58726bf889517d2a6c260d05",
-"5880f5003861c0001118a0ab",
-"58857c5f76ee7f23a8036274",
-"5886d6ceb154802d00bc7ba2",
-"5885a3aac3ed5d0011199f96",
-"5870e87d6ebf5925a013c165",
-"587f20af68834500113e3f06",
-"5872011ba4e2f82b0451012a",
-"58726c2089517d2a6c260d08",
-"5872fcad8def9a37eccf52aa",
-"5872fcfd8def9a37eccf52ac",
-"587b5b70d150930011f6485a",
-"58805be568834500113e40f3",
-"5885c62a8406b42b38a2dc1b",
-"5885243c0dc2b40a2857b14f",
-"58877346fd23ba0011dd522b",
-"588773e5fd23ba0011dd523b",
-"58885183226dd10011180be8",
-"5870d4140f70f1181c8edbf4",
-"58ec9f23c92fad00112d1cee",
-"58ec9f8cc92fad00112d1cf2",
-"5870f05180ea0e0698890928",
-"5872fe798def9a37eccf52c0",
-"5872fc998def9a37eccf52a8",
-"5871d7bb54dcbf2e48a79317",
-"597897b1119b830c8956e35c",
-"597897b1119b830c8956e35a",
-"597897b1119b830c8956e364",
-"597897b1119b830c8956e362",
-"597897b1119b830c8956e36c",
-"597897b1119b830c8956e36e",
-"597897b1119b830c8956e376",
-"597897b1119b830c8956e35e",
-"597897b1119b830c8956e380",
-"597897b1119b830c8956e358",
-"597897b1119b830c8956e368",
-"597897b1119b830c8956e366",
-"597897b1119b830c8956e372",
-"597897b1119b830c8956e370",
-"597897b1119b830c8956e356",
-"597897b1119b830c8956e37a",
-"597897b1119b830c8956e360",
-"597897b1119b830c8956e36a",
-"597897b1119b830c8956e374",
-"597897b1119b830c8956e38a",
-"597897b1119b830c8956e37c",
-"597897b1119b830c8956e394",
-"597897b1119b830c8956e386",
-"597897b1119b830c8956e39e",
-"597897b1119b830c8956e390",
-"597897b1119b830c8956e3a8",
-"597897b1119b830c8956e39a",
-"597897b1119b830c8956e3b2",
-"597897b1119b830c8956e3a4",
-"597897b1119b830c8956e3bc",
-"597897b1119b830c8956e3ae",
-"597897b1119b830c8956e3c6",
-"597897b1119b830c8956e3b8",
-"597897b1119b830c8956e3d0",
-"597897b1119b830c8956e3c2",
-"597897b1119b830c8956e3da",
-"597897b1119b830c8956e3e4",
-"597897b1119b830c8956e37e",
-"597897b1119b830c8956e3ee",
-"597897b1119b830c8956e388",
-"597897b2119b830c8956e3f8",
-"597897b2119b830c8956e402",
-"597897b1119b830c8956e392",
-"597897b1119b830c8956e384",
-"597897b1119b830c8956e39c",
-"597897b1119b830c8956e3a6",
-"597897b1119b830c8956e38e",
-"597897b1119b830c8956e3b0",
-"597897b1119b830c8956e398",
-"597897b1119b830c8956e3ba",
-"597897b1119b830c8956e3a2",
-"597897b1119b830c8956e3c4",
-"597897b1119b830c8956e3ac",
-"597897b1119b830c8956e3ce",
-"597897b1119b830c8956e3b6",
-"597897b1119b830c8956e3d8",
-"597897b1119b830c8956e3c0",
-"597897b1119b830c8956e3ca",
-"597897b1119b830c8956e3e2",
-"597897b1119b830c8956e3d4",
-"597897b1119b830c8956e378",
-"597897b1119b830c8956e3de",
-"597897b1119b830c8956e382",
-"597897b1119b830c8956e3e8",
-"597897b1119b830c8956e38c",
-"597897b1119b830c8956e396",
-"597897b1119b830c8956e3a0",
-"597897b1119b830c8956e3aa",
-"597897b1119b830c8956e3b4",
-"597897b1119b830c8956e3be",
-"597897b1119b830c8956e3c8",
-"597897b1119b830c8956e3d2",
-"597897b1119b830c8956e3dc",
-"597897b1119b830c8956e3cc",
-"597897b1119b830c8956e3d6",
-"597897b1119b830c8956e3e0",
-"597897b1119b830c8956e3ea",
-"597897b2119b830c8956e3f4",
-"597897b2119b830c8956e3fe",
-"597897b2119b830c8956e408",
-"597897b1119b830c8956e3ec",
-"597897b1119b830c8956e3f2",
-"597897b2119b830c8956e3fc",
-"597897b2119b830c8956e3f6",
-"597897b2119b830c8956e400",
-"597897b2119b830c8956e406",
-"597897b1119b830c8956e3e6",
-"597897b1119b830c8956e3f0",
-"597897b2119b830c8956e3fa",
-"597897b2119b830c8956e404",
-"599aea2991027a2064294730",
-"599aea2a91027a2064294732",
-"599aea2a91027a2064294734",
-"599aea2991027a206429472e",
-"599aea2a91027a2064294736",
-"599aea2a91027a2064294738",
-"599aea2a91027a206429473a",
-"599aea2a91027a206429473e",
-"599aea2a91027a206429473c",
-"599aea2a91027a2064294740",
-"599aea2a91027a2064294744",
-"599aea2a91027a2064294742",
-"599edda10c052c568f3fa5cc",
-"599edda10c052c568f3fa5ce",
-"59a6d9fda953ba5cd5fa275b",
-"59ad4b8e0faf9d5ebc5a8614",
-"59b159673d5e963fc12ea487",
-"59b1a62d27114f55e73e8426",
-"59b3e0b04c731b7ceff4d5c3",
-"59b6a5823995b654f42c435f",
-"59baa20338d2bf10f2bd1cf9",
-"59bbcdbf7899cf6d69a47825",
-"59bbdb36d7dde1755d710ffd",
-"59c12364bf64ab1062c34fb0",
-"59c392058a41515171bb9315",
-"59cd09ff8225fc7343d899a9",
-"59ce59c0f5912b613a5df58d",
-"59d258258d08101bc8904daa",
-"59d7c023bc724f0918fc775e",
-"59e4d36a5dbddd0c51e61fe1",
-"59f1b1989acf5e210074ad20",
-"5a0dcf9bd3c3d649a60f5375",
-"5a10576887ca5478a88de208",
-"5a10576887ca5478a88de206",
-"5a10576887ca5478a88de210",
-"5a10576887ca5478a88de20c",
-"5a10576887ca5478a88de20e",
-"5a10576887ca5478a88de20a",
-"5a10576887ca5478a88de212",
-"5a10576887ca5478a88de214",
-"5a10576887ca5478a88de216",
-"5a10576887ca5478a88de218",
-"5a10576887ca5478a88de21a",
-"5a10576887ca5478a88de21c",
-"5a33be87a4995f5cc1120c51",
 
-];*/
     var coachingIds = [];
 var allProviders = targetStudyProvider
     .find({ '_id': { $in : coachingIds}, email: {$exists: true}, disabled: false }, { name: 1, email:1 })
@@ -1785,6 +1529,115 @@ router.post('/CATEmail', function(req, res) {
         }
         }else{
             res.json('No Active SendGrid API Key');
+        }
+    });
+});
+
+
+router.post('/HappyNewYearEmail', function(req, res) {
+    console.log('Starting Happy New Year 2018 Email');
+    var fromEmail = {
+        email: 'always@exambazaar.com',
+        name: 'Always Exambazaar'
+    };
+    
+    var templateName = 'New Year 2018 Email';
+    res.json(true);
+    
+    
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+        var apiKey = existingSendGridCredential.apiKey;
+        var sg = require("sendgrid")(apiKey);
+        var emailTemplate = existingSendGridCredential.emailTemplate;
+        var templateFound = false;
+        var nLength = emailTemplate.length;
+        var counter = 0;
+        var templateId;
+        emailTemplate.forEach(function(thisEmailTemplate, index){
+        if(thisEmailTemplate.name == templateName){
+            templateFound = true;
+            templateId = thisEmailTemplate.templateKey;
+            var from_email = new helper.Email(fromEmail);
+            //email: {$exists: true}, mobile: "9829685919"
+            var allUsers = user.find({email: {$exists: true}}, {basic: 1, email: 1, _id: 1}, function(err, allUsers) {
+            if (!err){
+                var emailcounter = 0;
+                var counter = 0;
+                var nUsers = allUsers.length;
+                console.log("Total " + nUsers + " users!");
+                allUsers.forEach(function(thisUser, index){
+
+                    var to = thisUser.email;
+                    var username = "Student";
+                    var subject = " ";
+                    if(thisUser.basic && thisUser.basic.name){
+                        username = thisUser.basic.name;
+                    }
+
+
+                    var to_email = new helper.Email(to);
+                    var html = ' ';
+
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                     mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+
+
+                    if(thisUser.email && thisUser.email != ''){
+                        console.log('Sending email to ' + username + ' at ' + to);
+                        sg.API(request, function(error, response) {
+                        if(error){
+                            console.log('Could not send email! ' + error);
+                        }else{
+                            counter += 1;
+                            console.log(counter + "/" + nUsers + " done!");
+                            if(counter == nUsers){
+                                console.log('All Done');
+                            }
+                        }
+                    });
+
+
+                    }else{
+                        counter += 1;
+                        if(counter == nUsers){
+                            console.log('All Done');
+                        }
+                    }
+                });
+
+
+
+            } else {throw err;}
+            });
+            
+            
+
+        }
+        if(counter == nLength){
+            if(!templateFound){
+                console.log('Could not send email as there is no template with name: ' + templateName);
+                res.json(false);
+            }
+        }
+        });
+        if(nLength == 0){
+            if(!templateFound){
+                console.log('Could not send email as there is no template with name: ' + templateName);
+                res.json(false);
+            }
+        }
+        }else{
+            console.log('No Active SendGrid API Key');
+            res.json(false);
         }
     });
 });

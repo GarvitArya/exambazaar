@@ -1,5 +1,5 @@
 <style>
-    #instituteInput{
+    .instituteInput{
         background-color : #f7f7f7;
         font-weight: 100;
         font-size: 12px;
@@ -149,7 +149,7 @@
         </div>
         <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
             <div flex="40" layout="row" layout-align="start center">
-                <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left" ng-model="instituteInput" id="instituteInput" >
+                <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left instituteInput" ng-model="instituteInput" >
             </div>
             <div flex="20" layout="row" layout-align="start center">
                 <md-datepicker ng-model="ciDeadline" md-placeholder="Set Deadline"></md-datepicker>
@@ -296,7 +296,7 @@
             </div>
             <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
                 <div flex="5" layout="row" layout-align="start center">
-                    <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left" ng-model="instituteVerifyCount" id="instituteInput" >
+                    <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left instituteInput" ng-model="instituteVerifyCount" >
                 </div>
                 <div flex="35" layout="row" layout-align="start center">
                     <md-input-container class="width75 text-primary">
@@ -381,7 +381,7 @@
         </div>
         <div layout="row" layout-xs="column"  layout-align="center" layout-padding>
             <div flex="5" layout="row" layout-align="start center">
-                <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left" ng-model="addContactInfoCount" id="instituteInput" >
+                <input type="text" placeholder="Paste Link or Institute Id" class="form-control text-center width100 text-left instituteInput" ng-model="addContactInfoCount" >
             </div>
             <div flex="35" layout="row" layout-align="start center">
                 <md-input-container class="width75 text-primary">

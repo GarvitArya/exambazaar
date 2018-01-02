@@ -313,7 +313,7 @@
               <ul class="dropdown-menu">
                 <li ng-if="sessionuser.userType=='Intern - Business Development'">
                     <a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">To fill Colleges</a>
-                    <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>
+                    <a ui-sref="assigned">Assigned Institutes</a>
                     <a ui-sref="assignedToVerify({ userId:{{'sessionuser.userId'}} })">To Verify Institutes</a>
                     <a ui-sref="assignedToAddContactInfo({ userId:{{'sessionuser.userId'}} })">To Add Contact Info Institutes</a>
                     <a ui-sref="assignedToRate({ userId:{{'sessionuser.userId'}} })">To Rate Institutes</a>
@@ -421,7 +421,7 @@
                 <a ng-if="sessionuser.userType != 'Partner'" ui-sref="viewed({ userId:{{'sessionuser.userId'}} })">Take a Lookback</a>
                 </li>-->
                 <li ng-if="sessionuser.userType=='Intern - Business Development' || sessionuser.userType=='Master'">
-                    <a ui-sref="assigned({ userId:{{'sessionuser.userId'}} })">Assigned Institutes</a>
+                    <a ui-sref="assigned">Assigned Institutes</a>
                 </li>
                 <li ng-if="sessionuser.userType=='Intern - Business Development'">
                     <a ui-sref="filled({ userId:{{'sessionuser.userId'}} })">Your Filled Institutes</a>

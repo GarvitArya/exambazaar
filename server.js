@@ -267,7 +267,7 @@ var allStates = [
 '/ebinternal/user/:userId/addedQuestions',
 '/ebinternal/user/:userId/filledColleges',
 '/ebinternal/user/:userId/addIntern',
-'/ebinternal/user/:userId/assigned',
+'/ebinternal/fci',
 '/ebinternal/user/:userId/assignedToAddContactInfo',
 '/ebinternal/user/:userId/assignedToRate',
 '/ebinternal/user/:userId/assignedToVerify',

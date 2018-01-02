@@ -175,22 +175,36 @@ router.post('/userevaluate', function(req, res) {
                     thisQuesiton.questions.forEach(function(subQuestion, sIndex){
                         var subQuestionId = subQuestion._id;
                         var correctOptionId = null;
-                        subQuestion.options.forEach(function(thisOption, oIndex){
-                            if(thisOption._correct){
-                                correctOptionId = thisOption._id;
-                                
-                                var thisKey = {
-                                    question: questionId.toString(),
-                                    subquestion: subQuestionId.toString(),
-                                    option: correctOptionId.toString(),
-                                };
-                                solutionKey.push(thisKey);
-                                counter += 1;
-                            }
-                            
+                        var correctNumericalAnswers = null;
+                       
+                        if(subQuestion.type == 'mcq'){
+                            subQuestion.options.forEach(function(thisOption, oIndex){
+                                if(thisOption._correct){
+                                    correctOptionId = thisOption._id;
 
-                        });
+                                    var thisKey = {
+                                        question: questionId.toString(),
+                                        subquestion: subQuestionId.toString(),
+                                        option: correctOptionId.toString(),
+                                    };
+                                    solutionKey.push(thisKey);
+                                    counter += 1;
+                                }
+
+
+                            });
+                        }
                         
+                        if(subQuestion.type == 'numerical'){
+                            correctNumericalAnswers = subQuestion.numericalAnswers;
+                            var thisKey = {
+                                question: questionId.toString(),
+                                subquestion: subQuestionId.toString(),
+                                numericalAnswers: correctNumericalAnswers,
+                            };
+                            solutionKey.push(thisKey);
+                            counter += 1;
+                        }
                         
                         if(counter == nQuestions){
                             
@@ -206,7 +220,15 @@ router.post('/userevaluate', function(req, res) {
                             userresponses.forEach(function(thisResponse, rIndex){
                                 var thisQuestionId = thisResponse.question.toString();
                                 var thisSubQuestionId = thisResponse.subquestion.toString();
-                                var thisOptionId = thisResponse.option.toString();
+                                var thisOptionId = null;
+                                var thisnumericalAnswer = null;
+                                if(thisResponse.option){
+                                    thisOptionId = thisResponse.option.toString();
+                                }
+                                if(thisResponse.numericalAnswer){
+                                    thisOptionId = thisResponse.numericalAnswer.toString();
+                                }
+                                
                                 var thisPair = {
                                     question: thisQuestionId,
                                     subquestion: thisSubQuestionId,
@@ -217,6 +239,9 @@ router.post('/userevaluate', function(req, res) {
                                 var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
 
                                 if(k1Index != -1){
+                                    
+                                    
+                                    
                                     if(thisOptionId == solutionKey[k1Index].option){
                                         correct.push(thisPair);
                                     }else{

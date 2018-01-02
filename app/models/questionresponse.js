@@ -7,6 +7,7 @@ var questionresponseSchema = mongoose.Schema({
     question: { type: Schema.ObjectId, ref: 'question'},
     subquestion: { type: String},
     option: { type: String},
+    numericalAnswer: { type: String},
     _created: { type: Date, default: Date.now },
 });
 questionresponseSchema.plugin(deepPopulate);

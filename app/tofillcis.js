@@ -312,46 +312,112 @@ router.get('/', function(req, res) {
 });
 //to get all tofillcis for a user
 router.get('/user/:userId', function(req, res) {
+    var limit = 100;
     var userId = req.params.userId;
-    var tofillcis = tofillci
-        .find({user: userId})
-        .deepPopulate('institute user')
-        .exec(function (err, tofillcis) {
-        if (!err){
-            var basicFillTasks = [];
-            var counter = 0;
-            var nLength = tofillcis.length;
-            tofillcis.forEach(function(thisFillTask, index){
-                var newTask = {
-                    user: {
-                        _id: thisFillTask.user._id,
-                        name: thisFillTask.user.basic.name,
-                    },
-                    institute: {
-                        _id: thisFillTask.institute._id,
-                        name: thisFillTask.institute.name,
-                        address: thisFillTask.institute.address,
-                        city: thisFillTask.institute.city,
-                        pincode: thisFillTask.institute.pincode
-                    },
-                    _created: thisFillTask._created,
-                    _deadline: thisFillTask._deadline,
-                    _finished: thisFillTask._finished,
-                    active: thisFillTask.active,
+    var fullAccessUsers = ["5a1831f0bd2adb260055e352"];
+    var thisUser = user.findOne({_id: userId}, {basic: 1, userType: 1}, function(err, thisUser) {
+    if (!err){
+        if(thisUser){
+            if(thisUser.userType == "Master" || fullAccessUsers.indexOf(thisUser._id.toString()) != -1){
+                var tofillcis = tofillci
+                .find({})
+                .limit(limit)
+                .sort( { _created: -1 } )
+                .deepPopulate('institute user')
+                .exec(function (err, tofillcis) {
+                if (!err){
+                    var basicFillTasks = [];
+                    var counter = 0;
+                    var nLength = tofillcis.length;
+                    tofillcis.forEach(function(thisFillTask, index){
+                        var newTask = {
+                            user: {
+                                _id: thisFillTask.user._id,
+                                name: thisFillTask.user.basic.name,
+                            },
+                            institute: {
+                                _id: thisFillTask.institute._id,
+                                name: thisFillTask.institute.name,
+                                address: thisFillTask.institute.address,
+                                city: thisFillTask.institute.city,
+                                pincode: thisFillTask.institute.pincode
+                            },
+                            _created: thisFillTask._created,
+                            _deadline: thisFillTask._deadline,
+                            _finished: thisFillTask._finished,
+                            active: thisFillTask.active,
 
-                };
-                counter = counter + 1;
-                basicFillTasks.push(newTask);
-                if(counter == nLength){
-                    res.json(basicFillTasks);
-                }
+                        };
+                        counter = counter + 1;
+                        basicFillTasks.push(newTask);
+                        if(counter == nLength){
+                            res.json(basicFillTasks);
+                        }
+                    });
+
+                    if(nLength == 0){
+                        res.json([]);
+                    }
+                } else {throw err;}
             });
-            
-            if(nLength == 0){
-                res.json([]);
+            }else{
+                var tofillcis = tofillci
+                .find({user: userId})
+                .limit(limit)
+                .sort( { _created: -1 } )
+                .deepPopulate('institute user')
+                .exec(function (err, tofillcis) {
+                if (!err){
+                    var basicFillTasks = [];
+                    var counter = 0;
+                    var nLength = tofillcis.length;
+                    tofillcis.forEach(function(thisFillTask, index){
+                        var newTask = {
+                            user: {
+                                _id: thisFillTask.user._id,
+                                name: thisFillTask.user.basic.name,
+                            },
+                            institute: {
+                                _id: thisFillTask.institute._id,
+                                name: thisFillTask.institute.name,
+                                address: thisFillTask.institute.address,
+                                city: thisFillTask.institute.city,
+                                pincode: thisFillTask.institute.pincode
+                            },
+                            _created: thisFillTask._created,
+                            _deadline: thisFillTask._deadline,
+                            _finished: thisFillTask._finished,
+                            active: thisFillTask.active,
+
+                        };
+                        counter = counter + 1;
+                        basicFillTasks.push(newTask);
+                        if(counter == nLength){
+                            res.json(basicFillTasks);
+                        }
+                    });
+
+                    if(nLength == 0){
+                        res.json([]);
+                    }
+                } else {throw err;}
+            });
+                
+                
             }
-        } else {throw err;}
+        }else{
+            res.json([]);
+        }
+
+
+
+    } else {throw err;}
     });
+    
+    
+    
+    
+    
     
 });
 
