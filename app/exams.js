@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var exam = require('../app/models/exam');
+var stream = require('../app/models/stream');
 var blogpost = require('../app/models/blogpost');
 var mongoose = require('mongoose');
 
@@ -170,6 +171,49 @@ router.get('/stream/:streamName', function(req, res) {
     
 });
 
+router.get('/streamexam', function(req, res) {
+    var allActiveStreams = stream
+        .find({active: true}, {displayname: 1, rank: 1})
+        .sort("-rank")
+        .exec(function (err, allActiveStreams) {
+        if (!err){
+            var streamIds = allActiveStreams.map(function(a) {return a._id.toString();});
+            var streamNameRanks = allActiveStreams.map(function(a) {return {stream: a.displayname, rank: a.rank};});
+            
+            var allActiveExams = exam
+                .find({active: true},{stream:1, seoname:1, rank: 1, name:1})
+                .sort("-rank")
+                .exec(function (err, allActiveExams) {
+                if (!err){
+                    var streamExams = {};
+                    allActiveExams.forEach(function(thisExam, index){
+                        var thisStreamId = thisExam.stream.toString();
+                        
+                        var sIndex = streamIds.indexOf(thisStreamId);
+                        if(sIndex != -1){
+                            var thisStreamName = streamNameRanks[sIndex].stream;
+                            if(!streamExams[thisStreamName]){
+                                streamExams[thisStreamName] = [];
+                                
+                            }
+                            streamExams[thisStreamName].push(thisExam);
+                        }
+                    });
+                    
+                    var streamexams = {
+                        streamranks: streamNameRanks,   
+                        streamexams: streamExams,   
+                    };
+                    res.json(streamexams);
+                } else {throw err;}
+            });
+            
+        } else {throw err;}
+    });
+    
+    
+    
+});
 router.get('/exam/:examName', function(req, res) {
     var examName = req.params.examName;
     var thisExam = exam

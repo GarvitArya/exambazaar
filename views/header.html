@@ -50,6 +50,47 @@
     }
     
     
+    .dropdown-submenu {
+    position:relative;
+}
+.dropdown-submenu>.dropdown-menu {
+    top:0;
+    left:100%;
+    margin-top:-6px;
+    margin-left:-1px;
+    -webkit-border-radius:0 6px 6px 6px;
+    -moz-border-radius:0 6px 6px 6px;
+    border-radius:0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+    display:block;
+}
+.dropdown-submenu>a:after {
+    display:block;
+    content:" ";
+    float:right;
+    width:0;
+    height:0;
+    border-color:transparent;
+    border-style:solid;
+    border-width:5px 0 5px 5px;
+    border-left-color:#cccccc;
+    margin-top:5px;
+    margin-right:-10px;
+}
+.dropdown-submenu:hover>a:after {
+    border-left-color:#ffffff;
+}
+.dropdown-submenu.pull-left {
+    float:none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left:-100%;
+    margin-left:10px;
+    -webkit-border-radius:6px 0 6px 6px;
+    -moz-border-radius:6px 0 6px 6px;
+    border-radius:6px 0 6px 6px;
+}
     
 </style>
 
@@ -126,31 +167,25 @@
               </ul>
             </li>
            
-            <!--
-            <li class="dropdown" ng-if="streamExams">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Exam</a>
-              <ul class="dropdown-menu">
-              <li ng-repeat="streamExam in streamExams" class="dropdown-submenu" >
-                  <a tabindex="-1" href="#">
-                    {{streamExam.stream}}
-                  </a>
-                  <ul class="dropdown-menu">
-                      
-                      <li ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
-                        <a ui-sref="exam({ examName:{{'exam.name'}} })">
-                            {{exam.seoname}}
-                        </a>
-                      </li>
-                  </ul>
-                    
-                </li>
-                
-              </ul>
-            </li>
-            -->
-            
             <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Top Rankers<!--<span class="caret"></span>--></a>
+                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Exams</a>
+                  <ul class="dropdown-menu">
+                        
+                    <li class="menu-item dropdown dropdown-submenu" ng-repeat="streamrank in streamranks | orderBy:['-rank']">
+                        <a href="#">{{streamrank.stream}}</a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="exam in streamexams[streamrank.stream] | orderBy:['-rank']">
+                                <a ui-sref="exam({ examName:{{'exam.name'}} })">{{exam.seoname}}</a>
+                            </li>
+                            
+                        </ul>
+                    </li>  
+                      
+                   </ul>
+                </li>
+            
+            <!--<li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Top Rankers</a>
               <ul class="dropdown-menu">
                 <li><a ui-sref="rankerswall({ examName:'NEET UG', year:'2017'} )">
                     <div>NEET UG 2017</div>
@@ -161,7 +196,9 @@
                     <div class="subheader">Meet JEE Advanced 2017 Toppers</div>
                 </a></li>
               </ul>
-            </li>
+            </li>-->
+            
+            
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="aroundme">Around Me</a></li>
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="review">Review a Coaching</a></li>
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="eligibility">Exam Eligibility&nbsp;<i class="fa fa-star" aria-hidden="true"></i></a></li>
@@ -219,21 +256,7 @@
                     <li><a ui-sref="checkLogo({ userId:{{'sessionuser.userId'}}, pageNumber:'1' } )">Check Logos</a></li>
                   </ul>
                 </li>
-                <li class="dropdown">
-                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Exams</a>
-                  <ul class="dropdown-menu">
-                        
-                    <li class="dropdown">
-                      <a href="#">Stream 1</a>
-                      <ul class="dropdown-menu">
-                      <a href="#">Exam 1</a>
-                      <a href="#">Exam 2</a>
-                      </ul>
-                    </li>
-                    <li><a href="#">Something else here</a></li>
-                    <li><a href="#">Separated link</a></li>
-                   </ul>
-                </li>
+                
                 <li class="dropdown">
                   <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<!--<span class="caret"></span>--></a>
                   <ul class="dropdown-menu">

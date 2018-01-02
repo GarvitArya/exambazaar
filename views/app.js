@@ -681,6 +681,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExam = function(examId) {
             return $http.get('/api/exams/edit/'+examId, {examId: examId});
         };
+        this.streamexam = function(examId) {
+            return $http.get('/api/exams/streamexam');
+        };
         this.getExams = function() {
             return $http.get('/api/exams');
         };
@@ -9618,7 +9621,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);     
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'SidebarJS','$timeout', '$window', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, SidebarJS,$timeout, $window){
+        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'ExamService', 'SidebarJS','$timeout', '$window', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, ExamService, SidebarJS,$timeout, $window){
             
             $scope.maintenance = false;
             
@@ -9628,6 +9631,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $rootScope.searchMode = false;
             $rootScope.searchPlaceholder = "Search";
             $rootScope.stateName = $state.current.name;
+            
+            
             
             $rootScope.loginState = $rootScope.stateName;
             $rootScope.defaultCoachingLogo = "https://exambazaar.s3.amazonaws.com/fb2b671170976dfdbb2992a1aeaf0c87.png";
@@ -9657,7 +9662,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });
             }
-            
+            if(!$rootScope.streamranks || !$rootScope.streamexams){
+                ExamService.streamexam().success(function (data, status, headers) {
+                    if(data){
+                        $rootScope.streamranks = data.streamranks;
+                        $rootScope.streamexams = data.streamexams;
+                    }
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }
             
             //"findCoaching", "showCoaching", "showGroup"
             var headerGreenStates = [];
