@@ -2950,11 +2950,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });
             }else{
                 $cookies.remove("sessionuser");
-                $rootScope.$emit("CallBlogLogin", {});
+                $rootScope.$emit("ForcedLogin", {});
             }
             
         }else{
             $cookies.remove("sessionuser");
+            $rootScope.$emit("ForcedLogin", {});
         }
         
         
@@ -10181,7 +10182,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                      $state.go('assigned', {userId: $scope.sessionuser.userId});
                 }
                 if($scope.sessionuser.userType =='Student'){
-                    console.log('student logged in');
+                    //console.log('student logged in');
                     //$state.reload();
                 }
                 if($scope.sessionuser.userType =='Partner'){
@@ -16029,8 +16030,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             var examIds = allExams.map(function(a) {return a._id;});
             
-            
-            
             allExams.forEach(function(thisExam, index){
                 if(!thisExam.tests){
                     thisExam.tests = [];
@@ -16060,7 +16059,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
             
             $scope.allExams = allExams;
-            //console.log($scope.allTests);
             if($scope.user && $scope.user.userType=='Master'){
                 $scope.masterUser = true;
             }
@@ -16075,15 +16073,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log("Error ");
                 }); 
             };
-            /*$scope.testsWithQuestions = function(){
-                testService.testsWithQuestions().success(function (data, status, headers) {
-                    console.log(data);
-                })
-                .error(function (data, status, header, config) {
-                    console.log("Error ");
-                }); 
-            };*/
-            
             
             $scope.readTest = function(test){
                 var question = test.url.question;
@@ -40565,7 +40554,6 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         "contacts",
         "charting",
         "activeUsers",
-        "allTests",
         "allOffers",
         "allreviews",
         "allblogtags",
@@ -40597,7 +40585,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
 
     ];
     var atleastInternState = [
-        
+        "allTests",
         "coachingGroupSummary",
         "coachingGroup",
         "colleges",
@@ -40633,15 +40621,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
     
                                                    
     $transitions.onSuccess({}, function($transition$) {
-        //console.log("statechange success");
-        //console.log($state.current.name);
-        /*window.scrollTo(0, 0);
-        console.log("SEO Title: " + $rootScope.pageTitle);
-        console.log("SEO Description: " + $rootScope.pageDescription);
-        $rootScope.searchMode = false;
-        console.log("SEO Keywords: " +  $rootScope.pageKeywords);
-        console.log("FB Page URL: " +  $rootScope.pageURL);
-        console.log("FB Page Image: " +  $rootScope.pageImage);*/
+        
         $window.scrollTo(0, 0);
         var stateTo = $transition$.$to();
         var stateToURL = stateTo.url.pattern;
