@@ -174,7 +174,7 @@ router.get('/stream/:streamName', function(req, res) {
 router.get('/streamexam', function(req, res) {
     
     var allDegrees = blogpost
-        .find({'blogSeries': 'Degrees'}, {title: 1, urlslug: 1})
+        .find({'blogSeries': 'Degrees', active: true}, {title: 1, urlslug: 1})
         .exec(function (err, allDegrees) {
         if (!err){
             var allDegreeIds = allDegrees.map(function(a) {return a._id.toString();});
