@@ -9787,8 +9787,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
-            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'k21'];
-            console.log($state.current.name);
+            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'k21', 'eligibility'];
             SidebarJS.close();
             if(forceLoginStates.indexOf($state.current.name) != -1){
                 //console.log('I am here');
@@ -40629,7 +40628,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         
         var fIndex = stateToURL.indexOf(filterPattern);
         
-        if(stateTo != 'claim'){
+        if(stateTo != 'claim' && stateTo != 'eligibility'){
             $mdDialog.hide();
         }
         
