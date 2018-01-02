@@ -170,7 +170,22 @@
             <li class="dropdown">
                   <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Exams</a>
                   <ul class="dropdown-menu">
-                        
+                    <li >
+                        <a ui-sref="eligibility">
+                        <div flex layout="row" layout-align="start center" class="">
+                            <div layout="row" layout-align="start center" class="paddingR10">
+                                <img src="icons/eb.png" id="userPic" class="img-circle"/>
+                            </div>
+                            <div flex layout="column" layout-align="start start">
+                                <div class="bold">See Exam Eligibility</div>
+                                <div layout="row" layout-align="start center" class="subheader">
+                                    Checkout all exams you can write right now!
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </li>
+                      
                     <li class="menu-item dropdown dropdown-submenu" ng-repeat="streamrank in streamranks | orderBy:['-rank']">
                         <a href="#">{{streamrank.stream}}</a>
                         <ul class="dropdown-menu">
