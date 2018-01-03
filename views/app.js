@@ -32112,7 +32112,7 @@ function getLatLng(thisData) {
                 if(subquestion.type != 'numerical'){
                     subquestion.type = 'numerical';
                 }
-                subquestion.type.numericalAnswerType = 'Range';
+                subquestion.numericalAnswerType = 'Range';
                 if(!subquestion.numericalAnswers){
                     subquestion.numericalAnswers = [''];
                 }
