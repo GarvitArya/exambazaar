@@ -242,21 +242,39 @@
                         </div>
                         
                         
-                        <div layout="column" layout-align="start start" class="width100 marginB5" ng-if="question.type=='numerical'">
+                        <div layout="column" layout-align="start start" class="width100 marginB5" ng-show="question.type=='numerical'">
                             <div layout="row" layout-align="start center" class="width100">
                                 <div layout="row" layout-align="start center" flex="40">
                                     <div class="font14 marginR20">
-                                        Answer
+                                        Numerical Answer
+                                    </div>
+                                    <div class="paddingLR10">
+                                        <md-select ng-model="question.numericalAnswerType" placeholder="Numerical Answer Type" class="margin0">
+                                        <md-option ng-value="numericalAnswerType.value" ng-repeat="numericalAnswerType in numericalAnswerTypes" class="margin0">
+                                          {{numericalAnswerType.display}}
+                                        </md-option>
+                                    </md-select>
+                                    
+                                    
                                     </div>
                                     <span class="badge" ng-click="addNumericalAnswer(question)" ng-if="question.type =='numerical'">Add another answer</span>
                                 </div>
                                 <div layout="column" layout-align="start center" flex>
-                                <div layout="row" layout-align="start center" class="width100 marginB5" ng-repeat="numericalAnswer in question.numericalAnswers track by $index">
+                                <!--ng-if="numericalAnswerType == 'Exact'"-->    
+                                <div layout="row" layout-align="start center" class="width100 marginB5" ng-repeat="numericalAnswer in question.numericalAnswers track by $index" ng-if="question.numericalAnswerType == 'Exact'">
                                     <textarea class="width100 font14 margin0" ng-model="question.numericalAnswers[$index]" placeholder="Add numerical answer here" rows="1"></textarea>
                                     <div class="badge marginL10" id="removebadge" ng-click="removeNumericalAnswer(question, $index)">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </div>
                                 </div>
+                                <div layout="row" layout-align="start center" class="width100" ng-if="question.numericalAnswerType == 'Range'">
+                                    <div flex class="paddingLR10">
+                                        <input type="number" class="text-center width100"  placeholder="Min" ng-model="question.numericalAnswerRange.min">
+                                    </div>
+                                    <div flex class="paddingLR10">
+                                        <input type="number" class="text-center width100"  placeholder="Max" ng-model="question.numericalAnswerRange.max" >
+                                    </div>
+                                </div>    
                                     
                                 </div>
                             </div>

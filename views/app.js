@@ -31811,7 +31811,17 @@ function getLatLng(thisData) {
                 //$rootScope.$emit("CallBlogLogin", {});
             }
             
-            
+            $scope.numericalAnswerTypes = [
+                {
+                    display: 'Exact Match',
+                    value: 'Exact'
+                },
+                {
+                    display: 'Within a range',
+                    value: 'Range'
+                },
+                                          
+            ];
             $scope.test = thisTest.data;
             $scope.thisTestQuestions = thisTestQuestions.data;
             
@@ -32102,6 +32112,7 @@ function getLatLng(thisData) {
                 if(subquestion.type != 'numerical'){
                     subquestion.type = 'numerical';
                 }
+                subquestion.type.numericalAnswerType = 'Exact';
                 if(!subquestion.numericalAnswers){
                     subquestion.numericalAnswers = [''];
                 }
@@ -32159,6 +32170,7 @@ function getLatLng(thisData) {
             $scope.addNewQuestionSet();
             
             $scope.saveNewQuestion = function(){
+                console.log($scope.toAddQuestion);
                 questionService.saveQuestion($scope.toAddQuestion).success(function (data, status, headers) {
                     console.log(data);
                     $scope.toAddQuestion = data;
@@ -40902,6 +40914,29 @@ exambazaar.directive('onlyDigits', function () {
         function inputValue(val) {
           if (val) {
             var digits = val.replace(/[^0-9]/g, '');
+
+            if (digits !== val) {
+              ctrl.$setViewValue(digits);
+              ctrl.$render();
+            }
+            return parseInt(digits,10);
+          }
+          return undefined;
+        }            
+        ctrl.$parsers.push(inputValue);
+      }
+    };
+});
+
+
+exambazaar.directive('decimalOrInteger', function () {
+    return {
+      require: 'ngModel',
+      restrict: 'A',
+      link: function (scope, element, attr, ctrl) {
+        function inputValue(val) {
+          if (val) {
+            var digits = val.replace(/[0-9]+(\.[0-9][0-9]?)?/g, '');
 
             if (digits !== val) {
               ctrl.$setViewValue(digits);
