@@ -14,7 +14,7 @@ var questionSchema = mongoose.Schema({
     questions: [{
         type: {type: String}, //mcq or numerical
         numericalAnswers: [{type: String}], //all answers are correct
-        numericalAnswerType: {type: String, default: 'Exact'}, //Exact for exact match, Range for within the range
+        numericalAnswerType: {type: String, default: 'Range'}, //Exact for exact match, Range for within the range
         numericalAnswerRange:{
             min: {type: Number},
             max: {type: Number},
