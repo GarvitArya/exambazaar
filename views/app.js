@@ -40695,7 +40695,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         
         var fIndex = stateToURL.indexOf(filterPattern);
         
-        if(stateTo != 'claim' && stateTo != 'eligibility'){
+        if(stateTo != 'claim' && stateTo != 'eligibility'  && stateTo != 'showGroup'){
             $mdDialog.hide();
         }
         
