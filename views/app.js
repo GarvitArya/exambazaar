@@ -14986,9 +14986,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', 'viewService','MasterService', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification, viewService, MasterService){
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
+            
             $scope.masterUser = false;
             
-            $rootScope.pageTitle ='Coaching Centers around you!';
+            $rootScope.pageTitle ='Find Coaching Classes around you!';
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
                 if($scope.user.userType == 'Master'){
@@ -15014,7 +15015,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 url: $location.url()
             };
             if($scope.user && $scope.user.userId){
-                viewForm.user = $scope.user.userId
+                viewForm.user = $scope.user.userId;
             }
             //console.log(JSON.stringify(viewForm));
             if($cookies.getObject('ip')){
@@ -15074,9 +15075,22 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 };
                 targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
                         var examStream = data;
-                        
+                        if($scope.searchExams.length > 0){
+                            var firstExamId = $scope.searchExams[0].toString();
+                            var allExamIds = $scope.allExams.map(function(a) {return a._id.toString();});
+                            var fIndex = allExamIds.indexOf(firstExamId);
+                            if(fIndex != -1){
+                                var firstExam = $scope.allExams[fIndex];
+                                if(firstExam && firstExam.name){
+                                    examStream.exam = firstExam.name;
+                                }
+                                if(firstExam && firstExam.stream && firstExam.stream.name){
+                                    examStream.stream = firstExam.stream.name;
+                                }
+                            }   
+                        }
                         var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
-                        window.open(url,'_blank');
+                        window.open(url, '_top');//,'_blank'
                     })
                     .error(function (data, status, header, config) {
                         console.log('Error ' + data + ' ' + status);
@@ -15241,7 +15255,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.searchExams = [];
             $scope.aroundme = function(){
                 $mdDialog.hide();
-                Notification.clearAll()
+                Notification.clearAll();
                 //console.log($scope.searchExams);
                 
                 var queryForm = {

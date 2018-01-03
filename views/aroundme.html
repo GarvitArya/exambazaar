@@ -93,17 +93,17 @@
                         
                     </div>
                     <div layout="column" layout-align="center center" class="padding5">
-                        <div class="marginB10 thirdFont bold">  
+                        <div class="marginB10 thirdFont bold" ng-click="goToCoaching(activeProvider)" id="reviewLink">  
                             {{activeProvider.name}}
                         </div>
                         <div>
                             {{activeProvider.address}}
                         </div>
-                        <div>
-                            <!-- ui-sref="claim({ coachingId:{{'activeProvider._id'}} })" target="_blank"-->
+                        <!--<div>
+                             ui-sref="claim({ coachingId:{{'activeProvider._id'}} })" target="_blank"
                             <a ng-click="goToCoaching(activeProvider)" id="link">Go to coaching page</a>
-                            <!--<a ng-href="{{activeProvider.website[0]}}" id="link" target="_blank">{{activeProvider.website[0]}}</a>-->
-                        </div>
+                            <!--<a ng-href="{{activeProvider.website[0]}}" id="link" target="_blank">{{activeProvider.website[0]}}</a>
+                        </div>-->
 
                     </div>
                 </div>
@@ -141,14 +141,9 @@
     <!--<md-button class="md-black md-small " ng-click="setLocofAll()">
         Transform Lat Lng
     </md-button>-->
-    <md-button class="md-black md-small tolowercase" ng-click="showExamDialog()"> <!--aroundme-->
+    <md-button class="md-next md-small tolowercase" ng-click="showExamDialog()"> <!--aroundme-->
         <div layout="row" layout-align="start center">
-            <div layout="row" layout-align="start center" class="marginR10">
-                <i class="fa fa-search font18" aria-hidden="true"></i>
-            </div>
-            <div layout="row" layout-align="start center">
-                Around me
-            </div>
+            <i class="fa fa-search font18" aria-hidden="true"></i>&nbsp;Choose your Exams
         </div>
     </md-button>
     <!--<md-button class="md-black md-small tolowercase" ng-click="showExamDialog()">
@@ -206,48 +201,44 @@
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="examDialog">
-      <md-dialog class="edit-dialog whiteBackground">
-          <md-content flex layout="column" class="width100 paddingLR20">
+      <md-dialog class="blog-dialog whiteBackground">
+          <div layout="column" class="width100 smallFont padding10" id="blogTags">
             
-            <div layout="row" layout-align="center center" class="blogFont width100 marginB10 paddingTB10 gainsboroBottomBorder ">
-                <div layout="row" layout-align="start center" class="paddingL10">
-                    Tell us the exam you are preparing for!
+                <div layout="row" layout-xs="column" layout-align="center center" class="blogFont width100 subhheadingBottomBorder2 paddingB10 min10vh">
+                    <div layout="row" layout-align="start center" class="paddingL10">
+                        Choose exams & distance
+                    </div>
+                    <div flex layout="row" layout-align="end center">
+                        <div ng-repeat="distance in searchDistances" class="paddingLR5">
+                            <span class="badge" id="examTagHolder" ng-if="searchDistance != distance" ng-click="setSearchDistance(distance)">
+                                {{distance}} km
+                            </span>
+                            <span class="badge" id="existingExamTagHolder" ng-if="searchDistance == distance" ng-click="setSearchDistance(distance)">
+                                {{distance}} km
+                            </span>
+
+                        </div>
+                        <div>
+                            <md-button class="md-black md-small  tolowercase" ng-click="aroundme()">
+                                Go
+                            </md-button>
+                        </div>
+                    </div>
+
                 </div>
-                <div flex layout="row" layout-align="end center">
-                    <div class="bold paddingR10">
-                        Search within:
-                    </div>
-                    <div ng-repeat="distance in searchDistances" class="paddingLR5">
-                        <span class="badge" id="examTagHolder" ng-if="searchDistance != distance" ng-click="setSearchDistance(distance)">
-                            {{distance}} km
-                        </span>
-                        <span class="badge" id="existingExamTagHolder" ng-if="searchDistance == distance" ng-click="setSearchDistance(distance)">
-                            {{distance}} km
-                        </span>
-                        
-                    </div>
-                    <div>
-                        <md-button class="md-black md-small  tolowercase" ng-click="aroundme()">
-                            Go
-                        </md-button>
-                    </div>
-                </div>
-                
-            </div>
-            <div layout="column" layout-align="center center" class="width100 marginB20 marginLR20 font12">
-                <div layout="row" layout-align="start start"  class="width100 marginB10 bold">
-                    <div flex="15">
+                <div layout="row" layout-align="start start"  class="width100 marginTB10 bold paddingL10">
+                    <div flex-gt-xs="15" flex-xs="30">
                         Stream
                     </div>
-                    <div flex="85">
+                    <div flex>
                         Select Exams
                     </div>
                 </div>
-                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-if="thisStream.active" class="width100 marginTB5">
-                    <div flex="15">
+                <div layout="row" layout-align="start start" ng-repeat="thisStream in allStreams" ng-show="thisStream.active" class="width100 paddingL10 marginTB5" layout-wrap>
+                    <div flex-gt-xs="15" flex-xs="30">
                         {{thisStream.displayname}}
                     </div>
-                    <div flex="85">
+                    <div class="min5vh" flex layout-wrap >
                         <span ng-repeat="thisExam in allExams" ng-if="thisExam.stream._id == thisStream._id">
                             <span class="badge" id="examTagHolder" ng-if="searchExams.indexOf(thisExam._id) == -1" ng-click="addExam(thisExam)">
                                 {{thisExam.displayname}}
@@ -259,11 +250,11 @@
                     </div>
                 </div>
 
-            </div>
+         
               
           
           
-        </md-content>  
+        </div>  
       </md-dialog>
     </div>    
 </div> 
