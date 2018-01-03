@@ -1974,6 +1974,7 @@ router.get('/filledColleges/:userId', function(req, res) {
             if(fullUserScope){
                 var filledColleges = tofillcollege
                 .find({})
+                .sort("-_created")
                 .limit(limit)
                 .exec(function (err, filledColleges) {
                 if (!err){
@@ -2007,6 +2008,7 @@ router.get('/filledColleges/:userId', function(req, res) {
                 
                 var filledColleges = tofillcollege
                 .find({user: thisUser._id})
+                .sort("-_created")
                 .limit(limit)
                 .exec(function (err, filledColleges) {
                 if (!err){

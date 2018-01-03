@@ -186,7 +186,7 @@
                         </a>
                     </li>
                       
-                    <li class="menu-item dropdown dropdown-submenu" ng-repeat="streamrank in streamranks | orderBy:['-rank']">
+                    <li class="menu-item dropdown dropdown-submenu" ng-repeat="streamrank in streamranks | orderBy:['-rank']" ng-if="true">
                         <a href="#">{{streamrank.stream}}</a>
                         <ul class="dropdown-menu">
                             <li ng-repeat="exam in streamexams[streamrank.stream] | orderBy:['-rank']">

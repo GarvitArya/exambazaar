@@ -180,7 +180,7 @@ router.get('/streamexam', function(req, res) {
             var allDegreeIds = allDegrees.map(function(a) {return a._id.toString();});
             
             var allActiveStreams = stream
-            .find({active: true}, {displayname: 1, rank: 1})
+            .find({}, {displayname: 1, rank: 1, active: 1})
             .sort("-rank")
             .exec(function (err, allActiveStreams) {
             if (!err){
@@ -188,7 +188,7 @@ router.get('/streamexam', function(req, res) {
                 var streamNameRanks = allActiveStreams.map(function(a) {return {stream: a.displayname, rank: a.rank, degreeblogs: []};});
 
                 var allActiveExams = exam
-                    .find({active: true},{stream:1, seoname:1, rank: 1, name:1, examdegrees: 1})
+                    .find({},{stream:1, seoname:1, rank: 1, name:1, examdegrees: 1, active: 1})
                     .sort("-rank")
                     .exec(function (err, allActiveExams) {
                     if (!err){
