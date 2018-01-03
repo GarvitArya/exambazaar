@@ -172,7 +172,8 @@ router.get('/suggestedblogs/:examName', function(req, res) {
     
     
 });
-/*router.get('/suggestedblogs/:examName', function(req, res) {
+
+router.get('/topCoaching/:examName', function(req, res) {
     var examName = req.params.examName;
     
     var thisExam = exam
@@ -180,97 +181,53 @@ router.get('/suggestedblogs/:examName', function(req, res) {
         .exec(function (err, thisExam) {
         if (!err){
             
-            
             if(thisExam){
                 var examId = thisExam._id.toString();
                 var examblogposts = blogpost
-                .find({active: true, exams:examId})
+                .find({active: true, exams:examId, blogSeries: 'Expert Reviews'}, {urlslug:1, title: 1, coachingGroups: 1})
                 .exec(function (err, examblogposts) {
                     if (!err){
-                        var nBlogs = examblogposts.length;
-                        var examblogpostsIds = examblogposts .map(function(a) {return a._id;});
-                        var required = 4 - nBlogs;
-                        if(required > 0){
-                            var additionalblogposts = blogpost
-                            .find({_id: { $nin: examblogpostsIds }, active: true}).limit(required)
-                            .exec(function (err, additionalblogposts) {
-                                examblogposts = examblogposts.concat(additionalblogposts);
-                                var allBlogposts = [];
-                                var nBlogposts = examblogposts.length;
-                                var counter = 0;
-                                if(nBlogposts == 0){
-                                    res.json([]);
-                                }
-                                examblogposts.forEach(function(thisBlogpost, rindex){
-                                    var thisBlogUser = thisBlogpost.user;
-                                    var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
-                                        if (!err){
-                                            thisBlogpost.user = thisBlogUserInfo;
-                                            counter += 1;
-                                            allBlogposts.push(thisBlogpost);
-                                            if(counter == nBlogposts){
-                                                res.json(allBlogposts);   
-                                            }
-                                        }
-                                    });
-
-                                });
-
-                            });
-
-                        }else{
-                            var allBlogposts = [];
-                            var nBlogposts = examblogposts.length;
-                            var counter = 0;
-                            if(nBlogposts == 0){
-                                res.json([]);
+                    var allowed = ['_id', 'title', 'coachingGroups', 'urlslug'];    
+                    var nBlogs = examblogposts.length;
+                    var bCounter = 0;
+                    var allBlogs = [];
+                    examblogposts.forEach(function(thisBlogpost, rindex){
+                        var thisBlog = {};
+                        for (var property in thisBlogpost) {
+                            if(allowed.indexOf(property) != -1){
+                               thisBlog[property] = thisBlogpost[property]; 
                             }
-                            examblogposts.forEach(function(thisBlogpost, rindex){
-                                var thisBlogUser = thisBlogpost.user;
-                                var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
-                                    if (!err){
-                                        thisBlogpost.user = thisBlogUserInfo;
-                                        counter += 1;
-                                        allBlogposts.push(thisBlogpost);
-                                        if(counter == nBlogposts){
-                                            res.json(allBlogposts);   
-                                        }
-                                    }
-                                });
-
-                            });
+                             
                         }
+                        var groupNames = targetStudyProvider.aggregate(
+                        [
+                            {$match: {disabled: false, type: 'Coaching', 'groupName': { $in : thisBlogpost.coachingGroups} } },
+                            {"$group": { "_id": { city: "$city" }, count:{$sum:1}, logo: { $first: "$logo" }, name: { $addToSet: "$name" } } },
+                            {$sort:{"count":-1}}
+
+                        ],function(err, groupNames) {
+                        if (!err){
+                            bCounter += 1;
+                            thisBlog.coachings = groupNames;
+                            allBlogs.push(thisBlog);
+                            if(bCounter == nBlogs){
+                                console.log(allBlogs);
+                                res.json(allBlogs);
+                            }
+                            
+                        } else {throw err;}
+                        });
+                       
+                        
+
+                        
+                    });
+
 
                     } else {throw err;}
                 });
             }else{
-                var required = 4;
-                var additionalblogposts = blogpost
-                .find({_id: { $nin: examblogpostsIds }, active: true}).limit(required)
-                .exec(function (err, additionalblogposts) {
-                    examblogposts = examblogposts;
-                    var allBlogposts = [];
-                    var nBlogposts = examblogposts.length;
-                    var counter = 0;
-                    if(nBlogposts == 0){
-                        res.json([]);
-                    }
-                    examblogposts.forEach(function(thisBlogpost, rindex){
-                        var thisBlogUser = thisBlogpost.user;
-                        var thisBlogUserInfo = user.findOne({ '_id': thisBlogUser },{mobile:1, email:1, basic:1, image:1, userType:1, blogger:1},function (err, thisBlogUserInfo) {
-                            if (!err){
-                                thisBlogpost.user = thisBlogUserInfo;
-                                counter += 1;
-                                allBlogposts.push(thisBlogpost);
-                                if(counter == nBlogposts){
-                                    res.json(allBlogposts);   
-                                }
-                            }
-                        });
-
-                    });
-
-                });
+                res.json([]);
             }
             
             
@@ -278,7 +235,7 @@ router.get('/suggestedblogs/:examName', function(req, res) {
     });
     
     
-});*/
+});
 
 router.get('/getblogs', function(req, res) {
     var blogposts = blogpost

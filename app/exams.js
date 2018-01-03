@@ -180,12 +180,12 @@ router.get('/streamexam', function(req, res) {
             var allDegreeIds = allDegrees.map(function(a) {return a._id.toString();});
             
             var allActiveStreams = stream
-            .find({}, {displayname: 1, rank: 1, active: 1})
+            .find({}, {displayname: 1, rank: 1, active: 1, name: 1})
             .sort("-rank")
             .exec(function (err, allActiveStreams) {
             if (!err){
                 var streamIds = allActiveStreams.map(function(a) {return a._id.toString();});
-                var streamNameRanks = allActiveStreams.map(function(a) {return {stream: a.displayname, rank: a.rank, active: a.active, degreeblogs: []};});
+                var streamNameRanks = allActiveStreams.map(function(a) {return {stream: a.displayname, rank: a.rank, active: a.active, name: a.name, degreeblogs: []};});
 
                 var allActiveExams = exam
                     .find({stream: {$exists: true}},{stream:1, seoname:1, rank: 1, name:1, examdegrees: 1, active: 1})
@@ -223,7 +223,7 @@ router.get('/streamexam', function(req, res) {
                         }
 
                     });
-                    console.log(streamExams);
+                    //console.log(streamExams);
                     var streamExams = {
                         streamranks: streamNameRanks,   
                         streamexams: streamExams,   
@@ -248,6 +248,17 @@ router.get('/exam/:examName', function(req, res) {
     var thisExam = exam
         .findOne({'name': examName})
         .deepPopulate('stream')
+        .exec(function (err, thisExam) {
+        if (!err){
+            //console.log(thisExam);
+            res.json(thisExam);
+        } else {throw err;}
+    });
+});
+router.get('/exambasic/:examName', function(req, res) {
+    var examName = req.params.examName;
+    var thisExam = exam
+        .findOne({'name': examName}, {name:1, displayname: 1, rank: 1, seoname: 1})
         .exec(function (err, thisExam) {
         if (!err){
             //console.log(thisExam);

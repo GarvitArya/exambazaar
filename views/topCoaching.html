@@ -1,0 +1,96 @@
+<style>
+    input[type="text"],input[type="email"]
+    {
+        font-size: 14px;
+        color: #333333;
+        padding: 10px;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus{
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    .availText{
+        color: white;
+    }
+    .availText:hover{
+        color: #FF5A5F;
+    }
+    a.readLink{
+        color: black;
+    }
+    a.readLink:hover{
+        color: #20C39A;
+    }
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+
+<div class="textBlack whiteBackground secondFont font14">
+    <div layout="row" layout-align="center start" class="width100">
+    <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center start" class="marginT20 marginB40">
+        <div layout="row" layout-align="center start" class="h1Font width100 marginB40 subhheadingBottomBorder2 paddingB10">
+            Top {{exam.seoname}} Coaching Classes in India
+        </div>
+        
+        <div layout="row" layout-align="start start" class="width100" layout-wrap>
+            <div layout="row" layout-align="start start" flex-gt-sm="50" flex-sm="50" flex-xs="100" class="padding10" ng-repeat="topCoaching in topCoachings  | orderBy:['-allcenters']" ng-if="topCoaching.allcenters > 0">
+                <div layout="row" layout-align="start start" class="width100 padding10 boxShadow">
+                    
+                    <div layout="row" layout-align="end start" class="width100 paddingT10" flex="25">
+                        <img ng-src="{{topCoaching.coachings[0].logo}}" id="topcoachinglogo" class="">
+                    </div>
+                    <div layout="column" layout-align="start start" class="width100 paddingL40 paddingR10 " flex>
+                        <div layout="row" layout-align="start center" class="width100 ">
+                            <!--ui-sref="city({ categoryName:{{'stream.name'}}, subCategoryName:{{'exam.name'}} })" target="_blank"-->
+                           <span class="h2Font bold readLink"> {{topCoaching.coachingGroups[0]}}
+                            </span>
+                        </div>
+                        <div layout="row" layout-align="start center" class="width100 subBaseFont">
+                            <div flex>
+                                <md-select ng-model="topCoaching.currCity" placeholder="{{topCoaching.allcenters}} centers in India" class="margin0">
+                                    <md-option ng-value="city._id.city" ng-repeat="city in topCoaching.coachings" class="margin0">
+                                      {{city._id.city}}<!-- -&nbsp;<span class="font10">
+                                        {{city.count}} center<span ng-if="city.count > 1">s</span>&nbsp;
+                                        </span>-->
+                                    </md-option>
+                                </md-select>
+                            </div>
+                            <div flex layout="row" layout-align="start center" class="paddingL20">
+                                <a ng-if="topCoaching.currCity" id="reviewLink" ui-sref="showGroup({ categoryName:{{'stream.name'}}, subCategoryName:{{'exam.name'}}, cityName:{{'topCoaching.currCity'}}, groupName:{{'topCoaching.coachingGroups[0]'}} })" target="_blank">
+                                    See all
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        <div layout="row" layout-align="start end" class="width100 marginT20">
+                            <div layout="row" layout-align="start center" flex>
+                                <a class="baseFont" ui-sref="showblog({ blogpostSlug: {{'topCoaching.urlslug'}} })" target="_blank" id="reviewLink">
+                                    Read Expert Review
+                                </a>
+
+                            </div>
+                            <!--<div layout="row" layout-align="end center" flex>
+                                <md-button class="btn  actionButton tolowercase" ui-sref="city({ categoryName:{{'stream.name'}}, subCategoryName:{{'exam.name'}} })" target="_blank">
+                                    <span class="availText2">
+                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
+                                    </span>
+                                </md-button>
+                            </div>-->
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

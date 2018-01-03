@@ -699,6 +699,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExamByName = function(examName) {
             return $http.get('/api/exams/exam/'+examName, {examName: examName});
         };
+        this.getExamBasicByName = function(examName) {
+            return $http.get('/api/exams/exambasic/'+examName, {examName: examName});
+        };
         this.getExamPatternByName = function(examName) {
             return $http.get('/api/exams/pattern/'+examName, {examName: examName});
         };
@@ -1134,6 +1137,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.suggestedblogs = function(examName) {
             return $http.get('/api/blogposts/suggestedblogs/'+examName, {examName: examName});
+        };
+        this.topCoaching = function(examName) {
+            return $http.get('/api/blogposts/topCoaching/'+examName, {examName: examName});
         };
         this.headerBlogs = function() {
             return $http.get('/api/blogposts/headerBlogs');
@@ -2026,7 +2032,36 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
           
             
-    }]); 
+    }]);
+    
+    exambazaar.controller("topCoachingController", 
+        [ '$scope', '$stateParams', '$cookies', '$state', '$rootScope','$mdDialog','thisStream','thisExam', 'topCoachings',  function($scope, $stateParams, $cookies,$state, $rootScope, $mdDialog, thisStream, thisExam, topCoachings){
+        
+            $scope.exam = thisExam.data;
+            $scope.topCoachings = topCoachings.data;
+            $scope.stream = thisStream.data;
+            $rootScope.pageTitle = "Top Coachings for " + $scope.exam.seoname + " in India";
+            
+            var sanitize = function(){
+                $scope.topCoachings.forEach(function(thisCoaching, cIndex){
+                    thisCoaching.allcenters = 0;
+                    thisCoaching.coachings.forEach(function(thisCity, tIndex){
+                        thisCoaching.allcenters += thisCity.count;
+                    });
+                    //thisCoaching.coachings.city.sort();
+                });
+                
+                
+            };
+            sanitize();
+            console.log($scope.topCoachings);
+            //$rootScope.pageDescription = "Search for " + $scope.subcategory.displayname + " coaching classes in " + cityNames + " and 90 other cities in India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Classes in India";
+
+            //var examKeywords = "Exambazaar " + $scope.subcategory.displayname + " Coaching, "+ "Best " + $scope.subcategory.displayname + " Coaching Classes, " + "Top " + $scope.subcategory.displayname + " Coaching Centre, " + $scope.subcategory.displayname + " Coaching in India, ";
+            //$rootScope.pageKeywords = "Exambazaar, " + examKeywords + cityNamesCoaching;
+            
+    }]);
+        
     exambazaar.controller("cityController", 
         [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog','thisStream','thisExam',  function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog,thisStream,thisExam){
         $scope.hideLoginDialog();
@@ -9667,7 +9702,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     if(data){
                         $rootScope.streamranks = data.streamranks;
                         $rootScope.streamexams = data.streamexams;
-                        console.log($rootScope.streamranks);
+                        
                     }
                     
                 })
@@ -37661,9 +37696,41 @@ function getLatLng(thisData) {
                 }],
                 thisExam: ['ExamService','$stateParams',
                     function(ExamService,$stateParams){
-                    return ExamService.getExamByName($stateParams.subCategoryName);
+                    return ExamService.getExamBasicByName($stateParams.subCategoryName);
                 }],
-                exam: function() { return {}; }
+            }
+        
+        
+        })
+        .state('topCoaching', {
+            url: '/topCoaching/:categoryName/:subCategoryName',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'topCoaching.html',
+                    controller: 'topCoachingController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisStream: ['StreamService','$stateParams',
+                    function(StreamService,$stateParams){
+                    return StreamService.getStreamByName($stateParams.categoryName);
+                }],
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamBasicByName($stateParams.subCategoryName);
+                }],
+                topCoachings: ['blogpostService','$stateParams',
+                    function(blogpostService,$stateParams){
+                    return blogpostService.topCoaching($stateParams.subCategoryName);
+                }],
+                
             }
         
         
@@ -37690,7 +37757,7 @@ function getLatLng(thisData) {
                 }],
                 thisExam: ['ExamService','$stateParams',
                     function(ExamService,$stateParams){
-                    return ExamService.getExamByName($stateParams.subCategoryName);
+                    return ExamService.getExamBasicByName($stateParams.subCategoryName);
                 }],
                 streamExams: ['ExamService','$stateParams',
                     function(ExamService,$stateParams){

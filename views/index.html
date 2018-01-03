@@ -332,6 +332,7 @@
             font-size: 22px;
             color: black;
         }
+        
         .h3Font{
             font-family: 'Roboto Condensed', sans-serif;
             font-size: 16px;
@@ -391,6 +392,7 @@
             padding-right: 20px;
         }
         .dropdown-menu li a{
+            
             border-bottom: 1px solid whitesmoke;
             padding-left: 2px;
             padding-right: 30px;
@@ -402,7 +404,7 @@
             border-bottom: 1px solid #20C39A;
         }
         .dropdown-menu > li > a:hover {
-            background-color: white;
+            background-color: #F1FFFA;
             background-image: none;
         }
         .dropdown-menu{
@@ -900,6 +902,10 @@
             max-height: 50px;
             max-width: 100px;
         }
+        #topcoachinglogo{
+            max-height: 50px;
+            max-width: 100px;
+        }
         #fullPage{
             min-height: 100vh;
             margin: 0px;
@@ -1183,7 +1189,7 @@
             background-color: #20C39A;
         }
         .filterBackground{
-            background-color: #FFF8E8;
+            background-color: #FFFFFC;
         }
         .assignBackground{
             background-color: #EDF2F4;
@@ -1249,8 +1255,8 @@
         }
         .md-button.md-next:hover, .md-button.md-next:focus, .md-button.md-next:active{
             border: 2px solid #29335C;
-            background: #29335C;
-            color: white;
+            background: white;
+            color: #29335C;
             box-shadow: 0 0 5px #29335C;
         }
         .md-button.md-danger{
@@ -1260,8 +1266,8 @@
         }
         .md-button.md-danger:hover, .md-button.md-danger:focus, .md-button.md-danger:active{
             border: 2px solid #C00000;
-            background: #C00000;
-            color: white;
+            background: white;
+            color: #C00000;
             box-shadow: 0 0 5px #C00000;
         }
         .md-button.md-black{
@@ -2035,17 +2041,29 @@
         .k21logo{
             height: 50px;
         }
-        .actionButton{
+        .readButton{
+            background-color: #29335C;
+            color: white;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        .readButton:hover{
+            background-color: white;
+            color: #29335C;
+            font-weight: bold;
+        }
+        .actionButton, .actionButton:active, .actionButton:visited, .actionButton:link{
             background-color: #FF5A5F;
             color:white;
             margin-top: 10px;
             margin-right: 10px;
         }
-        .actionButton:hover{
+        .actionButton:hover, .actionButton:visited:hover, .actionButton:link:hover{
             background-color: white;
             color: #FF5A5F;
             font-weight: bold;
         }
+        
         button:focus, md-radio-button:focus {outline:0;}
         #iOSFix{flex: 1 0 auto !important;}
         div:focus {outline:0;}

@@ -3969,7 +3969,7 @@ router.get('/citySummaryService', function(req, res) {
         
         res.json(groupNames);
     } else {throw err;}
-    })
+    });
 });
 
 /*
