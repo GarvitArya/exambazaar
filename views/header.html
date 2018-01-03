@@ -91,7 +91,11 @@
     -moz-border-radius:6px 0 6px 6px;
     border-radius:6px 0 6px 6px;
 }
-    
+.scrollable-menu {
+    height: auto;
+    max-height: 500px;
+    overflow-x: hidden;
+}    
 </style>
 
 <nav class="navbar navbar-default navbar-fixed-top nav-justified secondFont font14 spacedLetter09" role="navigation" id="mainNav" ng-class="headerBackgroundCSS()" ng-if="!maintenance">
@@ -186,10 +190,10 @@
                         </a>
                     </li>
                       
-                    <li class="menu-item dropdown dropdown-submenu" ng-repeat="streamrank in streamranks | orderBy:['-rank']" ng-if="true">
+                    <li class="menu-item dropdown dropdown-submenu" ng-repeat="streamrank in streamranks | orderBy:['-rank']" ng-if="streamrank.active">
                         <a href="#">{{streamrank.stream}}</a>
                         <ul class="dropdown-menu">
-                            <li ng-repeat="exam in streamexams[streamrank.stream] | orderBy:['-rank']">
+                            <li ng-repeat="exam in streamexams[streamrank.stream] | orderBy:['-rank']" ng-if="exam.active">
                                 <a ui-sref="exam({ examName:{{'exam.name'}} })">{{exam.seoname}}</a>
                             </li>
                             
