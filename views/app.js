@@ -10233,7 +10233,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if($state.current.name == 'profile'){
                     $state.reload();
                 }
-                if($state.current.name == 'takeassessmentController'){
+                if($state.current.name == 'takeassessment'){
                     $state.reload();
                 }
                 if($state.current.name == 'claim'){
@@ -16419,7 +16419,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                                     $scope.testQuestions[index].questions[sindex].userAnswer = thisQuestionResponse.option.toString();
                                 }
                                 if(thisQuestionResponse.numericalAnswer){
-                                    $scope.testQuestions[index].questions[sindex].userNumericalAnswer = thisQuestionResponse.numericalAnswer.trim().toString();
+                                    $scope.testQuestions[index].questions[sindex].userNumericalAnswer = Number(thisQuestionResponse.numericalAnswer);
                                 }
                                 
                                 
@@ -16506,12 +16506,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
                 question.questions.forEach(function(subquestion, sindex){
                     if(subquestion.type == 'numerical'){
-                        if(subquestion.userNumericalAnswer && subquestion.userNumericalAnswer.trim() != ''){
+                        console.log(subquestion.userNumericalAnswer);
+                        if(subquestion.userNumericalAnswer){
                             var questionresponseForm = {
                                 user: $scope.user._id,
                                 question: question._id,
                                 subquestion: subquestion._id,
-                                numericalAnswer: subquestion.userNumericalAnswer.trim(),
+                                numericalAnswer: subquestion.userNumericalAnswer,
                             };
                             
                             questionresponseService.saveQuestionResponse(questionresponseForm).success(function (data, status, headers) {

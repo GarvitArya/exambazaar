@@ -1,5 +1,5 @@
 <style>
-    input[type="text"],input[type="email"]
+    input[type="text"],input[type="number"],
     {
         font-size: 14px;
         color: #333333;
@@ -9,7 +9,7 @@
         box-shadow: 0 0 5px 1px white;
     }
     
-    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus{
+    input[type="text"]:hover,input[type="text"]:focus, input[type="number"]:hover, input[type="number"]:focus{
         border: solid 1px #333333;
         box-shadow: 0 0 5px 1px #969696;
     }
@@ -335,7 +335,7 @@
                             <div layout="row" layout-align="center center" class="width100 marginTB20" ng-if="thisQuestion.type =='numerical'">
                                 <div flex="25">Your Answer</div>
                                 <div flex>
-                                    <input type="text" class="text-center width100 " ng-model="thisQuestion.userNumericalAnswer" placeholder="Type your numerical answer here">
+                                    <input type="number" class="text-center width100 " ng-model="thisQuestion.userNumericalAnswer" placeholder="Type your numerical answer here">
                                 </div>
                             
                                 
@@ -375,7 +375,7 @@
                 You have attempted {{answered}} out of {{totalQuestions}} questions!
             </div>
             <div class="" ng-if="userAssessment.evaluation.score">
-                Score: {{userAssessment.evaluation.score}} out of {{testQuestions.length * 3}}
+                Score: {{userAssessment.evaluation.score}} <span ng-if="test.maxScore">out of maximum {{test.maxScore}}</span>
             </div>
         </div>
         

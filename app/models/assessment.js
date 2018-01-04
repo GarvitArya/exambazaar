@@ -28,6 +28,10 @@ var assessmentSchema = mongoose.Schema({
             correct: {type: String},
             incorrect: {type: String},
         },
+        marked:{
+            correct: [Schema.Types.Mixed],    
+            incorrect: [Schema.Types.Mixed],    
+        },
         score: {type: String},
         _created: { type: Date, default: Date.now },
     },                           

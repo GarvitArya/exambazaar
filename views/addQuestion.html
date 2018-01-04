@@ -394,16 +394,25 @@
                 </div>
                 
                 <div class="h3Font marginB20">Test Simulation Information</div>
-                <div layout="row" layout-align="start center" class="width100 marginTB10 padding10 assignBackground">
-                    <div class="bold paddingR10">
+                <div layout="row" layout-align="start center" class="width100 marginT10 padding10 assignBackground">
+                    <div class="bold paddingR10" flex="40">
                     Total Number of Questions in the test
                     </div>
                     <div flex class="paddingL10">
                         <input type="text" class="width100"  placeholder="Total Number of Questions" ng-model="test.nQuestions">
                     </div>
                 </div>
+                <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
+                    <div class="bold paddingR10"  flex="40">
+                    Total Duration of the test in minutes
+                    </div>
+                    <div flex class="paddingL10">
+                        <input type="text" class="width100"  placeholder="Duration of the test in minutes" ng-model="test.duration">
+                    </div>
+                </div>
+                
                 <div layout="column" layout-align="start start" class="width100 marginTB10 padding10 assignBackground">
-                    <div class="baseFont">Test Instructions</div>
+                    <div class="baseFont">Test Instructions - Add/Edit</div>
 
                     <div layout="column" layout-align="start start" class="width100 marginT5" ng-repeat="instruction in test.instructions track by $index" >
                         <div layout="row" layout-align="start center" class="width100 marginB5">
