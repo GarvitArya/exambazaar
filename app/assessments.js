@@ -26,7 +26,22 @@ router.get('/remove/:assessmentId', function(req, res) {
         if (err) {
             console.log(err);
         } else {
-            console.log('Question Response removed!');
+            console.log('Assessment removed!');
+            res.json(true);
+        }                              
+    });
+});
+
+router.post('/removeAssessment', function(req, res) {
+    var thisAssessment = req.body;
+    var userId = thisAssessment.userId;
+    var testId = thisAssessment.testId;
+    
+    assessment.remove({user: userId, test: testId}, function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log('Assessment removed!');
             res.json(true);
         }                              
     });

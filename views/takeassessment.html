@@ -244,7 +244,11 @@
             </div>
             <div flex="80" layout="column" layout-align="center center" class="blogFont">
                 <div class="bold">{{test.name}}</div>
-                <div class="font14" ng-click="showInstructionDialog()">Read Instructions</div>
+                <div class="font14" >
+                    <span class="paddingLR10" ng-click="showInstructionDialog()">Read Instructions</span>
+                    <span class="paddingLR10 danger" ng-click="removeAssessmentDialog()" ng-if="fullScope">Reset Test</span>
+                
+                </div>
             </div>
             <div layout="row" layout-align="end center" flex="20">
                 <md-button class="md-danger md-large tolowercase margin0 min10vh " ng-click="submitAssessment()" ng-if="testStarted && !testOver">

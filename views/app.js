@@ -561,6 +561,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getAssessment = function(assessment) {
             return $http.post('/api/assessments/edit', assessment);
         };
+        this.removeAssessment = function(assessment) {
+            return $http.post('/api/assessments/removeAssessment', assessment);
+        };
+        
         this.getAssessments = function() {
             return $http.get('/api/assessments/');
         };
@@ -16597,9 +16601,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                  $scope.testQuestions.forEach(function(thisQuestion, index){
                     thisQuestion = sanitizeQuestion(thisQuestion);
                 });
-
+                $scope.fullScope = false;
                 UserService.getUser(sessionuser._id).success(function (data, status, headers) {
                     $scope.user = data;
+                    if($scope.user.userType == 'Master' || $scope.user._id == '5a1831f0bd2adb260055e352'){
+                        $scope.fullScope = true;
+                    }
                     $scope.assessmentInfo = {
                         name: $scope.user.basic.name,
                         mobile: $scope.user.mobile,
@@ -16807,6 +16814,39 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.closeInstructionDialog = function(ev) {
 
                 $mdDialog.hide();
+            };
+        
+            $scope.removeAssessmentDialog = function(){
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to reset the test?')
+                .textContent('You will lose your progress!' )
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.removeAssessment();
+                }, function() {
+                  //nothing
+                });   
+            };
+        
+            $scope.removeAssessment = function(){
+                var thisAssessment = {
+                    userId: $scope.user._id,
+                    testId: $scope.test._id,
+                };
+                assessmentService.removeAssessment(thisAssessment).success(function (data, status, headers) {
+                    Notification.success({message: "Assessment has been reset",  positionY: 'top', positionX: 'left', delay: 10000});
+                    $state.reload();
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
             };
             $scope.startAssessment = function(ev) {
                 $scope.startErrors = [];
