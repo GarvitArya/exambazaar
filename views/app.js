@@ -31890,6 +31890,35 @@ function getLatLng(thisData) {
             };
             $scope.findMissingQuestions();
             
+            
+            var find_duplicate_in_array = function (thisArray) {
+                var nElements = thisArray.length;
+                var duplicates = [];
+                thisArray.forEach(function(thisElement, index){
+                    var subArray = thisArray.slice(index + 1, nElements - (index + 1) );
+                    var sIndex = subArray.indexOf(thisElement);
+                    if(sIndex != -1){
+                        duplicates.push(thisElement);
+                    }
+                    
+                });
+                return duplicates;
+            };
+            
+            $scope.repeatQuestions = [];
+            $scope.findRepeatQuestions = function(){
+                var startingNo = 10000;
+                var endingNo = 0;
+                var qnos = [];
+                var startNumbers = $scope.thisTestQuestions.map(function(a) {return a._startnumber;});
+                qnos = find_duplicate_in_array(startNumbers);
+                console.log(qnos);
+                $scope.repeatQuestions = qnos;
+                
+            };
+            $scope.findRepeatQuestions();
+            
+            
             $scope.markCreator = function(){
                 if($scope.user.userType = 'Master'){
                      questionService.markCreator($scope.test._id).success(function (data, status, headers) {

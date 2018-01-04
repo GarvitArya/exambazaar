@@ -117,16 +117,31 @@
                     <span ng-if="testQuestion._endnumber && testQuestion._endnumber != ''">
                         - {{testQuestion._endnumber}}
                     </span>
+                    <span ng-if="testQuestion.questions.length > 1">
+                        ({{testQuestion.questions.length}})
+                    </span>
                 </div>
                 
             </div>
         </div>
         <div layout="row" layout-align="start center" class="width100 marginTB5" ng-if="fullScope"  layout-wrap>
-            <a ng-click="markCreator()" class="marginR10">Mark Creator</a>
-            <a ng-click="markAnswerExists()" class="marginR10">Mark Answered Questions</a>
-            <div ng-repeat="missingQuestion in missingQuestions" layout-wrap class="badge marginB5 marginR5" id="missingBadge">
+            <!--<a ng-click="markCreator()" class="marginR10">Mark Creator</a>
+            <a ng-click="markAnswerExists()" class="marginR10">Mark Answered Questions</a>-->
+            <div class="marginLR10" ng-if="missingQuestions.length > 0">
+            Missing Questions: 
+            </div>
+            <div ng-repeat="missingQuestion in missingQuestions" layout-wrap class="badge marginB5 marginR5" id="missingBadge"  ng-if="missingQuestions.length > 0">
                 <span>
                     Q. {{missingQuestion}}
+                </span>
+            </div>
+            
+            <div class="marginLR10"  ng-if="repeatQuestions.length > 0">
+            Repeated Questions: 
+            </div>
+            <div ng-repeat="repeatQuestion in repeatQuestions" layout-wrap class="badge marginB5 marginR5" id="missingBadge">
+                <span>
+                    Q. {{repeatQuestion}}
                 </span>
             </div>
         </div>
@@ -153,7 +168,7 @@
                 <div layout="row" layout-align="start center" class="marginR10" ng-if="fullScope" >
                     <a ng-click="splitQuestions()" class="marginR5" ng-if="toAddQuestion.questions.length > 1">Split Questions</a>
                     <a ng-click="removeQuestionDialog()" class="marginR5">Delete Question</a>
-                    <a ng-click="markMCQs()" class="marginR5">Mark MCQs</a>
+                    <!--<a ng-click="markMCQs()" class="marginR5">Mark MCQs</a>-->
                 </div>
                 <!--<div layout="row" layout-align="start center" class="marginR10">
                     <md-switch ng-model="toAddQuestion._multipleCorrect" aria-label="Multiple Correct Answers?" class="margin0">

@@ -130,6 +130,7 @@ router.post('/markSimulate', function(req, res) {
                         //console.log(comment);
                     }
                     if(subQuestion.type == 'mcq'){
+                        var answerMarked = false;
                         subQuestion.options.forEach(function(thisOption, oIndex){
                         if(thisOption.option.length < 1 ){
                             valid = false;
@@ -138,21 +139,20 @@ router.post('/markSimulate', function(req, res) {
                             existingTest.simulate.comments.push(comment);
                             //console.log(comment);
                         }
-                            if(thisOption._correct){
-                                correctOptionId = thisOption._id;
-
-                                var thisKey = {
-                                    question: questionId.toString(),
-                                    subquestion: subQuestionId.toString(),
-                                    option: correctOptionId.toString(),
-                                };
-                                //solutionKey.push(thisKey);
-                                //counter += 1;
-                            }
-
+                        if(thisOption._correct){
+                            answerMarked = false;
+                        }
+                        
                             
 
                         });
+                        if(!answerMarked){
+                            valid = false;
+                            var comment = "Invalid Q No: " + qno;
+                            comment += ": as correct option answer is not marked!";
+                            existingTest.simulate.comments.push(comment);
+                        }
+                        
                     }
                     if(subQuestion.type == 'numerical'){
                         //
