@@ -77,6 +77,9 @@
     .disabled{
         background-color: #FF5A5F;
     }
+    .badge{
+        background: #20C39A;
+    }
 </style>
 <div class="whiteBackground mainContent" >
     <div id="spacer3">
@@ -101,7 +104,7 @@
                 <div class="font12">{{test.description}}</div>
             </div>
             
-            <div layout="row" layout-align="start center" class="marginTB5" ng-if="user.userType=='Master'" ng-click="flipwatermarked(test._id)">
+            <div layout="row" layout-align="start center" class="marginTB5" ng-if="fullScope" ng-click="flipwatermarked(test._id)">
                 <i class="fa fa-check-square-o text-primary marginR10" aria-hidden="true" ng-if="test.watermarked"></i>
                 <i class="fa fa-times danger marginR10" aria-hidden="true" ng-if="!test.watermarked"></i>
                 Flip Watermarked
@@ -118,7 +121,7 @@
                 
             </div>
         </div>
-        <div layout="row" layout-align="start center" class="width100 marginTB5" ng-if="user.userType=='Master'"  layout-wrap>
+        <div layout="row" layout-align="start center" class="width100 marginTB5" ng-if="fullScope"  layout-wrap>
             <a ng-click="markCreator()" class="marginR10">Mark Creator</a>
             <a ng-click="markAnswerExists()" class="marginR10">Mark Answered Questions</a>
             <div ng-repeat="missingQuestion in missingQuestions" layout-wrap class="badge marginB5 marginR5" id="missingBadge">
@@ -147,7 +150,7 @@
                         Is there a paragraph for the set of questions?
                     </md-switch>
                 </div>
-                <div layout="row" layout-align="start center" class="marginR10" ng-if="user.userType=='Master'" >
+                <div layout="row" layout-align="start center" class="marginR10" ng-if="fullScope" >
                     <a ng-click="splitQuestions()" class="marginR5" ng-if="toAddQuestion.questions.length > 1">Split Questions</a>
                     <a ng-click="removeQuestionDialog()" class="marginR5">Delete Question</a>
                     <a ng-click="markMCQs()" class="marginR5">Mark MCQs</a>
@@ -353,25 +356,65 @@
             
             
         </div>
-        
-        <div layout="column" layout-align="start start" class="width100 font14 marginTB10" ng-if="user.userType=='Master'">
-            <div class="font16 marginB20">Test Instructions</div>
-            <div layout="column" layout-align="start start" class="width100" ng-repeat="instruction in test.instructions" >
-                <div layout="row" layout-align="start start" class="width100 marginB5">
-                    <div flex="5">{{$index + 1}}</div>
-                    <div flex><input type="text" class="width100"  placeholder="Instruction goes here" ng-model="test.instructions[$index]"></div>
+        <div layout="column" layout-align="start start" class="width100 headingTopBorder2 paddingT20 marginT40" ng-if="fullScope">
+            <div layout="column" layout-align="start start" class="width100 subBaseFont marginTB10 boxShadow padding10" >
+                <div layout="row" layout-align="start center" class="width100 marginTB10 padding10 font24 text-primary" ng-if="test.simulate.ready">
+                    <i class="fa fa-check-circle font32" aria-hidden="true"></i>&nbsp;Ready to simulate!
+                </div>
+                <div layout="column" layout-align="start start" class="width100 marginTB10 padding10 assignBackground2" ng-if="test.simulate.comments.length > 0">
+                    <div class="baseFont">Simulation Issues - Need Correction <span class="badge">{{test.simulate.comments.length}}</span>
+                    
+                    </div>
+
+                    <div layout="column" layout-align="start start" class="width100 marginT5 smallFont textBlack" ng-repeat="comment in test.simulate.comments track by $index" >
+                        <div layout="row" layout-align="start center" class="width100">
+                            <div flex="5">{{$index + 1}}</div>
+                            <div flex>
+                                {{comment}}
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
                 
-            </div>
-            <div layout="row" layout-align="center center" id="upload3" ng-click="addTestInstruction()" class="width100 marginT10">
-                <span>
-                    <i class="fa fa-plus" aria-hidden="true"></i> Add Instruction
-                </span>
-            </div>
-            <div layout="row" layout-align="end center" class="width100">
-                <md-button class="md-next md-small font10" ng-click="saveTest()">
-                Save Test Instructions
-                </md-button>
+                <div class="h3Font marginB20">Test Simulation Information</div>
+                <div layout="row" layout-align="start center" class="width100 marginTB10 padding10 assignBackground">
+                    <div class="bold paddingR10">
+                    Total Number of Questions in the test
+                    </div>
+                    <div flex class="paddingL10">
+                        <input type="text" class="width100"  placeholder="Total Number of Questions" ng-model="test.nQuestions">
+                    </div>
+                </div>
+                <div layout="column" layout-align="start start" class="width100 marginTB10 padding10 assignBackground">
+                    <div class="baseFont">Test Instructions</div>
+
+                    <div layout="column" layout-align="start start" class="width100 marginT5" ng-repeat="instruction in test.instructions track by $index" >
+                        <div layout="row" layout-align="start center" class="width100 marginB5">
+                            <div flex="5">{{$index + 1}}</div>
+                            <div flex><input type="text" class="width100"  placeholder="Instruction goes here" ng-model="test.instructions[$index]"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div layout="row" layout-align="center center" id="upload3" ng-click="addTestInstruction()" class="width100 marginTB5">
+                    <span>
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add Instruction
+                    </span>
+                </div>
+                
+                
+                <div layout="row" layout-align="end center" class="width100 marginT20">
+                    <md-button class="md-danger md-small font10" ng-click="markSimulate()">
+                    Check Simulation Readiness
+                    </md-button>
+                    <md-button class="md-next md-small font10" ng-click="saveTest()">
+                    Save Simulation Details
+                    </md-button>
+                </div>
             </div>
         </div>
     </div>

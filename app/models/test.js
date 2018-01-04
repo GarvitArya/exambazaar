@@ -26,8 +26,11 @@ var testSchema = mongoose.Schema({
     active : { type: Boolean, default: true},
     watermarked : { type: Boolean, default: false},
     simulate: {
-        allAnsweredMarked: { type: Boolean, default: false},
-        allSolutionMarked: { type: Boolean, default: false},
+        ready: { type: Boolean, default: false},
+        comments: [{type: String}],
+        /*allAnsweredMarked: { type: Boolean, default: false},
+        allSolutionMarked: { type: Boolean, default: false},*/
+        _date: { type: Date, default: Date.now },
         
     },
     _created: { type: Date, default: Date.now },

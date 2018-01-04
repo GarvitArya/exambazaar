@@ -258,7 +258,7 @@ router.get('/exam/:examName', function(req, res) {
 router.get('/exambasic/:examName', function(req, res) {
     var examName = req.params.examName;
     var thisExam = exam
-        .findOne({'name': examName}, {name:1, displayname: 1, rank: 1, seoname: 1})
+        .findOne({'name': examName}, {logo:1, name:1, displayname: 1, rank: 1, seoname: 1, website: 1, briefDescription:1, frequency: 1, cycle:1})
         .exec(function (err, thisExam) {
         if (!err){
             //console.log(thisExam);

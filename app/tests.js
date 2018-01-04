@@ -24,10 +24,9 @@ router.post('/save', function(req, res) {
     if(thisTest._id){
        testId = thisTest._id;
     }
-    console.log(JSON.stringify(thisTest));
     
     var existingTest = test.findOne({ '_id': testId },function (err, existingTest) {
-        console.log(existingTest);
+        
         if(existingTest){
             for (var property in thisTest) {
                 existingTest[property] = thisTest[property];
@@ -67,77 +66,166 @@ router.get('/', function(req, res) {
     
 });
 
-router.get('/markSimulate', function(req, res) {
+router.post('/markSimulate', function(req, res) {
+    var testIds = req.body;
+    
+    /*var testIds = [
+        "599c57b84f2991101b2355ab",
+        "599c58474f2991101b2355ad",
+        "599c59834f2991101b2355d9",
+        "599c62c5085cd914e7fe73d7",
+        "599e9a7f262de245f7c82a11",
+        "599e9b1f262de245f7c82a12",
+
+    ];*/
+    
     res.json(true);
+    //_id: {$in: testIds}
+    console.log(testIds);
+    if(testIds && testIds.length > 0){
     var allTests = test
-        .find({},{_id: 1})
+        .find({_id: {$in: testIds}},{_id: 1, simulate: 1, nQuestions: 1, instructions: 1})
         .limit(1000)
-        //.deepPopulate('exam')
         .exec(function (err, allTests) {
         if (!err){
+            var nTests = allTests.length;
+            var tCounter = 0;
             var theseTests = allTests.map(function(a) {return a._id.toString();});
-            
-            
-            theseTests.forEach(function(existingTest, index){
-                var testId = existingTest.toString();
-                
+            allTests.forEach(function(existingTest, index){
+                var testId = existingTest._id.toString();
                 var solutionKey = [];
                 var testQuestions = question
-                .find({test: testId}, {questions: 1})
+                .find({test: testId}, {questions: 1, _startnumber: 1, _endnumber: 1})
                 .deepPopulate('questions')
                 .exec(function (err, testQuestions) {
+                var valid = true;
+                if(!existingTest.simulate){
+                    existingTest.simulate = {};
+                }
+                existingTest.simulate.comments = [];
                     
                 if(testQuestions && testQuestions.length > 0){
                 var nQuestions = 0;    
                 var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
-                var valid = true;
+                
                 var counter = 0;
 
                 testQuestions.forEach(function(thisQuesiton, qIndex){
                     nQuestions += thisQuesiton.questions.length;
                 });
                 
+                
                 testQuestions.forEach(function(thisQuesiton, qIndex){
                 var questionId = thisQuesiton._id;
                 thisQuesiton.questions.forEach(function(subQuestion, sIndex){
+                    var qno = Number(thisQuesiton._startnumber) + sIndex;
                     var subQuestionId = subQuestion._id;
                     var correctOptionId = null;
                     if(subQuestion.question.length < 10 ){
                         valid = false;
+                        
+                        var comment = "Invalid Q No: " + qno;
+                        comment += ": as Question length is < 10 characters";
+                        existingTest.simulate.comments.push(comment);
+                        //console.log(comment);
                     }
-                    subQuestion.options.forEach(function(thisOption, oIndex){
+                    if(subQuestion.type == 'mcq'){
+                        subQuestion.options.forEach(function(thisOption, oIndex){
                         if(thisOption.option.length < 1 ){
                             valid = false;
+                            var comment = "Invalid Q No: " + qno;
+                            comment += ": as Option length is < 1 character";
+                            existingTest.simulate.comments.push(comment);
+                            //console.log(comment);
                         }
-                        if(thisOption._correct){
-                            correctOptionId = thisOption._id;
+                            if(thisOption._correct){
+                                correctOptionId = thisOption._id;
 
-                            var thisKey = {
-                                question: questionId.toString(),
-                                subquestion: subQuestionId.toString(),
-                                option: correctOptionId.toString(),
-                            };
-                            //solutionKey.push(thisKey);
-                            counter += 1;
+                                var thisKey = {
+                                    question: questionId.toString(),
+                                    subquestion: subQuestionId.toString(),
+                                    option: correctOptionId.toString(),
+                                };
+                                //solutionKey.push(thisKey);
+                                //counter += 1;
+                            }
+
+                            
+
+                        });
+                    }
+                    if(subQuestion.type == 'numerical'){
+                        //
+                        if(subQuestion.numericalAnswerType == 'Exact'){
+                            subQuestion.numericalAnswers.forEach(function(thisAnswer, aIndex){
+                            if(thisAnswer.length < 1 ){
+                                valid = false;
+                                var comment = "Invalid Q No: " + qno;
+                                comment += ": as one of the numerical answer of type 'Exact' is blank";
+                                existingTest.simulate.comments.push(comment);
+                                //console.log(comment);
+                                
+                            }
+                            });
+                            
+                        }
+                        if(subQuestion.numericalAnswerType == 'Range'){
+                            if(!subQuestion.numericalAnswerRange || (!subQuestion.numericalAnswerRange.min && subQuestion.numericalAnswerRange.min != 0) || (!subQuestion.numericalAnswerRange.max && subQuestion.numericalAnswerRange.max != 0) ){
+                                valid = false;
+                                var comment = "Invalid Q No: " + qno;
+                                comment += ": as either of min/max of the numerical answer of type 'Range' is blank";
+                                existingTest.simulate.comments.push(comment);
+                                //console.log(comment);
+                                
+                            }else{
+                                
+                                /*if(subQuestion.numericalAnswerRange.min.length < 1 || subQuestion.numericalAnswerRange.max.length < 1 ){
+                                    valid = false;
+                                }  */ 
+                            }
                         }
                         
-                        if(counter == nQuestions && valid){
-
-                            console.log(testId);
-
+                        
+                    }
+                    
+                    
+                    counter += 1;
+                    if(counter == nQuestions){
+                        if(valid){
+                            
+                            if(existingTest.nQuestions && Number(existingTest.nQuestions) == nQuestions){
+                                
+                            }else{
+                                valid = false;
+                                var comment = "Total number of questions in the test not marked";
+                                existingTest.simulate.comments.push(comment);
+                            }
+                            if(existingTest.instructions && existingTest.instructions.length >= 4){
+                                
+                            }else{
+                                valid = false;
+                                var comment = "Test has less than 4 instruction points!";
+                                existingTest.simulate.comments.push(comment);
+                            }
                         }
-
-                    });
-
-
+                        
+                        existingTest.simulate.ready = valid;
+                        existingTest.save(function(err, existingTest) {
+                            if (err) return console.error(err);
+                            console.log(existingTest._id + " saved!");
+                            
+                            tCounter += 1;
+                            if(tCounter == nTests){
+                                console.log("--- All done --- " + nTests + " tests assessed!");
+                            }
+                        });
+                        //console.log("A -- " + testId);
+                        
+                        
+                    }
+                    
                     
                 });
-
-
-
-
-
-
 
                 });
 
@@ -145,12 +233,200 @@ router.get('/markSimulate', function(req, res) {
 
                 }else{
                     
+                    valid = false;
+                    var comment = "No test questions linked to the test";
+                    existingTest.simulate.ready = false;
+                    existingTest.simulate.comments.push(comment);
+                    existingTest.save(function(err, existingTest) {
+                        if (err) return console.error(err);
+                        console.log(existingTest._id + " saved!");
+                        tCounter += 1;
+                        if(tCounter == nTests){
+                            console.log("--- All done --- " + nTests + " tests assessed!");
+                        }
+                    });
                 }     
             });
+            
+                
                 
             });
         } else {throw err;}
     });
+        
+    }else{
+        console.log('I am here');
+    var allTests = test
+        .find({},{_id: 1, simulate: 1, nQuestions: 1, instructions: 1})
+        .limit(1000)
+        .exec(function (err, allTests) {
+        if (!err){
+            var nTests = allTests.length;
+            var tCounter = 0;
+            var theseTests = allTests.map(function(a) {return a._id.toString();});
+            allTests.forEach(function(existingTest, index){
+                var testId = existingTest._id.toString();
+                var solutionKey = [];
+                var testQuestions = question
+                .find({test: testId}, {questions: 1, _startnumber: 1, _endnumber: 1})
+                .deepPopulate('questions')
+                .exec(function (err, testQuestions) {
+                var valid = true;
+                if(!existingTest.simulate){
+                    existingTest.simulate = {};
+                }
+                existingTest.simulate.comments = [];
+                    
+                if(testQuestions && testQuestions.length > 0){
+                var nQuestions = 0;    
+                var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
+                
+                var counter = 0;
+
+                testQuestions.forEach(function(thisQuesiton, qIndex){
+                    nQuestions += thisQuesiton.questions.length;
+                });
+                
+                
+                testQuestions.forEach(function(thisQuesiton, qIndex){
+                var questionId = thisQuesiton._id;
+                thisQuesiton.questions.forEach(function(subQuestion, sIndex){
+                    var qno = Number(thisQuesiton._startnumber) + sIndex;
+                    var subQuestionId = subQuestion._id;
+                    var correctOptionId = null;
+                    if(subQuestion.question.length < 10 ){
+                        valid = false;
+                        
+                        var comment = "Invalid Q No: " + qno;
+                        comment += ": as Question length is < 10 characters";
+                        existingTest.simulate.comments.push(comment);
+                        //console.log(comment);
+                    }
+                    if(subQuestion.type == 'mcq'){
+                        subQuestion.options.forEach(function(thisOption, oIndex){
+                        if(thisOption.option.length < 1 ){
+                            valid = false;
+                            var comment = "Invalid Q No: " + qno;
+                            comment += ": as Option length is < 1 character";
+                            existingTest.simulate.comments.push(comment);
+                            //console.log(comment);
+                        }
+                            if(thisOption._correct){
+                                correctOptionId = thisOption._id;
+
+                                var thisKey = {
+                                    question: questionId.toString(),
+                                    subquestion: subQuestionId.toString(),
+                                    option: correctOptionId.toString(),
+                                };
+                                //solutionKey.push(thisKey);
+                                //counter += 1;
+                            }
+
+                            
+
+                        });
+                    }
+                    if(subQuestion.type == 'numerical'){
+                        //
+                        if(subQuestion.numericalAnswerType == 'Exact'){
+                            subQuestion.numericalAnswers.forEach(function(thisAnswer, aIndex){
+                            if(thisAnswer.length < 1 ){
+                                valid = false;
+                                var comment = "Invalid Q No: " + qno;
+                                comment += ": as one of the numerical answer of type 'Exact' is blank";
+                                existingTest.simulate.comments.push(comment);
+                                //console.log(comment);
+                                
+                            }
+                            });
+                            
+                        }
+                        if(subQuestion.numericalAnswerType == 'Range'){
+                            if(!subQuestion.numericalAnswerRange || (!subQuestion.numericalAnswerRange.min && subQuestion.numericalAnswerRange.min != 0) || (!subQuestion.numericalAnswerRange.max && subQuestion.numericalAnswerRange.max != 0) ){
+                                valid = false;
+                                var comment = "Invalid Q No: " + qno;
+                                comment += ": as either of min/max of the numerical answer of type 'Range' is blank";
+                                existingTest.simulate.comments.push(comment);
+                                //console.log(comment);
+                                
+                            }else{
+                                
+                                /*if(subQuestion.numericalAnswerRange.min.length < 1 || subQuestion.numericalAnswerRange.max.length < 1 ){
+                                    valid = false;
+                                }  */ 
+                            }
+                        }
+                        
+                        
+                    }
+                    
+                    
+                    counter += 1;
+                    if(counter == nQuestions){
+                        if(valid){
+                            
+                            if(existingTest.nQuestions && Number(existingTest.nQuestions) == nQuestions){
+                                
+                            }else{
+                                valid = false;
+                                var comment = "Total number of questions in the test not marked";
+                                existingTest.simulate.comments.push(comment);
+                            }
+                            if(existingTest.instructions && existingTest.instructions.length >= 4){
+                                
+                            }else{
+                                valid = false;
+                                var comment = "Test has less than 4 instruction points!";
+                                existingTest.simulate.comments.push(comment);
+                            }
+                        }
+                        
+                        existingTest.simulate.ready = valid;
+                        existingTest.save(function(err, existingTest) {
+                            if (err) return console.error(err);
+                            console.log(existingTest._id + " saved!");
+                            
+                            tCounter += 1;
+                            if(tCounter == nTests){
+                                console.log("--- All done --- " + nTests + " tests assessed!");
+                            }
+                        });
+                        //console.log("A -- " + testId);
+                        
+                        
+                    }
+                    
+                    
+                });
+
+                });
+
+
+
+                }else{
+                    
+                    valid = false;
+                    var comment = "No test questions linked to the test";
+                    existingTest.simulate.ready = false;
+                    existingTest.simulate.comments.push(comment);
+                    existingTest.save(function(err, existingTest) {
+                        if (err) return console.error(err);
+                        console.log(existingTest._id + " saved!");
+                        tCounter += 1;
+                        if(tCounter == nTests){
+                            console.log("--- All done --- " + nTests + " tests assessed!");
+                        }
+                    });
+                }     
+            });
+            
+                
+                
+            });
+        } else {throw err;}
+    });    
+    }    
     
 });
 

@@ -641,8 +641,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getk21Test = function() {
             return $http.get('/api/tests/k21');
         };
-        this.markSimulate = function() {
-            return $http.get('/api/tests/markSimulate');
+        this.markSimulate = function(testIds) {
+            return $http.post('/api/tests/markSimulate', testIds);
         };
         this.testsWithQuestions = function() {
             return $http.get('/api/tests/testsWithQuestions');
@@ -2218,6 +2218,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.city = $stateParams.cityName;
         $scope.category = thisStream.data;
         $scope.subcategory = thisExam.data;
+        console.log($scope.subcategory);
         var streamExamsData = streamExams.data;
         var streamExamsIds = streamExamsData.map(function(a) {return a._id;});
         $scope.streamExams = streamExams.data.map(function(a) {return a.name;});
@@ -14553,7 +14554,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       };
 
       CoachingStream.prototype.nextPage = function() {
-        console.log(this.finished);
+        //console.log(this.finished);
         if (this.busy) return;
         if (this.finished) return;
         this.busy = true;
@@ -16114,7 +16115,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.masterUser = true;
             }
             $scope.markSimulate = function(){
-                testService.markSimulate().success(function (data, status, headers) {
+                var testIds = [];
+                testService.markSimulate(testIds).success(function (data, status, headers) {
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {
@@ -31816,10 +31818,13 @@ function getLatLng(thisData) {
          
     exambazaar.controller("addQuestionController", 
         [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', 'questionService', 'testService', '$state', '$mdDialog', '$timeout', 'thisTestQuestions', '$cookies', function($scope, Notification, $rootScope, thisTest, Upload, ImageService, questionService, testService, $state, $mdDialog, $timeout, thisTestQuestions, $cookies){
-            
+            $scope.fullScope = false;
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
                 
+                if($scope.user.userType == 'Master' || $scope.user._id == '5a1831f0bd2adb260055e352'){
+                   $scope.fullScope = true;
+                }
                 
             }else{
                 //$rootScope.$emit("CallBlogLogin", {});
@@ -31932,9 +31937,11 @@ function getLatLng(thisData) {
                 $scope.test.instructions.push('');
             };
             $scope.saveTest = function(){
-                console.log($scope.test);
+                
                 testService.saveTest($scope.test).success(function (data, status, headers) {
                     $scope.test = data;
+                    $scope.markSimulate();
+                    Notification.success({message: "Test simulation details saved!",  positionY: 'top', positionX: 'right', delay: 3000});
                 })
                 .error(function (data, status, header, config) {
                     console.log('Error ' + data + ' ' + status);
@@ -32196,6 +32203,8 @@ function getLatLng(thisData) {
                 });
             };
             
+            
+            
             $scope.setQuestion = function(question){
                 $scope.toAddQuestion = question;
                 
@@ -32369,6 +32378,16 @@ function getLatLng(thisData) {
                     });
                 }
              };
+            
+            $scope.markSimulate = function(){
+                var testIds = [$scope.test._id];
+                testService.markSimulate(testIds).success(function (data, status, headers) {
+                    Notification.primary({message: "Simulation check resut fetched!",  positionY: 'top', positionX: 'right', delay: 3000});
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                }); 
+            };
             
     }]);
     Date.prototype.addDays = function(days) {
@@ -40714,6 +40733,10 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
                                                    
     $transitions.onSuccess({}, function($transition$) {
         
+        console.log('SEO Title: ' + $rootScope.pageTitle);
+        console.log('SEO Description: ' + $rootScope.pageDescription);
+        console.log('SEO Keywords: ' + $rootScope.pageKeywords);
+                
         $window.scrollTo(0, 0);
         var stateTo = $transition$.$to();
         var stateToURL = stateTo.url.pattern;

@@ -33,7 +33,7 @@
 <div class="whiteBackground mainContent" >
     <div id="spacer">
     </div>
-    <div layout="row" layout-align="center center" class="width100 marginB20">
+    <div layout="row" layout-align="center center" class="width100 marginB20" ng-if="user._id=='5a04512a63c45b592385f27b'">
         <a ng-click="markWatermarked()" id="link">
             Mark Watermarked
         </a>
@@ -45,14 +45,16 @@
         </a>
     </div>
     <div layout="row" layout-align="start start" class="padded" ng-if="masterUser" layout-wrap>
-    <div flex="100" layout="column" layout-align="center center" ng-repeat="exam in allExams | orderBy:['-nTyped']" class="width100 gainsboroBorder">
+    <div flex="100" layout="column" layout-align="center center" ng-repeat="exam in allExams | orderBy:['-nTyped']" class="width100 boxShadow marginTB20">
         <div layout="column" layout-align="center center" class="width100 marginB20 marginT10">
-            <div class="bold">{{exam.displayname}}</div>
-            <div>Total tests: {{exam.tests.length}}</div>
-            <div>Total questions: {{exam.nTyped}}</div>
+            <div class="h3Font bold">{{exam.displayname}}</div>
+            <div>Total tests: {{exam.tests.length}} & Total questions: {{exam.nTyped}}</div>
         </div>
-        <div layout="row" layout-align="start start" flex layout-wrap class=" width100 padding10">
-            <div layout="column" layout-align="center center" ng-repeat="test in exam.tests | orderBy:['-nTyped']"  class="marginR5 marginB2">
+        <div layout="row" layout-align="start start" flex layout-wrap class="width100 bold baseFont padding10 assignBackground">
+            Ready for Simulation
+        </div>
+        <div layout="row" layout-align="start start" flex layout-wrap class=" width100 padding10 assignBackground">
+            <div layout="column" layout-align="center center" ng-repeat="test in exam.tests | orderBy:['-nTyped']"  class="marginR5 marginB2" ng-if="test.simulate.ready">
                 <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB2">
                     {{$index + 1}}. {{test.name}}&nbsp;&nbsp;<i class="fa fa-anchor" aria-hidden="true" ng-if="test.url.answer"></i>
                     <span class="badge" ng-if="test.nTyped">{{test.nTyped}}</span>
@@ -62,10 +64,21 @@
                 </div>-->
             </div>
         </div>
+        <div layout="row" layout-align="start start" flex layout-wrap class="width100 baseFont padding10 assignBackground2">
+            Not Ready for Simulation
+        </div>
+        <div layout="row" layout-align="start start" flex layout-wrap class=" width100 padding10 assignBackground2" >
+            <div layout="column" layout-align="center center" ng-repeat="test in exam.tests | orderBy:['-nTyped', 'simulate.comments.length']"  class="marginR5 marginB2" ng-if="!test.simulate.ready">
+                <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB2">
+                    {{$index + 1}}. {{test.name}}&nbsp;<i class="fa fa-anchor" aria-hidden="true" ng-if="test.url.answer"></i>
+                    <span class="badge" ng-if="test.nTyped">{{test.nTyped}}</span>
+                </a>
+                <!--<div ng-click="upload(test)">
+                    Upload
+                </div>-->
+            </div>
+        </div>
         
     </div>
-    </div>
-    <div layout="row" layout-align="start start" class="padded" ng-if="masterUser" layout-wrap>
-        
     </div>
 </div>
