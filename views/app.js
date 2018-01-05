@@ -35832,9 +35832,9 @@ function getLatLng(thisData) {
                     mobile: ''
                 },
                 templateName: 'Press Coverage',
-                sender: $scope.user.basic.name,
+                sender: 'Vikrant',//$scope.user.basic.name,
                 senderId: $scope.user._id,
-                from: $scope.user.email,
+                from: 'vikrant@exambazaar.com',//$scope.user.email,
                 subject: '[Press Release] Story coverage of Exambazaar (IIT-IIM alumni Jaipur based startup)',
                 html: '',
             };

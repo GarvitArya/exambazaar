@@ -355,6 +355,7 @@ var fromEmail = {
     if (!err){
     if(allProviders){
         res.json(true);
+        console.log('There are: ' + allProviders.length + ' providers!');
         allProviders.forEach(function(thisProvider, pindex){
         var thisEmails = thisProvider.email;
         var instituteName = thisProvider.name;
@@ -408,10 +409,10 @@ var fromEmail = {
                     if(existingEmail){
                         console.log("Email to " + to + " already sent at: " + existingEmail._date);
                     }else{
-                        
+                        //console.log("Will send to " + to);
                         sg.API(request, function(error, response) {
                             if(error){
-                                res.json('Could not send email! ' + error);
+                                console.log('Could not send email! ' + error);
                             }else{
 
                             var this_email = new email({
