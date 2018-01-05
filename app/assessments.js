@@ -376,7 +376,7 @@ router.post('/userevaluate', function(req, res) {
                             
                             score += incorrectScore;
                         });
-                            
+                        score = Math.round(score * 100) / 100;
                         console.log('Score is: ' + score);
                             
                         var evaluation = {
