@@ -345,9 +345,10 @@ var fromEmail = {
     name: sender
 };
 
-    var coachingIds = [];
-var allProviders = targetStudyProvider
-    .find({ '_id': { $in : coachingIds}, email: {$exists: true}, disabled: false }, { name: 1, email:1 })
+    //var coachingIds = ['58821266fe400914343a5074'];
+    //'_id': { $in : coachingIds}, 
+    var allProviders = targetStudyProvider
+    .find({ email: {$exists: true}, disabled: false }, { name: 1, email:1 })
     //.limit(1)
     .exec(function (err, allProviders) {
 
@@ -359,17 +360,15 @@ var allProviders = targetStudyProvider
         var instituteName = thisProvider.name;
         var instituteId = thisProvider._id;
         thisEmails.forEach(function(thisEmail, eindex){
-
+            var emailSent = false;
+            
             var to = thisEmail;
-            //to = 'saloni@exambazaar.com';
-            var subject = "Attract New Students with a Simple Blog - " + instituteName + "!";
-
-
+            //to = 'ayush@exambazaar.com';
+            var subject = instituteName + " - You are the expert! Would you write with us?";
             var html = ' ';
             if(!html){
                 html = ' ';
             }
-
             var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
             if (err) return handleError(err);
 
@@ -403,38 +402,48 @@ var allProviders = targetStudyProvider
                   path: '/v3/mail/send',
                   body: mail.toJSON(),
                 });
-
-                sg.API(request, function(error, response) {
-                    if(error){
-                        res.json('Could not send email! ' + error);
+                
+                var existingEmail = email.findOne({ to: to, _date: {$gte: new Date('2018-01-05T00:00:00.000Z')}}, {templateId: 1, _date: 1, to: 1},function (err, existingEmail) {
+                    if (err) return handleError(err);
+                    if(existingEmail){
+                        console.log("Email to " + to + " already sent at: " + existingEmail._date);
                     }else{
+                        
+                        sg.API(request, function(error, response) {
+                            if(error){
+                                res.json('Could not send email! ' + error);
+                            }else{
 
-                    var this_email = new email({
-                        institute: instituteId,
-                        user: senderId,
-                        templateId: templateId,
-                        fromEmail: {
-                            email: from,
-                            name: sender
-                        },
-                        to: to,
-                        response: {
-                            status: response.statusCode,
-                            _date: response.headers.date,
-                            xMessageId: response.headers["x-message-id"]
-                        }
+                            var this_email = new email({
+                                institute: instituteId,
+                                user: senderId,
+                                templateId: templateId,
+                                fromEmail: {
+                                    email: from,
+                                    name: sender
+                                },
+                                to: to,
+                                response: {
+                                    status: response.statusCode,
+                                    _date: response.headers.date,
+                                    xMessageId: response.headers["x-message-id"]
+                                }
 
-                    });
+                            });
 
-                    this_email.save(function(err, this_email) {
-                        if (err) return console.error(err);
-                        eCounter += 1;
-                        console.log(eCounter + '. Email sent to ' + instituteName + ' at ' + this_email.to);
-                    });
-                    //res.json(response);
+                            this_email.save(function(err, this_email) {
+                                if (err) return console.error(err);
+                                eCounter += 1;
+                                console.log(eCounter + '. Email sent to ' + instituteName + ' at ' + this_email.to);
+                            });
+                            //res.json(response);
+                            }
+
+                        });
                     }
-
                 });
+                
+                /**/
 
             }
             if(counter == nLength){
@@ -523,7 +532,8 @@ router.post('/introductionofEB', function(req, res) {
                     var eCounter = 0;
                     var emailArray = thisProvider.email;
                     var instituteName = thisProvider.name;
-                    var subject = instituteName + " - Get started with Exambazaar!";
+                    //var subject = instituteName + " - Get started with Exambazaar!";
+                    var subject = instituteName + " - You are the expert! Would you write for us?";
                     var instituteId = thisProvider._id;
                     var content = new helper.Content('text/html', html);
                     
@@ -532,6 +542,8 @@ router.post('/introductionofEB', function(req, res) {
                     emailArray.forEach(function(thisEmail, eindex){
                         //console.log(thisEmail);
                         //thisEmail = "gaurav@exambazaar.com";
+                        
+                        
                         var to_email = new helper.Email(thisEmail);
                         var mail = new helper.Mail(fromEmail, subject, to_email, content);
                         mail.setTemplateId(templateId);

@@ -36061,7 +36061,8 @@ function getLatLng(thisData) {
                     
                     $scope.email.instituteId = $scope.provider._id;
                     $scope.email.logo = $scope.provider.logo;
-                    $scope.email.subject = $scope.provider.name + " - Get started with Exambazaar!";
+                    //$scope.email.subject = $scope.provider.name + " - Get started with Exambazaar!";
+                    $scope.email.subject = $scope.provider.name + " - You are the expert! Would you write with us?";
                 }
                 }).error(function (data, status, header, config) {
                     console.log("Error ");
@@ -37162,15 +37163,30 @@ function getLatLng(thisData) {
             //console.log($rootScope.blogAuthors);   
             
             $scope.recommenedBlogs = recommenedBlogs.data;
+            //console.log($scope.recommenedBlogs);
             $scope.suggestedBlogs = [];
-            $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.examBlogs);
-            $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.blogSeries);
-            $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.coachingBlogs);
-            $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.blogAuthor);
-            $scope.suggestedBlogs = $scope.suggestedBlogs.slice(0, 6);
+            if($scope.recommenedBlogs.examBlogs){
+                $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.examBlogs);
+            }
+            if($scope.recommenedBlogs.blogSeries){
+                $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.blogSeries);
+            }
+            if($scope.recommenedBlogs.coachingBlogs){
+                $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.coachingBlogs);
+            }
+            if($scope.recommenedBlogs.blogAuthor){
+                $scope.suggestedBlogs = $scope.suggestedBlogs.concat($scope.recommenedBlogs.blogAuthor);
+            }
+            if($scope.suggestedBlogs.length > 6){
+                $scope.suggestedBlogs = $scope.suggestedBlogs.slice(0, 6);
+            }
             
-            var suggestedBlogURLs = $scope.suggestedBlogs.map(function(a) {return a.urlslug;});
             
+            var suggestedBlogURLs = [];
+            if($scope.suggestedBlogs && $scope.suggestedBlogs.length > 0){
+                console.log($scope.suggestedBlogs);
+                suggestedBlogURLs = $scope.suggestedBlogs.map(function(a) {return a.urlslug;});
+            }
             suggestedBlogURLs.forEach(function(thisURL, uIndex){
                 suggestedBlogURLs[uIndex] = "https://www.exambazaar.com/blogpost/" + thisURL;
             });
@@ -40803,9 +40819,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
                                                    
     $transitions.onSuccess({}, function($transition$) {
         
-        console.log('SEO Title: ' + $rootScope.pageTitle);
-        console.log('SEO Description: ' + $rootScope.pageDescription);
-        console.log('SEO Keywords: ' + $rootScope.pageKeywords);
+        
                 
         $window.scrollTo(0, 0);
         var stateTo = $transition$.$to();
@@ -40829,7 +40843,14 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
             
             if($cookies.getObject('sessionuser')){
                 var user = $cookies.getObject('sessionuser');
+                
                 var userType = user.userType;
+                if(userType == 'Master'){
+                    console.log('SEO Title: ' + $rootScope.pageTitle);
+                    console.log('SEO Description: ' + $rootScope.pageDescription);
+                    console.log('SEO Keywords: ' + $rootScope.pageKeywords);
+                }
+                
                 if(mIndex != -1 && userType != 'Master'){
                     $cookies.remove('sessionuser');
                     //$state.reload();
