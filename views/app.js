@@ -15691,12 +15691,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             var InspirationStreamInfo = {
                 streamId: null,
-                excluded: ['Top 10 Online', 'Best Books', 'Exam Page', 'Best Schools', 'Degrees', 'Expert Reviews', 'EdBites', 'Build Resume', 'Job', 'Career' ],
+                excluded: ['Top 10 Online', 'Best Books', 'Exam Page', 'Best Schools', 'Degrees', 'Expert Reviews', 'EdBites', 'Build Resume', 'Job', 'Career', 'Exam Preparation' ],
                 limit: 3,
             };
             var ExamPreparationStreamInfo = {
                 streamId: null,
-                included: ['Top 10 Online', 'Best Books', 'Exam Page' ],
+                included: ['Top 10 Online', 'Best Books', 'Exam Page', 'Exam Preparation' ],
                 limit: 3,
             };
             var InformationStreamInfo = {
