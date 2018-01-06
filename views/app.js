@@ -35102,7 +35102,8 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-                "tanshichat@gmail.com",
+              
+
 
 
 
@@ -35111,6 +35112,7 @@ function getLatLng(thisData) {
                 
                 UserService.getUserBasic(userId).success(function (data, status, headers) {
                     var marketingUser = data;
+                    console.log(marketingUser);
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
                             //body: "We are currently offering internship to students in Jaipur across 3 domains - Business Development, Design and Business Analyst. The interns will work out of our office in Jaipur. Kindly inform your students about this opportunity and let us know if we need to follow any steps/protocol to reach out to them.",
@@ -36061,8 +36063,8 @@ function getLatLng(thisData) {
                     
                     $scope.email.instituteId = $scope.provider._id;
                     $scope.email.logo = $scope.provider.logo;
-                    //$scope.email.subject = $scope.provider.name + " - Get started with Exambazaar!";
-                    $scope.email.subject = $scope.provider.name + " - You are the expert! Would you write with us?";
+                    $scope.email.subject = $scope.provider.name + " - Get started with Exambazaar!";
+                    //$scope.email.subject = $scope.provider.name + " - You are the expert! Would you write with us?";
                 }
                 }).error(function (data, status, header, config) {
                     console.log("Error ");
