@@ -131,7 +131,8 @@ var userSchema = mongoose.Schema({
         }],
         profileCredential: String,
         facebookProfile: String,
-    }
+    },
+    referralcode: {type: String},
 });
 userSchema.plugin(passportLocalMongoose);
 

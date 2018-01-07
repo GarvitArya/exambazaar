@@ -218,7 +218,7 @@
                                 
                             </div>
                         </div>-->
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start center" class="fieldRow">
                             <div flex="{{col1Width}}" class="col1">Gender</div>
                             <div layout="row" layout-align="start center" flex class="col2">
                                 <div ng-repeat="gender in userVariables.genders" class="marginR10">
@@ -229,7 +229,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start center" class="fieldRow">
                             <div flex="{{col1Width}}" class="col1">Category</div>
                             <div layout="row" layout-align="start center" flex class="col2">
                                 <div ng-repeat="caste in userVariables.categories" class="marginR10">
@@ -240,7 +240,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start center" class="fieldRow">
                             <div flex="{{col1Width}}" class="col1">Person with Disability (PwD)</div>
                             <div layout="row" layout-align="start center" flex class="col2">
                                 <span class="badge emptyTag marginR10" ng-class="{ filledTag: user.basic.PwD==true }" ng-click="setPwD(true)">
@@ -251,14 +251,14 @@
                                 </span>
                             </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start center" class="fieldRow">
                             <div flex="{{col1Width}}" class="col1">Date of Birth</div>
                             <div layout="row" layout-align="start center" flex class="col2 paddingTB10">
                                 <md-datepicker ng-model="user.basic.dob" md-placeholder="Date of Birth" class="margin0"></md-datepicker>
                             </div>
                         </div>
                         
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start center" class="fieldRow">
                             <div flex="{{col1Width}}" class="col1">
                                 <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Contact')">
                                     Next
@@ -267,20 +267,20 @@
                         </div>
                     </div>
                     <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Contact'">
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start center" class="fieldRow">
                             <div flex="{{col1Width}}" class="col1">Mobile</div>
                             <div flex class="col2">
                                 <input type="text" class="width100" ng-model="user.mobile"  placeholder="Mobile">
                             </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start center" class="fieldRow">
                             <div flex="{{col1Width}}" class="col1">Email</div>
                             <div flex class="col2">
                                 <input type="email" class="width100" ng-model="user.email"  placeholder="Email Address">
                             </div>
                         </div>
                         <div layout="row" layout-align="start start" class="fieldRow">
-                            <div layout="column" layout-align="start start" flex="{{col1Width}}" class="col1">
+                            <div layout="column" layout-align="start center" flex="{{col1Width}}" class="col1">
                                 <div>Location</div>
                                 <div class="font10 textLightGrey">
                                     We use your location to improve your experience in the website.
@@ -301,7 +301,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start center" class="fieldRow">
                             <div flex="{{col1Width}}" class="col1">
                                 <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Academic')">
                                     Next
@@ -460,6 +460,12 @@
                         </div>
                     </div>-->
                     <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Social'">
+                        <div layout="row" layout-align="start center" class="fieldRow">
+                            <div flex="{{col1Width}}" class="col1">Referral Code</div>
+                            <div flex class="col2">
+                                <input type="text" class="width100" ng-model="user.referralcode"  placeholder="Referral Code">
+                            </div>
+                        </div>
                         <span ng-if="!user.facebookId" class="editFont marginB20">
                             You can link Facebook to your existing account to enable seamless logging in.
                         </span>
@@ -489,7 +495,7 @@
                             </div>
 
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start center" class="fieldRow">
                             <div flex="{{col1Width}}" class="col1">
                                 <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Blogging')">
                                     Next
@@ -498,7 +504,7 @@
                         </div>
                     </div>
                     <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Blogging'">
-                        <div layout="row" layout-align="start start" class="fieldRow" ng-if="user.blogger.active">
+                        <div layout="row" layout-align="start center" class="fieldRow" ng-if="user.blogger.active">
                             <div flex="{{col1Width}}" class="col1">
                                 <div>
                                     Add profile credential
@@ -512,7 +518,7 @@
                                 
                             </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow" ng-if="user.blogger.active">
+                        <div layout="row" layout-align="start center" class="fieldRow" ng-if="user.blogger.active">
                             <div flex="{{col1Width}}" class="col1">
                                 <div>
                                     Add Facebook Profile
@@ -543,7 +549,7 @@
                             
                             </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start center" class="fieldRow">
                             <div flex="{{col1Width}}" class="col1">
                                 <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Preferences')">
                                     Next

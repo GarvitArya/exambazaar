@@ -12723,7 +12723,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("filledCollegesController", 
-        [ '$scope', '$http','$state', '$rootScope','thisuser','tofillcollegeService', 'filledColleges', 'ebteam', function($scope, $http, $state, $rootScope, thisuser, tofillcollegeService, filledColleges, ebteam){
+        [ '$scope', '$http','$state', '$rootScope','thisuser','tofillcollegeService', 'filledColleges', 'ebteam', '$mdDialog', function($scope, $http, $state, $rootScope, thisuser, tofillcollegeService, filledColleges, ebteam, $mdDialog){
             $scope.user = thisuser.data;
             $scope.filledcolleges = filledColleges.data;
             $scope.allFilledcolleges = filledColleges.data;
@@ -12841,6 +12841,94 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }
                 });
             };
+            
+            $scope.showSummaryDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#summaryDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
+            
+            $scope.generateInternSummary = function(){
+                //Summary code starts here
+                var reportSummary = [];
+                var reportSummaryIds = []; 
+                 $scope.allFilledcolleges.forEach(function(thisFilledCollege, index){
+                     //console.log(thisFilledCollege);
+                     var user = thisFilledCollege.user;
+                     //console.log(user);
+                     var userName = null;
+                     if(user && user.basic.name){
+                         userName = user.basic.name;
+                     }
+                    var thisDateString = moment(thisFilledCollege._created).format("DD-MMM-YYYY");
+
+                    var thisIndex = -1;
+                    for(var i = 0; i < reportSummary.length; i++) {
+                        if (reportSummary[i].userName == userName && reportSummary[i].dateString == thisDateString) {
+                            thisIndex = i;
+                        }
+                    }
+                    var thisCount = 0;
+                    if(thisFilledCollege.active == false){
+                        thisCount = 1;
+                    }
+                    if(thisIndex != -1){
+                        reportSummary[thisIndex].count += thisCount;
+                    }else{
+                        var newSummary = {
+
+                            userName: userName,
+                            dateString: thisDateString,
+                            count: thisCount,
+                        };
+                        reportSummary.push(newSummary);
+                    }
+
+                });
+                var uniqueDateStrings = [];
+                var uniqueUserNames = [];
+                var finalSummary = {};
+
+                 reportSummary.forEach(function(thisElement, index){
+                    if(uniqueDateStrings.indexOf(thisElement.dateString) == -1){
+
+                        uniqueDateStrings.push(thisElement.dateString);
+                    }
+                });
+                reportSummary.forEach(function(thisElement, index){
+                    if(uniqueUserNames.indexOf(thisElement.userName) == -1){
+                        uniqueUserNames.push(thisElement.userName);
+                    }
+                });
+                 uniqueDateStrings.forEach(function(thisElement, index){
+                    uniqueUserNames.forEach(function(thisSubElement, sindex){
+                        finalSummary[thisElement] = {};
+                        finalSummary[thisElement][thisSubElement] = 0;
+
+                    });
+                });
+                reportSummary.forEach(function(thisElement, index){
+                    finalSummary[thisElement.dateString][thisElement.userName] = thisElement.count;
+                });
+                var summaryStrings = [];
+                for (var property in finalSummary) {
+                    var newString = "";
+                    newString += "Date: " +property + " | ";
+                    for (var property2 in finalSummary[property]) {
+                        newString += property2 +": " + finalSummary[property][property2] + " | ";
+                    }
+                    summaryStrings.push(newString);
+                }
+                $scope.summaryStrings = summaryStrings;
+                console.log(summaryStrings);
+                //Summary code ends here    
+            };
+            $scope.generateInternSummary();
     }]);
         
     exambazaar.controller("addedQuestionsController", 
@@ -13224,7 +13312,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var city = $rootScope.reviewCity;
                 var institute = $rootScope.reviewInstitute;
                 
-                $state.go('showGroup', {categoryName: stream.name, subCategoryName: exam.name, cityName: city, groupName: institute.groupName});
+                $state.go('showGroup', {categoryName: stream.name, subCategoryName: exam.name, cityName: city, groupName: institute.groupName,'#': 'Reviews'});
             };
             $rootScope.pageTitle ='Write a Review | Exambazaar';
             
@@ -36063,8 +36151,8 @@ function getLatLng(thisData) {
                     
                     $scope.email.instituteId = $scope.provider._id;
                     $scope.email.logo = $scope.provider.logo;
-                    $scope.email.subject = $scope.provider.name + " - Get started with Exambazaar!";
-                    //$scope.email.subject = $scope.provider.name + " - You are the expert! Would you write with us?";
+                    $scope.email.subject = //$scope.provider.name + " - Get started with Exambazaar!";
+                    $scope.email.subject = $scope.provider.name + " - You are the expert! Would you write with us?";
                 }
                 }).error(function (data, status, header, config) {
                     console.log("Error ");

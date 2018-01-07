@@ -57,6 +57,13 @@
                 </md-select>
             </div>
         </div>
+        
+        <div layout="row" layout-align="center center" class="width100 marginTB10">
+            <md-button class="md-next md-small font10" ng-click="showSummaryDialog()" ng-if="summaryStrings && summaryStrings.length > 0">
+                Summary by Date
+            </md-button>
+        </div>
+        
         <div flex layout="row" layout-align="start center" class="width100 greyBottomBorder marginT20 font10 bold">
             <div flex="5">
                 S. No.
@@ -130,3 +137,23 @@
     <div id="spacer">
     </div>
 </div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="summaryDialog">
+      <md-dialog class="blog-dialog whiteBackground">
+          <div layout="column" layout-align="center center" class="width100 galleryDiv">
+            
+            <div layout="row" layout-align="center center" class="blogFont width100 paddingTB10 subhheadingBottomBorder2 ">
+                Summary
+            </div>
+
+            <div layout="column" layout-align="start start" class="width100 galleryDiv exact40vh padding20">
+                <div layout="row" layout-align="center center" ng-repeat="summary in summaryStrings" class="padding5">
+                    {{summary}}
+                </div>
+            </div>
+            
+        </div>  
+      </md-dialog>
+    </div>    
+</div> 
