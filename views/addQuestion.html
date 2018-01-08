@@ -371,7 +371,7 @@
             
             
         </div>
-        <div layout="column" layout-align="start start" class="width100 headingTopBorder2 paddingT20 marginT40" ng-if="fullScope">
+        <div layout="column" layout-align="start start" class="width100 headingTopBorder2 paddingT20 marginT40" >
             <div layout="column" layout-align="start start" class="width100 subBaseFont marginTB10 boxShadow padding10" >
                 <div layout="row" layout-align="start center" class="width100 marginTB10 padding10 font24 text-primary" ng-if="test.simulate.ready">
                     <i class="fa fa-check-circle font32" aria-hidden="true"></i>&nbsp;Ready to simulate!
@@ -393,7 +393,9 @@
 
                 </div>
                 
-                <div class="h3Font marginB20">Test Simulation Information</div>
+                
+                <div layout="column" layout-align="start start" ng-if="fullScope" class="width100 marginTB10">
+                <div class="h3Font marginB10">Test Simulation Information</div>
                 <div layout="row" layout-align="start center" class="width100 marginT10 padding10 assignBackground">
                     <div class="bold paddingR10" flex="40">
                     Total Number of Questions in the test
@@ -438,6 +440,7 @@
                     <md-button class="md-next md-small font10" ng-click="saveTest()">
                     Save Simulation Details
                     </md-button>
+                </div>
                 </div>
             </div>
         </div>
