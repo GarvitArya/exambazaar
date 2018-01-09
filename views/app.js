@@ -39355,7 +39355,9 @@ function getLatLng(thisData) {
                     function(upvoteService,$stateParams) {
                     return upvoteService.blogpostUpvoteCount($stateParams.blogpostSlug);
                 }],
-                
+                mediumEditor: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['mediumEditor'], {serie: true});
+                }],
                 
             }
         })
