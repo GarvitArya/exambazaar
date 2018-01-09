@@ -258,7 +258,7 @@
             <!--<li ng-if="sessionuser.userType=='Student'"><a ui-sref="k21">K21 Test</a></li>-->
         </ul>
         
-        <div hide-sm hide-xs layout="row" layout-align="start center" ng-if="!searchMode && headerShowOptions()">
+        <div hide-sm hide-xs hide-md layout="row" layout-align="start center" ng-if="!searchMode && headerShowOptions()">
             
             <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Partner'">
                 <li><a ui-sref="partner-dashboard({ userId:{{'sessionuser.userId'}} })">Home</a></li>
@@ -436,7 +436,7 @@
                 </div>
                 
             </ul>    
-            <ul hide-gt-sm flex class="nav navbar-nav" ng-controller="autocompleteController as ctrl">
+            <ul hide-gt-md flex class="nav navbar-nav" ng-controller="autocompleteController as ctrl">
                 <li ng-if="!showMobileSearch" ng-click="flipMobileSearch()">
                     <img src="images/icons/Hsearch.png" />
                 </li>

@@ -374,7 +374,21 @@
         <div layout="column" layout-align="start start" class="width100 headingTopBorder2 paddingT20 marginT40" >
             <div layout="column" layout-align="start start" class="width100 subBaseFont marginTB10 boxShadow padding10" >
                 <div layout="row" layout-align="start center" class="width100 marginTB10 padding10 font24 text-primary" ng-if="test.simulate.ready">
-                    <i class="fa fa-check-circle font32" aria-hidden="true"></i>&nbsp;Ready to simulate!
+                    <div class="paddingR20">
+                        <i class="fa fa-check-circle font32" aria-hidden="true"></i>&nbsp;Ready to simulate!
+                    </div>
+                    <div class="paddingL20">
+                        
+                        <md-button class="md-danger md-small font10" ng-click="manualMarkforEBSimulation()" ng-if="!test.simulationactive">
+                        Manually Mark for EB Simulation
+                        </md-button>
+                        <md-button class="md-next md-small font10" ng-click="manualUnmarkforEBSimulation()" ng-if="test.simulationactive">
+                        Manually Unmark for EB Simulation
+                        </md-button>
+                        <md-button class="md-danger md-small font10" ng-click="simulateNow()" ng-if="test.simulationactive">
+                        Simulate Now
+                        </md-button>
+                    </div>
                 </div>
                 <div layout="column" layout-align="start start" class="width100 marginTB10 padding10 assignBackground2" ng-if="test.simulate.comments.length > 0">
                     <div class="baseFont">Simulation Issues - Need Correction <span class="badge">{{test.simulate.comments.length}}</span>

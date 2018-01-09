@@ -2653,11 +2653,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("eligibilityController", 
         [ '$scope', '$http','$state', '$stateParams', '$rootScope', '$cookies', 'UserService', 'availDiscountService', 'EmailService', '$mdDialog', '$timeout', 'Notification', 'examList', 'streamList', 'eligibilityList', function($scope,$http,$state, $stateParams, $rootScope, $cookies, UserService, availDiscountService, EmailService, $mdDialog, $timeout, Notification, examList, streamList, eligibilityList){
-            $scope.col1Width = 40;
-            $scope.col1WidthAcademic = 20;
-            $scope.exams = examList.data;
-            $scope.streams = streamList.data;
-            $scope.eligibilityList = eligibilityList.data;
+        $scope.col1Width = 40;
+        $scope.col1WidthAcademic = 20;
+        $scope.exams = examList.data;
+        $scope.streams = streamList.data;
+        $scope.eligibilityList = eligibilityList.data;
             
         $scope.setPage = function(pageName){
              $scope.components.forEach(function(thisCategory, index){
@@ -2967,6 +2967,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     UserService.getEligibility($scope.user._id).success(function (data, status, headers) {
                         if(data && data.eligibility){
                             $scope.user.eligibility = data.eligibility;
+                            
+                            
                             Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
                             Notification.primary("Hurray! We have loaded your qualifications!");
                             $scope.sanitizeEligibility();
@@ -3143,6 +3145,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             ],
         };
         $scope.setGender = function(gender){
+            console.log(gender);
             if(!$scope.user.basic){
                 $scope.user.basic = {};
             }
@@ -3211,7 +3214,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
         };
             
-        $scope.sanitizeEligibility = function(eligibility){
+        $scope.sanitizeEligibility2 = function(eligibility){
             if(eligibility && eligibility.educationLevel){
                 var eLevel = eligibility.educationLevel.level;
                 if(eLevel == 0){
@@ -3249,7 +3252,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
             
             $scope.user.eligibility.educationLevel = educationLevel;
-            $scope.sanitizeEligibility($scope.user.eligibility);
+            $scope.sanitizeEligibility2($scope.user.eligibility);
             /*if($scope.user.eligibility.educationLevel.name == 'I-X'){
                 console.log('I am here');
                 $scope.components[0].subcategories = [];
@@ -3356,7 +3359,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             document.body.scrollTop = document.documentElement.scrollTop = 0;
         };    
         var checkEligibility = function(thisIndex){
-            //console.log($scope.elgInput);
+            //
             $scope.elgInput = $scope.user.eligibility;
             var error = false;
             var errorClass12Subjects = true;
@@ -3364,6 +3367,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             var errorPostGradMajor = true;
             var errorMessages = [];
             
+            //console.log($scope.user.eligibility);
+            if(!$scope.user.eligibility.category.general){
+                $scope.user.eligibility.category.general = true;
+            }
             if(!$scope.elgInput.age){
                 error = true;
                 errorMessages.push("Please select your age");
@@ -3450,7 +3457,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.elgVerified = true;    
                 $scope.validEligibilities = [];    
                 $scope.uniqueValidEligibilities = [];
-                var checkExamIds = ['58ad20045401f52440af6f24'];
+                //var checkExamIds = ['58ad20045401f52440af6f24'];
                 $scope.eligibilityList.forEach(function(thisEligibility, index){
                 
                 var checkCategory = thisEligibility.category.applicable;
@@ -3483,9 +3490,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if(checkAge){
                     if($scope.elgInput.age < thisEligibility.age.minage || $scope.elgInput.age > thisEligibility.age.maxage){
                         valid = false;
-                        if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
-                            //console.log(index + " " + valid + " " + thisEligibility._id);
-                        }
+                        /*if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
+                            console.log(index + " " + valid + " " + thisEligibility._id);
+                        }*/
                         //console.log(index + " " + valid + " " + thisEligibility._id);
                     }
                 }
@@ -3497,9 +3504,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.class12Subjects.forEach(function(thisItem, itemIndex){
                         if(thisEligibility.class12Subjects[thisItem.name] && !$scope.elgInput.class12Subjects[thisItem.name]){
                             valid = false;
-                            if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
+                            /*if(checkExamIds.indexOf(thisEligibility.exam._id) != -1){
                                 console.log(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
-                            }
+                            }*/
                             //console.log(index + " " + valid + " " + thisItem.name + " " + thisEligibility._id);
                         }
                     });
@@ -32093,6 +32100,19 @@ function getLatLng(thisData) {
                     $scope.test.instructions = [];
                 }
                 $scope.test.instructions.push('');
+            };
+            
+            $scope.manualMarkforEBSimulation = function(){
+                $scope.test.simulationactive = true;
+                $scope.saveTest();
+            };
+            $scope.manualUnmarkforEBSimulation = function(){
+                $scope.test.simulationactive = false;
+                $scope.saveTest();
+            };
+            $scope.simulateNow = function(){
+                var url = $state.href('takeassessment', {testId: $scope.test._id});
+                window.open(url,'_blank');
             };
             $scope.saveTest = function(){
                 
