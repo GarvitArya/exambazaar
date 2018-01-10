@@ -36058,7 +36058,7 @@ function getLatLng(thisData) {
             
     }]);    
     exambazaar.controller("sendEmailController", 
-        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'UserService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', function($scope,$http,$state,EmailService, targetStudyProviderService, UserService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope){
+        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'UserService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', 'Notification', function($scope,$http,$state,EmailService, targetStudyProviderService, UserService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope, Notification){
             $rootScope.pageTitle = "Send Emails via Sendgrid";
             $scope.emailService = function(){
                 targetStudyProviderService.emailService().success(function (data, status, headers) {
@@ -36111,7 +36111,7 @@ function getLatLng(thisData) {
             };
             $scope.email = {
                 to: '',
-                templateName: 'Claim CI Email - 28thNov2017',
+                templateName: '',
                 sender: '',
                 senderId: '',
                 from: '',
@@ -36154,11 +36154,14 @@ function getLatLng(thisData) {
                 },9000)
             };
             $scope.templateNames = [
-                /*'Survey Email - 11March2017',*/
-                'Claim CI Email - 28thNov2017',
+                
+                'CI Email - Claim Your Listing - 2018',
+                'CI Email - Write a Blog - 2018'
+                
+                /*'Survey Email - 11March2017',
                 'Claim CI Email - 7thNov2017',
                 'Claim CI Email - 5thApril2017',
-                'Follow Up 1 to CIs',
+                'Follow Up 1 to CIs',*/
             ];
             $scope.showLevel = 0;
             
@@ -36177,6 +36180,18 @@ function getLatLng(thisData) {
                     }
                 }
             }
+            $scope.$watch('email.templateName', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue != ''){
+                    
+                    if(newValue == 'CI Email - Claim Your Listing - 2018'){
+                        $scope.email.subject = $scope.provider.name + " - Get started with Exambazaar!";
+                    }
+                    if(newValue == 'CI Email - Write a Blog - 2018'){
+                        $scope.email.subject = $scope.provider.name + " - You are the expert! Would you write with us?";
+                    }
+                    //$scope.email.subject = $scope.provider.name + " - You are the expert! Would you write with us?";
+                }
+            });
             $scope.$watch('email.instituteId', function (newValue, oldValue, scope) {
             if(newValue != null && newValue != ''){
                 //console.log(newValue);
@@ -36235,8 +36250,7 @@ function getLatLng(thisData) {
                     
                     $scope.email.instituteId = $scope.provider._id;
                     $scope.email.logo = $scope.provider.logo;
-                    $scope.email.subject = $scope.provider.name + " - Get started with Exambazaar!";
-                    //$scope.email.subject = $scope.provider.name + " - You are the expert! Would you write with us?";
+                    
                 }
                 }).error(function (data, status, header, config) {
                     console.log("Error ");
@@ -36252,19 +36266,25 @@ function getLatLng(thisData) {
             
             $scope.sendEmail = function() {
                 console.log($scope.email);
-                EmailService.sendGrid($scope.email).success(function (data, status, headers) {
-                    var response = data;
-                    console.log(JSON.stringify(response));
-                    if(response.statusCode == '202'){
-                        $scope.showSentDialog();
-                    }else{
-                        $scope.showErrorDialog();
-                    }
-                    //alert(JSON.stringify(data));
-                })
-                .error(function (data, status, header, config) {
-                    console.log('Error ' + data + ' ' + status);
-                });  
+                
+                if($scope.email.templateName == ''){
+                    Notification.warning({message: "Select Email template to send!",  positionY: 'top', positionX: 'right', delay: 5000});
+                }else{
+                    EmailService.sendGrid($scope.email).success(function (data, status, headers) {
+                        var response = data;
+                        console.log(JSON.stringify(response));
+                        if(response.statusCode == '202'){
+                            $scope.showSentDialog();
+                        }else{
+                            $scope.showErrorDialog();
+                        }
+                        //alert(JSON.stringify(data));
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });  
+                }
+                
             };
             
             $scope.blogInvite = function() {

@@ -36,7 +36,7 @@
     <div layout="column" layout-margin layout-padding>
     <h4 class="text-primary md-title">Send Claim Email to Institutes</h4>
     <div class="col-md-12" id="addMasterForm" ng-if="showLevel > 5">
-        <md-button class="md-cancel md-small font10" ng-click="flipSendingMode()">
+        <!--<md-button class="md-cancel md-small font10" ng-click="flipSendingMode()">
             <span ng-if="sendingMode">Show History</span>
             <span ng-if="!sendingMode">New Email</span>
         </md-button>
@@ -52,7 +52,7 @@
         <md-button class="md-cancel md-small font10" ng-click="blogInvite()" ng-if="user.userType =='Master'">
             Blog Invite
         </md-button>
-        <!--<md-button class="md-cancel md-small font10" ng-click="groupWebsiteService()" ng-if="user.userType =='Master'">
+        <md-button class="md-cancel md-small font10" ng-click="groupWebsiteService()" ng-if="user.userType =='Master'">
             Group Website Service
         </md-button>-->
         <md-content flex layout-padding ng-show="sendingMode">
