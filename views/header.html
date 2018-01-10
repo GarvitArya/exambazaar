@@ -294,9 +294,17 @@
                 <li class="dropdown">
                   <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Database<!--<span class="caret"></span>--></a>
                   <ul class="dropdown-menu">
-                    <li><a ui-sref="addExam">Add Exam</a></li>
-                    <li><a ui-sref="addEligibility">Add Eligibility</a></li>
-                    <li><a ui-sref="addStream">Add Stream</a></li>
+                      
+                    <li class="menu-item dropdown dropdown-submenu">
+                    <a href="#">Exam Related</a>
+                    <ul class="dropdown-menu">
+                        <li><a ui-sref="addExam">Add Exam</a></li>
+                        <li><a ui-sref="addEligibility">Add Eligibility</a></li>
+                        <li><a ui-sref="addStream">Add Stream</a></li>
+
+                    </ul>
+                    </li>  
+                    
                     <li><a ui-sref="addLocation">Add Location</a></li>
                     <li><a ui-sref="addMediaTag">Add Media Tag</a></li>
                     <li><a ui-sref="addGroup">Add Group</a></li>
