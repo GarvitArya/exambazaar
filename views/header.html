@@ -51,51 +51,52 @@
     
     
     .dropdown-submenu {
-    position:relative;
-}
-.dropdown-submenu>.dropdown-menu {
-    top:0;
-    left:100%;
-    margin-top:-6px;
-    margin-left:-1px;
-    -webkit-border-radius:0 6px 6px 6px;
-    -moz-border-radius:0 6px 6px 6px;
-    border-radius:0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-    display:block;
-}
-.dropdown-submenu>a:after {
-    display:block;
-    content:" ";
-    float:right;
-    width:0;
-    height:0;
-    border-color:transparent;
-    border-style:solid;
-    border-width:5px 0 5px 5px;
-    border-left-color:#cccccc;
-    margin-top:5px;
-    margin-right:-10px;
-}
-.dropdown-submenu:hover>a:after {
-    border-left-color:#ffffff;
-}
-.dropdown-submenu.pull-left {
-    float:none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-    left:-100%;
-    margin-left:10px;
-    -webkit-border-radius:6px 0 6px 6px;
-    -moz-border-radius:6px 0 6px 6px;
-    border-radius:6px 0 6px 6px;
-}
-.scrollable-menu {
-    height: auto;
-    max-height: 500px;
-    overflow-x: hidden;
-}    
+        position:relative;
+        /*background: #f6f6f6;*/
+    }
+    .dropdown-submenu>.dropdown-menu {
+        top:0;
+        left:100%;
+        margin-top:-6px;
+        margin-left:-1px;
+        -webkit-border-radius:0 6px 6px 6px;
+        -moz-border-radius:0 6px 6px 6px;
+        border-radius:0 6px 6px 6px;
+    }
+    .dropdown-submenu:hover>.dropdown-menu {
+        display:block;
+    }
+    .dropdown-submenu>a:after {
+        display:block;
+        content:" ";
+        float:right;
+        width:0;
+        height:0;
+        border-color:transparent;
+        border-style:solid;
+        border-width:5px 0 5px 5px;
+        border-left-color:#cccccc;
+        margin-top:5px;
+        margin-right:-10px;
+    }
+    .dropdown-submenu:hover>a:after {
+        border-left-color:#ffffff;
+    }
+    .dropdown-submenu.pull-left {
+        float:none;
+    }
+    .dropdown-submenu.pull-left>.dropdown-menu {
+        left:-100%;
+        margin-left:10px;
+        -webkit-border-radius:6px 0 6px 6px;
+        -moz-border-radius:6px 0 6px 6px;
+        border-radius:6px 0 6px 6px;
+    }
+    .scrollable-menu {
+        height: auto;
+        max-height: 500px;
+        overflow-x: hidden;
+    }    
 </style>
 
 <nav class="navbar navbar-default navbar-fixed-top nav-justified secondFont font14 spacedLetter09" role="navigation" id="mainNav" ng-class="headerBackgroundCSS()" ng-if="!maintenance">
@@ -172,7 +173,7 @@
             </li>
            
             <li class="dropdown">
-                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Exams</a>
+                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Exams<!--<span class="caret"></span>--></a>
                   <ul class="dropdown-menu">
                     <li >
                         <a ui-sref="eligibility">
@@ -271,11 +272,11 @@
                 <!--
                 <li><a ng-click="sendWelcomeEmail()">Send Welcome Email</a></li>-->
                 <li class="dropdown">
-                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sandbox<!--<span class="caret"></span>--></a>
+                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports<!--<span class="caret"></span>--></a>
                   <ul class="dropdown-menu">
                     
                     <li class="menu-item dropdown dropdown-submenu">
-                    <a href="#">Reports</a>
+                    <a href="#">EB Reports</a>
                     <ul class="dropdown-menu">
                         <li><a ui-sref="charting">Charting</a></li>
                         <li><a ui-sref="allreviews">All Reviews</a></li>
@@ -288,9 +289,23 @@
                         <li><a ui-sref="extractEmails">Extract Emails</a></li>
                     </ul>
                     </li>
+                    <li class="menu-item dropdown dropdown-submenu">
+                    <a href="#">Intern Reports</a>
+                    <ul class="dropdown-menu">
+                        <li><a ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })">Added Institutes</a></li>
+                        <li><a ui-sref="addedQuestions({ userId:{{'sessionuser.userId'}} })">Added Questions</a></li>
+                        <li><a ui-sref="assigned">FCI Report</a></li>
+                        <li><a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">FC Report (colleges)</a></li>
+                        <li><a ui-sref="colleges">Colleges</a></li>
+                        
+                        
+                        
+                        
+                    </ul>
+                    </li>  
                     
-                    <li><a ui-sref="search">Quick Search</a></li>
-                    <!--<li><a ui-sref="sandbox2({ masterId:{{'sessionuser.userId'}}, cityName:'New Delhi' } )">Show on Map</a></li>
+                    <!--<li><a ui-sref="search">Quick Search</a></li>
+                    <li><a ui-sref="sandbox2({ masterId:{{'sessionuser.userId'}}, cityName:'New Delhi' } )">Show on Map</a></li>
                     <li><a ui-sref="eligibility">Eligibility</a></li>
                     <li><a ui-sref="socialLogin">Social Login</a></li>
                     
@@ -306,7 +321,8 @@
                 <li class="dropdown">
                   <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Database<!--<span class="caret"></span>--></a>
                   <ul class="dropdown-menu">
-                      
+                    <li><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
+                    <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
                     <li class="menu-item dropdown dropdown-submenu">
                     <a href="#">Exam Related</a>
                     <ul class="dropdown-menu">
@@ -315,11 +331,22 @@
                         <li><a ui-sref="addStream">Add Stream</a></li>
 
                     </ul>
-                    </li>  
+                    </li>
+                      
+                      
                     
                     <li class="menu-item dropdown dropdown-submenu">
                     <a href="#">Coaching Related</a>
                     <ul class="dropdown-menu">
+                        
+                        <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Default Dataset</a></li>
+                        <li><a ui-sref="coachingGroupSummary">Coaching Group Summary</a></li>
+                        <li><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
+                        
+                        
+                        <li><a ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a></li>
+                        
+                        <li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>
                         <li><a ui-sref="addLocation">Add Location</a></li>
                         <li><a ui-sref="addMediaTag">Add Media Tag</a></li>
                         <li><a ui-sref="addGroup">Add Group</a></li>
@@ -343,6 +370,7 @@
                     <li class="menu-item dropdown dropdown-submenu">
                     <a href="#">Other</a>
                     <ul class="dropdown-menu">
+                        <li><a ui-sref="addOffer({ userId:{{'sessionuser.userId'}} })">Add Offers</a></li>
                         <li><a ui-sref="addSubscriber">Add Subscriber</a></li>
                         <li><a ui-sref="checkLogo({ userId:{{'sessionuser.userId'}}, pageNumber:'1' } )">Check Logos</a></li>
                     </ul>
@@ -385,23 +413,7 @@
                     
                   </ul>
                 </li>
-                <li class="dropdown">
-                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<!--<span class="caret"></span>--></a>
-                  <ul class="dropdown-menu">
-                    <li><a ui-sref="colleges">Colleges</a></li>
-                    <li><a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">To fill Colleges</a></li>
-                    <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Default Dataset</a></li>
-                    <li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>
-                    <li><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
-                    <li><a ui-sref="addOffer({ userId:{{'sessionuser.userId'}} })">Add Offers</a></li>
-                    <li><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
-                    <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
-                    <li><a ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a></li>
-                    <li><a ui-sref="coachingGroupSummary">Coaching Group Summary</a></li>
-                    <li><a ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })">Added Institutes</a></li>
-                    <li><a ui-sref="addedQuestions({ userId:{{'sessionuser.userId'}} })">Added Questions</a></li>
-                  </ul>
-                </li>
+                
             </ul>
 
             <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Intern - Business Development'">
