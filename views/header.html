@@ -283,7 +283,7 @@
                         <li><a ui-sref="allOffers">All Offers</a></li>
                         
                         <li><a ui-sref="scheduleQAD({ userId:{{'sessionuser.userId'}} })">QAD</a></li>
-                        <li><a ui-sref="activeUsers({ userId:{{'sessionuser.userId'}} })">Active Users</a></li>
+                        
                         <li><a ui-sref="contacts">Contacts</a></li>
                         <li><a ui-sref="extractEmails">Extract Emails</a></li>
                     </ul>
@@ -365,15 +365,23 @@
                     </ul>
                     </li>  
                       
+                    <li class="menu-item dropdown dropdown-submenu">
+                    <a href="#">User Related</a>
+                    <ul class="dropdown-menu">
+                        <li><a ui-sref="manageUsers({ masterId:{{'sessionuser.userId'}} })">Manage Users</a></li>
+                        <li><a ui-sref="userSurvey({ userId:{{'sessionuser.userId'}} })">User Survey</a></li>
+                        <li><a ui-sref="activeUsers({ userId:{{'sessionuser.userId'}} })">Active Users</a></li>
+                        <li><a ui-sref="userMarketing({ userId:{{'sessionuser.userId'}} })">User Marketing</a></li>
+                        <li><a ui-sref="addIntern({ userId:{{'sessionuser.userId'}} })">Add Intern User</a></li>
+                        <li><a ui-sref="addMaster({ masterId:{{'sessionuser.userId'}} })">Add Master User</a></li>
+
+                    </ul>
+                    </li>  
+                      
                     
-                      
-                      
-                    <li><a ui-sref="userSurvey({ userId:{{'sessionuser.userId'}} })">User Survey</a></li>
-                    <li><a ui-sref="userMarketing({ userId:{{'sessionuser.userId'}} })">User Marketing</a></li>
-                    <li><a ui-sref="addMaster({ masterId:{{'sessionuser.userId'}} })">Add Master User</a></li>
-                    <li><a ui-sref="manageUsers({ masterId:{{'sessionuser.userId'}} })">Manage Users</a></li>
-                    <li><a ui-sref="addIntern({ userId:{{'sessionuser.userId'}} })">Add Intern User</a></li>
-                    <li><a ui-sref="group({ userId:{{'sessionuser.userId'}} })">Group</a></li>
+                    
+                    
+                    <!--<li><a ui-sref="group({ userId:{{'sessionuser.userId'}} })">Group</a></li>-->
                     
                   </ul>
                 </li>

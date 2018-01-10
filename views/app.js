@@ -537,6 +537,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             return $http.get('/api/availDiscounts/edit/'+availDiscountId, {availDiscountId: availDiscountId});
         };
     }]);
+    exambazaar.service('qmarkforreviewService', ['$http', function($http) {
+        this.saveQMarkforReview = function(qmarkforreview) {
+            return $http.post('/api/qmarkforreviews/save', qmarkforreview);
+        };
+        this.getUserQMarkforReviews = function(userId) {
+            
+            return $http.get('/api/qmarkforreviews/user/'+userId, {userId: userId});
+        };
+        this.removeQMarkforReview = function(qmarkforreviewId) {
+            return $http.get('/api/qmarkforreviews/remove/'+qmarkforreviewId, {qmarkforreviewId: qmarkforreviewId});
+        };
+    }]);
     exambazaar.service('questionresponseService', ['$http', function($http) {
         this.saveQuestionResponse = function(questionresponse) {
             return $http.post('/api/questionresponses/save', questionresponse);
@@ -16421,7 +16433,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     
-    exambazaar.controller("careertestController", 
+    /*exambazaar.controller("careertestController", 
     [ '$scope', '$state', '$stateParams', 'screenSize', function($scope, $state, $stateParams, screenSize ){
         
             
@@ -16446,9 +16458,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
 
             
-    }]);   
+    }]);  */ 
     exambazaar.controller("takeassessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
         
             $scope.assessmentInfo = {
                 name: '',
@@ -16494,6 +16506,51 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             $scope.examQuestions = [];
             $scope.answered = 0;
+        
+            var getUserQMarkForReview = function(){
+                if($scope.user._id){
+                qmarkforreviewService.getUserQMarkforReviews($scope.user._id).success(function (data, status, headers) {
+
+                $scope.userQMarkForReview = data;
+                var userQMarkForReviewSubQuestionIds = $scope.userQMarkForReview.map(function(a) {return a.subquestion.toString();});
+                
+                if($scope.userQMarkForReview){
+                    $scope.marked = 0;
+                    $scope.testQuestions.forEach(function(thisQuestion, index){
+
+                        var markforreview = false;
+                        
+                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                            var submarkforreview = false;
+                            var thisSubQuestionId = thisSubQuestion._id.toString();
+                            
+                            var qIndex = userQMarkForReviewSubQuestionIds.indexOf(thisSubQuestionId);
+
+                            if(qIndex != -1){
+                                
+                                submarkforreview = true;
+                                markforreview = true;
+                                
+                                $scope.marked += 1;
+
+                            }else{
+                                
+                            }
+                            thisSubQuestion.markforreview = submarkforreview;
+                        });
+                        thisQuestion.markforreview = markforreview;
+                    });
+
+                    
+                }
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+                }
+
+            };
             var getUserResponses = function(){
                 if($scope.user._id){
                 questionresponseService.getUserQuestionResponses($scope.user._id).success(function (data, status, headers) {
@@ -16597,6 +16654,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     question.anyAnswer = true;
                     Notification.primary({message: "Your answer has been marked!",  positionY: 'top', positionX: 'left', delay: 2000});
                     getUserResponses();
+                    getUserQMarkForReview();
 
                 })
                 .error(function (data, status, header, config) {
@@ -16622,7 +16680,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                                 question.anyAnswer = true;
                                 Notification.primary({message: "Your answer has been marked!",  positionY: 'top', positionX: 'left', delay: 2000});
                                 getUserResponses();
-
+                                getUserQMarkForReview();
                             })
                             .error(function (data, status, header, config) {
                                 Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
@@ -16745,7 +16803,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             $scope.testStarted = false;
                         }
                         getUserResponses();
-
+                        getUserQMarkForReview();
 
                     })
                     .error(function (data, status, header, config) {
@@ -16805,7 +16863,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         $scope.testStarted = false;
                     }
                     getUserResponses();
-
+                    getUserQMarkForReview();
 
 
                 })
@@ -16867,10 +16925,47 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
                 }
             }, true);
+            //qmarkforreviewService abcd
+            $scope.markQuestionForReview = function(question, subquestion){
+                var qmarkforreviewForm = {
+                    user: $scope.user._id,
+                    question: question._id,
+                    subquestion: subquestion._id,
+                };
 
-
-
+                qmarkforreviewService.saveQMarkforReview(qmarkforreviewForm).success(function (data, status, headers) {
+                    question.markforreview = true;
+                    Notification.primary({message: "Your question has been marked for review!",  positionY: 'top', positionX: 'left', delay: 2000});
+                    //getUserResponses();
+                    getUserQMarkForReview();
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
             
+            $scope.clearQuestionMarkForReview = function(subquestion){
+                
+                var userQMarkForReviewSubQuestionIds = $scope.userQMarkForReview.map(function(a) {return a.subquestion.toString();});
+
+                var subquestionId = subquestion._id;
+                var uIndex = userQMarkForReviewSubQuestionIds.indexOf(subquestionId);
+                if(uIndex != -1){
+                    var thisUserQMarkForReview = $scope.userQMarkForReview[uIndex];
+                    qmarkforreviewService.removeQMarkforReview(thisUserQMarkForReview._id).success(function (data, status, headers) {
+                        Notification.success({message: "Your question has been unmarked from review!",  positionY: 'top', positionX: 'left', delay: 2000});
+                        getUserQMarkForReview();
+
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+
+                }
+            };
+        
             $scope.clearAnswer = function(subquestion){
                 if(subquestion.type =='numerical'){
                     subquestion.userNumericalAnswer = null;
@@ -38678,7 +38773,7 @@ function getLatLng(thisData) {
                      return $ocLazyLoad.load(['angularTimer'], {serie: true});
                 }],
             }
-        })*/
+        })
         .state('careertest', {
             url: '/career/:domainName',
             views: {
@@ -38694,7 +38789,7 @@ function getLatLng(thisData) {
                     templateUrl: 'footer.html'
                 }
             },
-        })
+        })*/
         .state('takeassessment', {
             url: '/takeassessment/:testId',
             views: {

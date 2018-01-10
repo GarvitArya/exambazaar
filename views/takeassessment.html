@@ -99,7 +99,7 @@
         
     }
     .emptyTag{
-        width:50px;
+        width:70px;
         height:30px;
         color: gray;
         background: white;
@@ -112,14 +112,14 @@
     }
     
     .answeredTag{
-        width:50px;
+        width:70px;
         height:30px;
         color: black;
         background: #20C39A;
         border: 1px solid black;
     }
     .activeTag{
-        width:50px;
+        width:70px;
         height:30px;
         color: white;
         background: #009EE3;
@@ -264,11 +264,18 @@
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="" ng-if="!testOver && testStarted">
         
-        <div flex="25" layout="column" layout-align="start start"  class="height100 leftBar">
-            <div layout="row" layout-align="start start" class="width100"  layout-wrap>
-                <div flex="20" layout="row" layout-align="center center" ng-repeat="myquestion in testQuestions" class="paddingTB5" >
+        <div flex="30" layout="column" layout-align="start start"  class="height100 leftBar">
+            <div layout="row" layout-align="start start" class="width100 smallFont"  layout-wrap>
+                
+                <div flex="25" layout="row" layout-align="center center" ng-repeat="myquestion in testQuestions" class="paddingTB5" >
                     <span class="emptyTag" layout="row" layout-align="center center" ng-class="{ answeredTag: myquestion.anyAnswer, activeTag: myquestion._id == question._id}" ng-click="setQuestion(myquestion)">
                     {{myquestion._startnumber}}<span ng-if="myquestion._endnumber">&nbsp;-&nbsp;{{myquestion._endnumber}}</span>
+                        
+                    <span class="marginL5">
+                        
+                        <i class="fa fa-star textBlack" aria-hidden="true" ng-if="myquestion.markforreview"></i>
+                        <i class="fa fa-star-o" aria-hidden="true" ng-if="!myquestion.markforreview"></i>
+                    </span>    
                     </span>
 
 
@@ -276,11 +283,13 @@
             </div>
             <div layout="row" layout-align="center center" class="width100 textGray marginT20 font12">
                 {{answered}} out of {{totalQuestions}} attempted
-                
+            </div>
+            <div layout="row" layout-align="center center" class="width100 textGray marginT20 font12">
+                <i class="fa fa-star textBlack" aria-hidden="true"></i>&nbsp;{{marked}} out of {{totalQuestions}} marked for review
             </div>
         </div>
-        <div flex layout="row" layout-align="center center" class="paddingLR20">
-            <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
+        <div flex layout="row" layout-align="center center" class="paddingL20">
+            <div layout="row" layout-align="start start" class="width100">
             <div layout="column" layout-align="start start" class="width100 min100vh" flex>
                 
                 <div layout="column" layout-align="center start" class="width100" >
@@ -346,9 +355,20 @@
                             </div>
                             
                             <div flex layout="row" layout-align="center center" class="width100">
-                                <md-button class="md-signup md-large tolowercase margin0 nextButton" ng-click="clearAnswer(thisQuestion)" ng-disabled="!thisQuestion.userAnswer && !thisQuestion.userNumericalAnswer">
-                                    Clear your response
-                                </md-button>
+                                <div class="paddingLR5">
+                                    <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="markQuestionForReview(question, thisQuestion)" ng-if="!thisQuestion.markforreview">
+                                        Mark for Review
+                                    </md-button>
+                                    <md-button class="md-next md-large tolowercase margin0 nextButton" ng-click="clearQuestionMarkForReview(thisQuestion)" ng-if="thisQuestion.markforreview">
+                                        Unmark from Review
+                                    </md-button>
+                                </div>
+                                <div class="paddingLR5">
+                                    <md-button class="md-signup md-large tolowercase margin0 nextButton" ng-click="clearAnswer(thisQuestion)" ng-disabled="!thisQuestion.userAnswer && !thisQuestion.userNumericalAnswer">
+                                        Clear your response
+                                    </md-button>
+                                </div>
+                                
                                 
                             </div>
                             
