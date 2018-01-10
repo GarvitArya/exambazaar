@@ -48,7 +48,68 @@ router.post('/save', function(req, res) {
     });
 });
 
+router.post('/customMarking', function(req, res) {
+    var customMarkingForm = req.body;
+    var testId = customMarkingForm.testId;
+    var customMarking = customMarkingForm.customMarking;
+    
+    var existingTest = test.findOne({ '_id': testId },function (err, existingTest) {
+        
+        if(existingTest){
+            
+            var testQuestions = question
+                .find({test: testId}, {questions: 1})
+                .deepPopulate('questions')
+                .exec(function (err, testQuestions) {
+                var valid = true;
+                
+                if(testQuestions && testQuestions.length > 0){
+                var nQuestions = 0;
+                var counter = 0;
 
+                testQuestions.forEach(function(thisQuestion, qIndex){
+                    nQuestions += thisQuestion.questions.length;
+                });
+                
+                
+                testQuestions.forEach(function(thisQuestion, qIndex){
+                var questionId = thisQuestion._id;
+                thisQuestion.questions.forEach(function(subQuestion, sIndex){
+                    subQuestion.marking = customMarking;
+                    
+                    thisQuestion.save(function(err, thisQuestion) {
+                        if (err) return console.error(err);
+
+                        console.log(question._id + " saved!");
+                        
+                        counter += 1;
+                        if(counter == nQuestions){
+                            res.json(true);
+                        }
+                    });
+                    
+                    
+                });
+
+                    
+                    
+                });
+
+
+
+                }else{
+                    
+                    res.json(false);
+                }     
+            });
+            
+            
+            
+        }else{
+            res.json(false);
+        }
+    });
+});
 
 //to get all tests
 router.get('/', function(req, res) {
@@ -109,20 +170,20 @@ router.post('/markSimulate', function(req, res) {
                 
                 var counter = 0;
 
-                testQuestions.forEach(function(thisQuesiton, qIndex){
-                    nQuestions += thisQuesiton.questions.length;
+                testQuestions.forEach(function(thisQuestion, qIndex){
+                    nQuestions += thisQuestion.questions.length;
                 });
                 
                 
-                testQuestions.forEach(function(thisQuesiton, qIndex){
-                var questionId = thisQuesiton._id;
-                thisQuesiton.questions.forEach(function(subQuestion, sIndex){
+                testQuestions.forEach(function(thisQuestion, qIndex){
+                var questionId = thisQuestion._id;
+                thisQuestion.questions.forEach(function(subQuestion, sIndex){
                     var subScore = 3;
                     if(subQuestion.marking.correct){
                         subScore = Number(subQuestion.marking.correct);
                     }
                     maxScore += subScore;
-                    var qno = Number(thisQuesiton._startnumber) + sIndex;
+                    var qno = Number(thisQuestion._startnumber) + sIndex;
                     var subQuestionId = subQuestion._id;
                     var correctOptionId = null;
                     if(subQuestion.question.length < 10 ){
@@ -291,20 +352,20 @@ router.post('/markSimulate', function(req, res) {
 
                     var counter = 0;
 
-                    testQuestions.forEach(function(thisQuesiton, qIndex){
-                        nQuestions += thisQuesiton.questions.length;
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                        nQuestions += thisQuestion.questions.length;
                     });
 
 
-                    testQuestions.forEach(function(thisQuesiton, qIndex){
-                    var questionId = thisQuesiton._id;
-                    thisQuesiton.questions.forEach(function(subQuestion, sIndex){
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                    var questionId = thisQuestion._id;
+                    thisQuestion.questions.forEach(function(subQuestion, sIndex){
                         var subScore = 3;
                         if(subQuestion.marking.correct){
                             subScore = Number(subQuestion.marking.correct);
                         }
                         maxScore += subScore;
-                        var qno = Number(thisQuesiton._startnumber) + sIndex;
+                        var qno = Number(thisQuestion._startnumber) + sIndex;
                         var subQuestionId = subQuestion._id;
                         var correctOptionId = null;
                         if(subQuestion.question.length < 10 ){

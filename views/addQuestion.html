@@ -448,6 +448,10 @@
                 
                 
                 <div layout="row" layout-align="end center" class="width100 marginT20">
+                    <md-button class="md-green2 md-small font10" ng-click="showCustomMarkingDialog()">
+                    Custom Marking
+                    </md-button>
+                    
                     <md-button class="md-danger md-small font10" ng-click="markSimulate()">
                     Check Simulation Readiness
                     </md-button>
@@ -516,4 +520,30 @@
           </div>
       </md-dialog>
     </div>    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="customMarkingDialog">
+      <md-dialog class="blog-dialog whiteBackground padding20">
+        <div layout="row" layout-align="start start" class="width100 padding10 min20vh">
+            <div flex="40">
+                Set marking for all questions
+            </div>
+            <div flex layout="row" layout-align="start start">
+                <div flex class="paddingLR10">
+                    <input type="number" class="width100 text-primary" ng-model="customMarking.correct"  placeholder="Marks for correct answer">
+                </div>
+                <div flex class="paddingLR10">
+                    <input type="number" class="width100  danger" ng-model="customMarking.incorrect"  placeholder="Marks for incorrect answer">
+                </div>
+            </div>
+        </div>
+          <div layout="row" layout-align="center center" class="width100 padding10 min20vh">
+              <md-button class="md-danger md-small font10" ng-click="setCustomMarkingForAll()">
+                Set Custom Marking for all questions
+                </md-button>
+              
+          </div>
+      </md-dialog>
+</div>    
 </div>

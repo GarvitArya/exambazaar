@@ -641,6 +641,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveTest = function(test) {
             return $http.post('/api/tests/save', test);
         };
+        this.customMarking = function(customMarkingForm) {
+            return $http.post('/api/tests/customMarking', customMarkingForm);
+        };
         
         this.getk21Test = function() {
             return $http.get('/api/tests/k21');
@@ -13883,11 +13886,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
             };
             $scope.updateAssignedTo = function(intern){
+                console.log(intern);
                 $scope.assignedTo = intern;
             };
             
             $scope.assignAll = function(){
-                
+                console.log();
                 if(!$scope.assignedTo){
                     Notification.warning({message: "Select an Intern to assign to!",  positionY: 'top', positionX: 'right', delay: 1000});
                 }else if(!$scope.deadline){
@@ -31955,6 +31959,8 @@ function getLatLng(thisData) {
     exambazaar.controller("addQuestionController", 
         [ '$scope', 'Notification', '$rootScope', 'thisTest', 'Upload', 'ImageService', 'questionService', 'testService', '$state', '$mdDialog', '$timeout', 'thisTestQuestions', '$cookies', function($scope, Notification, $rootScope, thisTest, Upload, ImageService, questionService, testService, $state, $mdDialog, $timeout, thisTestQuestions, $cookies){
             $scope.fullScope = false;
+            $scope.test = thisTest.data;
+            $scope.thisTestQuestions = thisTestQuestions.data;
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
                 
@@ -31965,6 +31971,65 @@ function getLatLng(thisData) {
             }else{
                 //$rootScope.$emit("CallBlogLogin", {});
             }
+            
+            $scope.customMarking = {
+                correct: '',
+                incorrect: ''
+            };
+            $scope.showCustomMarkingDialog = function(ev){
+                $mdDialog.show({
+                  contentElement: '#customMarkingDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });    
+            };
+            
+            $scope.setCustomMarkingForAll = function(){
+                var valid = true;
+                if($scope.customMarking.correct == ''){
+                    valid = false;
+                }
+                if($scope.customMarking.incorrect == '' && $scope.customMarking.incorrect != 0){
+                    valid = false;
+                }
+                if($scope.customMarking.incorrect > 0){
+                    valid = false;
+                    Notification.warning({message: "The marks for incorrect answer should be NEGATIVE!",  positionY: 'top', positionX: 'right', delay: 5000});
+                }
+                if($scope.customMarking.correct < 0){
+                    valid = false;
+                    Notification.warning({message: "The marks for correct answer should be POSITIVE!",  positionY: 'top', positionX: 'right', delay: 5000});
+                }
+                if($scope.customMarking.correct + $scope.customMarking.incorrect < 0){
+                    valid = false;
+                    Notification.warning({message: "The NEGATIVE marks for incorrect answer cannot be greater than POSITIVE marks for correct answer!",  positionY: 'top', positionX: 'right', delay: 10000});
+                }
+                
+                if(!valid){
+                    Notification.warning({message: "Your custom marking scheme does not fit the requirements at EB!",  positionY: 'top', positionX: 'right', delay: 5000});
+                }else{
+                    var customMarkingForm = {
+                        testId: $scope.test._id,
+                        customMarking: $scope.customMarking
+                    };
+                    
+                    testService.customMarking(customMarkingForm).success(function (data, status, headers) {
+                        if(data){
+                            Notification.success({message: "Custom marking synched!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        }else{
+                            Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        }
+                        
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                    console.log(customMarkingForm);
+                }
+                
+                
+            };
             
             $scope.numericalAnswerTypes = [
                 {
@@ -31977,13 +32042,14 @@ function getLatLng(thisData) {
                 },
                                           
             ];
-            $scope.test = thisTest.data;
-            $scope.thisTestQuestions = thisTestQuestions.data;
+            
             
             $scope.sortQuestions = function(){
                 $scope.thisTestQuestions.forEach(function(thisQuestion, index){
                     thisQuestion._startnumber = parseInt(thisQuestion._startnumber);
                     thisQuestion._endnumber = parseInt(thisQuestion._endnumber);
+                    
+                    
                 });    
             };
             $scope.sortQuestions();
@@ -32048,7 +32114,6 @@ function getLatLng(thisData) {
                 var qnos = [];
                 var startNumbers = $scope.thisTestQuestions.map(function(a) {return a._startnumber;});
                 qnos = find_duplicate_in_array(startNumbers);
-                console.log(qnos);
                 $scope.repeatQuestions = qnos;
                 
             };
