@@ -68,19 +68,7 @@
             </div>
             <form name="emailForm" >
             <div layout="column" >
-                <div layout="row">
-                    <md-input-container class="width50 text-primary">
-                      <md-select ng-model="email.templateName"  placeholder="Select Template" required>
-
-                        <md-option ng-value="templateName" ng-repeat="templateName in templateNames" class="text-primary" >
-                            <!--ng-click="update(mobile)"-->
-                          {{templateName}}
-                        </md-option>
-                      </md-select>
-                    </md-input-container>
-                    
-                    
-                </div>
+                
                 <div layout="row">
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>From</label>
@@ -106,13 +94,26 @@
                         <input required ng-model="email.instituteName" disabled>
                     </md-input-container>
                 </div>
-                <div layout="row" class="marginTB5">
+                <div layout="row" ng-show="email.instituteId != ''">
+                    <md-input-container class="width50 text-primary bold">
+                      <md-select ng-model="email.templateName"  placeholder="Select Template" required>
+
+                        <md-option ng-value="templateName" ng-repeat="templateName in templateNames" class="text-primary" >
+                            <!--ng-click="update(mobile)"-->
+                          {{templateName}}
+                        </md-option>
+                      </md-select>
+                    </md-input-container>
+                    
+                    
+                </div>
+                <div layout="row" class="marginTB5" layout-wrap ng-show="email.instituteId != ''">
                     <span ng-repeat="email in provider.email" ng-click="setEmail(email)">
                         <span class="badge">{{email}}</span>&nbsp;&nbsp;
                     </span>
                    
                 </div>
-                <div layout="row">
+                <div layout="row" ng-show="email.instituteId != ''">
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>To</label>
                         <input required ng-model="email.to">
@@ -122,7 +123,7 @@
                         <input required ng-model="email.subject">
                     </md-input-container>
                 </div>
-                <div layout="column" layout-align="center center">
+                <div layout="column" layout-align="center center" ng-show="email.instituteId != ''">
                     <span class="secondFont bold">Earlier Emails Sent</span>
                     <div class="font8" ng-repeat="email in emailSent | orderBy:'-_date'">
                         {{email.name}} on {{email._date | date: "dd-MMM-yy HH:mm"}} ({{email.fromNow}}). From Email: {{email.fromEmail.email}}, To Email: {{email.to}}
