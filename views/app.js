@@ -16433,7 +16433,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     
-    /*exambazaar.controller("careertestController", 
+    exambazaar.controller("careertestController", 
     [ '$scope', '$state', '$stateParams', 'screenSize', function($scope, $state, $stateParams, screenSize ){
         
             
@@ -16458,7 +16458,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
 
             
-    }]);  */ 
+    }]); 
     exambazaar.controller("takeassessmentController", 
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
         
@@ -38773,7 +38773,7 @@ function getLatLng(thisData) {
                      return $ocLazyLoad.load(['angularTimer'], {serie: true});
                 }],
             }
-        })
+        })*/
         .state('careertest', {
             url: '/career/:domainName',
             views: {
@@ -38789,7 +38789,7 @@ function getLatLng(thisData) {
                     templateUrl: 'footer.html'
                 }
             },
-        })*/
+        })
         .state('takeassessment', {
             url: '/takeassessment/:testId',
             views: {
