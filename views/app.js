@@ -36236,7 +36236,7 @@ function getLatLng(thisData) {
                     $scope.email.instituteId = $scope.provider._id;
                     $scope.email.logo = $scope.provider.logo;
                     $scope.email.subject = $scope.provider.name + " - Get started with Exambazaar!";
-                    $scope.email.subject = //$scope.provider.name + " - You are the expert! Would you write with us?";
+                    //$scope.email.subject = $scope.provider.name + " - You are the expert! Would you write with us?";
                 }
                 }).error(function (data, status, header, config) {
                     console.log("Error ");
