@@ -227,11 +227,12 @@
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 
-<div class="textBlack whiteBackground secondFont font14" ng-if="user && !disabled" www.exambazaar.com>
+<div class="textBlack whiteBackground secondFont font14 width100" ng-if="user && !disabled" www.exambazaar.com>
     
-    <div layout="column" layout-align="center center" class="marginTB10">
+    <div layout="row" layout-align="center center" class="marginTB10 width100">
+    <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start center">    
         <div layout="row" layout-align="center center" class="width100 headingBottomBorder2">
-            <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10">
+            <div layout="column" layout-align="center start" class="paddingTB10" flex>
             
                 <div class="">
                     Result in {{test.name}}
@@ -243,8 +244,20 @@
                  Test Date: {{userAssessment._start | date: "dd-MMM-yy HH:mm"}}
                 </div>
             </div>
+            <div layout="column" layout-align="center end" class="paddingTB10" flex>
             
+                <div class="">
+                    Result in {{test.name}}
+                </div>
+                <div>
+                 Candidate: {{user.basic.name}}
+                </div>
+                <div>
+                 Test Date: {{userAssessment._start | date: "dd-MMM-yy HH:mm"}}
+                </div>
+            </div>
         </div>
+    </div>
     </div>
     
     <div layout="row" layout-align="center start" class="width100">

@@ -15619,7 +15619,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     date: new Date(thisDay._id.year, thisDay._id.month-1, thisDay._id.day),
                     providers: thisDay.count,
                 };
-                if(thisDay._id.month>2){
+                if(thisDay._id.month>2  || thisDay._id.year>2017){
                     $scope.providerSummary.push(newDayData);
                 }
                 
@@ -15661,7 +15661,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     date: new Date(thisDay._id.year, thisDay._id.month-1, thisDay._id.day),
                     reviews: thisDay.count,
                 };
-                if(thisDay._id.month>2){
+                if(thisDay._id.month>2 || thisDay._id.year>2017){
                     $scope.reviewSummary.push(newDayData);
                 }
                 
@@ -36149,28 +36149,8 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"aakritikataria1@gmail.com",
-"chaskaraditi@gmail.com",
-"adityadhopade18@gmail.com",
-"amitmittal.613@gmail.com",
-"aparnanagabhushan98@gmail.com",
-"dipankarpal181@yahoo.com",
-"deepaligambhir9719@gmail.com",
-"aishamomlill1997@gmail.com",
-"mittalkamayani@gmail.com",
-"khushbujha23@gmail.com",
-"monicatamuly@gmail.com",
-"mounicakommajosyula@gmail.com",
-"nickkgdd25@gmail.com",
-"niveditajhunjhunwala@gmail.com",
-"prakashbishi.7@gmail.com",
-"pratikshawadibhasme@gmail.com",
-"rahul.mitra685@gmail.com",
-"ry02659@gmail.com",
-"shania.prock@gmail.com",
-"sgrockshubham02@gmail.com",
-"ravula.swapna@gmail.com",
-
+"gaurav@exambazaar.com",
+//"adityashubham@muj.manipal.edu"
 
 
             ];
