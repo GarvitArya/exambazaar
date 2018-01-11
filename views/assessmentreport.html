@@ -231,31 +231,17 @@
     
     <div layout="column" layout-align="center center" class="marginTB10">
         <div layout="row" layout-align="center center" class="width100 headingBottomBorder2">
-            <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start center" class="paddingTB10">
-            <div layout="row" layout-align="center center" flex="10" class="blogFont font24 textLightGrey" >
-                
-                <div layout="row" layout-align="center center" ng-if="endTime">
-                    <i class="fa fa-clock-o font32 marginR10" aria-hidden="true"></i>
-                    <timer end-time="endTime">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
-                </div>
-                
-                
+            <div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10">
             
-            </div>
-            <div flex="80" layout="column" layout-align="center center" class="blogFont">
-                <div class="bold">{{test.name}}</div>
-                <div class="font14" >
-                    <span class="paddingLR10" ng-click="showInstructionDialog()">Read Instructions</span>
-                    <span class="paddingLR10 danger" ng-click="removeAssessmentDialog()" ng-if="fullScope">Reset Test</span>
-                
+                <div class="">
+                    Result in {{test.name}}
                 </div>
-            </div>
-            <div layout="row" layout-align="end center" flex="20">
-                <md-button class="md-danger md-large tolowercase margin0 min10vh " ng-click="submitAssessment()" ng-if="testStarted && !testOver">
-                    Submit Test
-                </md-button>
-
-            </div>   
+                <div>
+                 Candidate: {{user.basic.name}}
+                </div>
+                <div>
+                 Test Date: {{userAssessment._start | date: "dd-MMM-yy HH:mm"}}
+                </div>
             </div>
             
         </div>
@@ -534,25 +520,3 @@
     </md-dialog>
     </div>    
 </div>
-<!--
-<div class="bottomBar">
-    <div layout="row" layout-align="start center">
-        <div flex ="80">
-            <span>
-            Would you like to submit your test? 
-            </span>
-        </div>
-        <div layout="row" layout-align="end center" flex = "20">
-            <md-button class="md-danger md-small font10 width8 tolowercase" ng-click="subscribe()">
-                Submit
-            </md-button>
-            
-            <md-button class="md-default md-cancel md-small font10 width8" ng-click="dontsaveChanges()">
-                Cancel
-            </md-button>
-            
-        </div>
-        
-    </div>
-</div>-->
-

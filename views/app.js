@@ -10259,7 +10259,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if($state.current.name == 'profile'){
                     $state.reload();
                 }
-                if($state.current.name == 'takeassessment'){
+                if($state.current.name == 'assessment'){
                     $state.reload();
                 }
                 if($state.current.name == 'claim'){
@@ -16446,11 +16446,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     domainName = $stateParams.domainName.toLowerCase();
                 }
                 if(domainName == 'aptitude'){
-                    $state.go('takeassessment', {testId: '5a17f5f617cb4c07c5dd7f5b'});
+                    $state.go('assessment', {testId: '5a17f5f617cb4c07c5dd7f5b'});
                 }else if(domainName == 'coding'){
-                    $state.go('takeassessment', {testId: '5a2e5d007a7d9659d7c4537d'});
+                    $state.go('assessment', {testId: '5a2e5d007a7d9659d7c4537d'});
                 }else if(domainName == 'quant'){
-                    $state.go('takeassessment', {testId: '5a2e5924ea139b56bbff0694'});
+                    $state.go('assessment', {testId: '5a2e5924ea139b56bbff0694'});
                 }else{
                     $scope.errorText = "Something's not right in the url! Please write to us at team@exambazaar.com for any queries!";
                 }
@@ -16459,7 +16459,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
             
     }]); 
-    exambazaar.controller("takeassessmentController", 
+        
+    exambazaar.controller("assessmentreportController", 
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
         
             $scope.assessmentInfo = {
@@ -17140,6 +17141,722 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     var timeNow = moment();
                     if($scope.endTime - timeNow < 0 && !$scope.userAssessment.submitted){
                         //console.log('Test is over');
+                        $scope.testOver = true;
+                        $scope.submitAssessmentHelper();
+                    }
+                }
+
+            }, 1000);
+
+            /*var vis = (function(){
+                var stateKey, eventKey, keys = {
+                    hidden: "visibilitychange",
+                    webkitHidden: "webkitvisibilitychange",
+                    mozHidden: "mozvisibilitychange",
+                    msHidden: "msvisibilitychange"
+                };
+                for (stateKey in keys) {
+                    if (stateKey in document) {
+                        eventKey = keys[stateKey];
+                        break;
+                    }
+                }
+                return function(c) {
+                    if (c) document.addEventListener(eventKey, c);
+                    return !document[stateKey];
+                }
+            })();
+            var visible = vis();
+            vis(function(){
+              document.title = vis() ? 'Visible' : 'Not visible';
+            });*/
+
+    }]);
+    exambazaar.controller("assessmentController", 
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
+        
+            $scope.assessmentInfo = {
+                name: '',
+                mobile: '',
+                email: '',
+                address: '',
+                degree: '',
+                otherdegree: '',
+                stream: '',
+                otherstream: '',
+                agree: false,
+            };
+            $scope.disabled = false;
+            $scope.testStarted = false;
+            $scope.testOver = false;
+            if (screenSize.is('xs, sm')){
+                $scope.disabled = true;
+            }else{
+                $scope.disabled = false;
+            }
+
+            
+            $scope.seeAssessmentResult = function(){
+                var url = $state.href('assessmentreport', {testId: $scope.test._id});
+                window.open(url,'_blank');
+            };
+
+            var sanitizeQuestion = function(question){
+                if(question && question.context){
+                    question.context = question.context.replace(/\n/ig, '<br/>');
+                }
+                if(question && question.questions){
+                    question.questions.forEach(function(thisQuestion, index){
+                        thisQuestion.question = thisQuestion.question.replace(/\n/ig, '<br/>');
+
+                        thisQuestion.options.forEach(function(thisOption, oindex){
+                            thisOption.option = thisOption.option.replace(/\n/ig, '<br/>');
+                            //thisOption.option = optionsPrefix[oindex] + thisOption.option;
+                        });
+                    });
+
+                }
+                return question;
+            };
+            $scope.fullScreenMode = false;
+            
+            $scope.examQuestions = [];
+            $scope.answered = 0;
+        
+            var getUserQMarkForReview = function(){
+                if($scope.user._id){
+                qmarkforreviewService.getUserQMarkforReviews($scope.user._id).success(function (data, status, headers) {
+
+                $scope.userQMarkForReview = data;
+                var userQMarkForReviewSubQuestionIds = $scope.userQMarkForReview.map(function(a) {return a.subquestion.toString();});
+                
+                if($scope.userQMarkForReview){
+                    $scope.marked = 0;
+                    $scope.testQuestions.forEach(function(thisQuestion, index){
+
+                        var markforreview = false;
+                        
+                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                            var submarkforreview = false;
+                            var thisSubQuestionId = thisSubQuestion._id.toString();
+                            
+                            var qIndex = userQMarkForReviewSubQuestionIds.indexOf(thisSubQuestionId);
+
+                            if(qIndex != -1){
+                                
+                                submarkforreview = true;
+                                markforreview = true;
+                                
+                                $scope.marked += 1;
+
+                            }else{
+                                
+                            }
+                            thisSubQuestion.markforreview = submarkforreview;
+                        });
+                        thisQuestion.markforreview = markforreview;
+                    });
+
+                    
+                }
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+                }
+
+            };
+            var getUserResponses = function(){
+                if($scope.user._id){
+                questionresponseService.getUserQuestionResponses($scope.user._id).success(function (data, status, headers) {
+
+                $scope.userResponses = data;
+                var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.subquestion.toString();});
+                
+                if($scope.userResponses){
+                    $scope.answered = 0;
+                    $scope.totalQuestions = 0;
+                    $scope.testQuestions.forEach(function(thisQuestion, index){
+
+                        var anyAnswer = false;
+                        $scope.totalQuestions += thisQuestion.questions.length;
+                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                            
+                            var thisSubQuestionId = thisSubQuestion._id.toString();
+                            
+                            var qIndex = userResponseSubQuestionIds.indexOf(thisSubQuestionId);
+
+                            if(qIndex != -1){
+                                var thisQuestionResponse = $scope.userResponses[qIndex];
+                                anyAnswer = true;
+                               
+                                if(thisQuestionResponse.option){
+                                    $scope.testQuestions[index].questions[sindex].userAnswer = thisQuestionResponse.option.toString();
+                                }
+                                if(thisQuestionResponse.numericalAnswer){
+                                    $scope.testQuestions[index].questions[sindex].userNumericalAnswer = Number(thisQuestionResponse.numericalAnswer);
+                                }
+                                
+                                
+                                
+                                $scope.answered += 1;
+
+                            }else{
+                                $scope.testQuestions[index].questions[sindex].userAnswer = null;
+                                $scope.testQuestions[index].questions[sindex].userNumericalAnswer = null;
+                            }
+
+                            
+                        });
+                        thisQuestion.anyAnswer = anyAnswer;
+
+                        thisQuestion = sanitizeQuestion(thisQuestion);
+                    });
+
+                    
+                }
+                    /*if($scope.userResponses){
+                    $scope.answered = 0;
+                    $scope.testQuestions.forEach(function(thisQuestion, index){
+                        var thisQuestionId = thisQuestion._id;
+                        var qIndex = userResponseSubQuestionIds.indexOf(thisQuestionId);
+
+                        if(qIndex != -1){
+                            var thisQuestionResponse = $scope.userResponses[qIndex];
+                            thisQuestion.userAnswer = thisQuestionResponse.option.toString();
+                            $scope.answered += 1;
+
+                        }else{
+                            thisQuestion.userAnswer = null;
+                        }
+
+                        thisQuestion.questions.forEach(function(thisSubQuestion, index){
+                            var thisSubQuestionId = thisSubQuestion._id.toString();
+
+                        });
+
+                        thisQuestion = sanitizeQuestion(thisQuestion);
+                    });
+                }*/
+
+
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+                }
+
+            };
+            $scope.degrees = ["B.Tech", "MCA", "MBA", "Others"];
+            $scope.streams = ["CS", "IT", "EC", "Others"];
+
+            $scope.instructions = [
+                "Welcome to Exambazaar!",
+                "Exambazaar is India's largest education discovery platform which provides comprehensive information for test preparation for entrance exams, colleges, courses, universities and career options in India. You can find information about more than 100 exams and how to prepare for them. Students can also find exclusive videos and photographs of thousands of coaching institutes in every nook and corner of India. We currently cover 93 cities across India with over 26,000 education providers",
+
+            ];
+            $scope.markAnswer = function(question, subquestion, option){
+                var questionresponseForm = {
+                    user: $scope.user._id,
+                    question: question._id,
+                    subquestion: subquestion._id,
+                    option: option._id,
+                };
+
+                questionresponseService.saveQuestionResponse(questionresponseForm).success(function (data, status, headers) {
+                    question.anyAnswer = true;
+                    Notification.primary({message: "Your answer has been marked!",  positionY: 'top', positionX: 'left', delay: 2000});
+                    getUserResponses();
+                    getUserQMarkForReview();
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
+        
+            $scope.markNumericalAnswer = function(question){
+                
+                question.questions.forEach(function(subquestion, sindex){
+                    if(subquestion.type == 'numerical'){
+                        console.log(subquestion.userNumericalAnswer);
+                        if(subquestion.userNumericalAnswer){
+                            var questionresponseForm = {
+                                user: $scope.user._id,
+                                question: question._id,
+                                subquestion: subquestion._id,
+                                numericalAnswer: subquestion.userNumericalAnswer,
+                            };
+                            
+                            questionresponseService.saveQuestionResponse(questionresponseForm).success(function (data, status, headers) {
+                                question.anyAnswer = true;
+                                Notification.primary({message: "Your answer has been marked!",  positionY: 'top', positionX: 'left', delay: 2000});
+                                getUserResponses();
+                                getUserQMarkForReview();
+                            })
+                            .error(function (data, status, header, config) {
+                                Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                                console.log('Error ' + data + ' ' + status);
+                            });
+                            
+                        }
+                        
+                    }
+                });
+                /*var questionresponseForm = {
+                    user: $scope.user._id,
+                    question: question._id,
+                    subquestion: subquestion._id,
+                    option: option._id,
+                };
+
+                questionresponseService.saveQuestionResponse(questionresponseForm).success(function (data, status, headers) {
+                    question.anyAnswer = true;
+                    Notification.primary({message: "Your answer has been marked!",  positionY: 'top', positionX: 'left', delay: 2000});
+                    getUserResponses();
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                    console.log('Error ' + data + ' ' + status);
+                });*/
+            };
+            $scope.setQuestion = function(question){
+                if($scope.question){
+                    $scope.markNumericalAnswer($scope.question);
+                }
+                
+                $scope.question = question;
+                
+            };
+            $scope.setNextQuestion = function(question){
+                var questionId = question._id;
+                var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
+                var nQuestions = $scope.testQuestions.length;
+
+                var tIndex = testQuestionIds.indexOf(questionId);
+                console.log(tIndex);
+
+                if(tIndex != -1 && tIndex != nQuestions- 1){
+                    $scope.question = $scope.testQuestions[tIndex + 1];
+                }
+                $scope.markNumericalAnswer(question);
+            };
+            $scope.setPreviousQuestion = function(question){
+                var questionId = question._id;
+                var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
+                var nQuestions = $scope.testQuestions.length;
+
+                var tIndex = testQuestionIds.indexOf(questionId);
+                console.log(tIndex);
+
+                if(tIndex != -1 && tIndex != 0){
+                    $scope.question = $scope.testQuestions[tIndex-1];
+                }
+                $scope.markNumericalAnswer(question);
+            };
+            $scope.user = {};
+            if($cookies.getObject('sessionuser')){
+                var sessionuser = $cookies.getObject( 'sessionuser');
+                $scope.test = thistest.data;
+                if($scope.test.instructions){
+                    $scope.instructions = $scope.test.instructions;    
+                }
+                
+                $scope.testQuestions = thisTestQuestions.data;
+                $rootScope.pageTitle = "Exambazaar Test";
+                var nQuestions = $scope.testQuestions.length;
+                $scope.setQuestion($scope.testQuestions[0]);
+                 $scope.testQuestions.forEach(function(thisQuestion, index){
+                    thisQuestion = sanitizeQuestion(thisQuestion);
+                });
+                $scope.fullScope = false;
+                UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    if($scope.user.userType == 'Master' || $scope.user._id == '5a1831f0bd2adb260055e352'){
+                        $scope.fullScope = true;
+                    }
+                    $scope.assessmentInfo = {
+                        name: $scope.user.basic.name,
+                        mobile: $scope.user.mobile,
+                        email: $scope.user.email,
+                        address: '',
+                        degree: '',
+                        otherdegree: '',
+                        stream: '',
+                        otherstream: '',
+                        agree: false,
+                    };
+
+                    Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    var assessmentForm = {
+                        user: $scope.user._id,
+                        test: $stateParams.testId,
+                    };
+                    assessmentService.getAssessment(assessmentForm).success(function (adata, status, headers) {
+                        $scope.userAssessment = adata;
+                        $scope.testOver = false;
+                        $scope.testStarted = false;
+
+
+                        if($scope.userAssessment){
+                            $scope.testStarted = true;
+                            $scope.endTime = moment($scope.userAssessment._end);
+                            var timeNow = moment();
+                            if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
+                                $scope.testOver = true;
+                                console.log('Test is over or submitted');
+
+                            }else{
+                                $scope.testOver = false;
+
+                            }
+
+                        }else{
+                            $scope.testStarted = false;
+                        }
+                        getUserResponses();
+                        getUserQMarkForReview();
+
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+
+
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "User not logged in!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }else{
+                //$scope.user = null;
+                //$rootScope.$emit("CallBlogLogin", {});
+            }
+            var optionsPrefix = [
+                'A) ',
+                'B) ',
+                'C) ',
+                'D) ',
+                'E) ',
+                'F) ',
+                'G) ',
+                'H) ',
+            ];
+
+
+            $scope.submitAssessmentHelper = function(){
+                var assessmentForm = {
+                    user: $scope.user._id,
+                    test: $stateParams.testId,
+                };
+                assessmentService.submitAssessment(assessmentForm).success(function (adata, status, headers) {
+                    Notification.success({message: "Thank you, all done!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    $scope.userAssessment = adata;
+                    $scope.testOver = false;
+                    $scope.testStarted = false;
+                    $scope.userevaluate();
+
+                    if($scope.userAssessment){
+                        $scope.testStarted = true;
+                        $scope.endTime = moment($scope.userAssessment._end);
+                        var timeNow = moment();
+                        if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
+                            $scope.testOver = true;
+                            console.log('Test is over or submitted');
+
+                        }else{
+                            $scope.testOver = false;
+
+                        }
+
+                    }else{
+                        $scope.testStarted = false;
+                    }
+                    getUserResponses();
+                    getUserQMarkForReview();
+
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+
+            };
+            $scope.submitAssessment = function(){
+
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to submit your test?')
+                .textContent('You will not be able to access it again!' )
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+
+                    $scope.submitAssessmentHelper();
+
+
+                }, function() {
+                  //nothing
+                }); 
+
+
+
+
+            }
+
+            $scope.userevaluate = function(){
+                var assessmentForm = {
+                    user: $scope.user._id,
+                    test: $stateParams.testId,
+                };
+
+                assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
+                    console.log(edata);
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }
+
+
+            $scope.$watch('question', function (newValue, oldValue, scope) {
+                if(newValue != null){
+                    var questionId = newValue._id;
+                    var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
+
+                    var tIndex = testQuestionIds.indexOf(questionId);
+                    
+                    $scope.activeQuestionNo = tIndex + 1;
+
+                }
+            }, true);
+            //qmarkforreviewService abcd
+            $scope.markQuestionForReview = function(question, subquestion){
+                var qmarkforreviewForm = {
+                    user: $scope.user._id,
+                    question: question._id,
+                    subquestion: subquestion._id,
+                };
+
+                qmarkforreviewService.saveQMarkforReview(qmarkforreviewForm).success(function (data, status, headers) {
+                    question.markforreview = true;
+                    Notification.primary({message: "Your question has been marked for review!",  positionY: 'top', positionX: 'left', delay: 2000});
+                    //getUserResponses();
+                    getUserQMarkForReview();
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
+            
+            $scope.clearQuestionMarkForReview = function(subquestion){
+                
+                var userQMarkForReviewSubQuestionIds = $scope.userQMarkForReview.map(function(a) {return a.subquestion.toString();});
+
+                var subquestionId = subquestion._id;
+                var uIndex = userQMarkForReviewSubQuestionIds.indexOf(subquestionId);
+                if(uIndex != -1){
+                    var thisUserQMarkForReview = $scope.userQMarkForReview[uIndex];
+                    qmarkforreviewService.removeQMarkforReview(thisUserQMarkForReview._id).success(function (data, status, headers) {
+                        Notification.success({message: "Your question has been unmarked from review!",  positionY: 'top', positionX: 'left', delay: 2000});
+                        getUserQMarkForReview();
+
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+
+                }
+            };
+        
+            $scope.clearAnswer = function(subquestion){
+                if(subquestion.type =='numerical'){
+                    subquestion.userNumericalAnswer = null;
+                }
+                var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.subquestion.toString();});
+
+                var subquestionId = subquestion._id;
+                var uIndex = userResponseSubQuestionIds.indexOf(subquestionId);
+                if(uIndex != -1){
+                    var thisUserResponse = $scope.userResponses[uIndex];
+                    questionresponseService.removeQuestionResponse(thisUserResponse._id).success(function (data, status, headers) {
+                        //console.log('All done');
+                        getUserResponses();
+
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+
+                }
+            };
+            
+
+
+            
+
+            $scope.showInstructionDialog = function(ev) {
+
+                $mdDialog.show({
+                  contentElement: '#instructionDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: false,
+                  escapeToClose: false,
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
+            $scope.closeInstructionDialog = function(ev) {
+
+                $mdDialog.hide();
+            };
+        
+            $scope.removeAssessmentDialog = function(){
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to reset the test?')
+                .textContent('You will lose your progress!' )
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.removeAssessment();
+                }, function() {
+                  //nothing
+                });   
+            };
+        
+            $scope.removeAssessment = function(){
+                var thisAssessment = {
+                    userId: $scope.user._id,
+                    testId: $scope.test._id,
+                };
+                assessmentService.removeAssessment(thisAssessment).success(function (data, status, headers) {
+                    Notification.success({message: "Assessment has been reset",  positionY: 'top', positionX: 'left', delay: 10000});
+                    $state.reload();
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+            };
+            $scope.startAssessment = function(ev) {
+                $scope.startErrors = [];
+                var valid = true;
+                console.log($scope.assessmentInfo);
+                if($scope.assessmentInfo && $scope.assessmentInfo.mobile){
+                    $scope.assessmentInfo.mobile = $scope.assessmentInfo.mobile.toString();
+                }
+
+                if(!$scope.assessmentInfo.agree){
+                    valid = false;
+                    console.log('1');
+                    $scope.startErrors.push('Please agree to terms and conditions.');
+                }
+                if($scope.assessmentInfo.name.length < 2){
+                    valid = false;
+                    console.log('2');
+                    $scope.startErrors.push('Please enter name');
+                }
+                if($scope.assessmentInfo.email.length < 2){
+                    valid = false;
+                    console.log('3');
+                    $scope.startErrors.push('Please enter email');
+                }
+                
+                /*if(!$scope.assessmentInfo.degree){
+                    valid = false;
+                    console.log('5');
+                    $scope.startErrors.push('Please select degree');
+                }
+                if($scope.assessmentInfo.degree == "Others" && $scope.assessmentInfo.otherdegree.length < 2){
+                    valid = false;
+                    console.log('6');
+                    $scope.startErrors.push('Please enter Other degree name');
+                }
+                if(!$scope.assessmentInfo.stream){
+                    valid = false;
+                    console.log('7');
+                    $scope.startErrors.push('Please select stream');
+                }
+                if($scope.assessmentInfo.stream == "Others" && $scope.assessmentInfo.otherstream.length < 2){
+                    valid = false;
+                    console.log('8');
+                    $scope.startErrors.push('Please select Other stream name');
+                }
+                if($scope.assessmentInfo.mobile.length != 10){
+                    valid = false;
+                    console.log('9');
+                    $scope.startErrors.push('Please enter mobile');
+                }*/
+
+                if(valid){
+                    var assessmentForm = {
+                        user: $scope.user._id,
+                        test: $stateParams.testId,
+                        info: $scope.assessmentInfo,
+                        //time: 60,
+                        time: $scope.test.duration,
+                    };
+                    assessmentService.saveAssessment(assessmentForm).success(function (adata, status, headers) {
+                        $scope.userAssessment = adata;
+                        if($scope.userAssessment){
+                            $scope.testStarted = true;
+                            $scope.endTime = moment($scope.userAssessment._end);
+                            var timeNow = moment();
+                            if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
+                                $scope.testOver = true;
+                                console.log('Test is over or submitted');
+
+                            }else{
+                                $scope.testOver = false;
+
+                            }
+
+                        }else{
+                            $scope.testStarted = false;
+                        }
+                        getUserResponses();
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+
+
+                }else{
+                    Notification.primary({message: "Please fill the form correctly and agree to terms to proceed ahead!",  positionY: 'top', positionX: 'right', delay: 5000});
+                }
+
+
+
+            };
+
+            window.setInterval(function(){
+                //console.log('Here');
+                if($scope.userAssessment){
+                    var timeNow = moment();
+                    if($scope.endTime - timeNow < 0 && !$scope.userAssessment.submitted){
+                        console.log('Test is over');
                         $scope.testOver = true;
                         $scope.submitAssessmentHelper();
                     }
@@ -32271,7 +32988,7 @@ function getLatLng(thisData) {
                 $scope.saveTest();
             };
             $scope.simulateNow = function(){
-                var url = $state.href('takeassessment', {testId: $scope.test._id});
+                var url = $state.href('assessment', {testId: $scope.test._id});
                 window.open(url,'_blank');
             };
             $scope.saveTest = function(){
@@ -35370,7 +36087,27 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-
+"aakritikataria1@gmail.com",
+"chaskaraditi@gmail.com",
+"adityadhopade18@gmail.com",
+"amitmittal.613@gmail.com",
+"aparnanagabhushan98@gmail.com",
+"dipankarpal181@yahoo.com",
+"deepaligambhir9719@gmail.com",
+"aishamomlill1997@gmail.com",
+"mittalkamayani@gmail.com",
+"khushbujha23@gmail.com",
+"monicatamuly@gmail.com",
+"mounicakommajosyula@gmail.com",
+"nickkgdd25@gmail.com",
+"niveditajhunjhunwala@gmail.com",
+"prakashbishi.7@gmail.com",
+"pratikshawadibhasme@gmail.com",
+"rahul.mitra685@gmail.com",
+"ry02659@gmail.com",
+"shania.prock@gmail.com",
+"sgrockshubham02@gmail.com",
+"ravula.swapna@gmail.com",
 
 
 
@@ -38790,16 +39527,16 @@ function getLatLng(thisData) {
                 }
             },
         })
-        .state('takeassessment', {
-            url: '/takeassessment/:testId',
+        .state('assessment', {
+            url: '/assessment/:testId',
             views: {
                 'header':{
                     templateUrl: 'header.html',
                     
                 },
                 'body':{
-                    templateUrl: 'takeassessment.html',
-                    controller: 'takeassessmentController',
+                    templateUrl: 'assessment.html',
+                    controller: 'assessmentController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -38816,6 +39553,32 @@ function getLatLng(thisData) {
                 }],
                 angularTimer: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularTimer'], {serie: true});
+                }],
+            }
+        })
+        .state('assessmentreport', {
+            url: '/assessmentreport/:testId',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'assessmentreport.html',
+                    controller: 'assessmentreportController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thistest: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getTest($stateParams.testId);
+                }],
+                thisTestQuestions: ['questionService','$stateParams',
+                    function(questionService, $stateParams){
+                        return questionService.getTestQuestions($stateParams.testId);
                 }],
             }
         })
@@ -41164,7 +41927,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         }else{
             //console.log('Not EB Internal');
         }
-        if(stateTo == 'takeassessment'){
+        if(stateTo == 'assessment'){
             if($cookies.getObject('sessionuser')){
                 
                 
