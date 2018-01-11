@@ -710,6 +710,95 @@ router.post('/streamblogstream', function(req, res) {
     
 });
 
+router.post('/infographicstream', function(req, res) {
+    
+    var skip = 0;
+    var limit = 4;
+    var excluded = [];
+    var included = [];
+    var streamId = null;
+    var streamInfo = req.body;
+    if(streamInfo.streamId && mongoose.Types.ObjectId.isValid(streamInfo.streamId)){
+        streamId = streamInfo.streamId.toString();
+    }
+    if(streamInfo && streamInfo.skip){
+        skip = streamInfo.skip;
+    }
+    if(streamInfo && streamInfo.limit){
+        limit = streamInfo.limit;
+    }
+    if(streamInfo && streamInfo.excluded && streamInfo.excluded.length > 0){
+        excluded = streamInfo.excluded;
+    }
+    if(streamInfo && streamInfo.included && streamInfo.included.length > 0){
+        included = streamInfo.included;
+    }
+    /*console.log('Limit and skip are:');
+    console.log(limit + " | " + skip);
+    console.log('---------------------');
+    console.log('Stream Id is:');
+    console.log(streamId);
+    console.log('---------------------');
+    console.log('Included are:');
+    console.log(included);
+    console.log('---------------------');
+    console.log('Excluded are:');
+    console.log(excluded);
+    console.log('---------------------');*/
+    
+    
+    if(streamId){
+        var allExams = exam
+            .find({'stream': streamId}, {_id:1})
+            .exec(function (err, allExams) {
+            if (!err){
+                if(allExams){
+                    var allExamIds =  allExams.map(function(a) {return a._id;});
+                    var blogposts = blogpost
+                    .find({active: true, exams: { $in : allExamIds }, infographic: {"$nin": [ null, "" ]}}, {title:1, urlslug:1, infographic: 1, infographicThumbnail: 1})
+                    .sort({_published: -1})
+                    .limit(limit)
+                    .skip(skip)
+                    .exec(function (err, blogposts) {
+                        if (!err){
+                            res.json(blogposts); 
+                        } else {throw err;}
+                    });
+
+
+                }else{
+                    //console.log('I am here');
+                    var blogposts = blogpost
+                    .find({active: true, infographic: {"$nin": [ null, "" ]}}, {title:1, urlslug:1, infographic: 1, infographicThumbnail: 1})
+                    .sort({_published: -1})
+                    .limit(limit)
+                    .skip(skip)
+                    .exec(function (err, blogposts) {
+                        if (!err){
+                            res.json(blogposts);
+                        } else {throw err;}
+                    });
+                }  
+            } else {throw err;}
+        });
+    }else{
+
+        var blogposts = blogpost
+        .find({active: true, infographic: {"$nin": [ null, "" ]}}, {title:1, urlslug:1, infographic: 1, infographicThumbnail: 1})
+        .sort({_published: -1})
+        .limit(limit)
+        .skip(skip)
+        .exec(function (err, blogposts) {
+            if (!err){
+                console.log(blogposts);
+                res.json(blogposts);
+            } else {throw err;}
+        });
+    }
+    
+    
+});
+
 router.post('/blogstream', function(req, res) {
     
     var skip = 0;

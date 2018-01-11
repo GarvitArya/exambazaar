@@ -260,7 +260,12 @@
                         </span>
                     </div>
                 </div>
-                
+                <div layout="column" layout-align="start start" class="blogSeparator width100" ng-if="blogpost.infographic">
+                    <div layout="row" layout-align="start center" class="width100 font22 bold padding10">
+                        Related Infographic    
+                    </div>
+                    <img ng-src="{{blogpost.infographic}}" class="padding10 width100"/>
+                </div>
                 <div layout="column" layout-align="start start" class="width100 paddingT10 paddingB20 blogSeparator">
                     <div layout="column" layout-align="start start">
                         <div class="font20 bold">SEO</div>
@@ -431,9 +436,11 @@
                             <a clipboard supported="supported" text="photo.image" on-copied="showCopiedDialog(photo.image)" on-error="fail(err)" id="copyLink" class="textPrimary"><i class="fa fa-file-image-o" aria-hidden="true"></i> Use</a>
                             <md-tooltip>Use this image in the blog</md-tooltip>
                         </div>
-                        <div flex layout="row" layout-align="center center">
-                            <a ng-click="setInfographic(photo.image)"><i class="fa fa-info-circle" aria-hidden="true"></i> Info</a>
-                            <md-tooltip>Set this image as the blog's infographic</md-tooltip>
+                        <div flex layout="column" layout-align="center center">
+                            <div layout="row" class="marginB5"><a ng-click="setInfographic(photo.image)"><i class="fa fa-info-circle" aria-hidden="true"></i> Info</a>
+                            <md-tooltip>Set this image as the blog's infographic</md-tooltip></div>
+                            <div layout="row" class="marginB5"><a ng-click="setInfographicThumbnail(photo.image)"><i class="fa fa-info-circle" aria-hidden="true"></i> Thumb</a>
+                            <md-tooltip>Set this image as the blog's infographic</md-tooltip></div>
                         </div>
                         <div layout="row" layout-align="start center">
                             <a ng-click="removePic(photo.image)" id="copyLink" class="textPrimary danger pull-right marginL10"><i class="fa fa-trash" aria-hidden="true"></i></a>

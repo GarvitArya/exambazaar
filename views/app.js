@@ -1142,6 +1142,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.blogstream = function(streamInfo) {
             return $http.post('/api/blogposts/blogstream', streamInfo);
         };
+        this.infographicstream = function(streamInfo) {
+            return $http.post('/api/blogposts/infographicstream', streamInfo);
+        };
+        
         this.EdBitesstream = function(streamInfo) {
             return $http.post('/api/blogposts/EdBitesstream', streamInfo);
         };
@@ -14867,7 +14871,46 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
       return BlogStream;
     });    
-        
+    exambazaar.factory('InfographicStream', function(blogpostService) {
+      var InfographicStream = function(streamInfo) {
+        this.items = [];
+        this.busy = false;
+        this.finished = false;
+        this.skip = 0;
+        this.limit = streamInfo.limit;
+        this.streamId = streamInfo.streamId;
+        this.included = streamInfo.included;
+        this.excluded = streamInfo.excluded;
+      };
+
+      InfographicStream.prototype.nextPage = function() {
+        if (this.busy) return;
+        if (this.finished) return;
+        this.busy = true;
+        var streamInfo = {
+            skip: this.skip,
+            limit: this.limit,
+            streamId: this.streamId,
+            included: this.included,
+            excluded: this.excluded,
+        };
+        blogpostService.infographicstream(streamInfo).success(function (data, status, headers) {
+            var items = data;
+            if(!items || (items && items.length == 0)){
+                this.finished = true;
+            }
+            //console.log(items);
+            this.items = this.items.concat(items);
+            this.skip += items.length;
+            this.busy = false;
+        }.bind(this))
+        .error(function (data, status, header, config) {
+            console.log("Error ");
+        });  
+      };
+
+      return InfographicStream;
+    });     
         
     exambazaar.controller("socialLoginController", 
         [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'UserService', 'BlogStream', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, UserService, BlogStream){
@@ -15778,7 +15821,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
     exambazaar.controller("blogController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', 'BlogStream', 'EdBitesStream', 'streamList', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, Socialshare, viewService, upvoteService, allBlogsUpvotesCount, BlogStream, EdBitesStream, streamList){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies','$mdDialog', '$document', 'pageTimer', 'blogpostService', 'Socialshare', 'viewService', 'upvoteService', 'allBlogsUpvotesCount', 'BlogStream', 'InfographicStream', 'EdBitesStream', 'streamList', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, $mdDialog, $document, pageTimer, blogpostService, Socialshare, viewService, upvoteService, allBlogsUpvotesCount, BlogStream, InfographicStream, EdBitesStream, streamList){
             //$scope.allBlogs = allBlogs.data;
             var allStreams = streamList.data;
             $scope.allStreams = [];
@@ -15830,6 +15873,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 included: ['EdBites'],
                 limit: 3,
             };
+            var InforgraphicStreamInfo = {
+                streamId: null,
+                excluded: [],
+                limit: 3,
+            };
             
             
             var refreshAll = function(){
@@ -15840,6 +15888,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.ResumeBlogs = new BlogStream(ResumeStreamInfo);
                 
                 $scope.allEdbites = new BlogStream(EdbitesStreamInfo);
+                $scope.allInfographics = new InfographicStream(InforgraphicStreamInfo);
 
                 $scope.InspirationBlogs.nextPage();
                 $scope.ExamPreparationBlogs.nextPage();
@@ -15847,6 +15896,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.BestCoachingBlogs.nextPage();
                 $scope.ResumeBlogs.nextPage();
                 $scope.allEdbites.nextPage();
+                $scope.allInfographics.nextPage();
+                
+                //console.log($scope.allInfographics);
             };
             refreshAll();
             $scope.setStream = function(stream){
@@ -15857,6 +15909,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 ExamPreparationStreamInfo.streamId = stream._id;
                 InformationStreamInfo.streamId = stream._id;
                 BestCoachingStreamInfo.streamId = stream._id;
+                InforgraphicStreamInfo.streamId = stream._id;
                 //ResumeStreamInfo.streamId = stream._id;
                 
                 refreshAll();
@@ -15869,12 +15922,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 BestCoachingStreamInfo.streamId = null;
                 //ResumeStreamInfo.streamId = null;
                 EdbitesStreamInfo.streamId = null;
+                InforgraphicStreamInfo.streamId = null;
                 
                 refreshAll();
             };
             
             $scope.loadNextEdBitesBlogs = function(){
                 $scope.allEdbites.nextPage();
+            };
+            $scope.loadNextInfographics = function(){
+                $scope.allInfographics.nextPage();
             };
             $scope.loadNextInspirationBlogs = function(){
                 $scope.InspirationBlogs.nextPage();
@@ -37925,6 +37982,24 @@ function getLatLng(thisData) {
                 .cancel('Cancel');
                 $mdDialog.show(confirm).then(function() {
                     $scope.blogpost.infographic = image;
+                    Notification.primary({message: "All set! Remember to save the blog now!",  positionY: 'top', positionX: 'right', delay: 3000});
+                }, function() {
+                  //nothing
+                }); 
+            };
+            $scope.setInfographicThumbnail = function(image){
+                
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to set this image as the blog infographic thumbnail?')
+                .textContent('You can always change this')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.blogpost.infographicThumbnail = image;
+                    Notification.primary({message: "All set! Remember to save the blog now!",  positionY: 'top', positionX: 'right', delay: 3000});
                 }, function() {
                   //nothing
                 }); 

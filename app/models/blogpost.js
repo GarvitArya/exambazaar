@@ -13,6 +13,7 @@ var blogpostSchema = mongoose.Schema({
     },
     coverPhoto: String,
     infographic: String,
+    infographicThumbnail: String,
     urlslug: { type: String, unique: true },
     title: String,
     subtitle:String,
