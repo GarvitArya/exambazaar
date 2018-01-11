@@ -370,13 +370,14 @@
                     </span>
                 </div>
                 </div>
-                <div layout="column" layout-align="start start" class="blogSeparator width100" ng-if="blogpost.infographic">
+                <div class="width100" id="Infographic">
+                <div layout="column" layout-align="start start" class="blogSeparator width100" ng-if="blogpost.infographic" >
                     <div layout="row" layout-align="start center" class="width100 font22 bold padding10">
                         Related Infographic    
                     </div>
                     <img ng-src="{{blogpost.infographic}}" class="padding10 width100"/>
                 </div>
-                
+                </div>
                 
                 <div layout="column" layout-align="start start" class="width100 marginT20" ng-if="suggestedBlogs.length > 0">    
                 <div layout="row" layout-align="start center" class="width100 font22 bold padding10" >

@@ -15836,6 +15836,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var url = $state.href('showblog', {blogpostSlug: blog.urlslug});
                 window.open(url,'_blank');  
             };
+            $scope.goToBlogInfographic = function(blog){
+                var url = $state.href('showblog', {blogpostSlug: blog.urlslug,'#': 'Infographic'});
+                window.open(url,'_blank');  
+            };
+            
             
             $scope.filterStream = null;
             var streamInfo = {

@@ -768,11 +768,11 @@
     <div layout="row" layout-align="start start" class="width100" layout-wrap>
         <div layout="column" layout-align="center center"  class="width100 paddingTB10" ng-repeat="blogpost in allInfographics.items">
             <div layout="column" layout-align="center start" class="width100 boxShadow" id="blogpost" >
-                <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank"><img ng-src="{{blogpost.infographicThumbnail}}"/></a>
+            <img ng-src="{{blogpost.infographicThumbnail}}" ng-click="goToBlogInfographic(blogpost)"/>
             <div layout="column" layout-align="start center" class="min10vh paddingLR10 paddingTB10 width100 blogpostBorder ">
                 <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginTB10">
                     <div flex layout="column" layout-align="start start" flex class="baseFont wideLine2 marginR10">
-                        <a ui-sref="showblog({ blogpostSlug:{{'blogpost.urlslug'}} })" target="_blank">
+                        <a ng-click="goToBlogInfographic(blogpost)">
                             {{blogpost.title}}
                         </a>
                     </div>
