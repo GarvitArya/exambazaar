@@ -129,7 +129,7 @@ router.get('/', function(req, res) {
 
 router.post('/markSimulate', function(req, res) {
     var testIds = req.body;
-    
+    var limit = 2000;
     /*var testIds = [
         "599c57b84f2991101b2355ab",
         "599c58474f2991101b2355ad",
@@ -143,191 +143,10 @@ router.post('/markSimulate', function(req, res) {
     res.json(true);
     //_id: {$in: testIds}
     if(testIds && testIds.length > 0){
-    var allTests = test
-        .find({_id: {$in: testIds}},{_id: 1, simulate: 1, nQuestions: 1, instructions: 1})
-        .limit(1000)
-        .exec(function (err, allTests) {
-        if (!err){
-            var nTests = allTests.length;
-            var tCounter = 0;
-            var theseTests = allTests.map(function(a) {return a._id.toString();});
-            allTests.forEach(function(existingTest, index){
-                var testId = existingTest._id.toString();
-                var solutionKey = [];
-                var testQuestions = question
-                .find({test: testId}, {questions: 1, _startnumber: 1, _endnumber: 1})
-                .deepPopulate('questions')
-                .exec(function (err, testQuestions) {
-                var valid = true;
-                if(!existingTest.simulate){
-                    existingTest.simulate = {};
-                }
-                existingTest.simulate.comments = [];
-                var maxScore = 0;    
-                if(testQuestions && testQuestions.length > 0){
-                var nQuestions = 0;    
-                var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
-                
-                var counter = 0;
-
-                testQuestions.forEach(function(thisQuestion, qIndex){
-                    nQuestions += thisQuestion.questions.length;
-                });
-                
-                
-                testQuestions.forEach(function(thisQuestion, qIndex){
-                var questionId = thisQuestion._id;
-                thisQuestion.questions.forEach(function(subQuestion, sIndex){
-                    var subScore = 3;
-                    if(subQuestion.marking.correct){
-                        subScore = Number(subQuestion.marking.correct);
-                    }
-                    maxScore += subScore;
-                    var qno = Number(thisQuestion._startnumber) + sIndex;
-                    var subQuestionId = subQuestion._id;
-                    var correctOptionId = null;
-                    if(subQuestion.question.length < 10 ){
-                        valid = false;
-                        
-                        var comment = "Invalid Q No: " + qno;
-                        comment += ": as Question length is < 10 characters";
-                        existingTest.simulate.comments.push(comment);
-                        //console.log(comment);
-                    }
-                    if(subQuestion.type == 'mcq'){
-                        var answerMarked = false;
-                        subQuestion.options.forEach(function(thisOption, oIndex){
-                        if(thisOption.option.length < 1 ){
-                            valid = false;
-                            var comment = "Invalid Q No: " + qno;
-                            comment += ": as Option length is < 1 character";
-                            existingTest.simulate.comments.push(comment);
-                            //console.log(comment);
-                        }
-                        if(thisOption._correct){
-                            answerMarked = true;
-                        }
-                        
-                            
-
-                        });
-                        if(!answerMarked){
-                            valid = false;
-                            var comment = "Invalid Q No: " + qno;
-                            comment += ": as correct option answer is not marked!";
-                            existingTest.simulate.comments.push(comment);
-                        }
-                        
-                    }
-                    if(subQuestion.type == 'numerical'){
-                        //
-                        if(subQuestion.numericalAnswerType == 'Exact'){
-                            subQuestion.numericalAnswers.forEach(function(thisAnswer, aIndex){
-                            if(thisAnswer.length < 1 ){
-                                valid = false;
-                                var comment = "Invalid Q No: " + qno;
-                                comment += ": as one of the numerical answer of type 'Exact' is blank";
-                                existingTest.simulate.comments.push(comment);
-                                //console.log(comment);
-                                
-                            }
-                            });
-                            
-                        }
-                        if(subQuestion.numericalAnswerType == 'Range'){
-                            if(!subQuestion.numericalAnswerRange || (!subQuestion.numericalAnswerRange.min && subQuestion.numericalAnswerRange.min != 0) || (!subQuestion.numericalAnswerRange.max && subQuestion.numericalAnswerRange.max != 0) ){
-                                valid = false;
-                                var comment = "Invalid Q No: " + qno;
-                                comment += ": as either of min/max of the numerical answer of type 'Range' is blank";
-                                existingTest.simulate.comments.push(comment);
-                                //console.log(comment);
-                                
-                            }else{
-                                
-                                /*if(subQuestion.numericalAnswerRange.min.length < 1 || subQuestion.numericalAnswerRange.max.length < 1 ){
-                                    valid = false;
-                                }  */ 
-                            }
-                        }
-                        
-                        
-                    }
-                    
-                    
-                    counter += 1;
-                    if(counter == nQuestions){
-                        if(valid){
-                            
-                            if(existingTest.nQuestions && Number(existingTest.nQuestions) == nQuestions){
-                                
-                            }else{
-                                valid = false;
-                                var comment = "Total number of questions in the test not marked";
-                                existingTest.simulate.comments.push(comment);
-                            }
-                            if(existingTest.instructions && existingTest.instructions.length >= 0){
-                                
-                            }else{
-                                valid = false;
-                                var comment = "Test has less than 4 instruction points!";
-                                existingTest.simulate.comments.push(comment);
-                            }
-                        }
-                        
-                        existingTest.simulate.ready = valid;
-                        if(valid){
-                            console.log('Max Score is: ' + maxScore);
-                            existingTest.maxScore = maxScore; 
-                        }
-                        existingTest.save(function(err, existingTest) {
-                            if (err) return console.error(err);
-                            console.log(existingTest._id + " saved!");
-                            
-                            tCounter += 1;
-                            if(tCounter == nTests){
-                                console.log("--- All done --- " + nTests + " tests assessed!");
-                            }
-                        });
-                        //console.log("A -- " + testId);
-                        
-                        
-                    }
-                    
-                    
-                });
-
-                });
-
-
-
-                }else{
-                    
-                    valid = false;
-                    var comment = "No test questions linked to the test";
-                    existingTest.simulate.ready = false;
-                    existingTest.simulate.comments.push(comment);
-                    existingTest.save(function(err, existingTest) {
-                        if (err) return console.error(err);
-                        console.log(existingTest._id + " saved!");
-                        tCounter += 1;
-                        if(tCounter == nTests){
-                            console.log("--- All done --- " + nTests + " tests assessed!");
-                        }
-                    });
-                }     
-            });
-            
-                
-                
-            });
-        } else {throw err;}
-    });
-        
-    }else{
-        console.log('Marking Simulation for all Tests');
+        console.log('Marking Simulation for some Tests');
         var allTests = test
-            .find({},{_id: 1, simulate: 1, nQuestions: 1, instructions: 1})
-            .limit(1000)
+            .find({_id: {$in: testIds}},{_id: 1, simulate: 1, nQuestions: 1, instructions: 1, duration: 1})
+            .limit(limit)
             .exec(function (err, allTests) {
             if (!err){
                 var nTests = allTests.length;
@@ -447,11 +266,209 @@ router.post('/markSimulate', function(req, res) {
                                     var comment = "Total number of questions in the test not marked";
                                     existingTest.simulate.comments.push(comment);
                                 }
-                                if(existingTest.instructions && existingTest.instructions.length >= 4){
+                                //console.log(existingTest._id + " " + existingTest.duration);
+                                if(existingTest.duration && existingTest.duration != '' && Number(existingTest.duration) > 0){
 
                                 }else{
                                     valid = false;
-                                    var comment = "Test has less than 4 instruction points!";
+                                    var comment = "Test duration has not been manually set!";
+                                    existingTest.simulate.comments.push(comment);
+                                }
+                                if(existingTest.instructions && existingTest.instructions.length >= 5){
+
+                                }else{
+                                    valid = false;
+                                    var comment = "Test has less than 5 instruction points!";
+                                    existingTest.simulate.comments.push(comment);
+                                }
+                            }
+
+                            existingTest.simulate.ready = valid;
+                            if(valid){
+                                console.log('Max Score is: ' + maxScore);
+                                existingTest.maxScore = maxScore; 
+                            }
+                            existingTest.save(function(err, existingTest) {
+                                if (err) return console.error(err);
+                                console.log(existingTest._id + " saved!");
+
+                                tCounter += 1;
+                                if(tCounter == nTests){
+                                    console.log("--- All done --- " + nTests + " tests assessed!");
+                                }
+                            });
+                            //console.log("A -- " + testId);
+
+
+                        }
+
+
+                    });
+
+                    });
+
+
+
+                    }else{
+
+                        valid = false;
+                        var comment = "No test questions linked to the test";
+                        existingTest.simulate.ready = false;
+                        existingTest.simulate.comments.push(comment);
+                        existingTest.save(function(err, existingTest) {
+                            if (err) return console.error(err);
+                            console.log(existingTest._id + " saved!");
+                            tCounter += 1;
+                            if(tCounter == nTests){
+                                console.log("--- All done --- " + nTests + " tests assessed!");
+                            }
+                        });
+                    }     
+                });
+
+
+
+                });
+            } else {throw err;}
+        });
+        
+    }else{
+        console.log('Marking Simulation for all Tests');
+        var allTests = test
+            .find({},{_id: 1, simulate: 1, nQuestions: 1, instructions: 1, duration: 1})
+            .limit(limit)
+            .exec(function (err, allTests) {
+            if (!err){
+                var nTests = allTests.length;
+                var tCounter = 0;
+                var theseTests = allTests.map(function(a) {return a._id.toString();});
+                allTests.forEach(function(existingTest, index){
+                    var testId = existingTest._id.toString();
+                    var solutionKey = [];
+                    var testQuestions = question
+                    .find({test: testId}, {questions: 1, _startnumber: 1, _endnumber: 1})
+                    .deepPopulate('questions')
+                    .exec(function (err, testQuestions) {
+                    var valid = true;
+                    if(!existingTest.simulate){
+                        existingTest.simulate = {};
+                    }
+                    existingTest.simulate.comments = [];
+                    var maxScore = 0;    
+                    if(testQuestions && testQuestions.length > 0){
+                    var nQuestions = 0;    
+                    var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
+
+                    var counter = 0;
+
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                        nQuestions += thisQuestion.questions.length;
+                    });
+
+
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                    var questionId = thisQuestion._id;
+                    thisQuestion.questions.forEach(function(subQuestion, sIndex){
+                        var subScore = 3;
+                        if(subQuestion.marking.correct){
+                            subScore = Number(subQuestion.marking.correct);
+                        }
+                        maxScore += subScore;
+                        var qno = Number(thisQuestion._startnumber) + sIndex;
+                        var subQuestionId = subQuestion._id;
+                        var correctOptionId = null;
+                        if(subQuestion.question.length < 10 ){
+                            valid = false;
+
+                            var comment = "Invalid Q No: " + qno;
+                            comment += ": as Question length is < 10 characters";
+                            existingTest.simulate.comments.push(comment);
+                            //console.log(comment);
+                        }
+                        if(subQuestion.type == 'mcq'){
+                            var answerMarked = false;
+                            subQuestion.options.forEach(function(thisOption, oIndex){
+                            if(thisOption.option.length < 1 ){
+                                valid = false;
+                                var comment = "Invalid Q No: " + qno;
+                                comment += ": as Option length is < 1 character";
+                                existingTest.simulate.comments.push(comment);
+                                //console.log(comment);
+                            }
+                            if(thisOption._correct){
+                                answerMarked = true;
+                            }
+
+
+
+                            });
+                            if(!answerMarked){
+                                valid = false;
+                                var comment = "Invalid Q No: " + qno;
+                                comment += ": as correct option answer is not marked!";
+                                existingTest.simulate.comments.push(comment);
+                            }
+
+                        }
+                        if(subQuestion.type == 'numerical'){
+                            //
+                            if(subQuestion.numericalAnswerType == 'Exact'){
+                                subQuestion.numericalAnswers.forEach(function(thisAnswer, aIndex){
+                                if(thisAnswer.length < 1 ){
+                                    valid = false;
+                                    var comment = "Invalid Q No: " + qno;
+                                    comment += ": as one of the numerical answer of type 'Exact' is blank";
+                                    existingTest.simulate.comments.push(comment);
+                                    //console.log(comment);
+
+                                }
+                                });
+
+                            }
+                            if(subQuestion.numericalAnswerType == 'Range'){
+                                if(!subQuestion.numericalAnswerRange || (!subQuestion.numericalAnswerRange.min && subQuestion.numericalAnswerRange.min != 0) || (!subQuestion.numericalAnswerRange.max && subQuestion.numericalAnswerRange.max != 0) ){
+                                    valid = false;
+                                    var comment = "Invalid Q No: " + qno;
+                                    comment += ": as either of min/max of the numerical answer of type 'Range' is blank";
+                                    existingTest.simulate.comments.push(comment);
+                                    //console.log(comment);
+
+                                }else{
+
+                                    /*if(subQuestion.numericalAnswerRange.min.length < 1 || subQuestion.numericalAnswerRange.max.length < 1 ){
+                                        valid = false;
+                                    }  */ 
+                                }
+                            }
+
+
+                        }
+
+
+                        counter += 1;
+                        if(counter == nQuestions){
+                            if(valid){
+
+                                if(existingTest.nQuestions && Number(existingTest.nQuestions) == nQuestions){
+
+                                }else{
+                                    valid = false;
+                                    var comment = "Total number of questions in the test not marked";
+                                    existingTest.simulate.comments.push(comment);
+                                }
+                                //console.log(existingTest._id + " " + existingTest.duration);
+                                if(existingTest.duration && existingTest.duration != '' && Number(existingTest.duration) > 0){
+
+                                }else{
+                                    valid = false;
+                                    var comment = "Test duration has not been manually set!";
+                                    existingTest.simulate.comments.push(comment);
+                                }
+                                if(existingTest.instructions && existingTest.instructions.length >= 5){
+
+                                }else{
+                                    valid = false;
+                                    var comment = "Test has less than 5 instruction points!";
                                     existingTest.simulate.comments.push(comment);
                                 }
                             }

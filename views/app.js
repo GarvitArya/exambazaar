@@ -36159,8 +36159,8 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"gaurav@exambazaar.com",
-//"adityashubham@muj.manipal.edu"
+"adityashubham1997@gmail.com",
+//"gaurav@exambazaar.com"
 
 
             ];
@@ -36171,7 +36171,7 @@ function getLatLng(thisData) {
                     console.log(marketingUser);
                     if(marketingUser.mobile == '9829685919'){
                         var emailForm = {
-                            //body: "We are currently offering internship to students in Jaipur across 3 domains - Business Development, Design and Business Analyst. The interns will work out of our office in Jaipur. Kindly inform your students about this opportunity and let us know if we need to follow any steps/protocol to reach out to them.",
+                            //body: "Hi Pratik, though this email is for interns, we are also looking for full time employees in Jaipur. Let us know if you have anyone in mind. Thanks Gaurav",
                             //body: "Dear Candidate, thank you for attending our campus drive yesterday. While we cannot extend you an offer to join us as a Web Developer, we will consider you for any of the below 6-month internships (January - June 2018). Do reach out to us after completing the steps below with your resume &  preferred Internship Programme - Business Development, Design or Business Analyst. In a short paragraph, do tell us why we should hire you for the role. Good luck!",
                             emailList: internshipEmailList,
                             templateName: 'Internship at Exambazaar',
