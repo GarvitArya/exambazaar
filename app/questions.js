@@ -276,23 +276,40 @@ router.get('/question/:questionId', function(req, res) {
     
 });
 
-router.get('/markCreator/:testId', function(req, res) {
-    var creatorId = '5a0a975e7e56384fa04379ab';
-    var testId = req.params.testId;
-    res.json('Done');
+router.get('/markCreator', function(req, res) {
+    var userId = '59a7eb973d71f10170dbb468';
     var allQuestions = question
-        .find({'test': testId},{_createdBy: 1})
+        .find({'_createdBy': {$exists: false}},{_createdBy: 1})
         .exec(function (err, allQuestions) {
         if (!err){
-            console.log(allQuestions.length);
             
-            allQuestions.forEach(function(thisQuestion, qIndex){
-                thisQuestion._createdBy = creatorId;
-                thisQuestion.save(function(err, thisQuestion) {
-                    if (err) return console.error(err);
-                    console.log('Question saved: ' + thisQuestion._id);
-                });
-            });
+            if(allQuestions){
+                var nQuestions = allQuestions.length;
+                var counter = 0;
+                if(nQuestions == 0){
+                    res.json(true);
+                }else{
+                    allQuestions.forEach(function(thisQuestion, qIndex){
+                        thisQuestion._createdBy = userId;
+                        thisQuestion.save(function(err, thisQuestion) {
+                            if (err) return console.error(err);
+                            counter += 1;
+                            console.log(qIndex + ' Question saved: ' + thisQuestion._id);
+                            if(counter == nQuestions){
+                                res.json(true);
+                            }
+                            
+                        });
+                    });
+                }
+                
+                
+                
+            }else{
+                res.json(false);
+            }
+            
+            
             
         } else {throw err;}
     });

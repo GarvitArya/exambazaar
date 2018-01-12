@@ -3,7 +3,7 @@
     {
         font-size: 13px;
         color: #333333;
-        padding: 5px;
+        padding: 3px;
         border: solid 1px #969696;
         transition: box-shadow 0.3s, border 0.3s;
         box-shadow: 0 0 5px 1px white;
@@ -29,7 +29,7 @@
     }
     textarea{
         width:100%;
-        padding: 5px 5px;
+        padding: 3px;
         display: inline-block;
         border: 1px solid #969696;
         border-radius: 4px;
@@ -43,9 +43,9 @@
         border: 1px solid #969696;
     }
     #pageLogoHolder{
-        border: 1px solid #969696;
+        border: 1px solid #FF5A5F;
         border-radius: 4px;
-        color: #969696;
+        color: #FF5A5F;
     }
     .pageLogo{
         max-height: 50px;
@@ -66,51 +66,71 @@
         background: #FF5A5F;
         color: white;
     }
+    #upload4{
+        background: #20C39A;
+        color: white;
+        padding: 10px;
+    }
+    #upload4:hover {
+        background: #29335C;
+        color: white;
+    }
     #questionNoBadge{
-        background-color: #FF5A5F;
-        padding: 5px;
+        background-color: #20C39A;
+        padding: 4px;
+    }
+    #addQuestionBadge{
+        background-color: #29335C;
+        padding: 8px;
     }
     #missingBadge{
-        background-color: #20C39A;
-        padding: 5px;
+        background-color: #FF5A5F;
+        padding: 4px;
     }
     .disabled{
         background-color: #FF5A5F;
     }
     .badge{
-        background: #20C39A;
+        background: #FF5A5F;
     }
 </style>
 <div class="whiteBackground mainContent" >
     <div id="spacer3">
     </div>
-    <div layout="column" layout-align="start start" class="padded width100" ng-if="user">
+    <div layout="column" layout-align="start start" class="padded width100 smallFont" ng-if="user">
         <div layout="column" layout-align="start start" class="width100 paddingB5 headingBottomBorder" >
-            <div layout="column" layout-align="start start">
-                <div layout="row" layout-align="start center">
-                    <div class="font20 bold marginR20">
-                        {{test.name}}
+            <div layout="column" layout-align="start start" class="width100">
+                <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder">
+                    <div class="font20 bold marginR40">
+                        Paper: {{test.name}}
                     </div>
-                    <div layout="row" layout-align="start start">
+                    <div layout="row" layout-align="start center" flex>
                         <a class="" ng-href="{{test.url.question}}" target="_blank" id="link">
-                            <i class="fa fa-file-pdf-o font20" aria-hidden="true"></i>&nbsp;<span class="font12">Question Paper</span>
+                            <i class="fa fa-file-pdf-o font20" aria-hidden="true"></i>&nbsp;<span class="">Question Paper</span>
                         </a>
                         <a class="marginL10" ng-href="{{test.url.answer}}" target="_blank" id="link" ng-if="test.url.answer">
-                            <i class="fa fa-file-pdf-o font20" aria-hidden="true"></i>&nbsp;<span class="font12">Answer</span>
+                            <i class="fa fa-file-pdf-o font20" aria-hidden="true"></i>&nbsp;<span class="">Answer</span>
                         </a>
+                        
+                        <div flex layout="row" layout-align="end center" class="">
+                            <div layout="row" layout-align="start center" class="marginL20" ng-if="fullScope" ng-click="flipwatermarked(test._id)">
+                                <i class="fa fa-check-square-o text-primary marginR10 font16" aria-hidden="true" ng-if="test.watermarked"></i>
+                                <i class="fa fa-times danger marginR10 font16" aria-hidden="true" ng-if="!test.watermarked"></i>
+                                <span class="text-primary" ng-if="test.watermarked">Watermarked</span>
+                                <span class="danger" ng-if="!test.watermarked">Not Watermarked</span>
+                            </div>
+                            <a ng-click="markCreator()" class="marginL20" ng-if="fullScope">Mark Creator</a>
+                        
+                        </div>
                     </div>
                     
                 </div>
-                <div class="font12">{{test.description}}</div>
+                <!--<div class="">{{test.description}}</div>-->
             </div>
             
-            <div layout="row" layout-align="start center" class="marginTB5" ng-if="fullScope" ng-click="flipwatermarked(test._id)">
-                <i class="fa fa-check-square-o text-primary marginR10" aria-hidden="true" ng-if="test.watermarked"></i>
-                <i class="fa fa-times danger marginR10" aria-hidden="true" ng-if="!test.watermarked"></i>
-                Flip Watermarked
-            </div>
+            
             <div layout="row" layout-align="start center" flex layout-wrap class="marginT10">
-                <div ng-repeat="testQuestion in thisTestQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR5 marginB5" id="questionNoBadge" ng-click="setQuestion(testQuestion)">
+                <div ng-repeat="testQuestion in thisTestQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR2 marginB2 font9" id="questionNoBadge" ng-click="setQuestion(testQuestion)">
                     <span>
                         Q. {{testQuestion._startnumber}}
                     </span>
@@ -125,12 +145,12 @@
             </div>
         </div>
         <div layout="row" layout-align="start center" class="width100 marginTB5"   layout-wrap>
-            <!--<a ng-click="markCreator()" class="marginR10">Mark Creator</a>
-            <a ng-click="markAnswerExists()" class="marginR10">Mark Answered Questions</a>-->
-            <div class="marginLR10" ng-if="missingQuestions.length > 0">
+            
+            <!--<a ng-click="markAnswerExists()" class="marginR10">Mark Answered Questions</a>-->
+            <div class="marginR10" ng-if="missingQuestions.length > 0">
             Missing Questions: 
             </div>
-            <div ng-repeat="missingQuestion in missingQuestions" layout-wrap class="badge marginB5 marginR5" id="missingBadge"  ng-if="missingQuestions.length > 0">
+            <div ng-repeat="missingQuestion in missingQuestions" layout-wrap class="badge marginB2 marginR2 font9" id="missingBadge"  ng-if="missingQuestions.length > 0">
                 <span>
                     Q. {{missingQuestion}}
                 </span>
@@ -139,106 +159,113 @@
             <div class="marginLR10"  ng-if="repeatQuestions.length > 0">
             Repeated Questions: 
             </div>
-            <div ng-repeat="repeatQuestion in repeatQuestions" layout-wrap class="badge marginB5 marginR5" id="missingBadge">
+            <div ng-repeat="repeatQuestion in repeatQuestions" layout-wrap class="badge marginB2 marginR2 font9" id="missingBadge">
                 <span>
                     Q. {{repeatQuestion}}
                 </span>
             </div>
         </div>
-        <div layout="column" layout-align="start start" class="width100 font14 marginTB10" >
-            <div layout="row" layout-align="start center" class="width100 font16 bold marginT5" layout-wrap>
-                <div layout="row" layout-align="start center" class="marginR20">
-                    Add Question or Question Set
+        <div layout="column" layout-align="start start" class="width100 marginTB5" >
+            <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder paddingB5" layout-wrap>
+                <div layout="row" layout-align="start center" class="font16 bold marginR20">
+                    Question&nbsp;<span ng-if="toAddQuestion._startnumber">{{toAddQuestion._startnumber}}</span><span ng-if="toAddQuestion._endnumber">-{{toAddQuestion._endnumber}}</span>
                 </div>
-                <div layout="row" layout-align="start center" class="badge marginL10" id="questionNoBadge" ng-click="addNewQuestionSet()">
+                <div layout="row" layout-align="start center" id="addQuestionBadge" class="badge marginR10"  ng-click="addNewQuestionSet()">
                     <i class="fa fa-plus " aria-hidden="true"></i> Add a new Question Set
                 </div>
-            </div>
-            <div layout="row" layout-align="start center" class="width100 marginT5 paddingB10 gainsboroBottomBorder" layout-wrap>
-                <div layout="row" layout-align="start center" class="marginR10">
-                    <md-switch ng-model="toAddQuestion._groupOfQuestions" aria-label="Question Group?" class="margin0">
-                        Adding a group of questions?
-                    </md-switch>
-                </div>
-                <div layout="row" layout-align="start center" class="marginR10">
-                    <md-switch ng-model="toAddQuestion._hascontext" aria-label="Write Up?" class="margin0">
-                        Is there a paragraph for the set of questions?
-                    </md-switch>
-                </div>
-                <div layout="row" layout-align="start center" class="marginR10" ng-if="fullScope" >
-                    <a ng-click="splitQuestions()" class="marginR5" ng-if="toAddQuestion.questions.length > 1">Split Questions</a>
-                    <a ng-click="removeQuestionDialog()" class="marginR5">Delete Question</a>
-                    <!--<a ng-click="markMCQs()" class="marginR5">Mark MCQs</a>-->
-                </div>
-                <!--<div layout="row" layout-align="start center" class="marginR10">
-                    <md-switch ng-model="toAddQuestion._multipleCorrect" aria-label="Multiple Correct Answers?" class="margin0">
-                        Multiple Correct Answers?
-                    </md-switch>
-                </div>-->
                 
-            </div>
-            <div layout="row" layout-align="center center" class="textDarkGrey width100 paddingTB10" >
-                <div flex="20" layout="column" layout-align="start start" class="font14 bold width100" >
-                    Add Question Set Images
-                </div>
-                <div flex layout="column" layout-align="start start" class="font12" >
-                    <div layout="column" layout-align="center start" class=" textDarkGrey" ngf-select="uploadImage(images)" ng-model="images" multiple="multiple" >
-                        <div class="padding10" id="pageLogoHolder">
-                            <span>
-                            <i class="fa fa-file-text font32" aria-hidden="true"></i>
-                            </span>
-                            <span>
-                                Upload Images
-                            </span>
-                        </div>
+                
+                <div flex layout="row" layout-align="end center" class="marginL10 " layout-wrap>
+                    <div layout="row" layout-align="start center" class="marginR10">
+                        <md-switch ng-model="toAddQuestion._groupOfQuestions" aria-label="Question Group?" class="margin0 danger bold">
+                            Adding a group of questions?
+                        </md-switch>
+                    </div>
+                    <div layout="row" layout-align="start center" class="danger bold">
+                        <md-switch ng-model="toAddQuestion._hascontext" aria-label="Write Up?" class="margin0">
+                            Is there a paragraph for the set of questions?
+                        </md-switch>
+                    </div>
+                    <div layout="row" layout-align="start center" class="marginL10" ng-if="fullScope" >
+                        <a ng-click="splitQuestions()" class="marginR5" ng-if="toAddQuestion.questions.length > 1">Split Questions</a>
+                        <span class="badge" ng-click="removeQuestionDialog()">
+                        Delete Question
+                        </span>
+                        <!--<a ng-click="markMCQs()" class="marginR5">Mark MCQs</a>-->
+                    </div>
+                    <!--<div layout="row" layout-align="start center" class="marginR10">
+                        <md-switch ng-model="toAddQuestion._multipleCorrect" aria-label="Multiple Correct Answers?" class="margin0">
+                            Multiple Correct Answers?
+                        </md-switch>
+                    </div>-->
 
+                </div>
+            </div>
+            
+            <div layout="row" layout-align="end center" class="textDarkGrey width100 paddingTB5" >
+                <div flex class="h3Font">
+                Question Set&nbsp;<span ng-if="toAddQuestion._id">has {{toAddQuestion.questions.length}} question(s)</span>
+                </div>
+                <div class="marginR20 danger">
+                    Add Images in this Question Set
+                </div>
+                <div layout="column" layout-align="center start" class=" textDarkGrey" ngf-select="uploadImage(images)" ng-model="images" multiple="multiple" >
+                    <div class="padding5" id="pageLogoHolder">
+                        <span>
+                        <i class="fa fa-file-text font20" aria-hidden="true"></i>
+                        </span>
+                        <span>
+                            Upload Images
+                        </span>
                     </div>
-                    <div flex layout="row" layout-align="start start" ng-if="toAddQuestion.images && toAddQuestion.images.length > 0" class="paddingL20 width100" layout-wrap>
-                        <div layout="column" layout-align="center center" ng-repeat="image in toAddQuestion.images" class="marginR10 marginT10">
-                            <div layout="row" layout-align="center center" class="marginB5">
-                                <a ng-href="{{image}}" target="_blank">
-                                    <!--<i class="fa fa-check-square-o text-primary marginR10" aria-hidden="true"></i> Image {{$index}}-->
-                                    <img ng-src="{{image}}" id="screenshot"/>
-                                </a>
-                            </div>
-                            <div layout="row" layout-align="center center" class="badge" id="removebadge" ng-click="removeImage(image)">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </div>
+
+                </div>
+                <div layout="row" layout-align="start start" ng-if="toAddQuestion.images && toAddQuestion.images.length > 0" class="paddingL20" layout-wrap>
+                    <div layout="column" layout-align="center center" ng-repeat="image in toAddQuestion.images" class="marginR10 marginT10">
+                        <div layout="row" layout-align="center center" class="marginB5">
+                            <a ng-href="{{image}}" target="_blank">
+                                <!--<i class="fa fa-check-square-o text-primary marginR10" aria-hidden="true"></i> Image {{$index}}-->
+                                <img ng-src="{{image}}" id="screenshot"/>
+                            </a>
+                        </div>
+                        <div layout="row" layout-align="center center" class="badge" id="removebadge" ng-click="removeImage(image)">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div layout="row" layout-align="start center" class="width100 marginT5" ng-if="toAddQuestion._hascontext">
+            <div layout="row" layout-align="start center" class="width100 marginTB5" ng-if="toAddQuestion._hascontext">
                 <textarea class="width100 font14" ng-model="toAddQuestion.context" placeholder="Add question context here. Paragraph of RC, etc" rows="4"></textarea>
             </div>
             
-            <div layout="column" layout-align="start start" class="font12 width100 marginT20" ng-repeat="question in toAddQuestion.questions">
+            <div layout="column" layout-align="start start" class="boxShadow width100 marginTB10 padding10" ng-repeat="question in toAddQuestion.questions">
                 <div layout="row" layout-align="start center" class="width100 marginB10">
-                    <div layout="row" layout-align="start center" class="font16">
-                    Question {{$index + 1}} <span class="marginL20 font10">{{toAddQuestion._id}}</span>
+                    <div layout="row" layout-align="start center" class="baseFont">
+                    Type subquestion {{$index + 1}} here<span class="marginL20 font10">{{toAddQuestion._id}}</span>
                     
                     </div>
                                     
-                    <div flex layout="row" layout-align="start center" ng-click="removeQuestionFromSet(question, $index)" class="marginL20" ng-if="$index > 0">
+                    <div layout="row" layout-align="start center" ng-click="removeQuestionFromSet(question, $index)" class="marginL20" ng-if="$index > 0">
                         <i class="fa fa-trash font20" aria-hidden="true"></i>
+                    </div>
+                    <div flex layout="row" layout-align="end start" class="width100">
+                        <span class="marginL20 badge" ng-click="numericalType(question)" ng-if="question.type =='mcq'">Flip to Numerical Type</span>
+                        <span class="marginL20 badge" ng-click="mcqType(question)" ng-if="question.type =='numerical'">Flip to MCQ</span>
                     </div>
                 </div>
                 <div layout="row" layout-align="start start" class="width100">
                     
                     
-                    <div flex layout="column" layout-align="start start" class="padding10 width100">
-                        <div layout="row" layout-align="end start" class="marginB10 width100">
-                            <span class="marginL20 badge" ng-click="numericalType(question)" ng-if="question.type =='mcq'">Flip to Numerical Type</span>
-                            <span class="marginL20 badge" ng-click="mcqType(question)" ng-if="question.type =='numerical'">Flip to MCQ</span>
-                        </div>
+                    <div flex layout="column" layout-align="start start" class="width100">
+                        
                         
                         <div layout="row" layout-align="start start" class="marginB10 width100">
-                            <textarea class="width100 font14 margin0" ng-model="question.question" placeholder="Add question here" rows="4"></textarea>
+                            <textarea class="width100 font14 margin0" ng-model="question.question" placeholder="Add question text here" rows="4"></textarea>
                         </div>
                         
-                        <div layout="column" layout-align="start start" class="width100 marginB5" ng-repeat="option in question.options" ng-if="question.type=='mcq'">
-                            <div layout="row" layout-align="start center" class="width100">
-                                <div layout="row" layout-align="start center" flex="40">
+                        <div layout="column" layout-align="start start" class="width100 paddingLR20" ng-repeat="option in question.options" ng-if="question.type=='mcq'">
+                            <div layout="row" layout-align="start center" class="width100 marginB2">
+                                <div layout="row" layout-align="start center" flex="30">
                                     <div class="font14 marginR20">
                                         Option {{$index+1}}
                                     </div>
@@ -260,7 +287,7 @@
                         </div>
                         
                         
-                        <div layout="column" layout-align="start start" class="width100 marginB5" ng-show="question.type=='numerical'">
+                        <div layout="column" layout-align="start start" class="width100 paddingLR20" ng-show="question.type=='numerical'">
                             <div layout="row" layout-align="start center" class="width100">
                                 <div layout="row" layout-align="start center" flex="40">
                                     <div class="font14 marginR20">
@@ -297,39 +324,41 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="center center" id="upload3" ng-click="addNewOption(question)" class="width100 marginT10"  ng-if="question.type=='mcq'">
+                        <div layout="row" layout-align="center center" id="upload3" ng-click="addNewOption(question)" class="width100 marginT5"  ng-if="question.type=='mcq'">
                             <span>
-                                <i class="fa fa-plus" aria-hidden="true"></i> Add Option
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Another Option
                             </span>
                         </div>
                         
                         
                         
-                        <div layout="row" layout-align="start center" class="width100 min10vh marginTB20">
-                            <div layout="row" layout-align="start center" flex="40">
-                                <div class="font14 marginR20">
+                        <div layout="row" layout-align="start center" class="width100 min10vh marginTB5 paddingLR20">
+                            <div layout="row" layout-align="start center" flex="30">
+                                <div class="font14">
                                     Marking for question
                                 </div>
                             </div>
                             <div layout="row" layout-align="start center" flex>
-                                <div flex layout="column" layout-align="center center">
-                                    <div class="text-primary">Correct Answer</div>
-                                    <input type="text" class="width60 text-center"  placeholder="Correct Answer" ng-model="question.marking.correct">
+                                <div layout="row" layout-align="start center">
+                                    <div class="text-primary paddingR10">Correct Answer</div>
+                                    <div flex class="paddingR10"><input type="text" class="width100 text-center"  placeholder="Correct Answer" ng-model="question.marking.correct"></div>
                                 </div>
-                                <div flex layout="column" layout-align="center center">
-                                    <div class="danger">Incorrect Answer</div>
-                                    <input type="text" class="width60 text-center"  placeholder="Correct Answer" ng-model="question.marking.incorrect">
+                                <div layout="row" layout-align="start center">
+                                    <div class="danger paddingL10">Incorrect Answer</div>
+                                    <div flex class="paddingL10">
+                                        <input type="text" class="width100 text-center"  placeholder="Correct Answer" ng-model="question.marking.incorrect">
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
                         
-                        <div flex layout="row" layout-align="start start" class="marginB10 marginT20 width100">
+                        <div flex layout="row" layout-align="start start" class="marginTB5 paddingLR20 width100">
                             <div flex class="width100">
                                 <textarea class="width100 font14 margin0" ng-model="question.solution.solution" placeholder="Add solution here (if available)" rows="3"></textarea>
                             </div>
                             
-                            <div layout="column" layout-align="start start" class="font12 paddingL10" >
+                            <div layout="column" layout-align="start start" class=" paddingL10" >
                             <div layout="column" layout-align="center start" class=" textDarkGrey width100 height100" ngf-select="uploadSolutionImages(question, question.solutionimages)" ng-model="question.solutionimages" multiple="multiple" >
                                 <div class="padding10" id="pageLogoHolder">
                                     <span>
@@ -362,7 +391,7 @@
                 
             </div>
             
-            <div layout="row" layout-align="center center" id="upload3" ng-click="addNewQuestion()" class="width100 marginT10">
+            <div layout="row" layout-align="center center" id="upload4" ng-click="addNewQuestion()" class="width100 marginT10">
                 <span>
                     <i class="fa fa-plus" aria-hidden="true"></i> Add another question to this set
                 </span>

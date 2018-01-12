@@ -602,7 +602,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             return $http.get('/api/questions/testQuestions/'+testId, {testId: testId});
         };
         this.markCreator = function(testId) {
-            return $http.get('/api/questions/markCreator/'+testId, {testId: testId});
+            return $http.get('/api/questions/markCreator');
         };
         this.getQuestion = function(questionId) {
             return $http.get('/api/questions/edit/'+questionId, {questionId: questionId});
@@ -32968,15 +32968,19 @@ function getLatLng(thisData) {
             
             
             var find_duplicate_in_array = function (thisArray) {
+                thisArray = thisArray.sort();
+                console.log(thisArray);
                 var nElements = thisArray.length;
                 var duplicates = [];
                 thisArray.forEach(function(thisElement, index){
-                    var subArray = thisArray.slice(index + 1, nElements - (index + 1) );
-                    var sIndex = subArray.indexOf(thisElement);
-                    if(sIndex != -1){
-                        duplicates.push(thisElement);
+                    if(index < nElements - 1){
+                        if(thisArray[index] == thisArray[index + 1]){
+                            var dIndex = duplicates.indexOf(thisArray[index]);
+                            if(dIndex == -1){
+                                duplicates.push(thisArray[index]);
+                            }
+                        }
                     }
-                    
                 });
                 return duplicates;
             };
@@ -32989,17 +32993,23 @@ function getLatLng(thisData) {
                 var startNumbers = $scope.thisTestQuestions.map(function(a) {return a._startnumber;});
                 qnos = find_duplicate_in_array(startNumbers);
                 $scope.repeatQuestions = qnos;
-                
             };
             $scope.findRepeatQuestions();
             
             
             $scope.markCreator = function(){
                 if($scope.user.userType = 'Master'){
-                     questionService.markCreator($scope.test._id).success(function (data, status, headers) {
-                        console.log(data);
+                     questionService.markCreator().success(function (data, status, headers) {
+                         
+                         if(data){
+                             Notification.success({message: "All done!",  positionY: 'top', positionX: 'right', delay: 5000});
+                         }else{
+                             Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                         }
+                        
                     })
                     .error(function (data, status, header, config) {
+                         Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
                         console.log('Error ' + data + ' ' + status);
                     });
                 }
@@ -38270,7 +38280,6 @@ function getLatLng(thisData) {
             
             var suggestedBlogURLs = [];
             if($scope.suggestedBlogs && $scope.suggestedBlogs.length > 0){
-                console.log($scope.suggestedBlogs);
                 suggestedBlogURLs = $scope.suggestedBlogs.map(function(a) {return a.urlslug;});
             }
             suggestedBlogURLs.forEach(function(thisURL, uIndex){
@@ -41852,6 +41861,9 @@ function getLatLng(thisData) {
     })();
 
 exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, $anchorScroll, $state, $cookies, $mdDialog) {
+    
+    
+    
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
     $rootScope.message = '';
     $rootScope.imageUrl = '';
@@ -42148,6 +42160,25 @@ exambazaar.directive('affixer', function ($window) {
         }
     };
 });
+
+exambazaar.directive('scrollpercentage', function ($window) {
+    return {
+        restrict: 'A',
+        link: function ($scope, $element) {
+            angular.element($window).bind('scroll', function() {
+
+                var offSet = $window.pageYOffset,
+                height = $window.innerHeight,
+                scrolledPercentage = (offSet / height * 100);
+                //console.log(scrolledPercentage);
+                if (scrolledPercentage >= 60) {
+                  console.log(scrolledPercentage + ' over 60');
+                }
+            });                      
+        }
+    };
+});
+
 exambazaar.directive('onlyDigits', function () {
     return {
       require: 'ngModel',
@@ -42255,4 +42286,5 @@ exambazaar.directive('www.exambazaar.com', function(){
         }
     };
 });
+
 
