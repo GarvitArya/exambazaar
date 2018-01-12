@@ -16276,6 +16276,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if(qIndex != -1){
                     thisTest.nTyped = testswithQuestions[qIndex].count;
                     if(eIndex != -1){
+                        //console.log(thisTest);
+                        if(thisTest.simulate.ready){
+                            if(!allExams[eIndex].nReady){
+                                allExams[eIndex].nReady = 0;
+                            }
+                            allExams[eIndex].nReady += 1;
+                        }
                         allExams[eIndex].nTyped += testswithQuestions[qIndex].count;
                     }
                     
@@ -16285,6 +16292,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
             
             $scope.allExams = allExams;
+            
+            
             if($scope.user && $scope.user.userType=='Master'){
                 $scope.masterUser = true;
             }

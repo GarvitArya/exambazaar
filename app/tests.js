@@ -530,11 +530,12 @@ router.get('/testsWithQuestions', function(req, res) {
     var testSummary = question.aggregate(
     [
         {$match: {} },
-        {"$group": { "_id": { test: "$test" }, count:{$sum:1} } },
+        {"$group": { "_id": { test: "$test" }, count:{$sum: {"$size": "$questions"}} } },
         {$sort:{"count":-1}}
     ],function(err, testSummary) {
     if (!err){
         var finalTestSummary = [];
+        //console.log(testSummary);
         testSummary.forEach(function(existingTest, index){
             var newItem = {
                 _id: existingTest._id.test,
