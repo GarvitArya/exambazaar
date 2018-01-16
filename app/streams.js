@@ -101,4 +101,52 @@ router.get('/stream/:streamName', function(req, res) {
     });
 });
 
+router.post('/addLogo', function(req, res) {
+    var newLogoForm = req.body;
+    console.log(newLogoForm);
+    var logo = newLogoForm.logo;
+    var streamId = newLogoForm.streamId;
+    var color = newLogoForm.color;
+    //console.log('Express received: ' + JSON.stringify(newLogoForm));
+    
+    var thisStream = stream
+        .findOne({ _id: streamId }, {logo:1})
+        .exec(function (err, thisStream) {
+        if (!err){
+            
+            if(thisStream && color){
+                if(color == 'black'){
+                    if(!thisStream.logo){
+                        thisStream.logo = {};
+                    }
+                    thisStream.logo.black = logo;
+                    thisStream.save(function(err, thisStream) {
+                        if (err) return console.error(err);
+                        //console.log("Logo data saved for " + thisStream._id);
+                        res.json(thisStream.logo);
+                    });
+                }else if(color == 'white'){
+                    if(!thisStream.logo){
+                        thisStream.logo = {};
+                    }
+                    thisStream.logo.white = logo;
+                    thisStream.save(function(err, thisStream) {
+                        if (err) return console.error(err);
+                        //console.log("Logo data saved for " + thisStream._id);
+                        res.json(thisStream.logo);
+                    });
+                }else{
+                    res.json(false);
+                }
+                
+                
+            }else{
+                console.log('No such stream');
+                res.json(false);
+            }
+        } else {throw err;}
+    });
+    
+});
+
 module.exports = router;

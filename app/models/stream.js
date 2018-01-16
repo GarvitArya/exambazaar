@@ -6,8 +6,11 @@ var streamSchema = mongoose.Schema({
     name: {type: String,required: true,unique:true},
     displayname: {type: String},
     active:{type: Boolean, default: true},
-    rank: {type: Number}
-    
+    rank: {type: Number},
+    logo: {
+        white: {type: String},
+        black: {type: String},
+    }
 });
 streamSchema.plugin(deepPopulate);
 module.exports = mongoose.model('stream', streamSchema);

@@ -453,7 +453,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             return $http.post('/api/users/userSurvey',userList);
         };
     }]);
-        
+    exambazaar.service('cirfFactorService', ['$http', function($http) {
+        this.saveCirfFactor = function(cirfFactor) {
+            return $http.post('/api/cirffactors/save', cirfFactor);
+        };
+        this.getExamCirfFactors = function(examId) {
+            
+            return $http.get('/api/cirffactors/exam/'+examId, {examId: examId});
+        };
+        this.removeCirfFactor = function(cirffactorId) {
+            return $http.get('/api/cirffactors/remove/'+cirffactorId, {cirffactorId: cirffactorId});
+        };
+    }]);    
     exambazaar.service('EmailService', ['$http', function($http) {
         this.getEmails = function() {
             return $http.get('/api/emails');
@@ -489,8 +500,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.CATEmail = function() {
             return $http.post('/api/emails/CATEmail');
         };
-        this.HappyNewYearEmail = function() {
-            return $http.post('/api/emails/HappyNewYearEmail');
+        this.EventsEmail = function() {
+            return $http.post('/api/emails/EventsEmail');
         };
         this.internshipEmail = function(emailForm) {
             return $http.post('/api/emails/internshipEmail', emailForm);
@@ -1521,7 +1532,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getStreamByName = function(streamName) {
             return $http.get('/api/streams/stream/'+streamName, {streamName: streamName});
         };
-        
+        this.addLogo = function(newLogoForm) {
+            return $http.post('/api/streams/addLogo',newLogoForm);
+        };
         
     }]);
     exambazaar.service('ProviderService', ['$http', function($http) {
@@ -1654,7 +1667,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.bulkDisableProviders = function(disableForm) {
             return $http.post('/api/targetStudyProviders/bulkDisableProviders',disableForm);
         };
-        
+        this.cirf = function(cirfForm) {
+            return $http.post('/api/targetStudyProviders/cirf',cirfForm);
+        };
         this.groupProviders = function(query) {
             return $http.get('/api/targetStudyProviders/group/'+query, {query: query});
         };
@@ -6373,6 +6388,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.ebuser = true;
                 $scope.masteruser = true;
             }
+            if($scope.user._id == '5a1831f0bd2adb260055e352'){
+                $scope.masteruser = true;
+            }
             if($scope.user.userType=='Intern - Business Development'){
                 $scope.editable = true;
                 $scope.verifiedUser = true;
@@ -7337,6 +7355,31 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });
             };
         
+        $scope.cirf = function(){
+            var cirfForm = {
+                instituteIds: [$scope.provider._id],
+                examId: '58cedb079eef5e0011c17e91',
+            };
+            targetStudyProviderService.cirf(cirfForm).success(function (data, status, headers) {
+                if(data && data.length > 0){
+                    $scope.statements = data;
+                    $scope.showStatementsDialog();
+                }
+                //console.log(data);
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error ");
+            });    
+        };
+        
+        $scope.showStatementsDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#statementsDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
         
         $scope.addExamResult = function(){
             var providerId = $scope.provider._id;
@@ -8459,6 +8502,32 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if($scope.provider.rating.examRating && $scope.provider.rating.examRating.length > 0){
                 //console.log('Am here');
                 $scope.examRatingParamValues = $scope.provider.rating.examRating;
+                
+                var existingExamIds = $scope.examRatingParamValues.map(function(a) {return a.exam._id.toString();});
+                console.log(existingExamIds);
+                console.log($scope.examRatingParamValues);
+                $scope.provider.exams.forEach(function(thisExam, examIndex){
+                    if(existingExamIds.indexOf(thisExam._id.toString()) == -1){
+                        var examRating = {
+                            exam: thisExam,
+                            resultType: 'CLP+DLP',
+                            rating: {
+                            },
+                        };
+                         $scope.examRatingParams.forEach(function(thisRP, rpIndex){
+                            examRating.rating[thisRP.name] = {
+                                option: null, 
+                                estimate: false, 
+                                value: '',
+                            };
+                        });
+                        $scope.examRatingParamValues.push(examRating);
+                    }
+                    
+                    
+                });
+                console.log($scope.examRatingParamValues);
+                
             }
             
             if($scope.provider.rating.facilities){
@@ -9731,7 +9800,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if(!$rootScope.streamranks || !$rootScope.streamexams){
                 ExamService.streamexam().success(function (data, status, headers) {
                     if(data){
+                        
                         $rootScope.streamranks = data.streamranks;
+                        
                         $rootScope.streamexams = data.streamexams;
                         
                     }
@@ -16247,7 +16318,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     exambazaar.controller("allTestsController", 
-        [ '$scope', 'thisuser','examList','testList', 'testService', 's3UtilsService', 'testswithQuestions', function($scope, thisuser, examList, testList, testService, s3UtilsService, testswithQuestions){
+        [ '$scope', 'thisuser','examList','testList', 'testService', 's3UtilsService', 'testswithQuestions', 'questionService', 'Notification', function($scope, thisuser, examList, testList, testService, s3UtilsService, testswithQuestions, questionService, Notification){
+            
+            
+            $scope.markMCQs = function(){
+                questionService.markMCQs().success(function (data, status, headers) {
+                    Notification.primary({message: "All questions marked to MCQs successfully!",  positionY: 'top', positionX: 'right', delay: 3000});
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
+                });
+            };
             $scope.user = thisuser.data;
             $scope.allTests = testList.data;
             var testswithQuestions = testswithQuestions.data;
@@ -31075,8 +31156,211 @@ function getLatLng(thisData) {
                 console.log('Error ' + data + ' ' + status);
             });    
         };
-    }]);        
+    }]);
         
+        
+    exambazaar.controller("cirfController", 
+        [ '$scope', '$http','$state', '$rootScope', '$cookies', 'UserService', 'Notification', '$mdDialog', 'examList', 'cirfFactorService', function($scope,$http,$state,$rootScope, $cookies, UserService, Notification, $mdDialog, examList, cirfFactorService){
+        $scope.col1width = 30;
+        var examIds = [];
+        $scope.subfactorTypes = ['Bucket', 'Checklist'];
+        $scope.authorized = false;
+        
+        $scope.getFactorColor = function(index){
+            index = index % 5 + 1;
+            var classname = "factor" + index;
+            return(classname);
+        };
+        if($cookies.getObject('sessionuser')){
+            var sessionuser = $cookies.getObject( 'sessionuser');
+            if(sessionuser && sessionuser._id){
+                UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    $scope.exams = examList.data;
+                    examIds = $scope.exams.map(function(a) {return a._id;});
+                    if($scope.user.userType == 'Master'){
+                        $scope.authorized = true; 
+                    }
+                    if($scope.user._id == '5a1831f0bd2adb260055e352'){
+                        $scope.authorized = true; 
+                    }
+                    Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }else{
+                //$cookies.remove("sessionuser");
+                //$rootScope.$emit("CallBlogLogin", {});
+            }
+            
+        }else{
+            
+        }
+         
+        $scope.saveFactor = function(factor, index){
+             cirfFactorService.saveCirfFactor(factor).success(function (data, status, headers) {
+                
+                if(data && $scope.exam.factors && $scope.exam.factors.length > index){
+                    $scope.exam.factors[index] = data;
+                    Notification.success({message: "Factor successfully saved!",  positionY: 'top', positionX: 'right', delay: 2000});
+                }
+                
+                
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });
+        }; 
+        $scope.setExam = function(exam){
+            $scope.exam = exam;
+            
+            cirfFactorService.getExamCirfFactors($scope.exam._id).success(function (data, status, headers) {
+                
+                if(data){
+                    $scope.exam.factors = data;
+                }
+                
+                
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });
+            
+            
+        };
+        $scope.deleteFactorConfirm = function(factor, index){
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to delete this factor?')
+                .textContent('You will not be able to recover it after this!')
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.deleteFactor(factor, index);
+                }, function() {
+                  //nothing
+                });
+        };
+        $scope.deleteFactor = function(factor, index){
+            
+            if(factor._id){
+                cirfFactorService.removeCirfFactor(factor._id).success(function (data, status, headers) {
+                
+                    if(data){
+                        Notification.success({message: "Factor successfully deleted!",  positionY: 'top', positionX: 'right', delay: 2000});
+                        $state.reload();
+                    }else{
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 2000});
+                    }
+
+
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }else{
+                $scope.exam.factors.splice(index, 1);
+            }
+            
+                
+        }; 
+        $scope.addNewFactor = function(){
+            if($scope.exam){
+                var newFactor = {
+                    name: '',
+                    weight: '',
+                    exam: examIds,
+                    subfactors: [],
+                };
+                $scope.addNewSubFactor(newFactor);
+                if(!$scope.exam.factors){
+                    $scope.exam.factors = [];
+                }
+                $scope.exam.factors.push(newFactor);
+            }    
+        };
+        $scope.addNewExamFactor = function(){
+            if($scope.exam){
+                var newFactor = {
+                    name: '',
+                    weight: '',
+                    exam: [$scope.exam._id],
+                    subfactors: [],
+                };
+                $scope.addNewSubFactor(newFactor);
+                if(!$scope.exam.factors){
+                    $scope.exam.factors = [];
+                }
+                $scope.exam.factors.push(newFactor);
+            }    
+        };
+        
+            
+        $scope.addNewSubFactor = function(factor){
+            if(!factor.subfactors){
+                factor.subfactors = [];
+            }
+            var newSubFactor = {
+                name: '',
+                type: 'Bucket',
+                buckets: [],
+                checklists: [],
+                weight: '',
+                variable: '',
+            };
+            factor.subfactors.push(newSubFactor);
+        };
+        $scope.removeSubFactor = function(factor, index){
+            if(!factor.subfactors){
+                factor.subfactors = [];
+            }
+            if(index < factor.subfactors.length){
+                factor.subfactors.splice(index, 1);
+            }
+            
+        };
+        $scope.addSubFactorBucket = function(factor, index){
+            if(!factor.subfactors){
+                factor.subfactors = [];
+            }
+            if(factor.subfactors.length > index){
+                if(!factor.subfactors[index].buckets){
+                    factor.subfactors[index].buckets = [];
+                }
+                var newBucket = {
+                    range: {
+                        min: '',
+                        max: ''
+                    },
+                    score: '',
+                };
+                factor.subfactors[index].buckets.push(newBucket);
+            }
+            
+        };
+        $scope.addSubFactorChecklist = function(factor, index){
+            if(!factor.subfactors){
+                factor.subfactors = [];
+            }
+            if(factor.subfactors.length > index){
+                if(!factor.subfactors[index].checklists){
+                    factor.subfactors[index].checklists = [];
+                }
+                var newChecklist = {
+                    score: '',
+                    variable: '',
+                };
+                factor.subfactors[index].checklists.push(newChecklist);
+            }
+            
+        };    
+    }]);    
     exambazaar.controller("profileController", 
         [ '$scope', '$http','$state', '$rootScope', '$cookies', '$geolocation', 'Upload', 'ImageService', 'UserService', '$facebook', '$mdDialog', '$timeout', 'Notification', function($scope,$http,$state,$rootScope, $cookies, $geolocation, Upload, ImageService, UserService, $facebook, $mdDialog, $timeout, Notification){
         $scope.col1Width = 40;
@@ -33113,14 +33397,7 @@ function getLatLng(thisData) {
             };
             
             
-            $scope.markMCQs = function(){
-                questionService.markMCQs().success(function (data, status, headers) {
-                    Notification.primary({message: "All questions marked to MCQs successfully!",  positionY: 'top', positionX: 'right', delay: 1000});
-                })
-                .error(function (data, status, header, config) {
-                    console.log('Error ' + data + ' ' + status);
-                });
-            };
+            
             $scope.splitQuestions = function(){
                 var questionSet = $scope.toAddQuestion;
                 var nQuestions = questionSet.questions.length;
@@ -35952,7 +36229,7 @@ function getLatLng(thisData) {
             
     }]);
     exambazaar.controller("addStreamController", 
-        [ '$scope',  'streamList','StreamService','$http','$state', function($scope, streamList, StreamService,$http,$state){
+        [ '$scope',  'streamList','StreamService','$http','$state', 'Notification', 'ImageService', 'Upload', function($scope, streamList, StreamService, $http, $state, Notification, ImageService, Upload){
         $scope.streams = streamList.data;
         console.log(streamList.data);
         $scope.addStream = function () {
@@ -35965,8 +36242,82 @@ function getLatLng(thisData) {
             });
         };
         $scope.setStream = function(stream){
+            $scope.newlogo = null;
+            
             $scope.stream = stream;
         };
+            
+            
+        $scope.uploadLogo = function (newlogo, color) {
+            var logo = [newlogo];
+            var nFiles = logo.length;
+            
+            var counter = 0;
+            if (logo && logo.length) {
+            
+            logo.forEach(function(thisFile, index){
+            var fileInfo = {
+                filename: thisFile.name,
+                contentType: thisFile.type
+            }; ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+            var s3Request = {};
+            var allParams = data.params;
+            for (var key in allParams) {
+              if (allParams.hasOwnProperty(key)) {
+                s3Request[key] = allParams[key];
+              }
+            }
+                 
+            s3Request.file = thisFile;
+            Upload.upload({
+                url: data.endpoint_url,
+                data: s3Request
+            }).then(function (resp) {
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                var logoLink = $(resp.data).find('Location').text();
+                
+                var newLogoForm ={
+                    logo: logoLink,
+                    streamId: $scope.stream._id,
+                    color: color,
+                };
+                
+                if(newLogoForm.streamId){
+                    StreamService.addLogo(newLogoForm).success(function (data, status, headers) {
+                        if(data){
+                            counter = counter + 1;
+                            Notification.primary({message: "Great! All saved!",  positionY: 'top', positionX: 'right', delay: 5000});
+                            
+                            
+                            $state.reload();
+                        }else{
+                            Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        }
+                        
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                }else{
+                    //$scope.saveExamFirstDialog();
+                }
+                
+                
+                
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    
+                });
+
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error");
+            });   
+                 
+            });
+            }
+        };    
     }]);
     
         
@@ -36168,9 +36519,7 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"adityashubham1997@gmail.com",
 //"gaurav@exambazaar.com"
-
 
             ];
             $scope.internshipEmail = function(userId){
@@ -36232,11 +36581,11 @@ function getLatLng(thisData) {
             };
             
             
-            $scope.HappyNewYearEmail = function(userId){
+            $scope.EventsEmail = function(userId){
                 UserService.getUserBasic(userId).success(function (data, status, headers) {
                     var marketingUser = data;
                     if(marketingUser.mobile == '9829685919'){
-                         EmailService.HappyNewYearEmail().success(function (thisData, status, headers) {
+                         EmailService.EventsEmail().success(function (thisData, status, headers) {
                             
                             Notification.success("All done!");
                         })
@@ -40189,7 +40538,28 @@ function getLatLng(thisData) {
             resolve: {
             }
         })
-    
+        .state('cirf', {
+            url: '/ebinternal/cirf',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'cirf.html',
+                    controller: 'cirfController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExamsBasic();
+                }],
+            }
+        })
         .state('addedInstitutes', {
             url: '/ebinternal/user/:userId/addedInstitutes',
             views: {
@@ -41279,7 +41649,9 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
-                stream: function() { return {}; }
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
             }
         })
         .state('addOffer', {

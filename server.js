@@ -140,6 +140,7 @@ var availDiscounts = require('./app/availDiscounts.js',availDiscounts);
 var questions = require('./app/questions.js',questions); 
 var questionresponses = require('./app/questionresponses.js',questionresponses); 
 var qmarkforreviews = require('./app/qmarkforreviews.js',qmarkforreviews); 
+var cirffactors = require('./app/cirffactors.js',cirffactors); 
 var assessments = require('./app/assessments.js',assessments); 
 var eligibilitys = require('./app/eligibilitys.js',eligibilitys); 
 var streams = require('./app/streams.js',streams); 
@@ -189,6 +190,7 @@ app.use('/api/tests', tests);
 app.use('/api/questions', questions);
 app.use('/api/questionresponses', questionresponses);
 app.use('/api/qmarkforreviews', qmarkforreviews);
+app.use('/api/cirffactors', cirffactors);
 app.use('/api/assessments', assessments);
 app.use('/api/availDiscounts', availDiscounts);
 app.use('/api/eligibilitys', eligibilitys);
@@ -280,6 +282,7 @@ var allStates = [
 '/ebinternal/user/:userId/filledAll',
 '/ebinternal/user/:userId/group',
 '/ebinternal/profile',
+'/ebinternal/cirf',
 '/ebinternal/reviewed',
 '/ebinternal/userInstitutes',
 '/ebinternal/academics',

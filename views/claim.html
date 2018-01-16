@@ -3124,7 +3124,7 @@
 
 <div class="bottomBar" ng-if="!smallScreen">
     <div layout="row" ng-show="editDescription || editContact || editExam || editCourse || editResult || editResult2 ||  editPhoto || editResultPhoto || editVideo || editFaculty || editLocation || editEBnote" layout-align="start center">
-        <div flex ="80">
+        <div flex>
             <span>
             Do you want to save your changes to {{provider.name}}? 
             </span>
@@ -3136,17 +3136,38 @@
                 Uploading {{faculties.length}} faculties: {{facultyProgess | number:0}}% done
             </span>
         </div>
+        
         <div layout="row" flex = "20">
-            <md-button class="md-green2 md-small font10 width8" ng-click="saveProvider()">
-            Save
-            </md-button>
-            <!--<md-button class="md-default md-cancel md-small  minwidth10" ng-click="dontsaveChanges()">
-                Don't Save
-            </md-button>-->
-            <md-button class="md-default md-cancel md-small font10 width8" ng-click="dontsaveChanges()">
-                Cancel
-            </md-button>
+            <div class="marginR10">
+                <md-button class="md-green2 md-small font10 margin0" ng-click="saveProvider()">
+                Save
+                </md-button>
+            </div>
+            <div class="marginR10">
+                <md-button class="md-default md-cancel md-small font10 margin0" ng-click="dontsaveChanges()">
+                    Cancel
+                </md-button>
+            </div>
         </div>
         
     </div>
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="statementsDialog">
+      <md-dialog class="fullscreen-dialog whiteBackground">
+          
+          <div layout="column" layout-align="start center" layout-fill>
+              <div layout="row" layout-align="start center" ng-repeat="statement in statements track by $index">
+                {{statement}}
+              </div>        
+          </div>
+      </md-dialog>
+    </div>    
+</div>
+
+<div layout="row" layout-align="end center" class="rightMidButton paddingR10" ng-if="masteruser">
+    <md-button class="md-next md-small font10 margin0" ng-click="cirf()">
+    CIRF for JEE Main
+    </md-button>
 </div>

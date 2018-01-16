@@ -1,0 +1,221 @@
+<style>
+    #categories{
+        margin-top: 20px;
+    }
+    #categoryFont{
+        min-height: 5vh;
+        color: white;
+        min-width: 175px;
+        border-style: solid;
+        border-radius: 10px;
+        border-width: 1px;
+        background-color: rgba(0,0,0,0.6);
+        margin-top: 7px;
+        margin-bottom: 7px;
+        margin-right: 0px;
+        padding: 5px;
+        
+        box-shadow: 2px 2px 2px #6A6968;
+    }
+    #categoryFont:hover{
+        background-color: #20C39A;
+        font-weight: 900;
+    }
+    #categoryLink a:hover{
+      padding: 0px;
+      color: white;
+      text-decoration: none;
+    }
+    #pageHeader{
+        color: rgba(0,0,0,0.8);
+        letter-spacing: 4px;
+    }
+    #pageHeaderFont{
+        letter-spacing: 2px;
+    }
+    a:hover{
+        text-decoration: none;
+    }
+    #breadcrumb{
+        color: #20C39A;
+    }
+    
+    #coachingHeader{
+        color: #20C39A;
+        letter-spacing: 1px;
+    }
+    #coachingCourses{
+        letter-spacing: 0px;
+    }
+    #knowmore{
+        width:100%;
+        background-color: #20C39A;
+        margin-top: 10px;
+    }
+    #fullPageGradient1{
+        
+    }
+    
+    .nohighlight{
+        border-bottom: solid;
+        border-width: 1px;
+        border-color: rgba(0,0,0,0.6);
+        
+    }
+    .highlight{
+        border-bottom: solid;
+        border-width: 3px;
+        border-color: #20C39A;
+        color: #20C39A;
+    }
+    
+    #normal{
+        color: #20C39A;
+        letter-spacing: 0px;
+    }
+    #normal a{
+        color: #20C39A;
+    }
+    #leftTabs{
+        
+        margin-bottom: 20px;
+    }
+    
+    #subcategory{
+        height: 100%;
+        padding-right: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        min-height: 15vh;
+        
+        /*border-style: solid;
+        border-radius: 10px;*/
+        
+        /*border-width: 2px;
+        border-color: whitesmoke;
+        box-shadow: 1px 1px 1px #6A6968;
+        border: 1px solid #ccc;
+        */
+        
+        background-color: white;
+        box-shadow: 0 0 7px gainsboro;
+    }
+    
+    #rightTabs{
+        background-color: rgba(0,0,0,0.6);
+        color: whitesmoke;
+        border: none;
+        height: 100%;
+        margin-bottom: 20px;
+        
+    }
+    
+    .label-eb{
+        background: #20C39A;
+    }
+    .btn:active{
+        background: #20C39A;
+    }
+    .btn:selected{
+        background: #20C39A;
+    }
+    
+    #pageLogoHolder{
+        height: 100px;
+        width: 150px;
+    }
+    #coachingList{
+        /*min-height: 40vh;*/
+    }
+    a{
+        color: #20C39A;
+    }
+    #reviewLink{
+        color: #20C39A;
+    }
+    #reviewLink:hover{
+        text-decoration: underline;
+    }
+    #distanceBadge{
+        border: 1px solid #6A6968;
+        background: transparent;
+        color: #6A6968;
+    }
+    #subheading{
+        letter-spacing: 4px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+        color: white;
+        text-shadow: 0 0 10px #383838;
+        max-width: 800px;
+    }
+    .pageLogo{
+        max-height: 32px;
+        max-width: 32px;
+    }
+</style>
+
+<div flex layout="column" layout-align="start center" class="text-white mainContent" id="fullPage">
+    <div id="spacer1" hide-xs>
+    </div>
+    <div id="spacerXS" hide-gt-xs>
+    </div>
+    <div layout="column" layout-align="start center" class="width100" id="landingPage">
+        <h1 layout="row" layout-align="center center" class="h1Font bold text-white" id="pageHeaderFont" layout-wrap>
+            <div class="marginR20">
+                SEARCH
+            </div>
+            <div class="marginR20">
+                &#8226;
+            </div>
+            <div class="marginR20">
+                COMPARE
+            </div>
+            <div class="marginR20">
+                &#8226;
+            </div>
+            <div>
+                APPLY
+            </div>
+        </h1>
+        
+        <div  layout="row" layout-align="center center" class="marginT20  text-center width100" id="subheading">
+            <div flex="90" layout="column" layout-align="center center" class="">
+                <div layout="column" layout-align="center center" class="h3Font text-white bold width100">
+                    SEARCH THROUGH 26,000+ COACHING INSTITUTES IN 90+ CITIES
+                </div>
+                <!--<div layout="column" layout-align="center center" class="font16 letterspacing2 marginT10 width100">Explore photos, videos, discounts, reviews and more</div>-->
+                <!--Browse through thousands of Coaching Institutes offering Amazing Discounts and Find the one Right For You!-->
+            </div>
+        </div>
+        <!--<div class="marginT40">
+            <md-button type="submit" class="md-large md-start width100 mainFont font20" ui-sref="main">Search Now</md-button>
+        </div>-->
+        
+        <div layout="row" layout-align="center center" class="marginTB10 text-center width100 paddingB10">
+            <div flex-gt-xs="70" layout="row" layout-align="center center" class="subhheadingBottomBorder4 paddingB20" layout-wrap ng-if="streamranks">
+                <div layout="column" layout-align="center center" flex-gt-md="25" flex-sm="25" flex-xs="100" ng-repeat="stream in streamranks | orderBy:['-rank']" ng-if="stream.active && stream.stream != 'Other'" class="paddingTB5 paddingLR10">
+                <div layout="row" layout-align="center center" class="p0Button width100" ui-sref="category({ categoryName:{{'stream.name'}} })">
+                    <div>
+                        <img class="pageLogo" ng-src="{{stream.logo.white}}"/>
+                    </div>
+                    <div flex class="marginL10">
+                        <h1 class="h3Font text-white spacedLetter1">{{stream.stream}}</h1>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!--<div layout="row" layout-align="center center" class="width100">
+            <div flex-gt-xs="70" layout="row" layout-align="center center" ng-if="streamranks">
+                <button class="btn actionButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
+                </button>
+                <md-button class="md-danger md-small font14 primaryFont spacedLetter1 padding5" ng-click="showUserReviewSearchDialog()" ng-controller="offerController">
+                Review Your Coaching
+                </md-button>   
+            </div>
+        </div>-->
+    </div>
+    
+</div>

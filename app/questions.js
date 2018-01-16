@@ -123,33 +123,32 @@ router.get('/', function(req, res) {
 router.get('/markMCQs', function(req, res) {
     console.log('Marking MCQ subquestions');
     var allQuestions = question
-        .find({ }, {type:1, questions: 1})
-        //.limit(1)
-        //.deepPopulate('exam')
+        .find({}, {questions: 1})
         .exec(function (err, allQuestions) {
         if (!err){
-            var standardMarking = {
-                correct: '3',
-                incorrect: '-1',
-            };
+            var counter = 0;
+            var nQuestions = allQuestions.length;
+            res.json(true);
             
             allQuestions.forEach(function(thisQuestion, qIndex){
+                var thisCounter = 0;
                 thisQuestion.questions.forEach(function(thisSubQuestion, sIndex){
-                    if(!thisSubQuestion.marking){
-                        //console.log('I am here');
-                        thisSubQuestion.marking = standardMarking;
-                    }
-                    /*if(!thisSubQuestion.type){
+                    if(!thisSubQuestion.type){
                         thisSubQuestion.type = 'mcq';
-                    }*/
+                        counter += 1;
+                        thisCounter += 1;
+                        
+                    }
                     
                 });
-                //console.log(thisQuestion);
-                thisQuestion.save(function(err, thisQuestion) {
+                if(thisCounter > 0){
+                    thisQuestion.save(function(err, thisQuestion) {
                     if (err) return console.error(err);
-                    console.log('Question type marked: ' + thisQuestion._id);
-                });
+                        console.log('Question type marked: ' + thisQuestion._id);
+                    });
+                }
             });
+            console.log('Suggest ' + counter + " changes out of " + nQuestions + " questions!");
         } else {throw err;}
     });
     

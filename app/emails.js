@@ -1547,14 +1547,14 @@ router.post('/CATEmail', function(req, res) {
 });
 
 
-router.post('/HappyNewYearEmail', function(req, res) {
-    console.log('Starting Happy New Year 2018 Email');
+router.post('/EventsEmail', function(req, res) {
+    console.log('Starting Events Email');
     var fromEmail = {
         email: 'always@exambazaar.com',
         name: 'Always Exambazaar'
     };
     
-    var templateName = 'New Year 2018 Email';
+    var templateName = 'Events';
     res.json(true);
     
     
@@ -1605,15 +1605,20 @@ router.post('/HappyNewYearEmail', function(req, res) {
 
 
                     if(thisUser.email && thisUser.email != ''){
-                        console.log('Sending email to ' + username + ' at ' + to);
+                        
                         sg.API(request, function(error, response) {
                         if(error){
-                            console.log('Could not send email! ' + error);
-                        }else{
                             counter += 1;
-                            console.log(counter + "/" + nUsers + " done!");
+                            console.log(index + '. Could not send email! ' + error);
+                        }else{
+                            
+                            counter += 1;
+                            emailcounter += 1;
+                            console.log(index  + '. Email sent to ' + username + ' at ' + to);
+                            //console.log(counter + "/" + nUsers + " done!");
                             if(counter == nUsers){
-                                console.log('All Done');
+                                console.log("Total " + emailcounter + " emails delivered " + " out of " + counter + " attempts!" );
+                                //console.log('All Done');
                             }
                         }
                     });

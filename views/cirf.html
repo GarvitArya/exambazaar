@@ -1,0 +1,239 @@
+<style>
+    .badge{
+        background: #FF5A5F;
+    }
+    .common{
+        background: #20C39A;
+    }
+    #upload4{
+        background: #20C39A;
+        color: white;
+        padding: 5px;
+    }
+    #upload4:hover {
+        background: #29335C;
+        color: white;
+    }
+    
+    #upload5{
+        background: #FF5A5F;
+        color: white;
+        padding: 5px;
+    }
+    #upload5:hover {
+        background: #29335C;
+        color: white;
+    }
+    input[type="text"]
+    {
+        font-size: 13px;
+        color: #333333;
+        padding: 2px;
+        border: solid 1px #969696;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    input[type="text"]:focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    .factor1{
+        background: #E4FCFC;
+    }
+    .factor2{
+        background: #FBF0DF;
+    }
+    .factor3{
+        background: #FFF8F0;
+    }
+    .factor4{
+        background: #E7E3EB;
+    }
+    .factor5{
+        background: #C5C6CC;
+    }
+    
+</style>
+
+<div class="whiteBackground smallFont paddingLR40">
+    <div id="spacer">
+    </div>
+    <div layout="column" layout-align="start start" ng-if="authorized">
+        <div layout="row" layout-align="center center" class="h1Font text-primary bold width100">
+            CIRF
+        </div>
+        <div layout-wrap>
+            <span class="badge marginR2 marginB2" ng-repeat="thisExam in exams | orderBy:['stream.displayname','-rank']" ng-if="thisExam.active && thisExam.rank > 80" ng-click="setExam(thisExam)">
+                {{thisExam.displayname}}
+            </span>
+        </div>
+        <div layout="column" layout-align="start start" class="width100 marginTB20 " ng-if="exam">
+            <div layout="row" layout-align="start center" class="h3Font width100 subhheadingBottomBorder3 paddingB10">
+                {{exam.displayname}}&nbsp;&nbsp;<span class="badge">
+                    {{exam.factors.length}} factors
+                </span>
+            </div>
+            <div layout="row" layout-align="start start" class="width100" layout-wrap>
+            <div flex="50" layout="column" layout-align="start start" class="width100 padding10 marginTB20" ng-repeat="factor in exam.factors" >
+                <div layout="column" layout-align="start start" class="width100 padding10 boxShadow" ng-class="getFactorColor($index)">
+                <div layout="row" layout-align="start center" class="width100 baseFont marginT5 marginB20 bold" >
+                    <div flex>
+                        Factor {{$index + 1}}&nbsp;&nbsp;<i class="fa fa-trash danger" aria-hidden="true" ng-click="deleteFactorConfirm(factor, $index)"></i>
+                    </div>
+                    <div flex layout="row" layout-align="end start">
+                        <span class="badge" ng-if="factor.exam.length == 1">
+                        Exam Specific
+                        </span>
+                        <span class="badge common" ng-if="factor.exam.length > 1">
+                        Common Factor
+                        </span>
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" class="width100 marginTB5">
+                    <div flex="{{col1width}}" class="bold">Factor Name</div>
+                    <div flex>
+                        <input type="text" class="text-center width100"  placeholder="Factor Name" ng-model="factor.name">
+                    </div>
+                
+                </div>
+                <div layout="row" layout-align="start start" class="width100 marginTB5">
+                    <div flex="{{col1width}}" class="bold">Factor Weight</div>
+                    <div flex>
+                        <input type="text" class="text-center width100"  placeholder="Factor Weight out of 100" ng-model="factor.weight">
+                    </div>
+                
+                </div>
+                <div layout="column" layout-align="start center" class="width100 padding10 boxShadow marginTB10" ng-repeat="subfactor in factor.subfactors">
+                    <div class="width100 bold">
+                        Subfactor {{$index + 1}}&nbsp;&nbsp;<i class="fa fa-trash danger" aria-hidden="true" ng-click="removeSubFactor(factor, $index)"></i>
+                    
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 marginTB5">
+                        <div flex="{{col1width}}" class="bold">SubFactor Name</div>
+                        <div flex>
+                            <input type="text" class="text-center width100"  placeholder="SubFactor Name" ng-model="subfactor.name">
+                        </div>
+
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 marginTB5">
+                        <div flex="{{col1width}}" class="bold">SubFactor Weight</div>
+                        <div flex>
+                            <input type="text" class="text-center width100"  placeholder="SubFactor Weight out of 100" ng-model="subfactor.weight">
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 marginTB5">
+                        <div flex="{{col1width}}" class="bold">SubFactor Variable</div>
+                        <div flex>
+                            <input type="text" class="text-center width100"  placeholder="Variable in Rating Param" ng-model="subfactor.variable">
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 marginTB5">
+                        <div flex="{{col1width}}" class="bold">SubFactor Type</div>
+                        <div flex>
+                            <md-select ng-model="subfactor.type" placeholder="Subfactor Type" class="margin0 text-center">
+                                <md-option ng-value="subfactorType" ng-repeat="subfactorType in subfactorTypes" class="margin0">
+                                  {{subfactorType}}
+                                </md-option>
+                            </md-select>
+                        </div>
+                    </div>
+                    
+                    <div layout="row" layout-align="start center" class="width100 marginTB5" ng-if="subfactor.type == 'Bucket'">
+                        <div layout="row" layout-align="start center" flex="{{col1width}}" class="bold">Buckets&nbsp;<span class='badge'>{{subfactor.buckets.length}}</span></div>
+                        <div layout="column" layout-align="center center" class="" flex>
+                            <div layout="row" layout-align="center center" class="width100" ng-repeat="bucket in subfactor.buckets">
+                                <div flex class="paddingR10">
+                                <input type="text" class="text-center width100"  placeholder="Min of Bucket" ng-model="bucket.range.min">
+                                </div>
+                                <div flex class="paddingR10">
+                                <input type="text" class="text-center width100"  placeholder="Max of Bucket" ng-model="bucket.range.max">
+                                </div>
+                                <div flex class="paddingR10">
+                                <input type="text" class="text-center width100"  placeholder="Score of Bucket out of 100" ng-model="bucket.score">
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div layout="row" layout-align="end center" class="width100 marginTB5 font10" ng-if="subfactor.type=='Bucket'">
+                        <div flex="40" layout="row" layout-align="center center" id="upload4" ng-click="addSubFactorBucket(factor, $index)" >
+                            <span>
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Bucket
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div layout="row" layout-align="start center" class="width100 marginTB5" ng-if="subfactor.type == 'Checklist'">
+                        <div layout="row" layout-align="start center" flex="{{col1width}}" class="bold">Checklists&nbsp;<span class='badge'>{{subfactor.checklists.length}}</span></div>
+                        <div layout="column" layout-align="center center" class="" flex>
+                            <div layout="row" layout-align="center center" class="width100" ng-repeat="checklist in subfactor.checklists">
+                                <div flex class="paddingR10">
+                                <input type="text" class="text-center width100"  placeholder="Checklist Variable" ng-model="checklist.variable">
+                                </div>
+                                <div flex class="paddingR10">
+                                <input type="text" class="text-center width100"  placeholder="Score of Bucket" ng-model="checklist.score">
+                                </div>
+                                
+                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div layout="row" layout-align="end center" class="width100 marginTB5 font10" ng-if="subfactor.type=='Checklist'">
+                        <div flex="40" layout="row" layout-align="center center" id="upload5" ng-click="addSubFactorChecklist(factor, $index)" >
+                            <span>
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Checklist Item
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="width100 marginTB5">
+                    <div layout="row" layout-align="start center" flex class="marginR10">
+                        <a ng-click="addNewSubFactor(factor)" id="blogPageLink" class="bold">
+                        Add SubFactor
+                        </a>
+                    </div>
+                    <div flex layout="row" layout-align="end center">
+                    <md-button class="md-danger md-small font10 margin0" ng-click="saveFactor(factor, $index)">
+                        Save Factor
+                    </md-button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div layout="row" layout-align="center center" class="width100 marginT10">
+                <div flex="40" layout="row" layout-align="center center" id="upload4" ng-click="addNewFactor()" >
+                    <span>
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add another common rating factor
+                    </span>
+                </div>
+                <div flex="20">
+                </div>
+                <div flex="40" layout="row" layout-align="center center" id="upload5" ng-click="addNewExamFactor()" >
+                    <span>
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add Exam rating factor
+                    </span>
+                </div>
+            </div>
+            
+            
+        </div>
+        
+        
+    </div>
+    
+    <div layout="column" layout-align="start start" ng-if="!authorized" class="font20 bold">
+        You do not have access to view this information. Login above to try again.
+    </div>
+    <div id="spacer">
+    </div>
+</div>
+
+

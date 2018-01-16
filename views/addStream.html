@@ -22,25 +22,76 @@
         color: #20C39A;
         text-decoration: none;
     }
+    .badge{
+        background: #29335C;
+    }
+    #pageLogoHolder{
+        border: 1px solid rgba(0,0,0,0.8);
+        min-height: 120px;
+        width: 120px;
+        border-radius: 4px;
+    }
+    .pageLogo{
+        max-height: 50px;
+    }
 </style>
-<div class="container">
-    <div id="spacer1">
+<div id="spacer1">
     </div>
-    <div layout="row" layout-margin layout-padding>
-        <span class="md-subhead" ng-repeat="existingStream in streams">
-            <a ng-click="setStream(existingStream)">{{existingStream.displayname}}</a>, 
+<div class="padded marginT40">
+    
+    <div layout="row" layout-wrap class="subhheadingBottomBorder3 paddingB5">
+        <span class="badge marginR5 marginB5" ng-repeat="existingStream in streams" ng-click="setStream(existingStream)">
+            {{existingStream.displayname}}
         </span>
     </div>
     
-    <md-divider></md-divider>
-    
-    <div layout="column" layout-margin layout-padding>
-    <h4 class="text-primary md-title">Add Stream</h4>
-    <div class="col-md-12" id="addMasterForm">
+    <div layout="column">
+    <h4 class="h2Font">
+        <span ng-if="!stream._id">Add Stream</span>
+        <span ng-if="stream._id">{{stream.displayname}}</span>
+    </h4>
+    <div class="width100" id="addMasterForm">
         <md-content flex layout-padding>
             <form name="streamForm" >
             <div layout="column" >
-                <div layout="column">
+                <div layout="row" layout-align="start center"  class="width100" ng-if="stream._id">
+                    <div layout="column" layout-align="center center" class="padding5 whiteBackground marginR20" id="pageLogoHolder">
+                        <img  ng-src="{{stream.logo.black}}" class="pageLogo" ng-if="stream.logo.black !=''"/>
+                        <span ng-show="stream.logo.black && stream.logo.black !=''" class="font9 textDarkGrey" ngf-select="uploadLogo(newlogo, 'black')" ng-model="newlogo" ngf-accept="'image/*'">
+                            Change Logo Black
+                        </span>
+                        <span class="textDarkGrey" ng-show="stream.logo.black == '' || !stream.logo.black" ng-click="">
+
+                            <div layout="column" layout-align="center center" class="width100 height100" ngf-select="uploadLogo(newlogo, 'black')" ng-model="newlogo" ngf-accept="'image/*'">
+                                <span class="md-display-1">
+                                    <i class="fa fa-camera" aria-hidden="true"></i>
+                                </span>
+                                <span>
+                                    Add Logo Black
+                                </span>
+                            </div>
+                        </span>
+                    </div>
+                    
+                    <div layout="column" layout-align="center center" class="padding5 blackBackground marginR20" id="pageLogoHolder">
+                        <img  ng-src="{{stream.logo.white}}" class="pageLogo" ng-if="stream.logo.white !=''"/>
+                        <span ng-show="stream.logo.white && stream.logo.white !=''" class="font9 text-white" ngf-select="uploadLogo(newlogo, 'white')" ng-model="newlogo" ngf-accept="'image/*'">
+                            Change Logo White
+                        </span>
+                        <span class="textDarkGrey" ng-show="stream.logo.white == '' || !stream.logo.white" ng-click="">
+
+                            <div layout="column" layout-align="center center" class="width100 height100 text-white" ngf-select="uploadLogo(newlogo, 'white')" ng-model="newlogo" ngf-accept="'image/*'">
+                                <span class="md-display-1">
+                                    <i class="fa fa-camera " aria-hidden="true"></i>
+                                </span>
+                                <span>
+                                    Add Logo White
+                                </span>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div layout="column" class="marginT10">
 
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>Stream Name</label>
@@ -59,13 +110,14 @@
                     </md-switch>
                 </div>   
 
-                <md-button class="md-raised md-primary" ng-click="addStream()" ng-disabled="streamForm.$invalid">Add Stream</md-button>
+                <md-button class="md-raised md-primary" ng-click="addStream()" ng-disabled="streamForm.$invalid">
+                    <span ng-if="!stream._id">Add Stream</span>
+                    <span ng-if="stream._id">Save {{stream.displayname}} Stream</span>
+                </md-button>
 
             </div>
         </form>
         </md-content>
         </div>
     </div>
-</div>
-<div>
 </div>
