@@ -402,7 +402,7 @@ router.post('/cirf', function(req, res) {
     var examId = cirfForm.examId;
     var statements = [];
     
-    var allProviders = targetStudyProvider.find( {"_id" : {$in: instituteIds}, type: 'Coaching'}, {rating: 1, name: 1},function(err, allProviders) {
+    var allProviders = targetStudyProvider.find( {"_id" : {$in: instituteIds}, type: 'Coaching'}, {rating: 1, name: 1, groupName: 1},function(err, allProviders) {
     if (!err){
     var nLength = allProviders.length;
     var counter = 0;
@@ -410,11 +410,19 @@ router.post('/cirf', function(req, res) {
     if(nLength == 0){
         res.json(false);
     }
-    allProviders.forEach(function(thisProvider, index){
-    
-    var rating = thisProvider.rating;
+    allProviders.forEach(function(this_Provider, index){
+        var groupName = this_Provider.groupName;
+        
+        var thisProvider = targetStudyProvider.findOne( {"groupName" : groupName, type: 'Coaching', $and: [{"rating": {$exists: true}},{"rating.n_exams": {$exists: true}}]}, {rating: 1, name: 1, groupName: 1},function(err, thisProvider) {
+        if (!err){
+            
+        if(thisProvider){
+            
+        console.log('Coaching Id is: ' + thisProvider._id);
+        statements.push('Coaching Id is: ' + thisProvider._id);
+        var rating = thisProvider.rating;
 
-    var allCIRFs = cirffactor.find( {exam : examId}, {},function(err, allCIRFs) {
+        var allCIRFs = cirffactor.find( {exam : examId}, {},function(err, allCIRFs) {
     if (!err){
         var cCounter = 0;
         var nCIRFs = allCIRFs.length;
@@ -556,9 +564,15 @@ router.post('/cirf', function(req, res) {
         }
     } else {throw err;}
     });
+        
+        }else{
+            console.log('Could not find rating for the coaching!');
+            statements.push('Could not find rating for the coaching!');
+            res.json(statements);
+        }    
 
-
-
+        }
+        });
     
     });
         
