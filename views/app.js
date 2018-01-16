@@ -33418,13 +33418,16 @@ function getLatLng(thisData) {
 
                         };
                         newQuestion.questions = [];
-                        newQuestion.questions.push({
-                            question: questionSet.context + '\r\n\r\n' + thisQuestion.question,
-                            options: thisQuestion.options,
-                            solution: thisQuestion.solution,
-                            answer: thisQuestion.answer,
-                            images: thisQuestion.images,
-                        });
+                        var thisNewQuestion = {};
+                        for (var property in thisQuestion) {
+                            thisNewQuestion[property] = thisQuestion[property];
+                            
+                        }
+                        
+                        if(questionSet.context && questionSet.context != ''){
+                            thisNewQuestion.question = questionSet.context + '\r\n\r\n' + thisQuestion.question;
+                        }
+                        newQuestion.questions.push(thisNewQuestion);
                         newQuestion._createdBy = $scope.user._id;
                         allSplitQuestions.push(newQuestion);
                     });
