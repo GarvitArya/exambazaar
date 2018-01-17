@@ -98,6 +98,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               ]
             },
             {
+              name: 'angularScreenfull',
+              files: [
+                    'screenfull.js',
+                    'angular-screenfull.js'
+              ]
+            },  
+            {
               name: 'angularFileSaver',
               files: [
                     'angular-file-saver.bundle.js'
@@ -39984,6 +39991,10 @@ function getLatLng(thisData) {
                 angularTimer: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularTimer'], {serie: true});
                 }],
+                angularScreenfull: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularScreenfull'], {serie: true});
+                }],
+                
             }
         })
         .state('assessmentreport', {
