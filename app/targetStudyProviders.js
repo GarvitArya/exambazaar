@@ -470,6 +470,30 @@ router.post('/cirf', function(req, res) {
                         if(providerVariable.value && providerVariable.value.indexOf('%') != -1){
                             providerVariable.value = parseFloat(providerVariable.value);
                         }
+                        if(providerVariable && providerVariable.value == ''){
+                            var option = providerVariable.option;
+                            if(option.indexOf('-') != -1){
+                                var splits = str.split("-");
+                                var sum = 0;
+                                splits.forEach(function(thisValue, vindex){
+                                    sum += parseFloat(thisValue);
+                                    //console.log(thisValue);
+                                });
+                                sum = sum/splits.length;
+                                providerVariable.value = sum;
+                            }
+                            if(option.indexOf('>') != -1){
+                                var opt1 = option.replace(">", "");
+                                
+                                providerVariable.value = parseFloat(opt1) + 1;
+                                
+                            }
+                            if(option.indexOf('<') != -1){
+                                var opt1 = option.replace(">", "");
+                                providerVariable.value = parseFloat(opt1) - 1;
+                                
+                            }
+                        }
                         //console.log(ratingVariable + " " + providerVariable);
 
                         if(buckets && buckets.length > 0){
@@ -540,8 +564,8 @@ router.post('/cirf', function(req, res) {
                     }
                     
                     var subFactorScore = Number(subfactorScore * Number(thisSubfactor.weight) * factorWeight / 100 / 100);
-                    console.log("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of 100");
-                    statements.push("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of 100");
+                    console.log("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
+                    statements.push("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
                     
                     factorScore += subFactorScore;
                     //console.log(sindex + ". " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight);
