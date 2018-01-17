@@ -66,7 +66,7 @@
             Ready for Simulation
         </div>
         <div layout="row" layout-align="start start" flex layout-wrap class=" width100 padding5 assignBackground">
-            <div layout="column" layout-align="center center" ng-repeat="test in exam.tests | orderBy:['-nTyped']"  class="marginR5 marginB2" ng-if="test.simulate.ready">
+            <div layout="column" layout-align="center center" ng-repeat="test in exam.tests | orderBy:['-year','-nTyped']"  class="marginR5 marginB2" ng-if="test.simulate.ready">
                 <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB2">
                     {{$index + 1}}. {{test.name}}&nbsp;&nbsp;<i class="fa fa-anchor" aria-hidden="true" ng-if="test.url.answer"></i>
                     <span class="badge" ng-if="test.nTyped">{{test.nTyped}}</span>
@@ -80,7 +80,7 @@
             Not Ready for Simulation
         </div>
         <div layout="row" layout-align="start start" flex layout-wrap class=" width100 padding5 assignBackground2" >
-            <div layout="column" layout-align="center center" ng-repeat="test in exam.tests | orderBy:['-nTyped', 'simulate.comments.length']"  class="marginR5 marginB2" ng-if="!test.simulate.ready">
+            <div layout="column" layout-align="center center" ng-repeat="test in exam.tests | orderBy:['-year','-nTyped', 'simulate.comments.length']"  class="marginR5 marginB2" ng-if="!test.simulate.ready">
                 <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="marginR5 marginB2">
                     {{$index + 1}}. {{test.name}}&nbsp;<i class="fa fa-anchor" aria-hidden="true" ng-if="test.url.answer"></i>
                     <span class="badge" ng-if="test.nTyped">{{test.nTyped}}</span>
