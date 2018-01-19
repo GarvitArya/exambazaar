@@ -446,6 +446,16 @@
                         <input type="text" class="width100"  placeholder="Total Number of Questions" ng-model="test.nQuestions">
                     </div>
                 </div>
+                <div layout="row" layout-align="start center" class="width100 marginT10 padding10 assignBackground">
+                    <div class="bold paddingR10" flex="40">
+                    Can the test be reset & taken again by the candidate?
+                    </div>
+                    <div flex class="paddingL10">
+                        <md-switch ng-model="test.resettable" aria-label="Resettable?" class="margin0 danger bold">
+                            Resettable test?
+                        </md-switch>
+                    </div>
+                </div>
                 <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
                     <div class="bold paddingR10"  flex="40">
                     Total Duration of the test in minutes

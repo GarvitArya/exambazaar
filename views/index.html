@@ -344,13 +344,18 @@
             color: black;
         }
         .subBaseFont{
-            font-family: 'Roboto Condensed', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 13px;
             color: #333333;
         }
         .smallFont{
             font-family: 'Fira Sans', sans-serif;
             font-size: 12px;
+            color: #808080;
+        }
+        .smallerFont{
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 10px;
             color: #808080;
         }
         .inputFont{
@@ -745,8 +750,21 @@
         }
         .exact100h{
             height: 100vh;
-            min-height: 100%;
-            max-height: 100%;
+        }
+        .exact90h{
+            height: 90vh;
+        }
+        .exact70h{
+            height: 70vh;
+        }
+        .exact65h{
+            height: 65vh;
+        }
+        .exact85h{
+            height: 85vh;
+        }
+        .exact75h{
+            height: 75vh;
         }
         .exact50h{
             height: 50vh;
@@ -765,8 +783,18 @@
         }
         .exact25h{
             height: 25vh;
-            min-height: 25%;
-            max-height: 25%;
+        }
+        .exact20h{
+            height: 20vh;
+        }
+        .exact15h{
+            height: 15vh;
+        }
+        .exact10h{
+            height: 10vh;
+        }
+        .exact5h{
+            height: 5vh;
         }
         .min100vh{
             min-height: 100vh;
@@ -776,6 +804,15 @@
         }
         .min80vh{
             min-height: 80vh;
+        }
+        .min70vh{
+            min-height: 70vh;
+        }
+        .min60vh{
+            min-height: 60vh;
+        }
+        .min55vh{
+            min-height: 55vh;
         }
         .min50vh{
             min-height: 50vh;
@@ -836,7 +873,7 @@
             border-bottom: 1px solid #ccc;
         }
         .greyRightBorder{
-            border-right: 1px solid whitesmoke;
+            border-right: 1px solid gainsboro;
         }
         .footerBottomBorder{
             border-bottom: 1px solid #8e8e8e;
@@ -1321,6 +1358,31 @@
             color: #C00000;
             box-shadow: 0 0 5px #C00000;
         }
+        
+        .md-button.md-markReview{
+            border: 2px solid #8378d0;
+            background: #8378d0;
+            color: white;
+        }
+        .md-button.md-markReview:hover, .md-button.md-markReview:focus, .md-button.md-markReview:active{
+            border: 2px solid #8378d0;
+            background: white;
+            color: #8378d0;
+            box-shadow: 0 0 5px #8378d0;
+        }
+        
+        .md-button.md-saveNext{
+            border: 2px solid #20C39A;
+            background: #20C39A;
+            color: white;
+        }
+        .md-button.md-saveNext:hover, .md-button.md-saveNext:focus, .md-button.md-saveNext:active{
+            border: 2px solid #20C39A;
+            background: white;
+            color: #20C39A;
+            box-shadow: 0 0 5px #20C39A;
+        }
+        
         .md-button.md-black{
             border: 2px solid black;
             background: black;
@@ -1717,6 +1779,10 @@
         .marginTB200{
             margin-top: 200px;
             margin-bottom: 200px;
+        }
+        .paddingTB1{
+            padding-top: 1px;
+            padding-bottom: 1px;
         }
         .paddingTB2{
             padding-top: 2px;
@@ -2520,6 +2586,9 @@
             min-height: 5vh;
             /*background: #f7f7f7;*/
             z-index: 1;
+        }
+        .onTop{
+            z-index: 20000;
         }
         .component{
             padding-top: 5px;
