@@ -238,7 +238,7 @@ var allStates = [
 '/ebinternal/allOffers',
 '/ebinternal/allreviews',
 '/ebinternal/allblogtags',
-'/ebinternal/allTests/:userId',
+'/ebinternal/allTests',
 '/ebinternal/calendar',
 '/ebinternal/charting',
 '/ebinternal/coaching/database1/:city',

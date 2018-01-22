@@ -20,12 +20,12 @@ mongoose.Promise = require('bluebird');
 
 router.get('/remove/:qviewId', function(req, res) {
     var qviewId = req.params.qviewId;
-    console.log(qviewId);
+    //console.log(qviewId);
     qview.remove({_id: qviewId}, function(err, result) {
         if (err) {
             console.log(err);
         } else {
-            console.log('Question Response removed!');
+            //console.log('Question Response removed!');
             res.json(true);
         }                              
     });
@@ -34,9 +34,9 @@ router.get('/remove/:qviewId', function(req, res) {
 });
 //to add an qview
 router.post('/save', function(req, res) {
-    console.log('Starting qview save!');
+    //console.log('Starting qview save!');
     var thisQView = req.body;
-    console.log(thisQView);
+    //console.log(thisQView);
     var qviewId = '';
     for (var property in thisQView) {
         thisQView[property] = thisQView[property].toString();
@@ -48,7 +48,7 @@ router.post('/save', function(req, res) {
             }
             existingQView.save(function(err, existingQView) {
                 if (err) return console.error(err);
-                console.log('QView saved: ' + existingQView._id);
+                //console.log('QView saved: ' + existingQView._id);
                 res.json(existingQView);
             });
         }else{
@@ -58,7 +58,7 @@ router.post('/save', function(req, res) {
             }
             existingQView.save(function(err, existingQView) {
                 if (err) return console.error(err);
-                console.log('QView saved: ' + existingQView._id);
+                //console.log('QView saved: ' + existingQView._id);
                 res.json(existingQView);
             }); 
         }
@@ -71,7 +71,7 @@ router.get('/user/:userId', function(req, res) {
         .find({user: userId})
         .exec(function (err, allQViews) {
         if (!err){
-            console.log(allQViews);
+            //console.log(allQViews);
             res.json(allQViews);
         } else {throw err;}
     });

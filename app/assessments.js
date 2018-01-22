@@ -7,6 +7,8 @@ var test = require('../app/models/test');
 var user = require('../app/models/user');
 var assessment = require('../app/models/assessment');
 var questionresponse = require('../app/models/questionresponse');
+var qmarkforreview = require('../app/models/qmarkforreview');
+var qview = require('../app/models/qview');
 var question = require('../app/models/question');
 var cisaved = require('../app/models/cisaved');
 var mongoose = require('mongoose');
@@ -20,8 +22,10 @@ db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
-router.get('/remove/:assessmentId', function(req, res) {
+/*router.get('/remove/:assessmentId', function(req, res) {
     var assessmentId = req.params.assessmentId;
+    
+    
     assessment.remove({_id: assessmentId}, function(err, result) {
         if (err) {
             console.log(err);
@@ -30,21 +34,63 @@ router.get('/remove/:assessmentId', function(req, res) {
             res.json(true);
         }                              
     });
-});
+});*/
 
 router.post('/removeAssessment', function(req, res) {
     var thisAssessment = req.body;
     var userId = thisAssessment.userId;
     var testId = thisAssessment.testId;
     
-    assessment.remove({user: userId, test: testId}, function(err, result) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log('Assessment removed!');
-            res.json(true);
-        }                              
+    //console.log(testId);
+    var allQuestions = question.find({ 'test': testId }, {questions: 1},function (err, allQuestions) {
+        var allsubquestions = [];
+        if(allQuestions){
+            allQuestions.forEach(function(thisQuestion, qIndex){
+                allsubquestions = allsubquestions.concat(thisQuestion.questions);
+            });
+        }
+        var testSubQuestionsIds = allsubquestions.map(function(a) {return a._id.toString();});
+        console.log(testSubQuestionsIds.length);
+        
+        if(testSubQuestionsIds && testSubQuestionsIds.length > 0){
+            questionresponse.remove({subquestion: {$in: testSubQuestionsIds}, user: userId}, function(err, result) {
+                if (err) {console.log(err);} else{
+                    qmarkforreview.remove({subquestion: {$in: testSubQuestionsIds}, user: userId}, function(err, result) {
+                        if (err) {console.log(err);} else{
+                            qview.remove({subquestion: {$in: testSubQuestionsIds}, user: userId}, function(err, result) {
+                                if (err) {console.log(err);} else{
+                                    assessment.remove({user: userId, test: testId}, function(err, result) {
+                                        if (err) {
+                                            console.log(err);
+                                        } else {
+                                            console.log('Assessment removed!');
+                                            res.json(true);
+                                        }                              
+                                    });
+                                }                              
+                            });
+                        }                              
+                    });
+                }                              
+            });
+            //questionresponse
+            //qmarkforreview
+            //qview
+            
+            /*assessment.remove({user: userId, test: testId}, function(err, result) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('Assessment removed!');
+                    res.json(true);
+                }                              
+            });*/
+        }else{
+            res.json(false);   
+        }
     });
+    
+    
 });
 
 //to add an assessment

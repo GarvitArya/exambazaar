@@ -262,7 +262,7 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
     
     <div layout="row" layout-align="center center" class=" exact10h greyBottomBorder" id="testHeader">
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="start center" class="paddingLR30" >
-            <div layout="row" layout-align="start center" flex="20" class="" >
+            <div layout="row" layout-align="start center" flex="30" class="" >
                 
             <div layout="column" layout-align="center center"  class="" ng-if="endTime">
                 <div layout="row" layout-align="start center" class="width100 h3Font narrowLine textDarkGrey" >
@@ -272,6 +272,7 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
                 <div layout="row" layout-align="start start" class="subBaseFont narrowLine width100 textDarkGrey paddingT5" >
                     <span class="" ng-click="showInstructionDialog()">Test Instructions</span>
                     <span class="marginL10 danger" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">Reset Test</span>
+                    <span class="marginL10" ng-click="openAddQuestion()" ng-if="fullScope">Add Question Page</span>
                 
                 </div>
             </div>
@@ -279,8 +280,8 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
             <div flex layout="column" layout-align="center center" class="">
                 <div class="h2Font bold">{{test.name}}</div>
             </div>
-            <div layout="row" layout-align="end center" flex="20">
-                <md-button class="md-danger md-small tolowercase margin0 min5vh font12" ng-click="submitAssessment()" ng-if="testStarted && !testOver">
+            <div layout="row" layout-align="end center" flex="30">
+                <md-button class="md-submitTest md-small tolowercase margin0 min5vh font12" ng-click="submitAssessment()" ng-if="testStarted && !testOver">
                     Submit Test
                 </md-button>
 
@@ -419,7 +420,7 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
 
                     </div>
                 </div>
-                <div layout="row" layout-align="start center" class="width100 exact10h whiteBackground greyTopBorder paddingT5 onTop">
+                <div layout="row" layout-align="start center" class="width100 exact10h whiteBackground greyTopBorder paddingT5">
                     <!--<div layout="row" layout-align="start center">
                         <md-button class="md-next md-large tolowercase margin0 " ng-click="setPreviousQuestion(question)" ng-if="question._id != testQuestions[0]._id">
                             Previous

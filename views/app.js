@@ -16337,9 +16337,21 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     exambazaar.controller("allTestsController", 
-        [ '$scope', 'thisuser','examList','testList', 'testService', 's3UtilsService', 'testswithQuestions', 'questionService', 'Notification', function($scope, thisuser, examList, testList, testService, s3UtilsService, testswithQuestions, questionService, Notification){
-            
-            
+        [ '$scope','examList','testList', 'testService', 's3UtilsService', 'testswithQuestions', 'questionService', 'Notification', '$cookies', function($scope, examList, testList, testService, s3UtilsService, testswithQuestions, questionService, Notification, $cookies){
+            $scope.fullScope = false;
+            if($cookies.getObject('sessionuser')){
+                var sessionuser = $cookies.getObject( 'sessionuser');
+                
+                if(sessionuser.userType =='Master'){
+                    $scope.fullScope = true;
+                    $scope.user = sessionuser;
+                }
+                if(sessionuser._id =='5a1831f0bd2adb260055e352'){
+                    $scope.fullScope = true;
+                }
+            }else{
+                
+            }
             $scope.markMCQs = function(){
                 questionService.markMCQs().success(function (data, status, headers) {
                     Notification.primary({message: "All questions marked to MCQs successfully!",  positionY: 'top', positionX: 'right', delay: 3000});
@@ -16348,7 +16360,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
                 });
             };
-            $scope.user = thisuser.data;
             $scope.allTests = testList.data;
             var testswithQuestions = testswithQuestions.data;
             var testswithQuestionIds = testswithQuestions.map(function(a) {return a._id.toString();});
@@ -16394,12 +16405,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.allExams = allExams;
             
             
-            if($scope.user && $scope.user.userType=='Master'){
-                $scope.masterUser = true;
-            }
-            if($scope.user && $scope.user._id=='5a1831f0bd2adb260055e352'){
-                $scope.masterUser = true;
-            }
+            
             $scope.markSimulate = function(){
                 var testIds = [];
                 testService.markSimulate(testIds).success(function (data, status, headers) {
@@ -16633,6 +16639,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("assessmentController", 
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
+        
+            $scope.openAddQuestion = function(){
+                var url = $state.href('addQuestion', {testId: $scope.test._id});
+                window.open(url, '_blank');    
+            };
             $scope.col1Width = '25';
             $scope.pageWidth = '100';
             $scope.question = null;
@@ -32581,6 +32592,8 @@ function getLatLng(thisData) {
                 //$rootScope.$emit("CallBlogLogin", {});
             }
             
+            
+            
             $scope.customMarking = {
                 correct: '',
                 incorrect: ''
@@ -39238,7 +39251,7 @@ function getLatLng(thisData) {
             }
         })
         .state('allTests', {
-            url: '/ebinternal/allTests/:userId',
+            url: '/ebinternal/allTests',
             views: {
                 'header':{
                     templateUrl: 'header.html',
@@ -39253,10 +39266,6 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisuser: ['UserService', '$stateParams',
-                    function(UserService,$stateParams){
-                    return UserService.getUser($stateParams.userId);
-                }],
                 examList: ['ExamService',
                     function(ExamService){
                     return ExamService.getExams();
