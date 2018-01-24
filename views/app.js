@@ -625,6 +625,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveQuestion = function(question) {
             return $http.post('/api/questions/save', question);
         };
+        
+        this.markSection = function(sectionForm) {
+            return $http.post('/api/questions/markSection', sectionForm);
+        };
         this.changeUser = function(testId) {
             return $http.get('/api/questions/changeUser');
         };
@@ -714,6 +718,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.getExamTestsByExamName = function(examName) {
             return $http.get('/api/tests/examByName/'+examName, {examName: examName});
+        };
+        this.officialPapersByExamName = function(examName) {
+            return $http.get('/api/tests/officialPapers/'+examName, {examName: examName});
         };
         this.markWatermarked = function() {
             return $http.get('/api/tests/markWatermarked');
@@ -16915,6 +16922,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
 
             };
+            
             $scope.degrees = ["B.Tech", "MCA", "MBA", "Others"];
             $scope.streams = ["CS", "IT", "EC", "Others"];
 
@@ -17043,7 +17051,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if($cookies.getObject('sessionuser')){
                 var sessionuser = $cookies.getObject( 'sessionuser');
                 $scope.test = thistest.data;
-                if($scope.test.instructions){
+                if($scope.test.instructions && $scope.test.instructions.length > 0){
                     $scope.instructions = $scope.test.instructions;    
                 }
                 
@@ -17367,7 +17375,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.startAssessment = function(ev) {
                 $scope.startErrors = [];
                 var valid = true;
-                console.log($scope.assessmentInfo);
+                //console.log($scope.assessmentInfo);
                 if($scope.assessmentInfo && $scope.assessmentInfo.mobile){
                     $scope.assessmentInfo.mobile = $scope.assessmentInfo.mobile.toString();
                 }
@@ -17415,12 +17423,23 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }*/
 
                 if(valid){
+                    var timewithbreak = Number($scope.test.duration);
+                    var testSections = $scope.test.simulate.sections;
+                    if(testSections){
+                    testSections.forEach(function(thisSection, index){
+                        if(thisSection.timedSeparately){
+                            timewithbreak += Number(thisSection.break);
+                        }
+                    });
+                    }
+                    
                     var assessmentForm = {
                         user: $scope.user._id,
                         test: $stateParams.testId,
                         info: $scope.assessmentInfo,
                         //time: 60,
                         time: $scope.test.duration,
+                        timewithbreak: timewithbreak,
                     };
                     assessmentService.saveAssessment(assessmentForm).success(function (adata, status, headers) {
                         $scope.userAssessment = adata;
@@ -32607,6 +32626,119 @@ function getLatLng(thisData) {
                 });    
             };
             
+            $scope.updateSections = function(){
+                $scope.allSectionNames = [];
+                
+                $scope.thisTestQuestions.forEach(function(thisQuestion, index){
+                    var thisSection = thisQuestion.section;
+                    /*if(!thisSection){
+                        thisSection = 'null';
+                    }*/
+                    var tIndex = $scope.allSectionNames.indexOf(thisSection);
+                    if(tIndex == -1){
+                        $scope.allSectionNames.push(thisSection);
+                    }
+                    
+                });
+                
+            };
+            $scope.selectedClass = function(question){
+                var className = 'unselectedbadge';
+                var selectedQuestionIds = $scope.selectedQuestions.map(function(a) {return a._id;});
+                if(selectedQuestionIds.indexOf(question._id) != -1){
+                    className = 'selectedbadge';
+                }
+                return className;
+            };
+            $scope.selectedQuestions = [];
+            $scope.newSectionName = '';
+            $scope.addtoSelection = function(question){
+                
+                
+                if(!$scope.selectedQuestions){
+                    $scope.selectedQuestions = [];
+                }
+                var selectedQuestionIds = $scope.selectedQuestions.map(function(a) {return a._id;});
+                var sIndex = selectedQuestionIds.indexOf(question._id);
+                if(sIndex == -1){
+                    $scope.selectedQuestions.push(question);
+                }
+                
+                
+            };
+            
+            $scope.removeFromSelection = function(question){
+                if(!$scope.selectedQuestions){
+                    $scope.selectedQuestions = [];
+                }
+                var selectedQuestionIds = $scope.selectedQuestions.map(function(a) {return a._id;});
+                var sIndex = selectedQuestionIds.indexOf(question._id);
+                if(sIndex != -1){
+                    $scope.selectedQuestions.splice(sIndex, 1);
+                }
+            };
+            $scope.clearSelection = function(){
+                $scope.selectedQuestions = [];
+            };
+            $scope.syncTestSections = function(){
+                
+                if(!$scope.test.simulate.sections){
+                    $scope.test.simulate.sections = [];
+                }
+                var existingSectionNames = $scope.test.simulate.sections.map(function(a) {return a.name;});
+                if($scope.allSectionNames && $scope.allSectionNames.length > 1){
+                    $scope.allSectionNames.forEach(function(thisSectionName, index){
+                        var secIndex = existingSectionNames.indexOf(thisSectionName);
+                        if(secIndex == -1){
+                            var section = {
+                                name: thisSectionName,
+                                timedSeparately: false,
+                                time: '', //in minutes
+                                break: '', //in minutes
+                                order: '', //in minutes
+                            };
+                            $scope.test.simulate.sections.push(section);
+                        }
+                        
+                    });
+                    
+                    
+                }
+            };
+            $scope.saveSectionNames = function(sectionName){
+                var selectedQuestionIds = $scope.selectedQuestions.map(function(a) {return a._id;});
+               
+                var sectionForm = {
+                    sectionName: sectionName,
+                    questionIds: selectedQuestionIds,
+                    testId: $scope.test._id,
+                };
+                
+                questionService.markSection(sectionForm).success(function (data, status, headers) {
+                         
+                     if(data){
+                         Notification.success({message: "All done!",  positionY: 'top', positionX: 'right', delay: 5000});
+                         $state.reload();
+                     }else{
+                         Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                     }
+
+                })
+                .error(function (data, status, header, config) {
+                     Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
+            $scope.testSections = function(){
+                
+            };
+            
+            $scope.showCustomSections = false;
+            $scope.showSectionsMarkingDialog = function(ev){
+                $scope.updateSections();
+                $scope.syncTestSections();
+                $scope.showCustomSections = true;
+            };
             $scope.setCustomMarkingForAll = function(){
                 var valid = true;
                 if($scope.customMarking.correct == ''){
@@ -32717,7 +32849,6 @@ function getLatLng(thisData) {
             
             var find_duplicate_in_array = function (thisArray) {
                 thisArray = thisArray.sort();
-                console.log(thisArray);
                 var nElements = thisArray.length;
                 var duplicates = [];
                 thisArray.forEach(function(thisElement, index){
@@ -32797,6 +32928,15 @@ function getLatLng(thisData) {
                     $scope.test.instructions = [];
                 }
                 $scope.test.instructions.push('');
+            };
+            $scope.removeTestInstruction = function(index){
+                if(!$scope.test.instructions){
+                    $scope.test.instructions = [];
+                }
+                if($scope.test.instructions.length > index){
+                    $scope.test.instructions.splice(index, 1);
+                }
+                
             };
             
             $scope.manualMarkforEBSimulation = function(){
@@ -33280,7 +33420,56 @@ function getLatLng(thisData) {
         }
         return retVal;
     }
-    
+    exambazaar.controller("officialPapersController", 
+        [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'officialPapers', 'Carousel', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, officialPapers, Carousel, viewService, $location, screenSize){
+            $scope.slideCount = 2;
+            $scope.exam = thisexam.data;
+            
+            $scope.officialPapers = officialPapers.data;
+            $scope.officialPapers.forEach(function(thisPaper, index){
+                thisPaper.durationFormatted = '';
+                var hours = Math.floor( thisPaper.duration / 60);
+                var minutes = thisPaper.duration % 60;
+                if(hours > 0){
+                    var hText = 'hours';
+                    if(hours == 1){
+                        hText = 'hour';
+                    }
+                    thisPaper.durationFormatted += hours + ' ' + hText;
+                }
+                if(minutes > 0){
+                    thisPaper.durationFormatted += ' and ' + minutes + ' minutes';
+                }
+            });
+            console.log($scope.officialPapers);
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+            }else{
+                //$scope.signupNeeded = true;
+            }
+            var viewForm = {
+                state: $state.current.name,
+                claim: false,
+                url: $location.url()
+            };
+            if($scope.user && $scope.user.userId){
+                viewForm.user = $scope.user.userId;
+            }
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                //console.log('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.log();
+            });
+            
+            
+            
+            $rootScope.pageTitle = $scope.exam.displayname + " Official Papers";
+    }]);
     exambazaar.controller("examController", 
         [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'thisExamDegrees', 'suggestedblogs', 'Carousel', 'targetStudyProviderService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, thisExamDegrees, suggestedblogs, Carousel, targetStudyProviderService, viewService, $location, screenSize){
             $scope.slideCount = 2;
@@ -41383,6 +41572,62 @@ function getLatLng(thisData) {
                 bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
                 }],
+            }
+        })
+        .state('officialpapers', {
+            url: '/officialpapers/:examName',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'officialpapers.html',
+                    controller: 'officialPapersController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisexam: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamByName($stateParams.examName);    
+                }],
+                /*thisExamPattern: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamPatternByName($stateParams.examName);    
+                }],
+                thisExamBooks: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamBooksByName($stateParams.examName);    
+                }],
+                thisExamDegrees: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getDegreesByName($stateParams.examName);    
+                }],*/
+                officialPapers: ['testService', '$stateParams',
+                    function(testService, $stateParams){
+                    return testService.officialPapersByExamName($stateParams.examName);
+                }],
+                /*loadAngularTimeline: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularTimeline'], {serie: true});
+                }],*/
+                loadUICarousel: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['UICarousel'], {serie: true});
+                }],
+                
+                /*
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
+                suggestedblogs: ['blogpostService','$stateParams',
+                    function(blogpostService,$stateParams){
+                    return blogpostService.suggestedblogs($stateParams.examName);
+                }],*/
+                /*bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
+                }],*/
             }
         })
         .state('addQuestion', {

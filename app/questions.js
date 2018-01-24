@@ -102,6 +102,33 @@ router.post('/save', function(req, res) {
     });
 });
 
+router.post('/markSection', function(req, res) {
+    console.log('Starting marking of questions!');
+    var sectionForm = req.body;
+    var questionIds = sectionForm.questionIds;
+    var sectionName = sectionForm.sectionName;
+    
+    
+    var existingQuestions = question.find({ '_id': {$in: questionIds} },function (err, existingQuestions) {
+        var nQuestions = existingQuestions.length;
+        var counter = 0;
+        if(existingQuestions && existingQuestions.length > 0){
+            existingQuestions.forEach(function(existingQuestion, qIndex){
+                existingQuestion.section = sectionName;
+                existingQuestion.save(function(err, existingQuestion) {
+                    if (err) return console.error(err);
+                    console.log('Question saved: ' + existingQuestion._id);
+                    counter += 1;
+                    if(counter == nQuestions){
+                        res.json(true);
+                    }
+                }); 
+            });
+        }else{
+             res.json(false);
+        }
+    });
+});
 
 
 //to get all questions

@@ -40,6 +40,7 @@ var questionSchema = mongoose.Schema({
     }],
     test: { type: Schema.ObjectId, ref: 'test'},
     exam: { type: Schema.ObjectId, ref: 'exam'},
+    section: { type: String},
     
     active : { type: Boolean, default: true},
     _answerExists : { type: Boolean, default: false},

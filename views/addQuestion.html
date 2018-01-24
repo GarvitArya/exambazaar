@@ -28,6 +28,8 @@
         color: #20C39A;
     }
     textarea{
+        min-width:100%;
+        resize: none;
         width:100%;
         padding: 3px;
         display: inline-block;
@@ -92,6 +94,15 @@
     }
     .badge{
         background: #FF5A5F;
+    }
+    .unselectedbadge{
+        border: 1px solid #404040;
+        background: white;
+        color: #404040;
+    }
+    .selectedbadge{
+        background: #FF5A5F;
+        border: 1px solid #FF5A5F;
     }
 </style>
 <div class="whiteBackground mainContent" >
@@ -202,8 +213,10 @@
             </div>
             
             <div layout="row" layout-align="end center" class="textDarkGrey width100 paddingTB5" >
-                <div flex class="h3Font">
+                <div layout="row" layout-align="start center" flex class="h3Font">
                 Question Set&nbsp;<span ng-if="toAddQuestion._id">has {{toAddQuestion.questions.length}} question(s)</span>
+                    
+                <input type="text" class="text-center marginL10"  placeholder="Question Section if any" ng-model="toAddQuestion.section">    
                 </div>
                 <div class="marginR20 danger">
                     Add Images in this Question Set
@@ -472,6 +485,9 @@
                         <div layout="row" layout-align="start center" class="width100 marginB5">
                             <div flex="5">{{$index + 1}}</div>
                             <div flex><input type="text" class="width100"  placeholder="Instruction goes here" ng-model="test.instructions[$index]"></div>
+                            <div layout="row" layout-align="end center" flex="5">
+                                <i class="fa fa-trash danger" aria-hidden="true" ng-click="removeTestInstruction($index)"></i>
+                            </div>
                         </div>
 
                     </div>
@@ -486,6 +502,9 @@
                 
                 
                 <div layout="row" layout-align="end center" class="width100 marginT20">
+                    <md-button class="md-markReview md-small font10" ng-click="showSectionsMarkingDialog()">
+                    Custom Sections
+                    </md-button>
                     <md-button class="md-green2 md-small font10" ng-click="showCustomMarkingDialog()">
                     Custom Marking
                     </md-button>
@@ -497,6 +516,104 @@
                     Save Simulation Details
                     </md-button>
                 </div>
+                    
+                    
+                <div layout="column" layout-align="start start" ng-if="showCustomSections" class="width100">
+
+                <div layout="row" layout-align="start start" class="width100 h2Font marginT20">
+                    Set sections Questions
+                </div>
+                <div layout="row" layout-align="start start" class="width100 marginB10">
+                    <div layout="column" layout-align="start start"  class="width100 padding10"  ng-repeat="section in allSectionNames" flex="33">
+                        <div layout="column" layout-align="start start" class="width100 padding10 boxShadow font9">
+                            <div class="width100 marginB10">
+                                {{section}}<span ng-if="!section">Not marked</span>
+                            </div>
+                            <div class="width100 marginB10" layout="row" layout-align="start start" layout-wrap>
+                                <span ng-repeat="testQuestion in thisTestQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR2 marginB2" ng-class="selectedClass(testQuestion)" ng-if="testQuestion.section == section" ng-click="addtoSelection(testQuestion)">
+                                    <span>
+                                        Q. {{testQuestion._startnumber}}
+                                    </span>
+                                    <span ng-if="testQuestion._endnumber && testQuestion._endnumber != ''">
+                                            - {{testQuestion._endnumber}}
+                                    </span>
+
+                                </span>
+                            </div>
+                            
+                            <div class="width100 marginB10" layout="row" layout-align="start start">
+                                <div layout="column" layout-align="start start" ng-repeat="thisSection in test.simulate.sections" ng-if="thisSection.name == section" class="width100">
+                                    <div class="width100 padding5" layout="row" layout-align="start center">
+                                        <div flex>Is this section timed?</div>
+                                        <div flex>
+                                        <md-switch ng-model="thisSection.timedSeparately" aria-label="Timed Separately?" class="margin0">
+                                            Timed Separately?
+                                        </md-switch>
+                                        </div>
+                                    </div>
+                                    <div flex class="width100 padding5" ng-if="thisSection.timedSeparately" layout="row" layout-align="start center">
+                                        <div flex>Time Duration</div>
+                                        <div>
+                                        <input type="text" class="" ng-model="thisSection.time"  placeholder="Time for this section">
+                                        </div>
+                                    </div>
+                                    <div flex class="width100 padding5" ng-if="thisSection.timedSeparately" layout="row" layout-align="start center">
+                                        <div flex>Max Break duration after section</div>
+                                        <div>
+                                        <input type="text" class="" ng-model="thisSection.break"  placeholder="Break duration after section">
+                                        </div>
+                                    </div>
+                                    <div flex class="width100 padding5" ng-if="thisSection.timedSeparately" layout="row" layout-align="start center">
+                                        <div flex>Position in simulation</div>
+                                        <div>
+                                        <input type="text" class="" ng-model="thisSection.order"  placeholder="Position in simulation">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center" class="width100 marginT20">
+                    <md-button class="md-markReview md-small font10" ng-click="saveTest()">
+                    Save Section Details
+                    </md-button>
+                </div>
+                <div layout="row" layout-align="start center" class="width100 boxShadow lightGreyBackground padding10 margin10" ng-show="selectedQuestions.length > 0">
+                    <div layout="column" layout-align="start start" flex>
+                        <div class="width100">
+                            Set Section Name for: 
+                            <span class="badge unselectedbadge marginL10" ng-click="clearSelection()">
+                            Clear
+                            </span>
+                        
+                        </div>
+                        
+                        <div layout="row" layout-align="start start" class="width100" layout-wrap>
+                        <span ng-repeat="testQuestion in selectedQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR2 marginB2 selectedBadge" ng-click="removeFromSelection(testQuestion)">
+                            <span>
+                                Q. {{testQuestion._startnumber}}
+                            </span>
+                            <span ng-if="testQuestion._endnumber && testQuestion._endnumber != ''">
+                                    - {{testQuestion._endnumber}}
+                            </span>
+
+                        </span>
+                        </div>
+                        
+                    </div>
+                    <div layout="row" layout-align="start center" flex>
+                        <input type="text" class="" ng-model="newSectionName"  placeholder="New Section Name">
+                        <md-button class="md-markReview md-small font10" ng-click="saveSectionNames(newSectionName)">
+                        Save Question Section
+                        </md-button>
+                    </div>
+                </div>
+            </div>    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -585,3 +702,5 @@
       </md-dialog>
 </div>    
 </div>
+
+

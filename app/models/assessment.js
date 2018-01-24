@@ -7,6 +7,7 @@ var assessmentSchema = mongoose.Schema({
     test: { type: Schema.ObjectId, ref: 'test'},
     _start: { type: Date, default: Date.now },
     _end: { type: Date },
+    _endwithbreak: { type: Date },
     submitted: { type: Boolean, default: false },
     _submit: { type: Date },
     

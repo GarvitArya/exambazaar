@@ -253,6 +253,7 @@ var allStates = [
 '/ebinternal/editExam/:examId',
 /*'/ebinternal/error',*/
 '/exam/:examName',
+'/officialpapers/:examName',
 '/ebinternal/extractEmails',
 '/ebinternal/master/:masterId/addMaster',
 '/ebinternal/master/:masterId/dashboard',

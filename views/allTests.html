@@ -80,7 +80,7 @@
             <div layout="row" layout-align="center center" flex="5">Reset</div>
         </div>
         <div layout="column" layout-align="start start" class=" width100" >
-            <div layout="row" layout-align="start center" ng-repeat="test in exam.tests | orderBy:['-simulationactive','-simulate.ready','-year','-nTyped', 'simulate.comments.length']"  class="width100 greyDashedBottomBorder">
+            <div layout="row" layout-align="start center" ng-repeat="test in exam.tests | orderBy:['-official','-simulationactive','-simulate.ready','-year','-nTyped', 'simulate.comments.length']"  class="width100 greyDashedBottomBorder">
                 <div layout="row" layout-align="center center" flex="5">
                     {{$index + 1}}
                 </div>

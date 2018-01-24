@@ -281,6 +281,47 @@ router.post('/markSimulate', function(req, res) {
                                     var comment = "Test has less than 5 instruction points!";
                                     existingTest.simulate.comments.push(comment);
                                 }
+                                if(existingTest.simulate.sections && existingTest.simulate.sections.length > 1){
+                                    
+                                var totalDuration = 0;
+                                existingTest.simulate.sections.forEach(function(thisSection, sindex){
+                                    if(thisSection.name && thisSection.timedSeparately){
+                                        totalDuration += Number(thisSection.time);
+                                    }
+                                });
+                                if(totalDuration == existingTest.duration){
+                                    
+                                }else{
+                                    valid = false;
+                                    var comment = "Test has sections timed separately but sum of those durations does not add up to the total duration of the test";
+                                    existingTest.simulate.comments.push(comment);
+                                }
+                                }
+                                
+                                
+                                if(existingTest.simulate.sections && existingTest.simulate.sections.length > 1){
+                                    
+                                var ordered = existingTest.simulate.sections.map(function(a) {return Number(a.order);});
+                                
+                                for(var i = 1; i <= existingTest.simulate.sections.length; i++) {
+                                    var oIndex = ordered.indexOf(i);
+                                    if(oIndex == -1) {
+                                        valid = false;
+                                        var comment = "Test has missing section at position sequence: " + i;
+                                        existingTest.simulate.comments.push(comment);
+                                    }
+                                }    
+                                    
+                                if(totalDuration == existingTest.duration){
+                                    
+                                }else{
+                                    valid = false;
+                                    var comment = "Test has sections timed separately but sum of those durations does not add up to the total duration of the test";
+                                    existingTest.simulate.comments.push(comment);
+                                }
+                                }
+                                
+                                
                             }
 
                             existingTest.simulate.ready = valid;
@@ -579,9 +620,26 @@ router.get('/examByName/:examName', function(req, res) {
             });
         } else {throw err;}
     });
-    
-    
-    
+});
+
+router.get('/officialPapers/:examName', function(req, res) {
+    var examName = req.params.examName;
+    var thisExam = exam
+        .findOne({'name': examName})
+        .exec(function (err, thisExam) {
+        if (!err){
+            //console.log(thisExam);
+            var examId = thisExam._id;
+            var allTests = test
+                .find({exam: examId, official: true, simulationactive: true}, {name: 1, description: 1, duration: 1, simulationactive: 1, year: 1, nQuestions: 1})
+                .exec(function (err, allTests) {
+                if (!err){
+                    console.log(allTests);
+                    res.json(allTests);
+                } else {throw err;}
+            });
+        } else {throw err;}
+    });
 });
 
 router.get('/test/:testId', function(req, res) {

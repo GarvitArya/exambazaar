@@ -98,9 +98,15 @@ router.post('/save', function(req, res) {
     console.log('Starting assessment save!');
     var thisAssessment = req.body;
     var assessmentTime = 30;
+    
     if(thisAssessment.time){
         assessmentTime = thisAssessment.time;
     }
+    var timewithbreak = assessmentTime;
+    if(thisAssessment.timewithbreak){
+        timewithbreak = thisAssessment.timewithbreak;
+    }
+    console.log(timewithbreak);
     var assessmentId = '';
     for(var property in thisAssessment){
         if(property != 'info' && property != 'time'){
@@ -125,6 +131,7 @@ router.post('/save', function(req, res) {
             }
             existingAssessment._start = moment();
             existingAssessment._end = moment(existingAssessment._start).add(assessmentTime, 'minutes');
+            existingAssessment._endwithbreak = moment(existingAssessment._start).add(timewithbreak, 'minutes');
             existingAssessment.save(function(err, existingAssessment) {
                 if (err) return console.error(err);
                 console.log('Assessment saved: ' + existingAssessment._id);

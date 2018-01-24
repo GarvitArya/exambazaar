@@ -29,8 +29,7 @@ var testSchema = mongoose.Schema({
     simulate: {
         ready: { type: Boolean, default: false},
         comments: [{type: String}],
-        /*allAnsweredMarked: { type: Boolean, default: false},
-        allSolutionMarked: { type: Boolean, default: false},*/
+        sections:[Schema.Types.Mixed],
         _date: { type: Date, default: Date.now },
         
     },

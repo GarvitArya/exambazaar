@@ -1,0 +1,93 @@
+<style>
+.box {
+  position: relative;
+}
+.ribbon {
+  position: absolute;
+  right: -5px; top: -5px;
+  z-index: 1;
+  overflow: hidden;
+  width: 75px; height: 75px;
+  text-align: right;
+}
+.ribbon span {
+  font-size: 10px;
+  font-weight: bold;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 20px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  width: 100px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#2989d8 0%, #1e5799 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 19px; right: -21px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid #1e5799;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #1e5799;
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid transparent;
+  border-right: 3px solid #1e5799;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #1e5799;
+}
+    
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+
+<div class="whiteBackground baseFont width100">
+    <div id="examinfo3" class="width100">
+    <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkTranslucentBackground min20vh" >
+        <div class="h1Font bold text-white">
+            {{exam.seoname | uppercase}} PREVIOUS YEAR PAPERS
+        </div>
+    </div>
+    </div>
+    
+    <div layout="row" layout-align="center start" class="width100">
+        <div layout="row" layout-xs="column" layout-align="start start" class="width100" flex-xs="100" flex-gt-xs="75">
+            <div layout="column" layout-align="start start" class="width100 padding20">
+                <div layout="row" layout-align="start center" class="box width100 paddingTB10 paddingLR40 boxShadow min20vh" ng-repeat="paper in officialPapers">
+                    <div layout="column" layout-align="start start" flex>
+                        <div class="ribbon"><span>{{paper.year}}</span></div>
+                        <div class="h2Font bold width100">{{paper.name}}</div>
+                        <div class="baseFont width100">{{paper.description}}</div>
+                        <div class="subBaseFont width100 textLightGrey marginT5">{{paper.nQuestions}} Questions | Time: {{paper.durationFormatted}}</div>
+                    </div>
+                    <div layout="column" layout-align="start center" flex>
+                        <md-button class="md-saveNext md-small font16 margin0 " ui-sref="assessment({ testId:{{'paper._id'}} })">
+                            Start
+                        </md-button>
+                        <div class="smallFont marginT5">or <a href="#" id="reviewLink">Download PDF</a></div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            
+        </div>
+    
+    </div>
+    
+    
+    
+</div>
