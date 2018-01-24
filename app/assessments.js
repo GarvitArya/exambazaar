@@ -109,7 +109,7 @@ router.post('/save', function(req, res) {
     console.log(timewithbreak);
     var assessmentId = '';
     for(var property in thisAssessment){
-        if(property != 'info' && property != 'time'){
+        if(property != 'info' && property != 'time' && property != 'timewithbreak'){
             thisAssessment[property] = thisAssessment[property].toString();
         }
         
