@@ -17372,51 +17372,60 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });
                 
             };
-            $scope.startAssessment = function(ev) {
+            $scope.startAssessment = function(assessmentInfo) {
+                
                 $scope.startErrors = [];
                 var valid = true;
-                //console.log($scope.assessmentInfo);
-                if($scope.assessmentInfo && $scope.assessmentInfo.mobile){
-                    $scope.assessmentInfo.mobile = $scope.assessmentInfo.mobile.toString();
+                if(!assessmentInfo.mobile){
+                    assessmentInfo.mobile = '';
+                }
+                if(assessmentInfo && assessmentInfo.mobile){
+                    assessmentInfo.mobile = assessmentInfo.mobile.toString();
                 }
 
-                if(!$scope.assessmentInfo.agree){
+                if(!assessmentInfo.agree){
                     valid = false;
                     console.log('1');
                     $scope.startErrors.push('Please agree to terms and conditions.');
                 }
-                if($scope.assessmentInfo.name.length < 2){
+                if(assessmentInfo.name.length < 2){
                     valid = false;
                     console.log('2');
                     $scope.startErrors.push('Please enter name');
                 }
-                if($scope.assessmentInfo.email.length < 2){
+                console.log(assessmentInfo.mobile);
+                if(assessmentInfo.mobile.length < 9){
+                    valid = false;
+                    console.log('4');
+                    $scope.startErrors.push('Please enter a valid mobile number');
+                }
+                if(assessmentInfo.email.length < 2){
                     valid = false;
                     console.log('3');
                     $scope.startErrors.push('Please enter email');
                 }
                 
-                /*if(!$scope.assessmentInfo.degree){
+                /*if(!assessmentInfo.degree){
                     valid = false;
                     console.log('5');
                     $scope.startErrors.push('Please select degree');
                 }
-                if($scope.assessmentInfo.degree == "Others" && $scope.assessmentInfo.otherdegree.length < 2){
+                if(assessmentInfo.degree == "Others" && assessmentInfo.otherdegree.length < 2){
                     valid = false;
                     console.log('6');
                     $scope.startErrors.push('Please enter Other degree name');
                 }
-                if(!$scope.assessmentInfo.stream){
+                if(!assessmentInfo.stream){
                     valid = false;
                     console.log('7');
                     $scope.startErrors.push('Please select stream');
                 }
-                if($scope.assessmentInfo.stream == "Others" && $scope.assessmentInfo.otherstream.length < 2){
+                if(assessmentInfo.stream == "Others" && assessmentInfo.otherstream.length < 2){
                     valid = false;
                     console.log('8');
                     $scope.startErrors.push('Please select Other stream name');
                 }
-                if($scope.assessmentInfo.mobile.length != 10){
+                if(assessmentInfo.mobile.length != 10){
                     valid = false;
                     console.log('9');
                     $scope.startErrors.push('Please enter mobile');
@@ -17436,7 +17445,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     var assessmentForm = {
                         user: $scope.user._id,
                         test: $stateParams.testId,
-                        info: $scope.assessmentInfo,
+                        info: assessmentInfo,
                         //time: 60,
                         time: $scope.test.duration,
                         timewithbreak: timewithbreak,

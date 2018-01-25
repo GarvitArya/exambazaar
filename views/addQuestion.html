@@ -1,5 +1,5 @@
 <style>
-    input[type="text"]
+    input[type="text"], input[type="number"]
     {
         font-size: 13px;
         color: #333333;
@@ -9,11 +9,7 @@
         box-shadow: 0 0 5px 1px white;
     }
     
-    input[type="text"]:hover {
-        border: solid 1px #707070;
-        box-shadow: 0 0 5px 1px #969696;
-    }
-    input[type="text"]:focus {
+    input[type="text"]:hover, input[type="text"]:focus, input[type="number"]:hover, input[type="number"]:focus {
         border: solid 1px #707070;
         box-shadow: 0 0 5px 1px #969696;
     }
@@ -451,7 +447,7 @@
                 
                 <div layout="column" layout-align="start start" class="width100 marginTB10">
                 <div class="h3Font marginB10">Test Simulation Information</div>
-                <div layout="row" layout-align="start center" class="width100 marginT10 padding10 assignBackground">
+                <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
                     <div class="bold paddingR10" flex="40">
                     Total Number of Questions in the test
                     </div>
@@ -459,7 +455,7 @@
                         <input type="text" class="width100"  placeholder="Total Number of Questions" ng-model="test.nQuestions">
                     </div>
                 </div>
-                <div layout="row" layout-align="start center" class="width100 marginT10 padding10 assignBackground">
+                <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
                     <div class="bold paddingR10" flex="40">
                     Can the test be reset & taken again by the candidate?
                     </div>
@@ -475,6 +471,14 @@
                     </div>
                     <div flex class="paddingL10">
                         <input type="text" class="width100"  placeholder="Duration of the test in minutes" ng-model="test.duration">
+                    </div>
+                </div>
+                <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
+                    <div class="bold paddingR10" flex="40">
+                    Simulation Rank
+                    </div>
+                    <div flex class="paddingL10">
+                        <input type="number" class="width100"  placeholder="Rank while showing for simulation (lower is better)" ng-model="test.simulationrank">
                     </div>
                 </div>
                 

@@ -631,7 +631,7 @@ router.get('/officialPapers/:examName', function(req, res) {
             //console.log(thisExam);
             var examId = thisExam._id;
             var allTests = test
-                .find({exam: examId, official: true, simulationactive: true}, {name: 1, description: 1, duration: 1, simulationactive: 1, year: 1, nQuestions: 1})
+                .find({exam: examId, official: true, simulationactive: true}, {name: 1, description: 1, duration: 1, simulationactive: 1, year: 1, nQuestions: 1, showrank: 1, downloadable: 1, url: 1})
                 .exec(function (err, allTests) {
                 if (!err){
                     console.log(allTests);

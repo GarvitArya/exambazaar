@@ -4,7 +4,7 @@
 }
 .ribbon {
   position: absolute;
-  right: -5px; top: -5px;
+  left: -5px; top: -5px;
   z-index: 1;
   overflow: hidden;
   width: 75px; height: 75px;
@@ -17,35 +17,174 @@
   text-transform: uppercase;
   text-align: center;
   line-height: 20px;
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
   width: 100px;
   display: block;
   background: #79A70A;
-  background: linear-gradient(#2989d8 0%, #1e5799 100%);
+  background: linear-gradient(#3e476c 0%, #29335C 100%);
   box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
   position: absolute;
-  top: 19px; right: -21px;
+  top: 19px; left: -21px;
 }
 .ribbon span::before {
   content: "";
   position: absolute; left: 0px; top: 100%;
   z-index: -1;
-  border-left: 3px solid #1e5799;
+  border-left: 3px solid #29335C;
   border-right: 3px solid transparent;
   border-bottom: 3px solid transparent;
-  border-top: 3px solid #1e5799;
+  border-top: 3px solid #29335C;
 }
 .ribbon span::after {
   content: "";
   position: absolute; right: 0px; top: 100%;
   z-index: -1;
   border-left: 3px solid transparent;
-  border-right: 3px solid #1e5799;
+  border-right: 3px solid #29335C;
   border-bottom: 3px solid transparent;
-  border-top: 3px solid #1e5799;
+  border-top: 3px solid #29335C;
 }
     
+    
+    .profileBar{
+        background-color: #29335C;
+        color: white;
+    }
+    .profileBar a{
+        color: white;
+        text-decoration: none;
+        
+    }
+    
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        
+    }
+    .fieldRow{
+        min-height: 5vh;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .fieldRow div.col1{
+        color: gray;
+        font-family: 'Roboto Condensed', sans-serif;
+    }
+    .fieldRow div.col2{
+        color: black;
+    }
+    
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    .active{
+        color: white;
+        font-weight: bold;
+        border-bottom: 2px solid white;
+    }
+    #topBar{
+        color: white;
+    }
+    #topBar.active{
+        color: white;
+    }
+    #topBar:hover{
+        font-weight: bold;
+    }
+    .leftBar{
+        border-right: 2px solid whitesmoke;
+    }
+    #leftBarButton{
+        border-bottom: 2px solid whitesmoke;
+    }
+    #leftBarButton:hover{
+        border-bottom: 2px solid #20C39A;
+    }
+    #leftBarButton.sideactive{
+        /*border: 2px solid #20C39A;
+        color: #20C39A;
+        font-weight: bold;*/
+        background: whitesmoke;
+        
+    }
+    .emptyTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    
+    .edLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .edLevelTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledEdLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .badge{
+        font-size: 14px;
+        white-space: normal;
+        margin-top: 0px;
+    }
+    .subSectionHeader{
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid whitesmoke;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .academicSubSection{
+        border-bottom: 1px solid #20C39A;
+        
+    }
+    .academicSubHeader{
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    .nextButton{
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    #profilePicSection{
+        margin-bottom: 20px;
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -54,18 +193,37 @@
 </div>
 
 <div class="whiteBackground baseFont width100">
-    <div id="examinfo3" class="width100">
-    <div layout="row" layout-xs="column" layout-align="center center" class="width100 darkTranslucentBackground min20vh" >
-        <div class="h1Font bold text-white">
-            {{exam.seoname | uppercase}} PREVIOUS YEAR PAPERS
+    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
+        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100">
+            <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="paddingLR20">
+                <span id="topBar" ng-class="{ active: component.active }" >
+                    
+                </span>       
+            </a>
+        </div>
+    </div>
+    <div id="testHeader" class="width100">
+    <div layout="column" layout-align="center center" class="width100 min40vh" >
+        <div class="h1Font bold">
+            {{exam.seoname | uppercase}} Previous Year Official Papers
+        </div>
+        <div class="baseFont paddingTB5">
+            {{officialPapers.length}} Official Papers | Exam Simulation | All for FREE
         </div>
     </div>
     </div>
     
     <div layout="row" layout-align="center start" class="width100">
-        <div layout="row" layout-xs="column" layout-align="start start" class="width100" flex-xs="100" flex-gt-xs="75">
+        <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingTB30 paddingLR20" hide-xs flex-gt-xs="20">
+            <div class="box boxShadow width100 paddingTB10 paddingLR40 h3Font">
+            {{exam.seoname | uppercase}}
+            </div>
+        </div>
+        <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR40" flex-xs="100" flex-gt-xs>
             <div layout="column" layout-align="start start" class="width100 padding20">
                 <div layout="row" layout-align="start center" class="box width100 paddingTB10 paddingLR40 boxShadow min20vh margin10" ng-repeat="paper in officialPapers">
+                    <div layout="column" layout-align="start start" flex="10">
+                    </div>
                     <div layout="column" layout-align="start start" flex>
                         <div class="ribbon"><span>{{paper.year}}</span></div>
                         <div class="h2Font bold width100">{{paper.name}}</div>
@@ -76,7 +234,7 @@
                         <md-button class="md-saveNext md-small font16 margin0 " ui-sref="assessment({ testId:{{'paper._id'}} })">
                             Start
                         </md-button>
-                        <div class="smallFont marginT5">or <a href="#" id="reviewLink">Download PDF</a></div>
+                        <div class="smallFont marginT5" ng-show="paper.downloadable">or <a ng-href="{{paper.url.question}}" target="_blank" ng-if="paper.url.question" id="reviewLink">Download PDF</a></div>
                     </div>
 
 

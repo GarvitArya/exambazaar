@@ -1,8 +1,8 @@
 <style>
-    input[type="text"],input[type="number"],
+    input[type="text"], input[type="number"]
     {
         padding: 5px;
-        font-size: 14px;
+        font-size: 13px;
         color: #333333;
         border: solid 1px #ccc;
         transition: box-shadow 0.3s, border 0.3s;
@@ -10,6 +10,8 @@
     }
     
     input[type="text"]:hover,input[type="text"]:focus, input[type="number"]:hover, input[type="number"]:focus{
+        padding: 5px;
+        font-size: 13px;
         border: solid 1px #333333;
         box-shadow: 0 0 5px 1px #969696;
     }
@@ -240,16 +242,13 @@
         margin: 0 auto;
         max-width: 90%;
     }
-    #testHeader{
-       /*background-color: #ffffff;
-background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.14' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");*/
-        background: whitesmoke;
-        
-    }
+    
     .vScroll{
         overflow: auto;
     }
-    
+    #headerLogo{
+        max-height: 50px;
+    }
     
 </style>
 
@@ -260,10 +259,12 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
 
 <div class="textBlack whiteBackground secondFont exact100h " ng-if="user && !disabled" www.exambazaar.com>
     
-    <div layout="row" layout-align="center center" class=" exact10h greyBottomBorder" id="testHeader">
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="start center" class="paddingLR30" >
+    <div layout="row" layout-align="center center" class=" exact10h greyBottomBorder " id="testHeader">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="start center" class="paddingLR10" >
             <div layout="row" layout-align="start center" flex="30" class="" >
-                
+            <div layout="row" layout-align="start center" class="marginR10">
+                <a href="https://www.exambazaar.com" target="_blank"><img src="images/logo/eblogo.png" id="headerLogo"/></a>  
+            </div>    
             <div layout="column" layout-align="center center"  class="" ng-if="endTime">
                 <div layout="row" layout-align="start center" class="width100 h3Font narrowLine textDarkGrey" >
                     <i class="fa fa-clock-o font20 marginR10" aria-hidden="true"></i>
@@ -271,8 +272,8 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
                 </div>
                 <div layout="row" layout-align="start start" class="subBaseFont narrowLine width100 textDarkGrey paddingT5" >
                     <span class="" ng-click="showInstructionDialog()">Test Instructions</span>
-                    <span class="marginL10 danger" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">Reset Test</span>
-                    <span class="marginL10" ng-click="openAddQuestion()" ng-if="fullScope">Add Question Page</span>
+                    <span class="marginL10 danger font8" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">Reset</span>
+                    <span class="marginL10 font8" ng-click="openAddQuestion()" ng-if="fullScope">QPage</span>
                 
                 </div>
             </div>
@@ -280,7 +281,7 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
             <div flex layout="column" layout-align="center center" class="">
                 <div class="h2Font bold">{{test.name}}</div>
             </div>
-            <div layout="row" layout-align="end center" flex="30">
+            <div layout="row" layout-align="end center" flex="30" class="">
                 <md-button class="md-submitTest md-small tolowercase margin0 min5vh font12" ng-click="submitAssessment()" ng-if="testStarted && !testOver">
                     Submit Test
                 </md-button>
@@ -290,11 +291,11 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
     </div>
     
     <div layout="row" layout-align="center start" class="width100 exact90h">
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="" ng-if="!testOver && testStarted">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="!testOver && testStarted">
 
-            <div flex-gt-xs="{{col1Width}}" layout="column" layout-align="center center"  class="greyRightBorder exact90h padding10 smallFont">
-                <div layout="column" layout-align="center center" class="exact20h  width100 paddingLR20 ">
-                    <div layout="column" layout-align="center center" class="width100 padding10 blackBorder">
+            <div flex-gt-xs="{{col1Width}}" layout="column" layout-align="center center"  class="greyRightBorder exact90h smallFont">
+                <div layout="column" layout-align="center center" class="exact20h  width100 paddingLR20 paddingT10">
+                    <div layout="column" layout-align="center center" class="width100 padding10">
                         <div layout="row" layout-align="center center" class="width100 paddingTB5">
                             <div flex layout="row" layout-align="center center" class="">
                                 <div flex="25" >
@@ -335,7 +336,7 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
                 <div layout="row" layout-align="center end" class="marginT20 marginB5 width100 ">
                     Question List
                 </div>
-                <div layout="row" layout-align="center start" class="width100 exact70h vScroll " layout-wrap>
+                <div layout="row" layout-align="center start" class="width100 exact70h vScroll paddingB40" layout-wrap>
                     <div ng-repeat="showquestion in questionList" class="margin5 emptyTag" layout="row" layout-align="center center" ng-class="{ seenTag: showquestion.subquestion.seen, answeredTag: showquestion.subquestion.anyAnswer, reviewTag: showquestion.subquestion.markforreview, activeTag: showquestion.subquestion._id == subquestion._id}" ng-click="setQuestion(showquestion.question, showquestion.sno)">
                         {{showquestion.no}}
                     </div>
@@ -455,77 +456,80 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
             </div>
         </div>
 
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="paddingTB10" ng-if="testOver">
-            <div layout="column" layout-align="center center" class="width100 blogFont">
-                <div class="font32">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="testOver ">
+            <div layout="column" layout-align="center center" class="width100 blogFont exact90h">
+                <div class="h1Font">
                     {{user.basic.name}}
                 </div>
-                <div class="font24">
+                <div class="h2Font">
                     Thank you, your responses have been auto-saved!
                 </div>
-                <div class="textGray font12">
+                <div class="baseFont textGray">
                     You have attempted {{answered}} out of {{totalQuestions}} questions!
                 </div>
-                <!--<div class="marginTB10">
+                <div class="padding10">
                     <md-button class="md-danger md-large tolowercase margin0 " ng-click="seeAssessmentResult()">
-                        See your result
+                        Analyze your result
                     </md-button>
-                </div>-->
-                <div class="" ng-if="userAssessment.evaluation.score">
-                    Score: {{userAssessment.evaluation.score}} <span ng-if="test.maxScore">out of maximum {{test.maxScore}}</span>
                 </div>
+                <!--<div class="" ng-if="userAssessment.evaluation.score">
+                    Score: {{userAssessment.evaluation.score}} <span ng-if="test.maxScore">out of maximum {{test.maxScore}}</span>
+                </div>-->
             </div>
 
         </div>
 
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="paddingTB10 blogFont" ng-if="!testStarted">
-            <div flex layout="column" layout-align="start center" class="paddingLR20">
-            <div layout="column" layout-align="start center" class="width100 paddingLR40" ng-if="user">
-                <div layout="row" layout-align="start center" class="width100 bold marginB20">
-                    Complete the information below:
-                </div>
-                <div layout="row" layout-align="start center" class="width100 marginB5">
-                    <div flex="30">Name</div>
-                    <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.name"></div>
-                </div>
-                <div layout="row" layout-align="start center" class="width100 marginB5">
-                    <div flex="30">Mobile</div>
-                    <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.mobile" ng-minlength="10" ng-maxlength="10" only-digits></div>
-                </div>
-                <div layout="row" layout-align="start center" class="width100 marginB5">
-                    <div flex="30">Email</div>
-                    <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.email"></div>
-                </div>
-            </div>
-            </div>
-            <div flex layout="column" layout-align="start center" class="paddingLR20">
-                <div layout="column" layout-align="start center" class="width100 editFont" >
-                    <div layout="row" layout-align="start center" class="blogFont bold font20 width100 marginB20">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="blogFont paddingLR40" ng-if="!testStarted">
+            
+            <div flex="60" layout="column" layout-align="start center" class="paddingLR20">
+                <div layout="row" layout-align="start center" class="blogFont bold font20 width100 exact10h">
                     Instructions for taking the test:
-                    </div>
-                    <div ng-repeat="instruction in  instructions track by $index" class="width100">
+                </div>
+                <div layout="column" layout-align="start center" class="paddingLR20 paddingT10 paddingB20 width100 editFont exact70h vScroll greyBorder" >
+                    
+                    <div ng-repeat="instruction in  instructions track by $index" class="width100 padding5">
                         <div class="blogFont font14">
                             {{$index+1}}. {{instruction}}
                         </div>
                     </div>
                 </div>
-                <div layout="column" layout-align="start start" class="width100 blogFont marginT20" >
-                    <md-switch ng-model="assessmentInfo.agree" aria-label="Agree with terms?" class="margin0">
-                     Do you agree with the instructions above?
-                    </md-switch>
+                
+            </div>
+            <div flex layout="column" layout-align="start center" class="paddingLR20 ">
+            <div layout="column" layout-align="start center" class="width100 baseFont " ng-if="user">
+                <div layout="row" layout-align="start center" class="width100 bold exact10h">
+                    Complete the information below:
                 </div>
-
-                <div layout="row" layout-align="start center" class="width100 marginT20">
-                    <md-button class="md-next md-large tolowercase margin0  width50" ng-click="startAssessment()">
+                <div layout="column" layout-align="start start" class="width100 padding20 exact30h greyBorder vScroll">
+                    <div layout="row" layout-align="start center" class="width100 marginB5">
+                        <div flex="25">Name</div>
+                        <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.name"></div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 marginB5">
+                        <div flex="25">Mobile</div>
+                        <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.mobile" only-digits></div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 marginB5">
+                        <div flex="25">Email</div>
+                        <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.email"></div>
+                    </div>
+                </div>
+            </div>
+            <div layout="column" layout-align="center center" class="width100 blogFont exact20h " >
+                <md-switch ng-model="assessmentInfo.agree" aria-label="Agree with terms?" class="margin0">
+                 Do you agree with the instructions above?
+                </md-switch>
+                <div layout="row" layout-align="center center" class="width100 padding10">
+                    <md-button class="md-next md-large tolowercase margin0  width50" ng-click="startAssessment(assessmentInfo)">
                         Start
                     </md-button>
                 </div>
-                <div layout="column" layout-align="start start" class="paddingL20 font12 danger width100">
-                    <div layout="row" layout-align="start start" ng-repeat="startError in startErrors">{{$index+1}}. {{startError}}
-                    </div>
-                </div> 
+            </div> 
+            <div layout="column" layout-align="start center" class="paddingL20 font12 danger width100 exact20h ">
+                <div layout="row" layout-align="start start" ng-repeat="startError in startErrors">{{$index+1}}. {{startError}}
+                </div>
+            </div>    
             </div>
-
         </div>
     </div>
 </div>
@@ -568,28 +572,3 @@ background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0
     </md-dialog>
     </div>    
 </div>
-
-
-
-<!--
-<div class="bottomBar">
-    <div layout="row" layout-align="start center">
-        <div flex ="80">
-            <span>
-            Would you like to submit your test? 
-            </span>
-        </div>
-        <div layout="row" layout-align="end center" flex = "20">
-            <md-button class="md-danger md-small font10 width8 tolowercase" ng-click="subscribe()">
-                Submit
-            </md-button>
-            
-            <md-button class="md-default md-cancel md-small font10 width8" ng-click="dontsaveChanges()">
-                Cancel
-            </md-button>
-            
-        </div>
-        
-    </div>
-</div>-->
-

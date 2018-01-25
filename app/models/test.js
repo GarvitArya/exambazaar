@@ -4,6 +4,7 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var testSchema = mongoose.Schema({
     name: {type: String},
+    
     description: {type: String},
     year: {type: String},
     nQuestions: {type: String},
@@ -21,7 +22,7 @@ var testSchema = mongoose.Schema({
     mockPaper: {type: Boolean},
     solved: {type: Boolean},
     questionWithAnswer: {type: Boolean},
-    
+    simulationrank: {type: Number},
     downloadable : { type: Boolean, default: false},
     verified : { type: Boolean, default: false},
     active : { type: Boolean, default: true},
