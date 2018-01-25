@@ -17016,6 +17016,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if(sIndex < nSubQuestions - 1){
                     $scope.subquestion = question.questions[sIndex + 1];
                     markView($scope.question, $scope.subquestion);
+                    $scope.markNumericalAnswer($scope.question, $scope.subquestion);
                 }else if (sIndex == nSubQuestions - 1 ){
                     var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
                     var nQuestions = $scope.testQuestions.length;
@@ -17023,13 +17024,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     var tIndex = testQuestionIds.indexOf(questionId);
 
                     if(tIndex != -1 && tIndex != nQuestions- 1){
+                        $scope.markNumericalAnswer($scope.question, $scope.subquestion);
                         $scope.question = $scope.testQuestions[tIndex + 1];
                         $scope.setSubQuestion($scope.question, 0);
                         markView($scope.question, $scope.subquestion);
                     }else if (tIndex == nQuestions- 1){
                         $scope.submitAssessment();
                     }
-                    $scope.markNumericalAnswer($scope.question, $scope.subquestion);
+                    
                 }
                 
             };

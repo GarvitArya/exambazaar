@@ -80,20 +80,23 @@
         width:30px;
         height:30px;
         background: white;
-        color: black;
+        color: gray;
         border: 1px solid gray;
     }
     .legendTag.answered{
         background: #20C39A;
         color: white;
+        border: 1px solid #20C39A;
     }
     .legendTag.review{
         background: #8378d0;
         color: white;
+        border: 1px solid #8378d0;
     }
     .legendTag.seen{
         background: gainsboro;
         color: black;
+        border: 1px solid gainsboro;
     }
     .correctTag{
         padding-left: 4px;
@@ -129,7 +132,7 @@
     }
     .emptyTag:hover{
         color: white;
-        background: #009EE3;
+        background: black;
         border: 1px solid black;
     }
     
@@ -142,7 +145,7 @@
         min-height:30px;
         color: black;
         background: gainsboro;
-        border: 1px solid gray;
+        border: 1px solid gainsboro;
     }
     .answeredTag{
         padding-left: 4px;
@@ -153,7 +156,7 @@
         min-height:30px;
         color: white;
         background: #20C39A;
-        border: 1px solid gray;
+        border: 1px solid #20C39A;
     }
     .reviewTag{
         padding-left: 4px;
@@ -164,7 +167,7 @@
         min-height:30px;
         color: white;
         background: #8378d0;
-        border: 1px solid gray;
+        border: 1px solid #8378d0;
     }
     .activeTag{
         padding-left: 4px;
@@ -174,8 +177,8 @@
         width:50px;
         min-height:30px;
         color: white;
-        background: #009EE3;
-        border: 1px solid gray;
+        background: black;
+        border: 1px solid black;
     }
     
     .badge{
@@ -247,9 +250,15 @@
         overflow: auto;
     }
     #headerLogo{
-        max-height: 50px;
+        max-height: 40px;
     }
-    
+    .leftBar{
+        border-right: 2px solid whitesmoke;
+    }
+    #legendBox{
+        border: 1px solid #ccc;
+        background: whitesmoke;
+    }
 </style>
 
 <!--<div id="spacer1" class="hidden-xs whiteBackground">
@@ -262,24 +271,20 @@
     <div layout="row" layout-align="center center" class=" exact10h greyBottomBorder " id="testHeader">
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="start center" class="paddingLR10" >
             <div layout="row" layout-align="start center" flex="30" class="" >
-            <div layout="row" layout-align="start center" class="marginR10">
+            <div layout="row" layout-align="start center" class="marginR20">
                 <a href="https://www.exambazaar.com" target="_blank"><img src="images/logo/eblogo.png" id="headerLogo"/></a>  
             </div>    
             <div layout="column" layout-align="center center"  class="" ng-if="endTime">
-                <div layout="row" layout-align="start center" class="width100 h3Font narrowLine textDarkGrey" >
-                    <i class="fa fa-clock-o font20 marginR10" aria-hidden="true"></i>
+                <div layout="row" layout-align="start center" class="width100 h2Font narrowLine textDarkGrey" >
+                    <i class="fa fa-clock-o font24 marginR10" aria-hidden="true"></i>
                     <timer end-time="endTime">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
                 </div>
-                <div layout="row" layout-align="start start" class="subBaseFont narrowLine width100 textDarkGrey paddingT5" >
-                    <span class="" ng-click="showInstructionDialog()">Test Instructions</span>
-                    <span class="marginL10 danger font8" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">Reset</span>
-                    <span class="marginL10 font8" ng-click="openAddQuestion()" ng-if="fullScope">QPage</span>
                 
-                </div>
             </div>
             </div>
             <div flex layout="column" layout-align="center center" class="">
                 <div class="h2Font bold">{{test.name}}</div>
+                
             </div>
             <div layout="row" layout-align="end center" flex="30" class="">
                 <md-button class="md-submitTest md-small tolowercase margin0 min5vh font12" ng-click="submitAssessment()" ng-if="testStarted && !testOver">
@@ -291,12 +296,12 @@
     </div>
     
     <div layout="row" layout-align="center start" class="width100 exact90h">
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="!testOver && testStarted">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="" ng-if="!testOver && testStarted">
 
             <div flex-gt-xs="{{col1Width}}" layout="column" layout-align="center center"  class="greyRightBorder exact90h smallFont">
-                <div layout="column" layout-align="center center" class="exact20h  width100 paddingLR20 paddingT10">
-                    <div layout="column" layout-align="center center" class="width100 padding10">
-                        <div layout="row" layout-align="center center" class="width100 paddingTB5">
+                <div layout="column" layout-align="center center" class=" paddingTB10 width100" >
+                    <div layout="column" layout-align="center center" class="width80 padding10 exact20h" id="legendBox">
+                        <div layout="row" layout-align="center center" class="width90 paddingTB5">
                             <div flex layout="row" layout-align="center center" class="">
                                 <div flex="25" >
                                     <div class="legendTag answered" layout="row" layout-align="center center">{{answered}}</div>
@@ -313,7 +318,7 @@
                             </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="center center" class="width100 paddingTB5">
+                        <div layout="row" layout-align="center center" class="width90 paddingTB5">
                             <div flex layout="row" layout-align="center center" class="">
                                 <div flex="25">
                                     <div class="legendTag seen" layout="row" layout-align="center center">{{seen}}</div>
@@ -333,26 +338,33 @@
                     
                     </div>
                 </div>
-                <div layout="row" layout-align="center end" class="marginT20 marginB5 width100 ">
+                <!--<div layout="row" layout-align="center end" class="marginT20 marginB5 width100 ">
                     Question List
-                </div>
-                <div layout="row" layout-align="center start" class="width100 exact70h vScroll paddingB40" layout-wrap>
+                </div>-->
+                <div layout="row" layout-align="center start" class="width100 exact70h vScroll paddingT20 paddingB40 paddingLR20" layout-wrap>
                     <div ng-repeat="showquestion in questionList" class="margin5 emptyTag" layout="row" layout-align="center center" ng-class="{ seenTag: showquestion.subquestion.seen, answeredTag: showquestion.subquestion.anyAnswer, reviewTag: showquestion.subquestion.markforreview, activeTag: showquestion.subquestion._id == subquestion._id}" ng-click="setQuestion(showquestion.question, showquestion.sno)">
                         {{showquestion.no}}
                     </div>
                 </div>
+                <div layout="row" layout-align="center center" class="width100 subBaseFont textDarkGrey padding10 exact10h greyTopBorder" >
+                    <span class="" ng-click="showInstructionDialog()">Test Instructions</span>
+                    <span class="marginL10 danger font8" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">Reset</span>
+                    <span class="marginL10 font8" ng-click="openAddQuestion()" ng-if="fullScope">QPage</span>
                 
-                
+                </div>
             </div>
             
             
-            <div flex layout="column" layout-align="start start" class="subBaseFont wideLine paddingLR10  exact90h">
+            <div flex layout="column" layout-align="start start" class="subBaseFont paddingLR20  exact90h">
                 <div layout="row" layout-align="start center" class="width100 exact10h greyBottomBorder paddingT10">
 
                     <div flex class="width100 " layout="column" layout-align="center start">
-                        <span class="baseFont bold">
-                            Question {{activeQuestionNo}}
-                        </span>
+                        <div layout="row" layout-align="start center" class="baseFont bold">
+                            <div class="marginR5">Q.</div> 
+                            <div ng-repeat="showquestion in questionList" class="smallFont emptyTag" layout="row" layout-align="center center" ng-class="{ seenTag: showquestion.subquestion.seen, answeredTag: showquestion.subquestion.anyAnswer, reviewTag: showquestion.subquestion.markforreview}" ng-if="showquestion.no == activeQuestionNo">
+                                {{activeQuestionNo}}
+                            </div>
+                        </div>
                         
                         <span ng-if="question.questions.length > 1" class="subBaseFont paddingT5">
                             Question Group: ({{question._startnumber}}<span ng-if="question._endnumber">&nbsp;-&nbsp;{{question._endnumber}})</span>
@@ -383,7 +395,7 @@
                 </div>
                 
                 <div layout="row" layout-align="start start" class="exact70h width100">
-                    <div flex layout="column" layout-align="start start" class="width100 subBaseFont wideLine paddingLR10 paddingT20 paddingB40 exact70h vScroll" ng-if="question.context || question.images && question.images.length > 0">
+                    <div flex layout="column" layout-align="start start" class="width100 subBaseFont wideLine paddingLR10 paddingT20 paddingB40 exact70h vScroll leftBar" ng-if="question.context || question.images && question.images.length > 0">
                         <div ng-bind-html="question.context" class="width100 paddingB20 text-justify">
                         </div>
                         
@@ -392,7 +404,7 @@
                     <div flex layout="column" layout-align="start start" class="width100 exact70h vScroll paddingLR10 paddingB40">
 
                         <div layout="column" layout-align="start start" class="width100 min60vh padding10" ng-if="subquestion">
-                            <div layout="column" layout-align="start start" class="width100 boxShadow min60vh padding10">
+                            <div layout="column" layout-align="start start" class="width100 min60vh padding10">
                             <!--<div>Question {{activeQuestionNo}}</div>-->
                             <div ng-bind-html="subquestion.question" class="width100 paddingTB10">
                             </div>
@@ -433,12 +445,12 @@
                         <md-button class="md-markReview md-small tolowercase margin0 font12" ng-click="markQuestionForReview(question, subquestion)" ng-if="!subquestion.markforreview">
                             Mark for Review
                         </md-button>
-                        <md-button class="md-next md-small tolowercase margin0 font12" ng-click="clearQuestionMarkForReview(subquestion)" ng-if="subquestion.markforreview">
+                        <md-button class="md-unmarkReview md-small tolowercase margin0 font12" ng-click="clearQuestionMarkForReview(subquestion)" ng-if="subquestion.markforreview">
                             Unmark from Review
                         </md-button>
                     </div>
                     <div layout="row" layout-align="center center" flex class="">
-                        <div layout="row" layout-align="center center" ng-click="clearAnswer(subquestion)" >
+                        <div layout="row" layout-align="center center" ng-click="clearAnswer(subquestion)" ng-if="subquestion.userAnswer || subquestion.userNumericalAnswer">
                             <!--ng-if="subquestion.userAnswer || subquestion.userNumericalAnswer"-->
                         <i class="fa fa-times-circle-o font20" aria-hidden="true"></i>&nbsp;&nbsp;Clear your response
                         </div>
@@ -472,6 +484,13 @@
                         Analyze your result
                     </md-button>
                 </div>
+                <div class="">
+                    <span class="marginL10 danger" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">or Retake the Test</span>
+                    
+                </div>
+                <div class="padding10">
+                    <span class="marginL10" ng-click="openAddQuestion()" ng-if="fullScope">QPage</span> 
+                </div>
                 <!--<div class="" ng-if="userAssessment.evaluation.score">
                     Score: {{userAssessment.evaluation.score}} <span ng-if="test.maxScore">out of maximum {{test.maxScore}}</span>
                 </div>-->
@@ -482,7 +501,7 @@
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="blogFont paddingLR40" ng-if="!testStarted">
             
             <div flex="60" layout="column" layout-align="start center" class="paddingLR20">
-                <div layout="row" layout-align="start center" class="blogFont bold font20 width100 exact10h">
+                <div layout="row" layout-align="start center" class="h2Font bold width100 exact10h">
                     Instructions for taking the test:
                 </div>
                 <div layout="column" layout-align="start center" class="paddingLR20 paddingT10 paddingB20 width100 editFont exact70h vScroll greyBorder" >
@@ -497,7 +516,7 @@
             </div>
             <div flex layout="column" layout-align="start center" class="paddingLR20 ">
             <div layout="column" layout-align="start center" class="width100 baseFont " ng-if="user">
-                <div layout="row" layout-align="start center" class="width100 bold exact10h">
+                <div layout="row" layout-align="start center" class="h2Font width100 bold exact10h">
                     Complete the information below:
                 </div>
                 <div layout="column" layout-align="start start" class="width100 padding20 exact30h greyBorder vScroll">

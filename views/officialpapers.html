@@ -214,24 +214,25 @@
     </div>
     
     <div layout="row" layout-align="center start" class="width100">
-        <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingTB30 paddingLR20" hide-xs flex-gt-xs="20">
-            <div class="box boxShadow width100 paddingTB10 paddingLR40 h3Font">
+    <div flex-xs="100" flex-gt-xs="90"  layout="row" layout-align="center start" class="paddingTB40 width100">
+        <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingL20R40 leftBar" hide-xs flex-gt-xs="20">
+            <div layout="row" layout-align="center center" class=" sideactive width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton">
             {{exam.seoname | uppercase}}
             </div>
         </div>
         <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR40" flex-xs="100" flex-gt-xs>
-            <div layout="column" layout-align="start start" class="width100 padding20">
-                <div layout="row" layout-align="start center" class="box width100 paddingTB10 paddingLR40 boxShadow min20vh margin10" ng-repeat="paper in officialPapers">
+            <div layout="column" layout-align="start start" class="width100">
+                <div layout="row" layout-align="start center" class="box width100 paddingLR40 boxShadow min20vh marginB20" ng-repeat="paper in officialPapers | orderBy: ['simulationrank', '-year']">
                     <div layout="column" layout-align="start start" flex="10">
                     </div>
-                    <div layout="column" layout-align="start start" flex>
+                    <div layout="column" layout-align="start start" flex="70">
                         <div class="ribbon"><span>{{paper.year}}</span></div>
                         <div class="h2Font bold width100">{{paper.name}}</div>
                         <div class="baseFont width100">{{paper.description}}</div>
                         <div class="subBaseFont width100 textLightGrey marginT5">{{paper.nQuestions}} Questions | Time: {{paper.durationFormatted}}</div>
                     </div>
-                    <div layout="column" layout-align="start center" flex>
-                        <md-button class="md-saveNext md-small font16 margin0 " ui-sref="assessment({ testId:{{'paper._id'}} })">
+                    <div layout="column" layout-align="end end" class="paddingR20" flex>
+                        <md-button class="md-saveNext md-small font16 margin0 " ui-sref="assessment({ testId:{{'paper._id'}} })" target="_blank">
                             Start
                         </md-button>
                         <div class="smallFont marginT5" ng-show="paper.downloadable">or <a ng-href="{{paper.url.question}}" target="_blank" ng-if="paper.url.question" id="reviewLink">Download PDF</a></div>
@@ -244,6 +245,7 @@
             
         </div>
     
+    </div>
     </div>
     
     
