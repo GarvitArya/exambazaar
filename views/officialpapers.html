@@ -222,7 +222,7 @@
         </div>
         <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingLR40" flex-xs="100" flex-gt-xs>
             <div layout="column" layout-align="start start" class="width100">
-                <div layout="row" layout-align="start center" class="box width100 paddingLR40 boxShadow min20vh marginB20" ng-repeat="paper in officialPapers | orderBy: ['simulationrank', '-year']">
+                <div layout="row" layout-align="start center" class="box width100 paddingLR40 boxShadow min20vh marginB20" ng-repeat="paper in officialPapers | orderBy: ['simulationrank', '-year', 'name']">
                     <div layout="column" layout-align="start start" flex="10">
                     </div>
                     <div layout="column" layout-align="start start" flex="70">

@@ -293,7 +293,7 @@ var allStates = [
 //'/career/aptitude',
 '/career/:domainName',
 '/assessment/:testId',
-'/assessmentreport/:testId',
+'/reportassessment/:testId',
 '/ebinternal/testAssessment',
 '/ebinternal/emailToPublications',
 '/ebinternal/user/:userId/sendEmail',

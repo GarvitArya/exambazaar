@@ -16643,10 +16643,773 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
             
     }]); 
-    
+    exambazaar.controller("reportassessmentController", 
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
+            
+            $scope.openAddQuestion = function(){
+                var url = $state.href('addQuestion', {testId: $scope.test._id});
+                window.open(url, '_blank');    
+            };
+            $scope.col1Width = '25';
+            $scope.pageWidth = '100';
+            $scope.question = null;
+            $scope.subquestion = null;
+            
+            $scope.disabled = false;
+            $scope.testStarted = false;
+            $scope.testOver = false;
+            if (screenSize.is('xs, sm')){
+                $scope.disabled = true;
+            }else{
+                $scope.disabled = false;
+            }
+
+            var sanitizeQuestion = function(question){
+                if(question && question.context){
+                    question.context = question.context.replace(/\n/ig, '<br/>');
+                }
+                if(question._startnumber){
+                    question._startnumber = Number(question._startnumber);
+                }
+                if(question._endnumber){
+                    question._endnumber = Number(question._endnumber);
+                }
+                if(question && question.questions){
+                    question.questions.forEach(function(thisQuestion, index){
+                        
+                        if(!thisQuestion.marking){
+                            thisQuestion.marking = {
+                                correct: 3,
+                                incorrect: -1
+                            };
+                        }
+                        
+                        thisQuestion.question = thisQuestion.question.replace(/\n/ig, '<br/>');
+
+                        thisQuestion.options.forEach(function(thisOption, oindex){
+                            thisOption.option = thisOption.option.replace(/\n/ig, '<br/>');
+                            //thisOption.option = optionsPrefix[oindex] + thisOption.option;
+                        });
+                    });
+
+                }
+                return question;
+            };
+            $scope.fullScreenMode = false;
+            
+            $scope.examQuestions = [];
+            $scope.answered = 0;
+            $scope.seen = 0;
+        
+            var getUserQMarkForReview = function(){
+            if($scope.user._id){
+                qmarkforreviewService.getUserQMarkforReviews($scope.user._id).success(function (data, status, headers) {
+
+                $scope.userQMarkForReview = data;
+                var userQMarkForReviewSubQuestionIds = $scope.userQMarkForReview.map(function(a) {return a.subquestion.toString();});
+                
+                if($scope.userQMarkForReview){
+                    $scope.marked = 0;
+                    $scope.testQuestions.forEach(function(thisQuestion, index){
+
+                        var markforreview = false;
+                        
+                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                            var submarkforreview = false;
+                            var thisSubQuestionId = thisSubQuestion._id.toString();
+                            
+                            var qIndex = userQMarkForReviewSubQuestionIds.indexOf(thisSubQuestionId);
+
+                            if(qIndex != -1){
+                                
+                                submarkforreview = true;
+                                markforreview = true;
+                                
+                                $scope.marked += 1;
+
+                            }else{
+                                
+                            }
+                            thisSubQuestion.markforreview = submarkforreview;
+                        });
+                        thisQuestion.markforreview = markforreview;
+                    });
+
+                    
+                }
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }
+
+            };
+            var getUserQView = function(){
+            if($scope.user._id){
+                qviewService.getUserQViews($scope.user._id).success(function (data, status, headers) {
+
+                $scope.userQView = data;
+                var userQViewSubQuestionIds = $scope.userQView.map(function(a) {return a.subquestion.toString();});
+                if($scope.userQView){
+                    $scope.seen = 0;
+                    $scope.testQuestions.forEach(function(thisQuestion, index){
+                        //userQViewQuestionIds 
+                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                            var thisSeen = false;
+                            var sindex = userQViewSubQuestionIds.indexOf(thisSubQuestion._id);
+                            if(sindex != -1){
+                                thisSubQuestion.seen = true;
+                                $scope.seen += 1;
+                            }
+                            
+                        });
+                        
+                        
+                        
+                    });
+
+                    
+                }
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }
+
+            };
+            var getUserResponses = function(){
+                if($scope.user._id){
+                questionresponseService.getUserQuestionResponses($scope.user._id).success(function (data, status, headers) {
+
+                $scope.userResponses = data;
+                var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.subquestion.toString();});
+                
+                if($scope.userResponses){
+                    $scope.answered = 0;
+                    $scope.totalQuestions = 0;
+                    
+                    var userQViewSubQuestionIds = [];
+                    if($scope.userQView){
+                        var userQViewSubQuestionIds = $scope.userQView.map(function(a) {return a.subquestion.toString();});
+                    }
+                    $scope.testQuestions.forEach(function(thisQuestion, index){
+
+                        var anyAnswer = false;
+                        
+                        $scope.totalQuestions += thisQuestion.questions.length;
+                        
+                        
+                        
+                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                            var subanyAnswer = false;
+                            var thisSubQuestionId = thisSubQuestion._id.toString();
+                            
+                            var qIndex = userResponseSubQuestionIds.indexOf(thisSubQuestionId);
+
+                            if(qIndex != -1){
+                                var thisQuestionResponse = $scope.userResponses[qIndex];
+                                anyAnswer = true;
+                                subanyAnswer = true;
+                               
+                                if(thisQuestionResponse.option){
+                                    $scope.testQuestions[index].questions[sindex].userAnswer = thisQuestionResponse.option.toString();
+                                }
+                                if(thisQuestionResponse.numericalAnswer){
+                                    $scope.testQuestions[index].questions[sindex].userNumericalAnswer = Number(thisQuestionResponse.numericalAnswer);
+                                }
+                                
+                                
+                                
+                                $scope.answered += 1;
+
+                            }else{
+                                $scope.testQuestions[index].questions[sindex].userAnswer = null;
+                                $scope.testQuestions[index].questions[sindex].userNumericalAnswer = null;
+                            }
+
+                            thisSubQuestion.anyAnswer = subanyAnswer;
+                        });
+                        thisQuestion.anyAnswer = anyAnswer;
+
+                        thisQuestion = sanitizeQuestion(thisQuestion);
+                    });
+
+                    
+                }
+                    /*if($scope.userResponses){
+                    $scope.answered = 0;
+                    $scope.testQuestions.forEach(function(thisQuestion, index){
+                        var thisQuestionId = thisQuestion._id;
+                        var qIndex = userResponseSubQuestionIds.indexOf(thisQuestionId);
+
+                        if(qIndex != -1){
+                            var thisQuestionResponse = $scope.userResponses[qIndex];
+                            thisQuestion.userAnswer = thisQuestionResponse.option.toString();
+                            $scope.answered += 1;
+
+                        }else{
+                            thisQuestion.userAnswer = null;
+                        }
+
+                        thisQuestion.questions.forEach(function(thisSubQuestion, index){
+                            var thisSubQuestionId = thisSubQuestion._id.toString();
+
+                        });
+
+                        thisQuestion = sanitizeQuestion(thisQuestion);
+                    });
+                }*/
+
+
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+                }
+
+            };
+            
+            
+            $scope.setQuestion = function(question, index){
+                $scope.question = question;
+                $scope.setSubQuestion($scope.question, index);
+            };
+            $scope.setSubQuestion = function(question, index){
+                if(question && question.questions && question.questions.length > index){
+                    if($scope.question._id != question._id){
+                        $scope.question = question;
+                    }
+                    if($scope.subquestion){
+                        if($scope.subquestion._id != question.questions[index]._id){
+                            $scope.subquestion = question.questions[index];
+                        }
+                    }else{
+                        $scope.subquestion = question.questions[index];
+                    }
+                }
+                
+            };
+        
+            $scope.setNextQuestion = function(question, subquestion){
+                var questionId = question._id;
+                var subquestionId = subquestion._id;
+                var questionSubQuestionIds = question.questions.map(function(a) {return a._id.toString();});
+                var nSubQuestions = question.questions.length;
+                var sIndex = questionSubQuestionIds.indexOf(subquestionId);
+                if(sIndex < nSubQuestions - 1){
+                    $scope.subquestion = question.questions[sIndex + 1];
+                   
+                }else if (sIndex == nSubQuestions - 1 ){
+                    var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
+                    var nQuestions = $scope.testQuestions.length;
+
+                    var tIndex = testQuestionIds.indexOf(questionId);
+
+                    if(tIndex != -1 && tIndex != nQuestions- 1){
+                       
+                        $scope.question = $scope.testQuestions[tIndex + 1];
+                        $scope.setSubQuestion($scope.question, 0);
+                    }else if (tIndex == nQuestions- 1){
+                        $scope.submitAssessment();
+                    }
+                    
+                }
+                
+            };
+            $scope.setPreviousQuestion = function(question, subquestion){
+                var questionId = question._id;
+                var subquestionId = subquestion._id;
+                var questionSubQuestionIds = question.questions.map(function(a) {return a._id.toString();});
+                var nSubQuestions = question.questions.length;
+                var sIndex = questionSubQuestionIds.indexOf(subquestionId);
+                if(sIndex > nSubQuestions - 1){
+                    $scope.subquestion = question.questions[sIndex + 1];
+                   
+                }else if (sIndex == nSubQuestions - 1 ){
+                    var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
+                    var nQuestions = $scope.testQuestions.length;
+
+                    var tIndex = testQuestionIds.indexOf(questionId);
+
+                    if(tIndex != -1 && tIndex != nQuestions- 1){
+                       
+                        $scope.question = $scope.testQuestions[tIndex + 1];
+                        $scope.setSubQuestion($scope.question, 0);
+                    }else if (tIndex == nQuestions- 1){
+                        $scope.submitAssessment();
+                    }
+                    
+                }
+            };
+            $scope.user = {};
+            if($cookies.getObject('sessionuser')){
+                var sessionuser = $cookies.getObject( 'sessionuser');
+                $scope.test = thistest.data;
+                if($scope.test.instructions && $scope.test.instructions.length > 0){
+                    $scope.instructions = $scope.test.instructions;    
+                }
+                
+                $scope.testQuestions = thisTestQuestions.data;
+                $scope.testQuestions.sort(function(a,b) {return (Number(a._startnumber) > Number(b._startnumber)) ? 1 : ((Number(b._startnumber) > Number(a._startnumber)) ? -1 : 0);} ); 
+                
+                $rootScope.pageTitle = "Exambazaar Test";
+                var nQuestions = $scope.testQuestions.length;
+                $scope.questionList = [];
+                 $scope.testQuestions.forEach(function(thisQuestion, index){
+                    thisQuestion = sanitizeQuestion(thisQuestion);
+                    thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                        var newQuestionInList = {
+                            question: thisQuestion,
+                            subquestion: thisSubQuestion,
+                            no: thisQuestion._startnumber + sindex,
+                            sno: sindex,
+                        };
+                        $scope.questionList.push(newQuestionInList);
+                    });
+                     
+                });
+                
+                $scope.fullScope = false;
+                UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    
+
+                    Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    var assessmentForm = {
+                        user: $scope.user._id,
+                        test: $stateParams.testId,
+                    };
+                    assessmentService.getAssessment(assessmentForm).success(function (adata, status, headers) {
+                        $scope.userAssessment = adata;
+                        $scope.testOver = false;
+                        $scope.testStarted = false;
+
+
+                        if($scope.userAssessment){
+                            console.log($scope.userAssessment.evaluation.marked);
+                            $scope.testStarted = true;
+                            $scope.endTime = moment($scope.userAssessment._end);
+                            var timeNow = moment();
+                            if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
+                                $scope.testOver = true;
+                                console.log('Test is over or submitted');
+
+                            }else{
+                                $scope.testOver = false;
+
+                            }
+
+                        }else{
+                            $scope.testStarted = false;
+                        }
+                        getUserResponses();
+                        getUserQMarkForReview();
+                        getUserQView();
+                        $scope.setQuestion($scope.testQuestions[0], 0);
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+
+
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "User not logged in!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }else{
+                //$scope.user = null;
+                //$rootScope.$emit("CallBlogLogin", {});
+                
+                console.log('No User');
+            }
+            var optionsPrefix = [
+                'A) ',
+                'B) ',
+                'C) ',
+                'D) ',
+                'E) ',
+                'F) ',
+                'G) ',
+                'H) ',
+            ];
+
+
+            $scope.submitAssessmentHelper = function(){
+                var assessmentForm = {
+                    user: $scope.user._id,
+                    test: $stateParams.testId,
+                };
+                assessmentService.submitAssessment(assessmentForm).success(function (adata, status, headers) {
+                    Notification.success({message: "Thank you, all done!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    $scope.userAssessment = adata;
+                    $scope.testOver = false;
+                    $scope.testStarted = false;
+                    $scope.userevaluate();
+
+                    if($scope.userAssessment){
+                        $scope.testStarted = true;
+                        $scope.endTime = moment($scope.userAssessment._end);
+                        var timeNow = moment();
+                        if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
+                            $scope.testOver = true;
+                            console.log('Test is over or submitted');
+
+                        }else{
+                            $scope.testOver = false;
+
+                        }
+
+                    }else{
+                        $scope.testStarted = false;
+                    }
+                    getUserResponses();
+                    getUserQMarkForReview();
+                    getUserQView();
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+
+            };
+            $scope.submitAssessment = function(){
+                console.log($scope.isFullScreen);
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to submit your test?')
+                .textContent('You will not be able to access it again!' )
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+
+                    $scope.submitAssessmentHelper();
+
+
+                }, function() {
+                  //nothing
+                }); 
+
+
+
+
+            }
+
+            $scope.userevaluate = function(){
+                var assessmentForm = {
+                    user: $scope.user._id,
+                    test: $stateParams.testId,
+                };
+
+                assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
+                    console.log(edata);
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }
+
+
+            $scope.$watch('subquestion', function (newValue, oldValue, scope) {
+                if(newValue != null){
+                    $scope.activeQuestionNo = null;
+                    var questionId = $scope.question._id;
+                    var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
+
+                    var tIndex = testQuestionIds.indexOf(questionId);
+                    var thisQuestion = $scope.testQuestions[tIndex];
+                    var questionSubQuestionIds = thisQuestion.questions.map(function(a) {return a._id.toString();});
+                    var sIndex = questionSubQuestionIds.indexOf($scope.subquestion._id);
+                    
+                    if(sIndex != -1){
+                        $scope.activeQuestionNo = thisQuestion._startnumber + sIndex;
+                    }
+                    
+                    
+
+                }
+            }, true);
+            //qmarkforreviewService abcd
+            $scope.markQuestionForReview = function(question, subquestion){
+                var qmarkforreviewForm = {
+                    user: $scope.user._id,
+                    question: question._id,
+                    subquestion: subquestion._id,
+                };
+
+                qmarkforreviewService.saveQMarkforReview(qmarkforreviewForm).success(function (data, status, headers) {
+                    question.markforreview = true;
+                    //Notification.primary({message: "Your question has been marked for review!",  positionY: 'top', positionX: 'left', delay: 2000});
+                    //getUserResponses();
+                    getUserQMarkForReview();
+                    //getUserQView();
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
+            
+            $scope.clearQuestionMarkForReview = function(subquestion){
+                
+                var userQMarkForReviewSubQuestionIds = $scope.userQMarkForReview.map(function(a) {return a.subquestion.toString();});
+
+                var subquestionId = subquestion._id;
+                var uIndex = userQMarkForReviewSubQuestionIds.indexOf(subquestionId);
+                if(uIndex != -1){
+                    var thisUserQMarkForReview = $scope.userQMarkForReview[uIndex];
+                    qmarkforreviewService.removeQMarkforReview(thisUserQMarkForReview._id).success(function (data, status, headers) {
+                        //Notification.success({message: "Your question has been unmarked from review!",  positionY: 'top', positionX: 'left', delay: 2000});
+                        getUserQMarkForReview();
+
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+
+                }
+            };
+        
+            $scope.clearAnswer = function(subquestion){
+                if(subquestion.type =='numerical'){
+                    subquestion.userNumericalAnswer = null;
+                }
+                var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.subquestion.toString();});
+
+                var subquestionId = subquestion._id;
+                var uIndex = userResponseSubQuestionIds.indexOf(subquestionId);
+                if(uIndex != -1){
+                    var thisUserResponse = $scope.userResponses[uIndex];
+                    questionresponseService.removeQuestionResponse(thisUserResponse._id).success(function (data, status, headers) {
+                        //console.log('All done');
+                        getUserResponses();
+
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+
+                }
+            };
+            
+
+
+            
+
+            $scope.showInstructionDialog = function(ev) {
+
+                $mdDialog.show({
+                  contentElement: '#instructionDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: false,
+                  escapeToClose: false,
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
+            $scope.closeInstructionDialog = function(ev) {
+
+                $mdDialog.hide();
+            };
+        
+            $scope.removeAssessmentDialog = function(){
+                var confirm = $mdDialog.confirm()
+                .title('Would you like to reset the test?')
+                .textContent('You will lose your progress!' )
+                .ariaLabel('Lucky day')
+                .targetEvent()
+                .clickOutsideToClose(true)
+                .ok('Confirm')
+                .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.removeAssessment();
+                }, function() {
+                  //nothing
+                });   
+            };
+        
+            $scope.removeAssessment = function(){
+                var thisAssessment = {
+                    userId: $scope.user._id,
+                    testId: $scope.test._id,
+                };
+                assessmentService.removeAssessment(thisAssessment).success(function (data, status, headers) {
+                    Notification.success({message: "Assessment has been reset",  positionY: 'top', positionX: 'left', delay: 10000});
+                    $state.reload();
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+            };
+            $scope.startAssessment = function(assessmentInfo) {
+                
+                $scope.startErrors = [];
+                var valid = true;
+                if(!assessmentInfo.mobile){
+                    assessmentInfo.mobile = '';
+                }
+                if(assessmentInfo && assessmentInfo.mobile){
+                    assessmentInfo.mobile = assessmentInfo.mobile.toString();
+                }
+
+                if(!assessmentInfo.agree){
+                    valid = false;
+                    console.log('1');
+                    $scope.startErrors.push('Please agree to terms and conditions.');
+                }
+                if(assessmentInfo.name.length < 2){
+                    valid = false;
+                    console.log('2');
+                    $scope.startErrors.push('Please enter name');
+                }
+                console.log(assessmentInfo.mobile);
+                if(assessmentInfo.mobile.length < 9){
+                    valid = false;
+                    console.log('4');
+                    $scope.startErrors.push('Please enter a valid mobile number');
+                }
+                if(assessmentInfo.email.length < 2){
+                    valid = false;
+                    console.log('3');
+                    $scope.startErrors.push('Please enter email');
+                }
+                
+                /*if(!assessmentInfo.degree){
+                    valid = false;
+                    console.log('5');
+                    $scope.startErrors.push('Please select degree');
+                }
+                if(assessmentInfo.degree == "Others" && assessmentInfo.otherdegree.length < 2){
+                    valid = false;
+                    console.log('6');
+                    $scope.startErrors.push('Please enter Other degree name');
+                }
+                if(!assessmentInfo.stream){
+                    valid = false;
+                    console.log('7');
+                    $scope.startErrors.push('Please select stream');
+                }
+                if(assessmentInfo.stream == "Others" && assessmentInfo.otherstream.length < 2){
+                    valid = false;
+                    console.log('8');
+                    $scope.startErrors.push('Please select Other stream name');
+                }
+                if(assessmentInfo.mobile.length != 10){
+                    valid = false;
+                    console.log('9');
+                    $scope.startErrors.push('Please enter mobile');
+                }*/
+
+                if(valid){
+                    var timewithbreak = Number($scope.test.duration);
+                    var testSections = $scope.test.simulate.sections;
+                    if(testSections){
+                    testSections.forEach(function(thisSection, index){
+                        if(thisSection.timedSeparately){
+                            timewithbreak += Number(thisSection.break);
+                        }
+                    });
+                    }
+                    
+                    var assessmentForm = {
+                        user: $scope.user._id,
+                        test: $stateParams.testId,
+                        info: assessmentInfo,
+                        //time: 60,
+                        time: $scope.test.duration,
+                        timewithbreak: timewithbreak,
+                    };
+                    assessmentService.saveAssessment(assessmentForm).success(function (adata, status, headers) {
+                        $scope.userAssessment = adata;
+                        if($scope.userAssessment){
+                            $scope.testStarted = true;
+                            $scope.endTime = moment($scope.userAssessment._end);
+                            var timeNow = moment();
+                            if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
+                                $scope.testOver = true;
+                                console.log('Test is over or submitted');
+
+                            }else{
+                                $scope.testOver = false;
+
+                            }
+
+                        }else{
+                            $scope.testStarted = false;
+                        }
+                        getUserResponses();
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+
+
+                }else{
+                    Notification.primary({message: "Please fill the form correctly and agree to terms to proceed ahead!",  positionY: 'top', positionX: 'right', delay: 5000});
+                }
+
+
+
+            };
+
+            window.setInterval(function(){
+                //console.log('Here');
+                if($scope.userAssessment){
+                    var timeNow = moment();
+                    if($scope.endTime - timeNow < 0 && !$scope.userAssessment.submitted){
+                        console.log('Test is over');
+                        $scope.testOver = true;
+                        $scope.submitAssessmentHelper();
+                    }
+                }
+
+            }, 1000);
+
+            /*var vis = (function(){
+                var stateKey, eventKey, keys = {
+                    hidden: "visibilitychange",
+                    webkitHidden: "webkitvisibilitychange",
+                    mozHidden: "mozvisibilitychange",
+                    msHidden: "msvisibilitychange"
+                };
+                for (stateKey in keys) {
+                    if (stateKey in document) {
+                        eventKey = keys[stateKey];
+                        break;
+                    }
+                }
+                return function(c) {
+                    if (c) document.addEventListener(eventKey, c);
+                    return !document[stateKey];
+                }
+            })();
+            var visible = vis();
+            vis(function(){
+              document.title = vis() ? 'Visible' : 'Not visible';
+            });*/
+
+    }]); 
     exambazaar.controller("assessmentController", 
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
-        
+            
             $scope.openAddQuestion = function(){
                 var url = $state.href('addQuestion', {testId: $scope.test._id});
                 window.open(url, '_blank');    
@@ -16710,7 +17473,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     
             };
             $scope.seeAssessmentResult = function(){
-                var url = $state.href('assessmentreport', {testId: $scope.test._id});
+                var url = $state.href('reportassessment', {testId: $scope.test._id});
                 window.open(url,'_blank');
             };
 
@@ -17197,7 +17960,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
             };
             $scope.submitAssessment = function(){
-
+                console.log($scope.isFullScreen);
                 var confirm = $mdDialog.confirm()
                 .title('Would you like to submit your test?')
                 .textContent('You will not be able to access it again!' )
@@ -39634,6 +40397,36 @@ function getLatLng(thisData) {
                 }],
                 angularTimer: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularTimer'], {serie: true});
+                }],
+                angularScreenfull: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularScreenfull'], {serie: true});
+                }],
+                
+            }
+        })
+        .state('reportassessment', {
+            url: '/reportassessment/:testId',
+            views: {
+                /*'header':{
+                    templateUrl: 'header.html',
+                    
+                },*/
+                'body':{
+                    templateUrl: 'reportassessment.html',
+                    controller: 'reportassessmentController',
+                },
+                /*'footer': {
+                    templateUrl: 'footer.html'
+                }*/
+            },
+            resolve: {
+                thistest: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getTest($stateParams.testId);
+                }],
+                thisTestQuestions: ['questionService','$stateParams',
+                    function(questionService, $stateParams){
+                        return questionService.getTestQuestions($stateParams.testId);
                 }],
                 angularScreenfull: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularScreenfull'], {serie: true});

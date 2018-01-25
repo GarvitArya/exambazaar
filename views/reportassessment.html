@@ -275,9 +275,8 @@
                 <a href="https://www.exambazaar.com" target="_blank"><img src="images/logo/eblogo.png" id="headerLogo"/></a>  
             </div>    
             <div layout="column" layout-align="center center"  class="" ng-if="endTime">
-                <div layout="row" layout-align="start center" class="width100 h2Font narrowLine textDarkGrey" >
-                    <i class="fa fa-clock-o font24 marginR10" aria-hidden="true"></i>
-                    <timer end-time="endTime">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+                <div layout="row" layout-align="start center" class="width100 h3Font narrowLine textDarkGrey" >
+                    <span ng-if="user.basic.name">Candidate: {{user.basic.name}}</span>
                 </div>
                 
             </div>
@@ -286,20 +285,17 @@
                 <div class="h2Font bold">{{test.name}}</div>
                 
             </div>
-            <div layout="row" layout-align="end center" flex="30" class="">
-                <md-button class="md-submitTest md-small tolowercase margin0 min5vh font12" ng-click="submitAssessment()" ng-if="testStarted && !testOver" show-if-fullscreen=false>
-                    Submit Test
-                </md-button>
-                <md-button class="md-submitTest md-small tolowercase margin0 min5vh font12" ng-click="submitAssessment()" ng-if="testStarted && !testOver" ngsf-toggle-fullscreen show-if-fullscreen-enabled show-if-fullscreen=true>
-                    Submit Test
-                </md-button>
+            <div layout="row" layout-align="end center" flex="30" class="paddingR10">
+                <div layout="row" layout-align="end center" class="width100 h3Font narrowLine text-primary" >
+                    <i class="fa fa-check-circle font20" aria-hidden="true"></i>&nbsp;Submitted
+                </div>
 
             </div>   
         </div>
     </div>
     
     <div layout="row" layout-align="center start" class="width100 exact90h">
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="" ng-if="!testOver && testStarted">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="" ng-if="testOver">
 
             <div flex-gt-xs="{{col1Width}}" layout="column" layout-align="center center"  class="greyRightBorder exact90h smallFont">
                 <div layout="column" layout-align="center center" class=" paddingTB10 width100" >
@@ -419,7 +415,7 @@
                                
                             <md-radio-group ng-model="subquestion.userAnswer" ng-if="subquestion.type =='mcq'" class="width100">
 
-                            <md-radio-button value="{{option._id}}" ng-model="userAnswer" ng-repeat="option in subquestion.options"  ng-click="markAnswer(question, subquestion, option)" class="paddingTB2 widht100">
+                            <md-radio-button value="{{option._id}}" ng-model="userAnswer" ng-repeat="option in subquestion.options"  class="paddingTB2 widht100" ng-disabled="true">
                                 <div flex>{{option.option}}</div>
                             </md-radio-button>
 
@@ -428,7 +424,7 @@
                             <div layout="row" layout-align="center center" class="width100 paddingTB10" ng-if="subquestion.type =='numerical'">
                                 <div flex="25">Your Answer</div>
                                 <div flex>
-                                    <input type="number" class="text-center width100" ng-model="subquestion.userNumericalAnswer" placeholder="Type your numerical answer here">
+                                    <input type="number" class="text-center width100" ng-model="subquestion.userNumericalAnswer" placeholder="Type your numerical answer here" disabled>
                                 </div>
 
 
@@ -450,25 +446,19 @@
                     </div>-->
                     
                     <div layout="row" layout-align="start center" flex class="">
-                        <md-button class="md-markReview md-small tolowercase margin0 font12" ng-click="markQuestionForReview(question, subquestion)" ng-if="!subquestion.markforreview">
-                            Mark for Review
-                        </md-button>
-                        <md-button class="md-unmarkReview md-small tolowercase margin0 font12" ng-click="clearQuestionMarkForReview(subquestion)" ng-if="subquestion.markforreview">
-                            Unmark from Review
+                        <md-button class="md-next md-small font12 tolowercase margin0 " ng-click="setPreviousQuestion(question, subquestion)">
+                            Previous
                         </md-button>
                     </div>
                     <div layout="row" layout-align="center center" flex class="">
-                        <div layout="row" layout-align="center center" ng-click="clearAnswer(subquestion)" ng-if="subquestion.userAnswer || subquestion.userNumericalAnswer">
-                            <!--ng-if="subquestion.userAnswer || subquestion.userNumericalAnswer"-->
-                        <i class="fa fa-times-circle-o font20" aria-hidden="true"></i>&nbsp;&nbsp;Clear your response
-                        </div>
+                        
                         <!--<md-button class="md-signup md-small tolowercase margin0 font12" ng-click="clearAnswer(subquestion)" ng-disabled="!subquestion.userAnswer && !subquestion.userNumericalAnswer">
                             Clear your response
                         </md-button>-->
                     </div>
                     <div flex layout="row" layout-align="end center" class="">
                         <md-button class="md-saveNext md-small font12 tolowercase margin0 " ng-click="setNextQuestion(question, subquestion)">
-                            Save & Next
+                            Next
                         </md-button>
                     </div>
                 </div>
@@ -476,7 +466,7 @@
             </div>
         </div>
 
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="testOver ">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="!testOver">
             <div layout="column" layout-align="center center" class="width100 blogFont exact90h">
                 <div class="h1Font">
                     {{user.basic.name}}
@@ -504,59 +494,6 @@
                 </div>-->
             </div>
 
-        </div>
-
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="blogFont paddingLR40" ng-if="!testStarted">
-            
-            <div flex="60" layout="column" layout-align="start center" class="paddingLR20">
-                <div layout="row" layout-align="start center" class="h2Font bold width100 exact10h">
-                    Instructions for taking the test:
-                </div>
-                <div layout="column" layout-align="start center" class="paddingLR20 paddingT10 paddingB20 width100 editFont exact70h vScroll greyBorder" >
-                    
-                    <div ng-repeat="instruction in  instructions track by $index" class="width100 padding5">
-                        <div class="blogFont font14">
-                            {{$index+1}}. {{instruction}}
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-            <div flex layout="column" layout-align="start center" class="paddingLR20 ">
-            <div layout="column" layout-align="start center" class="width100 baseFont " ng-if="user">
-                <div layout="row" layout-align="start center" class="h2Font width100 bold exact10h">
-                    Complete the information below:
-                </div>
-                <div layout="column" layout-align="start start" class="width100 padding20 exact30h greyBorder vScroll">
-                    <div layout="row" layout-align="start center" class="width100 marginB5">
-                        <div flex="25">Name</div>
-                        <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.name"></div>
-                    </div>
-                    <div layout="row" layout-align="start center" class="width100 marginB5">
-                        <div flex="25">Mobile</div>
-                        <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.mobile" only-digits></div>
-                    </div>
-                    <div layout="row" layout-align="start center" class="width100 marginB5">
-                        <div flex="25">Email</div>
-                        <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.email"></div>
-                    </div>
-                </div>
-            </div>
-            <div layout="column" layout-align="center center" class="width100 blogFont exact20h " >
-                <md-switch ng-model="assessmentInfo.agree" aria-label="Agree with terms?" class="margin0">
-                 Do you agree with the instructions above?
-                </md-switch>
-                <div layout="row" layout-align="center center" class="width100 padding10">
-                    <md-button class="md-next md-large tolowercase margin0  width50" ng-click="startAssessment(assessmentInfo)">
-                        Start
-                    </md-button>
-                </div>
-            </div> 
-            <div layout="column" layout-align="start center" class="paddingL20 font12 danger width100 exact20h ">
-                <div layout="row" layout-align="start start" ng-repeat="startError in startErrors">{{$index+1}}. {{startError}}
-                </div>
-            </div>    
-            </div>
         </div>
     </div>
 </div>

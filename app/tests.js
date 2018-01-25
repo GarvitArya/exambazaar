@@ -629,14 +629,19 @@ router.get('/officialPapers/:examName', function(req, res) {
         .exec(function (err, thisExam) {
         if (!err){
             //console.log(thisExam);
-            var examId = thisExam._id;
-            var allTests = test
-                .find({exam: examId, official: true, simulationactive: true}, {name: 1, description: 1, duration: 1, simulationactive: 1, year: 1, nQuestions: 1, simulationrank: 1, downloadable: 1, url: 1})
-                .exec(function (err, allTests) {
-                if (!err){
-                    res.json(allTests);
-                } else {throw err;}
-            });
+            if(thisExam){
+                var examId = thisExam._id;
+                var allTests = test
+                    .find({exam: examId, official: true, simulationactive: true}, {name: 1, description: 1, duration: 1, simulationactive: 1, year: 1, nQuestions: 1, simulationrank: 1, downloadable: 1, url: 1})
+                    .exec(function (err, allTests) {
+                    if (!err){
+                        res.json(allTests);
+                    } else {throw err;}
+                });
+            }else{
+                res.json([]);
+            }
+            
         } else {throw err;}
     });
 });
@@ -662,6 +667,25 @@ router.get('/readTest/:testId', function(req, res) {
     console.log('Reading test: ' + testId);
     var thisTest = test
         .findOne({'_id': testId})
+        .exec(function (err, thisTest) {
+        if (!err){
+            var question = thisTest.url.question;
+            if(question){
+                console.log(question);
+                
+            }
+            //console.log(thisTest);
+            res.json(thisTest);
+        } else {throw err;}
+    });
+    
+});
+
+router.get('/answerKey/:testId', function(req, res) {
+    
+    var testId = req.params.testId;
+    var thisTest = test
+        .findOne({'_id': testId}, {})
         .exec(function (err, thisTest) {
         if (!err){
             var question = thisTest.url.question;
