@@ -704,6 +704,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getTest = function(testId) {
             return $http.get('/api/tests/edit/'+testId, {testId: testId});
         };
+        this.answerKey = function(testId) {
+            return $http.get('/api/tests/answerKey/'+testId, {testId: testId});
+        };
+        
         this.readTest = function(testId) {
             return $http.get('/api/tests/readTest/'+testId, {testId: testId});
         };
@@ -16644,7 +16648,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     exambazaar.controller("reportassessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thisanswerkey', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thisanswerkey, thisTestQuestions, Notification, $window, screenSize ){
             
             $scope.openAddQuestion = function(){
                 var url = $state.href('addQuestion', {testId: $scope.test._id});
@@ -16683,9 +16687,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                                 incorrect: -1
                             };
                         }
+                        console.log($scope.answerkeysubquestionIds);
+                        var sIndex = $scope.answerkeysubquestionIds.indexOf(thisQuestion._id.toString());
+                        if(sIndex != -1){
+                            thisQuestion.answer = $scope.answerkey[sIndex];
+                        }else{
+                            console.log('Did not find answer: ' + thisQuestion._id + " | " + question._id);
+                        }
                         
                         thisQuestion.question = thisQuestion.question.replace(/\n/ig, '<br/>');
-
+                        
+                        
                         thisQuestion.options.forEach(function(thisOption, oindex){
                             thisOption.option = thisOption.option.replace(/\n/ig, '<br/>');
                             //thisOption.option = optionsPrefix[oindex] + thisOption.option;
@@ -16779,6 +16791,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
 
             };
+            var getUserAnswers = function(){
+                if($scope.user._id){
+                    console.log($scope.userAssessment.evaluation.marked);
+                }
+            };
+        
             var getUserResponses = function(){
                 if($scope.user._id){
                 questionresponseService.getUserQuestionResponses($scope.user._id).success(function (data, status, headers) {
@@ -16949,6 +16967,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if($cookies.getObject('sessionuser')){
                 var sessionuser = $cookies.getObject( 'sessionuser');
                 $scope.test = thistest.data;
+                $scope.answerkey = thisanswerkey.data;
+                $scope.answerkeysubquestionIds = $scope.answerkey.map(function(a) {return a.subquestion;});
                 if($scope.test.instructions && $scope.test.instructions.length > 0){
                     $scope.instructions = $scope.test.instructions;    
                 }
@@ -16989,23 +17009,24 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         $scope.testStarted = false;
 
 
-                        if($scope.userAssessment){
+                        if($scope.userAssessment && $scope.userAssessment.submitted){
+                            $scope.testOver = true;
                             console.log($scope.userAssessment.evaluation.marked);
                             $scope.testStarted = true;
-                            $scope.endTime = moment($scope.userAssessment._end);
-                            var timeNow = moment();
-                            if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
-                                $scope.testOver = true;
-                                console.log('Test is over or submitted');
-
-                            }else{
-                                $scope.testOver = false;
-
-                            }
+                            
 
                         }else{
-                            $scope.testStarted = false;
+                            $scope.testOver = false;
+                            
+                            $scope.endTime = moment($scope.userAssessment._end);
+                            var timeNow = moment();
+                            if($scope.endTime - timeNow < 0 &&  !$scope.userAssessment.submitted){
+                                
+                                console.log('Need to submit the test');
+
+                            }
                         }
+                        getUserAnswers();
                         getUserResponses();
                         getUserQMarkForReview();
                         getUserQView();
@@ -34200,6 +34221,10 @@ function getLatLng(thisData) {
             $scope.exam = thisexam.data;
             
             $scope.officialPapers = officialPapers.data;
+            $scope.years = {
+                min: '',
+                max: '',
+            };
             $scope.officialPapers.forEach(function(thisPaper, index){
                 thisPaper.durationFormatted = '';
                 var hours = Math.floor( thisPaper.duration / 60);
@@ -40424,6 +40449,11 @@ function getLatLng(thisData) {
                     function(testService, $stateParams){
                     return testService.getTest($stateParams.testId);
                 }],
+                thisanswerkey: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.answerKey($stateParams.testId);
+                }],
+                
                 thisTestQuestions: ['questionService','$stateParams',
                     function(questionService, $stateParams){
                         return questionService.getTestQuestions($stateParams.testId);

@@ -684,19 +684,94 @@ router.get('/readTest/:testId', function(req, res) {
 router.get('/answerKey/:testId', function(req, res) {
     
     var testId = req.params.testId;
-    var thisTest = test
-        .findOne({'_id': testId}, {})
-        .exec(function (err, thisTest) {
-        if (!err){
-            var question = thisTest.url.question;
-            if(question){
-                console.log(question);
-                
+    
+    var solutionKey = [];
+    var testQuestions = question
+        .find({test: testId}, {questions: 1})
+        .deepPopulate('questions')
+        .exec(function (err, testQuestions) {
+        if(testQuestions){
+        var nQuestions = 0;   
+        var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
+
+        var counter = 0;
+
+        testQuestions.forEach(function(thisQuesiton, qIndex){
+            nQuestions += thisQuesiton.questions.length;
+        });
+        //console.log(nQuestions);
+        testQuestions.forEach(function(thisQuesiton, qIndex){
+        var questionId = thisQuesiton._id;
+        thisQuesiton.questions.forEach(function(subQuestion, sIndex){
+            var subQuestionId = subQuestion._id;
+            var correctOptionId = null;
+            var correctNumericalAnswers = null;
+
+            if(subQuestion.type == 'mcq'){
+                subQuestion.options.forEach(function(thisOption, oIndex){
+                    if(thisOption._correct){
+                        correctOptionId = thisOption._id;
+
+                        var thisKey = {
+                            question: questionId.toString(),
+                            subquestion: subQuestionId.toString(),
+                            marking: subQuestion.marking,
+                            type: subQuestion.type,
+                            option: correctOptionId.toString(),
+                        };
+                        solutionKey.push(thisKey);
+                        counter += 1;
+                    }
+
+
+                });
             }
-            //console.log(thisTest);
-            res.json(thisTest);
-        } else {throw err;}
+
+            if(subQuestion.type == 'numerical'){
+
+                if(subQuestion.numericalAnswerType == 'Exact'){
+                    correctNumericalAnswers = subQuestion.numericalAnswers;
+                    var thisKey = {
+                        question: questionId.toString(),
+                        subquestion: subQuestionId.toString(),
+                        marking: subQuestion.marking,
+                        type: subQuestion.type,
+                        numericalAnswerType: subQuestion.numericalAnswerType,
+                        numericalAnswers: correctNumericalAnswers,
+                    };
+                    solutionKey.push(thisKey);
+                    counter += 1;
+                }else if (subQuestion.numericalAnswerType == 'Range'){
+                    numericalAnswerRange = subQuestion.numericalAnswerRange;
+                    var thisKey = {
+                        question: questionId.toString(),
+                        subquestion: subQuestionId.toString(),
+                        marking: subQuestion.marking,
+                        type: subQuestion.type,
+                        numericalAnswerType: subQuestion.numericalAnswerType,
+                        numericalAnswerRange: numericalAnswerRange,
+                    };
+                    solutionKey.push(thisKey);
+                    counter += 1;
+                }
+
+            }
+
+            if(counter == nQuestions){
+                console.log(solutionKey);
+                res.json(solutionKey);
+            }
+        });
+
+        });
+
+        }else{
+            res.json(null);
+        }
     });
+    
+    
+    
     
 });
 

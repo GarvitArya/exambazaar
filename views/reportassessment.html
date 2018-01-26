@@ -259,6 +259,14 @@
         border: 1px solid #ccc;
         background: whitesmoke;
     }
+    .answerBox{
+        background: #C2F8CB;
+        color: black;
+    }
+    .answerBoxHeader{
+        background: #20C39A;
+        color: white;
+    }
 </style>
 
 <!--<div id="spacer1" class="hidden-xs whiteBackground">
@@ -416,7 +424,12 @@
                             <md-radio-group ng-model="subquestion.userAnswer" ng-if="subquestion.type =='mcq'" class="width100">
 
                             <md-radio-button value="{{option._id}}" ng-model="userAnswer" ng-repeat="option in subquestion.options"  class="paddingTB2 widht100" ng-disabled="true">
-                                <div flex>{{option.option}}</div>
+                                <div layout="row" layout-align="start center" flex>
+                                    {{option.option}}
+                                    <div layout="row" layout-align="start center" ng-if="option._id == subquestion.answer.option" class="marginL20 baseFont text-primary">
+                                        <i class="fa fa-check-circle text-primary font20  bold" aria-hidden="true" ></i>&nbsp;Correct
+                                    </div>
+                                </div>
                             </md-radio-button>
 
                             </md-radio-group>
@@ -430,7 +443,31 @@
 
                             </div>
 
-
+                            <div layout="column" layout-align="start start" ng-if="subquestion.answer.type =='numerical'" class="width100 boxShadow baseFont marginT20">
+                                <div layout="column" layout-align="start start" class=" width100 answerBoxHeader bold padding5">
+                                    Answer Key
+                                </div>
+                                
+                                <div ng-if="subquestion.answer.numericalAnswerType == 'Range' " class = "padding5">
+                                    <span ng-if="subquestion.answer.numericalAnswerRange.min != subquestion.answer.numericalAnswerRange.max">
+                                    Between the values: {{subquestion.answer.numericalAnswerRange.min}} and {{subquestion.answer.numericalAnswerRange.max}}
+                                    </span>
+                                    <span ng-if="subquestion.answer.numericalAnswerRange.min == subquestion.answer.numericalAnswerRange.max">
+                                    Correct Answer: {{subquestion.answer.numericalAnswerRange.min}}
+                                    </span>
+                                </div>
+                                <div ng-if="subquestion.answer.numericalAnswerType == 'Exact' " class = "padding5">
+                                    <div class="marginR10">
+                                       Correct Answer:
+                                    </div>
+                                    <div layout="row" layout-align="start center" class="width100" layout-wrap>
+                                        <div class="marginR5" ng-repeat="answer in subquestion.answer.numericalAnswers">
+                                            {{answer}}
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
 
                             </div>
                         </div>
