@@ -210,7 +210,7 @@
         <h1 class="h1Font bold padding5 text-center" hide-gt-xs>
             {{exam.seoname | uppercase}} Previous Year Official Papers
         </h1>
-        <h3 class=" h3Font text-center">
+        <h3 class=" h3Font padding5 text-center">
             Seal your {{exam.seoname | uppercase}} preparation by attempting the Official {{exam.seoname | uppercase}} Papers for years in a Live, Timed, Exam Environment for FREE
         </h3>
     </div>
@@ -273,7 +273,8 @@
                     </div>
                     <div layout="column" layout-align="start start" flex="70">
                         <div class="ribbon"><span>{{paper.year}}</span></div>
-                        <div class="h2Font bold width100">{{paper.name}}</div>
+                        <div hide-xs class="h2Font bold width100">{{paper.name}}</div>
+                        <div hide-gt-xs class="h3Font bold width100">{{paper.name}}</div>
                         <div class="baseFont width100">{{paper.description}}</div>
                         <div class="subBaseFont width100 textLightGrey marginT5">{{paper.nQuestions}} Questions | Time: {{paper.durationFormatted}}</div>
                     </div>
