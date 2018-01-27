@@ -9954,7 +9954,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
-            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'k21', 'eligibility'];
+            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'k21', 'eligibility', 'officialpapers'];
             SidebarJS.close();
             if(forceLoginStates.indexOf($state.current.name) != -1){
                 //console.log('I am here');
@@ -34239,8 +34239,26 @@ function getLatLng(thisData) {
                 if(minutes > 0){
                     thisPaper.durationFormatted += ' and ' + minutes + ' minutes';
                 }
+                
+                var thisYear = thisPaper.year;
+                if($scope.years.min == ''){
+                    $scope.years.min = thisYear;
+                }
+                if($scope.years.max == ''){
+                    $scope.years.max = thisYear;
+                }
+                
+                if($scope.years.min > thisYear){
+                    $scope.years.min = thisYear;
+                }
+                if($scope.years.max < thisYear){
+                    $scope.years.max = thisYear;
+                }
+                if($scope.years.min == '' || $scope.years.min == ''){
+                    $scope.years = null;
+                }
             });
-            console.log($scope.officialPapers);
+            //console.log($scope.officialPapers);
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
             }else{
@@ -34262,12 +34280,14 @@ function getLatLng(thisData) {
                 //console.log('View Marked');
             })
             .error(function (data, status, header, config) {
-                console.log();
+                console.log('View not saved!');
             });
             
+            $scope.userLogin = function(){
+                $rootScope.$emit("CallBlogLogin", {});    
+            };
             
-            
-            $rootScope.pageTitle = $scope.exam.displayname + " Official Papers";
+            $rootScope.pageTitle = $scope.exam.displayname + " Question Papers";
     }]);
     exambazaar.controller("examController", 
         [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'thisExamDegrees', 'suggestedblogs', 'Carousel', 'targetStudyProviderService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, thisExamDegrees, suggestedblogs, Carousel, targetStudyProviderService, viewService, $location, screenSize){
