@@ -10370,6 +10370,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if($state.current.name == 'claim'){
                     $state.reload();
                 }
+                if($state.current.name == 'officialpapers'){
+                    $state.reload();
+                }
                 //$state.reload();
             }
         };
