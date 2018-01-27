@@ -7385,10 +7385,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });
             };
         
-        $scope.cirf = function(){
+        $scope.cirf = function(examId){
             var cirfForm = {
                 instituteIds: [$scope.provider._id],
-                examId: '58cedb079eef5e0011c17e91',
+                examId: examId,
             };
             targetStudyProviderService.cirf(cirfForm).success(function (data, status, headers) {
                 if(data && data.length > 0){
@@ -42544,6 +42544,7 @@ function getLatLng(thisData) {
                 }],
             }
         })
+        
         .state('officialpapers', {
             url: '/officialpapers/:examName',
             views: {

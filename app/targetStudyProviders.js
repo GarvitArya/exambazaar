@@ -472,6 +472,10 @@ router.post('/cirf', function(req, res) {
                         }
                         if(providerVariable && providerVariable.value == ''){
                             var option = providerVariable.option;
+                            if(!option){
+                                option = '';
+                            }
+                            console.log(providerVariable);
                             if(option.indexOf('-') != -1){
                                 var splits = str.split("-");
                                 var sum = 0;
