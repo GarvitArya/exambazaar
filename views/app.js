@@ -17038,7 +17038,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     });
                      
                 });
-                console.log($scope.questionList);
                 $scope.getQClass = function(subquestion){
                     
                     var classname = '';
@@ -17083,11 +17082,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
                             }
                         }
-                        getUserAnswers();
-                        getUserResponses();
-                        getUserQMarkForReview();
-                        getUserQView();
-                        $scope.setQuestion($scope.testQuestions[0], 0);
+                        if($scope.testOver){
+                            getUserAnswers();
+                            getUserResponses();
+                            getUserQMarkForReview();
+                            getUserQView();
+                            $scope.setQuestion($scope.testQuestions[0], 0);
+                        }
+                        
                     })
                     .error(function (data, status, header, config) {
                         Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
