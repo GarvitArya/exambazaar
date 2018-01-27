@@ -98,6 +98,17 @@
         color: black;
         border: 1px solid gainsboro;
     }
+    .notattemptedTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        height:30px;
+        color: black;
+        background: white;
+        border: 1px solid black;
+    }
     .correctTag{
         padding-left: 4px;
         padding-right: 4px;
@@ -107,6 +118,7 @@
         height:30px;
         color: white;
         background: #2E8B57;
+        border: 1px solid #2E8B57;
     }
     .incorrectTag{
         padding-left: 4px;
@@ -117,6 +129,7 @@
         height:30px;
         color: white;
         background: #B22222;
+        border: 1px solid #B22222;
     }
     
     .emptyTag{
@@ -282,12 +295,7 @@
             <div layout="row" layout-align="start center" class="marginR20">
                 <a href="https://www.exambazaar.com" target="_blank"><img src="images/logo/eblogo.png" id="headerLogo"/></a>  
             </div>    
-            <div layout="column" layout-align="center center"  class="" ng-if="endTime">
-                <div layout="row" layout-align="start center" class="width100 h3Font narrowLine textDarkGrey" >
-                    <span ng-if="user.basic.name">Candidate: {{user.basic.name}}</span>
-                </div>
-                
-            </div>
+            
             </div>
             <div flex layout="column" layout-align="center center" class="">
                 <div class="h2Font bold">{{test.name}}</div>
@@ -295,7 +303,7 @@
             </div>
             <div layout="row" layout-align="end center" flex="30" class="paddingR10">
                 <div layout="row" layout-align="end center" class="width100 h3Font narrowLine text-primary" >
-                    <i class="fa fa-check-circle font20" aria-hidden="true"></i>&nbsp;Submitted
+                    <i class="fa fa-braille font24" aria-hidden="true"></i>&nbsp;&nbsp;Submitted
                 </div>
 
             </div>   
@@ -306,39 +314,43 @@
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="" ng-if="testOver">
 
             <div flex-gt-xs="{{col1Width}}" layout="column" layout-align="center center"  class="greyRightBorder exact90h smallFont">
-                <div layout="column" layout-align="center center" class=" paddingTB10 width100" >
+                <div layout="column" layout-align="center center" class="h3Font bold paddingTB5 width100" >
+                    <div><span ng-if="user.basic.name">Candidate: {{user.basic.name}}</span></div>
+                    <div>Test Score: {{userAssessment.evaluation.score}}</div>
+                </div>
+                <div layout="column" layout-align="center center" class=" paddingTB5 width100" >
                     <div layout="column" layout-align="center center" class="width80 padding10 exact20h" id="legendBox">
-                        <div layout="row" layout-align="center center" class="width90 paddingTB5">
+                        <div layout="row" layout-align="center center" class="width100 paddingTB5">
                             <div flex layout="row" layout-align="center center" class="">
                                 <div flex="25" >
-                                    <div class="legendTag answered" layout="row" layout-align="center center">{{answered}}</div>
+                                    <div class="legendTag correctTag" layout="row" layout-align="center center">{{userAssessment.evaluation.marked.correct.length}}</div>
 
+                                </div>
+                                <div flex class="paddingL5">Correct</div>
+                            </div>
+                            <div flex>
+                            <div flex layout="row" layout-align="center center">
+                                <div flex="25">
+                                    <div class="legendTag incorrectTag" layout="row" layout-align="center center">{{userAssessment.evaluation.marked.incorrect.length}}</div>
+                                </div>
+                                <div flex class="paddingL5">Incorrect</div>
+                            </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="center center" class="width100 paddingTB5">
+                            <div flex layout="row" layout-align="center center" class="">
+                                <div flex="25">
+                                    <div class="legendTag seenTag" layout="row" layout-align="center center">{{userAssessment.evaluation.marked.correct.length + userAssessment.evaluation.marked.incorrect.length}}</div>
                                 </div>
                                 <div flex class="paddingL5">Attempted</div>
                             </div>
                             <div flex>
                             <div flex layout="row" layout-align="center center">
                                 <div flex="25">
-                                    <div class="legendTag review" layout="row" layout-align="center center">{{marked}}</div>
-                                </div>
-                                <div flex class="paddingL5">To Review</div>
-                            </div>
-                            </div>
-                        </div>
-                        <div layout="row" layout-align="center center" class="width90 paddingTB5">
-                            <div flex layout="row" layout-align="center center" class="">
-                                <div flex="25">
-                                    <div class="legendTag seen" layout="row" layout-align="center center">{{seen}}</div>
-                                </div>
-                                <div flex class="paddingL5">Seen</div>
-                            </div>
-                            <div flex>
-                            <div flex layout="row" layout-align="center center">
-                                <div flex="25">
-                                    <div class="legendTag" layout="row" layout-align="center center">{{totalQuestions - seen}}</div>
+                                    <div class="legendTag" layout="row" layout-align="center center">{{totalQuestions - userAssessment.evaluation.marked.correct.length - userAssessment.evaluation.marked.incorrect.length}}</div>
 
                                 </div>
-                                <div flex class="paddingL5">Unseen</div>
+                                <div flex class="paddingL5">Not Attempted</div>
                             </div>
                             </div>
                         </div>
@@ -349,7 +361,7 @@
                     Question List
                 </div>-->
                 <div layout="row" layout-align="center start" class="width100 exact70h vScroll paddingT20 paddingB40 paddingLR20" layout-wrap>
-                    <div ng-repeat="showquestion in questionList" class="margin5 emptyTag" layout="row" layout-align="center center" ng-class="{ seenTag: showquestion.subquestion.seen, answeredTag: showquestion.subquestion.anyAnswer, reviewTag: showquestion.subquestion.markforreview, activeTag: showquestion.subquestion._id == subquestion._id}" ng-click="setQuestion(showquestion.question, showquestion.sno)">
+                    <div ng-repeat="showquestion in questionList" class="margin5 notattemptedTag" layout="row" layout-align="center center" ng-class="getQClass(showquestion.subquestion)" ng-click="setQuestion(showquestion.question, showquestion.sno)">
                         {{showquestion.no}}
                     </div>
                 </div>
@@ -384,8 +396,11 @@
                         
                     
                     </div>
-                    <div flex layout="row" layout-align="end start" class="width100 subBaseFont paddingLR20">
-
+                    <div flex layout="row" layout-align="end center">
+                        <div ng-if="subquestion.userevaluation.correct" layout="row" layout-align="end center">
+                            <div class="">
+                            Your score
+                            </div>
                             <div layout="row" layout-align="center center" class="marginLR5 correctTag"> 
                                 <span ng-if="subquestion.marking.correct[0] != '+'">
                                 +
@@ -394,15 +409,31 @@
                                     {{subquestion.marking.correct}}
                                 </span>
                                 <md-tooltip>
-                                You will score {{subquestion.marking.correct}} marks for correct answer of this question
+                                You have scored {{subquestion.marking.correct}} marks for correct answer of this question
                                 </md-tooltip>
+                            </div>
+                        </div>
+                        <div ng-if="subquestion.userevaluation.incorrect" layout="row" layout-align="end center">
+                            <div class="">
+                            Your score
                             </div>
                             <div layout="row" layout-align="center center" class="marginLR5 incorrectTag"> {{subquestion.marking.incorrect}}
                                 <md-tooltip>
-                                You will score {{subquestion.marking.incorrect}} marks for incorrect answer of this question
+                                You have scored {{subquestion.marking.incorrect}} marks for incorrect answer of this question
                                 </md-tooltip>
                             </div>
-                        </div> 
+                        </div>
+                        <div ng-if="subquestion.userevaluation.notattempted" layout="row" layout-align="end center">
+                            <div class="">
+                            Your score
+                            </div>
+                            <div layout="row" layout-align="center center" class="marginLR5 notattemptedTag"> 0
+                                <md-tooltip>
+                                You have scored 0 marks as you have not attempted this question
+                                </md-tooltip>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 

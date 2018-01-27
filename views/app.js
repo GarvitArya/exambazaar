@@ -16690,7 +16690,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                                 incorrect: -1
                             };
                         }
-                        console.log($scope.answerkeysubquestionIds);
+                        
                         var sIndex = $scope.answerkeysubquestionIds.indexOf(thisQuestion._id.toString());
                         if(sIndex != -1){
                             thisQuestion.answer = $scope.answerkey[sIndex];
@@ -16796,7 +16796,49 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             var getUserAnswers = function(){
                 if($scope.user._id){
-                    console.log($scope.userAssessment.evaluation.marked);
+                    var correct = $scope.userAssessment.evaluation.marked.correct;
+                    var correctSubQuestionIds = [];
+                    if(correct.length > 0){
+                        correctSubQuestionIds = correct.map(function(a) {return a.subquestion.toString();});
+                    }
+                    var incorrect = $scope.userAssessment.evaluation.marked.incorrect;
+                    var incorrectSubQuestionIds = [];
+                    if(incorrect.length > 0){
+                        incorrectSubQuestionIds = incorrect.map(function(a) {return a.subquestion.toString();});
+                    }
+                   
+                    
+                    $scope.testQuestions.forEach(function(thisQuestion, index){
+                        
+                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                            var qno = thisQuestion._startnumber + sindex;
+                            var cIndex = correctSubQuestionIds.indexOf(thisSubQuestion._id.toString());
+                            var icIndex = incorrectSubQuestionIds.indexOf(thisSubQuestion._id.toString());
+                            
+                            if(cIndex != -1){
+                                thisSubQuestion.userevaluation = {
+                                    correct: true,    
+                                    incorrect: false,    
+                                    notattempted: false,    
+                                };
+                            }else if(icIndex != -1){
+                                thisSubQuestion.userevaluation = {
+                                    correct: false,    
+                                    incorrect: true,    
+                                    notattempted: false,    
+                                };
+                            }else if(cIndex == -1 && icIndex == -1){
+                                thisSubQuestion.userevaluation = {
+                                    correct: false,    
+                                    incorrect: false,    
+                                    notattempted: true,    
+                                };
+                            }
+                            
+                        });
+                    });
+                    
+                    
                 }
             };
         
@@ -16947,28 +16989,29 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var questionSubQuestionIds = question.questions.map(function(a) {return a._id.toString();});
                 var nSubQuestions = question.questions.length;
                 var sIndex = questionSubQuestionIds.indexOf(subquestionId);
-                if(sIndex > nSubQuestions - 1){
-                    $scope.subquestion = question.questions[sIndex + 1];
+                if(sIndex > 0){
+                    $scope.subquestion = question.questions[sIndex - 1];
                    
-                }else if (sIndex == nSubQuestions - 1 ){
+                }else if (sIndex == 0){
                     var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
                     var nQuestions = $scope.testQuestions.length;
 
                     var tIndex = testQuestionIds.indexOf(questionId);
 
-                    if(tIndex != -1 && tIndex != nQuestions- 1){
+                    if(tIndex != -1 && tIndex != 0){
                        
-                        $scope.question = $scope.testQuestions[tIndex + 1];
-                        $scope.setSubQuestion($scope.question, 0);
-                    }else if (tIndex == nQuestions- 1){
-                        $scope.submitAssessment();
+                        $scope.question = $scope.testQuestions[tIndex - 1];
+                        $scope.setSubQuestion($scope.question, $scope.question.questions.length - 1);
+                    }else if (tIndex == 0){
+                        
                     }
                     
                 }
             };
-            $scope.user = {};
+            $scope.user = null;
             if($cookies.getObject('sessionuser')){
                 var sessionuser = $cookies.getObject( 'sessionuser');
+                
                 $scope.test = thistest.data;
                 $scope.answerkey = thisanswerkey.data;
                 $scope.answerkeysubquestionIds = $scope.answerkey.map(function(a) {return a.subquestion;});
@@ -16995,7 +17038,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     });
                      
                 });
-                
+                console.log($scope.questionList);
+                $scope.getQClass = function(subquestion){
+                    
+                    var classname = '';
+                    if(subquestion.userevaluation.correct){
+                        classname = 'correctTag';
+                    }
+                    if(subquestion.userevaluation.incorrect){
+                        classname = 'incorrectTag';
+                    }
+                    return(classname);
+                };
                 $scope.fullScope = false;
                 UserService.getUser(sessionuser._id).success(function (data, status, headers) {
                     $scope.user = data;
@@ -17014,7 +17068,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
                         if($scope.userAssessment && $scope.userAssessment.submitted){
                             $scope.testOver = true;
-                            console.log($scope.userAssessment.evaluation.marked);
+                           
                             $scope.testStarted = true;
                             
 
@@ -17863,6 +17917,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     });
                      
                 });
+                
                 
                 $scope.fullScope = false;
                 UserService.getUser(sessionuser._id).success(function (data, status, headers) {
