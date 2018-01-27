@@ -211,6 +211,9 @@
         <h3 class=" h3Font padding5 text-center">
             Seal your {{exam.seoname | uppercase}} preparation by attempting the Official {{exam.seoname | uppercase}} Papers for<span ng-if="!years">&nbsp;years&nbsp;</span><span ng-if="years">&nbsp;{{years.min}} - {{years.max}}&nbsp;</span>in a Live, Timed, Exam Environment for FREE
         </h3>
+        <div class="baseFont text-center">
+            {{examSummary.papers}} Papers | {{examSummary.hours}} Hours | {{examSummary.questions}} Questions
+        </div>
     </div>
     </div>
     <div layout="row" layout-align="center start" class="width100 textDarkGrey greyBottomBorder" layout-wrap>

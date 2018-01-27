@@ -34327,7 +34327,15 @@ function getLatLng(thisData) {
                 min: '',
                 max: '',
             };
+            $scope.examSummary = {
+                papers: $scope.officialPapers.length,
+                hours: 0,
+                questions: 0
+            };
             $scope.officialPapers.forEach(function(thisPaper, index){
+                $scope.examSummary.hours += Number(thisPaper.duration);
+                $scope.examSummary.questions += Number(thisPaper.nQuestions);
+                
                 thisPaper.durationFormatted = '';
                 var hours = Math.floor( thisPaper.duration / 60);
                 var minutes = thisPaper.duration % 60;
@@ -34364,7 +34372,9 @@ function getLatLng(thisData) {
                     thisPaper.fromnow = moment(thisPaper._actualdate).fromNow();
                 }
             });
-            //console.log($scope.officialPapers);
+            $scope.examSummary.hours = $scope.examSummary.hours/60;
+            
+            console.log($scope.examSummary);
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
             }else{
