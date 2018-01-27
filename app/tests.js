@@ -20,6 +20,9 @@ mongoose.Promise = require('bluebird');
 //to add an test
 router.post('/save', function(req, res) {
     var thisTest = req.body;
+    if(thisTest._actualdate){
+        console.log(thisTest._actualdate);
+    }
     var testId = '';
     if(thisTest._id){
        testId = thisTest._id;
@@ -51,6 +54,7 @@ router.post('/save', function(req, res) {
 router.post('/customMarking', function(req, res) {
     var customMarkingForm = req.body;
     var testId = customMarkingForm.testId;
+    var questionIds = customMarkingForm.questionIds;
     var customMarking = customMarkingForm.customMarking;
     
     var existingTest = test.findOne({ '_id': testId },function (err, existingTest) {
@@ -58,7 +62,7 @@ router.post('/customMarking', function(req, res) {
         if(existingTest){
             
             var testQuestions = question
-                .find({test: testId}, {questions: 1})
+                .find({test: testId, _id: {$in: questionIds}}, {questions: 1})
                 .deepPopulate('questions')
                 .exec(function (err, testQuestions) {
                 var valid = true;
@@ -80,7 +84,7 @@ router.post('/customMarking', function(req, res) {
                     thisQuestion.save(function(err, thisQuestion) {
                         if (err) return console.error(err);
 
-                        console.log(question._id + " saved!");
+                        console.log(questionId + " saved!");
                         
                         counter += 1;
                         if(counter == nQuestions){
@@ -632,7 +636,7 @@ router.get('/officialPapers/:examName', function(req, res) {
             if(thisExam){
                 var examId = thisExam._id;
                 var allTests = test
-                    .find({exam: examId, official: true, simulationactive: true}, {name: 1, description: 1, duration: 1, simulationactive: 1, year: 1, nQuestions: 1, simulationrank: 1, downloadable: 1, url: 1})
+                    .find({exam: examId, official: true, simulationactive: true}, {name: 1, description: 1, duration: 1, simulationactive: 1, year: 1, nQuestions: 1, simulationrank: 1, downloadable: 1, url: 1, _actualdate: 1})
                     .exec(function (err, allTests) {
                     if (!err){
                         res.json(allTests);

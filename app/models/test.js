@@ -4,7 +4,7 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var testSchema = mongoose.Schema({
     name: {type: String},
-    
+    _actualdate: { type: Date },
     description: {type: String},
     year: {type: String},
     nQuestions: {type: String},

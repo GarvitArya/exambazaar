@@ -33416,6 +33416,7 @@ function getLatLng(thisData) {
                 incorrect: ''
             };
             $scope.showCustomMarkingDialog = function(ev){
+                $scope.customMarkingQuestions = [];
                 $mdDialog.show({
                   contentElement: '#customMarkingDialog',
                   parent: angular.element(document.body),
@@ -33532,53 +33533,86 @@ function getLatLng(thisData) {
             };
             
             $scope.showCustomSections = false;
+            $scope.customMarkingQuestions = [];
             $scope.showSectionsMarkingDialog = function(ev){
                 $scope.updateSections();
                 $scope.syncTestSections();
                 $scope.showCustomSections = true;
             };
-            $scope.setCustomMarkingForAll = function(){
-                var valid = true;
-                if($scope.customMarking.correct == ''){
-                    valid = false;
+            $scope.addCustomMarkingQuestion = function(question){
+                if(!$scope.customMarkingQuestions){
+                   $scope.customMarkingQuestions = [];
                 }
-                if($scope.customMarking.incorrect == '' && $scope.customMarking.incorrect != 0){
-                    valid = false;
-                }
-                if($scope.customMarking.incorrect > 0){
-                    valid = false;
-                    Notification.warning({message: "The marks for incorrect answer should be NEGATIVE!",  positionY: 'top', positionX: 'right', delay: 5000});
-                }
-                if($scope.customMarking.correct < 0){
-                    valid = false;
-                    Notification.warning({message: "The marks for correct answer should be POSITIVE!",  positionY: 'top', positionX: 'right', delay: 5000});
-                }
-                if($scope.customMarking.correct + $scope.customMarking.incorrect < 0){
-                    valid = false;
-                    Notification.warning({message: "The NEGATIVE marks for incorrect answer cannot be greater than POSITIVE marks for correct answer!",  positionY: 'top', positionX: 'right', delay: 10000});
+                var questionIds = $scope.customMarkingQuestions.map(function(a) {return a._id;});
+                var qIndex = questionIds.indexOf(question._id);
+                if(qIndex == -1){
+                    $scope.customMarkingQuestions.push(question);
                 }
                 
-                if(!valid){
-                    Notification.warning({message: "Your custom marking scheme does not fit the requirements at EB!",  positionY: 'top', positionX: 'right', delay: 5000});
-                }else{
-                    var customMarkingForm = {
-                        testId: $scope.test._id,
-                        customMarking: $scope.customMarking
-                    };
-                    
-                    testService.customMarking(customMarkingForm).success(function (data, status, headers) {
-                        if(data){
-                            Notification.success({message: "Custom marking synched!",  positionY: 'top', positionX: 'right', delay: 5000});
-                        }else{
-                            Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
-                        }
-                        
-                    })
-                    .error(function (data, status, header, config) {
-                        console.log('Error ' + data + ' ' + status);
-                    });
-                    console.log(customMarkingForm);
+            };
+            $scope.removeCustomMarkingQuestion = function(question){
+                if(!$scope.customMarkingQuestions){
+                   $scope.customMarkingQuestions = [];
                 }
+                var questionIds = $scope.customMarkingQuestions.map(function(a) {return a._id;});
+                var qIndex = questionIds.indexOf(question._id);
+                if(qIndex != -1){
+                    $scope.customMarkingQuestions.splice(qIndex, 1);
+                }
+                
+            };
+            $scope.setCustomMarkingForAll = function(){
+                //console.log($scope.customMarkingQuestions);
+                var questionIds = $scope.customMarkingQuestions.map(function(a) {return a._id;});
+                if($scope.customMarkingQuestions.length > 0){
+                    
+                    var valid = true;
+                    if($scope.customMarking.correct == ''){
+                        valid = false;
+                    }
+                    if($scope.customMarking.incorrect == '' && $scope.customMarking.incorrect != 0){
+                        valid = false;
+                    }
+                    if($scope.customMarking.incorrect > 0){
+                        valid = false;
+                        Notification.warning({message: "The marks for incorrect answer should be NEGATIVE!",  positionY: 'top', positionX: 'right', delay: 5000});
+                    }
+                    if($scope.customMarking.correct < 0){
+                        valid = false;
+                        Notification.warning({message: "The marks for correct answer should be POSITIVE!",  positionY: 'top', positionX: 'right', delay: 5000});
+                    }
+                    if($scope.customMarking.correct + $scope.customMarking.incorrect < 0){
+                        valid = false;
+                        Notification.warning({message: "The NEGATIVE marks for incorrect answer cannot be greater than POSITIVE marks for correct answer!",  positionY: 'top', positionX: 'right', delay: 10000});
+                    }
+
+                    if(!valid){
+                        Notification.warning({message: "Your custom marking scheme does not fit the requirements at EB!",  positionY: 'top', positionX: 'right', delay: 5000});
+                    }else{
+                        var customMarkingForm = {
+                            testId: $scope.test._id,
+                            questionIds: questionIds,
+                            customMarking: $scope.customMarking
+                        };
+
+                        testService.customMarking(customMarkingForm).success(function (data, status, headers) {
+                            if(data){
+                                Notification.success({message: "Custom marking synched!",  positionY: 'top', positionX: 'right', delay: 5000});
+                            }else{
+                                Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                            }
+
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });
+                    }
+                    
+                }else{
+                    Notification.warning({message: "No question selected!",  positionY: 'top', positionX: 'right', delay: 5000});
+                }
+                
+                
                 
                 
             };
@@ -33751,6 +33785,14 @@ function getLatLng(thisData) {
             };
             $scope.saveTest = function(){
                 
+                if(!$scope.test._actualdate){
+                    $scope.test._actualdate = null;
+                    Notification.warning({message: "Not saving actual exam date as it is not set!",  positionY: 'top', positionX: 'right', delay: 3000});
+                }
+                if($scope.test._actualdate && moment($scope.test._actualdate).isSame(moment(), 'day')){
+                    $scope.test._actualdate = null;
+                    Notification.warning({message: "Not saving actual exam date as it is the same as today!",  positionY: 'top', positionX: 'right', delay: 3000});
+                }
                 testService.saveTest($scope.test).success(function (data, status, headers) {
                     $scope.test = data;
                     $scope.markSimulate();
@@ -34259,6 +34301,10 @@ function getLatLng(thisData) {
                 }
                 if($scope.years.min == '' || $scope.years.min == ''){
                     $scope.years = null;
+                }
+                
+                if(thisPaper._actualdate){
+                    thisPaper.fromnow = moment(thisPaper._actualdate).fromNow();
                 }
             });
             //console.log($scope.officialPapers);

@@ -73,8 +73,15 @@
         background: #29335C;
         color: white;
     }
-    #questionNoBadge{
+    .unquestionNoBadge{
+        background-color: white;
+        border: 1px solid #FF5A5F;
+        padding: 4px;
+    }
+    
+    .questionNoBadge{
         background-color: #20C39A;
+        border: 1px solid #FF5A5F;
         padding: 4px;
     }
     #addQuestionBadge{
@@ -137,7 +144,7 @@
             
             
             <div layout="row" layout-align="start center" flex layout-wrap class="marginT10">
-                <div ng-repeat="testQuestion in thisTestQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR2 marginB2 font9" id="questionNoBadge" ng-click="setQuestion(testQuestion)">
+                <div ng-repeat="testQuestion in thisTestQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR2 marginB2 font9 questionNoBadge" ng-click="setQuestion(testQuestion)">
                     <span>
                         Q. {{testQuestion._startnumber}}
                     </span>
@@ -473,6 +480,16 @@
                 </div>
                 <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
                     <div class="bold paddingR10" flex="40">
+                    Actual Exam Date
+                    </div>
+                    <div flex class="paddingL10">
+                        <md-datepicker ng-model="test._actualdate" class="margin0" md-placeholder="Actual Exam Date"></md-datepicker>
+                    </div>
+                </div>    
+                    
+                    
+                <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
+                    <div class="bold paddingR10" flex="40">
                     Can the test be reset & taken again by the candidate?
                     </div>
                     <div flex class="paddingL10">
@@ -709,12 +726,40 @@
 
 <div style="visibility: hidden">    
     <div class="md-dialog-container" id="customMarkingDialog">
-      <md-dialog class="blog-dialog whiteBackground padding20">
-        <div layout="row" layout-align="start start" class="width100 padding10 min20vh">
-            <div flex="40">
-                Set marking for all questions
+      <md-dialog class="blog-dialog whiteBackground padding10">
+        <div layout="column" layout-align="start start" class="width100 padding10 min20vh">
+            <div layout="column" layout-align="center center" class="h3Font width100 padding10">
+                Set marking for questions
             </div>
-            <div flex layout="row" layout-align="start start">
+            <div layout="row" layout-align="start center" layout-wrap class="paddingTB10 width100">
+                <div ng-repeat="testQuestion in thisTestQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR2 marginB2 font9 questionNoBadge" ng-click="addCustomMarkingQuestion(testQuestion)">
+                    <span>
+                        Q. {{testQuestion._startnumber}}
+                    </span>
+                    <span ng-if="testQuestion._endnumber && testQuestion._endnumber != ''">
+                        - {{testQuestion._endnumber}}
+                    </span>
+                    <span ng-if="testQuestion.questions.length > 1">
+                        ({{testQuestion.questions.length}})
+                    </span>
+                </div>
+                
+            </div>
+            <div layout="row" layout-align="start center" class="width100 min20vh padding10 h3Font">
+                <div class="marginR10">Selected Questions</div>
+                <div ng-repeat="testQuestion in customMarkingQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR2 marginB2 font9 questionNoBadge" ng-click="addCustomMarkingQuestion(testQuestion)">
+                    <span>
+                        Q. {{testQuestion._startnumber}}
+                    </span>
+                    <span ng-if="testQuestion._endnumber && testQuestion._endnumber != ''">
+                        - {{testQuestion._endnumber}}
+                    </span>
+                    <span ng-if="testQuestion.questions.length > 1">
+                        ({{testQuestion.questions.length}})
+                    </span>
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100">
                 <div flex class="paddingLR10">
                     <input type="number" class="width100 text-primary" ng-model="customMarking.correct"  placeholder="Marks for correct answer">
                 </div>
@@ -723,7 +768,7 @@
                 </div>
             </div>
         </div>
-          <div layout="row" layout-align="center center" class="width100 padding10 min20vh">
+          <div layout="row" layout-align="center center" class="width100 padding10">
               <md-button class="md-danger md-small font10" ng-click="setCustomMarkingForAll()">
                 Set Custom Marking for all questions
                 </md-button>
