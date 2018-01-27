@@ -69,14 +69,15 @@
             <div layout="row" layout-align="center center" flex="5">S. No.</div>
             <div layout="row" layout-align="start center" flex="25">Paper</div>
             <div layout="row" layout-align="center center" flex="5">Ready?</div>
-            <div layout="row" layout-align="center center" flex="10">#Comments</div>
-            <div layout="row" layout-align="center center" flex="10">Active on EB</div>
+            <div layout="row" layout-align="center center" flex="5">#Comments</div>
+            <div layout="row" layout-align="center center" flex="5">Active</div>
             <div layout="row" layout-align="center center" flex="5">Year</div>
             <div layout="row" layout-align="center center" flex="5">#Typed</div>
             <div layout="row" layout-align="center center" flex="5">#Questions</div>
             <div layout="row" layout-align="center center" flex="10">#Instructions</div>
             <div layout="row" layout-align="center center" flex="5">Duration</div>
             <div layout="row" layout-align="center center" flex="10">Max Score</div>
+            <div layout="row" layout-align="center center" flex="10">Actual Date</div>
             <div layout="row" layout-align="center center" flex="5">Reset</div>
         </div>
         <div layout="column" layout-align="start start" class=" width100" >
@@ -98,11 +99,11 @@
                         <i class="fa fa-times font16 danger" aria-hidden="true"></i>
                     </span>
                 </div>
-                <div layout="row" layout-align="center center" flex="10">
+                <div layout="row" layout-align="center center" flex="5">
                     {{test.simulate.comments.length}}
                 </div>
                 
-                <div layout="row" layout-align="center center" flex="10">
+                <div layout="row" layout-align="center center" flex="5">
                     <span ng-if="test.simulationactive">
                         <i class="fa fa-eye font16 text-primary" aria-hidden="true"></i>
                     </span>
@@ -127,6 +128,9 @@
                 </div>
                 <div layout="row" layout-align="center center" flex="10">
                     {{test.maxScore}}
+                </div>
+                <div layout="row" layout-align="center center" flex="10">
+                    {{test._actualdate | date: "MMMM dd yyyy"}}
                 </div>
                 <div layout="row" layout-align="center center" flex="5">
                     <span ng-if="test.resettable">
