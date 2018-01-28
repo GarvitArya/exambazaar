@@ -67,7 +67,7 @@
         
         <div layout="row" layout-align="start start" layout-wrap class="width100 greyBottomBorder assignBackground">
             <div layout="row" layout-align="center center" flex="5">S. No.</div>
-            <div layout="row" layout-align="start center" flex="25">Paper</div>
+            <div layout="row" layout-align="start center" flex="20">Paper</div>
             <div layout="row" layout-align="center center" flex="5">Ready?</div>
             <div layout="row" layout-align="center center" flex="5">#Comments</div>
             <div layout="row" layout-align="center center" flex="5">Active</div>
@@ -79,13 +79,14 @@
             <div layout="row" layout-align="center center" flex="10">Max Score</div>
             <div layout="row" layout-align="center center" flex="10">Actual Date</div>
             <div layout="row" layout-align="center center" flex="5">Reset</div>
+            <div layout="row" layout-align="center center" flex="5" ng-if="user.userType =='Master'">PDF</div>
         </div>
         <div layout="column" layout-align="start start" class=" width100" >
             <div layout="row" layout-align="start center" ng-repeat="test in exam.tests | orderBy:['-official','-simulationactive','-simulate.ready','-year','-nTyped', 'simulate.comments.length']"  class="width100 greyDashedBottomBorder">
                 <div layout="row" layout-align="center center" flex="5">
                     {{$index + 1}}
                 </div>
-                <div layout="row" layout-align="start center" flex="25">
+                <div layout="row" layout-align="start center" flex="20">
                     <a ui-sref="addQuestion({ testId:{{'test._id'}} })" target="_blank" id="link" class="bold">
                     {{test.name}}
                     
@@ -140,9 +141,9 @@
                         <i class="fa fa-times font16" aria-hidden="true"></i>
                     </span>
                 </div>
-                <!--<div ng-click="upload(test)">
-                    Upload
-                </div>-->
+                <div layout="row" layout-align="center center" flex="5" ng-if="user.userType =='Master'">
+                    <span ng-click="generatePDF(test)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></span>
+                </div>
             </div>
         </div>
         

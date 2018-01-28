@@ -215,6 +215,7 @@ var examSchema = mongoose.Schema({
         
         
     }],
+    officialpaperscoverphoto: {type: String},
 });
 examSchema.plugin(deepPopulate);
 module.exports = mongoose.model('exam', examSchema);

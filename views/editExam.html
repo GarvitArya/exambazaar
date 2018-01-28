@@ -31,6 +31,13 @@
         width: 150px;
         border-radius: 2px;
     }
+    #coverPhotoHolder{
+        border: 1px solid #eaeaea;
+        min-height: 150px;
+        width: 500px;
+        max-width: 500px;
+        border-radius: 2px;
+    }
     .pageLogo{
         max-height: 120px;
     }
@@ -168,6 +175,31 @@
                                 </span>
                                 <span>
                                     Add Logo
+                                </span>
+                            </div>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 padding5">
+                <div flex="20" layout="row" layout-align="start center">
+                    Official Papers Cover Photo of {{exam.displayname}}
+                </div>
+                <div flex layout="row" layout-align="start center"  class="">
+                    <div layout="column" layout-align="center center" class="padding5 whiteBackground" id="coverPhotoHolder">
+                        <img  ng-src="{{exam.officialpaperscoverphoto}}" class="pageLogo" ng-if="exam.officialpaperscoverphoto !=''"/>
+                        <span ng-show="exam.officialpaperscoverphoto && exam.officialpaperscoverphoto !=''" class="font9 textDarkGrey" ngf-select="uploadOPCoverPhoto(newcoverphoto)" ng-model="newcoverphoto" ngf-accept="'image/*'">
+                            Change Cover Photo
+                        </span>
+                        <span class="textDarkGrey" ng-show="exam.officialpaperscoverphoto == '' || !exam.officialpaperscoverphoto" ng-click="">
+
+                            <div layout="column" layout-align="center center" class="width100 height100" ngf-select="uploadOPCoverPhoto(newcoverphoto)" ng-model="newcoverphoto" ngf-accept="'image/*'">
+                                <span class="md-display-1">
+                                    <i class="fa fa-camera" aria-hidden="true"></i>
+                                </span>
+                                <span>
+                                    Add Cover Photo
                                 </span>
                             </div>
                         </span>

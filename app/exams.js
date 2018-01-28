@@ -358,6 +358,33 @@ router.get('/edit/:examId', function(req, res) {
     });
 });
 
+router.post('/addCoverPhoto', function(req, res) {
+    var newCoverPhotoForm = req.body;
+    var coverphoto = newCoverPhotoForm.coverphoto;
+    var examId = newCoverPhotoForm.examId;
+    //console.log('Express received: ' + JSON.stringify(newCoverPhotoForm));
+    
+    var thisExam = exam
+        .findOne({ _id: examId }, {officialpaperscoverphoto:1})
+        .exec(function (err, thisExam) {
+        if (!err){
+            
+            if(thisExam){
+                thisExam.officialpaperscoverphoto = coverphoto;
+                thisExam.save(function(err, thisExam) {
+                    if (err) return console.error(err);
+                    //console.log("Logo data saved for " + thisExam._id);
+                    res.json('Done');
+                });
+            }else{
+                console.log('No such exam');
+                res.json('Error');
+            }
+        } else {throw err;}
+    });
+    
+});
+
 router.post('/addLogo', function(req, res) {
     var newLogoForm = req.body;
     var logo = newLogoForm.logo;

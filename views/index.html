@@ -317,6 +317,54 @@
         .offerPopupFont{
             font-family: 'Unica One', sans-serif;
         }
+        .arrows {
+            width: 60px;
+            height: 72px;
+            position: absolute;
+            left: 50%;
+            margin-left: -30px;
+            bottom: 20px;
+        }
+
+        .arrows path {
+            stroke: white;
+            fill: transparent;
+            stroke-width: 1px;	
+            animation: arrow 2s infinite;
+            -webkit-animation: arrow 2s infinite; 
+        }
+
+        @keyframes arrow
+        {
+        0% {opacity:0}
+        40% {opacity:1}
+        80% {opacity:0}
+        100% {opacity:0}
+        }
+
+        @-webkit-keyframes arrow /*Safari and Chrome*/
+        {
+        0% {opacity:0}
+        40% {opacity:1}
+        80% {opacity:0}
+        100% {opacity:0}
+        }
+
+        .arrows path.a1 {
+            animation-delay:-1s;
+            -webkit-animation-delay:-1s; /* Safari 和 Chrome */
+        }
+
+        .arrows path.a2 {
+            animation-delay:-0.5s;
+            -webkit-animation-delay:-0.5s; /* Safari 和 Chrome */
+        }
+
+        .arrows path.a3 {	
+            animation-delay:0s;
+            -webkit-animation-delay:0s; /* Safari 和 Chrome */
+        }
+
         
         /*Start of new fonts - 22nd December*/
         .pageTitleFont{
@@ -708,6 +756,9 @@
         }
         .font48{
             font-size:48px;
+        }
+        .font54{
+            font-size:54px;
         }
         .font60{
             font-size:60px;
@@ -2195,13 +2246,21 @@
         .bottomOfferLogo{
             
         }
+        .testBenefits2{
+            min-height: 30vh;
+            padding-top: 30px;
+            padding-bottom: 20px;
+            padding-left: 60px;
+            padding-right: 60px;
+        }
         .testBenefits{
             min-height: 18vh;
             padding: 15px;
             padding-top: 25px;
         }
+        
         .benefitTitle{
-            margin-bottom: 5px;
+            margin-top: 5px;
         }
         .boxTop{
             text-align: center;
@@ -2214,28 +2273,28 @@
             padding: 5px;
             padding-top: 10px;
         }
-        .testBenefits.box1{
+        .box1{
             background: #F8E5E5;
         }
-        .testBenefits.box2{
+        .box2{
             background: #F7F6D1;
         }
-        .testBenefits.box3{
+        .box3{
             background: #D5F1F0;
         }
-        .testBenefits.box4{
+        .box4{
             background: #E5F4FF;
         }
-        .testBenefits.box5{
+        .box5{
             background: #FCEFE6;
         }
-        .testBenefits.box6{
+        .box6{
             background: #F2F1FF;
         }
-        .testBenefits.box7{
+        .box7{
             background: #F0FBDB;
         }
-        .testBenefits.box8{
+        .box8{
             background: #D1FFDB;
         }
         #testHeader{
@@ -3292,7 +3351,8 @@
     <script type="text/javascript" src="gulp-moment-map-social.js"></script>    
         
     <script src="ocLazyLoad.min.js"></script>
-    <!--<script type="text/javascript" src="angular-file-saver.bundle.js"></script>
+    <script type="text/javascript" src="angular-file-saver.bundle.js"></script>
+    <!--
     <script type="text/javascript" src="ui-carousel.min.js"></script>-->
     <script type="text/javascript" src="angular-lazy-img.js"></script>
     

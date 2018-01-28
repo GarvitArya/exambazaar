@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -687,6 +687,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveTest = function(test) {
             return $http.post('/api/tests/save', test);
         };
+        this.testpdf = function(test) {
+            return $http.post('/api/tests/testpdf', test, { responseType : 'arraybuffer' });
+        };
+        
         this.customMarking = function(customMarkingForm) {
             return $http.post('/api/tests/customMarking', customMarkingForm);
         };
@@ -774,6 +778,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.addLogo = function(newLogoForm) {
             return $http.post('/api/exams/addLogo',newLogoForm);
         };
+        this.addCoverPhoto = function(newCoverPhotoForm) {
+            return $http.post('/api/exams/addCoverPhoto',newCoverPhotoForm);
+        };
+        
         this.getExamPapers = function() {
             return $http.get('/api/exams/papers');
         };
@@ -2080,7 +2088,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     exambazaar.controller("p0Controller", 
-        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', function($scope, $cookies, $state, $rootScope, $mdDialog){
+        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', '$location', '$anchorScroll', function($scope, $cookies, $state, $rootScope, $mdDialog, $location, $anchorScroll){
             //var allExams = examList.data;
             
             //console.log(streamExams);
@@ -2090,7 +2098,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $rootScope.pageDescription = "Search and apply to the best coaching classes and get the education that you deserve. Browse through courses, photos, videos and results for 26000+ institutes in 90+ cities";
             $rootScope.pageKeywords = "Exambazaar, Exambazaar.com, Best Coaching Classes, Best Coaching, Top Coaching Classes, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT Coaching, GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
 
-
+            $scope.scrollPageDown = function(){
+                $location.hash('page2');
+                $anchorScroll();      
+            };
 
             /*$scope.goToCity = function(subcategory){ 
                 $cookies.putObject('subcategory', subcategory);
@@ -9954,7 +9965,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         //console.log($rootScope.stateName );
         $scope.showLoginDialog = function(ev) {
-            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'k21', 'eligibility', 'officialpapers'];
+            var forceLoginStates = ['showGroup', 'claim', 'rankerswall', 'k21', 'eligibility', 'questionpapers'];
             SidebarJS.close();
             if(forceLoginStates.indexOf($state.current.name) != -1){
                 //console.log('I am here');
@@ -10370,7 +10381,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if($state.current.name == 'claim'){
                     $state.reload();
                 }
-                if($state.current.name == 'officialpapers'){
+                if($state.current.name == 'questionpapers'){
                     $state.reload();
                 }
                 //$state.reload();
@@ -16351,7 +16362,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     exambazaar.controller("allTestsController", 
-        [ '$scope','examList','testList', 'testService', 's3UtilsService', 'testswithQuestions', 'questionService', 'Notification', '$cookies', function($scope, examList, testList, testService, s3UtilsService, testswithQuestions, questionService, Notification, $cookies){
+        [ '$scope','examList','testList', 'testService', 's3UtilsService', 'testswithQuestions', 'questionService', 'Notification', '$cookies', 'FileSaver', 'Blob', function($scope, examList, testList, testService, s3UtilsService, testswithQuestions, questionService, Notification, $cookies, FileSaver, Blob){
             $scope.fullScope = false;
             if($cookies.getObject('sessionuser')){
                 var sessionuser = $cookies.getObject( 'sessionuser');
@@ -16490,7 +16501,21 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });    
             };
             
-            
+            $scope.generatePDF = function(test){
+                var testForm = {
+                    _id: test._id    
+                };
+                testService.testpdf(testForm).success(function (data, status, headers) {
+                    var fileName = test.name + ' by Exambazaar' + '.pdf';
+                    var pdf = new Blob([data], {type : 'application/pdf'});
+                    FileSaver.saveAs(pdf, fileName);
+                    //console.log(data);
+                    //return(data);
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                }); 
+            };
             
             $scope.upload = function(test){
                 var fileInfo = {};
@@ -34321,6 +34346,12 @@ function getLatLng(thisData) {
         [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'officialPapers', 'Carousel', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, officialPapers, Carousel, viewService, $location, screenSize){
             $scope.slideCount = 2;
             $scope.exam = thisexam.data;
+            $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.jpg';
+            if($scope.exam.officialpaperscoverphoto && $scope.exam.officialpaperscoverphoto != ''){
+                $scope.defaultCoverPhoto = $scope.exam.officialpaperscoverphoto;
+            };
+            
+            
             
             $scope.officialPapers = officialPapers.data;
             $scope.years = {
@@ -34374,7 +34405,9 @@ function getLatLng(thisData) {
             });
             $scope.examSummary.hours = $scope.examSummary.hours/60;
             
-            console.log($scope.examSummary);
+            $rootScope.pageImage = $scope.defaultCoverPhoto;
+            $rootScope.pageTitle = $scope.exam.displayname + " Question Papers | " + $scope.examSummary.papers + " Papers, " + $scope.examSummary.hours + " Hours, " + $scope.examSummary.questions + " Questions";
+            
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
             }else{
@@ -34403,7 +34436,7 @@ function getLatLng(thisData) {
                 $rootScope.$emit("CallBlogLogin", {});    
             };
             
-            $rootScope.pageTitle = $scope.exam.displayname + " Question Papers";
+            
     }]);
     exambazaar.controller("examController", 
         [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'thisExamDegrees', 'suggestedblogs', 'Carousel', 'targetStudyProviderService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, thisExamDegrees, suggestedblogs, Carousel, targetStudyProviderService, viewService, $location, screenSize){
@@ -35034,6 +35067,68 @@ function getLatLng(thisData) {
                 }, function (evt) {
                     $scope.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
                     console.log($scope.uploadProgress);
+                });
+
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error");
+            });   
+                 
+            });
+            }
+        };
+        $scope.uploadOPCoverPhoto = function (newcoverphoto) {
+            var coverphoto = [newcoverphoto];
+            var nFiles = coverphoto.length;
+            
+            var counter = 0;
+            if (coverphoto && coverphoto.length) {
+            
+            coverphoto.forEach(function(thisFile, index){
+            var fileInfo = {
+                filename: thisFile.name,
+                contentType: thisFile.type
+            }; ImageService.s3Credentials(fileInfo).success(function (data, status, headers) {
+            var s3Request = {};
+            var allParams = data.params;
+            for (var key in allParams) {
+              if (allParams.hasOwnProperty(key)) {
+                s3Request[key] = allParams[key];
+              }
+            }
+                 
+            s3Request.file = thisFile;
+            Upload.upload({
+                url: data.endpoint_url,
+                data: s3Request
+            }).then(function (resp) {
+                console.log('Success ' + thisFile.name + 'uploaded. Response: ' + resp.data);
+                var coverphotoLink = $(resp.data).find('Location').text();
+                
+                var newCoverPhotoForm ={
+                    coverphoto: coverphotoLink,
+                    examId: $scope.exam._id
+                };
+                
+                if(newCoverPhotoForm.examId){
+                    ExamService.addCoverPhoto(newCoverPhotoForm).success(function (data, status, headers) {
+                        counter = counter + 1;
+                        $scope.showSavedDialog();
+                        $state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                }else{
+                    $scope.saveExamFirstDialog();
+                }
+                
+                
+                
+                }, function (resp) {
+                    console.log('Error status: ' + resp.status);
+                }, function (evt) {
+                    
                 });
 
             })
@@ -42545,8 +42640,8 @@ function getLatLng(thisData) {
             }
         })
         
-        .state('officialpapers', {
-            url: '/officialpapers/:examName',
+        .state('questionpapers', {
+            url: '/questionpapers/:examName',
             views: {
                 'header':{
                     templateUrl: 'header.html',

@@ -6,6 +6,7 @@ var exam = require('../app/models/exam');
 var test = require('../app/models/test');
 var question = require('../app/models/question');
 var mongoose = require('mongoose');
+var PDFDocument = require('pdfkit');
 
 var moment = require('moment');
 moment().format();
@@ -50,6 +51,172 @@ router.post('/save', function(req, res) {
         }
     });
 });
+
+
+router.post('/testpdf', function(req, res) {
+    var thisTest = req.body;
+    var testId = thisTest._id;
+    console.log('Starting for test: ' + testId);
+    
+    var optionArray = ['A. ', 'B. ', 'C. ', 'D. ', 'E. ', 'F. '];
+    
+    var existingTest = test.findOne({ '_id': testId },function (err, existingTest) {
+        if(existingTest){
+            var doc = new PDFDocument({margins : {
+                top: 50,
+                bottom:50,
+                left: 50,
+                right: 50
+            }});
+            doc.registerFont('Cardo', 'views/Cardo-Regular.ttf');
+            var title = existingTest.name;
+            var content = existingTest.description;
+            doc.image('public/images/logo/pdflogo.png', 100, 50);
+            doc.font('Cardo').fontSize(12).text(title + ' - brought to you by Exambazaar. Exambazaar is one of the largest education discovery platform in India & provides comprehensive information about entrance exams, colleges, courses and test preparation in India. Find us at https://www.exambazaar.com/', 50, 350, {
+                lineBreak: true
+            });
+            doc.addPage();
+            var testQuestions = question
+                .find({test: existingTest._id})
+                .exec(function (err, testQuestions) {
+                if(testQuestions && testQuestions.length > 0){
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                        thisQuestion._startnumber = Number(thisQuestion._startnumber);
+                        
+                        if(thisQuestion._endnumber){
+                            thisQuestion._endnumber = Number(thisQuestion._endnumber);
+                        }
+                    });
+                    
+                    testQuestions.sort(function(a,b) {return (Number(a._startnumber) > Number(b._startnumber)) ? 1 : ((Number(b._startnumber) > Number(a._startnumber)) ? -1 : 0);} );
+                    
+                    var nQuestionSets = testQuestions.length;
+                    var counter = 0;
+                    doc.info['Title'] = title + " brought to you by Exambazaar.com";
+                    doc.image('public/images/logo/pdflogo2.png', 50, 20).text('www.exambazaar.com', 50, 40);
+                    
+                    doc.info['Author'] = 'Exambazaar.com';
+                    doc.font('Cardo')
+                    .fontSize(24)
+                    .text(title, 50, 100); 
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                        var startnumber = thisQuestion._startnumber;
+                        var endnumber = thisQuestion._endnumber;
+                        var contentString = "Q. " + startnumber;
+                        if(endnumber && endnumber > startnumber){
+                            contentString += " - " + endnumber;
+                            contentString = 'Directions for: ' + contentString;
+                            doc.moveDown()
+                                .fillColor('black')
+                                .font('Cardo')
+                                .fontSize(14)
+                                .text(contentString, {
+                                align: 'justify',
+                                //indent: 30,
+                                //height: 300,
+                                ellipsis: true
+                            });
+                            var contextString = thisQuestion.context;
+                            doc.moveDown()
+                                .fillColor('blue')
+                                .font('Cardo')
+                                .fontSize(12)
+                                .text(contextString, {
+                                align: 'justify',
+                                //indent: 30,
+                                //height: 300,
+                                ellipsis: true
+                            });
+                            
+                            
+                            
+                        }
+                        
+                        /*var images = thisQuestion.images;
+                        if(images && images.length > 0){
+                            images.forEach(function(thisImage, iIndex){
+                                console.log(thisImage);
+                                doc.moveDown().image(thisImage).text(contentString);
+
+                            });
+
+
+                        }*/
+                        thisQuestion.questions.forEach(function(thisSubQuestion, sIndex){
+                            var qno = Number(startnumber) + sIndex;
+                            var questionString = 'Q. ' + qno + ' ' + thisSubQuestion.question;
+                           
+                            doc.moveDown()
+                                .fillColor('black')
+                                .font('Cardo')
+                                .fontSize(12)
+                                .text(questionString, {
+                                align: 'justify',
+                                //indent: 30,
+                                //height: 300,
+                                ellipsis: true
+                            });
+                            var sType = thisSubQuestion.type;
+                            if(sType == 'mcq'){
+                                var options = thisSubQuestion.options;
+                                options.forEach(function(thisOption, oIndex){
+                                    var oString = optionArray[oIndex] + thisOption.option;
+                                    doc.moveDown()
+                                        .fillColor('black')
+                                        .font('Cardo')
+                                        .fontSize(12)
+                                        .text(oString, {
+                                        align: 'justify',
+                                        //indent: 30,
+                                        //height: 300,
+                                        ellipsis: true
+                                    });
+                                    
+                                });
+                                //optionArray
+                            }
+                            
+                        });
+                        
+                        counter += 1;
+                        if(counter == nQuestionSets){
+                            doc.pipe(res);
+                            doc.end();
+                        }
+                    });
+                }    
+                    
+                    
+            });
+            
+            
+            //var filename = encodeURIComponent(title) + '.pdf';
+            
+            //res.setHeader('Content-disposition', 'attachment; filename="' + filename + '"');
+            //res.setHeader('Content-type', 'application/pdf');
+            
+            
+            
+
+            /*doc.fontSize(15)
+                .fillColor('blue')
+                .text('Read Full Article', 100, 100)
+                .link(100, 100, 160, 27, link);
+
+            doc.moveDown()
+                .fillColor('red')
+                .text("Author: "+author_name);*/
+
+            
+            
+            
+        }else{
+            res.json(null);
+        }
+    });
+});
+
+
 
 router.post('/customMarking', function(req, res) {
     var customMarkingForm = req.body;
