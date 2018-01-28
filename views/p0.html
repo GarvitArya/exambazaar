@@ -244,14 +244,14 @@
     <div layout="row" layout-align="start start" class="width100 exact30vh" >
         <div layout="column" layout-align="center start" class="min30vh width100">
             <div layout="row" layout-align="start start" class="width100">
-                <a ng-click="" class="text-primary" id="reviewLink">
+                <a ui-sref="questionpapers({ examName:'GATE' })" class="text-primary" id="reviewLink">
                     <h1 class="h1Font bold">
-                        Official Previous Year Quesion Papers&nbsp;&nbsp;<i class="fa fa-chevron-right font24" aria-hidden="true"></i>
+                        Official Previous Year Question Papers&nbsp;&nbsp;<i class="fa fa-chevron-right font24" aria-hidden="true"></i>
                     </h1>
                 </a>
             </div>
             <h3 class=" h3Font">
-                Seal your {{exam.seoname | uppercase}} preparation by attempting the Last 10 Year Question Papers for all exams in a Live, Timed, Exam Environment for FREE
+                Seal your Exam Preparation by attempting the Last 10 Year Question Papers for all exams in a Live, Timed, Exam Environment for FREE
             </h3>
         </div>
         
@@ -259,7 +259,7 @@
     
     
     
-    <div layout="column" layout-align="center center" hide-xs class="width100 whiteBackground exact60vh" ng-click="">
+    <div layout="column" layout-align="center center" hide-xs class="width100 whiteBackground exact60vh" ui-sref="questionpapers({ examName:'GATE' })">
         <div layout="row" layout-align="center center" class="width100 textDarkGrey ">
             <div flex layout="column" layout-align="start start" class="testBenefits2 exact30h box1 ">
                 <div layout="column" layout-align="center center " class="width100 padding5 exact10h "><i class="fa fa-desktop font48" aria-hidden="true"></i></div>
