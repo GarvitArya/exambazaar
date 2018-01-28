@@ -34409,7 +34409,7 @@ function getLatLng(thisData) {
             $rootScope.pageTitle = $scope.exam.displayname + " Question Papers | " + $scope.examSummary.papers + " Papers, " + $scope.examSummary.hours + " Hours, " + $scope.examSummary.questions + " Questions";
             var yearString = "years";
             if($scope.years.min && $scope.years.max && $scope.years.min != $scope.years.max){
-                yearString = $scope.years.max + ' - ' + $scope.years.min;
+                yearString = $scope.years.min + ' - ' + $scope.years.max;
             }
             
             
