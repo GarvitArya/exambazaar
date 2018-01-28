@@ -34407,6 +34407,26 @@ function getLatLng(thisData) {
             
             $rootScope.pageImage = $scope.defaultCoverPhoto;
             $rootScope.pageTitle = $scope.exam.displayname + " Question Papers | " + $scope.examSummary.papers + " Papers, " + $scope.examSummary.hours + " Hours, " + $scope.examSummary.questions + " Questions";
+            var yearString = "years";
+            if($scope.years.min && $scope.years.max && $scope.years.min != $scope.years.max){
+                yearString = $scope.years.max + ' - ' + $scope.years.min;
+            }
+            
+            
+            $rootScope.pageDescription = 'Seal your ' + $scope.exam.seoname + ' preparation by attempting the Official ' + $scope.exam.seoname + ' Papers for ' + yearString + ' in a Live, Timed, Exam Environment for FREE!';
+            var keywordString = '';
+            var suffix = [' Question Papers ', ' Question Papers PDF ', ' Question Papers & Answers PDF ' , ' Official Papers '];
+            
+            for(var i = $scope.years.max; i >= $scope.years.min; i--) {
+                suffix.forEach(function(thisSuffix, index){
+                    var newKeyWord = $scope.exam.seoname + ' ' + i +thisSuffix;
+                    keywordString = keywordString + newKeyWord + ', ';
+                });
+                
+                 
+            }
+            
+            $rootScope.pageKeywords = keywordString;
             
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
