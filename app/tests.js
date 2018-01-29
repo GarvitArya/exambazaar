@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var exam = require('../app/models/exam');
+var stream = require('../app/models/stream');
 var test = require('../app/models/test');
 var question = require('../app/models/question');
 var mongoose = require('mongoose');
@@ -792,6 +793,126 @@ router.get('/examByName/:examName', function(req, res) {
         } else {throw err;}
     });
 });
+
+router.get('/officialPapersStreamExam', function(req, res) {
+    var allTests = test
+        .find({official: true, simulationactive: true}, {exam:1})
+        .exec(function (err, allTests) {
+        if (!err){
+            var finalTests = [];
+            
+            var nTests = allTests.length;
+            var counter = 0;
+            var examIds = allTests.map(function(a) {return a.exam.toString();});
+            
+            var allStreams = stream
+            .find({active: true}, {})
+            .exec(function (err, allStreams) {
+                var allExams = exam
+                .find({active: true, stream: {$exists: true}}, {name:1, displayname:1, seoname: 1, stream:1, rank: 1})
+                .exec(function (err, allExams) {
+                    var allExamIds = allExams.map(function(a) {return a._id.toString();});
+                    var allStreamIds = allStreams.map(function(a) {return a._id.toString();});
+                    allTests.forEach(function(thisTest, tIndex){
+                        var examId = thisTest.exam.toString();
+                        var streamId = null;
+                        var eIndex = allExamIds.indexOf(examId);
+                        var thisExam = null;
+                        var thisStream = null;
+                        var sIndex = -1;
+                        if(eIndex != -1){
+                        thisExam = allExams[eIndex];
+                        streamId = thisExam.stream.toString();
+                        var sIndex = allStreamIds.indexOf(streamId);
+                        thisStream = allStreams[sIndex];
+                        var newTest = {
+                            test: thisTest,
+                            exam: thisExam,
+                            stream: thisStream,
+                        };
+                        finalTests.push(newTest);
+                        counter += 1;
+                        if(counter == nTests){
+                        var testStreamIds = finalTests.map(function(a) {return a.stream._id.toString();});
+                        var testExamIds = finalTests.map(function(a) {return a.exam ._id.toString();});
+                        var uniqueStreamIds = [];
+                        var uniqueExamIds = [];
+
+                        testStreamIds.forEach(function(thisId, pIndex){
+                            if(uniqueStreamIds.indexOf(thisId) == -1){
+                                uniqueStreamIds.push(thisId);
+                            }
+                        });
+                        testExamIds.forEach(function(thisId, pIndex){
+                            if(uniqueExamIds.indexOf(thisId) == -1){
+                                uniqueExamIds.push(thisId);
+                            }
+                        });
+                        /*var streamExamOfficialPapers = {
+                            streams: uniqueStreamIds,
+                            exams: uniqueExamIds,
+                            tests: finalTests
+                        };  */
+                        var streamExamOfficialPapers = [];    
+                        uniqueStreamIds.forEach(function(thisStream, index){
+                            var sIndex = allStreamIds.indexOf(thisStream);
+                            var thisStream = allStreams[sIndex];
+                            var newStream = {
+                                _id: thisStream._id,
+                                name: thisStream.name,
+                                displayname: thisStream.displayname,
+                                active: thisStream.active,
+                                rank: thisStream.rank,
+                                exams: []
+                            };
+                            streamExamOfficialPapers.push(newStream);
+                        });
+                        uniqueExamIds.forEach(function(thisExam, index){
+                            var eIndex = allExamIds.indexOf(thisExam);
+                            var thisExam = allExams[eIndex];
+                            var thisStreamId = thisExam.stream.toString();
+                            var sIndex = uniqueStreamIds.indexOf(thisStreamId);
+                            var newExam = {
+                                _id: thisExam._id,
+                                name: thisExam.name,
+                                displayname: thisExam.displayname,
+                                seoname: thisExam.seoname,
+                                active: thisExam.active,
+                                rank: thisExam.rank,
+                                tests: []
+                            };
+                            streamExamOfficialPapers[sIndex].exams.push(newExam);
+                        });  
+                        finalTests.forEach(function(thisTest, tIndex){
+                            var seopStreamIds = streamExamOfficialPapers.map(function(a) {return a._id.toString();});
+                            var streamId = thisTest.stream._id.toString();
+                            var examId = thisTest.exam._id.toString();
+                            var sIndex = seopStreamIds.indexOf(streamId);
+                            var thisStream = streamExamOfficialPapers[sIndex];
+                            var seopExamIds = thisStream.exams.map(function(a) {return a._id.toString();});
+                            var eIndex = seopExamIds.indexOf(examId);
+                            console.log(streamExamOfficialPapers[sIndex].exams[eIndex]);
+                            streamExamOfficialPapers[sIndex].exams[eIndex].tests.push(thisTest.test._id);
+                        });    
+                        //streamExamOfficialPapers
+                        console.log(streamExamOfficialPapers);
+                        res.json(streamExamOfficialPapers);
+                        }
+                        }else{
+                            counter += 1;
+                            console.log('Something went wrong!');
+                        }
+                    });
+                    
+                });
+                
+            });
+            
+            
+        } else {throw err;}
+    });
+});
+
 
 router.get('/officialPapers/:examName', function(req, res) {
     var examName = req.params.examName;

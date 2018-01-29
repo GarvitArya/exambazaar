@@ -743,11 +743,15 @@
                         ({{testQuestion.questions.length}})
                     </span>
                 </div>
-                
+                <div layout="row" layout-align="start center" class="badge marginR2 marginB2 font9 questionNoBadge" ng-click="setAllCustomMarkingQuestion()">
+                    <span>
+                        All Questions
+                    </span>
+                </div>
             </div>
-            <div layout="row" layout-align="start center" class="width100 min20vh padding10 h3Font">
+            <div layout="row" layout-align="start center" class="width100 min20vh padding10 h3Font" layout-wrap>
                 <div class="marginR10">Selected Questions</div>
-                <div ng-repeat="testQuestion in customMarkingQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR2 marginB2 font9 questionNoBadge" ng-click="addCustomMarkingQuestion(testQuestion)">
+                <div ng-repeat="testQuestion in customMarkingQuestions | orderBy:['_startnumber']" layout="row" layout-align="start center" class="badge marginR2 marginB2 font9 questionNoBadge" ng-click="removeCustomMarkingQuestion(testQuestion)">
                     <span>
                         Q. {{testQuestion._startnumber}}
                     </span>
@@ -758,6 +762,7 @@
                         ({{testQuestion.questions.length}})
                     </span>
                 </div>
+                <div class="marginR2 marginB2 font9" ng-click="removeAllCustomMarkingQuestion()">Clear</div>
             </div>
             <div layout="row" layout-align="start center" class="width100">
                 <div flex class="paddingLR10">

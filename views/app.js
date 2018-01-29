@@ -730,6 +730,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.officialPapersByExamName = function(examName) {
             return $http.get('/api/tests/officialPapers/'+examName, {examName: examName});
         };
+        this.officialPapersStreamExam = function() {
+            return $http.get('/api/tests/officialPapersStreamExam');
+        };
+        
         this.markWatermarked = function() {
             return $http.get('/api/tests/markWatermarked');
         };
@@ -16397,6 +16401,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     thisExam.tests = [];
                 }
                 thisExam.nTyped = 0;
+                thisExam.nActive = 0;
             });
             $scope.allTests.forEach(function(thisTest, index){
                 var eIndex = examIds.indexOf(thisTest.exam);
@@ -16408,6 +16413,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         allExams[eIndex].tests = [];
                     }
                     allExams[eIndex].tests.push(thisTest);
+                    if(thisTest.simulationactive){
+                        allExams[eIndex].nActive += 1;
+                    }
+                    
                 }
                 if(qIndex != -1){
                     thisTest.nTyped = testswithQuestions[qIndex].count;
@@ -33629,9 +33638,20 @@ function getLatLng(thisData) {
                 var qIndex = questionIds.indexOf(question._id);
                 if(qIndex == -1){
                     $scope.customMarkingQuestions.push(question);
-                }
-                
+                }  
             };
+            
+            $scope.setAllCustomMarkingQuestion = function(){
+                if(!$scope.customMarkingQuestions){
+                   $scope.customMarkingQuestions = [];
+                }
+                $scope.customMarkingQuestions = $scope.thisTestQuestions;
+            };
+            
+            $scope.removeAllCustomMarkingQuestion = function(){
+                $scope.customMarkingQuestions = [];
+            };
+            
             $scope.removeCustomMarkingQuestion = function(question){
                 if(!$scope.customMarkingQuestions){
                    $scope.customMarkingQuestions = [];
@@ -34343,7 +34363,7 @@ function getLatLng(thisData) {
         return retVal;
     }
     exambazaar.controller("officialPapersController", 
-        [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'officialPapers', 'Carousel', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, officialPapers, Carousel, viewService, $location, screenSize){
+        [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'officialPapers', 'officialPapersStreamExam', 'Carousel', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, officialPapers, officialPapersStreamExam, Carousel, viewService, $location, screenSize){
             $scope.slideCount = 2;
             $scope.exam = thisexam.data;
             $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.jpg';
@@ -34354,6 +34374,15 @@ function getLatLng(thisData) {
             
             
             $scope.officialPapers = officialPapers.data;
+            $scope.officialPapersStreamExam = officialPapersStreamExam.data;
+            var opStreamIds = $scope.officialPapersStreamExam.map(function(a) {return a._id.toString();});
+            
+            var streamId = $scope.exam.stream._id.toString();
+            var sIndex = opStreamIds.indexOf(streamId);
+            $scope.thisStream = $scope.officialPapersStreamExam[sIndex];
+            
+            console.log(streamId);
+            console.log($scope.officialPapersStreamExam);
             $scope.years = {
                 min: '',
                 max: '',
@@ -42680,6 +42709,7 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams) {
                     return ExamService.getExamByName($stateParams.examName);    
                 }],
+                
                 /*thisExamPattern: ['ExamService', '$stateParams',
                     function(ExamService,$stateParams) {
                     return ExamService.getExamPatternByName($stateParams.examName);    
@@ -42692,6 +42722,10 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams) {
                     return ExamService.getDegreesByName($stateParams.examName);    
                 }],*/
+                officialPapersStreamExam: ['testService', '$stateParams',
+                    function(testService){
+                    return testService.officialPapersStreamExam();
+                }],
                 officialPapers: ['testService', '$stateParams',
                     function(testService, $stateParams){
                     return testService.officialPapersByExamName($stateParams.examName);

@@ -58,9 +58,11 @@
         </span>
     </div>
         
-    <div layout="column" layout-align="center center" ng-repeat="exam in allExams | orderBy:['-nTyped']" class="width100 boxShadow marginTB10 font12">
+    <div layout="column" layout-align="center center" ng-repeat="exam in allExams | orderBy:['-nActive', '-nTyped']" class="width100 boxShadow marginTB10 font12">
         <div layout="column" layout-align="center center" class="width100 marginTB10">
-            <div class="h3Font bold">{{exam.displayname}}</div>
+            <a class="h3Font bold" ui-sref="questionpapers({ examName:{{'exam.name'}} })" target="_blank" id="reviewLink">
+                {{exam.displayname}}<!-- {{exam.nActive}}-->
+            </a>
             <div>Total tests: {{exam.tests.length}} & Total questions: {{exam.nTyped}}</div>
         </div>
         

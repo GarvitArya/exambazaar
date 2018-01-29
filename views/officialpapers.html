@@ -193,13 +193,21 @@
 </div>
 
 <div class="whiteBackground baseFont width100">
-    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
-        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100">
-            <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="paddingLR20">
-                <span id="topBar" ng-class="{ active: component.active }" >
-                    
-                </span>       
+    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100" layout-align="start start" hide-xs> 
+        <nav class="secondFont font14 spacedLetter09 headerBlue navbar-default" flex>
+            <ul ng-repeat="stream in officialPapersStreamExam | orderBy: ['-rank']" class="nav navbar-nav paddingLR20" flex>
+            <li class="dropdown" flex>
+            <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" flex>{{stream.displayname}}
             </a>
+            <ul class="dropdown-menu" flex>
+                <li ng-repeat="exam in stream.exams">
+                    <a ui-sref="questionpapers({ examName:{{'exam.name'}} })">{{exam.displayname}}
+                    </a>
+                </li>
+            </ul>
+            </li>  
+            </ul>
+        </nav>
         </div>
     </div>
     <div id="testHeader" class="width100">
@@ -262,9 +270,12 @@
     </div>
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="80"  layout="row" layout-align="center start" class="paddingTB40 width100">
-        <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingL20R40 leftBar" hide-xs flex-gt-xs="20">
-            <div layout="row" layout-align="center center" class=" sideactive width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton">
+        <div layout="column" layout-align="start start" class="width100 paddingL20R40 leftBar" hide-xs flex-gt-xs="20">
+            <div layout="row" layout-align="center center" class=" sideactive width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton" ui-sref="questionpapers({ examName:{{'exam.name'}} })">
             {{exam.seoname | uppercase}}
+            </div>
+            <div layout="row" layout-align="center center" class=" sideactive width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton" ng-repeat="thisexam in thisStream.exams" ng-if="thisexam.seoname != exam.seoname" ui-sref="questionpapers({ examName:{{'thisexam.name'}} })">
+            {{thisexam.seoname | uppercase}}
             </div>
         </div>
         <div layout="row" layout-xs="column" layout-align="start start" class="width100" flex-xs="100" flex-gt-xs>
