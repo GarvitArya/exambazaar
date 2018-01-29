@@ -209,7 +209,7 @@
             </ul>
         </nav>
         </div>
-    </div>
+    
     <div id="testHeader" class="width100">
     <div layout="column" layout-align="center center" class="width100 min30vh paddingTB10" >
         
@@ -287,7 +287,7 @@
                         <div class="ribbon"><span>{{paper.year}}</span></div>
                         <div hide-xs class="h2Font bold width100">{{paper.name}}</div>
                         <div hide-gt-xs class="h3Font bold width100">{{paper.name}}</div>
-                        <div class="baseFont width100" ng-if="paper._actualdate">As officially conducted on {{paper._actualdate | date: "MMMM dd yyyy"}} ({{paper.fromnow}})</div>
+                        <div class="baseFont width100" ng-if="paper._actualdate">As officially conducted on {{paper._actualdate | date: "MMMM dd yyyy"}} <!--({{paper.fromnow}})--></div>
                         <div class="baseFont width100" ng-if="!paper._actualdate">{{paper.description}}</div>
                         <div class="subBaseFont width100 textLightGrey marginT5">{{paper.nQuestions}} Questions | Time: {{paper.durationFormatted}}</div>
                     </div>
