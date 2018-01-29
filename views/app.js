@@ -1633,6 +1633,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.p5Analytics = function(analyticsForm) {
             return $http.post('/api/targetStudyProviders/p5Analytics', analyticsForm);
         };
+        this.courseSummary = function() {
+            return $http.post('/api/targetStudyProviders/courseSummary');
+        };
+        
         this.allResults = function(examId) {
             return $http.get('/api/targetStudyProviders/allResults/'+examId, {examId: examId});
         };
@@ -33375,9 +33379,11 @@ function getLatLng(thisData) {
         };
     }]); 
     exambazaar.controller("addGroupController", 
-        [ '$scope',  'groupList','GroupService','$http','$state', function($scope, groupList, GroupService,$http,$state){
+        [ '$scope',  'groupList','GroupService', 'targetStudyProviderService','$http','$state', 'examList', function($scope, groupList, GroupService, targetStudyProviderService,$http,$state, examList){
             
         $scope.groups = groupList.data;
+        $scope.exams = examList.data;
+        var examIds = $scope.exams.map(function(a) {return a._id.toString();});
         $scope.newgroups = [
             {
                 group: 'Jamboree'
@@ -33415,7 +33421,74 @@ function getLatLng(thisData) {
         $scope.setGroup = function(group){
             $scope.group = group;
         };
-    }]);  
+        $scope.examCourses = [];    
+        targetStudyProviderService.courseSummary().success(function (data, status, headers) {
+            $scope.allCourses = data;
+            var courseExamIds = $scope.allCourses.map(function(a) {return a.exam.toString();});
+            var uniqueExamIds = [];
+            var uniqueExams = [];
+            courseExamIds.forEach(function(thisId, pIndex){
+                var eIndex = examIds.indexOf(thisId);
+                var thisExam = $scope.exams[eIndex];
+                
+                if(thisId && thisExam && uniqueExamIds.indexOf(thisId) == -1){
+                    uniqueExamIds.push(thisId);
+                    
+                    
+                    var newExam = {
+                        name: thisExam.displayname,
+                        courses: []
+                    };
+                    uniqueExams.push(newExam);
+                }
+            });
+            
+            $scope.allCourses.forEach(function(thisCourse, cindex){
+                var examId = thisCourse.exam.toString();
+                var eIndex = uniqueExamIds.indexOf(examId);
+                if(eIndex != -1){
+                    uniqueExams[eIndex].courses.push(thisCourse);
+                }
+            });
+            uniqueExams.forEach(function(thisExam, eindex){
+                var thisCourses = thisExam.courses.map(function(a) {return Number(a.fees);});
+                thisExam.medianFee = median(thisCourses);
+                thisExam.avgFee = average(thisCourses);
+                thisExam.minFee = Math.min.apply(Math, thisCourses);
+                thisExam.maxFee = Math.max.apply(Math, thisCourses);
+                
+                
+            });
+            $scope.uniqueExams = uniqueExams;
+            
+        })
+        .error(function (data, status, header, config) {
+            console.log("Error ");
+        });
+    }]);
+        
+    function median(values){
+        values.sort(function(a,b){
+        return a-b;
+      });
+
+      if(values.length ===0) return 0
+
+      var half = Math.floor(values.length / 2);
+
+      if (values.length % 2)
+        return values[half];
+      else
+        return (values[half - 1] + values[half]) / 2.0;
+    };
+    function average(values){
+        var sum = 0;
+        for( var i = 0; i < values.length; i++ ){
+            sum += parseInt( values[i], 10 ); //don't forget to add the base
+        }
+
+        return sum/values.length;
+    };     
     exambazaar.controller("addLocationController", 
         [ '$scope',  'locationList','cityList','LocationService','$http','$state', function($scope, locationList,cityList, LocationService,$http,$state){
         $scope.locations = locationList.data;
@@ -42557,6 +42630,10 @@ function getLatLng(thisData) {
                 }],
                 loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExamsBasic();
                 }],
             }
         })

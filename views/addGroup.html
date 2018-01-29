@@ -84,6 +84,23 @@
         <md-button class="md-raised md-primary" ng-click="addGroups()">Add Groups</md-button>
     </div>
     
+    
+    <div layout="column" layout-align="center center" class="width100 paddingTB20">
+        <div layout="row" layout-align="center center" ng-repeat="exam in uniqueExams" class="width100 greyBottomBorder">
+            <div flex layout="row" layout-align="center center" class="blogFont bold">
+                {{exam.name}}
+            </div>
+            <div layout="row" layout-align="center center" flex>
+                <div layout="row" layout-align="center center" flex>{{exam.courses.length}}</div>
+                <div layout="row" layout-align="center center" flex>{{exam.minFee | number: 0}}</div>
+                <div layout="row" layout-align="center center" flex>{{exam.avgFee | number: 0}}</div>
+                <div layout="row" layout-align="center center" flex>{{exam.medianFee | number: 0}}</div>
+                <div layout="row" layout-align="center center" flex>{{exam.maxFee | number: 0}}</div>
+            </div>
+            
+        </div>
+    </div>
+    
 </div>
 <div>
 </div>

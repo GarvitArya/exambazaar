@@ -1196,6 +1196,40 @@ router.post('/addCourse', function(req, res) {
     
 });
 
+
+router.post('/courseSummary', function(req, res) {
+    var allProviders = targetStudyProvider
+        .find({disabled: false, course: {$exists:true}, $where:'this.course.length>3'}, {course:1})
+        .exec(function (err, allProviders) {
+        if (!err){
+            
+            if(allProviders){
+                var nProviders = allProviders.length;
+                var counter = 0;
+                var allCourses = [];
+                allProviders.forEach(function(thisProvider, index){
+                    var thisPCourse = thisProvider.course;
+                    var nCourses = thisPCourse.length;
+                    thisPCourse.forEach(function(thisCourse, cindex){
+                        if(thisCourse.fees && thisCourse.fees != '' && Number(thisCourse.fees) > 0){
+                            allCourses.push(thisCourse);
+                        }
+                        
+                    });
+                    if(index == nProviders - 1){
+                        //console.log(allCourses.length);
+                        res.json(allCourses);
+                    }
+                });
+                //res.json(true);
+            }else{
+                console.log('No such provider');
+                res.json(null);
+            }
+        } else {throw err;}
+    });
+    
+});
 router.post('/addVideo', function(req, res) {
     var newVideoForm = req.body;
     var videoLink = newVideoForm.video.link;
