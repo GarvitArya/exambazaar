@@ -34408,7 +34408,13 @@ function getLatLng(thisData) {
                 $scope.defaultCoverPhoto = $scope.exam.officialpaperscoverphoto;
             };
             
-            
+            $scope.sideBarButtonClass = function(thisexam){
+                var classname = '';
+                if($scope.exam._id == thisexam._id){
+                    classname = 'sideactive';
+                }
+                return classname;
+            };
             
             $scope.officialPapers = officialPapers.data;
             $scope.officialPapersStreamExam = officialPapersStreamExam.data;

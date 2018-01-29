@@ -193,11 +193,11 @@
 </div>
 
 <div class="whiteBackground baseFont width100">
-    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100" layout-align="start start" hide-xs> 
-        <nav class="secondFont font14 spacedLetter09 headerBlue navbar-default" flex>
-            <ul ng-repeat="stream in officialPapersStreamExam | orderBy: ['-rank']" class="nav navbar-nav paddingLR20" flex>
-            <li class="dropdown" flex>
-            <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" flex>{{stream.displayname}}
+    <div layout="row" layout-align="center center" hide-xs layout="row" class="profileBar width100" layout-align="start start" hide-xs> 
+        <nav class="secondFont spacedLetter09 headerBlue navbar-default" flex>
+            <ul ng-repeat="stream in officialPapersStreamExam | orderBy: ['-rank']" class="nav navbar-nav paddingLR20 " flex>
+            <li class="dropdown " flex>
+            <a href="" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" flex>{{stream.displayname}}
             </a>
             <ul class="dropdown-menu" flex>
                 <li ng-repeat="exam in stream.exams">
@@ -271,10 +271,10 @@
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="80"  layout="row" layout-align="center start" class="paddingTB40 width100">
         <div layout="column" layout-align="start start" class="width100 paddingL20R40 leftBar" hide-xs flex-gt-xs="20">
-            <div layout="row" layout-align="center center" class=" sideactive width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton" ui-sref="questionpapers({ examName:{{'exam.name'}} })">
+            <!--<div layout="row" layout-align="center center" class=" sideactive width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton" ui-sref="questionpapers({ examName:{{'exam.name'}} })">
             {{exam.seoname | uppercase}}
-            </div>
-            <div layout="row" layout-align="center center" class=" sideactive width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton" ng-repeat="thisexam in thisStream.exams" ng-if="thisexam.seoname != exam.seoname" ui-sref="questionpapers({ examName:{{'thisexam.name'}} })">
+            </div>-->
+            <div layout="row" layout-align="center center" class="width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton" ng-repeat="thisexam in thisStream.exams | orderBy: ['-rank']" ui-sref="questionpapers({ examName:{{'thisexam.name'}} })" ng-class="sideBarButtonClass(thisexam)">
             {{thisexam.seoname | uppercase}}
             </div>
         </div>
