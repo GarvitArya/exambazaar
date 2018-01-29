@@ -33,7 +33,6 @@ router.get('/remove/:blogpostId', function(req, res) {
         }                              
     });
 });
-
 router.get('/verify/:blogpostId', function(req, res) {
     var blogpostId = req.params.blogpostId;
     var thisBlogpost = blogpost.find({"_id":blogpostId}, {urlslug:1},function(err, docs) {
@@ -65,10 +64,9 @@ router.get('/blogpostsCount', function(req, res) {
         } else {throw err;}
     });
 });
-
 router.get('/suggestedblogs/:examName', function(req, res) {
     var examName = req.params.examName;
-    
+    var limit = 8;
     var thisExam = exam
         .findOne({'name': examName}, {_id:1, name:1})
         .exec(function (err, thisExam) {
@@ -78,11 +76,12 @@ router.get('/suggestedblogs/:examName', function(req, res) {
                 var examId = thisExam._id.toString();
                 var examblogposts = blogpost
                 .find({active: true, exams:examId})
+                .limit(limit)
                 .exec(function (err, examblogposts) {
                     if (!err){
                         var nBlogs = examblogposts.length;
                         var examblogpostsIds = examblogposts .map(function(a) {return a._id;});
-                        var required = 4 - nBlogs;
+                        var required = 8 - nBlogs;
                         if(required > 0){
                             var additionalblogposts = blogpost
                             .find({_id: { $nin: examblogpostsIds }, active: true}).limit(required)
@@ -137,9 +136,10 @@ router.get('/suggestedblogs/:examName', function(req, res) {
                     } else {throw err;}
                 });
             }else{
-                var required = 4;
+                var required = 8;
                 var additionalblogposts = blogpost
                 .find({_id: { $nin: examblogpostsIds }, active: true}).limit(required)
+                .limit(limit)
                 .exec(function (err, additionalblogposts) {
                     examblogposts = examblogposts;
                     var allBlogposts = [];
@@ -172,7 +172,6 @@ router.get('/suggestedblogs/:examName', function(req, res) {
     
     
 });
-
 router.get('/topCoaching/:examName', function(req, res) {
     var examName = req.params.examName;
     
@@ -236,7 +235,6 @@ router.get('/topCoaching/:examName', function(req, res) {
     
     
 });
-
 router.get('/getblogs', function(req, res) {
     var blogposts = blogpost
     .find({active: true})
@@ -265,11 +263,6 @@ router.get('/getblogs', function(req, res) {
         } else {throw err;}
     });
 });
-
-
-
-
-
 router.post('/suggestedblogstream', function(req, res) {
     var streamInfo = req.body;
     var streamName = streamInfo.streamName;

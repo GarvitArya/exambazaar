@@ -17522,7 +17522,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
     }]); 
     exambazaar.controller("assessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize ){
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize, viewService ){
             
             $scope.openAddQuestion = function(){
                 var url = $state.href('addQuestion', {testId: $scope.test._id});
@@ -17961,6 +17961,25 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     if($scope.user.userType == 'Master' || $scope.user._id == '5a1831f0bd2adb260055e352'){
                         $scope.fullScope = true;
                     }
+                    var viewForm = {
+                        state: $state.current.name,
+                        claim: false
+                    };
+                    if($scope.user && $scope.user.userId){
+                        viewForm.user = $scope.user.userId
+                    }
+                    //console.log(JSON.stringify(viewForm));
+                    if($cookies.getObject('ip')){
+                        var ip = $cookies.getObject('ip');
+                        viewForm.ip = ip;
+                    }
+                    viewService.saveview(viewForm).success(function (data, status, headers) {
+                        //console.log('View Marked');
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log();
+                    });
+                    
                     $scope.assessmentInfo = {
                         name: $scope.user.basic.name,
                         mobile: $scope.user.mobile,
@@ -18022,6 +18041,24 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //$rootScope.$emit("CallBlogLogin", {});
                 
                 console.log('No User');
+                var viewForm = {
+                    state: $state.current.name,
+                    claim: false
+                };
+                if($scope.user && $scope.user.userId){
+                    viewForm.user = $scope.user.userId
+                }
+                //console.log(JSON.stringify(viewForm));
+                if($cookies.getObject('ip')){
+                    var ip = $cookies.getObject('ip');
+                    viewForm.ip = ip;
+                }
+                viewService.saveview(viewForm).success(function (data, status, headers) {
+                    //console.log('View Marked');
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });
             }
             var optionsPrefix = [
                 'A) ',
@@ -34689,6 +34726,7 @@ function getLatLng(thisData) {
                         var dateRange = thisStep.stepDate.dateRange;
                         var timeRanges = thisStep.stepDate.timeRange;
                         var dateRanges = thisStep.stepDate.dates;
+                        var dateArray = thisStep.stepDate.dateArray;
                         
                         var allDay = false;
                         var dateString = '';
@@ -34714,17 +34752,27 @@ function getLatLng(thisData) {
                         if(dateRange && dateRange.startDate && dateRange.endDate){
                             var startDate = moment(dateRange.startDate);
                             var endDate = moment(dateRange.endDate);
-                            dateString = "" + moment(startDate).format('DD MMM YY');
+                            dateString = "" + moment(startDate).format('DD MMM YYYY');
                            
                             
                             if(compareDates(startDate, endDate) == -1){
-                                dateString += " to " + moment(dateRange.endDate).format('DD MMM YY');
+                                dateString += " to " + moment(dateRange.endDate).format('DD MMM YYYY');
                             }
                             
                         }
-                        
-                        if(index == 2){
-                            console.log(dateString);
+                        if(!dateString || dateString == ''){
+                            if(dateArray && dateArray.length > 0){
+                                dateArray.forEach(function(thisDate, index){
+                                    dateString += moment(thisDate).format('DD MMM YYYY');
+                                    if(index == dateArray.length - 2){
+                                        dateString += ' & ';
+                                    }
+                                    if(index < dateArray.length - 2){
+                                        dateString += ', ';
+                                    }
+                                });
+                                
+                            }
                         }
                         if(allDay){
                             timeString = "All Day ";
@@ -34761,7 +34809,18 @@ function getLatLng(thisData) {
             };
             
             
-            $rootScope.pageTitle = $scope.exam.displayname;
+            $rootScope.pageTitle = $scope.exam.displayname + " Exam - All about the Exam - Recommended Readings & Previous Papers";
+            $rootScope.pageDescription = $scope.exam.displayname + " Exam - Registration, Syllabus & Brochure, Exam Dates, Pattern, Recommended Preparation Books, Online coaching resources, Recommended Reading, Previous Papers";
+            var keyWordString = '';
+            var keywordArray = ["Registration",	"Syllabus & Brochure", "Exam Dates", "Pattern", "Recommended Preparation Books", "Online coaching resources", "Recommended Reading", "Previous Papers"];
+            var years = ['','2018', '2017', '2016'];
+            years.forEach(function(thisYear, yindex){
+                keywordArray.forEach(function(thisKeyword, kindex){
+                
+                    keyWordString += $scope.exam.seoname + ' ' + thisYear + ' ' + thisKeyword + ', ';
+                });
+            });
+            $rootScope.pageKeywords = keyWordString;
     }]);
             
     exambazaar.controller("editExamController", 
