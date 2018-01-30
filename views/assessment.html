@@ -366,7 +366,7 @@
             <div flex layout="column" layout-align="start start" class="subBaseFont paddingLR20  exact90h">
                 <div layout="row" layout-align="start center" class="width100 exact10h greyBottomBorder paddingT10">
 
-                    <div flex class="width100 " layout="column" layout-align="center start">
+                    <div flex class="" layout="column" layout-align="center start">
                         <div layout="row" layout-align="start center" class="baseFont bold">
                             <div class="marginR5">Q.</div> 
                             <div ng-repeat="showquestion in questionList" class="smallFont emptyTag" layout="row" layout-align="center center" ng-class="{ seenTag: showquestion.subquestion.seen, answeredTag: showquestion.subquestion.anyAnswer, reviewTag: showquestion.subquestion.markforreview}" ng-if="showquestion.no == activeQuestionNo">
@@ -379,6 +379,14 @@
                         </span>
                         
                     
+                    </div>
+                    <div class="danger paddingLR10" >
+                        <span ng-if="!subquestion.errorReported" ng-click="markQuestionErrorDialog(question, subquestion)">
+                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                            <md-tooltip>
+                            Report Error in this Question
+                            </md-tooltip>
+                        </span>
                     </div>
                     <div flex layout="row" layout-align="end start" class="width100 subBaseFont paddingLR20">
 
