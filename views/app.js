@@ -1633,10 +1633,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.p5Analytics = function(analyticsForm) {
             return $http.post('/api/targetStudyProviders/p5Analytics', analyticsForm);
         };
+        this.examListingsSummary = function() {
+            return $http.post('/api/targetStudyProviders/examListingsSummary');
+        };
         this.courseSummary = function() {
             return $http.post('/api/targetStudyProviders/courseSummary');
         };
-        
         this.allResults = function(examId) {
             return $http.get('/api/targetStudyProviders/allResults/'+examId, {examId: examId});
         };
@@ -2104,7 +2106,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
             $rootScope.pageTitle = 'Best Coaching Classes in India for more than 50 exams | Exambazaar.com';
             $rootScope.pageDescription = "Search and apply to the best coaching classes and get the education that you deserve. Browse through courses, photos, videos and results for 26000+ institutes in 90+ cities";
-            $rootScope.pageKeywords = "Exambazaar, Exambazaar.com, Best Coaching Classes, Best Coaching, Top Coaching Classes, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT Coaching, GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
+            $rootScope.pageKeywords = "Exambazaar, Exam Bazaar, Exambazaar.com, Best Coaching Classes, Best Coaching, Top Coaching Classes, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT Coaching, GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
 
             $scope.scrollPageDown = function(){
                 $location.hash('page2');
@@ -2231,7 +2233,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Srinagar", 
             "Surat", 
             "Thrissur", 
-            "Tiruvananthapuram", 
+            "Thiruvananthapuram", 
             "Trichy", 
             "Trissur", 
             "Trivandrum", 
@@ -13363,7 +13365,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 "Srinagar", 
                 "Surat", 
                 "Thrissur", 
-                "Tiruvananthapuram", 
+                "Thiruvananthapuram", 
                 "Trichy", 
                 "Trissur", 
                 "Trivandrum", 
@@ -33465,6 +33467,28 @@ function getLatLng(thisData) {
         .error(function (data, status, header, config) {
             console.log("Error ");
         });
+            
+            
+        targetStudyProviderService.examListingsSummary().success(function (data, status, headers) {
+            $scope.examGroups = data;
+            $scope.examGroups.forEach(function(thisExam, index){
+                var thisGroups = thisExam.topNgroups;
+                thisExam.nGroups = Number(thisExam.nGroups);
+                var topNCount = 0;
+                thisGroups.forEach(function(thisGroup, gindex){
+                    topNCount += Number(thisGroup.centers);
+                });
+                thisExam.topNCount = topNCount;
+                if(thisExam.nGroups && thisExam.nGroups > 0){
+                    thisExam.fragmentation = Number(thisExam.topNCount/thisExam.nGroups) * 100;
+                }
+                
+            });
+            console.log($scope.examGroups);
+        })
+        .error(function (data, status, header, config) {
+            console.log("Error ");
+        });    
     }]);
         
     function median(values){

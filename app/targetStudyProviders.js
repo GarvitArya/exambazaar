@@ -1230,6 +1230,92 @@ router.post('/courseSummary', function(req, res) {
     });
     
 });
+
+function add(a, b) {
+    return a + b;
+}
+router.post('/examListingsSummary', function(req, res) {
+    var examGroups = [];
+    
+     var allExams = exam.find({active: true}, {exam: 1, name:1, displayname: 1, seoname: 1, stream: 1},function(err, allExams) {
+        if (!err){
+                var nExams = allExams.length;
+                console.log(nExams + " total exams");
+                var eCounter = 0;
+                allExams.forEach(function(thisExam, index){
+                var examId = thisExam._id;
+                
+                var groupNames = targetStudyProvider.aggregate(
+                [
+                    {$match: {exams: examId, disabled: false} },
+                    {"$group": { "_id": { name: "$name" }, count:{$sum:1} } },
+                    {$sort:{"count":-1}}
+
+                ],function(err, groupNames) {
+                if (!err){
+                    var nGroupCounts = groupNames.length;
+                    var groupCounts = groupNames.map(function(a) {return Number(a.count);});
+                    //console.log(groupCounts);
+                    
+                    var nGroups = groupCounts.reduce(add, 0);
+
+
+                    console.log(examId +" " + nGroupCounts + " " + nGroups);
+                    groupNames = groupNames.slice(0, 5);
+                    //console.log(groupNames);
+                    var queryGroups = [];
+                    groupNames.forEach(function(thisGroup, index){
+                        var qGroup = {
+                            name: thisGroup._id.name,
+                            centers: thisGroup.count,
+                        };
+                        queryGroups.push(qGroup);
+                    });
+                    //console.log(queryGroups);
+                    var thisExamGroup = {
+                        exam: thisExam,
+                        nGroups: nGroups,
+                        topNgroups: queryGroups
+                    };
+                    examGroups.push(thisExamGroup);
+                    eCounter += 1;
+                    if(eCounter == nExams){
+                        //console.log('I am here');
+                        //console.log(examGroups);
+                        res.json(examGroups);
+                    }
+                    //res.json(queryGroups);
+                } else {throw err;}
+                });
+                
+                
+                /*var allProviders = targetStudyProvider
+                .find({disabled: false, exam: examId}, {exam: 1, name:1, groupname: 1})
+                .exec(function (err, allProviders) {
+                    if (!err){
+
+                        if(allProviders){
+                            var nProviders = allProviders.length;
+                            console.log(nProviders);
+                            res.json(true);
+                        }else{
+                            console.log('No such provider');
+                            res.json(null);
+                        }
+                    } else {throw err;}
+                });*/
+                
+                
+                
+            });
+            
+            
+            
+        }
+     });
+    
+    
+});
 router.post('/addVideo', function(req, res) {
     var newVideoForm = req.body;
     var videoLink = newVideoForm.video.link;

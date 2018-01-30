@@ -85,9 +85,9 @@
     </div>
     
     
-    <div layout="column" layout-align="center center" class="width100 paddingTB20">
+    <div layout="column" layout-align="center center" class="width100 paddingTB20 boxShadow marginTB20">
         <div layout="row" layout-align="center center" ng-repeat="exam in uniqueExams" class="width100 greyBottomBorder">
-            <div flex layout="row" layout-align="center center" class="blogFont bold">
+            <div flex layout="row" layout-align="center center" class="">
                 {{exam.name}}
             </div>
             <div layout="row" layout-align="center center" flex>
@@ -100,7 +100,22 @@
             
         </div>
     </div>
-    
+    <div layout="column" layout-align="center center" class="width100 paddingTB20 boxShadow marginTB20">
+        <div layout="row" layout-align="center center" ng-repeat="examGroup in examGroups" class="width100 greyBottomBorder">
+            <div flex layout="row" layout-align="center center" class="">
+                {{examGroup.exam.name}}
+            </div>
+            <div flex layout="row" layout-align="center center" class="">
+                {{examGroup.exam._id}}
+            </div>
+            <div layout="row" layout-align="center center" flex>
+                <div layout="row" layout-align="center center" flex>{{examGroup.topNCount}}</div>
+                <div layout="row" layout-align="center center" flex>{{examGroup.nGroups}}</div>
+                <div layout="row" layout-align="center center" flex>{{examGroup.fragmentation | number: 2}}</div>
+            </div>
+            
+        </div>
+    </div>
 </div>
 <div>
 </div>
