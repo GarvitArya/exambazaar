@@ -78,7 +78,7 @@ exambazaar.controller("addStudentController",
         
 
 exambazaar.controller("oldClaimController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies','$mdDialog', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies,$mdDialog){
+    [ '$scope','$rootScope', 'coachingService','thisProvider','$state','$stateParams', '$cookies','$mdDialog', function($scope,$rootScope, coachingService,thisProvider,$state,$stateParams, $cookies,$mdDialog){
         
         $scope.editable = false;
         $scope.verifiedUser = false;

@@ -91,9 +91,9 @@ var userSchema = mongoose.Schema({
         postgradPercentage: { type: String},
     },
     
-    partner: [{ type: Schema.ObjectId, ref: 'targetStudyProvider' }],
+    partner: [{ type: Schema.ObjectId, ref: 'coaching' }],
     shortlisted: [{
-        institute: { type: Schema.ObjectId, ref: 'targetStudyProvider' },
+        institute: { type: Schema.ObjectId, ref: 'coaching' },
         _date: { type: Date, default: Date.now }
     }],
     email : { type: String},

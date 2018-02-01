@@ -111,7 +111,7 @@ app.use(flash());
 
 var routes = require('./app/routes.js')(app, passport);
 var providers = require('./app/providers.js',providers); 
-var targetStudyProviders = require('./app/targetStudyProviders.js',targetStudyProviders); 
+var coachings = require('./app/coachings.js',coachings); 
 var colleges = require('./app/colleges.js',colleges); 
 var results = require('./app/results.js',results); 
 var offers = require('./app/offers.js',offers); 
@@ -164,7 +164,7 @@ var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredent
 
 
 app.use('/api/providers', providers);
-app.use('/api/targetStudyProviders', targetStudyProviders);
+app.use('/api/coachings', coachings);
 app.use('/api/colleges', colleges);
 app.use('/api/results', results);
 app.use('/api/offers', offers);
@@ -383,6 +383,15 @@ setTimeout(function(){
     //procmons.procmon();
     console.log("It's time to send procmon email:");
 }, millisTill10);
+
+
+function doSomething()
+{
+    procmons.assessmentshelper();
+}
+
+
+setInterval(doSomething, 1*60*1000);
 
 
 var server = app.listen(port);

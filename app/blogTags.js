@@ -4,7 +4,7 @@ var router = express.Router();
 var config = require('../config/mydatabase.js');
 var blogTag = require('../app/models/blogTag');
 var blogpost = require('../app/models/blogpost');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var user = require('../app/models/user');
 var email = require('../app/models/email');
 

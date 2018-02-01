@@ -5,7 +5,7 @@ var config = require('../config/mydatabase.js');
 var stream = require('../app/models/stream');
 var exam = require('../app/models/exam');
 var blogpost = require('../app/models/blogpost');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 
 router.post('/p0', function(req, res) {
     var urls = ["https://www.exambazaar.com"];
@@ -137,7 +137,7 @@ router.post('/p3', function(req, res) {
     var urls = [];
     
     
-    var allCities = targetStudyProvider.distinct( ("city"),function(err, allCities) {
+    var allCities = coaching.distinct( ("city"),function(err, allCities) {
     if (!err){
         var nCities = allCities.length;
         var cCounter = 0;
@@ -187,7 +187,7 @@ router.post('/p3Aggregate', function(req, res) {
         if (!err){
             allExams.forEach(function(thisExam, eindex){
                 var thisExamId = thisExam._id;
-                var groupNames = targetStudyProvider.aggregate(
+                var groupNames = coaching.aggregate(
                 [
                     {$match: {disabled: false, exams: thisExamId, type:'Coaching'} },
                     {"$group": { "_id": { city: "$city" }, count:{$sum:1} } },
@@ -241,7 +241,7 @@ router.post('/p5', function(req, res) {
             if(ecounter == nExams && scounter == nStreams){
                 var examStreamIds = examStreams.map(function(a) {return a.examId.toString();});
                 //console.log(examStreamIds);
-                var groupNames = targetStudyProvider.aggregate(
+                var groupNames = coaching.aggregate(
                 [
                     {$match: {disabled: false, exams: {$exists: true}} },
                     {"$group": { "_id": { groupName: "$groupName", city: "$city" }, exams: { $addToSet: "$exams" } } },

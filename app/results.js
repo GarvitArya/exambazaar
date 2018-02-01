@@ -3,7 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var result = require('../app/models/result');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var user = require('../app/models/user');
 var email = require('../app/models/email');
 var exam = require('../app/models/exam');
@@ -56,7 +56,7 @@ router.get('/', function(req, res) {
                     if (!err){
                         thisResult.user = thisUser;
                         
-                        var thisProvider = targetStudyProvider.findOne({ '_id': instituteId },{name:1, logo:1},function (err, thisProvider) {
+                        var thisProvider = coaching.findOne({ '_id': instituteId },{name:1, logo:1},function (err, thisProvider) {
                             if (!err){
                                 thisResult.institute = thisProvider;
                                 allResults.push(thisResult);
@@ -90,7 +90,7 @@ router.get('/edit/:resultId', function(req, res) {
             
         if (!err){
             var instituteId = thisResult.institute;
-            var thisProvider = targetStudyProvider
+            var thisProvider = coaching
             .findOne({_id : instituteId, disabled: {$ne: true}},{name:1 , groupName:1, disabled: 1, city:1, logo:1, address:1, pincode:1})
             //.deepPopulate('exams exams.stream')
             .exec(function (err, thisProvider) {
@@ -121,7 +121,7 @@ router.get('/user/:userId', function(req, res) {
         
         var resultInstituteIds =  results.map(function(a) {return a.institute;});
         
-        var allProviderResults = targetStudyProvider
+        var allProviderResults = coaching
             .find({_id : { $in : resultInstituteIds }, disabled: {$ne: true}},{name:1 , groupName:1, exams:1, disabled: 1, city:1, logo:1, address:1, pincode:1})
             .deepPopulate('exams exams.stream')
             .exec(function (err, allProviderResults) {
@@ -173,7 +173,7 @@ router.post('/groupResults', function(req, res) {
         if (!err){
             var examId = thisExam._id.toString();
             
-            var allGroupInstitutes = targetStudyProvider.find({ 'groupName': groupName },{_id:1},function (err, allGroupInstitutes) {
+            var allGroupInstitutes = coaching.find({ 'groupName': groupName },{_id:1},function (err, allGroupInstitutes) {
             if (!err){
                 allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
                 var basicResults = [];

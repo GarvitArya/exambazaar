@@ -129,7 +129,7 @@ app.use(flash());
 var routes = require('./app/routes.js')(app, passport); 
 //var institutes = require('./app/institutes.js',institutes); 
 var providers = require('./app/providers.js',providers); 
-var targetStudyProviders = require('./app/targetStudyProviders.js',targetStudyProviders); 
+var coachings = require('./app/coachings.js',coachings); 
 var results = require('./app/results.js',results); 
 var offers = require('./app/offers.js',offers); 
 var coupons = require('./app/coupons.js',coupons); 
@@ -173,7 +173,7 @@ var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredent
 
 
 app.use('/api/providers', providers);
-app.use('/api/targetStudyProviders', targetStudyProviders);
+app.use('/api/coachings', coachings);
 app.use('/api/results', results);
 app.use('/api/offers', offers);
 app.use('/api/coupons', coupons);

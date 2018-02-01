@@ -3,14 +3,14 @@ var mongoose = require('mongoose');
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var Schema = mongoose.Schema;
 
-var targetStudyProviderSchema = mongoose.Schema({
+var coachingSchema = mongoose.Schema({
     type: {type: String, default:'Coaching'},
     name: {type: String,required: true},
     description: {type: String},
     group: { type: Schema.ObjectId, ref: 'group' },
     groupName: {type: String},
     groupChecked: {type: Boolean,default: false},
-    targetStudyWebsite: String,
+    coachingWebsite: String,
     website: [String],
     otherlistings: [String],
     newwebsite: [String],
@@ -215,10 +215,10 @@ var targetStudyProviderSchema = mongoose.Schema({
     googlePlaceSearchTry:Boolean,
 });
 
-targetStudyProviderSchema.index({ loc: '2dsphere'});
+coachingSchema.index({ loc: '2dsphere'});
 
-targetStudyProviderSchema.plugin(deepPopulate);
-var targetStudyProvider = mongoose.model('targetStudyProvider', targetStudyProviderSchema);
+coachingSchema.plugin(deepPopulate);
+var coaching = mongoose.model('coaching', coachingSchema);
 
 
-module.exports = targetStudyProvider;
+module.exports = coaching;

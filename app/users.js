@@ -16,7 +16,7 @@ var email = require('../app/models/email');
 var cisaved = require('../app/models/cisaved');
 var question = require('../app/models/question');
 var mongoose = require('mongoose');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var helper = require('sendgrid').mail;
 var sendGridCredential = require('../app/models/sendGridCredential');
 var moment = require('moment');
@@ -480,7 +480,7 @@ router.post('/deliverVoucher', function(req, res) {
                     res.json(null);
                 }else{
                     var providerId = thisCoupon.provider;
-                    var thisProvider = targetStudyProvider.findOne({ '_id': providerId }, {name:1, logo:1},function (err, thisProvider) {
+                    var thisProvider = coaching.findOne({ '_id': providerId }, {name:1, logo:1},function (err, thisProvider) {
                     if (!err){
                         if(!thisProvider._id){
                             console.log('Coupon does not exist');
@@ -981,7 +981,7 @@ router.post('/shortlistInstitute', function(req, res) {
         
         var shortListedInstitutes = existingUser.shortlisted.map(function(a) {return a._id;});
         //ABC
-        var thisInstitute = targetStudyProvider
+        var thisInstitute = coaching
             .findOne({'_id': instituteId},{interested: 1})
             /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
             .exec(function (err, thisInstitute) {
@@ -1398,7 +1398,7 @@ function closeFillCollege(userId, pastInternId, res){
 };
 function closeCreatedCI(userId, pastInternId, res){
     console.log('Starting Coaching created by process:');
-    var allElements = targetStudyProvider
+    var allElements = coaching
     .find({_createdBy: userId},{_createdBy:1})
     .exec(function (err, allElements) {
     if (!err){
@@ -1872,7 +1872,7 @@ router.get('/addedInstitutes/:userId', function(req, res) {
             }
             
             if(fullUserScope){
-                var addedInstitutes = targetStudyProvider
+                var addedInstitutes = coaching
                 .find({_createdBy: {$exists: true}, disabled: false},{name:1, website: 1, address:1, city:1, state:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1, pincode:1})
                 .sort( { _created: -1 } )
                 .limit(limit)
@@ -1883,7 +1883,7 @@ router.get('/addedInstitutes/:userId', function(req, res) {
                 });
             }else{
                 
-                var addedInstitutes = targetStudyProvider
+                var addedInstitutes = coaching
                 .find({_createdBy: {$exists: true}, _createdBy: thisUser._id},{name:1, website: 1, address:1, city:1, state:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1, pincode:1})
                 .sort( { _created: -1 } )
                 .limit(limit)
@@ -2068,7 +2068,7 @@ router.get('/editShortlist/:userId', function(req, res) {
             //console.log('No of shortlists: ' + nShortlisted);
             shortlistedIds.forEach(function(instituteId, index){
                 
-                var thisInstitute = targetStudyProvider
+                var thisInstitute = coaching
                 .findOne({'_id': instituteId},{name:1, website: 1, address:1, city:1, state:1, logo:1})
                 /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
                 .exec(function (err, thisInstitute) {
@@ -2121,7 +2121,7 @@ router.get('/userShortlist/:userId', function(req, res) {
                 var basicShortlisted = [];
                 var counter = 0;
                 shortlisted.forEach(function(thisShortlist, index){
-                    var thisInstitute = targetStudyProvider
+                    var thisInstitute = coaching
                     .findOne({'_id': thisShortlist._id},{name:1, website: 1, address:1, city:1, state:1, logo:1})
                     .exec(function (err, thisInstitute) {
                     if (!err){
@@ -2201,7 +2201,7 @@ router.post('/makePartner', function(req, res) {
         .exec(function (err, thisUser) {
         if (!err){
             
-            var thisInstitute = targetStudyProvider
+            var thisInstitute = coaching
             .findOne({ '_id': partnerInstituteId })
             .exec(function (err, thisInstitute) {
             if (!err){
@@ -2239,7 +2239,7 @@ router.post('/unmakePartner', function(req, res) {
         .exec(function (err, thisUser) {
         if (!err){
             
-            var thisInstitute = targetStudyProvider
+            var thisInstitute = coaching
             .findOne({ '_id': partnerInstituteId })
             .exec(function (err, thisInstitute) {
             if (!err){

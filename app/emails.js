@@ -5,7 +5,7 @@ var helper = require('sendgrid').mail;
 var email = require('../app/models/email');
 var user = require('../app/models/user');
 var college = require('../app/models/college');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var subscriber = require('../app/models/subscriber');
 var sendGridCredential = require('../app/models/sendGridCredential');
 
@@ -347,7 +347,7 @@ var fromEmail = {
 
     //var coachingIds = ['58821266fe400914343a5074'];
     //'_id': { $in : coachingIds}, 
-    var allProviders = targetStudyProvider
+    var allProviders = coaching
     .find({ email: {$exists: true}, disabled: false }, { name: 1, email:1 })
     //.limit(1)
     .exec(function (err, allProviders) {
@@ -517,7 +517,7 @@ router.post('/introductionofEB', function(req, res) {
             var from_email = new helper.Email(fromEmail);
             
             
-            var allProviders = targetStudyProvider.find({ disabled: false, email: {$exists: true}, $where:'this.email.length>0'}, {email:1, name: 1},function (err, allProviders){
+            var allProviders = coaching.find({ disabled: false, email: {$exists: true}, $where:'this.email.length>0'}, {email:1, name: 1},function (err, allProviders){
                 if (err) return handleError(err);
                 var nProviders = allProviders.length;
                 console.log('There are ' + nProviders + ' coachings!');

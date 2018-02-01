@@ -3,7 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var suggestCoaching = require('../app/models/suggestCoaching');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var user = require('../app/models/user');
 
 var mongoose = require('mongoose');

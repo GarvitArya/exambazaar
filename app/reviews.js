@@ -3,7 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var review = require('../app/models/review');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var user = require('../app/models/user');
 var email = require('../app/models/email');
 
@@ -55,7 +55,7 @@ router.get('/', function(req, res) {
                     if (!err){
                         thisReview.user = thisUser;
                         
-                        var thisProvider = targetStudyProvider.findOne({ '_id': instituteId },{name:1, logo:1, city:1},function (err, thisProvider) {
+                        var thisProvider = coaching.findOne({ '_id': instituteId },{name:1, logo:1, city:1},function (err, thisProvider) {
                             if (!err){
                                 thisReview.institute = thisProvider;
                                 allReviews.push(thisReview);
@@ -89,7 +89,7 @@ router.get('/edit/:reviewId', function(req, res) {
             
         if (!err){
             var instituteId = thisReview.institute;
-            var thisProvider = targetStudyProvider
+            var thisProvider = coaching
             .findOne({_id : instituteId, disabled: {$ne: true}},{name:1 , groupName:1, disabled: 1, city:1, logo:1, address:1, pincode:1})
             //.deepPopulate('exams exams.stream')
             .exec(function (err, thisProvider) {
@@ -174,7 +174,7 @@ router.get('/user/:userId', function(req, res) {
         
         var reviewInstituteIds =  reviews.map(function(a) {return a.institute;});
         
-        var allProviderReviews = targetStudyProvider
+        var allProviderReviews = coaching
             .find({_id : { $in : reviewInstituteIds }, disabled: {$ne: true}},{name:1 , groupName:1, exams:1, disabled: 1, city:1, logo:1, address:1, pincode:1})
             .deepPopulate('exams exams.stream')
             .exec(function (err, allProviderReviews) {

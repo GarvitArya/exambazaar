@@ -4,7 +4,7 @@ var router = express.Router();
 var helper = require('sendgrid').mail;
 var publicationemail = require('../app/models/publicationemail');
 var user = require('../app/models/user');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var subscriber = require('../app/models/subscriber');
 var sendGridCredential = require('../app/models/sendGridCredential');
 

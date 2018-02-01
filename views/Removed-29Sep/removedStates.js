@@ -923,9 +923,9 @@
                 }
             },
             resolve: {
-                thisProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
                 provider: function() { return {}; }
                 

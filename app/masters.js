@@ -10,7 +10,7 @@ var sourceUrl = require('../app/models/sourceUrl');
 var clusterUrl = require('../app/models/clusterUrl');
 var user = require('../app/models/user');
 var provider = require('../app/models/provider');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 
 var mongoose = require('mongoose');
 var db = mongoose.connection;
@@ -126,7 +126,7 @@ router.post('/extractEmails/', function(req, res) {
     var validEmail = true;
     //_id:{$in: providerIds}
     //{website: {$exists: true}, $where:"this.website.length>0 && this.website[0] !=''"}
-    var allGroupProviders = targetStudyProvider.find({website: {$exists: true}, $where:"this.website.length>0 && this.website[0] !=''"}, {website:1, email: 1, name:1},function(err, allGroupProviders) {
+    var allGroupProviders = coaching.find({website: {$exists: true}, $where:"this.website.length>0 && this.website[0] !=''"}, {website:1, email: 1, name:1},function(err, allGroupProviders) {
     if (!err){
         var nProviders = allGroupProviders.length;
         console.log('Fetching emails for: ' + nProviders + ' coachings');
@@ -643,7 +643,7 @@ Quotas per day per key:
 router.get('/latLngSummary', function(req, res) {
     console.log('Lat Long summary starting');
     //res.json('Done');
-    var allProviders = targetStudyProvider.find( { latlng: {$exists: false}, possibleGeoCodings:{$exists: true},latlngna:true,  disabled: false}, {possibleGeoCodings:1, name:1, address:1, city:1, pincode:1,latlng:1, latlngna:1, loc:1},function(err, allProviders) {
+    var allProviders = coaching.find( { latlng: {$exists: false}, possibleGeoCodings:{$exists: true},latlngna:true,  disabled: false}, {possibleGeoCodings:1, name:1, address:1, city:1, pincode:1,latlng:1, latlngna:1, loc:1},function(err, allProviders) {
     if (!err){
         var foundNone = [];
         var foundOne = [];
@@ -733,7 +733,7 @@ router.get('/bulkSaveLatLng', function(req, res) {
 
     var geocoder = NodeGeocoder(options);
     
-    var allProviders = targetStudyProvider.find( { latlng: {$exists: false}, possibleGeoCodings:{$exists: false},latlngna:true,  disabled: false}, {latlng:1, latlngna:1, address:1, city:1, state:1, pincode:1, disabled:1, name: 1,possibleGeoCodings:1},function(err, allProviders) {
+    var allProviders = coaching.find( { latlng: {$exists: false}, possibleGeoCodings:{$exists: false},latlngna:true,  disabled: false}, {latlng:1, latlngna:1, address:1, city:1, state:1, pincode:1, disabled:1, name: 1,possibleGeoCodings:1},function(err, allProviders) {
     if (!err){
         var nLength = allProviders.length;
         var counter = 0;
@@ -857,7 +857,7 @@ router.get('/googlePlaces', function(req, res) {
     });*/
     var ObjectId = require('mongodb').ObjectID;
     //, exams: ObjectId("58ac27030be6311eccbbc3a6")
-    var allProviders = targetStudyProvider.find( { latlng: {$exists: true}, latlngna:false,  disabled: false, googlePlaceSearchTry: {$ne: true}}, {latlng:1, name: 1},function(err, allProviders) {
+    var allProviders = coaching.find( { latlng: {$exists: true}, latlngna:false,  disabled: false, googlePlaceSearchTry: {$ne: true}}, {latlng:1, name: 1},function(err, allProviders) {
     if (!err){
         var nLength = allProviders.length;
         var counter = 0;
@@ -983,54 +983,7 @@ router.post('/addIntern/', function(req, res) {
     
 });
 
-router.get('/getAllExams/', function(req, res) {
-    url = 'https://targetstudy.com/exams/';
-    var Request = unirest.get(url);
-    Request.headers({
-      'Accept': 'application/json',
-      'Accept-Language': 'en-us',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0'
-      //'User-Agent': 'Unirest Node.js'
-    });
-    //list-group list-group-item
-    
-    Request.timeout(600000).end(function (response) {
-        if (response.error) {
-            console.log('GET error', response.error)
-        }else{
-            //console.log("--------------------");
-            var sourceCode = response.body;
-            //console.log(sourceCode);
-            var $ = cheerio.load(sourceCode, {
-                normalizeWhitespace: true,
-                xmlMode: true
-            });
-
-            var shorts = [];
-            var exams = [];
-            
-            $('.list-group').find('.list-group-item').each(function(i, elem) {
-                var all = $(this).text();
-                var shortName = $(this).find('b').text();
-                var link = $(this).find('a').text();
-                shorts[i] = shortName;
-                exams[i] = link;
-            });
-            
-            shorts.forEach(function(thistd, tdindex){
-                if(shorts[tdindex]){
-                    console.log(shorts[tdindex] + ": " + exams[tdindex]);
-                }else{
-                    console.log(exams[tdindex]);
-                }
-                
-            });
-            console.log(exams.length + " " + shorts.length);
-        }
-    });
-    
-});
-router.post('/targetstudyurls/', function(req, res) {
+router.post('/coachingurls/', function(req, res) {
     //urls are stored in sourceurls
     var urls = req.body;
     //console.log(urls);
@@ -1113,10 +1066,10 @@ router.post('/targetstudyurls/', function(req, res) {
                     });
                     
                     
-                    var newtargetStudyProvider = new targetStudyProvider({
+                    var newcoaching = new coaching({
                         name: name,
                         website: website,
-                        targetStudyWebsite: url,
+                        coachingWebsite: url,
                         address: address,
                         city: city,
                         state: state,
@@ -1126,7 +1079,7 @@ router.post('/targetstudyurls/', function(req, res) {
                         phone: phones,
                         coursesOffered: services,
                     });
-                    newtargetStudyProvider.save(function(err, newtargetStudyProvider) {
+                    newcoaching.save(function(err, newcoaching) {
                         if (err) return console.error(err);
                         console.log("Provider saved: " + name + " " + city);
                         

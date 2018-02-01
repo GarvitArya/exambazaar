@@ -140,7 +140,7 @@
         </div>
         <div flex>
             <span ng-repeat="cityState in cityStates | orderBy: ['-count','city']" ng-if="cityState.state == state" class="badge marginR5">
-                <a ui-sref="targetStudyProviders({ city:{{'cityState.city'}} })">{{cityState.city}}&nbsp;&nbsp;{{cityState.count}}</a>
+                <a ui-sref="coachings({ city:{{'cityState.city'}} })">{{cityState.city}}&nbsp;&nbsp;{{cityState.count}}</a>
             </span>
         </div>
     </div>
@@ -148,7 +148,7 @@
         <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2" ng-repeat="state in states">
             <div>{{state}}</div>
             <span ng-repeat="cityState in cityStates | orderBy: 'city'" ng-if="cityState.state == state">
-                <a ui-sref="targetStudyProviders({ city:{{'cityState.city'}} })">{{cityState.city}} | </a>
+                <a ui-sref="coachings({ city:{{'cityState.city'}} })">{{cityState.city}} | </a>
             </span>
             
         </div>

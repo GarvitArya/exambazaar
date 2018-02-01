@@ -2,13 +2,13 @@ var express = require('express');
 var router = express.Router();
 //basiccoaching
 var config = require('../config/mydatabase.js');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var cirffactor = require('../app/models/cirffactor');
 var blogpost = require('../app/models/blogpost');
 var cisaved = require('../app/models/cisaved');
 var email = require('../app/models/email');
 var disableProvider = require('../app/models/disableProvider');
-var oldtargetStudyProvider = require('../app/models/oldtargetStudyProvider');
+var oldcoaching = require('../app/models/oldcoaching');
 var exam = require('../app/models/exam');
 var view = require('../app/models/view');
 var result = require('../app/models/result');
@@ -29,7 +29,7 @@ mongoose.Promise = require('bluebird');
 router.get('/cities', function(req, res) {
     
             
-    targetStudyProvider.aggregate(
+    coaching.aggregate(
     [
         {$match: { disabled: false, type: 'Coaching'} },
         {"$group": { "_id": { city: "$city", state: "$state" }, count:{$sum:1} } }
@@ -46,7 +46,7 @@ router.get('/cities', function(req, res) {
     
     
     /*
-    targetStudyProvider.distinct( ("city","state"),function(err, docs) {
+    coaching.distinct( ("city","state"),function(err, docs) {
     if (!err){
         console.log(docs);
         res.json(docs);
@@ -64,7 +64,7 @@ router.get('/providercities/:query', function(req, res) {
         query = '';
     }
     //console.log('Query is: ' + query);
-    var cityNames = targetStudyProvider.aggregate(
+    var cityNames = coaching.aggregate(
     [
         {$match: {city:{'$regex' : query, '$options' : 'i'}, disabled: false} },
         {"$group": { "_id": { city: "$city" }, count:{$sum:1} } },
@@ -90,7 +90,7 @@ router.get('/providercities/:query', function(req, res) {
     });
     
     
-    /*var cities = targetStudyProvider.distinct( ("city"),function(err, cities) {
+    /*var cities = coaching.distinct( ("city"),function(err, cities) {
     if (!err){
         if(query == "exambazaar"){
             res.json(cities);
@@ -110,212 +110,73 @@ router.get('/providercities/:query', function(req, res) {
 });
 
 router.get('/oneOff', function(req, res) {
-    var idStates = [
-        {_id:"5a2b739fa361257342f2f4e2",pincode:"625001",},
-{_id:"5a2b9c20b431f9035c2c7a18",pincode:"625016",},
-{_id:"5a3373f54f20707364092c74",pincode:"731204",},
-{_id:"5a3375a6391943768fdffe02",pincode:"110045",},
-{_id:"5a33ee532ea08875a348aad2",pincode:"110009",},
-{_id:"5a33f3dc8212c7776ee59cd0",pincode:"734001",},
-{_id:"5a2fa4cfa119287e0a8bce5a",pincode:"700053",},
-{_id:"5a31389ec9bf1a56c01ff066",pincode:"600034",},
-{_id:"5a3917989ccd534ac15d4579",pincode:"411030",},
-{_id:"5a3521e97f304530f822b59a",pincode:"700150",},
-{_id:"5a26771eeb9f84633258d917",pincode:"500076",},
-{_id:"5a291de5f848e22586bb0362",pincode:"607402",},
-{_id:"5a2b8365461365798e0b2dfd",pincode:"600127",},
-{_id:"5a2693a89bc9b777bef5ed6a",pincode:"400602",},
-{_id:"5a269bccfdcc777c1e37a1fb",pincode:"380015",},
-{_id:"5a26b18da6641c0dc43b1e89",pincode:"500025",},
-{_id:"5a26b5ac7eb591121572e28c",pincode:"560008",},
-{_id:"5a292ca868bb2d2d62e00d0f",pincode:"201301",},
-{_id:"5a292ca868bb2d2d62e00d11",pincode:"560011",},
-{_id:"5a292f1981e3a42f661120c4",pincode:"600086",},
-{_id:"5a2ac525bdfebe3114c91fe9",pincode:"302015",},
-{_id:"5a2b66cd66bbfb6ebd651953",pincode:"560011",},
-{_id:"5a2b684866bbfb6ebd651975",pincode:"517408",},
-{_id:"5a2b691b66bbfb6ebd65198c",pincode:"517247",},
-{_id:"5a2b6c0466bbfb6ebd6519fb",pincode:"190006",},
-{_id:"5a2b71ad50fc86724e23d525",pincode:"630561",},
-{_id:"5a2b76c3a361257342f2f571",pincode:"691500",},
-{_id:"5a2b7855a361257342f2f5b6",pincode:"636701",},
-{_id:"5a2b7b1aa361257342f2f618",pincode:"614612",},
-{_id:"5a2b7bd6a361257342f2f630",pincode:"641012",},
-{_id:"5a2b7c54a361257342f2f651",pincode:"639004",},
-{_id:"5a2b8486461365798e0b2e08",pincode:"603209",},
-{_id:"5a2b8706a179d87b5da8e4a7",pincode:"636006",},
-{_id:"5a2b896da179d87b5da8e4dc",pincode:"625020",},
-{_id:"5a2b8e96e317e47d3ea521f0",pincode:"625001",},
-{_id:"5a2b9385fc34430145ad1a75",pincode:"600049",},
-{_id:"5a2b9b49b431f9035c2c7a12",pincode:"600020",},
-{_id:"5a2b9d03b431f9035c2c7a43",pincode:"603001",},
-{_id:"5a2b9defb431f9035c2c7a4c",pincode:"641001",},
-{_id:"5a2b9eb8b431f9035c2c7a52",pincode:"600056",},
-{_id:"5a2ba1e0b431f9035c2c7aad",pincode:"600014",},
-{_id:"5a2ba298b431f9035c2c7abd",pincode:"600011",},
-{_id:"5a2ba36bb431f9035c2c7ac3",pincode:"625001",},
-{_id:"5a2ba772b431f9035c2c7b34",pincode:"605011",},
-{_id:"5a2baa38b431f9035c2c7b6d",pincode:"600044",},
-{_id:"5a2bab22b431f9035c2c7b9f",pincode:"641004",},
-{_id:"5a2baf3db431f9035c2c7c1f",pincode:"600078",},
-{_id:"5a2bb135b431f9035c2c7c5c",pincode:"600040",},
-{_id:"5a2bb20db431f9035c2c7c89",pincode:"625002",},
-{_id:"5a2bb3e4b431f9035c2c7cab",pincode:"600017",},
-{_id:"5a2bb512b431f9035c2c7cfc",pincode:"641018",},
-{_id:"5a2bb6dab431f9035c2c7d38",pincode:"625016",},
-{_id:"5a2bb795b431f9035c2c7d48",pincode:"620018",},
-{_id:"5a2e95c7f631797c3a018733",pincode:"695014",},
-{_id:"5a2e9e894852d30604f6b4fd",pincode:"110060",},
-{_id:"5a2eb4ee616f06194051627e",pincode:"583101",},
-{_id:"5a2eb4ee616f061940516280",pincode:"563125",},
-{_id:"5a2eb4ee616f061940516282",pincode:"517001",},
-{_id:"5a2eb79c3e3c171dbcb6740d",pincode:"673008",},
-{_id:"5a2eb8f96428c32007465ee5",pincode:"682018",},
-{_id:"5a2ebb43ba8f942226139edb",pincode:"695001",},
-{_id:"5a2ebb43ba8f942226139edd",pincode:"682017",},
-{_id:"5a2ebb43ba8f942226139edf",pincode:"691010",},
-{_id:"5a2ebca753e8e925e97cd855",pincode:"682024",},
-{_id:"5a2ec067c558d52b520e4151",pincode:"695582",},
-{_id:"5a2ec131e2e5052eaf478443",pincode:"686002",},
-{_id:"5a2ec235674e9f2faa436c61",pincode:"695001",},
-{_id:"5a2ec322b2743231d32e339c",pincode:"600017",},
-{_id:"5a2ec5ba590e7733737c2318",pincode:"688008",},
-{_id:"5a2ec93babf03636ca731b67",pincode:"673019",},
-{_id:"5a2ec93babf03636ca731b69",pincode:"673011",},
-{_id:"5a2ec93babf03636ca731b6b",pincode:"673305",},
-{_id:"5a2f6a4388d9ad4d9782db36",pincode:"680012",},
-{_id:"5a2f6fe1d12400511d9dddf1",pincode:"641009",},
-{_id:"5a2f6fe1d12400511d9dddf3",pincode:"590001",},
-{_id:"5a2f6fe1d12400511d9dddf5",pincode:"676503",},
-{_id:"5a2f744361b4b454c0857777",pincode:"695001",},
-{_id:"5a2f75b6f56c9855767fa1bd",pincode:"671541",},
-{_id:"5a2f79c0f56c9855767fa23a",pincode:"695001",},
-{_id:"5a2f7d28fd407d59b883cb27",pincode:"695001",},
-{_id:"5a2f7f739260c75ccd1a0ebe",pincode:"695014",},
-{_id:"5a2f7fea9260c75ccd1a0ec2",pincode:"695015",},
-{_id:"5a2f8058b7c1565d871aec5a",pincode:"695001",},
-{_id:"5a2f81f54bc2d65f531de7e4",pincode:"689711",},
-{_id:"5a2f84be7c5c026154ce2188",pincode:"695541",},
-{_id:"5a2f864a473c5f634fe3d55e",pincode:"682035",},
-{_id:"5a2f870f473c5f634fe3d566",pincode:"682018",},
-{_id:"5a2f89677f084e67241366f1",pincode:"690518",},
-{_id:"5a2f92d9d79cb770e4dcb5ae",pincode:"691553",},
-{_id:"5a2f93abd7b27871d6382df0",pincode:"678001",},
-{_id:"5a2f951ad7b27871d6382dfd",pincode:"691005",},
-{_id:"5a2f9e3e5175d178b65bade6",pincode:"500073",},
-{_id:"5a2f9f023bb1987945a113a5",pincode:"600086",},
-{_id:"5a2fa0e73bb1987945a113fb",pincode:"522002",},
-{_id:"5a2fa1fecc992f7ab34f5185",pincode:"560078",},
-{_id:"5a2fa2bd9d503a7b542e4abc",pincode:"110085",},
-{_id:"5a2fa34e9d503a7b542e4ac2",pincode:"676521",},
-{_id:"5a2fa42b702b657dae9b40ad",pincode:"500073",},
-{_id:"5a2fa8a4fd68fd02d5e323a9",pincode:"600087",},
-{_id:"5a2fa950886523033d0b7515",pincode:"600034",},
-{_id:"5a2fa9f7886523033d0b7518",pincode:"641012",},
-{_id:"5a2fc340575d9e1e391cf1a3",pincode:"110016",},
-{_id:"5a2fc42c07122b1f1af78dc0",pincode:"390007",},
-{_id:"5a313d8b54d9145b21b9b962",pincode:"122009",},
-{_id:"5a3141abc497df5e2bb8683a",pincode:"141001",},
-{_id:"5a3141abc497df5e2bb8683c",pincode:"146001",},
-{_id:"5a3141abc497df5e2bb8683e",pincode:"160055",},
-{_id:"5a3141abc497df5e2bb86840",pincode:"143001",},
-{_id:"5a3141abc497df5e2bb86842",pincode:"144001",},
-{_id:"5a3141abc497df5e2bb86844",pincode:"180004",},
-{_id:"5a3141abc497df5e2bb86846",pincode:"147001",},
-{_id:"5a31460dedbc9960fdb6a138",pincode:"411001",},
-{_id:"5a31488d450c4262d3b8642a",pincode:"531031",},
-{_id:"5a314e5b56dc4368924d2ae0",pincode:"734001",},
-{_id:"5a31531fbf02096c0e3cff67",pincode:"388120",},
-{_id:"5a3155242659fe6d60e74dd7",pincode:"400057",},
-{_id:"5a3155da5c75896e15cf9250",pincode:"700107",},
-{_id:"5a315ac32d15ad7202772584",pincode:"452010",},
-{_id:"5a315d2aa8032174313191c0",pincode:"201301",},
-{_id:"5a325fad209b1829044266a3",pincode:"147001",},
-{_id:"5a3260dc75b6e82a5edb7593",pincode:"380015",},
-{_id:"5a3261c175b6e82a5edb759d",pincode:"781038",},
-{_id:"5a32629275b6e82a5edb75b1",pincode:"560079",},
-{_id:"5a32636b2ec5472c9ef15fbe",pincode:"506001",},
-{_id:"5a32666c2acc9a2e77d63eb7",pincode:"388001",},
-{_id:"5a3267aa5fe1b62f75977e34",pincode:"492007",},
-{_id:"5a3269100e22332fc7c2c0e6",pincode:"201303",},
-{_id:"5a326dab453b123163ec78ec",pincode:"390007",},
-{_id:"5a326dab453b123163ec78ee",pincode:"390002",},
-{_id:"5a326dab453b123163ec78f0",pincode:"395001",},
-{_id:"5a3270253716dc336bac40f2",pincode:"395007",},
-{_id:"5a32720311a27734deb869dc",pincode:"395007",},
-{_id:"5a32720311a27734deb869de",pincode:"395006",},
-{_id:"5a328003ec864c3a8ddfdd90",pincode:"110009",},
-{_id:"5a3280aaec864c3a8ddfdd9b",pincode:"110027",},
-{_id:"5a3281806ccf173beea55eb0",pincode:"110018",},
-{_id:"5a32833192f4da3c387bb2ce",pincode:"110052",},
-{_id:"5a328b18bf2f05429528392b",pincode:"110084",},
-{_id:"5a336dd28bd09c6c618b3f00",pincode:"110030",},
-{_id:"5a336f7f8bd09c6c618b40b4",pincode:"110085",},
-{_id:"5a33761f1717d4770897205f",pincode:"110032",},
-{_id:"5a337a4e2c44fa7cc1da0bbe",pincode:"201301",},
-{_id:"5a337b2c1e917d7e47e8b3c6",pincode:"110045",},
-{_id:"5a33878a275c7c12f8517685",pincode:"110059",},
-{_id:"5a33881852b09b13891d8c1a",pincode:"110084",},
-{_id:"5a3388a01934911494153c70",pincode:"110096",},
-{_id:"5a3389dd91bf1915cbf259e4",pincode:"110014",},
-{_id:"5a338aac9c5a09167f9086bc",pincode:"110032",},
-{_id:"5a338c11f06a6c1722be7ccf",pincode:"110059",},
-{_id:"5a338cba8e891718963fd00d",pincode:"124001",},
-{_id:"5a338d7ef572c018f45514b4",pincode:"560024",},
-{_id:"5a338e0df572c018f45514b6",pincode:"110080",},
-{_id:"5a339011ea558d1bfca8e598",pincode:"110005",},
-{_id:"5a3390b8ea558d1bfca8e59b",pincode:"110003",},
-{_id:"5a3391442e47961e83108c0c",pincode:"110087",},
-{_id:"5a33cd5ebfdb46668a8100ff",pincode:"110094",},
-{_id:"5a33ce2322f66a67058fe842",pincode:"110045",},
-{_id:"5a33cf23c37c3167ee43ef38",pincode:"110043",},
-{_id:"5a33cfd4c37c3167ee43ef3b",pincode:"110019",},
-{_id:"5a33d067c37c3167ee43ef5e",pincode:"110053",},
-{_id:"5a33d40de350c46a55e0b8d7",pincode:"110053",},
-{_id:"5a33d5c5e9085f6b40b09f92",pincode:"110024",},
-{_id:"5a33d6d1e9085f6b40b09f9a",pincode:"121102",},
-{_id:"5a33d92443e04c6c6caff8b5",pincode:"110059",},
-{_id:"5a33dda63d7c9a6f1408626a",pincode:"110018",},
-{_id:"5a33dee13d7c9a6f14086274",pincode:"110091",},
-{_id:"5a33df883d7c9a6f14086278",pincode:"110032",},
-{_id:"5a33e0c03d7c9a6f14086286",pincode:"110043",},
-{_id:"5a33e1903d7c9a6f14086294",pincode:"110078",},
-{_id:"5a33e25d3d7c9a6f1408629a",pincode:"110096",},
-{_id:"5a33e3e0cba36070e4e2d212",pincode:"110053",},
-{_id:"5a33f2308212c7776ee59cb6",pincode:"110063",},
-{_id:"5a33f61adf8dea785d7f5244",pincode:"110024",},
-{_id:"5a33f6f3df8dea785d7f524c",pincode:"110008",},
-{_id:"5a351a744b97702d1ad15b6a",pincode:"560078",},
-{_id:"5a351de1303c8a2e7365e0c1",pincode:"273001",},
-{_id:"5a35212d70c2f42f14181852",pincode:"147001",},
-{_id:"5a352514b26f42322353bd47",pincode:"411061",},
-{_id:"5a35282992837b3344b79f0a",pincode:"826004",},
-{_id:"5a352a226101df34e118ecb3",pincode:"673001",},
-{_id:"5a35397a46f5b53b87b1be2d",pincode:"575003",},
-{_id:"5a3908ba38c17442ad97a4f6",pincode:"143001",},
-{_id:"5a390c62e7427a445e88f7af",pincode:"202002",},
-{_id:"5a39250d7297575597137dbc",pincode:"400080",},
-{_id:"5a39250d7297575597137dbe",pincode:"400092",},
-{_id:"5a393c9b3cab5b665f808f51",pincode:"160022",},
-{_id:"5a3a6dc59efe701bd960589b",pincode:"247001",},
-{_id:"5a3a704edc41ae1d1d021d03",pincode:"201607",},
-{_id:"5a3a78c9541e8d1f221a4629",pincode:"151001",},
-{_id:"5a3a78c9541e8d1f221a462b",pincode:"144401",},
-{_id:"5a3a78c9541e8d1f221a462d",pincode:"174301",},
-{_id:"5a3a78c9541e8d1f221a4633",pincode:"144001",},
-{_id:"5a3a7ca463162122c92df9f2",pincode:"444604",},
-{_id:"5a3bb67a6c63ee491891e435",pincode:"380015",},
-{_id:"5a3bc150735f914f09ef95c4",pincode:"680001",},
-{_id:"5a3bddfa9831125c123143d4",pincode:"691574",},
+    var allCityNewCities = [{city:"Behror",newcity:"Alwar",},
+{city:"Beas",newcity:"Amritsar",},
+{city:"Garkheda",newcity:"Arangabad",},
+{city:"Jamkhandi",newcity:"Bagalkot ",},
+{city:"Banglore",newcity:"Bangalore",},
+{city:"Bengaluru",newcity:"Bangalore",},
+{city:"Bhatinda",newcity:"Bathinda",},
+{city:"Bolpur",newcity:"Birbhum",},
+{city:"Amargarh",newcity:"Bulandshahr",},
+{city:"Balurghat",newcity:"Dakshin Dinajpur",},
+{city:"Janakpuri",newcity:"Delhi",},
+{city:"Jangpura",newcity:"Delhi",},
+{city:"Angamaly",newcity:"Ernakulam",},
+{city:"Gobichettipalayam",newcity:"Erode",},
+{city:"Kotkapura",newcity:"Faridkot",},
+{city:"Khamano",newcity:"Fatehgarh Sahib",},
+{city:"Abohar",newcity:"Fazilka",},
+{city:"Karanpur",newcity:"Ganganagar",},
+{city:"Gurgram",newcity:"Gurgaon",},
+{city:"Gurugram",newcity:"Gurgaon",},
+{city:"Dasuya",newcity:"Hoshiarpur",},
+{city:"Ameerpet",newcity:"Hyderabad",},
+{city:"Adampur",newcity:"Jalandhar",},
+{city:"Bhogpur",newcity:"Jalandhar",},
+{city:"Bilga",newcity:"Jalandhar",},
+{city:"Goraya",newcity:"Jalandhar",},
+{city:"Cheeka",newcity:"Kaithal",},
+{city:"Kanchipuram",newcity:"Kancheepuram",},
+{city:"Bholath",newcity:"Kapurthala",},
+{city:"Chintamani",newcity:"Kolar",},
+{city:"Koyilandy",newcity:"Kozhikode",},
+{city:"Hosur",newcity:"Krishnagiri",},
+{city:"Jagraon",newcity:"Ludhiana",},
+{city:"Khanna",newcity:"Ludhiana",},
+{city:"Dindigul",newcity:"Madurai",},
+{city:"Baghaparana",newcity:"Moga",},
+{city:"Baghapurana",newcity:"Moga",},
+{city:"Dharamkot",newcity:"Moga",},
+{city:"Krishnanagar",newcity:"Nadia",},
+{city:"Basirhat",newcity:"North 24 Parganas",},
+{city:"Asansol",newcity:"Paschim Bardhaman",},
+{city:"Baramati",newcity:"Pune",},
+{city:"Kothrud",newcity:"Pune",},
+{city:"Haldia",newcity:"Purba Medinipur",},
+{city:"Katras",newcity:"Reasi",},
+{city:"Kharar",newcity:"Mohali",},
+{city:"Kattappana",newcity:"Sahyadri",},
+{city:"Chandausi",newcity:"Sambhal",},
+{city:"Ahmedgarh",newcity:"Sangrur",},
+{city:"Banga",newcity:"Shahid Bhagat Singh Nagar",},
+{city:"Karaikudi",newcity:"Sivaganga",},
+{city:"Dombivili",newcity:"Thane",},
+{city:"Dombivili West",newcity:"Thane",},
+{city:"Kumbakonam",newcity:"Thanjavur",},
+{city:"Kovilpatti",newcity:"Thoothukudi",},
+{city:"Kunnathur",newcity:"Tiruppur",},
+{city:"Kallakurichi",newcity:"Villupuram",},
+{city:"Jagadhari",newcity:"Yamunanagar",},
+{city:"Jagadhri",newcity:"Yamunanagar",}];
 
-    ];
     res.json(true);
-    var allIds = idStates.map(function(a) {return a._id;});
+    var allCities = allCityNewCities.map(function(a) {return a.city;});
     
     var changecounter = 0;
     var counter = 0;
-    var allProviders = targetStudyProvider
-        .find({ '_id': { $in : allIds} }, { state: 1})
+    var allProviders = coaching
+        .find({ 'city': { $in : allCities} }, { address: 1, city: 1})
         .exec(function (err, allProviders) {
             
         if (!err){
@@ -323,18 +184,24 @@ router.get('/oneOff', function(req, res) {
                 var nProviders = allProviders.length;
                 console.log(nProviders);
                 allProviders.forEach(function(rProvider, rindex){
-                    var bIndex = allIds.indexOf(rProvider._id.toString());
+                    var bIndex = allCities.indexOf(rProvider.city);
                     
                     if(bIndex != -1){
                         
-                        var newState = idStates[bIndex].pincode;
-                        if(newState != rProvider.pincode){
+                        var newCity = allCityNewCities[bIndex].newcity;
+                        if(newCity != rProvider.city){
                             changecounter += 1;
+                            var oldAddress = rProvider.address;
+                            var oldCity = rProvider.city;
                             
-                            rProvider.pincode = newState;
+                            rProvider.address = rProvider.address + ", " + rProvider.city;
+                            console.log("Change address from: " + oldAddress + " to " + rProvider.address);
+                            
+                            rProvider.city = newCity;
+                            console.log("Change city from: " + oldCity + " to " + rProvider.city);
                             rProvider.save(function(err, rProvider) {
                             if (err) return     console.error(err);
-                                console.log("Saved: " + rProvider._id + " " + rProvider.state + " to " + newState);
+                                console.log("Saved: " + rProvider._id);
                                 //res.json(rProvider._id);
                             });
                         }
@@ -343,6 +210,8 @@ router.get('/oneOff', function(req, res) {
                             console.log("Total " + changecounter + " changes!");
                         }
                         
+                    }else{
+                        console.log('Somethign went very wrong: ' + rProvider.city);
                     }
                     
                 });
@@ -365,7 +234,7 @@ router.post('/bulkDisableProviders', function(req, res) {
     instituteIds.forEach(function(thisInstituteId, index){
         //JHI
         
-        var thisProvider = targetStudyProvider.findOne( {"_id" : thisInstituteId, type: 'Coaching'}, {disabled:1},function(err, thisProvider) {
+        var thisProvider = coaching.findOne( {"_id" : thisInstituteId, type: 'Coaching'}, {disabled:1},function(err, thisProvider) {
         if (!err){
             counter = counter +1;
             thisProvider.disabled = true;
@@ -402,7 +271,7 @@ router.post('/cirf', function(req, res) {
     var examId = cirfForm.examId;
     var statements = [];
     
-    var allProviders = targetStudyProvider.find( {"_id" : {$in: instituteIds}, type: 'Coaching'}, {rating: 1, name: 1, groupName: 1},function(err, allProviders) {
+    var allProviders = coaching.find( {"_id" : {$in: instituteIds}, type: 'Coaching'}, {rating: 1, name: 1, groupName: 1},function(err, allProviders) {
     if (!err){
     var nLength = allProviders.length;
     var counter = 0;
@@ -413,7 +282,7 @@ router.post('/cirf', function(req, res) {
     allProviders.forEach(function(this_Provider, index){
         var groupName = this_Provider.groupName;
         
-        var thisProvider = targetStudyProvider.findOne( {"groupName" : groupName, type: 'Coaching', $and: [{"rating": {$exists: true}},{"rating.n_exams": {$exists: true}}]}, {rating: 1, name: 1, groupName: 1},function(err, thisProvider) {
+        var thisProvider = coaching.findOne( {"groupName" : groupName, type: 'Coaching', $and: [{"rating": {$exists: true}},{"rating.n_exams": {$exists: true}}]}, {rating: 1, name: 1, groupName: 1},function(err, thisProvider) {
         if (!err){
             
         if(thisProvider){
@@ -613,7 +482,7 @@ router.post('/cirf', function(req, res) {
 //to get all providers
 router.get('/websites', function(req, res) {
     console.log("Getting Websites");
-    targetStudyProvider.distinct( "website",function(err, docs) {
+    coaching.distinct( "website",function(err, docs) {
     if (!err){
         console.log(docs);
         docs.forEach(function(thisWebsite, index){
@@ -628,7 +497,7 @@ router.get('/cityProviderCount/:city', function(req, res) {
     /*, $where: "this.exams && this.exams.length > 0"*/
     var city = req.params.city;
     console.log('City is ' + city);
-    targetStudyProvider.count({city: city}, function(err, docs) {
+    coaching.count({city: city}, function(err, docs) {
     if (!err){
         res.json(docs);
     } else {throw err;}
@@ -636,7 +505,7 @@ router.get('/cityProviderCount/:city', function(req, res) {
 });
 
 router.get('/count', function(req, res) {
-    targetStudyProvider.count({}, function(err, docs) {
+    coaching.count({}, function(err, docs) {
     if (!err){ 
         //console.log(docs);
         res.json(docs);
@@ -645,8 +514,8 @@ router.get('/count', function(req, res) {
 });
 router.get('/city/:city', function(req, res) {
     var city = req.params.city;
-    var cityProviders = targetStudyProvider
-        .find({'city': city, disabled: {$ne: true}, type: 'Coaching' },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1, latlng:1, latlngna:1, ebVerifyState:1, groupName:1})
+    var cityProviders = coaching
+        .find({'city': city, disabled: {$ne: true}, type: 'Coaching' },{name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,coachingWebsite:1, rank:1, city:1, pincode:1, exams:1,location:1,email:1, ebNote:1, latlng:1, latlngna:1, ebVerifyState:1, groupName:1})
         .deepPopulate('exams location ebNote.user')
         .exec(function (err, cityProviders) {
         if (!err){
@@ -660,11 +529,11 @@ router.get('/city/:city', function(req, res) {
 
 router.get('/cityCount', function(req, res) {
     //console.log("In city count");
-    var cities = targetStudyProvider.distinct( "city",function(err, cities) {
+    var cities = coaching.distinct( "city",function(err, cities) {
     if (!err){
         var allCityCount = [];
         cities.forEach(function(thisCity, index){
-            var cityCount = targetStudyProvider.count({"city" : thisCity}, function(err, cityCount) {
+            var cityCount = coaching.count({"city" : thisCity}, function(err, cityCount) {
                 if (!err){ 
                     console.log(thisCity + "-" + cityCount);
                     //res.json(docs);
@@ -704,7 +573,7 @@ router.post('/bulkAddResult', function(req, res) {
     
     console.log('Express received: ' + tResults + " results");
     //, type: 'Coaching'
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId }, {results:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -842,7 +711,7 @@ router.post('/addResult', function(req, res) {
     var providerId = newResultForm.providerId;
     console.log('Express received: ' + JSON.stringify(newResultForm));
     //, type: 'Coaching' 
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId}, {results:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -910,7 +779,7 @@ router.post('/addPrimaryManagement', function(req, res) {
     var providerId = newManagementForm.providerId;
     console.log('Express received: ' + JSON.stringify(newManagementForm));
     //, type: 'Coaching' 
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId}, {management:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -936,7 +805,7 @@ router.post('/removeManagement', function(req, res) {
     var mobile = newManagement.mobile;
     var providerId = newManagementForm.providerId;
     console.log('Express received to remove: ' + JSON.stringify(newManagementForm));
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId, type: 'Coaching' }, {management:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -986,7 +855,7 @@ router.post('/addManagement', function(req, res) {
     var providerId = newManagementForm.providerId;
     console.log('Express received: ' + JSON.stringify(newManagementForm));
     //, type: 'Coaching' 
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId}, {management:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -1071,7 +940,7 @@ router.post('/addFaculty', function(req, res) {
     var providerId = newFacultyForm.providerId;
     console.log('Express received: ' + JSON.stringify(newFacultyForm));
     //, type: 'Coaching'
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId }, {faculty:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -1139,7 +1008,7 @@ router.post('/addCourse', function(req, res) {
     var providerId = newCourseForm.providerId;
     console.log('Express received: ' + JSON.stringify(newCourseForm));
     //, type: 'Coaching' 
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId}, {course:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -1198,7 +1067,7 @@ router.post('/addCourse', function(req, res) {
 
 
 router.post('/courseSummary', function(req, res) {
-    var allProviders = targetStudyProvider
+    var allProviders = coaching
         .find({disabled: false, course: {$exists:true}, $where:'this.course.length>3'}, {course:1})
         .exec(function (err, allProviders) {
         if (!err){
@@ -1245,7 +1114,7 @@ router.post('/examListingsSummary', function(req, res) {
                 allExams.forEach(function(thisExam, index){
                 var examId = thisExam._id;
                 
-                var groupNames = targetStudyProvider.aggregate(
+                var groupNames = coaching.aggregate(
                 [
                     {$match: {exams: examId, disabled: false} },
                     {"$group": { "_id": { name: "$name" }, count:{$sum:1} } },
@@ -1289,7 +1158,7 @@ router.post('/examListingsSummary', function(req, res) {
                 });
                 
                 
-                /*var allProviders = targetStudyProvider
+                /*var allProviders = coaching
                 .find({disabled: false, exam: examId}, {exam: 1, name:1, groupname: 1})
                 .exec(function (err, allProviders) {
                     if (!err){
@@ -1327,7 +1196,7 @@ router.post('/coachingMaintenance', function(req, res) {
     
     
     if(active){
-     var allProviders = targetStudyProvider.find( {exams: examId, disabled: false}, {exams: 1},function(err, allProviders) {
+     var allProviders = coaching.find( {exams: examId, disabled: false}, {exams: 1},function(err, allProviders) {
     if (!err){
         if(allProviders){
             var nLength = allProviders.length;
@@ -1371,7 +1240,7 @@ router.post('/addVideo', function(req, res) {
     var providerId = newVideoForm.providerId;
     console.log('Express received: ' + JSON.stringify(newVideoForm));
     //, type: 'Coaching' 
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId}, {video:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -1435,7 +1304,7 @@ router.post('/addResultPic', function(req, res) {
     
     console.log('Add Result Pic: Express received: ' + JSON.stringify(newResultPicForm));
     //, type: 'Coaching' 
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId}, {results:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -1468,7 +1337,7 @@ router.post('/addLogo', function(req, res) {
     var providerId = newLogoForm.providerId;
     console.log('Express received: ' + JSON.stringify(newLogoForm));
     //, type: 'Coaching' 
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId}, {logo:1, oldlogo:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -1490,7 +1359,7 @@ router.post('/addLogo', function(req, res) {
 });
 router.get('/coachingAddressService/', function(req, res) {
     
-    var allproviders =  targetStudyProvider.find({
+    var allproviders =  coaching.find({
             /*'city':'Noida',*/
             $or: [{'latlngna': {$exists: false}}, {'latlngna': false}],
             latlng: {$exists: false}, type: 'Coaching',
@@ -1511,7 +1380,7 @@ router.post('/bulkSaveLatLng', function(req, res) {
     LatLngForm.forEach(function(thisLatLng, index){
         //JHI
         
-        var thisProvider = targetStudyProvider.findOne( {"_id" : thisLatLng._id, type: 'Coaching'}, {latlng:1, latlngna:1},function(err, thisProvider) {
+        var thisProvider = coaching.findOne( {"_id" : thisLatLng._id, type: 'Coaching'}, {latlng:1, latlngna:1},function(err, thisProvider) {
         if (!err){
             counter = counter +1;
             var latlng = thisLatLng.latlng;
@@ -1595,7 +1464,7 @@ router.post('/aroundme', function(req, res) {
            }  
     };*/
     
-    var allProviders = targetStudyProvider.find( query, {name:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1},function(err, allProviders) {
+    var allProviders = coaching.find( query, {name:1, logo:1, loc:1, address: 1, phone:1, mobile: 1, website: 1, ebVerifyState: 1, exams: 1},function(err, allProviders) {
     if (!err){
         
        
@@ -1635,7 +1504,7 @@ function containsAny(source,target)
 
 router.post('/setLocOfAll', function(req, res) {
     console.log('service starting');
-    var allProviders = targetStudyProvider.find( { latlng: {$exists: true}, loc: {$exists: false}, type: 'Coaching'}, {latlng:1, loc: 1},function(err, allProviders) {
+    var allProviders = coaching.find( { latlng: {$exists: true}, loc: {$exists: false}, type: 'Coaching'}, {latlng:1, loc: 1},function(err, allProviders) {
     if (!err){
         var nLength = allProviders.length;
         var counter = 0;
@@ -1678,7 +1547,7 @@ router.post('/bulkCheckLogos', function(req, res) {
     instituteIds.forEach(function(thisInstituteId, index){
         //JHI
         
-        var thisProvider = targetStudyProvider.findOne( {"_id" : thisInstituteId, type: 'Coaching'}, {logoChecked:1},function(err, thisProvider) {
+        var thisProvider = coaching.findOne( {"_id" : thisInstituteId, type: 'Coaching'}, {logoChecked:1},function(err, thisProvider) {
         if (!err){
             counter = counter +1;
             thisProvider.logoChecked = true;
@@ -1706,7 +1575,7 @@ router.post('/addPhoto', function(req, res) {
     var providerId = newPhotoForm.providerId;
     console.log('Express received: ' + JSON.stringify(newPhotoForm));
     //, type: 'Coaching' 
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({ _id: providerId}, {photo:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -1766,7 +1635,7 @@ router.post('/addPhoto', function(req, res) {
 router.get('/query/:query', function(req, res) {
     var query = req.params.query;
     console.log(query);
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false, type: 'Coaching', exams: {$exists: true}, $where:'this.exams.length>0'}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1},function(err, docs) {
+    coaching.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false, type: 'Coaching', exams: {$exists: true}, $where:'this.exams.length>0'}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -1778,7 +1647,7 @@ router.get('/query/:query', function(req, res) {
 router.get('/coachingGroupQuery/:query', function(req, res) {
     var query = req.params.query;
     
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1, phone:1, mobile:1, email:1, pincode:1, website:1},function(err, docs) {
+    coaching.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, groupName:1, phone:1, mobile:1, email:1, pincode:1, website:1},function(err, docs) {
     if (!err){
         console.log(query + " " + docs.length);
         res.json(docs);
@@ -1788,7 +1657,7 @@ router.get('/coachingGroupQuery/:query', function(req, res) {
 });
 
 router.get('/dailySummary', function(req, res) {
-    var targetStudyProviderSummary = targetStudyProvider.aggregate(
+    var coachingSummary = coaching.aggregate(
     [
         {$match: {}},
         {$group: { _id : {
@@ -1799,9 +1668,9 @@ router.get('/dailySummary', function(req, res) {
         }/*,
         {$sort:{"_date":-1}}*/
 
-    ],function(err, targetStudyProviderSummary) {
+    ],function(err, coachingSummary) {
     if (!err){
-        res.json(targetStudyProviderSummary);
+        res.json(coachingSummary);
     } else {throw err;}
     });
 });
@@ -1829,7 +1698,7 @@ router.post('/p5Analytics', function(req, res) {
         }else{
             p5InstituteIds = p5Analytics.map(function(a) {return a._id.institute.toString();});
                         
-            var allInstitutes = targetStudyProvider.find({_id:{$in: p5InstituteIds}}, {name:1, city: 1, state: 1},function(err, allInstitutes) {
+            var allInstitutes = coaching.find({_id:{$in: p5InstituteIds}}, {name:1, city: 1, state: 1},function(err, allInstitutes) {
             if (!err){
                 var nInstitutes2 = allInstitutes.length;
                 console.log(nInstitutes2);
@@ -1872,7 +1741,7 @@ router.get('/blogCoachingGroupQuery/:query', function(req, res) {
     var query = req.params.query;
     
     
-    var groupNames = targetStudyProvider.aggregate(
+    var groupNames = coaching.aggregate(
     [
         {$match: {name:{'$regex' : query, '$options' : 'i'}, disabled: false} },
         {"$group": { "_id": { name: "$name" }, count:{$sum:1}, logo: { $first: "$logo" } } },
@@ -1896,7 +1765,7 @@ router.get('/blogCoachingGroupQuery/:query', function(req, res) {
     } else {throw err;}
     });
     
-    /*targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false}, {name:1 , logo:1, groupName:1},function(err, docs) {
+    /*coaching.find({name:{'$regex' : query, '$options' : 'i'}, disabled: false}, {name:1 , logo:1, groupName:1},function(err, docs) {
     if (!err){
         var groupNames = docs.map(function(a) {return a.groupName;});
         
@@ -1908,10 +1777,10 @@ router.get('/blogCoachingGroupQuery/:query', function(req, res) {
 });
 
 router.get('/contacts', function(req, res) {
-    var allMobiles = targetStudyProvider.distinct( "mobile",function(err, allMobiles) {
+    var allMobiles = coaching.distinct( "mobile",function(err, allMobiles) {
     if (!err){
         console.log('There are: ' + allMobiles.length + ' unique mobiles!');
-        var allPhones = targetStudyProvider.distinct( "phone",function(err, allPhones) {
+        var allPhones = coaching.distinct( "phone",function(err, allPhones) {
         if (!err){ 
             console.log('There are: ' + allPhones.length + ' unique phones!');
             var allcontacts = allMobiles.concat(allPhones);
@@ -1922,13 +1791,13 @@ router.get('/contacts', function(req, res) {
     } else {throw err;}
     });
     
-    var allEmails = targetStudyProvider.distinct( "email",function(err, allEmails) {
+    var allEmails = coaching.distinct( "email",function(err, allEmails) {
     if (!err){ 
         console.log('There are: ' + allEmails.length + ' unique emails!');
     } else {throw err;}
     });
     
-    allProviders = targetStudyProvider.find({email: {$exists: true}, $where:"this.email.length>0 && this.email[0] !=''"},{email:1},function(err, allProviders) {
+    allProviders = coaching.find({email: {$exists: true}, $where:"this.email.length>0 && this.email[0] !=''"},{email:1},function(err, allProviders) {
     if (!err){
         var counter = 0; 
         var nEmails = 0; 
@@ -1954,7 +1823,7 @@ router.get('/contacts', function(req, res) {
 });
 
 router.get('/sanitizeMobiles', function(req, res) {
-    var allProviders = targetStudyProvider.find({mobile: {$exists: true}}, {mobile:1},function(err, allProviders) {
+    var allProviders = coaching.find({mobile: {$exists: true}}, {mobile:1},function(err, allProviders) {
     if (!err){
         console.log('Starting sanitizing mobiles!');
         var incorrectMobiles = [];
@@ -2012,7 +1881,7 @@ router.get('/allResults/:examName', function(req, res) {
             var examId = thisExam._id.toString();
             console.log('Exam Id is: ' + examId);
             
-            var allResultProviders = targetStudyProvider.find({results: {$exists: true}, $where:'this.results.length>0', exams:{$elemMatch:{$eq:thisExam._id}} }, {groupName:1, results:1, logo:1, city:1},function(err, allResultProviders) {
+            var allResultProviders = coaching.find({results: {$exists: true}, $where:'this.results.length>0', exams:{$elemMatch:{$eq:thisExam._id}} }, {groupName:1, results:1, logo:1, city:1},function(err, allResultProviders) {
             if (!err){
                 var allResults = [];
                 var nProviders = allResultProviders.length;
@@ -2069,7 +1938,7 @@ router.post('/showGroupHelper', function(req, res) {
     var city = cityCoachingForm.city;
     var coachingName = cityCoachingForm.coachingName;
     
-    var cityProvider = targetStudyProvider.findOne({name: coachingName, city: city, exams: {$exists: true}, $where:'this.exams.length>0'}, {exams:1},function(err, cityProvider) {
+    var cityProvider = coaching.findOne({name: coachingName, city: city, exams: {$exists: true}, $where:'this.exams.length>0'}, {exams:1},function(err, cityProvider) {
     if (!err){
         var thisExam = cityProvider.exams[0];
         
@@ -2096,7 +1965,7 @@ router.post('/showGroupHelperById', function(req, res) {
     var coachingForm = req.body;
     var coachingId = coachingForm._id;
     
-    var cityProvider = targetStudyProvider.findOne({_id: coachingId, exams: {$exists: true}, $where:'this.exams.length>0'}, {exams:1, city:1, groupName: 1},function(err, cityProvider) {
+    var cityProvider = coaching.findOne({_id: coachingId, exams: {$exists: true}, $where:'this.exams.length>0'}, {exams:1, city:1, groupName: 1},function(err, cityProvider) {
     if (!err){
         var thisExam = cityProvider.exams[0];
         
@@ -2127,7 +1996,7 @@ router.post('/commonExamsInAll/', function(req, res) {
     var instituteArray = groupExamForm.instituteArray;
     var examArray = groupExamForm.examArray;
     console.log(JSON.stringify(examArray));
-    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {exams:1},function(err, allGroupProviders) {
+    var allGroupProviders = coaching.find({_id:{$in: instituteArray}}, {exams:1},function(err, allGroupProviders) {
     if (!err){
         //console.log(allGroupProviders);
         var examsObj = [];
@@ -2167,7 +2036,7 @@ router.post('/addExamsToAll/', function(req, res) {
     var instituteArray = groupExamForm.instituteArray;
     var examArray = groupExamForm.examArray;
     //console.log(JSON.stringify(groupExamForm));
-    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {exams:1},function(err, allGroupProviders) {
+    var allGroupProviders = coaching.find({_id:{$in: instituteArray}}, {exams:1},function(err, allGroupProviders) {
     if (!err){
         //console.log(allGroupProviders);
         
@@ -2199,7 +2068,7 @@ router.post('/setLogoForAll/', function(req, res) {
     var instituteArray = groupLogoForm.instituteArray;
     var logo = groupLogoForm.logo;
     //console.log(JSON.stringify(groupLogoForm));
-    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {logo:1},function(err, allGroupProviders) {
+    var allGroupProviders = coaching.find({_id:{$in: instituteArray}}, {logo:1},function(err, allGroupProviders) {
     if (!err){
         //console.log(allGroupProviders);
         
@@ -2222,7 +2091,7 @@ router.post('/setWebsiteForAll/', function(req, res) {
     var instituteArray = groupWebsiteForm.instituteArray;
     var websiteArray = groupWebsiteForm.websiteArray;
     //console.log(JSON.stringify(groupWebsiteForm));
-    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {website:1},function(err, allGroupProviders) {
+    var allGroupProviders = coaching.find({_id:{$in: instituteArray}}, {website:1},function(err, allGroupProviders) {
     if (!err){
         //console.log(allGroupProviders);
         
@@ -2274,7 +2143,7 @@ router.post('/setEmailForAll/', function(req, res) {
     var instituteArray = groupExamForm.instituteArray;
     var emailArray = groupExamForm.emailArray;
     //console.log(JSON.stringify(groupExamForm));
-    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {email:1},function(err, allGroupProviders) {
+    var allGroupProviders = coaching.find({_id:{$in: instituteArray}}, {email:1},function(err, allGroupProviders) {
     if (!err){
         //console.log(allGroupProviders);
         
@@ -2306,7 +2175,7 @@ router.post('/renameAllCoaching/', function(req, res) {
     var instituteArray = groupNameForm.instituteArray;
     var newName = groupNameForm.name;
     //console.log(JSON.stringify(groupNameForm));
-    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {name:1},function(err, allGroupProviders) {
+    var allGroupProviders = coaching.find({_id:{$in: instituteArray}}, {name:1},function(err, allGroupProviders) {
     if (!err){
         //console.log(allGroupProviders);
         
@@ -2330,7 +2199,7 @@ router.post('/renameAllGroupName/', function(req, res) {
     var instituteArray = groupNameForm.instituteArray;
     var newGroupName = groupNameForm.groupName;
     //console.log(JSON.stringify(groupNameForm));
-    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {groupName:1},function(err, allGroupProviders) {
+    var allGroupProviders = coaching.find({_id:{$in: instituteArray}}, {groupName:1},function(err, allGroupProviders) {
     if (!err){
         allGroupProviders.forEach(function(thisGroup, index){
             
@@ -2352,7 +2221,7 @@ router.post('/removeExamsFromAll/', function(req, res) {
     var instituteArray = groupExamForm.instituteArray;
     var examArray = groupExamForm.examArray;
     //console.log(JSON.stringify(groupExamForm));
-    var allGroupProviders = targetStudyProvider.find({_id:{$in: instituteArray}}, {exams:1},function(err, allGroupProviders) {
+    var allGroupProviders = coaching.find({_id:{$in: instituteArray}}, {exams:1},function(err, allGroupProviders) {
     if (!err){
         
         allGroupProviders.forEach(function(thisGroup, index){
@@ -2389,7 +2258,7 @@ router.post('/cityQuery', function(req, res) {
         query = '';
     }
     
-    var cityProviders = targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching' }, {name:1 , address:1, city:1, state:1, logo:1, exams:1},function(err, cityProviders) {
+    var cityProviders = coaching.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching' }, {name:1 , address:1, city:1, state:1, logo:1, exams:1},function(err, cityProviders) {
     if (!err){
         res.json(cityProviders);
     } else {throw err;}
@@ -2406,7 +2275,7 @@ router.post('/cityReviewQuery', function(req, res) {
         query = '';
     }
     //console.log('Query is: ' + query);
-    var groupNames = targetStudyProvider.aggregate(
+    var groupNames = coaching.aggregate(
     [
         {$match: {name:{'$regex' : query, '$options' : 'i'}, city: city, disabled: false} },
         {"$group": { "_id": { name: "$name" }, count:{$sum:1}, logo: { $first: "$logo" } } },
@@ -2431,7 +2300,7 @@ router.post('/cityReviewQuery', function(req, res) {
     });
     /*
     
-    var cityProviders = targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, exams:1},function(err, cityProviders) {
+    var cityProviders = coaching.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, exams:1},function(err, cityProviders) {
     if (!err){
         var providerNames = cityProviders.map(function(a) {return a.name;});
         var uniqueProviderNames = [];
@@ -2459,7 +2328,7 @@ router.post('/cityGroupExamQuery', function(req, res) {
     
     //console.log(JSON.stringify(cityGroupExamQueryForm));
     //, exams: exam
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, groupName: 1},function(err, docs) {
+    coaching.find({name:{'$regex' : query, '$options' : 'i'}, city: city, type: 'Coaching'}, {name:1 , address:1, city:1, state:1, logo:1, groupName: 1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -2469,7 +2338,7 @@ router.post('/cityGroupExamQuery', function(req, res) {
 
 router.get('/group/:query', function(req, res) {
     var query = req.params.query;
-    targetStudyProvider.find({name:{'$regex' : query, '$options' : 'i'}, type: 'Coaching'}, {name:1 ,group:1, groupName:1, address:1, city:1, state:1, logo:1, website:1, targetStudyWebsite:1},function(err, docs) {
+    coaching.find({name:{'$regex' : query, '$options' : 'i'}, type: 'Coaching'}, {name:1 ,group:1, groupName:1, address:1, city:1, state:1, logo:1, website:1, coachingWebsite:1},function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -2479,7 +2348,7 @@ router.get('/group/:query', function(req, res) {
 
 
 router.get('/providersWithAreas', function(req, res) {
-    targetStudyProvider.find({"name" : {$regex : ".*-.*"}, type: 'Coaching'}, {name:1 , address:1},function(err, docs) {
+    coaching.find({"name" : {$regex : ".*-.*"}, type: 'Coaching'}, {name:1 , address:1},function(err, docs) {
     if (!err){ 
         //console.log(docs);
         res.json(docs);
@@ -2491,7 +2360,7 @@ router.get('/providersWithAreas', function(req, res) {
 router.get('/changeProvidersStartingWith/:startsWith', function(req, res) {
     var startsWith = req.params.startsWith;
     console.log("Starts with is: "+startsWith);
-    targetStudyProvider.find({"name" : {$regex : ".*"+startsWith+".*"}, type: 'Coaching'}, {name:1 , website:1},function(err, allProviders) {
+    coaching.find({"name" : {$regex : ".*"+startsWith+".*"}, type: 'Coaching'}, {name:1 , website:1},function(err, allProviders) {
     if (!err){
         
         allProviders.forEach(function(thisprovider, index){
@@ -2532,14 +2401,14 @@ router.post('/CoachingStream', function(req, res) {
         if (!err){
             if(thisExam){
                 
-            /*targetStudyProvider.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}, type: 'Coaching'}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1, rank:1, city:1, pincode:1, exams:1, groupName:1, logo:1, results:1, latlng:1},{sort: '-rank'},function(err, providerList) {
+            /*coaching.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}, type: 'Coaching'}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1, rank:1, city:1, pincode:1, exams:1, groupName:1, logo:1, results:1, latlng:1},{sort: '-rank'},function(err, providerList) {
                     if (!err){
                         //console.log(providerList);
                         res.json(providerList);
                     } else {throw err;}
                 });*/
                     
-            var allCoachings = targetStudyProvider.aggregate(
+            var allCoachings = coaching.aggregate(
             [
                 {$match: {disabled: false, "city" : city,"exams" : thisExam._id} },
                 /*{$unwind:"$exams"},*/
@@ -2593,7 +2462,7 @@ router.post('/CoachingStream', function(req, res) {
                     
                     
                     
-                    var allGroupInstitutes = targetStudyProvider.find({ 'groupName': newProvider.groupName },{_id:1},function (err, allGroupInstitutes) {
+                    var allGroupInstitutes = coaching.find({ 'groupName': newProvider.groupName },{_id:1},function (err, allGroupInstitutes) {
                     if (!err){
                         allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
                         
@@ -2660,7 +2529,7 @@ router.post('/CoachingStream', function(req, res) {
     });
     
     
-    /*targetStudyProvider.find({"city" : city,"coursesOffered" : { $elemMatch : { $regex : course, $options : 'i' } }}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, providerList) {
+    /*coaching.find({"city" : city,"coursesOffered" : { $elemMatch : { $regex : course, $options : 'i' } }}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,coachingWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, providerList) {
     if (!err){
         res.json(providerList);
     } else {throw err;}
@@ -2680,7 +2549,7 @@ router.post('/cityCourse', function(req, res) {
         .exec(function (err, thisExam) {
         if (!err){
             if(thisExam){
-                targetStudyProvider.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}, type: 'Coaching'}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1, exams:1, group:1, groupName:1, logo:1, results:1, latlng:1},{sort: '-rank'},function(err, providerList) {
+                coaching.find({"city" : city,"exams" : thisExam._id, disabled: {$ne: true}, type: 'Coaching'}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,coachingWebsite:1, rank:1, city:1, pincode:1, exams:1, group:1, groupName:1, logo:1, results:1, latlng:1},{sort: '-rank'},function(err, providerList) {
                     if (!err){
                         //console.log(providerList);
                         res.json(providerList);
@@ -2694,7 +2563,7 @@ router.post('/cityCourse', function(req, res) {
     });
     
     
-    /*targetStudyProvider.find({"city" : city,"coursesOffered" : { $elemMatch : { $regex : course, $options : 'i' } }}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,targetStudyWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, providerList) {
+    /*coaching.find({"city" : city,"coursesOffered" : { $elemMatch : { $regex : course, $options : 'i' } }}, {name:1 , address:1, coursesOffered:1, phone:1, mobile:1, website:1,coachingWebsite:1, rank:1, city:1, pincode:1},{sort: '-rank'},function(err, providerList) {
     if (!err){
         res.json(providerList);
     } else {throw err;}
@@ -2707,7 +2576,7 @@ router.post('/setEBVerifyState', function(req, res) {
     var state = verifyForm.state;
     var user = verifyForm.user;
     //, type: 'Coaching'
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({'_id': provider}, {ebVerifyState:1, ebVerify: 1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -2744,7 +2613,7 @@ router.post('/setEBContactInfoState', function(req, res) {
     var contactInfoState = verifyForm.contactInfoState;
     var user = verifyForm.user;
     //, type: 'Coaching'
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({'_id': provider}, {addContactInfoDone:1, addContactInfoRequired: 1, addContactInfoAssigned: 1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -2777,7 +2646,7 @@ router.post('/bulksavecoaching', function(req, res) {
     var newProviderIds = [];
     
     thisProviders.forEach(function(thisProviderForm, pIndex){
-        var thisProvider = thisProviderForm.targetStudyProvider;
+        var thisProvider = thisProviderForm.coaching;
         if(thisProvider.city){
             thisProvider.city = thisProvider.city.trim();
             thisProvider.city = titleCase(thisProvider.city);
@@ -2794,7 +2663,7 @@ router.post('/bulksavecoaching', function(req, res) {
         //console.log(JSON.stringify(thisProvider));
         //console.log(userId);
         var arrayProps = ['email','phone','mobile','website'];
-        oldProvider = new targetStudyProvider({});
+        oldProvider = new coaching({});
         for (var property in thisProvider) {
             if(arrayProps.indexOf(property) != -1){
                 console.log(property + " " + thisProvider[property]);
@@ -2845,7 +2714,7 @@ router.post('/bulksavecoaching', function(req, res) {
 
 router.get('/removecoaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
-    targetStudyProvider.remove({_id: coachingId}, function(err, result) {
+    coaching.remove({_id: coachingId}, function(err, result) {
         if (err) {
             console.log(err);
         } else {
@@ -2857,14 +2726,14 @@ router.get('/removecoaching/:coachingId', function(req, res) {
 });
 
 router.post('/savecoaching', function(req, res) {
-    var thisProvider = req.body.targetStudyProvider;
+    var thisProvider = req.body.coaching;
     var userId = req.body.user;
     console.log(thisProvider.rating);
     //console.log("Other listings are: " + thisProvider.otherlistings);
     //console.log(thisProvider.rating);
     var coachingId = thisProvider._id;
     
-    var oldProvider = targetStudyProvider.findOne({"_id" : coachingId}, {},function(err, oldProvider) {
+    var oldProvider = coaching.findOne({"_id" : coachingId}, {},function(err, oldProvider) {
     if (!err){
         
         //oldProvider = thisProvider;
@@ -2909,7 +2778,7 @@ router.post('/savecoaching', function(req, res) {
         }else{
             //create a new provider
             console.log("--------New Coaching is: " + JSON.stringify(thisProvider));
-            oldProvider = new targetStudyProvider({});
+            oldProvider = new coaching({});
             for (var property in thisProvider) {
                 oldProvider[property] = thisProvider[property];
             }
@@ -2955,13 +2824,13 @@ router.get('/getGroupInfo/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     console.log('Fetching group info for: ' + coachingId);
     //type: 'Coaching'
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({'_id': coachingId},{groupName:1})
         .exec(function (err, thisProvider) {
         if (!err){
         if (thisProvider){
             var groupName = thisProvider.groupName;
-            var thisGroupProviders = targetStudyProvider
+            var thisGroupProviders = coaching
                 .find({'groupName': groupName},{name:1, description:1, address:1, email:1, website:1, facebookPage: 1, youtubeChannel:1, logo:1,photo:1, video:1})
                 .exec(function (err, thisGroupProviders) {
                 if (!err){
@@ -3019,8 +2888,8 @@ router.get('/claimcoaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     console.log('Fetching coaching ' + coachingId);
     //, type: 'Coaching'
-    var thisProvider = targetStudyProvider
-        .findOne({'_id': coachingId},{type: 1, name: 1, description: 1, groupName: 1, targetStudyWebsite: 1, website: 1, otherlistings: 1, facebookPage: 1, twitter: 1, youtubeChannel: 1, email: 1, address: 1, mapAddress: 1, latlng: 1, loc: 1, location: 1, city: 1, state: 1, pincode: 1, logo: 1,  mobile: 1, phone: 1, results:1, course:1, photo:1, video:1, faculty:1, exams: 1, disabled: 1, ebVerifyState: 1, ebNote: 1, _saved:1, _created: 1, rating: 1})
+    var thisProvider = coaching
+        .findOne({'_id': coachingId},{type: 1, name: 1, description: 1, groupName: 1, coachingWebsite: 1, website: 1, otherlistings: 1, facebookPage: 1, twitter: 1, youtubeChannel: 1, email: 1, address: 1, mapAddress: 1, latlng: 1, loc: 1, location: 1, city: 1, state: 1, pincode: 1, logo: 1,  mobile: 1, phone: 1, results:1, course:1, photo:1, video:1, faculty:1, exams: 1, disabled: 1, ebVerifyState: 1, ebNote: 1, _saved:1, _created: 1, rating: 1})
         .deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam rating.examRating.exam')
         .exec(function (err, thisProvider) {
         if (!err){
@@ -3033,7 +2902,7 @@ router.get('/coaching/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     console.log('Fetching coaching ' + coachingId);
     //, type: 'Coaching'
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({'_id': coachingId})
         .deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam rating.examRating.exam')
         .exec(function (err, thisProvider) {
@@ -3046,7 +2915,7 @@ router.get('/coaching/:coachingId', function(req, res) {
 router.get('/titleCaseName/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     //, type: 'Coaching'
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({'_id': coachingId}, {groupName: 1, name:1, website: 1, address:1, city:1, phone:1, mobile:1, email:1, logo:1, exams:1, _createdBy:1, _created:1})
         .exec(function (err, thisProvider) {
         if (!err){
@@ -3070,7 +2939,7 @@ router.get('/coachingreview/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     //console.log('Fetching coaching ' + coachingId);
     
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({'_id': coachingId, disabled: {$ne: true}, type: 'Coaching'},{name:1, description:1, groupName:1, email:1, address:1, location:1, city:1, state:1, pincode:1, logo:1, mobile:1, phone:1, course:1, exams:1})
         .deepPopulate('exams exams.stream location')
         .exec(function (err, thisProvider) {
@@ -3084,7 +2953,7 @@ router.get('/fillSummary/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     //console.log('Fetching coaching ' + coachingId);
     
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({'_id': coachingId, type: 'Coaching'})
         //.deepPopulate('exams exams.stream location faculty.exams ebNote.user results.exam')
         .exec(function (err, thisProvider) {
@@ -3130,7 +2999,7 @@ router.post('/coachingGroup', function(req, res) {
     var cityName = groupCity.cityName;
     
     //city: cityName,
-    var thisGroup = targetStudyProvider
+    var thisGroup = coaching
         .find({'groupName': groupName, disabled:false, type: 'Coaching'})
         .deepPopulate('exams exams.stream location results.exam')
         .exec(function (err, thisGroup) {
@@ -3144,7 +3013,7 @@ router.post('/coachingGroup', function(req, res) {
 router.get('/getGroupName/:coachingId', function(req, res) {
     var coachingId = req.params.coachingId;
     if(mongoose.Types.ObjectId.isValid(coachingId)){
-        var thisProvider = targetStudyProvider
+        var thisProvider = coaching
         .findOne({'_id': coachingId, type: 'Coaching'},{name:1, groupName:1})
             .exec(function (err, thisProvider) {
             if (!err){
@@ -3184,7 +3053,7 @@ router.get('/basiccoaching/:coachingId', function(req, res) {
     
     var coachingId = req.params.coachingId;
     if(mongoose.Types.ObjectId.isValid(coachingId)){
-        var thisProvider = targetStudyProvider
+        var thisProvider = coaching
         .findOne({'_id': coachingId, type: 'Coaching'},{name:1, website: 1, address:1, city:1, state:1, logo:1,email:1, mobile:1, phone:1, groupName:1})
             /*.deepPopulate('exams exams.stream location faculty.exams ebNote.user')*/
             .exec(function (err, thisProvider) {
@@ -3287,7 +3156,7 @@ router.get('/cisavedUsers/:coachingId', function(req, res) {
 
 router.get('/setRank0', function(req, res) {
     console.log("Starting now");
-    var allproviders =  targetStudyProvider.find({type: 'Coaching'}, {},function(err, allproviders) {
+    var allproviders =  coaching.find({type: 'Coaching'}, {},function(err, allproviders) {
     if (!err){
          allproviders.forEach(function(thisprovider, index){
              console.log(index);
@@ -3307,7 +3176,7 @@ router.get('/checkLogo/:pageNumber', function(req, res) {
     if(!pageNumber){
         pageNumber=1;
     }
-    var allproviders =  targetStudyProvider.find({ logo: { $exists: true, $ne: ''}, logoChecked: {$ne: true}, type: 'Coaching'}, {logo:1, newlogo:1, logoBackup:1, name:1},function(err, allproviders) {
+    var allproviders =  coaching.find({ logo: { $exists: true, $ne: ''}, logoChecked: {$ne: true}, type: 'Coaching'}, {logo:1, newlogo:1, logoBackup:1, name:1},function(err, allproviders) {
         if (!err){
             res.json(allproviders);
             /*var counter = 0;
@@ -3349,7 +3218,7 @@ router.get('/sandbox2Service/:cityName', function(req, res) {
     }
     console.log("Sandbox2 Service Starting now for " + city);
     /*, $where: "this.exams && this.exams.length > 0"*/
-    targetStudyProvider.find({city: city, latlng: {$exists: true}, type: 'Coaching'}, {latlng:1, name:1, address:1, mobile:1, phone:1, website:1, email:1, logo:1, ebVerifyState:1},function(err, allproviders) {
+    coaching.find({city: city, latlng: {$exists: true}, type: 'Coaching'}, {latlng:1, name:1, address:1, mobile:1, phone:1, website:1, email:1, logo:1, ebVerifyState:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;
         var nLength = allproviders.length;
@@ -3365,7 +3234,7 @@ router.get('/databaseService', function(req, res) {
     console.log("Database Service Starting now");
     res.json('Done');
     
-    var allResultProviders = targetStudyProvider.find({results: {$exists: true}, $where:'this.results.length>0'}, {groupName:1, results:1, logo:1, city:1},function(err, allResultProviders) {
+    var allResultProviders = coaching.find({results: {$exists: true}, $where:'this.results.length>0'}, {groupName:1, results:1, logo:1, city:1},function(err, allResultProviders) {
         if (!err){
             var resultsLength = 0;
             var nProviders = allResultProviders.length;
@@ -3409,7 +3278,7 @@ router.get('/databaseService', function(req, res) {
         }
     });
     
-    /*var allproviders = targetStudyProvider.find({"name" : {$regex : ".*Pvt Ltd."}}, {name:1, groupName: 1},function(err, allproviders) {
+    /*var allproviders = coaching.find({"name" : {$regex : ".*Pvt Ltd."}}, {name:1, groupName: 1},function(err, allproviders) {
         
         var counter = 0;
         var changes = 0;
@@ -3437,7 +3306,7 @@ router.get('/databaseService', function(req, res) {
         console.log("To change: " + changes + " providers!");
         
     });*/
-    /*targetStudyProvider.find({"email": { $exists: true}, _id: '5870ef3280ea0e0698890917'}, {email:1},function(err, allproviders) {
+    /*coaching.find({"email": { $exists: true}, _id: '5870ef3280ea0e0698890917'}, {email:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;
         var nLength = allproviders.length;
@@ -3461,7 +3330,7 @@ router.get('/databaseService', function(req, res) {
         
     });*/
     
-    /*targetStudyProvider.find({"city": 'Kota', disabled: false}, {verfiyAssigned: 1, ebVerify:1, disabled:1},function(err, allproviders) {
+    /*coaching.find({"city": 'Kota', disabled: false}, {verfiyAssigned: 1, ebVerify:1, disabled:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;
         var nLength = allproviders.length;
@@ -3481,7 +3350,7 @@ router.get('/databaseService', function(req, res) {
         
     });*/
     /*
-    targetStudyProvider.find({"website": { $exists: true,$ne:'' }, type: 'Coaching'}, {website:1, newwebsite:1},function(err, allproviders) {
+    coaching.find({"website": { $exists: true,$ne:'' }, type: 'Coaching'}, {website:1, newwebsite:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;
         var nLength = allproviders.length;
@@ -3531,7 +3400,7 @@ router.get('/databaseService', function(req, res) {
         "West Bengal",
     ];
     res.json('Done');
-    targetStudyProvider.find({}, {email:1, state:1},function(err, allproviders) {
+    coaching.find({}, {email:1, state:1},function(err, allproviders) {
         var counter = 0;
         var changes = 0;
         var nLength = allproviders.length;
@@ -3563,7 +3432,7 @@ router.get('/databaseService', function(req, res) {
     
    
     
-    /*var allproviders =  targetStudyProvider.find({city:'Jaipur'}, {email:1, state:1},function(err, allproviders) {
+    /*var allproviders =  coaching.find({city:'Jaipur'}, {email:1, state:1},function(err, allproviders) {
         if (!err){
             var counter = 0;
             var changes = 0;
@@ -3596,7 +3465,7 @@ router.get('/databaseService', function(req, res) {
     /*var groups = group.find({}, function(err, groups) {
         if (!err){
         var groupNames = groups.map(function(a) {return a.group;});
-        var allproviders =  targetStudyProvider.find({ }, {group:1, groupName:1},function(err, allproviders) {
+        var allproviders =  coaching.find({ }, {group:1, groupName:1},function(err, allproviders) {
             if (!err){
                 var counter = 0;
                 var changes = 0;
@@ -3649,7 +3518,7 @@ router.get('/cityStateService', function(req, res) {
     res.json('Done');
     
     
-    var allProviders = targetStudyProvider.find({type:'Coaching'}, {name:1, city:1, state:1},function(err, allProviders) {
+    var allProviders = coaching.find({type:'Coaching'}, {name:1, city:1, state:1},function(err, allProviders) {
         if (!err){
             var nProviders = allProviders.length;
             var counter = 0;
@@ -3732,7 +3601,7 @@ router.get('/cityStateService2', function(req, res) {
     console.log("City State 2 Service Starting now");
     var bCounter = 0;
     res.json('Done');
-    var allProviders = targetStudyProvider.find({type:'Coaching', disabled: false}, {name:1, city:1, state:1},function(err, allProviders) {
+    var allProviders = coaching.find({type:'Coaching', disabled: false}, {name:1, city:1, state:1},function(err, allProviders) {
         if (!err){
             var nProviders = allProviders.length;
             var counter = 0;
@@ -3780,7 +3649,7 @@ router.get('/cityStateService2', function(req, res) {
         }
     });
     
-    /*targetStudyProvider.distinct( ("city"),function(err, docs) {
+    /*coaching.distinct( ("city"),function(err, docs) {
     if (!err){
         //console.log(docs);
         res.json(docs);
@@ -3790,7 +3659,7 @@ router.get('/cityStateService2', function(req, res) {
 
 router.get('/logoService', function(req, res) {
     console.log("Logo Service Starting now");
-    var allproviders =  targetStudyProvider.find({"logo": { $exists: true, $ne: null }, type: 'Coaching' }, {logo:1},function(err, allproviders) {
+    var allproviders =  coaching.find({"logo": { $exists: true, $ne: null }, type: 'Coaching' }, {logo:1},function(err, allproviders) {
     if (!err){
          res.json('Done');
          var counter = 0;
@@ -3827,7 +3696,7 @@ router.get('/UniqueLogoService', function(req, res) {
     console.log("Getting all logos");
     
     
-    targetStudyProvider.find({logo: {$exists: true, $ne: ''}, type: 'Coaching'},{groupName:1, logo:1},function(err, allProviders) {
+    coaching.find({logo: {$exists: true, $ne: ''}, type: 'Coaching'},{groupName:1, logo:1},function(err, allProviders) {
     if (!err){
         var uniqueGroups = [];
         var uniqueLogos = [];
@@ -3852,7 +3721,7 @@ router.get('/UniqueLogoService', function(req, res) {
     } else {throw err;}
     }).limit(1000);
     
-    /*targetStudyProvider.distinct( "logo",function(err, docs) {
+    /*coaching.distinct( "logo",function(err, docs) {
     if (!err){ 
         console.log('There are: ' + docs.length + ' unique logos!');
         res.json(docs);
@@ -3863,7 +3732,7 @@ router.get('/UniqueLogoService', function(req, res) {
 router.get('/allDistinct', function(req, res) {
     console.log("Getting all distinct institutes with count");
     
-    targetStudyProvider.find({type: 'Coaching'},{name:1, groupName:1},function(err, allProviders) {
+    coaching.find({type: 'Coaching'},{name:1, groupName:1},function(err, allProviders) {
     if (!err){
         res.json('Done');
         allProviders.forEach(function(thisprovider, index){
@@ -3878,7 +3747,7 @@ router.get('/allDistinct', function(req, res) {
     } else {throw err;}
     });
     
-    /*targetStudyProvider.distinct("name",function(err, docs) {
+    /*coaching.distinct("name",function(err, docs) {
     if (!err){ 
         console.log(docs.length);
         console.log(docs);
@@ -3887,7 +3756,7 @@ router.get('/allDistinct', function(req, res) {
     }).limit(5000);*/
     /*var uniqueName = [];
     var nameCount = [];
-    var allproviders =  targetStudyProvider.find({}, {name:1},function(err, allproviders) {
+    var allproviders =  coaching.find({}, {name:1},function(err, allproviders) {
         var counter = 0;
         var nProviders = allproviders.length;
         res.json('Done');
@@ -3921,7 +3790,7 @@ router.get('/allDistinct', function(req, res) {
 router.get('/getAllCourses', function(req, res) {
     //console.log("Starting now");
     var allCourses = [];
-    var allproviders =  targetStudyProvider.find({type: 'Coaching'}, {coursesOffered:1, exams:1,name:1},function(err, allproviders) {
+    var allproviders =  coaching.find({type: 'Coaching'}, {coursesOffered:1, exams:1,name:1},function(err, allproviders) {
     if (!err){
         var courseExam = [];
          /*allproviders.forEach(function(thisprovider, index){
@@ -4054,10 +3923,10 @@ router.get('/getAllCourses', function(req, res) {
     });//.limit(20000).skip(000); //
 });
 
-router.get('/uprank/:targetStudyProviderId', function(req, res) {
-    var targetStudyProviderId = req.params.targetStudyProviderId;
-    //console.log(targetStudyProviderId);
-    var thisProvider = targetStudyProvider.findOne({"_id" : targetStudyProviderId, type: 'Coaching'}, {},function(err, thisProvider) {
+router.get('/uprank/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    //console.log(coachingId);
+    var thisProvider = coaching.findOne({"_id" : coachingId, type: 'Coaching'}, {},function(err, thisProvider) {
     if (!err){
         
         if(thisProvider.rank){
@@ -4075,10 +3944,10 @@ router.get('/uprank/:targetStudyProviderId', function(req, res) {
     } else {throw err;}
     });
 });
-router.get('/downrank/:targetStudyProviderId', function(req, res) {
-    var targetStudyProviderId = req.params.targetStudyProviderId;
-    //console.log(targetStudyProviderId);
-    var thisProvider = targetStudyProvider.findOne({"_id" : targetStudyProviderId, type: 'Coaching'}, {},function(err, thisProvider) {
+router.get('/downrank/:coachingId', function(req, res) {
+    var coachingId = req.params.coachingId;
+    //console.log(coachingId);
+    var thisProvider = coaching.findOne({"_id" : coachingId, type: 'Coaching'}, {},function(err, thisProvider) {
     if (!err){
         
         if(thisProvider.rank){
@@ -4098,7 +3967,7 @@ router.get('/downrank/:targetStudyProviderId', function(req, res) {
 });
 
 router.get('/cleanTargetstudyurls', function(req, res) {
-    var allproviders =  targetStudyProvider.find({type: 'Coaching'}, { website:1, name:1, city:1},function(err, allproviders) {
+    var allproviders =  coaching.find({type: 'Coaching'}, { website:1, name:1, city:1},function(err, allproviders) {
     if (!err){
         console.log('Here');
          allproviders.forEach(function(thisprovider, index){
@@ -4116,7 +3985,7 @@ router.get('/cleanTargetstudyurls', function(req, res) {
             if(thisprovider.website){
                 
                 
-                /*var oldWebsite = oldtargetStudyProvider
+                /*var oldWebsite = oldcoaching
                     .findOne({'_id': thisprovider._id})
                     .exec(function (err, oldWebsite) {
                     if (!err){
@@ -4143,25 +4012,6 @@ router.get('/cleanTargetstudyurls', function(req, res) {
                         console.log(thisprovider._id + " saved!");
                     });
                 }
-                
-                /*if(thisprovider.website.indexOf("https://targetstudy.com") != -1){
-                    console.log("Removing website " + thisprovider.website + " for " + thisprovider.name + ", " + thisprovider.city);
-                    thisprovider.website = '';
-
-                    thisprovider.save(function(err, thisprovider) {
-                        if (err) return console.error(err);
-                        console.log(thisprovider._id + " saved!");
-                    });
-
-                }*/
-                
-                    /*console.log("Null Removing website " + thisprovider.website + " for " + thisprovider.name + ", " + thisprovider.city);
-                    thisprovider.website = '';
-
-                    thisprovider.save(function(err, thisprovider) {
-                        if (err) return console.error(err);
-                        console.log(thisprovider._id + " saved!");
-                    });*/
 
                 
             }  
@@ -4174,7 +4024,7 @@ router.get('/cleanTargetstudyurls', function(req, res) {
 router.get('/edit/removeDuplicates/:city', function(req, res) {
     var city = req.params.city;
     console.log("City is: "+city);
-    var allproviders =  targetStudyProvider.find({"city" : city, type: 'Coaching'}, { address:1, name:1},function(err, allproviders) {
+    var allproviders =  coaching.find({"city" : city, type: 'Coaching'}, { address:1, name:1},function(err, allproviders) {
     if (!err){
         console.log("There are " + allproviders.length + " providers right now.");
         allproviders.forEach(function(thisprovider, index){
@@ -4184,7 +4034,7 @@ router.get('/edit/removeDuplicates/:city', function(req, res) {
             var name = thisprovider.name;
             console.log("Processing " + index + " " + address + " " + name);
             //{'website': url}
-            var thisproviders = targetStudyProvider.find({'address': address, 'name': name}, { address:1},function(err, thisproviders) {
+            var thisproviders = coaching.find({'address': address, 'name': name}, { address:1},function(err, thisproviders) {
                 if (!err){
                     thisproviders.forEach(function(removeProvider, providerindex){
                         
@@ -4228,7 +4078,7 @@ router.get('/emailService', function(req, res) {
     console.log("Email Service Starting now");
     res.json('Done');
     /*, $where:'this.email.length>0'*/
-    var allProviders = targetStudyProvider.find({email: {$exists: true}}, {groupName:1, email:1, logo:1, city:1},function(err, allProviders) {
+    var allProviders = coaching.find({email: {$exists: true}}, {groupName:1, email:1, logo:1, city:1},function(err, allProviders) {
         if (!err){
             var emailLength = 0;
             var nProviders = allProviders.length;
@@ -4270,7 +4120,7 @@ router.get('/groupSummaryService', function(req, res) {
     console.log("Group Website Service Starting now");
     //res.json('Done');
     
-    var groupNames = targetStudyProvider.aggregate(
+    var groupNames = coaching.aggregate(
     [
         {$match: {disabled: false} },
         {"$group": { "_id": { groupName: "$groupName" }, count:{$sum:1}, exams: { $addToSet: "$exams" } } },
@@ -4310,7 +4160,7 @@ router.get('/groupSummaryService', function(req, res) {
     });
     
     /*, $where:'this.email.length>0'*/
-    /*var allProviders = targetStudyProvider.find({website: {$exists: true} , $where:"this.website.length==0"}, {website:1, groupName: 1},function(err, allProviders) {
+    /*var allProviders = coaching.find({website: {$exists: true} , $where:"this.website.length==0"}, {website:1, groupName: 1},function(err, allProviders) {
         if (!err){
             var websiteLength = 0;
             var nProviders = allProviders.length;
@@ -4337,7 +4187,7 @@ router.get('/citySummaryService', function(req, res) {
     console.log("City Summary Service Starting now");
     //res.json('Done');
     
-    var groupNames = targetStudyProvider.aggregate(
+    var groupNames = coaching.aggregate(
     [
         {$match: {disabled: false, type: 'Coaching'} },
         {"$group": { "_id": { city: "$city" }, count:{$sum:1}, state: { $addToSet: "$state" } } },
@@ -4366,7 +4216,7 @@ router.get('/cacsService', function(req, res) {
     var toAddExam1 = '58e33887ceefed001156cec0';
     var toAddExam2 = '58e338b2ceefed001156cec2';
     
-    var allCoachings = targetStudyProvider.find({exams: ObjectId(examId)}, {name:1 , exams:1, _saved: 1, contactInfoState:1, addContactInfoDone:1, ebVerifyState:1},function(err, allCoachings) {
+    var allCoachings = coaching.find({exams: ObjectId(examId)}, {name:1 , exams:1, _saved: 1, contactInfoState:1, addContactInfoDone:1, ebVerifyState:1},function(err, allCoachings) {
     if (!err){
         var toSet = false;
         var toEdit = false;
@@ -4482,7 +4332,7 @@ router.post('/suggestedcoachings', function(req, res) {
             //$where:'this.exams.length>0'
         };
         
-        var allProviders = targetStudyProvider.find(query, {name:1, groupName:1, logo:1, loc:1, address: 1, city:1},function(err, allProviders) {
+        var allProviders = coaching.find(query, {name:1, groupName:1, logo:1, loc:1, address: 1, city:1},function(err, allProviders) {
         if (!err){
             var allProviderswithDistance = [];
             allProviders.forEach(function(thisProvider, pindex){
@@ -4508,7 +4358,7 @@ router.post('/suggestedcoachings', function(req, res) {
         
     }else if(city && country == "India"){
         console.log("Finding institutes based on city: " + city);
-        var allProviders = targetStudyProvider
+        var allProviders = coaching
             .find({'city': city, exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, city:1})
             .exec(function (err, allProviders) {
             if (!err){
@@ -4519,7 +4369,7 @@ router.post('/suggestedcoachings', function(req, res) {
         
     }else{
         console.log("Finding institutes on no basis!");
-        var allProviders = targetStudyProvider
+        var allProviders = coaching
             .find({exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, city:1})
             .exec(function (err, allProviders) {
             if (!err){
@@ -4529,7 +4379,7 @@ router.post('/suggestedcoachings', function(req, res) {
     }    
     }else{
         console.log("Finding institutes on no basis!");
-        var allProviders = targetStudyProvider
+        var allProviders = coaching
             .find({exams: thisExam}, {name:1, groupName:1, logo:1, loc:1, address: 1, city:1})
             .exec(function (err, allProviders) {
             if (!err){

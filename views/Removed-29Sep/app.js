@@ -1148,252 +1148,252 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             return $http.get('/api/providers/edit/removeDuplicates/'+city, {city: city});
         };
     }]);    
-    exambazaar.service('targetStudyProviderService', ['$http', function($http) {
+    exambazaar.service('coachingService', ['$http', function($http) {
         this.getProviders = function(city) {
-            return $http.get('/api/targetStudyProviders/city/'+city, {city: city});
+            return $http.get('/api/coachings/city/'+city, {city: city});
         };
         this.contacts = function() {
-            return $http.get('/api/targetStudyProviders/contacts');
+            return $http.get('/api/coachings/contacts');
         };
         this.sanitizeMobiles = function() {
-            return $http.get('/api/targetStudyProviders/sanitizeMobiles');
+            return $http.get('/api/coachings/sanitizeMobiles');
         };
         this.dailySummary = function() {
-            return $http.get('/api/targetStudyProviders/dailySummary');
+            return $http.get('/api/coachings/dailySummary');
         };
         this.allResults = function(examId) {
-            return $http.get('/api/targetStudyProviders/allResults/'+examId, {examId: examId});
+            return $http.get('/api/coachings/allResults/'+examId, {examId: examId});
         };
         this.getProvidersWithAreas = function() {
-            return $http.get('/api/targetStudyProviders/providersWithAreas');
+            return $http.get('/api/coachings/providersWithAreas');
         };
         this.coachingAddressService = function() {
-            return $http.get('/api/targetStudyProviders/coachingAddressService');
+            return $http.get('/api/coachings/coachingAddressService');
         };
         this.searchProviders = function(query) {
-            return $http.get('/api/targetStudyProviders/query/'+query, {query: query});
+            return $http.get('/api/coachings/query/'+query, {query: query});
         };
         this.searchCoachingGroupProviders = function(query) {
-            return $http.get('/api/targetStudyProviders/coachingGroupQuery/'+query, {query: query});
+            return $http.get('/api/coachings/coachingGroupQuery/'+query, {query: query});
         };
         this.searchBlogCoachingGroupProviders = function(query) {
-            return $http.get('/api/targetStudyProviders/blogCoachingGroupQuery/'+query, {query: query});
+            return $http.get('/api/coachings/blogCoachingGroupQuery/'+query, {query: query});
         };
         this.addExamsToAll = function(groupExamForm) {
-            return $http.post('/api/targetStudyProviders/addExamsToAll',groupExamForm);
+            return $http.post('/api/coachings/addExamsToAll',groupExamForm);
         };
         this.setLogoForAll = function(groupLogoForm) {
-            return $http.post('/api/targetStudyProviders/setLogoForAll',groupLogoForm);
+            return $http.post('/api/coachings/setLogoForAll',groupLogoForm);
         };
         this.setEmailForAll = function(groupExamForm) {
-            return $http.post('/api/targetStudyProviders/setEmailForAll',groupExamForm);
+            return $http.post('/api/coachings/setEmailForAll',groupExamForm);
         };
         this.setWebsiteForAll = function(groupWebsiteForm) {
-            return $http.post('/api/targetStudyProviders/setWebsiteForAll',groupWebsiteForm);
+            return $http.post('/api/coachings/setWebsiteForAll',groupWebsiteForm);
         };
         
         this.renameAllCoaching = function(groupNameForm) {
-            return $http.post('/api/targetStudyProviders/renameAllCoaching',groupNameForm);
+            return $http.post('/api/coachings/renameAllCoaching',groupNameForm);
         };
         this.renameAllGroupName = function(groupNameForm) {
-            return $http.post('/api/targetStudyProviders/renameAllGroupName',groupNameForm);
+            return $http.post('/api/coachings/renameAllGroupName',groupNameForm);
         };
         this.removeExamsFromAll = function(groupExamForm) {
-            return $http.post('/api/targetStudyProviders/removeExamsFromAll',groupExamForm);
+            return $http.post('/api/coachings/removeExamsFromAll',groupExamForm);
         };
         this.commonExamsInAll = function(groupExamForm) {
-            return $http.post('/api/targetStudyProviders/commonExamsInAll',groupExamForm);
+            return $http.post('/api/coachings/commonExamsInAll',groupExamForm);
         };
         this.searchCityProviders = function(cityQueryForm) {
-            return $http.post('/api/targetStudyProviders/cityQuery',cityQueryForm);
+            return $http.post('/api/coachings/cityQuery',cityQueryForm);
         };
         this.showGroupHelper = function(cityCoachingForm) {
-            return $http.post('/api/targetStudyProviders/showGroupHelper',cityCoachingForm);
+            return $http.post('/api/coachings/showGroupHelper',cityCoachingForm);
         };
         this.showGroupHelperById = function(coachingId) {
-            return $http.post('/api/targetStudyProviders/showGroupHelperById',coachingId);
+            return $http.post('/api/coachings/showGroupHelperById',coachingId);
         };
         this.searchCityReviewProviders = function(cityQueryForm) {
-            return $http.post('/api/targetStudyProviders/cityReviewQuery',cityQueryForm);
+            return $http.post('/api/coachings/cityReviewQuery',cityQueryForm);
         };
         this.cityGroupExamQueryForm = function(cityGroupExamQueryForm) {
-            return $http.post('/api/targetStudyProviders/cityGroupExamQuery',cityGroupExamQueryForm);
+            return $http.post('/api/coachings/cityGroupExamQuery',cityGroupExamQueryForm);
         };
         this.aroundme = function(queryForm) {
-            return $http.post('/api/targetStudyProviders/aroundme',queryForm);
+            return $http.post('/api/coachings/aroundme',queryForm);
         };
         this.bulkSaveLatLng = function(LatLngForm) {
-            return $http.post('/api/targetStudyProviders/bulkSaveLatLng',LatLngForm);
+            return $http.post('/api/coachings/bulkSaveLatLng',LatLngForm);
         };
         this.setLocOfAll = function() {
-            return $http.post('/api/targetStudyProviders/setLocofAll');
+            return $http.post('/api/coachings/setLocofAll');
         };
         this.checkLogo = function(pageNumber) {
-            return $http.get('/api/targetStudyProviders/checkLogo/'+pageNumber, {pageNumber: pageNumber});
+            return $http.get('/api/coachings/checkLogo/'+pageNumber, {pageNumber: pageNumber});
         };
         this.bulkCheckLogos = function(checkLogoForm) {
-            return $http.post('/api/targetStudyProviders/bulkCheckLogos',checkLogoForm);
+            return $http.post('/api/coachings/bulkCheckLogos',checkLogoForm);
         };
         this.bulkDisableProviders = function(disableForm) {
-            return $http.post('/api/targetStudyProviders/bulkDisableProviders',disableForm);
+            return $http.post('/api/coachings/bulkDisableProviders',disableForm);
         };
         
         this.groupProviders = function(query) {
-            return $http.get('/api/targetStudyProviders/group/'+query, {query: query});
+            return $http.get('/api/coachings/group/'+query, {query: query});
         };
         this.addFaculty = function(newFacultyForm) {
-            return $http.post('/api/targetStudyProviders/addFaculty',newFacultyForm);
+            return $http.post('/api/coachings/addFaculty',newFacultyForm);
         };
         this.addManagement = function(newManagementForm) {
-            return $http.post('/api/targetStudyProviders/addManagement',newManagementForm);
+            return $http.post('/api/coachings/addManagement',newManagementForm);
         };
         this.removeManagement = function(newManagementForm) {
-            return $http.post('/api/targetStudyProviders/removeManagement',newManagementForm);
+            return $http.post('/api/coachings/removeManagement',newManagementForm);
         };
         
         this.addPrimaryManagement = function(newManagementForm) {
-            return $http.post('/api/targetStudyProviders/addPrimaryManagement',newManagementForm);
+            return $http.post('/api/coachings/addPrimaryManagement',newManagementForm);
         };
         this.addResult = function(newResultForm) {
-            return $http.post('/api/targetStudyProviders/addResult',newResultForm);
+            return $http.post('/api/coachings/addResult',newResultForm);
         };
         this.bulkAddResult = function(bulkResult) {
-            return $http.post('/api/targetStudyProviders/bulkAddResult',bulkResult);
+            return $http.post('/api/coachings/bulkAddResult',bulkResult);
         };
         
         
         
         this.addPhoto = function(newPhotoForm) {
-            return $http.post('/api/targetStudyProviders/addPhoto',newPhotoForm);
+            return $http.post('/api/coachings/addPhoto',newPhotoForm);
         };
         
         this.addLogo = function(newLogoForm) {
-            return $http.post('/api/targetStudyProviders/addLogo',newLogoForm);
+            return $http.post('/api/coachings/addLogo',newLogoForm);
         };
         this.addResultPic = function(newResultPicForm) {
-            return $http.post('/api/targetStudyProviders/addResultPic',newResultPicForm);
+            return $http.post('/api/coachings/addResultPic',newResultPicForm);
         };
         
         this.addVideo = function(newVideoForm) {
-            return $http.post('/api/targetStudyProviders/addVideo',newVideoForm);
+            return $http.post('/api/coachings/addVideo',newVideoForm);
         };
         this.changeProvidersStartingWith = function(startsWith) {
-            return $http.get('/api/targetStudyProviders/changeProvidersStartingWith/'+startsWith, {startsWith: startsWith});
+            return $http.get('/api/coachings/changeProvidersStartingWith/'+startsWith, {startsWith: startsWith});
         };
         this.getCourseProviders = function(cityCourse) {
-            return $http.post('/api/targetStudyProviders/cityCourse',cityCourse);
+            return $http.post('/api/coachings/cityCourse',cityCourse);
         };
         this.getProvider = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/coaching/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/coaching/'+coachingId, {coachingId: coachingId});
         };
         this.titleCaseName = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/titleCaseName/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/titleCaseName/'+coachingId, {coachingId: coachingId});
         };
         this.getClaimProvider = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/claimcoaching/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/claimcoaching/'+coachingId, {coachingId: coachingId});
         };
         this.getProviderReview = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/coachingreview/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/coachingreview/'+coachingId, {coachingId: coachingId});
         };
         this.getGroupInfo = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/getGroupInfo/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/getGroupInfo/'+coachingId, {coachingId: coachingId});
         };
         this.getGroupCity = function(groupCity) {
-            return $http.post('/api/targetStudyProviders/coachingGroup/',groupCity);
+            return $http.post('/api/coachings/coachingGroup/',groupCity);
         };
         this.getProviderBasic = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/basiccoaching/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/basiccoaching/'+coachingId, {coachingId: coachingId});
         };
         this.getGroupName = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/getGroupName/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/getGroupName/'+coachingId, {coachingId: coachingId});
         };
         this.getProviderFillSummary = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/fillSummary/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/fillSummary/'+coachingId, {coachingId: coachingId});
         };
         this.cisavedUsers = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/cisavedUsers/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/cisavedUsers/'+coachingId, {coachingId: coachingId});
         };
         this.setEBVerifyState = function(verifyForm) {
-            return $http.post('/api/targetStudyProviders/setEBVerifyState',verifyForm);
+            return $http.post('/api/coachings/setEBVerifyState',verifyForm);
         };
         this.setEBContactInfoState = function(verifyForm) {
-            return $http.post('/api/targetStudyProviders/setEBContactInfoState',verifyForm);
+            return $http.post('/api/coachings/setEBContactInfoState',verifyForm);
         };
         this.saveProvider = function(provider) {
-            return $http.post('/api/targetStudyProviders/savecoaching',provider);
+            return $http.post('/api/coachings/savecoaching',provider);
         };
         this.removeProvider = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/removecoaching/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/removecoaching/'+coachingId, {coachingId: coachingId});
         };
         this.bulkSaveProviders = function(providers) {
-            return $http.post('/api/targetStudyProviders/bulksavecoaching',providers);
+            return $http.post('/api/coachings/bulksavecoaching',providers);
         };
         this.getCount = function() {
-            return $http.get('/api/targetStudyProviders/count');
+            return $http.get('/api/coachings/count');
         };
         this.getCityCount = function() {
-            return $http.get('/api/targetStudyProviders/cityCount');
+            return $http.get('/api/coachings/cityCount');
         };
         this.getCityProviderCount = function(city) {
-            return $http.get('/api/targetStudyProviders/cityProviderCount/'+city, {city: city});
+            return $http.get('/api/coachings/cityProviderCount/'+city, {city: city});
         };
         this.getCities = function() {
-            return $http.get('/api/targetStudyProviders/cities');
+            return $http.get('/api/coachings/cities');
         };
         
         this.providercities = function(query) {
-            return $http.get('/api/targetStudyProviders/providercities/'+query, {query: query});
+            return $http.get('/api/coachings/providercities/'+query, {query: query});
         };
         this.getWebsites = function() {
-            return $http.get('/api/targetStudyProviders/websites');
+            return $http.get('/api/coachings/websites');
         };
-        this.uprank = function(targetStudyProviderId) {
-            return $http.get('/api/targetStudyProviders/uprank/'+targetStudyProviderId, {targetStudyProviderId: targetStudyProviderId});
+        this.uprank = function(coachingId) {
+            return $http.get('/api/coachings/uprank/'+coachingId, {coachingId: coachingId});
         };
-        this.downrank = function(targetStudyProviderId) {
-            return $http.get('/api/targetStudyProviders/downrank/'+targetStudyProviderId, {targetStudyProviderId: targetStudyProviderId});
+        this.downrank = function(coachingId) {
+            return $http.get('/api/coachings/downrank/'+coachingId, {coachingId: coachingId});
         };
         this.cleanTargetstudyurls = function() {
-            return $http.get('/api/targetStudyProviders/cleanTargetstudyurls');
+            return $http.get('/api/coachings/cleanTargetstudyurls');
         };
         this.rank0 = function() {
-            return $http.get('/api/targetStudyProviders/setRank0');
+            return $http.get('/api/coachings/setRank0');
         };
         this.logoService = function() {
-            return $http.get('/api/targetStudyProviders/logoService');
+            return $http.get('/api/coachings/logoService');
         };
         this.databaseService = function() {
-            return $http.get('/api/targetStudyProviders/databaseService');
+            return $http.get('/api/coachings/databaseService');
         };
         this.cityStateService = function() {
-            return $http.get('/api/targetStudyProviders/cityStateService');
+            return $http.get('/api/coachings/cityStateService');
         };
         this.cityStateService2 = function() {
-            return $http.get('/api/targetStudyProviders/cityStateService2');
+            return $http.get('/api/coachings/cityStateService2');
         };
         this.emailService = function() {
-            return $http.get('/api/targetStudyProviders/emailService');
+            return $http.get('/api/coachings/emailService');
         };
         this.groupSummaryService = function() {
-            return $http.get('/api/targetStudyProviders/groupSummaryService');
+            return $http.get('/api/coachings/groupSummaryService');
         };
         this.citySummaryService = function() {
-            return $http.get('/api/targetStudyProviders/citySummaryService');
+            return $http.get('/api/coachings/citySummaryService');
         };
         this.sandbox2Service = function(city) {
-            return $http.get('/api/targetStudyProviders/sandbox2Service/'+city, {city: city});
+            return $http.get('/api/coachings/sandbox2Service/'+city, {city: city});
         };
         this.UniqueLogoService = function() {
-            return $http.get('/api/targetStudyProviders/UniqueLogoService');
+            return $http.get('/api/coachings/UniqueLogoService');
         };
         this.allDistinct = function() {
-            return $http.get('/api/targetStudyProviders/allDistinct');
+            return $http.get('/api/coachings/allDistinct');
         };
         this.getAllCourses = function() {
-            return $http.get('/api/targetStudyProviders/getAllCourses');
+            return $http.get('/api/coachings/getAllCourses');
         };
         this.removeDuplicates = function(city) {
-            return $http.get('/api/targetStudyProviders/edit/removeDuplicates/'+city, {city: city});
+            return $http.get('/api/coachings/edit/removeDuplicates/'+city, {city: city});
         };
     }]);      
      
@@ -1661,7 +1661,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);    
     
     exambazaar.controller("p4Controller", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'targetStudyProvidersList','cities','$state','$stateParams', '$cookies', 'thisStream', 'thisExam','streamExams', '$mdDialog', '$geolocation', 'suggestedblogs', function($scope,$rootScope, targetStudyProviderService, targetStudyProvidersList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams,  $mdDialog, $geolocation, suggestedblogs){
+    [ '$scope','$rootScope', 'coachingService', 'coachingsList','cities','$state','$stateParams', '$cookies', 'thisStream', 'thisExam','streamExams', '$mdDialog', '$geolocation', 'suggestedblogs', function($scope,$rootScope, coachingService, coachingsList,cities,$state,$stateParams, $cookies,thisStream,thisExam,streamExams,  $mdDialog, $geolocation, suggestedblogs){
        
         $scope.hideLoginDialog();
         $scope.editable = false;
@@ -1734,7 +1734,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         var streamExamsIds = streamExamsData.map(function(a) {return a._id;});
         $scope.streamExams = streamExams.data.map(function(a) {return a.name;});
         
-        $scope.providersList = targetStudyProvidersList.data;
+        $scope.providersList = coachingsList.data;
         $scope.uniqueProviders = [];
         $scope.uniqueInstitutes = [];
         var origins = [];
@@ -1897,7 +1897,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     
     exambazaar.controller("verifyClaimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService',  'OTPService','UserService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope, $rootScope, targetStudyProviderService, OTPService, UserService, thisProvider , $state, $stateParams, $cookies, $mdDialog, $timeout){
+    [ '$scope', '$rootScope', 'coachingService',  'OTPService','UserService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope, $rootScope, coachingService, OTPService, UserService, thisProvider , $state, $stateParams, $cookies, $mdDialog, $timeout){
         $scope.provider = thisProvider.data;
         $scope.currStep = 1;
         if($scope.provider.mobile.length > 0)
@@ -2012,7 +2012,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
    
     exambazaar.controller("showGroupController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
+    [ '$scope','$rootScope', 'coachingService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, coachingService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
         $rootScope.reviewStream = null;
         $rootScope.reviewExam = null;
         $rootScope.reviewCity = null;
@@ -2800,7 +2800,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         return self.indexOf(value) === index;
     }       
     exambazaar.controller("offersController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', 'offersList', 'couponsList', 'offerService', 'couponService', 'UserService', function($scope,$rootScope, targetStudyProviderService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo, offersList, couponsList, offerService, couponService, UserService){
+    [ '$scope', '$rootScope', 'coachingService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', 'offersList', 'couponsList', 'offerService', 'couponService', 'UserService', function($scope,$rootScope, coachingService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo, offersList, couponsList, offerService, couponService, UserService){
         $scope.provider = thisProvider.data;
         $scope.provideroffers = offersList.data;
         //console.log($scope.provideroffers);
@@ -3335,7 +3335,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService',  'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService,  thisGroupInfo, addContactInfoService, rateInstituteService){
+    [ '$scope', '$rootScope', 'coachingService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService',  'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', function($scope,$rootScope, coachingService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService,  thisGroupInfo, addContactInfoService, rateInstituteService){
         $scope.provider = thisProvider.data;
         $scope.thisGroupInfo = thisGroupInfo.data;
         
@@ -3768,7 +3768,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     user: $scope.user.userId
                 };
                 //console.log(ebVerfiyForm);
-                targetStudyProviderService.setEBVerifyState(ebVerfiyForm).success(function (data, status, headers) {
+                coachingService.setEBVerifyState(ebVerfiyForm).success(function (data, status, headers) {
                     
                     var toverifyciForm = {
                         institute: $scope.provider._id
@@ -3806,7 +3806,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     user: $scope.user.userId
                 };
                 console.log(contactInfoForm);
-                targetStudyProviderService.setEBContactInfoState(contactInfoForm).success(function (data, status, headers) {
+                coachingService.setEBContactInfoState(contactInfoForm).success(function (data, status, headers) {
                     
                     var addContactInfoForm = {
                         institute: $scope.provider._id
@@ -3856,7 +3856,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     instituteIds: instituteIds,
                     user: $scope.user.userId
                 };
-                targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+                coachingService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
@@ -3884,7 +3884,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });     
         };
         $scope.removeProvider = function(provider){
-             targetStudyProviderService.removeProvider(provider._id).success(function (data, status, headers) {
+             coachingService.removeProvider(provider._id).success(function (data, status, headers) {
                 if(data){
                     $scope.showSavedDialog();
                 }else{
@@ -4294,10 +4294,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.saveProvider = function(){
             //console.log($scope.provider);
             var saveProvider = {
-                targetStudyProvider:$scope.provider,
+                coaching:$scope.provider,
                 user: $scope.user.userId
             };
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+            coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.showSavedDialog();
                 $state.reload();
                 console.log("Done");
@@ -4619,10 +4619,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.saveProvider = function(){
                 console.log($scope.provider);
                 var saveProvider = {
-                    targetStudyProvider:$scope.provider,
+                    coaching:$scope.provider,
                     user: $scope.user.userId
                 };
-                targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+                coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                     //console.log($scope.editResult + ' ' + $scope.editResult);
                     if($scope.editResult || $scope.editResult){
                         $scope.addExamResult();
@@ -4683,10 +4683,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     }
                 });
                 
-            }); targetStudyProviderService.bulkAddResult(finalExamResult).success(function (data, status, headers) {
+            }); coachingService.bulkAddResult(finalExamResult).success(function (data, status, headers) {
                 //console.log("Done");
                 if(data == 'Done'){
-                    var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                    var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                     $scope.provider = refreshedProvider;
                      $scope.resultHelper('exam',$scope.providerExamIds);
                     $scope.examPivotResults =$scope.pivotResult;
@@ -5226,12 +5226,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var newPhotoForm ={
                     photo: thisFile.newPhoto,
                     providerId: providerId
-                }; targetStudyProviderService.addPhoto(newPhotoForm).success(function (data, status, headers) {
+                }; coachingService.addPhoto(newPhotoForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         $scope.showAddPhotosForm = true;
                         $scope.preUploadPhotoLength = $scope.provider.photo.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.provider = refreshedProvider;
                             $scope.editPhotos();
                         }).error(function (data, status, header, config) {
@@ -5362,11 +5362,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     image: logoLink,
                     resultId: resultId,
                     providerId: providerId
-                }; targetStudyProviderService.addResultPic(newResultPicForm).success(function (data, status, headers) {
+                }; coachingService.addResultPic(newResultPicForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.provider = refreshedProvider;
                             $scope.provider = refreshedProvider;
                             $scope.resultHelper('exam',$scope.providerExamIds);
@@ -5437,11 +5437,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var newLogoForm ={
                     logo: logoLink,
                     providerId: providerId
-                }; targetStudyProviderService.addLogo(newLogoForm).success(function (data, status, headers) {
+                }; coachingService.addLogo(newLogoForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.showSavedDialog();
                             $scope.provider = refreshedProvider;
                         }).error(function (data, status, header, config) {
@@ -5505,12 +5505,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var newResultForm ={
                     result: thisFile.newResult,
                     providerId: providerId
-                }; targetStudyProviderService.addResult(newResultForm).success(function (data, status, headers) {
+                }; coachingService.addResult(newResultForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         $scope.showAddResultsForm = true;
                         $scope.preUploadResultLength = $scope.provider.results.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.provider = refreshedProvider;
                             $scope.editResults();
                         }).error(function (data, status, header, config) {
@@ -5577,12 +5577,12 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var newFacultyForm ={
                     faculty: thisFile.newFaculty,
                     providerId: providerId
-                }; targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
+                }; coachingService.addFaculty(newFacultyForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         $scope.showAddFacultysForm = true;
                         $scope.preUploadFacultyLength = $scope.provider.faculty.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.provider = refreshedProvider;
                             $scope.editFaculties();
                         }).error(function (data, status, header, config) {
@@ -5840,11 +5840,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             
             var saveProvider = {
-                targetStudyProvider:$scope.provider,
+                coaching:$scope.provider,
                 user: $scope.user.userId
             };
             
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+            coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                 
                 var rateInstituteForm = {
                     institute: $scope.provider._id
@@ -5908,7 +5908,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);     
    
     exambazaar.controller("showCoachingController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies','thisStream','thisExam', '$document', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies,thisStream,thisExam,$document){
+    [ '$scope','$rootScope', 'coachingService','thisProvider','$state','$stateParams', '$cookies','thisStream','thisExam', '$document', function($scope,$rootScope, coachingService,thisProvider,$state,$stateParams, $cookies,thisStream,thisExam,$document){
         $scope.hideLoginDialog();
         $scope.category = thisStream.data;
         $scope.subcategory = thisExam.data;
@@ -5991,7 +5991,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
              
         
     exambazaar.controller("partnerDashboardController", 
-        [ '$scope', '$state','thisPartner', 'targetStudyProviderService', '$mdDialog','$timeout', function($scope, $state, thisPartner, targetStudyProviderService, $mdDialog, $timeout){
+        [ '$scope', '$state','thisPartner', 'coachingService', '$mdDialog','$timeout', function($scope, $state, thisPartner, coachingService, $mdDialog, $timeout){
             $scope.partner = thisPartner.data;
             $scope.listing = $scope.partner.partner[0];
             $scope.editManagement = false;
@@ -6051,7 +6051,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             management: thisManagement,
                             providerId: $scope.listing._id
                         };
-                         targetStudyProviderService.removeManagement(newManagementForm).success(function (data, status, headers) {
+                         coachingService.removeManagement(newManagementForm).success(function (data, status, headers) {
                             $scope.showSavedDialog();
                             $state.reload();
                             console.log("Done");
@@ -6080,7 +6080,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             management: thisManagement,
                             providerId: $scope.listing._id
                         };
-                         targetStudyProviderService.addPrimaryManagement(newManagementForm).success(function (data, status, headers) {
+                         coachingService.addPrimaryManagement(newManagementForm).success(function (data, status, headers) {
                             $scope.showSavedDialog();
                             $state.reload();
                             console.log("Done");
@@ -6123,7 +6123,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                             management: thisManagement,
                             providerId: $scope.listing._id
                         };
-                         targetStudyProviderService.addManagement(newManagementForm).success(function (data, status, headers) {
+                         coachingService.addManagement(newManagementForm).success(function (data, status, headers) {
                             $scope.showSavedDialog();
                             $state.reload();
                             console.log("Done");
@@ -6200,7 +6200,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         else return 0;
     };
     exambazaar.controller("masterDashboardController", 
-        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', 'reviewsCount', 'couponsCount', 'issuedcouponsCount' , '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'targetStudyProviderService', '$timeout', 'addContactInfoService', 'addContactInfoList', 'rateInstituteService', 'rateInstituteList', 'couponService', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, reviewsCount, couponsCount, issuedcouponsCount,  $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, targetStudyProviderService, $timeout, addContactInfoService, addContactInfoList, rateInstituteService, rateInstituteList, couponService){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', 'reviewsCount', 'couponsCount', 'issuedcouponsCount' , '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'coachingService', '$timeout', 'addContactInfoService', 'addContactInfoList', 'rateInstituteService', 'rateInstituteList', 'couponService', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, reviewsCount, couponsCount, issuedcouponsCount,  $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, coachingService, $timeout, addContactInfoService, addContactInfoList, rateInstituteService, rateInstituteList, couponService){
             
             $scope.today = moment();
             var startOfWeek = moment().startOf('week').subtract(3, "days");
@@ -6434,7 +6434,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.getSummary = function(tofillci){
                 var instituteId = tofillci.institute._id;
                 
-                targetStudyProviderService.getProviderFillSummary(instituteId).success(function (data, status, headers) {
+                coachingService.getProviderFillSummary(instituteId).success(function (data, status, headers) {
                     $scope.fillProvider = data;
                     $scope.fillUser = tofillci.user;
                     $scope.showFillDialog();
@@ -6579,7 +6579,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.fetching = true;
                     $scope.assignError = false;
                     console.log(newValue);
-                    targetStudyProviderService.getGroupName(newValue).success(function (data, status, headers) {
+                    coachingService.getGroupName(newValue).success(function (data, status, headers) {
                         console.log(data);
                         if(data){
                             $scope.assignGroup = data;
@@ -6632,7 +6632,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     $scope.fetching = true;
                     $scope.assignError = false;
                     console.log(newValue);
-                    targetStudyProviderService.getGroupName(newValue).success(function (data, status, headers) {
+                    coachingService.getGroupName(newValue).success(function (data, status, headers) {
                         console.log(data);
                         if(data){
                             $scope.assignGroup = data;
@@ -7799,14 +7799,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
      
      exambazaar.controller("providersWithAreasController", 
-    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','$state','$stateParams', '$cookies', function($scope, targetStudyProviderService,targetStudyProvidersList,$state,$stateParams, $cookies){
+    [ '$scope', 'coachingService','coachingsList','$state','$stateParams', '$cookies', function($scope, coachingService,coachingsList,$state,$stateParams, $cookies){
         
-        $scope.providersList = targetStudyProvidersList.data;
+        $scope.providersList = coachingsList.data;
         
         $scope.startsWithProviders = function(){
            
            if($scope.startsWith != ''){
-               targetStudyProviderService.changeProvidersStartingWith($scope.startsWith).success(function (data, status, headers) {
+               coachingService.changeProvidersStartingWith($scope.startsWith).success(function (data, status, headers) {
                     console.log("Done");
                    $scope.clear();
                 })
@@ -7828,10 +7828,10 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]); 
         
     exambazaar.controller("groupController", 
-    [ '$scope', 'targetStudyProviderService','$timeout','$state','$stateParams', '$cookies','$mdDialog','$window', function($scope, targetStudyProviderService,$timeout,$state,$stateParams, $cookies,$mdDialog,$window){
-        //$scope.providersList = targetStudyProvidersList.data;
+    [ '$scope', 'coachingService','$timeout','$state','$stateParams', '$cookies','$mdDialog','$window', function($scope, coachingService,$timeout,$state,$stateParams, $cookies,$mdDialog,$window){
+        //$scope.providersList = coachingsList.data;
         $scope.findPartners = function (query){
-            targetStudyProviderService.groupProviders(query).success(function (data, status, headers) {
+            coachingService.groupProviders(query).success(function (data, status, headers) {
                 $scope.providersList = data;
                 console.log("Done");
             })
@@ -7856,9 +7856,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         }
         $scope.saveChanges = function(providerId){
             var saveProvider = {
-                targetStudyProvider: providerId
+                coaching: providerId
             };
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+            coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.cancel();
                 
                 console.log("Done");
@@ -7887,9 +7887,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
     }]); 
     
-    exambazaar.controller("getTargetStudyCoachingController", 
-    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','targetStudyCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', 'emailList', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList, emailList){
-        $scope.providersList = targetStudyProvidersList.data;
+    exambazaar.controller("getCoachingCoachingController", 
+    [ '$scope', 'coachingService','coachingsList','coachingCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', 'emailList', function($scope, coachingService,coachingsList,coachingCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList, emailList){
+        $scope.providersList = coachingsList.data;
         $scope.emailsList = emailList.data;
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
         var institutesSaved = institutesSavedList.data;
@@ -8005,7 +8005,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
         });
         
-        $scope.cityStates = targetStudyCities.data.map(function(a) {return a._id;});
+        $scope.cityStates = coachingCities.data.map(function(a) {return a._id;});
         
         var repStates = $scope.cityStates.map(function(a) {return a.state;});
         $scope.states = [];
@@ -8051,7 +8051,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     instituteIds: instituteIds,
                     user: $scope.user.userId
                 };
-                targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+                coachingService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
@@ -8060,8 +8060,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             }
         };
         $scope.addEmail = function(provider){
-            $window.open(provider.targetStudyWebsite, '_newhtml');
-            //$window.open('https://targetstudy.com/tools/ge.php', '_newhtml2');
+            $window.open(provider.coachingWebsite, '_newhtml');
         };
         
         $scope.locations = locationsList.data;
@@ -8082,9 +8081,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             
             $scope.currProvider.location = thisLocation._id;
             var saveProvider = {
-                targetStudyProvider:$scope.currProvider
+                coaching:$scope.currProvider
             };
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+            coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.cancel();
                 
                 console.log("Done");
@@ -8099,7 +8098,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         
         $scope.uprank = function(provider){
-            targetStudyProviderService.uprank(provider._id).success(function (data, status, headers) {
+            coachingService.uprank(provider._id).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8107,7 +8106,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });
         };
         $scope.downrank = function(provider){
-            targetStudyProviderService.downrank(provider._id).success(function (data, status, headers) {
+            coachingService.downrank(provider._id).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8148,7 +8147,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         
         $scope.removeDuplicates = function(){
-            targetStudyProviderService.removeDuplicates($scope.city).success(function (data, status, headers) {
+            coachingService.removeDuplicates($scope.city).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8156,7 +8155,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });
         };
         $scope.rank0 = function(){
-            targetStudyProviderService.rank0().success(function (data, status, headers) {
+            coachingService.rank0().success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8166,7 +8165,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.getWebsites = function(){
             //alert('Starting');
-            targetStudyProviderService.getWebsites().success(function (data, status, headers) {
+            coachingService.getWebsites().success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8176,7 +8175,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.cityStateService = function(){
             //alert('Starting');
-            targetStudyProviderService.citySummaryService().success(function (data, status, headers) {
+            coachingService.citySummaryService().success(function (data, status, headers) {
                 
                 console.log("Done");
             })
@@ -8187,7 +8186,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.citySummary = null;
         $scope.citySummaryService = function(){
             //alert('Starting');
-            targetStudyProviderService.citySummaryService().success(function (data, status, headers) {
+            coachingService.citySummaryService().success(function (data, status, headers) {
                 $scope.citySummary = data;
                 console.log("Done");
             })
@@ -8197,7 +8196,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         $scope.cityStateService2 = function(){
             //alert('Starting');
-            targetStudyProviderService.cityStateService2().success(function (data, status, headers) {
+            coachingService.cityStateService2().success(function (data, status, headers) {
                 console.log(data);
                 //$scope.allCities = data;
             })
@@ -8206,7 +8205,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });
         };
         $scope.getCityCount = function(){
-            targetStudyProviderService.getCityCount().success(function (data, status, headers) {
+            coachingService.getCityCount().success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8215,7 +8214,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
         $scope.logoService = function(){
-            targetStudyProviderService.logoService().success(function (data, status, headers) {
+            coachingService.logoService().success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8223,7 +8222,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });
         };
         $scope.databaseService = function(){
-            targetStudyProviderService.databaseService().success(function (data, status, headers) {
+            coachingService.databaseService().success(function (data, status, headers) {
                 $scope.distinctStates = data;
                 console.log("Done");
             })
@@ -8234,7 +8233,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.UniqueLogoService = function(){
             
             $scope.showlogos = true;
-            targetStudyProviderService.UniqueLogoService().success(function (data, status, headers) {
+            coachingService.UniqueLogoService().success(function (data, status, headers) {
                 $scope.uniquelogos = data;
             })
             .error(function (data, status, header, config) {
@@ -8244,7 +8243,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         $scope.allDistinct = function(){
             $scope.allDistinctBool = false;
-            targetStudyProviderService.allDistinct().success(function (data, status, headers) {
+            coachingService.allDistinct().success(function (data, status, headers) {
                 alert('Done');
                 //$scope.allProviderNames = data;
                 //$scope.allDistinctBool = true;
@@ -8256,7 +8255,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         $scope.allCourses = false;
         $scope.getAllCourses = function(){
-            targetStudyProviderService.getAllCourses().success(function (data, status, headers) {
+            coachingService.getAllCourses().success(function (data, status, headers) {
                 console.log("Done");
                 $scope.allCourses = true;
                 $scope.courses = data;
@@ -8267,7 +8266,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
         $scope.cleanTargetstudyurls = function(){
-            targetStudyProviderService.cleanTargetstudyurls().success(function (data, status, headers) {
+            coachingService.cleanTargetstudyurls().success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8285,9 +8284,9 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
         }
     });
-    exambazaar.controller("editTargetStudyCoachingController", 
-    [ '$scope', 'targetStudyProviderService','LocationService','thisTargetStudyProvider','$state','$stateParams', '$cookies','ImageService','Upload','imageMediaTagList', function($scope, targetStudyProviderService,LocationService,thisTargetStudyProvider,$state,$stateParams, $cookies,ImageService,Upload,imageMediaTagList){
-        $scope.provider = thisTargetStudyProvider.data;
+    exambazaar.controller("editCoachingCoachingController", 
+    [ '$scope', 'coachingService','LocationService','thisCoachingProvider','$state','$stateParams', '$cookies','ImageService','Upload','imageMediaTagList', function($scope, coachingService,LocationService,thisCoachingProvider,$state,$stateParams, $cookies,ImageService,Upload,imageMediaTagList){
+        $scope.provider = thisCoachingProvider.data;
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
         
@@ -8376,7 +8375,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var newPhotoForm ={
                     photo: thisFile.newPhoto,
                     providerId: providerId
-                }; targetStudyProviderService.addPhoto(newPhotoForm).success(function (data, status, headers) {
+                }; coachingService.addPhoto(newPhotoForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         $scope.showAddPhotosForm = true;
@@ -8442,14 +8441,14 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var newFacultyForm ={
                     faculty: thisFile.newFaculty,
                     providerId: providerId
-                }; targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
+                }; coachingService.addFaculty(newFacultyForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     //console.log('Counter is: ' + counter);
                     //console.log("Faculty added to database " + thisFile.newFaculty.image);
                     if(counter == nFiles){
                         $scope.showAddFacultiesForm = true;
                         $scope.preUploadFacultyLength = $scope.provider.faculty.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.provider = refreshedProvider;
                             $scope.editPhotos();
                         }).error(function (data, status, header, config) {
@@ -8489,7 +8488,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             $scope.provider.location = location._id;
         };
         $scope.uprank = function(provider){
-            targetStudyProviderService.uprank(provider._id).success(function (data, status, headers) {
+            coachingService.uprank(provider._id).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8522,7 +8521,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         
         $scope.downrank = function(provider){
-            targetStudyProviderService.downrank(provider._id).success(function (data, status, headers) {
+            coachingService.downrank(provider._id).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8532,8 +8531,8 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         $scope.saveCoaching = function(){
             
            var provider = {
-               targetStudyProvider: $scope.provider
-           }; targetStudyProviderService.saveProvider(provider).success(function (data, status, headers) {
+               coaching: $scope.provider
+           }; coachingService.saveProvider(provider).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -8626,7 +8625,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("autocompleteController2", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
         
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
@@ -8641,7 +8640,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     city: $rootScope.city
                 };
                 
-                return targetStudyProviderService.searchCityProviders(cityQueryForm).then(function(response){
+                return coachingService.searchCityProviders(cityQueryForm).then(function(response){
                     //console.log(response.data);
                     return response.data;
                 });
@@ -8654,7 +8653,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
       
         
     exambazaar.controller("offerController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document, offerService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, coachingService, $mdDialog, $document, offerService){
             $scope.offers = [];
             offerService.getActiveOffersBasic().success(function (data, status, headers) {
                 $scope.offersList = data;
@@ -8745,7 +8744,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
     }]);    
     exambazaar.controller("offerController2", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document, offerService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, coachingService, $mdDialog, $document, offerService){
             $scope.offers = [];
             offerService.getActiveOffersBasic().success(function (data, status, headers) {
                 $scope.offersList = data;
@@ -8832,7 +8831,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
     }]);      
     exambazaar.controller("coachingGroupAutocompleteController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
@@ -8857,7 +8856,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         this.querySearch = function(query){
             if(query.length > 2){
                 $rootScope.coachingGroupItems = [];
-                return targetStudyProviderService.searchCoachingGroupProviders(query).then(function(response){
+                return coachingService.searchCoachingGroupProviders(query).then(function(response){
                     //console.log(response.data);
                     
                     $rootScope.coachingGroupItems = response.data;
@@ -8874,7 +8873,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);    
     
     exambazaar.controller("blogCoachingGroupAutocompleteController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
@@ -8885,7 +8884,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.querySearch = function(query){
             if(query.length > 2){
-                return targetStudyProviderService.searchBlogCoachingGroupProviders(query).then(function(response){
+                return coachingService.searchBlogCoachingGroupProviders(query).then(function(response){
                     //console.log(response.data);
                     
                     $rootScope.coachingGroupItems = response.data;
@@ -8916,7 +8915,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);    
         
     exambazaar.controller("autocompleteController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
             
             $scope.searchFocusIn = function(){
                 console.log('Focus In');
@@ -8933,7 +8932,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var coachingForm = {
                     _id: provider._id 
             };
-            targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+            coachingService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
                     var examStream = data;
                     $state.go('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
                     
@@ -8951,7 +8950,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.querySearch = function(query){
             if(query.length > 2){
-                return targetStudyProviderService.searchProviders(query).then(function(response){
+                return coachingService.searchProviders(query).then(function(response){
                     //console.log(response.data);
                     return response.data;
                 });
@@ -8960,7 +8959,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("citySearchController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$cookies', function($scope, $http, $state, $rootScope, targetStudyProviderService, $cookies){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', '$cookies', function($scope, $http, $state, $rootScope, coachingService, $cookies){
         
         
         if($cookies.getObject('userlocation')){
@@ -8983,7 +8982,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             if(query == ''){
                 searchQuery = "exambazaar";
             }
-            return targetStudyProviderService.providercities(searchQuery).then(function(response){
+            return coachingService.providercities(searchQuery).then(function(response){
                 
                 //console.log(response.data);
                 return response.data;
@@ -8992,7 +8991,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
     
     exambazaar.controller("coachingSearchController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
         
         
         this.selectedItemChange = selectedItemChange;
@@ -9012,7 +9011,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 };
                 //console.log($rootScope.newReviewCity);
 
-                return targetStudyProviderService.searchCityReviewProviders(cityQueryForm).then(function(response){
+                return coachingService.searchCityReviewProviders(cityQueryForm).then(function(response){
                     //console.log(response.data);
                     return response.data;
                 });
@@ -9023,7 +9022,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);  
         
     exambazaar.controller("reviewRedirectController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', 'offerService', '$mdDialog', '$document', function($scope, $http, $state, $rootScope, targetStudyProviderService, offerService, $mdDialog, $document){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', 'offerService', '$mdDialog', '$document', function($scope, $http, $state, $rootScope, coachingService, offerService, $mdDialog, $document){
             $scope.redirectToReview = function(){
                 if($rootScope.newReviewCity && $rootScope.newReviewCoaching){
                     //ABC
@@ -9032,7 +9031,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         coachingName: $rootScope.newReviewCoaching.name,
                     };
                     console.log(cityCoachingForm);
-                    targetStudyProviderService.showGroupHelper(cityCoachingForm).success(function (data, status, headers) {
+                    coachingService.showGroupHelper(cityCoachingForm).success(function (data, status, headers) {
                         var examStream = data;
                         console.log(examStream);
                         
@@ -9065,7 +9064,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);      
         
     exambazaar.controller("resultAutocompleteController", 
-        [ '$scope', '$http','$state', 'targetStudyProviderService', function($scope, $http, $state, targetStudyProviderService){
+        [ '$scope', '$http','$state', 'coachingService', function($scope, $http, $state, coachingService){
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
@@ -9075,7 +9074,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         };
         this.querySearch = function(query){
             if(query.length > 2){
-                return targetStudyProviderService.searchProviders(query).then(function(response){
+                return coachingService.searchProviders(query).then(function(response){
                     //console.log(response.data);
                     return response.data;
                 });
@@ -9084,13 +9083,13 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("sandbox2Controller", 
-        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$stateParams', 'targetStudyCities', 'cityProviderCount', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $stateParams, targetStudyCities, cityProviderCount){
-            $scope.providers = targetStudyProvidersList.data;
+        [ '$scope', '$http','$state','$rootScope','NgMap','coachingService','coachingsList', '$stateParams', 'coachingCities', 'cityProviderCount', function($scope, $http, $state, $rootScope,NgMap, coachingService, coachingsList, $stateParams, coachingCities, cityProviderCount){
+            $scope.providers = coachingsList.data;
             //$scope.filterText = 'Career Launcher';
             $scope.city = $stateParams.cityName;
             $scope.cityProviderCount = cityProviderCount.data;
             $scope.masterId = $stateParams.masterId;
-            $scope.cityStates = targetStudyCities.data.map(function(a) {return a._id;});
+            $scope.cityStates = coachingCities.data.map(function(a) {return a._id;});
             var repStates = $scope.cityStates.map(function(a) {return a.state;});
             $scope.states = [];
             repStates.forEach(function(thisState, index){
@@ -9136,7 +9135,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     
     exambazaar.controller("availOfferController", 
-        [ '$scope', '$http','$state', '$rootScope','thisuser','targetStudyProviderService', 'UserService', 'couponService', '$location', 'thisReview', 'activeOfferInstitutes', 'activeCoupons', 'Socialshare', '$mdDialog', '$timeout', '$window', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, UserService, couponService, $location, thisReview, activeOfferInstitutes, activeCoupons, Socialshare, $mdDialog, $timeout, $window){
+        [ '$scope', '$http','$state', '$rootScope','thisuser','coachingService', 'UserService', 'couponService', '$location', 'thisReview', 'activeOfferInstitutes', 'activeCoupons', 'Socialshare', '$mdDialog', '$timeout', '$window', function($scope, $http, $state, $rootScope, thisuser, coachingService, UserService, couponService, $location, thisReview, activeOfferInstitutes, activeCoupons, Socialshare, $mdDialog, $timeout, $window){
             $window.scrollTo(0, 0);
             $scope.user = thisuser.data;
             $scope.activeOfferInstitutes = activeOfferInstitutes.data;
@@ -9445,7 +9444,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     
     
     exambazaar.controller("reviewedController", 
-        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', '$location', 'thisuserReviewed', 'activeOffers', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, $location, thisuserReviewed, activeOffers){
+        [ '$scope', '$http','$state','$rootScope','thisuser','coachingService', '$location', 'thisuserReviewed', 'activeOffers', function($scope, $http, $state, $rootScope, thisuser, coachingService, $location, thisuserReviewed, activeOffers){
             $scope.user = thisuser.data;
             $scope.activeOffers = activeOffers.data;
             //console.log($scope.activeOffers);
@@ -9531,7 +9530,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("addedInstitutesController", 
-        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', '$mdDialog', '$timeout', 'tofillciService', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam, $mdDialog, $timeout, tofillciService){
+        [ '$scope', '$http','$state','$rootScope','thisuser','coachingService', 'addedInstitutes', 'ebteam', '$mdDialog', '$timeout', 'tofillciService', function($scope, $http, $state, $rootScope, thisuser, coachingService, addedInstitutes, ebteam, $mdDialog, $timeout, tofillciService){
             $scope.user = thisuser.data;
             $rootScope.pageTitle ='Report - Added Institutes';
             
@@ -9629,7 +9628,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             };
             
             $scope.titleCaseName = function(provider, index){
-                targetStudyProviderService.titleCaseName(provider._id).success(function (data, status, headers) {
+                coachingService.titleCaseName(provider._id).success(function (data, status, headers) {
                     if(data){
                         provider = data;
                         console.log(provider.name);
@@ -9666,7 +9665,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 });     
             };
             $scope.removeProvider = function(provider){
-                 targetStudyProviderService.removeProvider(provider._id).success(function (data, status, headers) {
+                 coachingService.removeProvider(provider._id).success(function (data, status, headers) {
                     if(data){
                         $scope.showSavedDialog();
                     }else{
@@ -9680,7 +9679,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("addedQuestionsController", 
-        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedQuestions', 'ebteam', 'examList', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedQuestions, ebteam, examList){
+        [ '$scope', '$http','$state','$rootScope','thisuser','coachingService', 'addedQuestions', 'ebteam', 'examList', function($scope, $http, $state, $rootScope, thisuser, coachingService, addedQuestions, ebteam, examList){
             $scope.user = thisuser.data;
             var exams = examList.data;
             
@@ -9758,7 +9757,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
         
     exambazaar.controller("cityGroupExamQueryController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
         
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
@@ -9775,7 +9774,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     stream: $rootScope.reviewStream,
                 };
                 
-                return targetStudyProviderService.cityGroupExamQueryForm(cityGroupExamQuery).then(function(response){
+                return coachingService.cityGroupExamQueryForm(cityGroupExamQuery).then(function(response){
                     //console.log(response.data);
                     return response.data;
                 });
@@ -9791,7 +9790,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
         
         
     exambazaar.controller("reviewController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', 'allcities', '$location', 'streamList', 'examList', '$mdDialog', function($scope, $http, $state, $rootScope, targetStudyProviderService, allcities, $location, streamList, examList, $mdDialog){
+        [ '$scope', '$http','$state','$rootScope','coachingService', 'allcities', '$location', 'streamList', 'examList', '$mdDialog', function($scope, $http, $state, $rootScope, coachingService, allcities, $location, streamList, examList, $mdDialog){
             $mdDialog.hide();
             $scope.streams = streamList.data;
             $scope.exams = examList.data;
@@ -10072,7 +10071,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);    */
     
     exambazaar.controller("coachingGroupController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $timeout,thisuser, examList, streamList){
+        [ '$scope', '$http','$state','$rootScope','coachingService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, coachingService, $mdDialog, $timeout,thisuser, examList, streamList){
             
             $scope.user = thisuser.data;
             $scope.allExams = examList.data;
@@ -10259,7 +10258,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     name: $scope.newName
                 };
                 
-                targetStudyProviderService.renameAllCoaching(groupNameForm).success(function (data, status, headers) {
+                coachingService.renameAllCoaching(groupNameForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -10282,7 +10281,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     groupName: $scope.newGroupName
                 };
                 
-                targetStudyProviderService.renameAllGroupName(groupNameForm).success(function (data, status, headers) {
+                coachingService.renameAllGroupName(groupNameForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -10412,7 +10411,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     examArray: $scope.addExamsArray
                 };
                 
-                targetStudyProviderService.addExamsToAll(groupExamForm).success(function (data, status, headers) {
+                coachingService.addExamsToAll(groupExamForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -10435,7 +10434,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     logo: $scope.newLogo
                 };
                 
-                targetStudyProviderService.setLogoForAll(groupLogoForm).success(function (data, status, headers) {
+                coachingService.setLogoForAll(groupLogoForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -10464,7 +10463,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         emailArray: emailArray
                     };
 
-                    targetStudyProviderService.setEmailForAll(groupEmailForm).success(function (data, status, headers) {
+                    coachingService.setEmailForAll(groupEmailForm).success(function (data, status, headers) {
                         $scope.showSavedDialog();
 
                     })
@@ -10495,7 +10494,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                         websiteArray: websiteArray
                     };
 
-                    targetStudyProviderService.setWebsiteForAll(groupWebsiteForm).success(function (data, status, headers) {
+                    coachingService.setWebsiteForAll(groupWebsiteForm).success(function (data, status, headers) {
                         $scope.showSavedDialog();
 
                     })
@@ -10545,7 +10544,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     examArray: $scope.removeExamsArray
                 };
                 
-                targetStudyProviderService.removeExamsFromAll(groupExamForm).success(function (data, status, headers) {
+                coachingService.removeExamsFromAll(groupExamForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -10569,7 +10568,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     examArray: allExamIds,
                 };
                 
-                targetStudyProviderService.commonExamsInAll(groupExamForm).success(function (data, status, headers) {
+                coachingService.commonExamsInAll(groupExamForm).success(function (data, status, headers) {
                     var commonExams = data;
                     $scope.commonExamIds = data;
                     var allExamIds =  $scope.allExams.map(function(a) {return a._id;});
@@ -10630,7 +10629,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     instituteIds: allInstitutes
                 };
                 console.log('Disabling: ' + allInstitutes.length);
-                targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+                coachingService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                 })
@@ -11021,11 +11020,11 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
     
     exambazaar.controller("contactsController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'targetStudyProviderService', 'contactsSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, targetStudyProviderService, contactsSummary){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'coachingService', 'contactsSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, coachingService, contactsSummary){
             $scope.contacts = contactsSummary.data;
             console.log($scope.contacts);
             $scope.sanitizeMobiles = function(){
-                targetStudyProviderService.sanitizeMobiles().success(function (data, status, headers) {
+                coachingService.sanitizeMobiles().success(function (data, status, headers) {
                     console.log('Mobiles sanitized');
                     console.log(data);
                     
@@ -11038,7 +11037,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);
       
     exambazaar.controller("aroundmeController", 
-        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', 'viewService','MasterService', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification, viewService, MasterService){
+        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'coachingService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', 'viewService','MasterService', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, coachingService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification, viewService, MasterService){
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
             $scope.masterUser = false;
@@ -11084,7 +11083,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
             });
             
             $scope.setLocofAll = function(){
-                targetStudyProviderService.setLocOfAll().success(function (data, status, headers) {
+                coachingService.setLocOfAll().success(function (data, status, headers) {
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {
@@ -11127,7 +11126,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 var coachingForm = {
                     _id: provider._id 
                 };
-                targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+                coachingService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
                         var examStream = data;
                         
                         var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
@@ -11308,7 +11307,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                 };
                 
                 
-                targetStudyProviderService.aroundme(queryForm).success(function (data, status, headers) {
+                coachingService.aroundme(queryForm).success(function (data, status, headers) {
                     $scope.providers = data;
                     
                     if($scope.providers.length > 0){
@@ -13390,7 +13389,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]); 
         
     exambazaar.controller("allreviewsController", 
-        [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'targetStudyProviderService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, targetStudyProviderService, $state, $mdDialog){
+        [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'coachingService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, coachingService, $state, $mdDialog){
             $scope.allReviews = allReviews.data;
             
             $rootScope.pageTitle = 'All Reviews';
@@ -13400,7 +13399,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
                     city: review.institute.city,
                     coachingName: review.institute.name,
                 };
-                targetStudyProviderService.showGroupHelper(cityCoachingForm).success(function (data, status, headers) {
+                coachingService.showGroupHelper(cityCoachingForm).success(function (data, status, headers) {
                     var examStream = data;
                     console.log(examStream);
 
@@ -13460,7 +13459,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]); 
     
     exambazaar.controller("allOffersController", 
-        [ '$scope', '$http', '$state', '$rootScope','offerService','allOffers', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, offerService, allOffers, targetStudyProviderService){
+        [ '$scope', '$http', '$state', '$rootScope','offerService','allOffers', 'coachingService', function($scope, $http, $state, $rootScope, offerService, allOffers, coachingService){
             $scope.allOffers = allOffers.data;
             
             $rootScope.pageTitle = 'All Offers';
@@ -13489,7 +13488,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]);     
         
     exambazaar.controller("rankerswallController", 
-        [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam','$location', 'Socialshare','$cookies', 'viewService', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam,$location, Socialshare, $cookies, viewService){
+        [ '$scope', '$http','$state', '$stateParams','$rootScope','coachingService','allResults', 'thisExam','$location', 'Socialshare','$cookies', 'viewService', function($scope, $http, $state, $stateParams, $rootScope, coachingService, allResults, thisExam,$location, Socialshare, $cookies, viewService){
             
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
@@ -13611,7 +13610,7 @@ var exambazaar = angular.module('exambazaar', ['ui.router', 'ngMaterial', 'ngAri
     }]); 
         
     exambazaar.controller("searchController", 
-        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$facebook', '$location', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $facebook, $location){
+        [ '$scope', '$http','$state','$rootScope','NgMap','coachingService','coachingsList', '$facebook', '$location', function($scope, $http, $state, $rootScope,NgMap, coachingService, coachingsList, $facebook, $location){
             
             
             $rootScope.pageTitle ='Search & Review Coaching Classes';
@@ -13761,7 +13760,7 @@ function getLatLng(thisData) {
     }]);     
         
     exambazaar.controller("checkLogoController", 
-        [ '$scope', 'thisuser','logoList' , '$http','$state', '$rootScope', '$cookies', 'UserService', 'targetStudyProviderService', function($scope, thisuser, logoList, $http,$state,$rootScope, $cookies, UserService, targetStudyProviderService){
+        [ '$scope', 'thisuser','logoList' , '$http','$state', '$rootScope', '$cookies', 'UserService', 'coachingService', function($scope, thisuser, logoList, $http,$state,$rootScope, $cookies, UserService, coachingService){
         $scope.user = thisuser.data;
         $scope.logoList = logoList.data;
         if($scope.user.userType =='Master'){
@@ -13781,7 +13780,7 @@ function getLatLng(thisData) {
             var checkLogoForm = {
                 ids: ids    
             };
-            targetStudyProviderService.bulkCheckLogos(checkLogoForm).success(function (data, status, headers) {
+            coachingService.bulkCheckLogos(checkLogoForm).success(function (data, status, headers) {
                
                 alert('Marked');
             })
@@ -17858,7 +17857,7 @@ function getLatLng(thisData) {
     }]);    
         
     exambazaar.controller("bulkDisableController", 
-        [ '$scope', '$rootScope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', function($scope, $rootScope, UserService,$http,$state, thisuser, targetStudyProviderService){
+        [ '$scope', '$rootScope', 'UserService', '$http', '$state', 'thisuser', 'coachingService', function($scope, $rootScope, UserService,$http,$state, thisuser, coachingService){
         $scope.user = thisuser.data;
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
@@ -17889,7 +17888,7 @@ function getLatLng(thisData) {
             };
             $scope.disabledIds = institutes;
             console.log(institutes.length);
-            targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+            coachingService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
                 //$scope.disabledIds = data;
                 console.log("Done");
             })
@@ -17905,7 +17904,7 @@ function getLatLng(thisData) {
     }]);        
         
     exambazaar.controller("addInstituteController", 
-        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', 'examList', 'streamList', '$rootScope', 'Notification', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService, examList, streamList,$rootScope, Notification){
+        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'coachingService', 'examList', 'streamList', '$rootScope', 'Notification', function($scope, UserService,$http,$state, thisuser, coachingService, examList, streamList,$rootScope, Notification){
             
         $rootScope.pageTitle = 'Add Coaching in EB';    
         $scope.user = thisuser.data;
@@ -17952,10 +17951,10 @@ function getLatLng(thisData) {
             //DEF
             $scope.newInstitute.groupName = $scope.newInstitute.name;
              var saveProvider = {
-                targetStudyProvider:$scope.newInstitute,
+                coaching:$scope.newInstitute,
                 user: $scope.user.userId
             };
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+            coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.addedInstituteId = data;
                 console.log("Done");
             })
@@ -18007,18 +18006,18 @@ function getLatLng(thisData) {
                     }
                     
                     var saveProvider = {
-                        targetStudyProvider:thisinstitute,
+                        coaching:thisinstitute,
                         user: $scope.user._id,
                         
                     };
                     if($scope.commonExams.length > 0){
-                        saveProvider.targetStudyProvider.exams = $scope.commonExams;
+                        saveProvider.coaching.exams = $scope.commonExams;
                     }
                         
                     institutes.push(saveProvider);
                 }
             });
-            targetStudyProviderService.bulkSaveProviders(institutes).success(function (data, status, headers) {
+            coachingService.bulkSaveProviders(institutes).success(function (data, status, headers) {
                 $scope.addedInstituteIds = data;
                 console.log("Done");
                 Notification.success("Great, we have added " + $scope.addedInstituteIds.length + " institutes!");
@@ -18112,10 +18111,10 @@ function getLatLng(thisData) {
         
         
     exambazaar.controller("sendEmailController", 
-        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'UserService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', function($scope,$http,$state,EmailService, targetStudyProviderService, UserService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope){
+        [ '$scope','$http','$state','EmailService', 'coachingService', 'UserService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', function($scope,$http,$state,EmailService, coachingService, UserService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope){
             $rootScope.pageTitle = "Send Emails via Sendgrid";
             $scope.emailService = function(){
-                targetStudyProviderService.emailService().success(function (data, status, headers) {
+                coachingService.emailService().success(function (data, status, headers) {
                     //$scope.distinctStates = data;
                     console.log("Done");
                 })
@@ -18267,7 +18266,7 @@ function getLatLng(thisData) {
                 //console.log(newValue);
                 if(newValue.length > 5){
                 //alert($scope.email.instituteId);
-                 targetStudyProviderService.getProviderBasic(newValue).success(function (data, status, headers) {
+                 coachingService.getProviderBasic(newValue).success(function (data, status, headers) {
                 if(data){
                     //console.log(data);
                     var refreshedProvider = data.provider;
@@ -20007,14 +20006,14 @@ function getLatLng(thisData) {
                     return ExamService.getStreamExams($stateParams.categoryName);
                 }],
                 
-                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
+                coachingsList: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
                     var cityCourse = {
                         city: $stateParams.cityName,
                         course: $stateParams.subCategoryName
                     };
                         
-                    return targetStudyProviderService.getCourseProviders(cityCourse);
+                    return coachingService.getCourseProviders(cityCourse);
                        
                 }],
                 suggestedblogs: ['blogpostService','$stateParams',
@@ -20050,9 +20049,9 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams){
                     return ExamService.getExamByName($stateParams.subCategoryName);
                 }],
-                thisProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
                 provider: function() { return {}; }
                 
@@ -20090,14 +20089,14 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
-                thisGroup: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
+                thisGroup: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
                     var groupCity = {
                         groupName: $stateParams.groupName,
                         cityName: $stateParams.cityName
                         
                     };
-                    return targetStudyProviderService.getGroupCity(groupCity);
+                    return coachingService.getGroupCity(groupCity);
                 }],
                 thisGroupResults: ['resultService','$stateParams',
                     function(resultService,$stateParams) {
@@ -20130,13 +20129,13 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
-                thisGroupInfo: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getGroupInfo($stateParams.coachingId);
+                thisGroupInfo: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getGroupInfo($stateParams.coachingId);
                 }],
                 imageMediaTagList:['MediaTagService','$stateParams',
                     function(MediaTagService) {  
@@ -20154,9 +20153,9 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
-                cisavedUsersList: ['targetStudyProviderService', '$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.cisavedUsers($stateParams.coachingId);
+                cisavedUsersList: ['coachingService', '$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.cisavedUsers($stateParams.coachingId);
                 }],
                 
                 provider: function() { return {}; }
@@ -20179,9 +20178,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
                 offersList: ['offerService','$stateParams',
                     function(offerService,$stateParams) {  
@@ -20191,9 +20190,9 @@ function getLatLng(thisData) {
                     function(couponService) {  
                     return couponService.getAllCodes();
                 }],
-                thisGroupInfo: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getGroupInfo($stateParams.coachingId);
+                thisGroupInfo: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getGroupInfo($stateParams.coachingId);
                 }],
                 
                 provider: function() { return {}; }
@@ -20216,9 +20215,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
                 provider: function() { return {}; }
                 
@@ -20260,9 +20259,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                contactsSummary: ['targetStudyProviderService',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.contacts();
+                contactsSummary: ['coachingService',
+                    function(coachingService) {
+                    return coachingService.contacts();
                 }],
                 provider: function() { return {}; }
                 
@@ -20300,9 +20299,9 @@ function getLatLng(thisData) {
                     function(UserService) {
                     return UserService.hourlyHeatmap();
                 }],
-                providerSummary: ['targetStudyProviderService',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.dailySummary();
+                providerSummary: ['coachingService',
+                    function(coachingService) {
+                    return coachingService.dailySummary();
                 }],
                 reviewSummary: ['reviewService',
                     function(reviewService) {
@@ -20551,9 +20550,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                groupSummary: ['targetStudyProviderService',
-                    function(targetStudyProviderService){
-                    return targetStudyProviderService.groupSummaryService();
+                groupSummary: ['coachingService',
+                    function(coachingService){
+                    return coachingService.groupSummaryService();
                 }],
                 examList: ['ExamService',
                     function(ExamService){
@@ -20585,9 +20584,9 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams){
                     return ExamService.getExamByName($stateParams.examName);
                 }],
-                allResults: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService, $stateParams) {   
-                    return targetStudyProviderService.allResults($stateParams.examName);
+                allResults: ['coachingService','$stateParams',
+                    function(coachingService, $stateParams) {   
+                    return coachingService.allResults($stateParams.examName);
                 }],
                 provider: function() { return {}; }
                 
@@ -20609,9 +20608,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService) {   
-                    return targetStudyProviderService.coachingAddressService();
+                coachingsList: ['coachingService','$stateParams',
+                    function(coachingService) {   
+                    return coachingService.coachingAddressService();
                 }],
                 provider: function() { return {}; }
                 
@@ -20694,9 +20693,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                allcities: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.getCities();
+                allcities: ['coachingService','$stateParams',
+                    function(coachingService) {
+                    return coachingService.getCities();
                 }],
                 streamList: ['StreamService',
                     function(StreamService){
@@ -20993,17 +20992,17 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
-                    return targetStudyProviderService.sandbox2Service($stateParams.cityName);
+                coachingsList: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    return coachingService.sandbox2Service($stateParams.cityName);
                 }],
-                cityProviderCount: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
-                    return targetStudyProviderService.getCityProviderCount($stateParams.cityName);
+                cityProviderCount: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    return coachingService.getCityProviderCount($stateParams.cityName);
                 }],
-                targetStudyCities: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.getCities();
+                coachingCities: ['coachingService','$stateParams',
+                    function(coachingService) {
+                    return coachingService.getCities();
                 }],
                 provider: function() { return {}; }
                 
@@ -21218,7 +21217,7 @@ function getLatLng(thisData) {
                 provider: function() { return {}; }
             }   
         })
-        .state('editTargetStudyProvider', {
+        .state('editCoachingProvider', {
             url: '/edit/database1/:coachingId', //masterId?
             views: {
                 'header':{
@@ -21226,17 +21225,17 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'editTargetStudyCoaching.html',
-                    controller: 'editTargetStudyCoachingController',
+                    templateUrl: 'editCoachingCoaching.html',
+                    controller: 'editCoachingCoachingController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
                 }
             },
             resolve: {
-                thisTargetStudyProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisCoachingProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
                 imageMediaTagList:['MediaTagService','$stateParams',
                     function(MediaTagService) {  
@@ -21262,14 +21261,14 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
-                    return targetStudyProviderService.getProvidersWithAreas();
+                coachingsList: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    return coachingService.getProvidersWithAreas();
                 }],
                 provider: function() { return {}; }
             }
         })
-        .state('targetStudyProviders', {
+        .state('coachings', {
             url: '/coaching/database1/:city', //masterId?
             views: {
                 'header':{
@@ -21277,8 +21276,8 @@ function getLatLng(thisData) {
                     
                 },
                 'body':{
-                    templateUrl: 'getTargetStudyCoaching.html',
-                    controller: 'getTargetStudyCoachingController',
+                    templateUrl: 'getCoachingCoaching.html',
+                    controller: 'getCoachingCoachingController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -21289,9 +21288,9 @@ function getLatLng(thisData) {
                     function(LocationService,$stateParams) {
                     return LocationService.getCityLocations($stateParams.city);
                 }],
-                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {   
-                    return targetStudyProviderService.getProviders($stateParams.city);
+                coachingsList: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {   
+                    return coachingService.getProviders($stateParams.city);
                 }],
                 institutesSavedList: ['cisavedService',
                     function(cisavedService) {   
@@ -21306,9 +21305,9 @@ function getLatLng(thisData) {
                     return EmailService.getEmails();
                 }],
                 provider: function() { return {}; },
-                targetStudyCities: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.getCities();
+                coachingCities: ['coachingService','$stateParams',
+                    function(coachingService) {
+                    return coachingService.getCities();
                 }]
                 
             }
@@ -21349,9 +21348,9 @@ function getLatLng(thisData) {
                     function(UserService) {
                     return UserService.getInterns();
                 }],
-                coachingCount: ['targetStudyProviderService',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.getCount();
+                coachingCount: ['coachingService',
+                    function(coachingService) {
+                    return coachingService.getCount();
                 }],
                 coachingSavedCount: ['cisavedService',
                     function(cisavedService) {
@@ -21714,9 +21713,9 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
                 }],
-                logoList: ['targetStudyProviderService', '$stateParams',
-                    function(targetStudyProviderService, $stateParams) {
-                    return targetStudyProviderService.checkLogo($stateParams.pageNumber);
+                logoList: ['coachingService', '$stateParams',
+                    function(coachingService, $stateParams) {
+                    return coachingService.checkLogo($stateParams.pageNumber);
                 }],
                 
                 user: function() { return {}; }

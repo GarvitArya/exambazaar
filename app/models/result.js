@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var resultSchema = mongoose.Schema({
-    provider: { type: Schema.ObjectId, ref: 'targetStudyProvider'},
+    provider: { type: Schema.ObjectId, ref: 'coaching'},
     exam: {type: Schema.ObjectId, ref: 'exam', required: true },
     year: {type: String},
     name: {type: String, required: true },

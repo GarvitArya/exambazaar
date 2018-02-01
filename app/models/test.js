@@ -17,7 +17,7 @@ var testSchema = mongoose.Schema({
     },
     screenshots: [{type: String}],
     exam: { type: Schema.ObjectId, ref: 'exam' },
-    institute: { type: Schema.ObjectId, ref: 'targetStudyProvider' },
+    institute: { type: Schema.ObjectId, ref: 'coaching' },
     official: {type: Boolean},
     mockPaper: {type: Boolean},
     solved: {type: Boolean},

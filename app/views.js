@@ -3,7 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var view = require('../app/models/view');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 
 
 var mongoose = require('mongoose');
@@ -214,7 +214,7 @@ router.get('/user/:userId', function(req, res) {
             var nLength = views.length;
             
             var viewInstituteIds =  views.map(function(a) {return a.institute;});
-            var allProviderViews = targetStudyProvider
+            var allProviderViews = coaching
                 .find({_id : { $in : viewInstituteIds }, disabled: {$ne: true}},{name:1 , groupName:1, exams:1, disabled: 1, city:1, logo:1})
                 .deepPopulate('exams exams.stream')
                 .exec(function (err, allProviderViews) {

@@ -3,7 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var addContactInfo = require('../app/models/addContactInfo');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var user = require('../app/models/user');
 
 var mongoose = require('mongoose');
@@ -129,7 +129,7 @@ router.get('/', function(req, res) {
             addContactInfos.forEach(function(thisFillTask, index){
                 var instituteId = thisFillTask.institute;
                 var userId = thisFillTask.user;
-                var thisProvider = targetStudyProvider
+                var thisProvider = coaching
                     .findOne({'_id': instituteId}, {name:1, city:1, email:1, website:1, facebookPage:1, youtubeChannel:1})
                     .exec(function (err, thisProvider) {
                     if (!err){
@@ -270,7 +270,7 @@ router.post('/save', function(req, res) {
     var _deadline = addContactInfoForm._deadline;
     console.info(JSON.stringify(addContactInfoForm));
     //, ebVerify: {$exists: false}
-    var cityProviders = targetStudyProvider
+    var cityProviders = coaching
         .find({'city': addContactInfoCity, disabled: {$ne: true}, website: {$ne: true}, addContactInfoAssigned: {$ne: true}, addContactInfoRequired: {$ne: false},addContactInfoDone: {$ne: true}},{name:1, groupName:1})
         .limit(addContactInfoCount)
         .exec(function (err, cityProviders) {
@@ -286,7 +286,7 @@ router.post('/save', function(req, res) {
                 {
                 var groupName = thisProvider.groupName;
                 var websiteExists = false;
-                var groupInstitutes = targetStudyProvider
+                var groupInstitutes = coaching
                     .find({'groupName': groupName, disabled:false},{website:1})
                     .exec(function (err, groupInstitutes) {
                     if (!err){

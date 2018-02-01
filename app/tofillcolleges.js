@@ -3,7 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var tofillcollege = require('../app/models/tofillcollege');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var user = require('../app/models/user');
 var email = require('../app/models/email');
 var moment = require('moment');
@@ -69,7 +69,7 @@ router.get('/collegesFilled', function(req, res) {
                 var college = thisFillTask.college;
                 var collegeId = college;
                 //console.log(collegeId);
-                var thisCollege = targetStudyProvider
+                var thisCollege = coaching
                     .findOne({_id: collegeId},{groupName:1})
                     .exec(function (err, thisCollege) {
                     if (!err){
@@ -100,7 +100,7 @@ router.get('/collegesFilled', function(req, res) {
 
 router.get('/prevFilled/:collegeId', function(req, res) {
     var collegeId = req.params.collegeId;
-    var thisProvider = targetStudyProvider
+    var thisProvider = coaching
         .findOne({'_id': collegeId},{groupName:1})
         //.deepPopulate('')
         .exec(function (err, thisProvider) {
@@ -120,7 +120,7 @@ router.get('/prevFilled/:collegeId', function(req, res) {
                         var college = thisFillTask.college;
                         var collegeId = college;
                         //console.log(collegeId);
-                        var thisCollege = targetStudyProvider
+                        var thisCollege = coaching
                             .findOne({_id: collegeId},{groupName:1})
                             .exec(function (err, thisCollege) {
                             if (!err){
@@ -301,7 +301,7 @@ router.get('/', function(req, res) {
             tofillcolleges.forEach(function(thisFillTask, index){
                 var collegeId = thisFillTask.college;
                 var userId = thisFillTask.user;
-                var thisProvider = targetStudyProvider
+                var thisProvider = coaching
                     .findOne({'_id': collegeId}, {name:1, city:1, email:1, groupName:1})
                     .exec(function (err, thisProvider) {
                     if (!err){

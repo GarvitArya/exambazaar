@@ -6,7 +6,7 @@ var coupon = require('../app/models/coupon');
 var review = require('../app/models/review');
 
 var user = require('../app/models/user');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var email = require('../app/models/email');
 
 
@@ -28,7 +28,7 @@ router.get('/edit/:couponId', function(req, res) {
         if (!err){
             //console.log(docs);
             var instituteId = thisCoupon.provider;
-            var thisProvider = targetStudyProvider
+            var thisProvider = coaching
             .findOne({_id : instituteId, disabled: {$ne: true}},{name:1 , groupName:1, disabled: 1, city:1, logo:1, address:1, pincode:1})
             //.deepPopulate('exams exams.stream')
             .exec(function (err, thisProvider) {

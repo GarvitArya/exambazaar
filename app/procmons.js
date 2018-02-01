@@ -14,7 +14,7 @@ var cisaved = require('../app/models/cisaved');
 var question = require('../app/models/question');
 var blogpost = require('../app/models/blogpost');
 var mongoose = require('mongoose');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var helper = require('sendgrid').mail;
 var sendGridCredential = require('../app/models/sendGridCredential');
 var moment = require('moment');
@@ -73,7 +73,7 @@ function prevDayViewCount(res){
     });
 };
 function totalProviderCount(res){
-    targetStudyProvider.count({}, function(err, docs) {
+    coaching.count({}, function(err, docs) {
     if (!err){
         res.providers = {
             all: docs,
@@ -86,7 +86,7 @@ function prevDayProviderCount(res){
     var start = moment().subtract(1, 'day').startOf('day');
     var end = moment().subtract(1, 'day').endOf('day');
     
-    targetStudyProvider.count({_created: {  $gte : start, $lte : end}}, function(err, docs) {
+    coaching.count({_created: {  $gte : start, $lte : end}}, function(err, docs) {
     if (!err){
         res.providers.prevDay= docs;
         totalReviewCount(res);
@@ -286,6 +286,11 @@ router.procmon = function(stats){
 };
 router.timestamp = function() {
 	console.log('Current Time in Unix Timestamp: ' + Math.floor(Date.now() / 1000))
+};
+
+
+router.assessmentshelper = function(){
+    console.log('Running Assessment Service: ' + Date.now());
 };
 
 module.exports = router;

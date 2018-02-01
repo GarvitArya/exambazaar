@@ -4,7 +4,7 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var availDiscountSchema = mongoose.Schema({
     user: { type: Schema.ObjectId, ref: 'user', required: true  },
-    institute: { type: Schema.ObjectId, ref: 'targetStudyProvider' },
+    institute: { type: Schema.ObjectId, ref: 'coaching' },
     exam: { type: Schema.ObjectId, ref: 'exam', required: true},
     course: {
         groupname: { type: 'String' },

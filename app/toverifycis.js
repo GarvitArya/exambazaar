@@ -3,7 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var toverifyci = require('../app/models/toverifyci');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var user = require('../app/models/user');
 
 var mongoose = require('mongoose');
@@ -131,7 +131,7 @@ router.get('/', function(req, res) {
             toverifycis.forEach(function(thisFillTask, index){
                 var instituteId = thisFillTask.institute;
                 var userId = thisFillTask.user;
-                var thisProvider = targetStudyProvider
+                var thisProvider = coaching
                     .findOne({'_id': instituteId}, {name:1, city:1, email:1, ebVerifyState:1})
                     .exec(function (err, thisProvider) {
                     if (!err){
@@ -271,7 +271,7 @@ router.post('/save', function(req, res) {
     var _deadline = toverifyciForm._deadline;
     //console.info(JSON.stringify(toverifyciForm));
     //, ebVerify: {$exists: false}
-    var cityProviders = targetStudyProvider
+    var cityProviders = coaching
         .find({'city': verifyCity, disabled: {$ne: true}, verfiyAssigned: {$ne: true}, website: {$exists: true}, $where:"this.website.length>0 && this.website[0]!=''" },{name:1, address:1, website: 1})
         .limit(instituteVerifyCount)
         .exec(function (err, cityProviders) {

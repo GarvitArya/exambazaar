@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var rateInstituteSchema = mongoose.Schema({
-    institute: { type: Schema.ObjectId, ref: 'targetStudyProvider', required: true },
+    institute: { type: Schema.ObjectId, ref: 'coaching', required: true },
     user: { type: Schema.ObjectId, required: true, ref: 'User' },
     active: { type: Boolean, default: true },
     _created: { type: Date, default: Date.now },

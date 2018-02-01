@@ -1626,277 +1626,277 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             return $http.post('/api/colleges/save',college);
         };
     }]); 
-    exambazaar.service('targetStudyProviderService', ['$http', function($http) {
+    exambazaar.service('coachingService', ['$http', function($http) {
         this.oneOff = function() {
-            return $http.get('/api/targetStudyProviders/oneOff');
+            return $http.get('/api/coachings/oneOff');
         };
         this.getProviders = function(city) {
-            return $http.get('/api/targetStudyProviders/city/'+city, {city: city});
+            return $http.get('/api/coachings/city/'+city, {city: city});
         };
         this.contacts = function() {
-            return $http.get('/api/targetStudyProviders/contacts');
+            return $http.get('/api/coachings/contacts');
         };
         this.sanitizeMobiles = function() {
-            return $http.get('/api/targetStudyProviders/sanitizeMobiles');
+            return $http.get('/api/coachings/sanitizeMobiles');
         };
         this.dailySummary = function() {
-            return $http.get('/api/targetStudyProviders/dailySummary');
+            return $http.get('/api/coachings/dailySummary');
         };
         this.p5Analytics = function(analyticsForm) {
-            return $http.post('/api/targetStudyProviders/p5Analytics', analyticsForm);
+            return $http.post('/api/coachings/p5Analytics', analyticsForm);
         };
         this.coachingMaintenance = function() {
-            return $http.post('/api/targetStudyProviders/coachingMaintenance');
+            return $http.post('/api/coachings/coachingMaintenance');
         };
         this.examListingsSummary = function() {
-            return $http.post('/api/targetStudyProviders/examListingsSummary');
+            return $http.post('/api/coachings/examListingsSummary');
         };
         this.courseSummary = function() {
-            return $http.post('/api/targetStudyProviders/courseSummary');
+            return $http.post('/api/coachings/courseSummary');
         };
         this.allResults = function(examId) {
-            return $http.get('/api/targetStudyProviders/allResults/'+examId, {examId: examId});
+            return $http.get('/api/coachings/allResults/'+examId, {examId: examId});
         };
         this.getProvidersWithAreas = function() {
-            return $http.get('/api/targetStudyProviders/providersWithAreas');
+            return $http.get('/api/coachings/providersWithAreas');
         };
         this.coachingAddressService = function() {
-            return $http.get('/api/targetStudyProviders/coachingAddressService');
+            return $http.get('/api/coachings/coachingAddressService');
         };
         this.searchProviders = function(query) {
-            return $http.get('/api/targetStudyProviders/query/'+query, {query: query});
+            return $http.get('/api/coachings/query/'+query, {query: query});
         };
         this.searchCoachingGroupProviders = function(query) {
-            return $http.get('/api/targetStudyProviders/coachingGroupQuery/'+query, {query: query});
+            return $http.get('/api/coachings/coachingGroupQuery/'+query, {query: query});
         };
         this.searchBlogCoachingGroupProviders = function(query) {
-            return $http.get('/api/targetStudyProviders/blogCoachingGroupQuery/'+query, {query: query});
+            return $http.get('/api/coachings/blogCoachingGroupQuery/'+query, {query: query});
         };
         this.addExamsToAll = function(groupExamForm) {
-            return $http.post('/api/targetStudyProviders/addExamsToAll',groupExamForm);
+            return $http.post('/api/coachings/addExamsToAll',groupExamForm);
         };
         this.setLogoForAll = function(groupLogoForm) {
-            return $http.post('/api/targetStudyProviders/setLogoForAll',groupLogoForm);
+            return $http.post('/api/coachings/setLogoForAll',groupLogoForm);
         };
         this.setEmailForAll = function(groupExamForm) {
-            return $http.post('/api/targetStudyProviders/setEmailForAll',groupExamForm);
+            return $http.post('/api/coachings/setEmailForAll',groupExamForm);
         };
         this.setWebsiteForAll = function(groupWebsiteForm) {
-            return $http.post('/api/targetStudyProviders/setWebsiteForAll',groupWebsiteForm);
+            return $http.post('/api/coachings/setWebsiteForAll',groupWebsiteForm);
         };
         
         this.renameAllCoaching = function(groupNameForm) {
-            return $http.post('/api/targetStudyProviders/renameAllCoaching',groupNameForm);
+            return $http.post('/api/coachings/renameAllCoaching',groupNameForm);
         };
         this.renameAllGroupName = function(groupNameForm) {
-            return $http.post('/api/targetStudyProviders/renameAllGroupName',groupNameForm);
+            return $http.post('/api/coachings/renameAllGroupName',groupNameForm);
         };
         this.removeExamsFromAll = function(groupExamForm) {
-            return $http.post('/api/targetStudyProviders/removeExamsFromAll',groupExamForm);
+            return $http.post('/api/coachings/removeExamsFromAll',groupExamForm);
         };
         this.commonExamsInAll = function(groupExamForm) {
-            return $http.post('/api/targetStudyProviders/commonExamsInAll',groupExamForm);
+            return $http.post('/api/coachings/commonExamsInAll',groupExamForm);
         };
         this.searchCityProviders = function(cityQueryForm) {
-            return $http.post('/api/targetStudyProviders/cityQuery',cityQueryForm);
+            return $http.post('/api/coachings/cityQuery',cityQueryForm);
         };
         this.showGroupHelper = function(cityCoachingForm) {
-            return $http.post('/api/targetStudyProviders/showGroupHelper',cityCoachingForm);
+            return $http.post('/api/coachings/showGroupHelper',cityCoachingForm);
         };
         this.showGroupHelperById = function(coachingId) {
-            return $http.post('/api/targetStudyProviders/showGroupHelperById',coachingId);
+            return $http.post('/api/coachings/showGroupHelperById',coachingId);
         };
         this.searchCityReviewProviders = function(cityQueryForm) {
-            return $http.post('/api/targetStudyProviders/cityReviewQuery',cityQueryForm);
+            return $http.post('/api/coachings/cityReviewQuery',cityQueryForm);
         };
         this.cityGroupExamQueryForm = function(cityGroupExamQueryForm) {
-            return $http.post('/api/targetStudyProviders/cityGroupExamQuery',cityGroupExamQueryForm);
+            return $http.post('/api/coachings/cityGroupExamQuery',cityGroupExamQueryForm);
         };
         this.aroundme = function(queryForm) {
-            return $http.post('/api/targetStudyProviders/aroundme',queryForm);
+            return $http.post('/api/coachings/aroundme',queryForm);
         };
         this.bulkSaveLatLng = function(LatLngForm) {
-            return $http.post('/api/targetStudyProviders/bulkSaveLatLng',LatLngForm);
+            return $http.post('/api/coachings/bulkSaveLatLng',LatLngForm);
         };
         this.setLocOfAll = function() {
-            return $http.post('/api/targetStudyProviders/setLocofAll');
+            return $http.post('/api/coachings/setLocofAll');
         };
         this.checkLogo = function(pageNumber) {
-            return $http.get('/api/targetStudyProviders/checkLogo/'+pageNumber, {pageNumber: pageNumber});
+            return $http.get('/api/coachings/checkLogo/'+pageNumber, {pageNumber: pageNumber});
         };
         this.bulkCheckLogos = function(checkLogoForm) {
-            return $http.post('/api/targetStudyProviders/bulkCheckLogos',checkLogoForm);
+            return $http.post('/api/coachings/bulkCheckLogos',checkLogoForm);
         };
         this.bulkDisableProviders = function(disableForm) {
-            return $http.post('/api/targetStudyProviders/bulkDisableProviders',disableForm);
+            return $http.post('/api/coachings/bulkDisableProviders',disableForm);
         };
         this.cirf = function(cirfForm) {
-            return $http.post('/api/targetStudyProviders/cirf',cirfForm);
+            return $http.post('/api/coachings/cirf',cirfForm);
         };
         this.groupProviders = function(query) {
-            return $http.get('/api/targetStudyProviders/group/'+query, {query: query});
+            return $http.get('/api/coachings/group/'+query, {query: query});
         };
         this.addFaculty = function(newFacultyForm) {
-            return $http.post('/api/targetStudyProviders/addFaculty',newFacultyForm);
+            return $http.post('/api/coachings/addFaculty',newFacultyForm);
         };
         this.addManagement = function(newManagementForm) {
-            return $http.post('/api/targetStudyProviders/addManagement',newManagementForm);
+            return $http.post('/api/coachings/addManagement',newManagementForm);
         };
         this.removeManagement = function(newManagementForm) {
-            return $http.post('/api/targetStudyProviders/removeManagement',newManagementForm);
+            return $http.post('/api/coachings/removeManagement',newManagementForm);
         };
         
         this.addPrimaryManagement = function(newManagementForm) {
-            return $http.post('/api/targetStudyProviders/addPrimaryManagement',newManagementForm);
+            return $http.post('/api/coachings/addPrimaryManagement',newManagementForm);
         };
         this.addResult = function(newResultForm) {
-            return $http.post('/api/targetStudyProviders/addResult',newResultForm);
+            return $http.post('/api/coachings/addResult',newResultForm);
         };
         this.bulkAddResult = function(bulkResult) {
-            return $http.post('/api/targetStudyProviders/bulkAddResult',bulkResult);
+            return $http.post('/api/coachings/bulkAddResult',bulkResult);
         };
         this.suggestedcoachings = function(examUserinfo) {
-            return $http.post('/api/targetStudyProviders/suggestedcoachings', examUserinfo);
+            return $http.post('/api/coachings/suggestedcoachings', examUserinfo);
         };
         
         
         this.addPhoto = function(newPhotoForm) {
-            return $http.post('/api/targetStudyProviders/addPhoto',newPhotoForm);
+            return $http.post('/api/coachings/addPhoto',newPhotoForm);
         };
         
         this.addLogo = function(newLogoForm) {
-            return $http.post('/api/targetStudyProviders/addLogo',newLogoForm);
+            return $http.post('/api/coachings/addLogo',newLogoForm);
         };
         this.addResultPic = function(newResultPicForm) {
-            return $http.post('/api/targetStudyProviders/addResultPic',newResultPicForm);
+            return $http.post('/api/coachings/addResultPic',newResultPicForm);
         };
         
         this.addVideo = function(newVideoForm) {
-            return $http.post('/api/targetStudyProviders/addVideo',newVideoForm);
+            return $http.post('/api/coachings/addVideo',newVideoForm);
         };
         this.changeProvidersStartingWith = function(startsWith) {
-            return $http.get('/api/targetStudyProviders/changeProvidersStartingWith/'+startsWith, {startsWith: startsWith});
+            return $http.get('/api/coachings/changeProvidersStartingWith/'+startsWith, {startsWith: startsWith});
         };
         this.getCourseProviders = function(cityCourse) {
-            return $http.post('/api/targetStudyProviders/cityCourse',cityCourse);
+            return $http.post('/api/coachings/cityCourse',cityCourse);
         };
         this.CoachingStream = function(streamInfo) {
-            return $http.post('/api/targetStudyProviders/CoachingStream', streamInfo);
+            return $http.post('/api/coachings/CoachingStream', streamInfo);
         };
         this.getProvider = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/coaching/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/coaching/'+coachingId, {coachingId: coachingId});
         };
         this.titleCaseName = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/titleCaseName/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/titleCaseName/'+coachingId, {coachingId: coachingId});
         };
         this.getClaimProvider = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/claimcoaching/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/claimcoaching/'+coachingId, {coachingId: coachingId});
         };
         this.getProviderReview = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/coachingreview/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/coachingreview/'+coachingId, {coachingId: coachingId});
         };
         this.getGroupInfo = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/getGroupInfo/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/getGroupInfo/'+coachingId, {coachingId: coachingId});
         };
         this.getGroupCity = function(groupCity) {
-            return $http.post('/api/targetStudyProviders/coachingGroup/',groupCity);
+            return $http.post('/api/coachings/coachingGroup/',groupCity);
         };
         this.getProviderBasic = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/basiccoaching/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/basiccoaching/'+coachingId, {coachingId: coachingId});
         };
         this.getGroupName = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/getGroupName/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/getGroupName/'+coachingId, {coachingId: coachingId});
         };
         this.getProviderFillSummary = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/fillSummary/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/fillSummary/'+coachingId, {coachingId: coachingId});
         };
         this.cisavedUsers = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/cisavedUsers/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/cisavedUsers/'+coachingId, {coachingId: coachingId});
         };
         this.setEBVerifyState = function(verifyForm) {
-            return $http.post('/api/targetStudyProviders/setEBVerifyState',verifyForm);
+            return $http.post('/api/coachings/setEBVerifyState',verifyForm);
         };
         this.setEBContactInfoState = function(verifyForm) {
-            return $http.post('/api/targetStudyProviders/setEBContactInfoState',verifyForm);
+            return $http.post('/api/coachings/setEBContactInfoState',verifyForm);
         };
         this.saveProvider = function(provider) {
-            return $http.post('/api/targetStudyProviders/savecoaching',provider);
+            return $http.post('/api/coachings/savecoaching',provider);
         };
         this.removeProvider = function(coachingId) {
-            return $http.get('/api/targetStudyProviders/removecoaching/'+coachingId, {coachingId: coachingId});
+            return $http.get('/api/coachings/removecoaching/'+coachingId, {coachingId: coachingId});
         };
         this.bulkSaveProviders = function(providers) {
-            return $http.post('/api/targetStudyProviders/bulksavecoaching',providers);
+            return $http.post('/api/coachings/bulksavecoaching',providers);
         };
         this.getCount = function() {
-            return $http.get('/api/targetStudyProviders/count');
+            return $http.get('/api/coachings/count');
         };
         this.getCityCount = function() {
-            return $http.get('/api/targetStudyProviders/cityCount');
+            return $http.get('/api/coachings/cityCount');
         };
         this.getCityProviderCount = function(city) {
-            return $http.get('/api/targetStudyProviders/cityProviderCount/'+city, {city: city});
+            return $http.get('/api/coachings/cityProviderCount/'+city, {city: city});
         };
         this.getCities = function() {
-            return $http.get('/api/targetStudyProviders/cities');
+            return $http.get('/api/coachings/cities');
         };
         
         this.providercities = function(query) {
-            return $http.get('/api/targetStudyProviders/providercities/'+query, {query: query});
+            return $http.get('/api/coachings/providercities/'+query, {query: query});
         };
         this.getWebsites = function() {
-            return $http.get('/api/targetStudyProviders/websites');
+            return $http.get('/api/coachings/websites');
         };
-        this.uprank = function(targetStudyProviderId) {
-            return $http.get('/api/targetStudyProviders/uprank/'+targetStudyProviderId, {targetStudyProviderId: targetStudyProviderId});
+        this.uprank = function(coachingId) {
+            return $http.get('/api/coachings/uprank/'+coachingId, {coachingId: coachingId});
         };
-        this.downrank = function(targetStudyProviderId) {
-            return $http.get('/api/targetStudyProviders/downrank/'+targetStudyProviderId, {targetStudyProviderId: targetStudyProviderId});
+        this.downrank = function(coachingId) {
+            return $http.get('/api/coachings/downrank/'+coachingId, {coachingId: coachingId});
         };
         this.cleanTargetstudyurls = function() {
-            return $http.get('/api/targetStudyProviders/cleanTargetstudyurls');
+            return $http.get('/api/coachings/cleanTargetstudyurls');
         };
         this.rank0 = function() {
-            return $http.get('/api/targetStudyProviders/setRank0');
+            return $http.get('/api/coachings/setRank0');
         };
         this.logoService = function() {
-            return $http.get('/api/targetStudyProviders/logoService');
+            return $http.get('/api/coachings/logoService');
         };
         this.databaseService = function() {
-            return $http.get('/api/targetStudyProviders/databaseService');
+            return $http.get('/api/coachings/databaseService');
         };
         this.cityStateService = function() {
-            return $http.get('/api/targetStudyProviders/cityStateService');
+            return $http.get('/api/coachings/cityStateService');
         };
         this.cityStateService2 = function() {
-            return $http.get('/api/targetStudyProviders/cityStateService2');
+            return $http.get('/api/coachings/cityStateService2');
         };
         this.emailService = function() {
-            return $http.get('/api/targetStudyProviders/emailService');
+            return $http.get('/api/coachings/emailService');
         };
         this.groupSummaryService = function() {
-            return $http.get('/api/targetStudyProviders/groupSummaryService');
+            return $http.get('/api/coachings/groupSummaryService');
         };
         this.citySummaryService = function() {
-            return $http.get('/api/targetStudyProviders/citySummaryService');
+            return $http.get('/api/coachings/citySummaryService');
         };
         this.cacsService = function() {
-            return $http.get('/api/targetStudyProviders/cacsService');
+            return $http.get('/api/coachings/cacsService');
         };
         this.sandbox2Service = function(city) {
-            return $http.get('/api/targetStudyProviders/sandbox2Service/'+city, {city: city});
+            return $http.get('/api/coachings/sandbox2Service/'+city, {city: city});
         };
         this.UniqueLogoService = function() {
-            return $http.get('/api/targetStudyProviders/UniqueLogoService');
+            return $http.get('/api/coachings/UniqueLogoService');
         };
         this.allDistinct = function() {
-            return $http.get('/api/targetStudyProviders/allDistinct');
+            return $http.get('/api/coachings/allDistinct');
         };
         this.getAllCourses = function() {
-            return $http.get('/api/targetStudyProviders/getAllCourses');
+            return $http.get('/api/coachings/getAllCourses');
         };
         this.removeDuplicates = function(city) {
-            return $http.get('/api/targetStudyProviders/edit/removeDuplicates/'+city, {city: city});
+            return $http.get('/api/coachings/edit/removeDuplicates/'+city, {city: city});
         };
     }]);      
      
@@ -2316,7 +2316,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);    
     
     exambazaar.controller("p4Controller", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'cities', '$state', '$stateParams', '$cookies', 'thisStream', 'thisExam','streamExams', '$mdDialog', '$geolocation', 'CoachingStream', 'SuggestedBlogStream', function($scope,$rootScope, targetStudyProviderService, cities, $state, $stateParams, $cookies,  thisStream, thisExam, streamExams, $mdDialog, $geolocation, CoachingStream, SuggestedBlogStream){
+    [ '$scope','$rootScope', 'coachingService', 'cities', '$state', '$stateParams', '$cookies', 'thisStream', 'thisExam','streamExams', '$mdDialog', '$geolocation', 'CoachingStream', 'SuggestedBlogStream', function($scope,$rootScope, coachingService, cities, $state, $stateParams, $cookies,  thisStream, thisExam, streamExams, $mdDialog, $geolocation, CoachingStream, SuggestedBlogStream){
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
         $scope.city = $stateParams.cityName;
@@ -2478,7 +2478,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
         }, true);
         
-        //$scope.providersList = targetStudyProvidersList.data;
+        //$scope.providersList = coachingsList.data;
         
         
         
@@ -2637,7 +2637,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     
     exambazaar.controller("verifyClaimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService',  'OTPService','UserService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope, $rootScope, targetStudyProviderService, OTPService, UserService, thisProvider , $state, $stateParams, $cookies, $mdDialog, $timeout){
+    [ '$scope', '$rootScope', 'coachingService',  'OTPService','UserService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', function($scope, $rootScope, coachingService, OTPService, UserService, thisProvider , $state, $stateParams, $cookies, $mdDialog, $timeout){
         $scope.provider = thisProvider.data;
         $scope.currStep = 1;
         if($scope.provider.mobile.length > 0)
@@ -4692,9 +4692,938 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);  
         
     
+    exambazaar.controller("groupreviewsController", 
+    [ '$scope','$rootScope', 'coachingService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, coachingService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
+        $rootScope.reviewStream = null;
+        $rootScope.reviewExam = null;
+        $rootScope.reviewCity = null;
+        $rootScope.reviewInstitute = null;
+        $mdDialog.hide();
+        
+        $scope.cancel = function() {
+          $mdDialog.cancel();
+        };
+        
+        $scope.thisGroupR = thisGroupResults.data;
+        if(!$scope.thisGroupR){
+            $scope.thisGroupR = [];
+        }
+        $scope.group = thisGroup.data;
+        var groupDisabled = $scope.group.map(function(a) {return a.disabled;});
+        var groupIds = $scope.group.map(function(a) {return a._id;});
+        
+        $scope.exam = thisExam.data;
+        $scope.thisExam = $scope.exam;
+        $scope.category = thisStream.data;
+        $scope.categoryName = $stateParams.categoryName;
+        $scope.groupName = $stateParams.groupName;
+        $scope.subCategoryName = $stateParams.subCategoryName;
+        $scope.subcategory = $scope.exam;
+        $scope.city = $stateParams.cityName; 
+        $scope.allExams = examList.data;
+        $scope.allStreams = streamList.data;
+        $scope.playerVars = {
+            controls: 1,
+            showinfo: 0
+        };
+        //console.log($scope.allExams);
+        if($cookies.getObject('sessionuser')){
+            $scope.user = $cookies.getObject('sessionuser');
+             UserService.getUserShortlistedInstitutes($scope.user.userId).success(function (data, status, headers) {
+                 var allShortlistData = data;
+                 var allShortlistedIds = allShortlistData.map(function(a) {return a.institute._id;});
+                 $scope.shortlistedIds = [];
+                 $scope.shortlistDetails = [];
+                 groupIds.forEach(function(thisGroupId, gindex){
+                     var sIndex = allShortlistedIds.indexOf(thisGroupId);
+                     if(sIndex != -1){
+                     $scope.shortlistedIds.push(thisGroupId); $scope.shortlistDetails.push(allShortlistData[sIndex]);
+                     }
+                 });
+                if($scope.shortlistedIds.indexOf($scope.provider._id) != -1){
+                    $scope.shortlisted = true;
+                }
+            })
+            .error(function (data, status, header, config) {
+                console.log('Shortlist Error' + status + " " + data);    
+            }); 
+            
+            if($scope.user.userType=='Master' || $scope.user.userType=='Intern - Business Development'){
+                $scope.ebuser = true;
+            }
+            
+            /*if($scope.user.userType=='Master'){
+                $scope.editable = true;
+                $scope.verifiedUser = true;
+                $scope.ebuser = true;
+            }
+            if($scope.user.userType=='Intern - Business Development'){
+                $scope.editable = true;
+                $scope.verifiedUser = true;
+                $scope.ebuser = true;
+                //$scope.showClaimDialog();
+            }
+            if($scope.user.userType=='Partner'){
+                $scope.verifiedUser = true;
+                $scope.ebuser = false;
+                if($scope.user.partner.indexOf($scope.provider._id) != -1){
+                    if(!$scope.provider.primaryManagement || $scope.provider.primaryManagement.name =='' || $scope.provider.primaryManagement.mobile ==''){
+                        
+                        $scope.editable = false;
+                        $scope.showAddPrimaryManagement();
+                    }else{
+                        $scope.editable = true;
+                    }
+                    
+                    
+                    
+                }else{
+                    $scope.editable = false;
+                    $scope.showUnauthorizedAccess();
+                    
+                }
+                
+            }*/
+        }else{
+            
+            $scope.signupNeeded = true;
+            //user is not allowed to access this page
+            /*var viewForm = {
+                institute: $scope.provider._id,
+                claim: true
+            };
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                console.log('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.log();
+            });*/
+        }
+        
+        if(!$scope.user || !$scope.user.userId){
+            $scope.showLoginForm();
+        }
+        
+        $scope.overviewIcons = [
+            {
+                icon:'images/icons/centre.png',
+                text:'Centres',
+                data: '1'
+            },
+            {
+                icon:'images/icons/city.png',
+                text:'Cities',
+                data: '1'
+            },
+            {
+                icon:'images/icons/students.png',
+                text:'Students',
+                data: '100'
+            },
+            {
+                icon:'images/icons/faculty.png',
+                text:'Faculty',
+                data: '10'
+            }
+        ];
+        $scope.components = [
+            /*'Overview',*/
+            'Contact',
+            'Exams',
+            'Results',
+            'Courses',
+            'Photos',
+            'Videos',
+            'Faculty',
+            'Location',
+            'Reviews'
+        ];
+        $scope.rankCategories = [
+            'GENERAL',    
+            'OBC-NCL',    
+            'SC/ST',    
+            'PwD'   
+        ];
+        $scope.resultYears = [
+            '2017',    
+            '2016',    
+            '2015',    
+            '2014',    
+            '2013',    
+            '2012',    
+            '2011',    
+            '2010',    
+            '2009',    
+            '2008',    
+            '2007',    
+            '2006',    
+            '2005',    
+            '2004',    
+            '2003'    
+        ];
+        
+        $scope.provider = {
+            name: $stateParams.groupName,
+            city: $stateParams.cityName
+        };
+        $scope.groupExams = [];
+        $scope.groupStreams = [];
+        $scope.groupPhotos = [];
+        $scope.groupVideos = [];
+        $scope.groupResults = [];
+        $scope.groupCourses = [];
+        $scope.groupFaculties = [];
+        var groupExamIds = [];
+        var groupStreamIds = [];
+        var examTitle = ' for ';
+        $scope.currStreamExams = [];
+        $scope.group.forEach(function(thisGroup, index){
+            if(thisGroup.latlng){
+                thisGroup.mapAddress = [thisGroup.latlng.lat, thisGroup.latlng.lng];
+                //console.log(thisGroup.mapAddress);
+            }
+            if(thisGroup.logo){
+                $scope.provider.logo = thisGroup.logo;
+            }
+            var thisGroupExams = thisGroup.exams;
+            thisGroupExams.forEach(function(thisExam, index){
+                groupExamIds = $scope.groupExams.map(function(a) {return a.exam._id;});
+                var eIndex = groupExamIds.indexOf(thisExam._id);
+                
+                if(eIndex == -1){
+                    var newGroupExam = {
+                        exam: thisExam,
+                        centre: [thisGroup]
+                    };
+                    var thisStream = thisExam.stream;
+                    groupStreamIds = $scope.groupStreams.map(function(a) {return a._id;});
+                    if(groupStreamIds.indexOf(thisStream._id) == -1){ $scope.groupStreams.push(thisStream);
+                    }
+                    $scope.groupExams.push(newGroupExam);
+                    if($scope.category._id.toString() == thisExam.stream._id.toString()){
+                        $scope.currStreamExams.push(thisExam);
+                    }
+                }else{
+                    var groupExam = $scope.groupExams[eIndex];
+                    groupExam.centre.push(thisGroup);
+                }
+            });
+            var thisGroupPhoto = thisGroup.photo;
+            //var thisGroupResults = thisGroup.results;
+            var thisGroupResults = $scope.thisGroupR;
+            var thisGroupVideo = thisGroup.video;
+            var thisGroupFaculty = thisGroup.faculty;
+            var thisGroupCourse = thisGroup.course;
+            $scope.groupPhotos = $scope.groupPhotos.concat(thisGroupPhoto);
+            $scope.groupVideos = $scope.groupVideos.concat(thisGroupVideo);
+            $scope.groupFaculties = $scope.groupFaculties.concat(thisGroupFaculty);
+            $scope.groupResults = $scope.groupResults.concat(thisGroupResults);
+            $scope.groupCourses = $scope.groupCourses.concat(thisGroupCourse);
+        });
+        
+        $scope.groupExamsOnly = $scope.groupExams.map(function(a) {return a.exam;});
+        //console.log($scope.groupResults);
+        
+        $scope.showPhotoDialog = function(ev,index) {
+            $scope.activePhotoIndex = index;
+            $scope.activePhoto = $scope.groupPhotos[index];
+            var indexPair = startEndIndex(index, $scope.groupPhotos.length);
+            $scope.startPhotoIndex = indexPair.start;
+            $scope.endPhotoIndex = indexPair.end;
+            
+            $mdDialog.show({
+              contentElement: '#photoDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        function startEndIndex (index, arrayLength){
+            
+            var showLength = 6;
+            var indexPair = {
+                start: 0,
+                end: arrayLength
+            };
+            
+            if(index - showLength/2 <=0){
+                indexPair.start = 0;
+                indexPair.end = Math.min(indexPair.start + showLength, arrayLength);
+            }else{
+                if(index + showLength/2 >= arrayLength){
+                    indexPair.end = arrayLength;
+                    indexPair.start = Math.max(0, indexPair.end - showLength);
+                    
+                }else{
+                    indexPair.start = index -showLength/2;
+                    indexPair.end = Math.min(indexPair.start + showLength, arrayLength);
+                }
+                
+            }
+            return (indexPair);
+        };
+        
+        $scope.prevPhoto = function(){
+            var index = $scope.activePhotoIndex - 1;
+            $scope.changePhotoImage(index);
+        };
+         $scope.nextPhoto = function(){
+            var index = $scope.activePhotoIndex + 1;
+            $scope.changePhotoImage(index);
+        };
+        $scope.changePhotoImage = function(index){
+            var arrayLength = $scope.groupPhotos.length;
+            if(index >=0 && index < arrayLength){
+                $scope.activePhotoIndex = index;
+                $scope.activePhoto = $scope.groupPhotos[index];
+                var indexPair = startEndIndex(index, $scope.groupPhotos.length);
+                //console.log(JSON.stringify(indexPair));
+                $scope.startPhotoIndex = indexPair.start;
+                $scope.endPhotoIndex = indexPair.end;
+            }
+            
+        };
+        $scope.showFacultyDialog = function(ev,index) {
+            $scope.activeFacultyIndex = index;
+            $scope.activeFaculty = $scope.groupFaculties[index];
+            var indexPair = startEndIndex(index, $scope.groupFaculties.length);
+            $scope.startFacultyIndex = indexPair.start;
+            $scope.endFacultyIndex = indexPair.end;
+            
+            $mdDialog.show({
+              contentElement: '#facultyDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        
+        $scope.getShortlistSelectedColour = function(thisGroup){
+            var className = "notselected";
+            if($scope.shortlistedIds){
+                var sIndex = $scope.shortlistedIds.indexOf(thisGroup._id);
+                if(sIndex == -1){
+                }else{
+                    className = "selected";
+                }
+            }
+            
+            
+            
+            return className;
+        };
+        
+        
+        $scope.updateShortlistInstitute = function(thisGroup){
+            var sIndex = $scope.shortlistedIds.indexOf(thisGroup._id);
+            
+            if(sIndex == -1){
+                $scope.shortlistedIds.push(thisGroup._id);
+                $scope.shortlistInstitute(thisGroup._id);
+            }else{
+                //$scope.shortlistedIds.splice(sIndex, 1);
+            }
+            
+        };
+        
+        
+        $scope.shortlistInstitute = function(instituteId){
+            //console.log($scope.shortlistedIds);
+            //$scope.showSelectShortlistCentreDialog();
+            if($scope.user.userId && instituteId){
+                var shortListForm = {
+                    userId: $scope.user.userId,
+                    instituteId: instituteId
+                };
+                UserService.shortlistInstitute(shortListForm).success(function (data, status, headers) {
+                    console.log('Institute Shortlisted');
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Shortlist error: ' + status + " " + data);    
+                });  
+            }
+              
+        };
+        $scope.prevFaculty = function(){
+            var index = $scope.activeFacultyIndex - 1;
+            $scope.changeFacultyImage(index);
+        };
+         $scope.nextFaculty = function(){
+            var index = $scope.activeFacultyIndex + 1;
+            $scope.changeFacultyImage(index);
+        };
+        $scope.changeFacultyImage = function(index){
+            var arrayLength = $scope.groupFaculties.length;
+            if(index >=0 && index < arrayLength){
+                $scope.activeFacultyIndex = index;
+                $scope.activeFaculty = $scope.groupFaculties[index];
+                var indexPair = startEndIndex(index,$scope.groupFaculties.length);
+                $scope.startFacultyIndex = indexPair.start;
+                $scope.endFacultyIndex = indexPair.end;
+            }
+            
+        };
+        
+        $scope.showResultDialog = function(ev, index, examResult) {
+            $scope.activeResultIndex = index;
+            $scope.activeResult = $scope.groupResults[index];
+            var indexPair = startEndIndex(index, $scope.groupResults.length);
+            
+            $scope.startResultIndex = indexPair.start;
+            $scope.endResultIndex = indexPair.end;
+            $scope.dialogExamResult = examResult;
+            
+            $mdDialog.show({
+              contentElement: '#resultsDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        
+        $scope.prevResult = function(){
+            var index = $scope.activeResultIndex - 1;
+            $scope.changeResultImage(index);
+        };
+         $scope.nextResult = function(){
+            var index = $scope.activeResultIndex + 1;
+            $scope.changeResultImage(index);
+        };
+        $scope.changeResultImage = function(index){
+            var arrayLength = $scope.groupResults.length
+            if(index >=0 && index < arrayLength){
+                $scope.activeResultIndex = index;
+                $scope.activeResult = $scope.groupResults[index];
+                var indexPair = startEndIndex(index,$scope.groupResults.length);
+                $scope.startResultIndex = indexPair.start;
+                $scope.endResultIndex = indexPair.end;
+            }
+        };
+        
+        
+        var instituteIds = []; //$scope.group.map(function(a) {return a._id;});
+        
+        $scope.group.forEach(function(thisGroup, index){
+            if(thisGroup.city == $stateParams.cityName){
+                instituteIds.push(thisGroup._id);
+            }
+        });
+        $scope.user = $cookies.getObject('sessionuser');
+        var viewForm = {
+            institutes: instituteIds,
+            state: $state.current.name,
+            //user: $scope.user.userId,
+            claim: false
+        };
+        if($scope.user && $scope.user.userId){
+            viewForm.user = $scope.user.userId
+        }
+        if($cookies.getObject('ip')){
+            var ip = $cookies.getObject('ip');
+            viewForm.ip = ip;
+        }
+        viewService.saveview(viewForm).success(function (data, status, headers) {
+            //console.log('View Marked');
+        })
+        .error(function (data, status, header, config) {
+            console.log();
+        });
+        
+        var examNamesKeywords = "";
+        
+        $scope.groupExams.forEach(function(thisExam, index){
+            examNamesKeywords += $stateParams.groupName + " " + $stateParams.cityName + " for " + thisExam.exam.displayname;
+            if(index < $scope.groupExams.length - 1){
+                examNamesKeywords += ", ";
+            }
+        });
+        var thisCity = $scope.city;
+        $scope.cityCenters = [];
+        $scope.group.forEach(function(thisGroup, gindex){
+            if(thisGroup.city == thisCity){
+                $scope.cityCenters.push(thisGroup);
+            }
+        });
+        var instituteDefinerLower = ["coaching", "classes"];
+        var instituteDefiner = [];//"Coaching", "Classes"
+        var groupNameLowerCase = $stateParams.groupName.toLowerCase();
+        if(groupNameLowerCase.indexOf('coaching') == -1){
+            instituteDefiner.push("Coaching");
+        }
+        if(groupNameLowerCase.indexOf('class') == -1 && groupNameLowerCase.indexOf('classes') == -1){
+            instituteDefiner.push("Classes");
+        }
+        var instituteDefinerString = '';
+        instituteDefiner.forEach(function(thisDefiner, dindex){
+            if(dindex == 0){
+                instituteDefinerString += " ";
+            }
+            instituteDefinerString += thisDefiner + " ";
+        });
+        //console.log(instituteDefinerString);
+        
+        /*
+        $rootScope.pageTitle = $stateParams.groupName + instituteDefinerString + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + " Exam";
+        $rootScope.pageDescription = $stateParams.groupName + ", " +$scope.city +  " has " + $scope.cityCenters.length + " " +   $scope.subcategory.displayname + " Coaching Centers in " + $scope.city + ". | Find fees, photos and reviews of " + $stateParams.groupName;
+        
+        var groupKeywords = $stateParams.groupName + ", Top " + $stateParams.subCategoryName + " Coaching in " + $stateParams.cityName + ", " + $stateParams.groupName + ' in ' + $stateParams.cityName + ' for ' + $stateParams.subCategoryName + ", " + $scope.cityCenters.length + " " + $stateParams.groupName + " Centers in " + $scope.city + ", ";
+        $rootScope.pageKeywords = groupKeywords + examNamesKeywords;
+        */
+        
+        /*
+        Title: <CI Name> | <Exam Name> Coaching in <City> for <Exam Name> Preparation
+        Description: <CI Name> <Exam Name> Coaching in <City> for <Exam Name> Preparation | <ncenter> centers | <CI Name> Courses, Fees, Reviews, Results, Faculty, Photos and <Exam Name> Tests
+        Keywords
+        <CI Name> Coaching in <City>
+        <CI Name> Coaching for <Exam Name>
+        <CI Name> <City>
+        <CI Name> <City> Reviews
+        <CI Name> <City> Tests
+        <CI Name> <City> Courses
+        <CI Name> Photos
+        <CI Name> Videos
+        <CI Name> How to prepare for <Exam Name>
+        <CI Name> Online Coaching
+        <CI Name> <Exam Name> Preparation
+        <CI Name> Online Test Series
+        <CI Name> Coaching in <Locality>
+        <Exam Name> Coaching Classes in <City>
+
+        */
+        var nCentersCity = $scope.cityCenters.length;
+        var nCentersTotal = $scope.group.length;
+        var centerText = " Centre";
+        if(nCentersCity > 1){
+            centerText = " Centres"
+        }
+        var nCentersCityText = nCentersCity + " " + $stateParams.groupName + " " + centerText + " in " + $stateParams.cityName;
+        var nCentersCityKeyword = nCentersCity + " " + $stateParams.groupName + centerText + " in " + $stateParams.cityName;    
+        
+        $rootScope.pageTitle = $stateParams.groupName + " | " + $scope.subcategory.seoname + ' Coaching in ' + $stateParams.cityName + " | " + nCentersCityText;
+        //+ " for " + $scope.subcategory.seoname + " Preparation"
+        
+        
+        
+        $rootScope.pageDescription = $stateParams.groupName + " " + $scope.subcategory.seoname + " Coaching in " + $stateParams.cityName + " for " + $scope.subcategory.seoname + " | " + nCentersCityText + " | " + $stateParams.groupName + " Courses, Fees, Reviews, Results, Faculty, Photos and " + $scope.subcategory.seoname + " Tests";
+        
+        /*<CI Name> Coaching in <City>
+        <CI Name> Coaching for <Exam Name>
+        <CI Name> <City>
+        <CI Name> <City> Reviews
+        <CI Name> <City> Tests
+        <CI Name> <City> Courses
+        <CI Name> <City> Photos
+        <CI Name> <City> Videos
+        <CI Name> How to prepare for <Exam Name>
+        <CI Name> Online Coaching
+        <CI Name> <Exam Name> Preparation
+        <CI Name> Online Test Series
+        <CI Name> Coaching in <Locality>
+        <Exam Name> Coaching Classes in <City>*/
+
+        
+        var coachingKeywordArray = [];
+        coachingKeywordArray.push($stateParams.groupName + " Coaching in " + $scope.city);
+        coachingKeywordArray.push($stateParams.groupName + " Coaching for " + $scope.subcategory.seoname);
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName);
+        coachingKeywordArray.push(nCentersCityKeyword);
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Reviews");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " " + $scope.subcategory.seoname +  " Reviews");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Tests");
+        coachingKeywordArray.push($stateParams.groupName + " " + $scope.subcategory.seoname + " Tests");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Courses");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Photos");
+        coachingKeywordArray.push($stateParams.groupName + " " + $stateParams.cityName + " Videos");
+        var thisKeyword1 = "";
+        var thisKeyword2 = "";
+        var thisKeyword3 = "";
+        var thisKeyword4 = "";
+        $scope.cityCenters.forEach(function(thisCenter, cindex){
+            thisKeyword1 = $stateParams.groupName + " Coaching in ";
+            thisKeyword2 = $scope.subcategory.seoname + " Coaching in ";
+            thisKeyword3 = $stateParams.groupName + " Coaching in ";
+            thisKeyword4 = $scope.subcategory.seoname + " Coaching in ";
+            if(thisCenter.location && thisCenter.location.area){
+                thisKeyword1 = thisKeyword1 + thisCenter.location.area;
+                thisKeyword2 = thisKeyword2 + thisCenter.location.area;
+                thisKeyword3 = thisKeyword3 + thisCenter.location.area + ", " + $stateParams.cityName;
+                thisKeyword4 = thisKeyword4 + thisCenter.location.area + ", " + $stateParams.cityName;
+            }else{
+                thisKeyword1 = thisKeyword1 + thisCenter.address;
+                thisKeyword2 = thisKeyword2 + thisCenter.address;
+                thisKeyword3 = thisKeyword3 + thisCenter.address + " " + $stateParams.cityName;
+                thisKeyword4 = thisKeyword4 + thisCenter.address + " " + $stateParams.cityName;
+            }
+            //coachingKeywordArray.push(thisKeyword1);
+            //coachingKeywordArray.push(thisKeyword2);
+            coachingKeywordArray.push(thisKeyword3);
+            coachingKeywordArray.push(thisKeyword4);
+        });
+        //console.log(coachingKeywordArray.length);
+        if(coachingKeywordArray.length < 20){
+            coachingKeywordArray.push($stateParams.groupName + " How to prepare for " + $scope.subcategory.seoname);
+            coachingKeywordArray.push($stateParams.groupName + " Online Coaching");
+            coachingKeywordArray.push($stateParams.groupName + " " + $scope.subcategory.seoname + " Preparation");
+            coachingKeywordArray.push($stateParams.groupName + " Online Test Series");
+            coachingKeywordArray.push($scope.subcategory.seoname + " Coaching in " + $stateParams.cityName);
+        }
+        
+        
+        //console.log($scope.cityCenters);
+        
+        //thisGroup.location
+        
+        
+        var coachingKeywords = "";
+        coachingKeywordArray.forEach(function(thisKeyword, kindex){
+            coachingKeywords += thisKeyword;
+            if(kindex < coachingKeywordArray.length - 1){
+                coachingKeywords += ", ";
+            }
+        });
+        //console.log(coachingKeywords);
+        $rootScope.pageKeywords = coachingKeywords;
+        
+        
+        
+        $scope.years = ["2017","2016","2015","2014","2013","2012","2011","2010","2009","2008","2007","2006","2005","2004","2003"];
+        $scope.reviewTags = ["Great Faculty", "Supportive Administration", "Value for Money", "Tech Powered", "Exhaustive Content", "Effective Test Series"];
+        $scope.addRemoveReviewTag = function(reviewTag){
+            if(!$scope.userReview.tags){
+                $scope.userReview.tags = [];
+            }
+            var rIndex = $scope.userReview.tags.indexOf(reviewTag);
+            if(rIndex == -1){
+                $scope.userReview.tags.push(reviewTag);
+            }else{
+                $scope.userReview.tags.splice(rIndex, 1);
+            }
+        };
+        $scope.setReviewTagColor = function(reviewTag){
+            var className = "unfilledTag";
+            var rIndex = $scope.userReview.tags.indexOf(reviewTag);
+            if(rIndex -= -1){
+                className = "filledTag";
+            }
+            return className;
+        };
+        
+        $scope.updateUserReviewYear = function(year){
+            if($scope.userReview){
+                UserService.year_of_start = year;
+            }
+        };
+        $scope.userReviewMode = false;
+        
+        $scope.showUserReviewDialog = function(ev,index) {
+            $mdDialog.show({
+              contentElement: '#userReviewDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            }).finally(function() {
+                $scope.userReviewMode = true;
+            });
+        };
+        
+        
+        
+        $scope.editUserReviewMode = function(){
+            $scope.userReviewMode = !$scope.userReviewMode;
+        };
+        reviewService.groupReviews(groupIds).success(function (data, status, headers) {
+            $scope.otherReviews = data;
+            $scope.otherReviews.forEach(function(thisReview, rindex){
+                var instituteId = thisReview.institute;
+                var iIndex = groupIds.indexOf(instituteId);
+                thisReview.institute = $scope.group[iIndex];
+                
+                $scope.reviewParams.forEach(function(thisParam, index){
+                                
+                var pIndex = $scope.reviews.indexOf(parseFloat(thisReview[thisParam.name]));
+                    
+                //console.log(thisReview[thisParam.name] + " "+ parseFloat(thisReview[thisParam.name]) + " " + pIndex);
+                $scope.setReview(thisParam.name,parseFloat(thisReview[thisParam.name]), $scope.otherReviews[rindex]);
+
+                });
+                
+                
+                
+            });
+            
+            
+        })
+        .error(function (data, status, header, config) {
+            console.log('Error ' + data + ' ' + status);
+        });
+        //groupIds
+        $scope.updateReviewInstitute = function(thisGroup){
+            $scope.userReview.institute = thisGroup._id;
+            console.log($scope.userReview.institute);
+        };
+        $scope.reviewParams = [
+            {name: "faculty", displayname:"Faculty and Teaching Experience", hoverVal: -1},
+            {name: "competitive_environment", displayname:"Competitive Environment", hoverVal: -1},
+            {name: "quality_of_material", displayname:"Quality of material", hoverVal: -1},
+            {name: "infrastructure", displayname:"Infrastructure", hoverVal: -1},
+        ];
+        
+        $scope.userReview = {
+            institute: null,
+            exam: $scope.exam._id,
+            stream: $scope.category._id,
+            text: '',
+            tags:[]
+        };
+        if($scope.user && $scope.user.userId){
+            $scope.userReview.user = $scope.user.userId;
+        }
+        $scope.reviewParams.forEach(function(thisParam, index){
+            $scope.userReview[thisParam.name] = null;
+        });
+        var noReview = false;
+        var reviewsQueried = false;
+        $scope.$watch('user.userId', function (newValue, oldValue, scope) {
+            if(newValue && !reviewsQueried){
+                reviewsQueried = true;
+                var userInstituteForm = {
+                    user: newValue,   
+                    instituteIdArray: groupIds,   
+                }; reviewService.existingReview(userInstituteForm).success(function (data, status, headers) {
+                    if(data && data.length > 0){
+                        $scope.userReview = data[0];
+                        
+                        if($scope.userReview){
+                            $scope.reviewParams.forEach(function(thisParam, index){
+                                
+                            var pIndex = $scope.reviews.indexOf(parseFloat($scope.userReview[thisParam.name]));
+                            $scope.setReview(thisParam.name,parseFloat($scope.userReview[thisParam.name]), $scope.userReview);
+                                
+                            });
+                        }
+                        
+                    }else{
+                        //console.log('Here');
+                        if($scope.user){
+                            //$scope.showUserReviewDialog();
+                        }
+                    } 
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                }); 
+            }else{
+            }
+        }, true);
+        $scope.reviews = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
+        $scope.reviewsClasses = ["review1","review2","review3","review4","review5","review6","review7","review8","review9"];
+        $scope.minTextLength = 70;
+        
+        $scope.placeholder = "Tip: A great review covers information about Faculty, Peer Interaction, Quality of material and Infrastructure. Got recommendations for your favorite faculty and employees, or something everyone should know about " + $scope.provider.name +", " + $scope.provider.city + "? Include that too! And remember, your review needs to be atleast " + $scope.minTextLength + " characters long. The best review will be featured on our main page :)";
+        
+        var paramNames = $scope.reviewParams.map(function(a) {return a.name;});
+        
+        $scope.getBackgroundColour = function(reviewParam,  paramIndex, userReview){
+            var pIndex = paramNames.indexOf(reviewParam.name);
+            var className = "noreview";
+            
+            var propName = $scope.reviewParams[pIndex].name;
+            
+            if(userReview && userReview[propName]){
+                var review = userReview[propName];
+                var rIndex = $scope.reviews.indexOf(review);
+                //console.log(rIndex);
+                if(paramIndex <= rIndex){
+                    var rIndex2 = rIndex + 1;
+                    className = "review" + rIndex2;    
+                }
+            }
+            
+            if($scope.reviewParams[pIndex].hoverVal >= 0){
+                className = "noreview";
+            };
+            
+            if($scope.reviewParams[pIndex].hoverVal >= paramIndex){
+                
+                var paramIndex2 = paramIndex + 1;
+                className = "review" + paramIndex2;
+            }
+            
+            
+            return className;
+        };
+        
+        
+        $scope.getReviewSelectedColour = function(thisGroup){
+            var className = "notselected";
+            if($scope.userReview && $scope.userReview.institute && $scope.userReview.institute == thisGroup._id){
+                className = "selected";
+            }
+            
+            return className;
+        };
+        $scope.logMouseEvent = function(reviewParam,  paramIndex) {
+            switch (event.type) {
+              case "mouseenter":
+                    console.log("Hey Mouse Entered");
+                    break;
+              case "mouseover":{
+                    var pIndex = paramNames.indexOf(reviewParam.name);
+                    $scope.reviewParams[pIndex].hoverVal = paramIndex;
+                    break;
+              }
+              case "mouseout":{
+                    var pIndex = paramNames.indexOf(reviewParam.name);
+                    $scope.reviewParams[pIndex].hoverVal = -1;
+                    break;
+              }
+                    
+              case "mouseleave":
+                console.log("Mouse Gone");
+                break;
+
+              default:
+                console.log(event.type);
+                break;
+            };
+        };
+        $scope.reviewCentreError = false;
+        $scope.showSelectReviewCentreDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#selectReviewCentreDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.showSelectShortlistCentreDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#selectShortlistCentreDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        $scope.showSavedReviewDialog = function(ev) {
+            $mdDialog.show({
+              contentElement: '#savedReviewDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+            $timeout(function(){
+                $mdDialog.cancel();
+            },1000)
+        };
+        
+        $scope.selectReviewCentre = function(){
+            if($scope.group.length > 1){
+                $scope.showSelectReviewCentreDialog();
+            }else{
+                $scope.updateReviewInstitute($scope.group[0]);
+                $scope.submitReview();
+            }
+        };
+        $scope.cancelSelectReviewCentre = function(){
+            $scope.reviewCentreError = false;
+            $mdDialog.hide();
+        };
+        $scope.submitReview = function(){
+            if(!$scope.userReview.institute){
+                $scope.reviewCentreError = true;
+            }else{
+                if($scope.userReview.user){
+                    reviewService.savereview($scope.userReview).success(function (data, status, headers) {
+                        var reviewId = data;
+                        $scope.showSavedReviewDialog();
+                        
+                        $state.go('availOffer', {userId: $scope.user.userId, reviewId: reviewId});
+                        
+                        //$state.reload();
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                }else{
+                    console.log('No user set');
+                    $scope.showLoginForm();
+                }
+            }
+            
+            
+        };
+        $scope.checkReview = function(reviewParam, rateVal) {   
+            if($scope.userReview[reviewParam.name] >=rateVal){return true;}else{return false;}
+        }
+        $scope.setReview = function(param, value, userReview){
+            //console.log(userReview);
+            if(userReview){
+                userReview[param] = value;
+            }
+            
+        };
+        $scope.invalidSubmit = function(){
+            var invalid = false;
+            
+            $scope.reviewParams.forEach(function(thisParam, index){
+                if(!$scope.userReview || !$scope.userReview[thisParam.name]){
+                    invalid = true;
+                }
+            });
+            if($scope.userReview){
+                $scope.userReview.text = $scope.userReview.text.trim();
+                $scope.userReview.text = $scope.userReview.text.replace(/\s+/g, " ");
+
+                var textLength = $scope.userReview.text.length;
+                //console.log(textLength);
+                if(textLength < $scope.minTextLength){
+                    invalid = true;
+                }
+            }
+            if(!$scope.userReview.exam ||  !$scope.userReview.stream ||  !$scope.userReview.year_of_start){
+                invalid = true;
+            }
+            
+            return invalid;
+        };
+        
+        
+        $scope.availDiscount = function(ev){
+            $scope.discountForm = {
+                email: null,
+                mobile: null,
+            };
+            if($scope.user._id){
+                if($scope.user.email){
+                    $scope.discountForm.email = $scope.user.email;
+                }
+                if($scope.user.mobile){
+                    $scope.discountForm.mobile = $scope.user.mobile;
+                }
+            }
+            $mdDialog.show({
+              contentElement: '#availDiscountDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: true
+            });
+        };
+        
+        $scope.availDiscount2 = function(){
+            alert('Here');
+        };
+        
+        
+    }]);
+        
    
     exambazaar.controller("p5Controller", 
-    [ '$scope','$rootScope', 'targetStudyProviderService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, targetStudyProviderService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
+    [ '$scope','$rootScope', 'coachingService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, coachingService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
         $rootScope.reviewStream = null;
         $rootScope.reviewExam = null;
         $rootScope.reviewCity = null;
@@ -5628,7 +6557,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         return self.indexOf(value) === index;
     }       
     /*exambazaar.controller("offersController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', 'offersList', 'couponsList', 'offerService', 'couponService', 'UserService', function($scope,$rootScope, targetStudyProviderService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo, offersList, couponsList, offerService, couponService, UserService){
+    [ '$scope', '$rootScope', 'coachingService', 'thisProvider', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'thisGroupInfo', 'offersList', 'couponsList', 'offerService', 'couponService', 'UserService', function($scope,$rootScope, coachingService, thisProvider, $state,$stateParams, $cookies,$mdDialog, $timeout, thisGroupInfo, offersList, couponsList, offerService, couponService, UserService){
         $scope.provider = thisProvider.data;
         $scope.provideroffers = offersList.data;
         //console.log($scope.provideroffers);
@@ -6143,7 +7072,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     
     exambazaar.controller("claimController", 
-    [ '$scope', '$rootScope', 'targetStudyProviderService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService',  'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', 'screenSize', '$location', function($scope,$rootScope, targetStudyProviderService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService,  thisGroupInfo, addContactInfoService, rateInstituteService, screenSize, $location){
+    [ '$scope', '$rootScope', 'coachingService', 'ImageService', 'LocationService', 'OTPService','UserService', 'cisavedService', 'tofillciService', 'viewService', 'Upload', 'thisProvider', 'imageMediaTagList', 'videoMediaTagList', 'examList', 'streamList', 'cisavedUsersList' , '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'toverifyciService',  'thisGroupInfo', 'addContactInfoService', 'rateInstituteService', 'screenSize', '$location', function($scope,$rootScope, coachingService, ImageService, LocationService, OTPService, UserService, cisavedService, tofillciService, viewService, Upload, thisProvider, imageMediaTagList, videoMediaTagList,  examList,streamList, cisavedUsersList , $state,$stateParams, $cookies,$mdDialog, $timeout, toverifyciService,  thisGroupInfo, addContactInfoService, rateInstituteService, screenSize, $location){
         
         $scope.thisUrl = $location.absUrl();
         if (screenSize.is('xs, sm')){
@@ -6551,7 +7480,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     user: $scope.user.userId
                 };
                 //console.log(ebVerfiyForm);
-                targetStudyProviderService.setEBVerifyState(ebVerfiyForm).success(function (data, status, headers) {
+                coachingService.setEBVerifyState(ebVerfiyForm).success(function (data, status, headers) {
                     
                     var toverifyciForm = {
                         institute: $scope.provider._id
@@ -6589,7 +7518,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     user: $scope.user.userId
                 };
                 console.log(contactInfoForm);
-                targetStudyProviderService.setEBContactInfoState(contactInfoForm).success(function (data, status, headers) {
+                coachingService.setEBContactInfoState(contactInfoForm).success(function (data, status, headers) {
                     
                     var addContactInfoForm = {
                         institute: $scope.provider._id
@@ -6639,7 +7568,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     instituteIds: instituteIds,
                     user: $scope.user.userId
                 };
-                targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+                coachingService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
@@ -6667,7 +7596,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });     
         };
         $scope.removeProvider = function(provider){
-             targetStudyProviderService.removeProvider(provider._id).success(function (data, status, headers) {
+             coachingService.removeProvider(provider._id).success(function (data, status, headers) {
                 if(data){
                     $scope.showSavedDialog();
                 }else{
@@ -7077,10 +8006,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.saveProvider = function(){
             console.log($scope.provider);
             var saveProvider = {
-                targetStudyProvider:$scope.provider,
+                coaching:$scope.provider,
                 user: $scope.user.userId
             };
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+            coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.showSavedDialog();
                 $state.reload();
                 console.log("Done");
@@ -7402,10 +8331,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.saveProvider = function(){
                 console.log($scope.provider);
                 var saveProvider = {
-                    targetStudyProvider:$scope.provider,
+                    coaching:$scope.provider,
                     user: $scope.user.userId
                 };
-                targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+                coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                     //console.log($scope.editResult + ' ' + $scope.editResult);
                     if($scope.editResult || $scope.editResult){
                         $scope.addExamResult();
@@ -7426,7 +8355,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 instituteIds: [$scope.provider._id],
                 examId: examId,
             };
-            targetStudyProviderService.cirf(cirfForm).success(function (data, status, headers) {
+            coachingService.cirf(cirfForm).success(function (data, status, headers) {
                 if(data && data.length > 0){
                     $scope.statements = data;
                     $scope.showStatementsDialog();
@@ -7491,10 +8420,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }
                 });
                 
-            }); targetStudyProviderService.bulkAddResult(finalExamResult).success(function (data, status, headers) {
+            }); coachingService.bulkAddResult(finalExamResult).success(function (data, status, headers) {
                 //console.log("Done");
                 if(data == 'Done'){
-                    var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                    var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                     $scope.provider = refreshedProvider;
                      $scope.resultHelper('exam',$scope.providerExamIds);
                     $scope.examPivotResults =$scope.pivotResult;
@@ -8035,12 +8964,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var newPhotoForm ={
                     photo: thisFile.newPhoto,
                     providerId: providerId
-                }; targetStudyProviderService.addPhoto(newPhotoForm).success(function (data, status, headers) {
+                }; coachingService.addPhoto(newPhotoForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         $scope.showAddPhotosForm = true;
                         $scope.preUploadPhotoLength = $scope.provider.photo.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.provider = refreshedProvider;
                             $scope.editPhotos();
                         }).error(function (data, status, header, config) {
@@ -8171,11 +9100,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     image: logoLink,
                     resultId: resultId,
                     providerId: providerId
-                }; targetStudyProviderService.addResultPic(newResultPicForm).success(function (data, status, headers) {
+                }; coachingService.addResultPic(newResultPicForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.provider = refreshedProvider;
                             $scope.provider = refreshedProvider;
                             $scope.resultHelper('exam',$scope.providerExamIds);
@@ -8246,11 +9175,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var newLogoForm ={
                     logo: logoLink,
                     providerId: providerId
-                }; targetStudyProviderService.addLogo(newLogoForm).success(function (data, status, headers) {
+                }; coachingService.addLogo(newLogoForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.showSavedDialog();
                             $scope.provider = refreshedProvider;
                         }).error(function (data, status, header, config) {
@@ -8314,12 +9243,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var newResultForm ={
                     result: thisFile.newResult,
                     providerId: providerId
-                }; targetStudyProviderService.addResult(newResultForm).success(function (data, status, headers) {
+                }; coachingService.addResult(newResultForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         $scope.showAddResultsForm = true;
                         $scope.preUploadResultLength = $scope.provider.results.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.provider = refreshedProvider;
                             $scope.editResults();
                         }).error(function (data, status, header, config) {
@@ -8386,12 +9315,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var newFacultyForm ={
                     faculty: thisFile.newFaculty,
                     providerId: providerId
-                }; targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
+                }; coachingService.addFaculty(newFacultyForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         $scope.showAddFacultysForm = true;
                         $scope.preUploadFacultyLength = $scope.provider.faculty.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.provider = refreshedProvider;
                             $scope.editFaculties();
                         }).error(function (data, status, header, config) {
@@ -8675,11 +9604,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             
             var saveProvider = {
-                targetStudyProvider:$scope.provider,
+                coaching:$scope.provider,
                 user: $scope.user.userId
             };
             
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+            coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                 
                 var rateInstituteForm = {
                     institute: $scope.provider._id
@@ -8743,7 +9672,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);     
    
     exambazaar.controller("showCoachingController", 
-    [ '$scope','$rootScope', 'targetStudyProviderService','thisProvider','$state','$stateParams', '$cookies','thisStream','thisExam', '$document', function($scope,$rootScope, targetStudyProviderService,thisProvider,$state,$stateParams, $cookies,thisStream,thisExam,$document){
+    [ '$scope','$rootScope', 'coachingService','thisProvider','$state','$stateParams', '$cookies','thisStream','thisExam', '$document', function($scope,$rootScope, coachingService,thisProvider,$state,$stateParams, $cookies,thisStream,thisExam,$document){
         $scope.hideLoginDialog();
         $scope.category = thisStream.data;
         $scope.subcategory = thisExam.data;
@@ -8826,7 +9755,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
              
         
     exambazaar.controller("partnerDashboardController", 
-        [ '$scope', '$state','thisPartner', 'targetStudyProviderService', '$mdDialog','$timeout', function($scope, $state, thisPartner, targetStudyProviderService, $mdDialog, $timeout){
+        [ '$scope', '$state','thisPartner', 'coachingService', '$mdDialog','$timeout', function($scope, $state, thisPartner, coachingService, $mdDialog, $timeout){
             $scope.partner = thisPartner.data;
             $scope.listing = $scope.partner.partner[0];
             $scope.editManagement = false;
@@ -8886,7 +9815,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             management: thisManagement,
                             providerId: $scope.listing._id
                         };
-                         targetStudyProviderService.removeManagement(newManagementForm).success(function (data, status, headers) {
+                         coachingService.removeManagement(newManagementForm).success(function (data, status, headers) {
                             $scope.showSavedDialog();
                             $state.reload();
                             console.log("Done");
@@ -8915,7 +9844,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             management: thisManagement,
                             providerId: $scope.listing._id
                         };
-                         targetStudyProviderService.addPrimaryManagement(newManagementForm).success(function (data, status, headers) {
+                         coachingService.addPrimaryManagement(newManagementForm).success(function (data, status, headers) {
                             $scope.showSavedDialog();
                             $state.reload();
                             console.log("Done");
@@ -8958,7 +9887,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             management: thisManagement,
                             providerId: $scope.listing._id
                         };
-                         targetStudyProviderService.addManagement(newManagementForm).success(function (data, status, headers) {
+                         coachingService.addManagement(newManagementForm).success(function (data, status, headers) {
                             $scope.showSavedDialog();
                             $state.reload();
                             console.log("Done");
@@ -9035,7 +9964,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         else return 0;
     };
     exambazaar.controller("masterDashboardController", 
-        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', 'reviewsCount', 'couponsCount', 'issuedcouponsCount' , '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'targetStudyProviderService', '$timeout', 'addContactInfoService', 'addContactInfoList', 'rateInstituteService', 'rateInstituteList', 'couponService', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, reviewsCount, couponsCount, issuedcouponsCount,  $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, targetStudyProviderService, $timeout, addContactInfoService, addContactInfoList, rateInstituteService, rateInstituteList, couponService){
+        [ '$scope', 'usersCount', 'verifiedUsersCount', 'studentCount', 'coachingCount', 'internList', 'tofillciList', 'tofillciService', 'viewService', '$state', 'masterViewSummary','coachingSavedCount', 'filledCount', 'reviewsCount', 'couponsCount', 'issuedcouponsCount' , '$mdDialog', 'toverifyciService', 'toverifyciList', 'verifiedCount', '$rootScope', 'coachingService', '$timeout', 'addContactInfoService', 'addContactInfoList', 'rateInstituteService', 'rateInstituteList', 'couponService', function($scope, usersCount, verifiedUsersCount, studentCount, coachingCount, internList, tofillciList, tofillciService,viewService, $state, masterViewSummary, coachingSavedCount , filledCount, reviewsCount, couponsCount, issuedcouponsCount,  $mdDialog, toverifyciService, toverifyciList, verifiedCount, $rootScope, coachingService, $timeout, addContactInfoService, addContactInfoList, rateInstituteService, rateInstituteList, couponService){
             
             $scope.today = moment();
             var startOfWeek = moment().startOf('week').subtract(3, "days");
@@ -9272,7 +10201,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.getSummary = function(tofillci){
                 var instituteId = tofillci.institute._id;
                 
-                targetStudyProviderService.getProviderFillSummary(instituteId).success(function (data, status, headers) {
+                coachingService.getProviderFillSummary(instituteId).success(function (data, status, headers) {
                     $scope.fillProvider = data;
                     $scope.fillUser = tofillci.user;
                     $scope.showFillDialog();
@@ -9416,7 +10345,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.fetching = true;
                     $scope.assignError = false;
                     console.log(newValue);
-                    targetStudyProviderService.getGroupName(newValue).success(function (data, status, headers) {
+                    coachingService.getGroupName(newValue).success(function (data, status, headers) {
                         console.log(data);
                         if(data){
                             $scope.assignGroup = data;
@@ -9469,7 +10398,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.fetching = true;
                     $scope.assignError = false;
                     console.log(newValue);
-                    targetStudyProviderService.getGroupName(newValue).success(function (data, status, headers) {
+                    coachingService.getGroupName(newValue).success(function (data, status, headers) {
                         console.log(data);
                         if(data){
                             $scope.assignGroup = data;
@@ -10755,14 +11684,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
      
      exambazaar.controller("providersWithAreasController", 
-    [ '$scope', 'targetStudyProviderService','targetStudyProvidersList','$state','$stateParams', '$cookies', function($scope, targetStudyProviderService,targetStudyProvidersList,$state,$stateParams, $cookies){
+    [ '$scope', 'coachingService','coachingsList','$state','$stateParams', '$cookies', function($scope, coachingService,coachingsList,$state,$stateParams, $cookies){
         
-        $scope.providersList = targetStudyProvidersList.data;
+        $scope.providersList = coachingsList.data;
         
         $scope.startsWithProviders = function(){
            
            if($scope.startsWith != ''){
-               targetStudyProviderService.changeProvidersStartingWith($scope.startsWith).success(function (data, status, headers) {
+               coachingService.changeProvidersStartingWith($scope.startsWith).success(function (data, status, headers) {
                     console.log("Done");
                    $scope.clear();
                 })
@@ -10784,10 +11713,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
         
     exambazaar.controller("groupController", 
-    [ '$scope', 'targetStudyProviderService','$timeout','$state','$stateParams', '$cookies','$mdDialog','$window', function($scope, targetStudyProviderService,$timeout,$state,$stateParams, $cookies,$mdDialog,$window){
-        //$scope.providersList = targetStudyProvidersList.data;
+    [ '$scope', 'coachingService','$timeout','$state','$stateParams', '$cookies','$mdDialog','$window', function($scope, coachingService,$timeout,$state,$stateParams, $cookies,$mdDialog,$window){
+        //$scope.providersList = coachingsList.data;
         $scope.findPartners = function (query){
-            targetStudyProviderService.groupProviders(query).success(function (data, status, headers) {
+            coachingService.groupProviders(query).success(function (data, status, headers) {
                 $scope.providersList = data;
                 console.log("Done");
             })
@@ -10812,9 +11741,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }
         $scope.saveChanges = function(providerId){
             var saveProvider = {
-                targetStudyProvider: providerId
+                coaching: providerId
             };
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+            coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.cancel();
                 
                 console.log("Done");
@@ -10844,10 +11773,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
     
     exambazaar.controller("getTargetStudyCoachingController", 
-    [ '$scope', 'targetStudyProviderService', 'targetStudyProvidersList','targetStudyCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', 'emailList', 'FileSaver', '$rootScope', function($scope, targetStudyProviderService,targetStudyProvidersList,targetStudyCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList, emailList, FileSaver, $rootScope){
+    [ '$scope', 'coachingService', 'coachingsList','coachingCities', '$timeout','$state','$stateParams', '$cookies','$mdDialog','locationsList','$window', 'institutesSavedList', 'institutesFilledList', 'emailList', 'FileSaver', '$rootScope', function($scope, coachingService,coachingsList,coachingCities,$timeout,$state,$stateParams, $cookies,$mdDialog, locationsList,$window, institutesSavedList, institutesFilledList, emailList, FileSaver, $rootScope){
         $scope.city = $stateParams.city;
         $rootScope.pageTitle = $scope.city + ' City Exambazaar Database';
-        $scope.providersList = targetStudyProvidersList.data;
+        $scope.providersList = coachingsList.data;
         $scope.emailsList = emailList.data;
         var providersListIds = $scope.providersList.map(function(a) {return a._id;});
         var institutesSaved = institutesSavedList.data;
@@ -10963,7 +11892,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
         });
         
-        $scope.cityStates = targetStudyCities.data.map(function(a) {return a._id;});
+        $scope.cityStates = coachingCities.data.map(function(a) {return a._id;});
         
         var repStates = $scope.cityStates.map(function(a) {return a.state;});
         $scope.states = [];
@@ -11081,7 +12010,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     instituteIds: instituteIds,
                     user: $scope.user.userId
                 };
-                targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+                coachingService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
                     $scope.showSavedDialog();
                 })
                 .error(function (data, status, header, config) {
@@ -11090,11 +12019,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
         };
         $scope.addEmail = function(provider){
-            $window.open(provider.targetStudyWebsite, '_newhtml');
-            //$window.open('https://targetstudy.com/tools/ge.php', '_newhtml2');
+            $window.open(provider.coachingWebsite, '_newhtml');
+           
         };
         $scope.oneOff = function(){
-            targetStudyProviderService.oneOff().success(function (data, status, headers) {
+            coachingService.oneOff().success(function (data, status, headers) {
                 $scope.showSavedDialog();
             })
             .error(function (data, status, header, config) {
@@ -11119,9 +12048,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             $scope.currProvider.location = thisLocation._id;
             var saveProvider = {
-                targetStudyProvider:$scope.currProvider
+                coaching:$scope.currProvider
             };
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+            coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.cancel();
                 
                 console.log("Done");
@@ -11136,7 +12065,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         
         $scope.uprank = function(provider){
-            targetStudyProviderService.uprank(provider._id).success(function (data, status, headers) {
+            coachingService.uprank(provider._id).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11144,7 +12073,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
         };
         $scope.downrank = function(provider){
-            targetStudyProviderService.downrank(provider._id).success(function (data, status, headers) {
+            coachingService.downrank(provider._id).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11185,7 +12114,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         
         $scope.removeDuplicates = function(){
-            targetStudyProviderService.removeDuplicates($scope.city).success(function (data, status, headers) {
+            coachingService.removeDuplicates($scope.city).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11193,7 +12122,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
         };
         $scope.rank0 = function(){
-            targetStudyProviderService.rank0().success(function (data, status, headers) {
+            coachingService.rank0().success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11203,7 +12132,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         $scope.getWebsites = function(){
             //alert('Starting');
-            targetStudyProviderService.getWebsites().success(function (data, status, headers) {
+            coachingService.getWebsites().success(function (data, status, headers) {
                 console.log("Done");
                 var allWebsites = data;
                 var separator = "\n";
@@ -11227,7 +12156,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         $scope.cityStateService = function(){
             //alert('Starting');
-            targetStudyProviderService.citySummaryService().success(function (data, status, headers) {
+            coachingService.citySummaryService().success(function (data, status, headers) {
                 
                 console.log("Done");
             })
@@ -11236,7 +12165,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
         };
         /*$scope.cacsService = function(){
-             targetStudyProviderService.cacsService().success(function (data, status, headers) {
+             coachingService.cacsService().success(function (data, status, headers) {
                 
                 console.log("Done");
             })
@@ -11248,7 +12177,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.citySummary = null;
         $scope.citySummaryService = function(){
             //alert('Starting');
-            targetStudyProviderService.citySummaryService().success(function (data, status, headers) {
+            coachingService.citySummaryService().success(function (data, status, headers) {
                 $scope.citySummary = data;
                 console.log("Done");
             })
@@ -11258,7 +12187,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         $scope.cityStateService2 = function(){
             //alert('Starting');
-            targetStudyProviderService.cityStateService2().success(function (data, status, headers) {
+            coachingService.cityStateService2().success(function (data, status, headers) {
                 console.log(data);
                 //$scope.allCities = data;
             })
@@ -11267,7 +12196,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
         };
         $scope.getCityCount = function(){
-            targetStudyProviderService.getCityCount().success(function (data, status, headers) {
+            coachingService.getCityCount().success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11276,7 +12205,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
         $scope.logoService = function(){
-            targetStudyProviderService.logoService().success(function (data, status, headers) {
+            coachingService.logoService().success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11284,7 +12213,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
         };
         $scope.databaseService = function(){
-            targetStudyProviderService.databaseService().success(function (data, status, headers) {
+            coachingService.databaseService().success(function (data, status, headers) {
                 $scope.distinctStates = data;
                 console.log("Done");
             })
@@ -11295,7 +12224,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.UniqueLogoService = function(){
             
             $scope.showlogos = true;
-            targetStudyProviderService.UniqueLogoService().success(function (data, status, headers) {
+            coachingService.UniqueLogoService().success(function (data, status, headers) {
                 $scope.uniquelogos = data;
             })
             .error(function (data, status, header, config) {
@@ -11305,7 +12234,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         $scope.allDistinct = function(){
             $scope.allDistinctBool = false;
-            targetStudyProviderService.allDistinct().success(function (data, status, headers) {
+            coachingService.allDistinct().success(function (data, status, headers) {
                 alert('Done');
                 //$scope.allProviderNames = data;
                 //$scope.allDistinctBool = true;
@@ -11317,7 +12246,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         $scope.allCourses = false;
         $scope.getAllCourses = function(){
-            targetStudyProviderService.getAllCourses().success(function (data, status, headers) {
+            coachingService.getAllCourses().success(function (data, status, headers) {
                 console.log("Done");
                 $scope.allCourses = true;
                 $scope.courses = data;
@@ -11328,7 +12257,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
         $scope.cleanTargetstudyurls = function(){
-            targetStudyProviderService.cleanTargetstudyurls().success(function (data, status, headers) {
+            coachingService.cleanTargetstudyurls().success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11347,7 +12276,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         }
     });
     exambazaar.controller("editTargetStudyCoachingController", 
-    [ '$scope', 'targetStudyProviderService','LocationService','thisTargetStudyProvider','$state','$stateParams', '$cookies','ImageService','Upload','imageMediaTagList', function($scope, targetStudyProviderService,LocationService,thisTargetStudyProvider,$state,$stateParams, $cookies,ImageService,Upload,imageMediaTagList){
+    [ '$scope', 'coachingService','LocationService','thisTargetStudyProvider','$state','$stateParams', '$cookies','ImageService','Upload','imageMediaTagList', function($scope, coachingService,LocationService,thisTargetStudyProvider,$state,$stateParams, $cookies,ImageService,Upload,imageMediaTagList){
         $scope.provider = thisTargetStudyProvider.data;
         $scope.imageTags = imageMediaTagList.data.mediaTypeTags;
         $scope.imageTypes = imageMediaTagList.data.distinctTypes;
@@ -11437,7 +12366,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var newPhotoForm ={
                     photo: thisFile.newPhoto,
                     providerId: providerId
-                }; targetStudyProviderService.addPhoto(newPhotoForm).success(function (data, status, headers) {
+                }; coachingService.addPhoto(newPhotoForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     if(counter == nFiles){
                         $scope.showAddPhotosForm = true;
@@ -11503,14 +12432,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var newFacultyForm ={
                     faculty: thisFile.newFaculty,
                     providerId: providerId
-                }; targetStudyProviderService.addFaculty(newFacultyForm).success(function (data, status, headers) {
+                }; coachingService.addFaculty(newFacultyForm).success(function (data, status, headers) {
                     counter = counter + 1;
                     //console.log('Counter is: ' + counter);
                     //console.log("Faculty added to database " + thisFile.newFaculty.image);
                     if(counter == nFiles){
                         $scope.showAddFacultiesForm = true;
                         $scope.preUploadFacultyLength = $scope.provider.faculty.length;
-                        var refreshedProvider = targetStudyProviderService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
+                        var refreshedProvider = coachingService.getProvider(providerId).success(function (refreshedProvider, status, headers) {
                             $scope.provider = refreshedProvider;
                             $scope.editPhotos();
                         }).error(function (data, status, header, config) {
@@ -11550,7 +12479,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.provider.location = location._id;
         };
         $scope.uprank = function(provider){
-            targetStudyProviderService.uprank(provider._id).success(function (data, status, headers) {
+            coachingService.uprank(provider._id).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11583,7 +12512,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
         $scope.downrank = function(provider){
-            targetStudyProviderService.downrank(provider._id).success(function (data, status, headers) {
+            coachingService.downrank(provider._id).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11593,8 +12522,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.saveCoaching = function(){
             
            var provider = {
-               targetStudyProvider: $scope.provider
-           }; targetStudyProviderService.saveProvider(provider).success(function (data, status, headers) {
+               coaching: $scope.provider
+           }; coachingService.saveProvider(provider).success(function (data, status, headers) {
                 console.log("Done");
             })
             .error(function (data, status, header, config) {
@@ -11687,7 +12616,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("autocompleteController2", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
         
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
@@ -11702,7 +12631,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     city: $rootScope.city
                 };
                 
-                return targetStudyProviderService.searchCityProviders(cityQueryForm).then(function(response){
+                return coachingService.searchCityProviders(cityQueryForm).then(function(response){
                     //console.log(response.data);
                     return response.data;
                 });
@@ -11715,7 +12644,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
       
         
     exambazaar.controller("offerController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document, offerService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, coachingService, $mdDialog, $document, offerService){
             $scope.offers = [];
             offerService.getActiveOffersBasic().success(function (data, status, headers) {
                 $scope.offersList = data;
@@ -11807,7 +12736,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("offerController2", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $document, offerService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', '$mdDialog', '$document', 'offerService', function($scope, $http, $state, $rootScope, coachingService, $mdDialog, $document, offerService){
             $scope.offers = [];
             offerService.getActiveOffersBasic().success(function (data, status, headers) {
                 $scope.offersList = data;
@@ -11894,7 +12823,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
     }]);      
     exambazaar.controller("coachingGroupAutocompleteController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
@@ -11919,7 +12848,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.querySearch = function(query){
             if(query.length > 2){
                 $rootScope.coachingGroupItems = [];
-                return targetStudyProviderService.searchCoachingGroupProviders(query).then(function(response){
+                return coachingService.searchCoachingGroupProviders(query).then(function(response){
                     //console.log(response.data);
                     
                     $rootScope.coachingGroupItems = response.data;
@@ -11936,7 +12865,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);    
     
     exambazaar.controller("blogCoachingGroupAutocompleteController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
@@ -11947,7 +12876,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.querySearch = function(query){
             if(query.length > 2){
-                return targetStudyProviderService.searchBlogCoachingGroupProviders(query).then(function(response){
+                return coachingService.searchBlogCoachingGroupProviders(query).then(function(response){
                     //console.log(response.data);
                     
                     $rootScope.coachingGroupItems = response.data;
@@ -11978,7 +12907,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);    
         
     exambazaar.controller("autocompleteController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
             
             $scope.searchFocusIn = function(){
                 console.log('Focus In');
@@ -11995,7 +12924,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var coachingForm = {
                     _id: provider._id 
             };
-            targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+            coachingService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
                     var examStream = data;
                     $state.go('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
                     
@@ -12013,7 +12942,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.querySearch = function(query){
             if(query.length > 2){
-                return targetStudyProviderService.searchProviders(query).then(function(response){
+                return coachingService.searchProviders(query).then(function(response){
                     //console.log(response.data);
                     return response.data;
                 });
@@ -12022,7 +12951,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("citySearchController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', '$cookies', function($scope, $http, $state, $rootScope, targetStudyProviderService, $cookies){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', '$cookies', function($scope, $http, $state, $rootScope, coachingService, $cookies){
         
         
         if($cookies.getObject('userlocation')){
@@ -12045,7 +12974,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if(query == ''){
                 searchQuery = "exambazaar";
             }
-            return targetStudyProviderService.providercities(searchQuery).then(function(response){
+            return coachingService.providercities(searchQuery).then(function(response){
                 
                 //console.log(response.data);
                 return response.data;
@@ -12054,7 +12983,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     exambazaar.controller("coachingSearchController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
         
         
         this.selectedItemChange = selectedItemChange;
@@ -12074,7 +13003,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 };
                 //console.log($rootScope.newReviewCity);
 
-                return targetStudyProviderService.searchCityReviewProviders(cityQueryForm).then(function(response){
+                return coachingService.searchCityReviewProviders(cityQueryForm).then(function(response){
                     //console.log(response.data);
                     return response.data;
                 });
@@ -12085,7 +13014,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);  
         
     exambazaar.controller("reviewRedirectController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', 'offerService', '$mdDialog', '$document', function($scope, $http, $state, $rootScope, targetStudyProviderService, offerService, $mdDialog, $document){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', 'offerService', '$mdDialog', '$document', function($scope, $http, $state, $rootScope, coachingService, offerService, $mdDialog, $document){
             $scope.redirectToReview = function(){
                 if($rootScope.newReviewCity && $rootScope.newReviewCoaching){
                     //ABC
@@ -12094,7 +13023,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         coachingName: $rootScope.newReviewCoaching.name,
                     };
                     console.log(cityCoachingForm);
-                    targetStudyProviderService.showGroupHelper(cityCoachingForm).success(function (data, status, headers) {
+                    coachingService.showGroupHelper(cityCoachingForm).success(function (data, status, headers) {
                         var examStream = data;
                         console.log(examStream);
                         
@@ -12127,7 +13056,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);      
         
     exambazaar.controller("resultAutocompleteController", 
-        [ '$scope', '$http','$state', 'targetStudyProviderService', function($scope, $http, $state, targetStudyProviderService){
+        [ '$scope', '$http','$state', 'coachingService', function($scope, $http, $state, coachingService){
             
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
@@ -12137,7 +13066,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.querySearch = function(query){
             if(query.length > 2){
-                return targetStudyProviderService.searchProviders(query).then(function(response){
+                return coachingService.searchProviders(query).then(function(response){
                     //console.log(response.data);
                     return response.data;
                 });
@@ -12146,13 +13075,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("sandbox2Controller", 
-        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$stateParams', 'targetStudyCities', 'cityProviderCount', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $stateParams, targetStudyCities, cityProviderCount){
-            $scope.providers = targetStudyProvidersList.data;
+        [ '$scope', '$http','$state','$rootScope','NgMap','coachingService','coachingsList', '$stateParams', 'coachingCities', 'cityProviderCount', function($scope, $http, $state, $rootScope,NgMap, coachingService, coachingsList, $stateParams, coachingCities, cityProviderCount){
+            $scope.providers = coachingsList.data;
             //$scope.filterText = 'Career Launcher';
             $scope.city = $stateParams.cityName;
             $scope.cityProviderCount = cityProviderCount.data;
             $scope.masterId = $stateParams.masterId;
-            $scope.cityStates = targetStudyCities.data.map(function(a) {return a._id;});
+            $scope.cityStates = coachingCities.data.map(function(a) {return a._id;});
             var repStates = $scope.cityStates.map(function(a) {return a.state;});
             $scope.states = [];
             repStates.forEach(function(thisState, index){
@@ -12198,7 +13127,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     
     exambazaar.controller("availOfferController", 
-        [ '$scope', '$http','$state', '$rootScope','thisuser','targetStudyProviderService', 'UserService', 'couponService', '$location', 'thisReview', 'activeOfferInstitutes', 'activeCoupons', 'Socialshare', '$mdDialog', '$timeout', '$window', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, UserService, couponService, $location, thisReview, activeOfferInstitutes, activeCoupons, Socialshare, $mdDialog, $timeout, $window){
+        [ '$scope', '$http','$state', '$rootScope','thisuser','coachingService', 'UserService', 'couponService', '$location', 'thisReview', 'activeOfferInstitutes', 'activeCoupons', 'Socialshare', '$mdDialog', '$timeout', '$window', function($scope, $http, $state, $rootScope, thisuser, coachingService, UserService, couponService, $location, thisReview, activeOfferInstitutes, activeCoupons, Socialshare, $mdDialog, $timeout, $window){
             $window.scrollTo(0, 0);
             $scope.user = thisuser.data;
             $scope.activeOfferInstitutes = activeOfferInstitutes.data;
@@ -12509,7 +13438,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
         
     exambazaar.controller("addedInstitutesController", 
-        [ '$scope', '$http','$state','$rootScope','thisuser','targetStudyProviderService', 'addedInstitutes', 'ebteam', '$mdDialog', '$timeout', 'tofillciService', function($scope, $http, $state, $rootScope, thisuser, targetStudyProviderService, addedInstitutes, ebteam, $mdDialog, $timeout, tofillciService){
+        [ '$scope', '$http','$state','$rootScope','thisuser','coachingService', 'addedInstitutes', 'ebteam', '$mdDialog', '$timeout', 'tofillciService', function($scope, $http, $state, $rootScope, thisuser, coachingService, addedInstitutes, ebteam, $mdDialog, $timeout, tofillciService){
             $scope.user = thisuser.data;
             $rootScope.pageTitle ='Report - Added Institutes';
             
@@ -12690,7 +13619,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
             $scope.titleCaseName = function(provider, index){
-                targetStudyProviderService.titleCaseName(provider._id).success(function (data, status, headers) {
+                coachingService.titleCaseName(provider._id).success(function (data, status, headers) {
                     if(data){
                         provider = data;
                         console.log(provider.name);
@@ -12727,7 +13656,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });     
             };
             $scope.removeProvider = function(provider){
-                 targetStudyProviderService.removeProvider(provider._id).success(function (data, status, headers) {
+                 coachingService.removeProvider(provider._id).success(function (data, status, headers) {
                     if(data){
                         $scope.showSavedDialog();
                     }else{
@@ -12741,7 +13670,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("analyticsController", 
-        [ '$scope', '$http', '$state', '$rootScope', '$cookies', 'blogpostService', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, $cookies, blogpostService, targetStudyProviderService){
+        [ '$scope', '$http', '$state', '$rootScope', '$cookies', 'blogpostService', 'coachingService', function($scope, $http, $state, $rootScope, $cookies, blogpostService, coachingService){
             var allblogsbasic = null;
             var allblogsbasicIds = null;
             $scope.analyticsOptions = ["Blog Analytics", "P5 Analytics"];
@@ -12759,7 +13688,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var coachingForm = {
                     _id: provider._id 
                 };
-                targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+                coachingService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
                         var examStream = data;
                         
                         var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
@@ -12853,7 +13782,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     start: $scope.start,
                     end: $scope.end,
                 };
-                targetStudyProviderService.p5Analytics(analyticsForm).success(function (data, status, headers) {
+                coachingService.p5Analytics(analyticsForm).success(function (data, status, headers) {
                     $scope.p5Analytics = data;
                 })
                 .error(function (data, status, header, config) {
@@ -13098,7 +14027,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("addedQuestionsController", 
-        [ '$scope', '$http','$state','$rootScope', '$mdDialog','thisuser','targetStudyProviderService', 'addedQuestions', 'ebteam', 'examList', function($scope, $http, $state, $rootScope, $mdDialog, thisuser, targetStudyProviderService, addedQuestions, ebteam, examList){
+        [ '$scope', '$http','$state','$rootScope', '$mdDialog','thisuser','coachingService', 'addedQuestions', 'ebteam', 'examList', function($scope, $http, $state, $rootScope, $mdDialog, thisuser, coachingService, addedQuestions, ebteam, examList){
             $scope.user = thisuser.data;
             var exams = examList.data;
             
@@ -13262,7 +14191,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("cityGroupExamQueryController", 
-        [ '$scope', '$http','$state','$rootScope', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, targetStudyProviderService){
+        [ '$scope', '$http','$state','$rootScope', 'coachingService', function($scope, $http, $state, $rootScope, coachingService){
         
         this.selectedItemChange = selectedItemChange;
         function selectedItemChange(item) {
@@ -13279,7 +14208,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     stream: $rootScope.reviewStream,
                 };
                 
-                return targetStudyProviderService.cityGroupExamQueryForm(cityGroupExamQuery).then(function(response){
+                return coachingService.cityGroupExamQueryForm(cityGroupExamQuery).then(function(response){
                     //console.log(response.data);
                     return response.data;
                 });
@@ -13295,7 +14224,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         
     exambazaar.controller("reviewController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', 'allcities', '$location', 'streamList', 'examList', '$mdDialog', function($scope, $http, $state, $rootScope, targetStudyProviderService, allcities, $location, streamList, examList, $mdDialog){
+        [ '$scope', '$http','$state','$rootScope','coachingService', 'allcities', '$location', 'streamList', 'examList', '$mdDialog', function($scope, $http, $state, $rootScope, coachingService, allcities, $location, streamList, examList, $mdDialog){
             $mdDialog.hide();
             $scope.streams = streamList.data;
             $scope.exams = examList.data;
@@ -14086,7 +15015,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);    
     exambazaar.controller("coachingGroupController", 
-        [ '$scope', '$http','$state','$rootScope','targetStudyProviderService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, targetStudyProviderService, $mdDialog, $timeout,thisuser, examList, streamList){
+        [ '$scope', '$http','$state','$rootScope','coachingService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, coachingService, $mdDialog, $timeout,thisuser, examList, streamList){
             
             $scope.user = thisuser.data;
             $scope.allExams = examList.data;
@@ -14273,7 +15202,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     name: $scope.newName
                 };
                 
-                targetStudyProviderService.renameAllCoaching(groupNameForm).success(function (data, status, headers) {
+                coachingService.renameAllCoaching(groupNameForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -14296,7 +15225,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     groupName: $scope.newGroupName
                 };
                 
-                targetStudyProviderService.renameAllGroupName(groupNameForm).success(function (data, status, headers) {
+                coachingService.renameAllGroupName(groupNameForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -14426,7 +15355,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     examArray: $scope.addExamsArray
                 };
                 
-                targetStudyProviderService.addExamsToAll(groupExamForm).success(function (data, status, headers) {
+                coachingService.addExamsToAll(groupExamForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -14449,7 +15378,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     logo: $scope.newLogo
                 };
                 
-                targetStudyProviderService.setLogoForAll(groupLogoForm).success(function (data, status, headers) {
+                coachingService.setLogoForAll(groupLogoForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -14478,7 +15407,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         emailArray: emailArray
                     };
 
-                    targetStudyProviderService.setEmailForAll(groupEmailForm).success(function (data, status, headers) {
+                    coachingService.setEmailForAll(groupEmailForm).success(function (data, status, headers) {
                         $scope.showSavedDialog();
 
                     })
@@ -14509,7 +15438,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         websiteArray: websiteArray
                     };
 
-                    targetStudyProviderService.setWebsiteForAll(groupWebsiteForm).success(function (data, status, headers) {
+                    coachingService.setWebsiteForAll(groupWebsiteForm).success(function (data, status, headers) {
                         $scope.showSavedDialog();
 
                     })
@@ -14559,7 +15488,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     examArray: $scope.removeExamsArray
                 };
                 
-                targetStudyProviderService.removeExamsFromAll(groupExamForm).success(function (data, status, headers) {
+                coachingService.removeExamsFromAll(groupExamForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                     //$scope.showSavedDialog();
@@ -14583,7 +15512,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     examArray: allExamIds,
                 };
                 
-                targetStudyProviderService.commonExamsInAll(groupExamForm).success(function (data, status, headers) {
+                coachingService.commonExamsInAll(groupExamForm).success(function (data, status, headers) {
                     var commonExams = data;
                     $scope.commonExamIds = data;
                     var allExamIds =  $scope.allExams.map(function(a) {return a._id;});
@@ -14644,7 +15573,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     instituteIds: allInstitutes
                 };
                 console.log('Disabling: ' + allInstitutes.length);
-                targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+                coachingService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
                     console.log('Done');
                     $scope.showSavedDialog();
                 })
@@ -14800,7 +15729,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     
     
-    exambazaar.factory('CoachingStream', function(targetStudyProviderService) {
+    exambazaar.factory('CoachingStream', function(coachingService) {
       var CoachingStream = function(streamInfo) {
         this.items = [];
         this.busy = false;
@@ -14824,7 +15753,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             cityName: this.cityName,
             groupName: this.groupName,
         };
-        targetStudyProviderService.CoachingStream(streamInfo).success(function (data, status, headers) {
+        coachingService.CoachingStream(streamInfo).success(function (data, status, headers) {
             var items = data;
             if(items.length == 0){
                 this.finished = true;
@@ -15265,11 +16194,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
      
         
     exambazaar.controller("contactsController", 
-        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'targetStudyProviderService', 'contactsSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, targetStudyProviderService, contactsSummary){
+        [ '$scope', '$http','$state','$rootScope', '$facebook', '$location', '$cookies', 'coachingService', 'contactsSummary', function($scope, $http, $state, $rootScope, $facebook, $location, $cookies, coachingService, contactsSummary){
             $scope.contacts = contactsSummary.data;
             console.log($scope.contacts);
             $scope.sanitizeMobiles = function(){
-                targetStudyProviderService.sanitizeMobiles().success(function (data, status, headers) {
+                coachingService.sanitizeMobiles().success(function (data, status, headers) {
                     console.log('Mobiles sanitized');
                     console.log(data);
                     
@@ -15282,7 +16211,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
       
     exambazaar.controller("aroundmeController", 
-        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'targetStudyProviderService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', 'viewService','MasterService', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, targetStudyProviderService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification, viewService, MasterService){
+        [ '$scope', '$http','$state','$rootScope', '$location', '$cookies', 'UserService', 'coachingService', 'NgMap', '$mdDialog', '$timeout', 'examList', 'streamList', '$geolocation', 'Notification', 'viewService','MasterService', function($scope, $http, $state, $rootScope, $location, $cookies, UserService, coachingService, NgMap, $mdDialog, $timeout, examList, streamList, $geolocation, Notification, viewService, MasterService){
             $scope.allExams = examList.data;
             $scope.allStreams = streamList.data;
             
@@ -15329,7 +16258,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
             
             $scope.setLocofAll = function(){
-                targetStudyProviderService.setLocOfAll().success(function (data, status, headers) {
+                coachingService.setLocOfAll().success(function (data, status, headers) {
                     console.log(data);
                 })
                 .error(function (data, status, header, config) {
@@ -15372,7 +16301,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var coachingForm = {
                     _id: provider._id 
                 };
-                targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+                coachingService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
                         var examStream = data;
                         if($scope.searchExams.length > 0){
                             var firstExamId = $scope.searchExams[0].toString();
@@ -15567,7 +16496,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 };
                 
                 
-                targetStudyProviderService.aroundme(queryForm).success(function (data, status, headers) {
+                coachingService.aroundme(queryForm).success(function (data, status, headers) {
                     $scope.providers = data;
                     
                     if($scope.providers.length > 0){
@@ -30502,7 +31431,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.sortByDate();
     }]); 
     exambazaar.controller("allreviewsController", 
-        [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'targetStudyProviderService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, targetStudyProviderService, $state, $mdDialog){
+        [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'coachingService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, coachingService, $state, $mdDialog){
             $scope.allReviews = allReviews.data;
             
             $rootScope.pageTitle = 'All Reviews';
@@ -30512,7 +31441,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     city: review.institute.city,
                     coachingName: review.institute.name,
                 };
-                targetStudyProviderService.showGroupHelper(cityCoachingForm).success(function (data, status, headers) {
+                coachingService.showGroupHelper(cityCoachingForm).success(function (data, status, headers) {
                     var examStream = data;
                     console.log(examStream);
                     
@@ -30575,7 +31504,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
     
     exambazaar.controller("allOffersController", 
-        [ '$scope', '$http', '$state', '$rootScope','offerService','allOffers', 'targetStudyProviderService', function($scope, $http, $state, $rootScope, offerService, allOffers, targetStudyProviderService){
+        [ '$scope', '$http', '$state', '$rootScope','offerService','allOffers', 'coachingService', function($scope, $http, $state, $rootScope, offerService, allOffers, coachingService){
             $scope.allOffers = allOffers.data;
             
             $rootScope.pageTitle = 'All Offers';
@@ -30604,7 +31533,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);     
         
     exambazaar.controller("rankerswallController", 
-        [ '$scope', '$http','$state', '$stateParams','$rootScope','targetStudyProviderService','allResults', 'thisExam','$location', 'Socialshare','$cookies', 'viewService', function($scope, $http, $state, $stateParams, $rootScope, targetStudyProviderService, allResults, thisExam,$location, Socialshare, $cookies, viewService){
+        [ '$scope', '$http','$state', '$stateParams','$rootScope','coachingService','allResults', 'thisExam','$location', 'Socialshare','$cookies', 'viewService', function($scope, $http, $state, $stateParams, $rootScope, coachingService, allResults, thisExam,$location, Socialshare, $cookies, viewService){
             
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
@@ -30726,7 +31655,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
         
     exambazaar.controller("searchController", 
-        [ '$scope', '$http','$state','$rootScope','NgMap','targetStudyProviderService','targetStudyProvidersList', '$facebook', '$location', function($scope, $http, $state, $rootScope,NgMap, targetStudyProviderService, targetStudyProvidersList, $facebook, $location){
+        [ '$scope', '$http','$state','$rootScope','NgMap','coachingService','coachingsList', '$facebook', '$location', function($scope, $http, $state, $rootScope,NgMap, coachingService, coachingsList, $facebook, $location){
             
             
             $rootScope.pageTitle ='Search & Review Coaching Classes';
@@ -30812,7 +31741,7 @@ function getLatLng(thisData) {
         
         
     exambazaar.controller("fciController", 
-        [ '$scope' ,  '$http','$state','$rootScope', '$cookies', 'UserService', 'tofillciService', 'targetStudyProviderService', 'Notification', 'ebteam', 'tofillciList', function($scope, $http, $state, $rootScope, $cookies, UserService, tofillciService, targetStudyProviderService, Notification, ebteam, tofillciList){
+        [ '$scope' ,  '$http','$state','$rootScope', '$cookies', 'UserService', 'tofillciService', 'coachingService', 'Notification', 'ebteam', 'tofillciList', function($scope, $http, $state, $rootScope, $cookies, UserService, tofillciService, coachingService, Notification, ebteam, tofillciList){
             $scope.ebteam = ebteam.data;
             $scope.fullScope = false;
             var fullScopeUsers = ["5a1831f0bd2adb260055e352"];
@@ -30950,7 +31879,7 @@ function getLatLng(thisData) {
                     $scope.fetching = true;
                     $scope.assignError = false;
                     
-                    targetStudyProviderService.getGroupName(newValue).success(function (data, status, headers) {
+                    coachingService.getGroupName(newValue).success(function (data, status, headers) {
                         
                         if(data){
                             $scope.assignGroup = data;
@@ -31039,7 +31968,7 @@ function getLatLng(thisData) {
     }]);     
         
     exambazaar.controller("checkLogoController", 
-        [ '$scope', 'thisuser','logoList' , '$http','$state', '$rootScope', '$cookies', 'UserService', 'targetStudyProviderService', function($scope, thisuser, logoList, $http,$state,$rootScope, $cookies, UserService, targetStudyProviderService){
+        [ '$scope', 'thisuser','logoList' , '$http','$state', '$rootScope', '$cookies', 'UserService', 'coachingService', function($scope, thisuser, logoList, $http,$state,$rootScope, $cookies, UserService, coachingService){
         $scope.user = thisuser.data;
         $scope.logoList = logoList.data;
         if($scope.user.userType =='Master'){
@@ -31059,7 +31988,7 @@ function getLatLng(thisData) {
             var checkLogoForm = {
                 ids: ids    
             };
-            targetStudyProviderService.bulkCheckLogos(checkLogoForm).success(function (data, status, headers) {
+            coachingService.bulkCheckLogos(checkLogoForm).success(function (data, status, headers) {
                
                 alert('Marked');
             })
@@ -32743,7 +33672,7 @@ function getLatLng(thisData) {
        
     
     exambazaar.controller("reviewedController", 
-        [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'reviewService', 'targetStudyProviderService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, reviewService, targetStudyProviderService, $location, Notification){
+        [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'reviewService', 'coachingService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, reviewService, coachingService, $location, Notification){
             $scope.col1Width = 40;
             $scope.col1WidthAcademic = 20;
         
@@ -32945,7 +33874,7 @@ function getLatLng(thisData) {
     
         
      exambazaar.controller("userInstitutesController", 
-        [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'targetStudyProviderService', 'viewService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, targetStudyProviderService, viewService, $location, Notification){
+        [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'coachingService', 'viewService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, coachingService, viewService, $location, Notification){
             $scope.col1Width = 40;
             $scope.col1WidthAcademic = 20;
             
@@ -33478,7 +34407,17 @@ function getLatLng(thisData) {
         };
     }]); 
     exambazaar.controller("addGroupController", 
-        [ '$scope',  'groupList','GroupService', 'targetStudyProviderService','$http','$state', 'examList', function($scope, groupList, GroupService, targetStudyProviderService,$http,$state, examList){
+        [ '$scope',  'groupList','GroupService', 'coachingService','$http','$state', 'examList', function($scope, groupList, GroupService, coachingService,$http,$state, examList){
+        
+        $scope.oneOff = function(){
+            coachingService.oneOff().success(function (data, status, headers) {
+                console.log(data);
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error ");
+            });
+        }; 
+        $scope.oneOff();    
             
         $scope.groups = groupList.data;
         $scope.exams = examList.data;
@@ -33521,7 +34460,7 @@ function getLatLng(thisData) {
             $scope.group = group;
         };
         $scope.examCourses = [];    
-        /*targetStudyProviderService.courseSummary().success(function (data, status, headers) {
+        /*coachingService.courseSummary().success(function (data, status, headers) {
             $scope.allCourses = data;
             var courseExamIds = $scope.allCourses.map(function(a) {return a.exam.toString();});
             var uniqueExamIds = [];
@@ -33566,7 +34505,7 @@ function getLatLng(thisData) {
         });
             
             
-        targetStudyProviderService.examListingsSummary().success(function (data, status, headers) {
+        coachingService.examListingsSummary().success(function (data, status, headers) {
             $scope.examGroups = data;
             $scope.examGroups.forEach(function(thisExam, index){
                 var thisGroups = thisExam.topNgroups;
@@ -33587,7 +34526,7 @@ function getLatLng(thisData) {
             console.log("Error ");
         });*/
             
-        targetStudyProviderService.coachingMaintenance().success(function (data, status, headers) {
+        coachingService.coachingMaintenance().success(function (data, status, headers) {
             
             console.log(data);
         })
@@ -34733,7 +35672,7 @@ function getLatLng(thisData) {
             
     }]);
     exambazaar.controller("examController", 
-        [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'thisExamDegrees', 'suggestedblogs', 'Carousel', 'targetStudyProviderService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, thisExamDegrees, suggestedblogs, Carousel, targetStudyProviderService, viewService, $location, screenSize){
+        [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'thisExamDegrees', 'suggestedblogs', 'Carousel', 'coachingService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, thisExamDegrees, suggestedblogs, Carousel, coachingService, viewService, $location, screenSize){
             $scope.slideCount = 2;
             $scope.mobileDevice = false;
             if (screenSize.is('xs, sm')){
@@ -34868,7 +35807,7 @@ function getLatLng(thisData) {
                         if($scope.user && $scope.user._id){
                             examUserinfo.userinfo.user = $scope.user._id;
                         }
-                        targetStudyProviderService.suggestedcoachings(examUserinfo).success(function (data, status, headers) {
+                        coachingService.suggestedcoachings(examUserinfo).success(function (data, status, headers) {
                             $scope.suggestedcoachings = data;
                             //console.log(data);
                         })
@@ -35005,7 +35944,7 @@ function getLatLng(thisData) {
                 var coachingForm = {
                     _id: provider._id 
                 };
-                targetStudyProviderService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+                coachingService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
                         var examStream = data;
                         
                         var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
@@ -37715,7 +38654,7 @@ function getLatLng(thisData) {
     }]);    
         
     exambazaar.controller("bulkDisableController", 
-        [ '$scope', '$rootScope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', function($scope, $rootScope, UserService,$http,$state, thisuser, targetStudyProviderService){
+        [ '$scope', '$rootScope', 'UserService', '$http', '$state', 'thisuser', 'coachingService', function($scope, $rootScope, UserService,$http,$state, thisuser, coachingService){
         $scope.user = thisuser.data;
         if($scope.user.userType =='Master'){
             $scope.showLevel = 10;
@@ -37747,7 +38686,7 @@ function getLatLng(thisData) {
             };
             $scope.disabledIds = institutes;
             console.log(institutes.length);
-            targetStudyProviderService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
+            coachingService.bulkDisableProviders(disableForm).success(function (data, status, headers) {
                 //$scope.disabledIds = data;
                 console.log("Done");
             })
@@ -37763,7 +38702,7 @@ function getLatLng(thisData) {
     }]);        
         
     exambazaar.controller("addInstituteController", 
-        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'targetStudyProviderService', 'examList', 'streamList', '$rootScope', 'Notification', function($scope, UserService,$http,$state, thisuser, targetStudyProviderService, examList, streamList,$rootScope, Notification){
+        [ '$scope', 'UserService', '$http', '$state', 'thisuser', 'coachingService', 'examList', 'streamList', '$rootScope', 'Notification', function($scope, UserService,$http,$state, thisuser, coachingService, examList, streamList,$rootScope, Notification){
             
         $rootScope.pageTitle = 'Add Coaching in EB';    
         $scope.user = thisuser.data;
@@ -37810,10 +38749,10 @@ function getLatLng(thisData) {
             //DEF
             $scope.newInstitute.groupName = $scope.newInstitute.name;
              var saveProvider = {
-                targetStudyProvider:$scope.newInstitute,
+                coaching:$scope.newInstitute,
                 user: $scope.user.userId
             };
-            targetStudyProviderService.saveProvider(saveProvider).success(function (data, status, headers) {
+            coachingService.saveProvider(saveProvider).success(function (data, status, headers) {
                 $scope.addedInstituteId = data;
                 console.log("Done");
             })
@@ -37865,18 +38804,18 @@ function getLatLng(thisData) {
                     }
                     
                     var saveProvider = {
-                        targetStudyProvider:thisinstitute,
+                        coaching:thisinstitute,
                         user: $scope.user._id,
                         
                     };
                     if($scope.commonExams.length > 0){
-                        saveProvider.targetStudyProvider.exams = $scope.commonExams;
+                        saveProvider.coaching.exams = $scope.commonExams;
                     }
                         
                     institutes.push(saveProvider);
                 }
             });
-            targetStudyProviderService.bulkSaveProviders(institutes).success(function (data, status, headers) {
+            coachingService.bulkSaveProviders(institutes).success(function (data, status, headers) {
                 $scope.addedInstituteIds = data;
                 console.log("Done");
                 Notification.success("Great, we have added " + $scope.addedInstituteIds.length + " institutes!");
@@ -38293,10 +39232,10 @@ function getLatLng(thisData) {
             
     }]);    
     exambazaar.controller("sendEmailController", 
-        [ '$scope','$http','$state','EmailService', 'targetStudyProviderService', 'UserService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', 'Notification', function($scope,$http,$state,EmailService, targetStudyProviderService, UserService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope, Notification){
+        [ '$scope','$http','$state','EmailService', 'coachingService', 'UserService', 'thisuser','$mdDialog', '$timeout', 'thisuserEmails', 'tofillciService', '$rootScope', 'Notification', function($scope,$http,$state,EmailService, coachingService, UserService, thisuser,$mdDialog, $timeout, thisuserEmails, tofillciService, $rootScope, Notification){
             $rootScope.pageTitle = "Send Emails via Sendgrid";
             $scope.emailService = function(){
-                targetStudyProviderService.emailService().success(function (data, status, headers) {
+                coachingService.emailService().success(function (data, status, headers) {
                     //$scope.distinctStates = data;
                     console.log("Done");
                 })
@@ -38437,7 +39376,7 @@ function getLatLng(thisData) {
                 //console.log(newValue);
                 if(newValue.length > 5){
                 //alert($scope.email.instituteId);
-                 targetStudyProviderService.getProviderBasic(newValue).success(function (data, status, headers) {
+                 coachingService.getProviderBasic(newValue).success(function (data, status, headers) {
                 if(data){
                     console.log(data);
                     var refreshedProvider = data.provider;
@@ -40341,14 +41280,14 @@ function getLatLng(thisData) {
                     return ExamService.getStreamExams($stateParams.categoryName);
                 }],
                 
-                /*targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
+                /*coachingsList: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
                     var cityCourse = {
                         city: $stateParams.cityName,
                         course: $stateParams.subCategoryName
                     };
                         
-                    return targetStudyProviderService.getCourseProviders(cityCourse);
+                    return coachingService.getCourseProviders(cityCourse);
                        
                 }],*/
                 suggestedblogs: ['blogpostService','$stateParams',
@@ -40386,9 +41325,9 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams){
                     return ExamService.getExamByName($stateParams.subCategoryName);
                 }],
-                thisProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
                 
                 
@@ -40410,13 +41349,13 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisGroup: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
+                thisGroup: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
                     var groupCity = {
                         groupName: $stateParams.groupName,
                         cityName: $stateParams.cityName,
                     };
-                    return targetStudyProviderService.getGroupCity(groupCity);
+                    return coachingService.getGroupCity(groupCity);
                 }],
                 thisExam: ['ExamService','$stateParams',
                     function(ExamService,$stateParams){
@@ -40488,13 +41427,13 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
-                thisGroup: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
+                thisGroup: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
                     var groupCity = {
                         groupName: $stateParams.groupName,
                         cityName: $stateParams.cityName,
                     };
-                    return targetStudyProviderService.getGroupCity(groupCity);
+                    return coachingService.getGroupCity(groupCity);
                 }],
                 thisGroupResults: ['resultService','$stateParams',
                     function(resultService,$stateParams) {
@@ -40510,6 +41449,33 @@ function getLatLng(thisData) {
                 }],
                 
                 
+                
+            }
+        })
+        .state('showGroupReviews', {
+            url: '/groupreviews/:categoryName/:subCategoryName/:cityName/:groupName',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'groupreviews.html',
+                    controller: 'groupreviewsController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisGroup: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    var groupCity = {
+                        groupName: $stateParams.groupName,
+                        cityName: $stateParams.cityName,
+                    };
+                    return coachingService.getGroupCity(groupCity);
+                }],
                 
             }
         })
@@ -40529,13 +41495,13 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
-                thisGroupInfo: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getGroupInfo($stateParams.coachingId);
+                thisGroupInfo: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getGroupInfo($stateParams.coachingId);
                 }],
                 imageMediaTagList:['MediaTagService','$stateParams',
                     function(MediaTagService) {  
@@ -40553,9 +41519,9 @@ function getLatLng(thisData) {
                     function(StreamService){
                     return StreamService.getStreams();
                 }],
-                cisavedUsersList: ['targetStudyProviderService', '$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.cisavedUsers($stateParams.coachingId);
+                cisavedUsersList: ['coachingService', '$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.cisavedUsers($stateParams.coachingId);
                 }],
                 loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
@@ -40586,9 +41552,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
                 offersList: ['offerService','$stateParams',
                     function(offerService,$stateParams) {  
@@ -40598,9 +41564,9 @@ function getLatLng(thisData) {
                     function(couponService) {  
                     return couponService.getAllCodes();
                 }],
-                thisGroupInfo: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getGroupInfo($stateParams.coachingId);
+                thisGroupInfo: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getGroupInfo($stateParams.coachingId);
                 }],
                 loadHandsontable: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
@@ -40626,9 +41592,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {  
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {  
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
                 
                 
@@ -40695,9 +41661,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                contactsSummary: ['targetStudyProviderService',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.contacts();
+                contactsSummary: ['coachingService',
+                    function(coachingService) {
+                    return coachingService.contacts();
                 }],
                 
                 
@@ -40741,9 +41707,9 @@ function getLatLng(thisData) {
                     function(UserService) {
                     return UserService.hourlyHeatmap();
                 }],
-                providerSummary: ['targetStudyProviderService',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.dailySummary();
+                providerSummary: ['coachingService',
+                    function(coachingService) {
+                    return coachingService.dailySummary();
                 }],
                 reviewSummary: ['reviewService',
                     function(reviewService) {
@@ -41234,9 +42200,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                groupSummary: ['targetStudyProviderService',
-                    function(targetStudyProviderService){
-                    return targetStudyProviderService.groupSummaryService();
+                groupSummary: ['coachingService',
+                    function(coachingService){
+                    return coachingService.groupSummaryService();
                 }],
                 examList: ['ExamService',
                     function(ExamService){
@@ -41268,9 +42234,9 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams){
                     return ExamService.getExamByName($stateParams.examName);
                 }],
-                allResults: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService, $stateParams) {   
-                    return targetStudyProviderService.allResults($stateParams.examName);
+                allResults: ['coachingService','$stateParams',
+                    function(coachingService, $stateParams) {   
+                    return coachingService.allResults($stateParams.examName);
                 }],
                 
                 
@@ -41292,9 +42258,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService) {   
-                    return targetStudyProviderService.coachingAddressService();
+                coachingsList: ['coachingService','$stateParams',
+                    function(coachingService) {   
+                    return coachingService.coachingAddressService();
                 }],
                 
                 
@@ -41431,9 +42397,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                allcities: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.getCities();
+                allcities: ['coachingService','$stateParams',
+                    function(coachingService) {
+                    return coachingService.getCities();
                 }],
                 streamList: ['StreamService',
                     function(StreamService){
@@ -41883,17 +42849,17 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
-                    return targetStudyProviderService.sandbox2Service($stateParams.cityName);
+                coachingsList: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    return coachingService.sandbox2Service($stateParams.cityName);
                 }],
-                cityProviderCount: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
-                    return targetStudyProviderService.getCityProviderCount($stateParams.cityName);
+                cityProviderCount: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    return coachingService.getCityProviderCount($stateParams.cityName);
                 }],
-                targetStudyCities: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.getCities();
+                coachingCities: ['coachingService','$stateParams',
+                    function(coachingService) {
+                    return coachingService.getCities();
                 }],
                 
                 
@@ -42164,9 +43130,9 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisTargetStudyProvider: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
-                    return targetStudyProviderService.getProvider($stateParams.coachingId);
+                thisTargetStudyProvider: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    return coachingService.getProvider($stateParams.coachingId);
                 }],
                 imageMediaTagList:['MediaTagService','$stateParams',
                     function(MediaTagService) {  
@@ -42194,14 +43160,14 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {
-                    return targetStudyProviderService.getProvidersWithAreas();
+                coachingsList: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    return coachingService.getProvidersWithAreas();
                 }],
                 
             }
         })
-        .state('targetStudyProviders', {
+        .state('coachings', {
             url: '/ebinternal/coaching/database1/:city',
             views: {
                 'header':{
@@ -42221,9 +43187,9 @@ function getLatLng(thisData) {
                     function(LocationService,$stateParams) {
                     return LocationService.getCityLocations($stateParams.city);
                 }],
-                targetStudyProvidersList: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService,$stateParams) {   
-                    return targetStudyProviderService.getProviders($stateParams.city);
+                coachingsList: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {   
+                    return coachingService.getProviders($stateParams.city);
                 }],
                 institutesSavedList: ['cisavedService',
                     function(cisavedService) {   
@@ -42237,9 +43203,9 @@ function getLatLng(thisData) {
                     function(EmailService) {   
                     return EmailService.getEmails();
                 }],
-                targetStudyCities: ['targetStudyProviderService','$stateParams',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.getCities();
+                coachingCities: ['coachingService','$stateParams',
+                    function(coachingService) {
+                    return coachingService.getCities();
                 }],
                 loadAngularFileSaver: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularFileSaver'], {serie: true});
@@ -42283,9 +43249,9 @@ function getLatLng(thisData) {
                     function(UserService) {
                     return UserService.getInterns();
                 }],
-                coachingCount: ['targetStudyProviderService',
-                    function(targetStudyProviderService) {
-                    return targetStudyProviderService.getCount();
+                coachingCount: ['coachingService',
+                    function(coachingService) {
+                    return coachingService.getCount();
                 }],
                 coachingSavedCount: ['cisavedService',
                     function(cisavedService) {
@@ -42623,9 +43589,9 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
                 }],
-                logoList: ['targetStudyProviderService', '$stateParams',
-                    function(targetStudyProviderService, $stateParams) {
-                    return targetStudyProviderService.checkLogo($stateParams.pageNumber);
+                logoList: ['coachingService', '$stateParams',
+                    function(coachingService, $stateParams) {
+                    return coachingService.checkLogo($stateParams.pageNumber);
                 }],
                 
                 user: function() { return {}; }
@@ -43367,7 +44333,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         "addedInstitutes",
         "addedQuestions",
         "providers",
-        "targetStudyProviders",
+        "coachings",
         "filled",
         "assigned",
         "assignedToVerify",

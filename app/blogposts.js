@@ -3,7 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var blogpost = require('../app/models/blogpost');
-var targetStudyProvider = require('../app/models/targetStudyProvider');
+var coaching = require('../app/models/coaching');
 var user = require('../app/models/user');
 var view = require('../app/models/view');
 var email = require('../app/models/email');
@@ -198,7 +198,7 @@ router.get('/topCoaching/:examName', function(req, res) {
                             }
                              
                         }
-                        var groupNames = targetStudyProvider.aggregate(
+                        var groupNames = coaching.aggregate(
                         [
                             {$match: {disabled: false, type: 'Coaching', 'groupName': { $in : thisBlogpost.coachingGroups} } },
                             {"$group": { "_id": { city: "$city" }, count:{$sum:1}, logo: { $first: "$logo" }, name: { $addToSet: "$name" } } },
@@ -2108,7 +2108,7 @@ router.get('/user/:userId', function(req, res) {
         
         var blogpostInstituteIds =  blogposts.map(function(a) {return a.institute;});
         
-        var allProviderBlogposts = targetStudyProvider
+        var allProviderBlogposts = coaching
             .find({_id : { $in : blogpostInstituteIds }, disabled: {$ne: true}},{name:1 , groupName:1, exams:1, disabled: 1, city:1, logo:1, address:1, pincode:1})
             .deepPopulate('exams exams.stream')
             .exec(function (err, allProviderBlogposts) {
