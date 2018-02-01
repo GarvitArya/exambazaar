@@ -477,7 +477,7 @@ router.post('/cirf', function(req, res) {
                             }
                             console.log(providerVariable);
                             if(option.indexOf('-') != -1){
-                                var splits = str.split("-");
+                                var splits = option.split("-");
                                 var sum = 0;
                                 splits.forEach(function(thisValue, vindex){
                                     sum += parseFloat(thisValue);
@@ -1315,6 +1315,54 @@ router.post('/examListingsSummary', function(req, res) {
      });
     
     
+});
+
+
+router.post('/coachingMaintenance', function(req, res) {
+    var examId = '58ac2cb47e852a2c401a8c44';
+    var addExamId = '58ac2ccc7e852a2c401a8c46';
+    var counter = 0;
+    var addcounter = 0;
+    var active = false;
+    
+    
+    if(active){
+     var allProviders = targetStudyProvider.find( {exams: examId, disabled: false}, {exams: 1},function(err, allProviders) {
+    if (!err){
+        if(allProviders){
+            var nLength = allProviders.length;
+            console.log(nLength);
+            allProviders.forEach(function(thisProvider, index){
+                var thisExam = thisProvider.exams;
+                var aeIndex = thisExam.indexOf(addExamId);
+                if(aeIndex != -1){
+                    //console.log('Add Exam Exists');
+                }else{
+                    addcounter += 1;
+                    thisProvider.exams.push(addExamId);
+                    thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("Coaching Updated " + thisProvider._id);
+                    });
+                    //console.log(thisProvider._id);
+                }
+                counter += 1;
+                if(counter == nLength){
+                    console.log("All done - " + addcounter + " coachings have been edited!");
+                }
+                
+                
+            });
+            res.json(true);
+        }else{
+            res.json(false);
+        }
+        
+    } else {throw err;}
+    });
+    }else{
+        res.json(false);
+    }
 });
 router.post('/addVideo', function(req, res) {
     var newVideoForm = req.body;

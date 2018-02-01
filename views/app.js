@@ -1645,6 +1645,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.p5Analytics = function(analyticsForm) {
             return $http.post('/api/targetStudyProviders/p5Analytics', analyticsForm);
         };
+        this.coachingMaintenance = function() {
+            return $http.post('/api/targetStudyProviders/coachingMaintenance');
+        };
         this.examListingsSummary = function() {
             return $http.post('/api/targetStudyProviders/examListingsSummary');
         };
@@ -33518,7 +33521,7 @@ function getLatLng(thisData) {
             $scope.group = group;
         };
         $scope.examCourses = [];    
-        targetStudyProviderService.courseSummary().success(function (data, status, headers) {
+        /*targetStudyProviderService.courseSummary().success(function (data, status, headers) {
             $scope.allCourses = data;
             var courseExamIds = $scope.allCourses.map(function(a) {return a.exam.toString();});
             var uniqueExamIds = [];
@@ -33579,6 +33582,14 @@ function getLatLng(thisData) {
                 
             });
             console.log($scope.examGroups);
+        })
+        .error(function (data, status, header, config) {
+            console.log("Error ");
+        });*/
+            
+        targetStudyProviderService.coachingMaintenance().success(function (data, status, headers) {
+            
+            console.log(data);
         })
         .error(function (data, status, header, config) {
             console.log("Error ");

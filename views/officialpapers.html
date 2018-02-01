@@ -194,7 +194,7 @@
 
 <div class="whiteBackground baseFont width100">
     <div layout="row" layout-align="center center" hide-xs layout="row" class="profileBar width100" layout-align="start start" hide-xs> 
-        <nav class="secondFont spacedLetter09 headerBlue navbar-default" flex>
+        <nav class=" spacedLetter09 headerBlue navbar-default" flex>
             <ul ng-repeat="stream in officialPapersStreamExam | orderBy: ['-rank']" class="nav navbar-nav paddingLR20 " flex>
             <li class="dropdown " flex>
             <a href="" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" flex>{{stream.displayname}}
@@ -211,15 +211,15 @@
         </div>
     
     <div id="testHeader" class="width100">
-    <div layout="column" layout-align="center center" class="width100 min30vh paddingTB10" >
+    <div layout="column" layout-align="center center" class="width100 min40vh paddingTB10" >
         
-        <h1 class="h1Font bold padding5 text-center">
+        <h1 class="margin0 padding10 h1Font bold text-center ">
             {{exam.seoname | uppercase}} Question Papers
         </h1>
-        <h3 class=" h3Font padding5 text-center">
+        <h3 class="margin0 padding10 h3Font text-center ">
             Seal your {{exam.seoname | uppercase}} preparation by attempting the Official {{exam.seoname | uppercase}} Papers for<span ng-if="!years">&nbsp;years&nbsp;</span><span ng-if="years">&nbsp;{{years.min}} - {{years.max}}&nbsp;</span>in a Live, Timed, Exam Environment for FREE
         </h3>
-        <div class="baseFont text-center">
+        <div class="h2Font paddingT30 bold text-center ">
             {{examSummary.papers}} Papers | {{examSummary.hours}} Hours | {{examSummary.questions}} Questions
         </div>
     </div>
