@@ -733,6 +733,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getTests = function() {
             return $http.get('/api/tests');
         };
+        this.getTestNames = function() {
+            return $http.get('/api/tests/names');
+        };
         this.getExamTests = function(examId) {
             return $http.get('/api/tests/exam/'+examId, {examId: examId});
         };
@@ -31373,11 +31376,31 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]); 
     
      exambazaar.controller("testAssessmentResultController", 
-        [ '$scope', '$http', '$rootScope','UserService','assessments','$state', '$mdDialog', 'assessmentService', function($scope, $http, $rootScope, UserService, assessments, $state, $mdDialog, assessmentService){
+        [ '$scope', '$http', '$rootScope','UserService','assessments', 'testNames', 'examList','$state', '$mdDialog', 'assessmentService', function($scope, $http, $rootScope, UserService, assessments, testNames, examList, $state, $mdDialog, assessmentService){
             $scope.assessments = assessments.data;
+            var testNames = testNames.data;
+            $scope.examList = examList.data;
+            var examListIds = $scope.examList.map(function(a) {return a._id.toString();});
+            var testNameIds = testNames.map(function(a) {return a._id.toString();});
             var allAssessments = [];
             var assessmentTestIds = [];
+            
+            testNames.forEach(function(thisTest, tindex){
+                var thisExamId = thisTest.exam.toString();
+                var eIndex = examListIds.indexOf(thisExamId);
+                if(eIndex != -1){
+                    thisTest.exam = $scope.examList[eIndex];
+                }
+                
+            });
+            console.log(testNames);
+            
              $scope.assessments.forEach(function(thisAssessment, aindex){
+                 var tIndex = testNameIds.indexOf(thisAssessment.test.toString());
+                 
+                 if(tIndex != -1){
+                     thisAssessment.test = testNames[tIndex];
+                 }
                 if(thisAssessment.evaluation && thisAssessment.evaluation.score){
                     thisAssessment.evaluation.score = Number(thisAssessment.evaluation.score);
                 }
@@ -38451,7 +38474,7 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"gaurav@exambazaar.com"
+"team@exambazaar.com"
 
             ];
             $scope.internshipEmail = function(userId){
@@ -42138,8 +42161,14 @@ function getLatLng(thisData) {
                     function(assessmentService) {   
                     return assessmentService.getAssessments();
                 }],
-                
-                
+                testNames: ['testService',
+                    function(testService) {   
+                    return testService.getTestNames();
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExamsBasic();
+                }],
             }
         })
         .state('allblogtags', {

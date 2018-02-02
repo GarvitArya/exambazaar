@@ -291,6 +291,11 @@ router.timestamp = function() {
 
 router.assessmentshelper = function(){
     console.log('Running Assessment Service: ' + Date.now());
+    
+    
+    
+    
+    
 };
 
 module.exports = router;

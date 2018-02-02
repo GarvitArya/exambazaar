@@ -70,11 +70,11 @@
 <div flex layout="row" layout-align="center start" class="whiteBackground" id="fullHeightPage">
     
     
-<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 height100 width100 blogFont font14">
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB10 height100 width100 basicFont font8">
     <div layout="row" layout-align="center center" class="marginT20 font20 textBlack bold paddingB10 width100">
         All Assessments&nbsp;<span class="badge" id="badge">{{assessments.length}}</span>
     </div>
-    <div layout="row" layout-align="center center" class="width100">
+    <!--<div layout="row" layout-align="center center" class="width100">
         <md-button class="md-next md-small tolowercase" ng-click="filterByTest('5a17f5f617cb4c07c5dd7f5b')">
             Aptitude Test Old
         </md-button>
@@ -90,61 +90,62 @@
         <md-button class="md-black md-small tolowercase" ng-click="sortByDate()">
             Sort by Date
         </md-button>
-    </div>    
-    <div layout="column" layout-align="center center" class="marginT40 width100">
+    </div>-->    
+    <div layout="column" layout-align="center center" class="marginT20 width100">
         <div layout="row" class="width100 bold paddingB5 marginB10 subhheadingBottomBorder2">
             <div flex="5" class="">S. No.</div>
             <div flex="15" class="">Candidate</div>
-            <div flex="15" class="">Degree</div>
+            <div flex="15" class="paddingLR5">Test Name</div>
+            <div flex="15" class="">Email</div>
+            <div flex="10" class="">Mobile</div>
             <div flex="10" class="">Start</div>
             <div flex="10" class="">End</div>
+            <div flex="10" class="">Submitted</div>
             <div flex="10" class="">Score</div>
             <div flex="10" class="">Questions</div>
-            <div flex="15" class="">Address</div>
-            
             
         </div>
-        <div layout="row" layout-align="start center" ng-repeat="assessment in assessments" class="width100 paddingTB5 gainsboroBottomBorder">
+        <div layout="row" layout-align="start center" ng-repeat="assessment in assessments" class="width100 gainsboroBottomBorder">
             <!-- | orderBy:'-evaluation.score'-->
             <div flex="5" class="">{{$index+1}}</div>
             <div layout="column"  flex="15" class=" ">
                 <div class="bold">{{assessment.info.name}}</div>
-                <div class="font8">{{assessment.info.mobile}}</div>
-                <div class="font8">{{assessment.info.email}}</div>
-                <div class="font8">{{assessment.user}}</div>
-                <div class="font8">{{assessment.test}}</div>
+                <div class="">{{assessment.user}}</div>
             
             </div>
-            <div layout="column"  flex="15" class="font8">
+            <div layout="column" layout-align="center start"  flex="15" class="paddingLR5">
+                <div>{{assessment.test.name}}</div>
+                <div>{{assessment.test.exam.seoname}}</div>
+            </div>
+            <div layout="column"  flex="15" class="">
                 
                 <div layout="row" class="width100">
-                    <div>{{assessment.info.degree}}</div>
-                    <div ng-if="assessment.info.degree == 'Others'">&nbsp;&nbsp;({{assessment.info.otherdegree}})</div>
+                    {{assessment.info.email}}
                 </div>
-                <div layout="row" class="width100">
-                    <div>{{assessment.info.stream}}</div>
-                    <div ng-if="assessment.info.stream == 'Others'">&nbsp;&nbsp;({{assessment.info.otherstream}})</div>
-                </div>
-                </div>
-            <div layout="column"  flex="10" class=" font8">
+                
+            </div>
+            <div layout="column"  flex="10" class=" ">
+                {{assessment.info.mobile}}
+            </div>
+            <div layout="column"  flex="10" class=" ">
                 {{assessment._start | date:'medium'}}
             </div>
-            <div layout="column"  flex="10" class=" font8">
+            <div layout="column"  flex="10" class=" ">
                 {{assessment._end | date:'medium'}}
+            </div>
+            <div layout="column"  flex="10" class=" ">
+                {{assessment._submit | date:'medium'}}
             </div>
             <div layout="column"  flex="10" class="">
                 <span ng-if="assessment.evaluation.score || assessment.evaluation.score == 0" class="bold">{{assessment.evaluation.score}}</span>
-                <span ng-if="!assessment.evaluation.score && assessment.evaluation.score != 0" ng-click="userevaluate(assessment)" class="font10 danger">Evaluate</span>
-                <!--<span ng-click="userevaluate(assessment)" class="font10 danger">Evaluate</span>-->
+                <span ng-if="!assessment.evaluation.score && assessment.evaluation.score != 0" ng-click="userevaluate(assessment)" class=" danger">Evaluate</span>
+                <!--<span ng-click="userevaluate(assessment)" class=" danger">Evaluate</span>-->
             </div>
-            <div layout="row"  flex="10" class="font10">
+            <div layout="row"  flex="10" class="">
                 {{assessment.evaluation.questions.attemped}} | 
                 {{assessment.evaluation.questions.unattemped}} | 
                 {{assessment.evaluation.questions.correct}} | 
                 {{assessment.evaluation.questions.incorrect}}
-            </div>
-            <div layout="column"  flex="15" class="font8 paddingR10">
-                {{assessment.info.address}}
             </div>
             
         </div>

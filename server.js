@@ -385,13 +385,11 @@ setTimeout(function(){
 }, millisTill10);
 
 
-function doSomething()
+/*function doSomething()
 {
     procmons.assessmentshelper();
 }
-
-
-setInterval(doSomething, 1*60*1000);
+setInterval(doSomething, 1*60*1000);*/
 
 
 var server = app.listen(port);

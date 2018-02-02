@@ -299,6 +299,19 @@ router.get('/', function(req, res) {
     
 });
 
+router.get('/names', function(req, res) {
+    
+    test
+        .find({simulationactive: true}, {name: 1, exam: 1})
+        //.deepPopulate('exam')
+        .exec(function (err, docs) {
+        if (!err){
+            res.json(docs);
+        } else {throw err;}
+    });
+    
+});
+
 router.post('/markSimulate', function(req, res) {
     var testIds = req.body;
     var limit = 2000;
