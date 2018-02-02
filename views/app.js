@@ -2325,7 +2325,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.city = $stateParams.cityName;
         $scope.category = thisStream.data;
         $scope.subcategory = thisExam.data;
-        console.log($scope.subcategory);
+        //console.log($scope.subcategory);
         var streamExamsData = streamExams.data;
         var streamExamsIds = streamExamsData.map(function(a) {return a._id;});
         $scope.streamExams = streamExams.data.map(function(a) {return a.name;});
@@ -2425,6 +2425,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             cityName: $scope.city,
         };
         $scope.allCoachings = new CoachingStream(streamInfo);
+        console.log($scope.allCoachings);
         $scope.allBlogs = new SuggestedBlogStream(streamInfo);
         
         $scope.uniqueProviders = [];
@@ -2437,6 +2438,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.$watch('allCoachings.items', function (newValue, oldValue, scope){
             if(newValue && newValue.length > 0 && newValue != oldValue){
              $scope.allCoachings.items.forEach(function(thisGroup, gindex){
+                 var oldCirf = thisGroup.examCirf;
+                 thisGroup.examCirf = Math.round(thisGroup.examCirf*2)/2;
+                 console.log(oldCirf + " " + thisGroup.examCirf);
+                 
                 if(!thisGroup.examsOffered || thisGroup.examsOffered.length == 0){
                     thisGroup.examsOffered = [];
                     thisGroup.exams.forEach(function(thisExam, eIndex){
@@ -31393,7 +31398,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
                 
             });
-            console.log(testNames);
             
              $scope.assessments.forEach(function(thisAssessment, aindex){
                  var tIndex = testNameIds.indexOf(thisAssessment.test.toString());

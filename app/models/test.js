@@ -23,6 +23,7 @@ var testSchema = mongoose.Schema({
     solved: {type: Boolean},
     questionWithAnswer: {type: Boolean},
     simulationrank: {type: Number},
+    analyzeable : { type: Boolean, default: true},
     downloadable : { type: Boolean, default: false},
     verified : { type: Boolean, default: false},
     active : { type: Boolean, default: true},

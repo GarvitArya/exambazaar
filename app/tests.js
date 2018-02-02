@@ -286,14 +286,12 @@ router.post('/customMarking', function(req, res) {
 //to get all tests
 router.get('/', function(req, res) {
     //console.log('Here');
-    test
-        .find({ })
+    var allTests = test
+        .find({})
         //.deepPopulate('exam')
-        .exec(function (err, docs) {
+        .exec(function (err, allTests) {
         if (!err){
-            //var testIds = docs.map(function(a) {return a.name;});
-            //console.log(docs);
-            res.json(docs);
+            res.json(allTests);
         } else {throw err;}
     });
     

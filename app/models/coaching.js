@@ -211,6 +211,11 @@ var coachingSchema = mongoose.Schema({
             }
         ],
     },
+    /*cirf:{
+        cirfExamRating:{
+            
+        }, 
+    },*/
     googlePlace:Schema.Types.Mixed,
     googlePlaceSearchTry:Boolean,
 });

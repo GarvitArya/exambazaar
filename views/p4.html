@@ -398,12 +398,16 @@
                                     </a>
                                 </h2>
                                 <div layout="row" layout-align="end center" flex>
-                                <button class="btn actionButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
-                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
-                                </button>
-                                <button class="btn actionButton  tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
-                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
-                                </button>
+                                <!--<div>
+                                    <i class="fa fa-star reviewStar font16 marginR2" aria-hidden="true"></i>
+                                    <i class="fa fa-star reviewStar font16 marginR2" aria-hidden="true"></i>  
+                                    <i class="fa fa-star reviewStar font16 marginR2" aria-hidden="true"></i>  
+                                    <i class="fa fa-star-half reviewStar font16 marginR2" aria-hidden="true"></i>
+                                    
+                                </div> -->   
+                                    
+                                    
+                                
                                 </div>
                             </div>
                             <div layout="row" layout-align="start center" class="width100 marginT5 " layout-wrap>
@@ -423,6 +427,7 @@
                             <div class="width100 marginT5 paddingB5 gainsboroBottomBorder font14">
                                 <a ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
                             </div>
+                            <div layout="row" layout-align="end center" class="width100">
                             <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT15 width100">
                                 <div layout="row" layout-align="start center" class="bold wideLine basicFont" ng-if="coachingGroup.examsOffered.length > 0">
                                     {{category.displayname}} Courses at {{coachingGroup.groupName}}
@@ -438,6 +443,15 @@
                                         &nbsp;|&nbsp;
                                     </div>-->
                                 </div>
+                            </div>
+                            <div layout="row" layout-align="end center" >
+                                <button class="btn actionButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
+                                </button>
+                                <button class="btn actionButton  tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
+                                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
+                                </button>
+                            </div>
                             </div>
 
                             <div layout="row" class="font14 bold narrowLine width100 marginT10 basicFont" ng-if="coachingGroup.groupResults.length > 0">

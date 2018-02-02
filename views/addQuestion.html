@@ -507,7 +507,17 @@
                             Downloadable test?
                         </md-switch>
                     </div>
-                </div>    
+                </div>
+                <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
+                    <div class="bold paddingR10" flex="40">
+                    Can the test result be analyzed by the candidate?
+                    </div>
+                    <div flex class="paddingL10">
+                        <md-switch ng-model="test.analyzeable" aria-label="Analyzeable?" class="margin0 danger bold">
+                            Analyzeable test?
+                        </md-switch>
+                    </div>
+                </div>
                 <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
                     <div class="bold paddingR10"  flex="40">
                     Total Duration of the test in minutes

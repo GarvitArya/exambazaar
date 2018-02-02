@@ -496,7 +496,7 @@
                     You have attempted {{answered}} out of {{totalQuestions}} questions!
                 </div>
                 <div class="padding10">
-                    <md-button class="md-danger md-large tolowercase margin0 " ng-click="seeAssessmentResult()">
+                    <md-button class="md-danger md-large tolowercase margin0 " ng-click="seeAssessmentResult()" ng-if="test.analyzeable">
                         Analyze your result
                     </md-button>
                 </div>
