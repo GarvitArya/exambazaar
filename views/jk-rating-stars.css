@@ -4,7 +4,7 @@
     font-size: 30px; }
 
 .jk-rating-stars-container .star-button {
-  text-shadow: 0.06em .04em #000000; }
+  /*text-shadow: 0.06em .04em #000000;*/ }
   .jk-rating-stars-container .star-button.star-on .material-icons {
     color: #FFD700; }
   .jk-rating-stars-container .star-button.star-off .material-icons {

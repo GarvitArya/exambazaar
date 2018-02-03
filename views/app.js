@@ -716,6 +716,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveTest = function(test) {
             return $http.post('/api/tests/save', test);
         };
+        this.suggestTest = function(usertest) {
+            return $http.post('/api/tests/suggestTest', usertest);
+        };
         this.testpdf = function(test) {
             return $http.post('/api/tests/testpdf', test, { responseType : 'arraybuffer' });
         };
