@@ -262,26 +262,7 @@
     
     
     
-    /*.custom .ngrateit-reset{
-        background-image: url("cancel-icon.svg");
-    }*/
-    /* Background */
-    .custom .ngrateit-bg-star{
-        background-image: url("icons/star/empty.svg");
-    }
-    /* Selected state */
-    .custom .ngrateit-selected {
-        background-image: url("icons/star/filled.svg");
-    }
-    /* Cancelation of hover styling */
-    .custom.ngrateit:not(.ngrateit-readonly) .ngrateit-rating span:hover ~ span {
-        background-image: url("icons/star/empty.svg");
-    }
-    /* Hover styling */
-    .custom.ngrateit:not(.ngrateit-readonly) .ngrateit-rating:hover span {
-        background-image: url("icons/star/filled.svg");
-        
-    }
+    
     
     
 </style>
@@ -509,7 +490,7 @@
             </div>
         </div>
 
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="testOver ">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="testOver">
             <div layout="column" layout-align="center center" class="width100 blogFont exact90h">
                 <div layout="column" layout-align="start start" class="baseFont exact50h boxShadow paddingTB10 paddingLR40">
                 <div layout="column" layout-align="center center" class="h2Font bold width100 exact5h">Help us improve!</div>

@@ -18112,17 +18112,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     };
                     assessmentService.getAssessment(assessmentForm).success(function (adata, status, headers) {
                         $scope.userAssessment = adata;
-                        if(!$scope.userAssessment.userRating){
+                        if($scope.userAssessment && !$scope.userAssessment.userRating){
                             $scope.userAssessment.userRating = 0;
                         }
-                        console.log($scope.userAssessment.userRating );
+                       
                         $scope.testOver = false;
                         $scope.testStarted = false;
 
 
                         if($scope.userAssessment && $scope.userAssessment.submitted){
                             $scope.testOver = true;
-                           
                             $scope.testStarted = true;
                             
 
@@ -18137,7 +18136,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
                             }
                         }
-                        if($scope.testOver){
+                        if($scope.testStarted && !$scope.testOver){
                             getUserAnswers();
                             getUserResponses();
                             getUserQMarkForReview();
@@ -18485,11 +18484,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                                 $scope.testOver = false;
 
                             }
-
+                            getUserAnswers();
+                            getUserResponses();
+                            getUserQMarkForReview();
+                            getUserQView();
                         }else{
                             $scope.testStarted = false;
                         }
-                        getUserResponses();
+                        
                     })
                     .error(function (data, status, header, config) {
                         Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
@@ -38563,7 +38565,59 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"team@exambazaar.com"
+"sidhrthsunil0123@gmail.com",
+"sabitan85@gmail.com",
+"dhanavathashok9849@gmail.com",
+"work.kamal1@gmail.com",
+"manvi.verma169@gmail.com",
+"sonyericssonj20i.ac@gmail.com",
+"ankitaaggarwal97@gmail.com",
+"sheetalpatel.178@gmail.com",
+"Sachinkshuklaoo7@gmail.com",
+"anshul8094215660@gmail.com",
+"prathiba.sriram@gmail.com",
+"sainishipra925@gmail.com",
+"banswaltanish@gmail.com",
+"satyam2208@gmail.com",
+"srikardudam@gmail.com",
+"pranavvaid33@gmail.com",
+"amitkant100@gmail.com",
+"arjunmemattathil1@gmail.com",
+"kaurparwinder2016@gmail.com",
+"pdsuthar10@gmail.com",
+"gauravkucheriya@gmail.com",
+"ashamannem11@gmail.com",
+"deekshagouda2627@gmail.com",
+"lavishlodha@gmail.com",
+"ghoshshalmali@gmail.com",
+"sunilzypee@gmail.com",
+"utturaj0007@gmail.com",
+"roxy248virgo@gmail.com",
+"sakshisanan0@gmail.com",
+"ashish12uca002@gmail.com",
+"mehtajinald@gmail.com",
+"ka752@snu.edu.in",
+"shoutayc@gmail.com",
+"jain.sak123@gmail.com",
+"sushma0550@gmail.com",
+"shivam_raj@srmuniv.edu.in",
+"vaibhavanand703@gmail.com",
+"upatya1798@gmail.com",
+"Priyaani.indira@gmail.com",
+"Peguda.Likhitha@st.niituniversity.in",
+"gauravsaha385@gmail.com",
+"khyatim98@gmail.com",
+"paperwork_2004@yahoo.com",
+"shringarikak5jan@gmail.com",
+"sd22101996@gmail.com",
+"hariharini79@gmail.com",
+"sakshimaurya70@gmail.com",
+"ashvijkumar09@gmail.com",
+"ms090595@gmail.com",
+"sharma.vips@yahoo.com",
+"keerdthe006@gmail.com",
+"ana1998musib@gmail.com",
+
 
             ];
             $scope.internshipEmail = function(userId){
