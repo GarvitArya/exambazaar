@@ -259,6 +259,10 @@
         border: 1px solid #ccc;
         background: whitesmoke;
     }
+    
+    .ngrateit-star{
+        background-size: 32px;
+    }
 </style>
 
 <!--<div id="spacer1" class="hidden-xs whiteBackground">
@@ -486,27 +490,50 @@
 
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="testOver ">
             <div layout="column" layout-align="center center" class="width100 blogFont exact90h">
-                <div class="h1Font">
-                    {{user.basic.name}}
+                <div layout="column" layout-align="start start" class="baseFont exact40h boxShadow paddingTB10 paddingLR40">
+                <div layout="column" layout-align="center center" class="h2Font bold width100 exact5h">Help us improve!</div>
+                <div layout="column" layout-align="center center" class="exact10h">
+                    {{user.basic.name}}, how was this exam simulation? Please rate it on a scale of 5!
                 </div>
-                <div class="h2Font">
-                    Thank you, your responses have been auto-saved!
+                <div layout="column" layout-align="center center" class="exact10h width100">
+                    <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" >
+                    </ng-rate-it>
+                    <div layout="column" layout-align="center center" ng-if="userAssessment.userRating > 0" class="smallFont">
+                        Your rating: {{userAssessment.userRating}} out of 5
+                    </div>
                 </div>
-                <div class="baseFont textGray">
-                    You have attempted {{answered}} out of {{totalQuestions}} questions!
-                </div>
-                <div class="padding10">
-                    <md-button class="md-danger md-large tolowercase margin0 " ng-click="seeAssessmentResult()" ng-if="test.analyzeable">
-                        Analyze your result
+                <div layout="column" layout-align="center center" class="exact25h width100" ng-show="userAssessment.userRating && userAssessment.userRating > 0">
+                    <div layout="column" layout-align="center center" ng-if="testExam.seoname" class="marginTB20">Also, have you taken any coaching classes for {{testExam.seoname}}? Help others with a quick review!</div>
+                    <div layout="column" layout-align="center center" ng-if="!testExam.seoname" class="marginTB20">Also, have you taken any coaching for any exam? Help the Exambazaar community with a quick review!</div>
+                    <md-button class="md-saveNext md-large tolowercase margin0 " ui-sref="review" target="_blank">
+                        Review a Coaching
                     </md-button>
                 </div>
-                <div class="">
-                    <span class="marginL10 danger" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">or Retake the Test</span>
-                    
                 </div>
-                <div class="padding10">
+                <div layout="column" layout-align="center center" class="exact40h width100 baseFont">
+                    <div class="h2Font">
+                        Thank you, your responses have been submitted!
+                    </div>
+                    <div class="baseFont textGray">
+                        You have attempted {{answered}} out of {{totalQuestions}} questions!
+                    </div>
+                    <div class="marginT20">
+                        <md-button class="md-danger md-large tolowercase margin0 " ng-click="seeAssessmentResult()" ng-if="test.analyzeable">
+                            Analyze your result
+                        </md-button>
+                    </div>
+                    <div class="smallFont">
+                        <span class="" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">or Retake the Test</span>
+
+                    </div>
+                </div>
+                
+                
+                
+                
+                <!--<div class="padding10">
                     <span class="marginL10" ng-click="openAddQuestion()" ng-if="fullScope">QPage</span> 
-                </div>
+                </div>-->
                 <!--<div class="" ng-if="userAssessment.evaluation.score">
                     Score: {{userAssessment.evaluation.score}} <span ng-if="test.maxScore">out of maximum {{test.maxScore}}</span>
                 </div>-->

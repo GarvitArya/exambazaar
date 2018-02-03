@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver', 'ngRateIt']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -587,6 +587,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             return $http.get('/api/questionreporterrors/user/'+userId, {userId: userId});
         };
+        this.getQuestionReportErrors = function(userId) {
+            
+            return $http.get('/api/questionreporterrors/');
+        };
         this.removeQuestionReportError = function(questionreporterrorId) {
             return $http.get('/api/questionreporterrors/remove/'+questionreporterrorId, {questionreporterrorId: questionreporterrorId});
         };
@@ -608,6 +612,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveAssessment = function(assessment) {
             return $http.post('/api/assessments/save', assessment);
         };
+        this.rate = function(ratingForm) {
+            return $http.post('/api/assessments/rate', ratingForm);
+        };
+        
         this.getUserAssessments = function(userId) {
             
             return $http.get('/api/assessments/user/'+userId, {userId: userId});
@@ -720,6 +728,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getTest = function(testId) {
             return $http.get('/api/tests/edit/'+testId, {testId: testId});
         };
+        this.getTestExam = function(testId) {
+            return $http.get('/api/tests/testExam/'+testId, {testId: testId});
+        };
+        
         this.answerKey = function(testId) {
             return $http.get('/api/tests/answerKey/'+testId, {testId: testId});
         };
@@ -14034,6 +14046,41 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.generateInternSummary();
     }]);
         
+    exambazaar.controller("questionReportErrorController", 
+        [ '$scope', '$http','$state','$rootScope', '$mdDialog', '$cookies','questionReports', 'testNames', function($scope, $http, $state, $rootScope, $mdDialog, $cookies, questionReports, testNames){
+            $scope.questionReports = questionReports.data;
+            
+            
+            $scope.testNames = testNames.data;
+            var testNameIds = $scope.testNames.map(function(a) {return a._id.toString();});
+            console.log($scope.questionReports);
+            $scope.questionReports.forEach(function(thisReport, index){
+                var thisTestId = null;
+                if(thisReport.test){
+                    thisTestId = thisReport.test.toString();
+                }
+                
+                
+                var tIndex = testNameIds.indexOf(thisTestId);
+                if(tIndex != -1){
+                    thisReport.test = $scope.testNames[tIndex];
+                }
+                
+            });
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+                
+                if($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development'){
+                    $scope.authorized = true;
+                    
+                }
+                
+            }else{
+                $scope.authorized = false;
+            }
+            
+    }]);    
+        
     exambazaar.controller("addedQuestionsController", 
         [ '$scope', '$http','$state','$rootScope', '$mdDialog','thisuser','coachingService', 'addedQuestions', 'ebteam', 'examList', function($scope, $http, $state, $rootScope, $mdDialog, thisuser, coachingService, addedQuestions, ebteam, examList){
             $scope.user = thisuser.data;
@@ -18480,8 +18527,27 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
     }]); 
     exambazaar.controller("assessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thisTestQuestions, Notification, $window, screenSize, viewService ){
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService ){
             
+            $scope.saveUserRating = function(rating){
+                var ratingForm = {
+                    test: $scope.test._id,    
+                    user: $scope.user._id, 
+                    rating: rating,    
+                };
+                assessmentService.rate(ratingForm).success(function (adata, status, headers) {
+                    if(adata){
+                        Notification.success({message: "Thank you, your rating has been recorded!",  positionY: 'top', positionX: 'left', delay: 1000});
+                    }else{
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                });
+                console.log(rating);
+            };
+        
             $scope.openAddQuestion = function(){
                 var url = $state.href('addQuestion', {testId: $scope.test._id});
                 window.open(url, '_blank');    
@@ -18933,6 +18999,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if($cookies.getObject('sessionuser')){
                 var sessionuser = $cookies.getObject( 'sessionuser');
                 $scope.test = thistest.data;
+                $scope.testExam = thistestExam.data;
                 if($scope.test.instructions && $scope.test.instructions.length > 0){
                     $scope.instructions = $scope.test.instructions;    
                 }
@@ -18940,7 +19007,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.testQuestions = thisTestQuestions.data;
                 $scope.testQuestions.sort(function(a,b) {return (Number(a._startnumber) > Number(b._startnumber)) ? 1 : ((Number(b._startnumber) > Number(a._startnumber)) ? -1 : 0);} ); 
                 
-                $rootScope.pageTitle = "Exambazaar Test";
+                
                 var nQuestions = $scope.testQuestions.length;
                 $scope.questionList = [];
                  $scope.testQuestions.forEach(function(thisQuestion, index){
@@ -18961,6 +19028,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.fullScope = false;
                 UserService.getUser(sessionuser._id).success(function (data, status, headers) {
                     $scope.user = data;
+                    $rootScope.pageTitle = $scope.test.name + " | " + $scope.user.basic.name;
                     if($scope.user.userType == 'Master' || $scope.user._id == '5a1831f0bd2adb260055e352'){
                         $scope.fullScope = true;
                     }
@@ -19215,6 +19283,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.markQuestionError = function(question, subquestion){
                 var questionreporterrorForm = {
                     user: $scope.user._id,
+                    test: $scope.test._id,
                     question: question._id,
                     subquestion: subquestion._id,
                 };
@@ -41956,6 +42025,10 @@ function getLatLng(thisData) {
                     function(testService, $stateParams){
                     return testService.getTest($stateParams.testId);
                 }],
+                thistestExam: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getTestExam($stateParams.testId);
+                }],
                 thisTestQuestions: ['questionService','$stateParams',
                     function(questionService, $stateParams){
                         return questionService.getTestQuestions($stateParams.testId);
@@ -42590,6 +42663,32 @@ function getLatLng(thisData) {
                     return UserService.getAddedInstitutes($stateParams.userId);
                 }],
                 
+            }
+        })
+        .state('questionReportError', {
+            url: '/ebinternal/questionReportError',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'questionReportError.html',
+                    controller: 'questionReportErrorController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                questionReports: ['questionreporterrorService',
+                    function(questionreporterrorService){
+                    return questionreporterrorService.getQuestionReportErrors();
+                }],
+                testNames: ['testService',
+                    function(testService) {   
+                    return testService.getTestNames();
+                }],
             }
         })
         .state('addedQuestions', {

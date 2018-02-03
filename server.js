@@ -274,6 +274,7 @@ var allStates = [
 '/ebinternal/user/:userId/:reviewId/availoffer',
 '/ebinternal/user/:userId/addedInstitutes',
 '/ebinternal/user/:userId/addedQuestions',
+'/ebinternal/questionReportError',
 '/ebinternal/user/:userId/filledColleges',
 '/ebinternal/user/:userId/addIntern',
 '/ebinternal/fci',
@@ -385,11 +386,11 @@ setTimeout(function(){
 }, millisTill10);
 
 
-/*function doSomething()
+function doSomething()
 {
     procmons.assessmentshelper();
 }
-setInterval(doSomething, 1*60*1000);*/
+setInterval(doSomething, 30*60*1000);
 
 
 var server = app.listen(port);

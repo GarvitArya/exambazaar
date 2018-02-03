@@ -5,6 +5,7 @@ var config = require('../config/mydatabase.js');
 var exam = require('../app/models/exam');
 var test = require('../app/models/test');
 var user = require('../app/models/user');
+var question = require('../app/models/question');
 var questionreporterror = require('../app/models/questionreporterror');
 var mongoose = require('mongoose');
 
@@ -75,6 +76,68 @@ router.get('/user/:userId', function(req, res) {
     
 });
 
+router.get('/', function(req, res) {
+    var allQuestionReportErrors = questionreporterror
+        .find({})
+        .exec(function (err, allQuestionReportErrors) {
+        if (!err){
+            var finalReports = [];
+            if(allQuestionReportErrors && allQuestionReportErrors.length > 0){
+                
+            allQuestionReportErrors.forEach(function(thisQuestionReport, qIndex){
+                var newQuestionReport = {
+                    test: thisQuestionReport.test,
+                    user: thisQuestionReport.user,
+                    _created: thisQuestionReport._created,
+                };
+                finalReports.push(newQuestionReport);
+            });
+            var questionIds = allQuestionReportErrors.map(function(a) {return a.question.toString();});
+            var userIds = allQuestionReportErrors.map(function(a) {return a.user.toString();});
+            var subquestionIds = allQuestionReportErrors.map(function(a) {return a.subquestion.toString();});
 
+            var existingUsers = user.find({ '_id': {$in: userIds} }, {basic: 1},function (err, existingUsers) {
+                
+            var existingQuestions = question.find({ '_id': {$in: questionIds} }, {questions: 1, _startnumber:1, _endnumber: 1},function (err, existingQuestions) {
+                var existingUserIds = existingUsers.map(function(a) {return a._id.toString();});
+                var existingQuestionIds = existingQuestions.map(function(a) {return a._id.toString();});
+                allQuestionReportErrors.forEach(function(thisQuestionReport, aqrIndex){
+                    var thisUserId = thisQuestionReport.user.toString();
+                    var thisQuestionId = thisQuestionReport.question.toString();
+                    var thisSubQuestionId = thisQuestionReport.subquestion.toString();
+                    var uIndex = existingUserIds.indexOf(thisUserId);
+                    if(uIndex != -1){
+                        finalReports[aqrIndex].username = existingUsers[uIndex].basic.name;
+                    }
+                    
+                    var qIndex = existingQuestionIds.indexOf(thisQuestionId);
+                    if(qIndex != -1){
+                        var thisQuestion = existingQuestions[qIndex];
+                        var thisSubQuestionIds =  thisQuestion.questions.map(function(a) {return a._id.toString();});
+                        var sqIndex = thisSubQuestionIds.indexOf(thisSubQuestionId);
+                        
+                        if(sqIndex != -1){
+                            var qno = Number(thisQuestion._startnumber) + sqIndex;
+                            finalReports[aqrIndex].qno = qno;
+                            
+                        }
+                    }
+                    if(aqrIndex == allQuestionReportErrors.length - 1){
+                        res.json(finalReports);   
+                    }
+                    
+                });
+                
+                });
+                });
+            }else{
+                 res.json([]);
+            }
+            
+            
+        } else {throw err;}
+    });
+    
+});
 
 module.exports = router;

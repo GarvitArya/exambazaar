@@ -1119,6 +1119,31 @@ router.get('/edit/:testId', function(req, res) {
     });
 });
 
+router.get('/testExam/:testId', function(req, res) {
+    var testId = req.params.testId;
+    var thisTest = test
+        .findOne({ '_id': testId },{exam: 1})
+        .exec(function (err, thisTest) {
+        if (!err){
+            var examId = thisTest.exam.toString();
+            
+            var thisExam = exam
+            .findOne({ '_id': examId, active: true },{name: 1, displayname:1, seoname: 1})
+            .exec(function (err, thisExam) {
+            if (!err){
+                if(thisExam && thisExam.seoname){
+                    res.json(thisExam);
+                }else{
+                    res.json(null);
+                }
+            }
+            });
+            
+            //process.exit();
+        } else {throw err;}
+    });
+});
+
 router.get('/k21', function(req, res) {
     var testId = '5a17f5f617cb4c07c5dd7f5b';
     //console.log("Test is " + testId);
