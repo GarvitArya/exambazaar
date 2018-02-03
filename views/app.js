@@ -42260,6 +42260,9 @@ function getLatLng(thisData) {
                     function(ExamService){
                     return ExamService.getExamsBasic();
                 }],
+                NgRateit: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngRateit'], {serie: true});
+                }],
             }
         })
         .state('allblogtags', {

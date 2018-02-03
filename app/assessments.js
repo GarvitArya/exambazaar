@@ -815,8 +815,11 @@ router.get('/user/:userId', function(req, res) {
 });
 
 router.get('/', function(req, res) {
+    var limit = 400;
     var allAssessments = assessment
         .find({})
+        //.limit(limit)
+        //.sort('-_created')
         //.deepPopulate('user')
         .exec(function (err, allAssessments) {
         if (!err){
