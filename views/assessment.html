@@ -496,7 +496,7 @@
                     {{user.basic.name}}, how was this exam simulation? Please rate it on a scale of 5!
                 </div>
                 <div layout="column" layout-align="center center" class="exact15h width100">
-                    <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" class="bigStar">
+                    <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" class="bigstar">
                     </ng-rate-it>
                     <div layout="column" layout-align="center center" ng-if="userAssessment.userRating > 0" class="smallFont">
                         Your rating: {{userAssessment.userRating}} out of 5
