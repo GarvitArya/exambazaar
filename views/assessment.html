@@ -490,8 +490,8 @@
             </div>
         </div>
 
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="testOver">
-            <div layout="column" layout-align="center center" class="width100 blogFont exact90h">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="min90h" ng-if="testOver">
+            <div flex layout="column" layout-align="center center" class="blogFont exact90h width100 paddingTB20">
                 <div layout="column" layout-align="start start" class="baseFont exact50h boxShadow paddingTB10 paddingLR40">
                 <div layout="column" layout-align="center center" class="h2Font bold width100 exact5h">Help us improve!</div>
                 <div layout="column" layout-align="center center" class="exact10h text-center width100">
@@ -515,7 +515,8 @@
                     </md-button>
                 </div>
                 </div>
-                <div layout="column" layout-align="center center" class="exact40h width100 baseFont">
+                <div layout="row" layout-align="center center" class="exact40h width100">
+                <div layout="column" layout-align="center center" flex class="exact40h baseFont">
                     <div class="h2Font">
                         Thank you, your responses have been submitted!
                     </div>
@@ -533,6 +534,7 @@
                     </div>
                 </div>
                 
+                </div>
                 
                 
                 
@@ -543,7 +545,15 @@
                     Score: {{userAssessment.evaluation.score}} <span ng-if="test.maxScore">out of maximum {{test.maxScore}}</span>
                 </div>-->
             </div>
+            <div layout="column" layout-align="center center" flex="25" class="padding20 width100 smallFont paddingTB20" ng-if="suggestedTests && suggestedTests.length > 0">
+                <div class="h2Font width100">
+                    Other Suggested Tests
+                </div>
+                <div layout="column" layout-align="center start" class=" width100">
+                    <a ui-sref="assessment({ testId:{{'suggestedTest._id'}} })" target="_blank" id="link" class="bold" ng-repeat="suggestedTest in suggestedTests">{{suggestedTest.name}}</a>
+                </div>
 
+            </div>
         </div>
 
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="blogFont paddingLR40" ng-if="!testStarted">

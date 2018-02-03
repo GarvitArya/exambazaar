@@ -5,6 +5,7 @@ var config = require('../config/mydatabase.js');
 var exam = require('../app/models/exam');
 var stream = require('../app/models/stream');
 var test = require('../app/models/test');
+var assessment = require('../app/models/assessment');
 var question = require('../app/models/question');
 var mongoose = require('mongoose');
 var PDFDocument = require('pdfkit');
@@ -53,7 +54,58 @@ router.post('/save', function(req, res) {
     });
 });
 
+router.post('/suggestTests', function(req, res) {
+    var testUserForm = req.body;
+    var testId = testUserForm.test.toString();
+    var userId = testUserForm.user.toString();
+    var limit = 8;
+    var finalSuggestedTests = [];
+    
+    var userTests = assessment.find({ 'user': userId }, {test: 1, user: 1},function (err, userTests) {
+        
+        var userTestIds = [];
+        if(!userTests){
+            userTests = [];
+        }
+        if(userTests.length > 0){
+            userTestIds = userTests.map(function(a) {return a.test.toString();});
+        }
+        var existingTest = test.findOne({ '_id': testId }, {exam: 1},function (err, existingTest) {
 
+            if(existingTest){
+                var examId = existingTest.exam.toString();
+                var suggestedTests = test.find({ 'exam': examId, simulationactive: true, _id: {$ne: testId} }, {exam: 1, name: 1},function (err, suggestedTests) {
+                    if(suggestedTests){
+                        suggestedTests.forEach(function(thisTest, index){
+                            var thisTestId = thisTest._id.toString();
+                            var tIndex = userTestIds.indexOf(thisTestId);
+                            if(tIndex == -1){
+                                finalSuggestedTests.push(thisTest);
+                            }
+                            
+                        });
+                        if(finalSuggestedTests.length > limit){
+                            finalSuggestedTests = finalSuggestedTests.slice(0, limit);
+                        }
+                        
+                        //console.log(finalSuggestedTests);
+                        res.json(finalSuggestedTests);
+                    }else{
+                        res.json([]); 
+                    }
+                });
+
+
+            }else{
+                res.json([]); 
+            }
+        });
+        
+        
+    });
+    
+    
+});
 router.post('/testpdf', function(req, res) {
     var thisTest = req.body;
     var testId = thisTest._id;

@@ -716,8 +716,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveTest = function(test) {
             return $http.post('/api/tests/save', test);
         };
-        this.suggestTest = function(usertest) {
-            return $http.post('/api/tests/suggestTest', usertest);
+        this.suggestTests = function(testUserForm) {
+            return $http.post('/api/tests/suggestTests', testUserForm);
         };
         this.testpdf = function(test) {
             return $http.post('/api/tests/testpdf', test, { responseType : 'arraybuffer' });
@@ -18545,7 +18545,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
     }]); 
     exambazaar.controller("assessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService ){
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService ){
             
             $scope.saveUserRating = function(rating){
                 var ratingForm = {
@@ -19013,6 +19013,24 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
                 $scope.markNumericalAnswer($scope.question, $scope.subquestion);
             };
+        
+            $scope.getSuggestedTests = function(){
+                var testUserForm = {
+                    test: $scope.test._id,
+                    user: $scope.user._id,
+                };
+                
+                testService.suggestTests(testUserForm).success(function (data, status, headers) {
+                    $scope.suggestedTests = data;
+                    console.log($scope.suggestedTests);
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                
+            };
+        
             $scope.user = {};
             if($cookies.getObject('sessionuser')){
                 var sessionuser = $cookies.getObject( 'sessionuser');
@@ -19047,6 +19065,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 UserService.getUser(sessionuser._id).success(function (data, status, headers) {
                     $scope.user = data;
                     $rootScope.pageTitle = $scope.test.name + " | " + $scope.user.basic.name;
+                    $scope.getSuggestedTests();
+                    
                     if($scope.user.userType == 'Master' || $scope.user._id == '5a1831f0bd2adb260055e352'){
                         $scope.fullScope = true;
                     }
@@ -38565,58 +38585,7 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"sidhrthsunil0123@gmail.com",
-"sabitan85@gmail.com",
-"dhanavathashok9849@gmail.com",
-"work.kamal1@gmail.com",
-"manvi.verma169@gmail.com",
-"sonyericssonj20i.ac@gmail.com",
-"ankitaaggarwal97@gmail.com",
-"sheetalpatel.178@gmail.com",
-"Sachinkshuklaoo7@gmail.com",
-"anshul8094215660@gmail.com",
-"prathiba.sriram@gmail.com",
-"sainishipra925@gmail.com",
-"banswaltanish@gmail.com",
-"satyam2208@gmail.com",
-"srikardudam@gmail.com",
-"pranavvaid33@gmail.com",
-"amitkant100@gmail.com",
-"arjunmemattathil1@gmail.com",
-"kaurparwinder2016@gmail.com",
-"pdsuthar10@gmail.com",
-"gauravkucheriya@gmail.com",
-"ashamannem11@gmail.com",
-"deekshagouda2627@gmail.com",
-"lavishlodha@gmail.com",
-"ghoshshalmali@gmail.com",
-"sunilzypee@gmail.com",
-"utturaj0007@gmail.com",
-"roxy248virgo@gmail.com",
-"sakshisanan0@gmail.com",
-"ashish12uca002@gmail.com",
-"mehtajinald@gmail.com",
-"ka752@snu.edu.in",
-"shoutayc@gmail.com",
-"jain.sak123@gmail.com",
-"sushma0550@gmail.com",
-"shivam_raj@srmuniv.edu.in",
-"vaibhavanand703@gmail.com",
-"upatya1798@gmail.com",
-"Priyaani.indira@gmail.com",
-"Peguda.Likhitha@st.niituniversity.in",
-"gauravsaha385@gmail.com",
-"khyatim98@gmail.com",
-"paperwork_2004@yahoo.com",
-"shringarikak5jan@gmail.com",
-"sd22101996@gmail.com",
-"hariharini79@gmail.com",
-"sakshimaurya70@gmail.com",
-"ashvijkumar09@gmail.com",
-"ms090595@gmail.com",
-"sharma.vips@yahoo.com",
-"keerdthe006@gmail.com",
-"ana1998musib@gmail.com",
+"team@exambazaar.com"
 
 
             ];
