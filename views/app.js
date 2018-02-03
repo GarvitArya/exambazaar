@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver', 'ngRateIt']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -95,6 +95,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               name: 'angularTimer',
               files: [
                     'https://cdnjs.cloudflare.com/ajax/libs/humanize-duration/3.12.0/humanize-duration.js', 'https://cdnjs.cloudflare.com/ajax/libs/angular-timer/1.3.5/angular-timer.js',
+              ]
+            },
+            {
+              name: 'ngRateit',
+              files: [
+                    'ng-rateit.css',
+                    'ng-rateit.js',
               ]
             },
             {
@@ -18100,6 +18107,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     };
                     assessmentService.getAssessment(assessmentForm).success(function (adata, status, headers) {
                         $scope.userAssessment = adata;
+                        if(!$scope.userAssessment.userRating){
+                            $scope.userAssessment.userRating = 0;
+                        }
+                        console.log($scope.userAssessment.userRating );
                         $scope.testOver = false;
                         $scope.testStarted = false;
 
@@ -42038,6 +42049,9 @@ function getLatLng(thisData) {
                 }],
                 angularScreenfull: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularScreenfull'], {serie: true});
+                }],
+                NgRateit: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngRateit'], {serie: true});
                 }],
                 
             }

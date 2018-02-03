@@ -490,13 +490,13 @@
 
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="testOver ">
             <div layout="column" layout-align="center center" class="width100 blogFont exact90h">
-                <div layout="column" layout-align="start start" class="baseFont exact40h boxShadow paddingTB10 paddingLR40">
+                <div layout="column" layout-align="start start" class="baseFont exact50h boxShadow paddingTB10 paddingLR40">
                 <div layout="column" layout-align="center center" class="h2Font bold width100 exact5h">Help us improve!</div>
-                <div layout="column" layout-align="center center" class="exact10h">
+                <div layout="column" layout-align="center center" class="exact10h text-center width100">
                     {{user.basic.name}}, how was this exam simulation? Please rate it on a scale of 5!
                 </div>
                 <div layout="column" layout-align="center center" class="exact10h width100">
-                    <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" >
+                    <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" class="bigStar">
                     </ng-rate-it>
                     <div layout="column" layout-align="center center" ng-if="userAssessment.userRating > 0" class="smallFont">
                         Your rating: {{userAssessment.userRating}} out of 5
