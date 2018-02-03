@@ -495,14 +495,14 @@
                 <div layout="column" layout-align="center center" class="exact10h text-center width100">
                     {{user.basic.name}}, how was this exam simulation? Please rate it on a scale of 5!
                 </div>
-                <div layout="column" layout-align="center center" class="exact10h width100">
+                <div layout="column" layout-align="center center" class="exact15h width100">
                     <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" class="bigStar">
                     </ng-rate-it>
                     <div layout="column" layout-align="center center" ng-if="userAssessment.userRating > 0" class="smallFont">
                         Your rating: {{userAssessment.userRating}} out of 5
                     </div>
                 </div>
-                <div layout="column" layout-align="center center" class="exact25h width100" ng-show="userAssessment.userRating && userAssessment.userRating > 0">
+                <div layout="column" layout-align="center center" class="exact20h width100" ng-show="userAssessment.userRating && userAssessment.userRating > 0">
                     <div layout="column" layout-align="center center" ng-if="testExam.seoname" class="marginTB20">Also, have you taken any coaching classes for {{testExam.seoname}}? Help others with a quick review!</div>
                     <div layout="column" layout-align="center center" ng-if="!testExam.seoname" class="marginTB20">Also, have you taken any coaching for any exam? Help the Exambazaar community with a quick review!</div>
                     <md-button class="md-saveNext md-large tolowercase margin0 " ui-sref="review" target="_blank">
