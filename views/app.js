@@ -100,8 +100,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             {
               name: 'ngRateit',
               files: [
-                    'ng-rateit.css',
-                    'ng-rateit.js',
+                    /*'ng-rateit.css',
+                    'ng-rateit.js',*/
+                  'jk-rating-stars.js',
+                  'jk-rating-stars.css'
               ]
             },
             {
