@@ -154,13 +154,9 @@
     }
 </style>
 
-<div flex layout="column" layout-align="center center" class="text-white mainContent" id="fullPage">
-    <div id="spacer1" hide-xs>
-    </div>
-    <div id="spacerXS" hide-gt-xs>
-    </div>
-    <div layout="column" layout-align="center center" class="width100" id="landingPage">
-        <h1 layout="row" layout-align="center center" hide-xs class="font48 bold text-white" id="pageHeaderFont" layout-wrap>
+<div layout="column" layout-align="center center" class="text-white exact100h" id="fullPage">
+    <div layout="column" layout-align="start center" class="width100" id="landingPage">
+        <h1 layout="row" layout-align="center center" class="h1Font bold text-white paddingLR20" id="pageHeaderFont" layout-wrap>
             <div class="marginR20">
                 SEARCH
             </div>
@@ -177,55 +173,47 @@
                 APPLY
             </div>
         </h1>
-        <h1 layout="row" layout-align="center center" hide-gt-xs class="font22 bold text-white" id="pageHeaderFont">
-            <div class="marginR10">
-                SEARCH
-            </div>
-            <div class="marginR10">
-                &#8226;
-            </div>
-            <div class="marginR10">
-                COMPARE
-            </div>
-            <div class="marginR10">
-                &#8226;
-            </div>
-            <div>
-                APPLY
-            </div>
-        </h1>
-        <div  layout="row" layout-align="center center" class=" marginTB10  text-center width100" id="subheading">
-            <div flex="90" layout="column" layout-align="center center" class="" hide-xs>
-                <div layout="column" layout-align="center center" class="font20 bold width100">
-                    26,000+ COACHING INSTITUTES | 90+ CITIES
+        
+        <div  layout="row" layout-align="center center" class="text-center width100 paddingLR20" id="subheading" hide-xs>
+            <div layout="column" layout-align="center center" class="">
+                <div layout="column" layout-align="center center" class="h3Font text-white bold width100 paddingTB10">
+                    SEARCH THROUGH 28,000+ COACHING INSTITUTES IN 100+ CITIES
                 </div>
-                <div layout="column" layout-align="center center" class="font16 letterspacing2 marginT10 width100">Explore photos, videos, discounts, reviews and more</div>
+                <!--<div layout="column" layout-align="center center" class="font16 letterspacing2 marginT10 width100">Explore photos, videos, discounts, reviews and more</div>-->
                 <!--Browse through thousands of Coaching Institutes offering Amazing Discounts and Find the one Right For You!-->
             </div>
-            <div flex="90" layout="column" layout-align="center center" class="" hide-gt-xs>
-                <div layout="column" layout-align="center center" class="font16 bold width100">26,000+ COACHING INSTITUTES | 90+ CITIES</div>
-                <div layout="column" layout-align="center center" class="font14 letterspacing2 marginT10 width100">Explore photos, videos, discounts, reviews and more</div>
-                <!--Thousands of Coaching Institutes offering Amazing Discounts. Find the one Right For You!-->
-            </div>
         </div>
-        <div class="marginT40">
+        <!--<div class="marginT40">
             <md-button type="submit" class="md-large md-start width100 mainFont font20" ui-sref="main">Search Now</md-button>
-        </div>
-        <!--
-        <div layout="row" layout-align="center center" class="marginT40 text-center width100">
-            <div flex="90" layout="column" layout-align="center center">
-                <div layout="column" layout-align="center center" class="font20 letterspacing2 bold width100">
-                    All Exams in India
-                </div>
-                <div layout="row" layout-align="center center" class="font16 width100">
-                    {{streamExams}}
-                    <div layout="column" layout-align="center center" flex="25" ng-repeat="streamExam in streamExams">
-                        <div>{{streamExam}}</div>
+        </div>-->
+        
+        <div layout="row" layout-align="center center" class="paddingTB10 text-center width100">
+            <div flex-gt-xs="70" layout="row" layout-align="center center" class="" layout-wrap ng-if="streamranks">
+                <div layout="column" layout-align="center center" flex-gt-md="25" flex-sm="25" flex-xs="50" ng-repeat="stream in streamranks | orderBy:['-rank']" ng-if="stream.active && stream.stream != 'Other'" class="paddingTB5 paddingLR10">
+                <div layout="row" layout-align="center center" class="p0Button width100" ui-sref="category({ categoryName:{{'stream.name'}} })">
+                    <div>
+                        <img class="pageLogo" ng-src="{{stream.logo.white}}"/>
+                    </div>
+                    <div flex class="marginL10">
+                        <h1 class="h3Font text-white spacedLetter1">{{stream.stream}}</h1>
                     </div>
                 </div>
+                </div>
             </div>
         </div>
-    -->
+        <!--<div layout="row" layout-align="center center" class="width100">
+            <div flex-gt-xs="70" layout="row" layout-align="center center" ng-if="streamranks">
+                <button class="btn actionButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                    <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
+                </button>
+                <md-button class="md-danger md-small font14 primaryFont spacedLetter1 padding5" ng-click="showUserReviewSearchDialog()" ng-controller="offerController">
+                Review Your Coaching
+                </md-button>   
+            </div>
+        </div>-->
+    </div>
+    
+    
         <div layout="row" layout-align="center center" class="width100 exact10h" ng-click="scrollPageDown()">
             <svg class="arrows">
                 <!--<path class="a1" d="M0 0 L30 32 L60 0"></path>-->
@@ -234,12 +222,12 @@
                 
             </svg>
         </div>
-    </div>
+    
     
 </div>
 
-
-<div layout="column" layout-align="center center" class="width100 exact100h paddingLR80" id="page2">
+<div layout="row" layout-align="center center" class="width100">
+<div layout="column" layout-align="center center" class="exact100h width100"  id="page2" flex-xs="90" flex-gt-xs="80">
     
     <div layout="row" layout-align="start start" class="width100 exact30vh" >
         <div layout="column" layout-align="center start" class="min30vh width100">
@@ -259,54 +247,49 @@
     
     
     
-    <div layout="column" layout-align="center center" hide-xs class="width100 whiteBackground exact60vh" ui-sref="questionpapers({ examName:'GATE' })">
-        <div layout="row" layout-align="center center" class="width100 textDarkGrey ">
-            <div flex layout="column" layout-align="start start" class="testBenefits2 exact30h box1 ">
-                <div layout="column" layout-align="center center " class="width100 padding5 exact10h "><i class="fa fa-desktop font48" aria-hidden="true"></i></div>
-                <div layout="column" layout-align="start start" class="width100 text-center exact20h ">
-                    <div class="bold width100 h3Font benefitTitle">Accustom Yourself</div>
-                    <div class="baseFont wideLine width100">Get used to the online features like Online "Page Turn"</div>
-                </div>
+    <div layout="row" layout-align="center center" class="width100 whiteBackground textDarkGrey" ui-sref="questionpapers({ examName:'JEE Main' })" layout-wrap>
+        <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box1 ">
+            <div layout="column" layout-align="center center " class="width100 padding20 exact10h "><i class="fa fa-desktop font40" aria-hidden="true"></i></div>
+            <div flex layout="column" layout-align="start center" class="width100 text-center">
+                <div class="bold width100 h3Font benefitTitle">Accustom Yourself</div>
+                <div class="baseFont wideLine width100">Get used to the online features like Online "Page Turn"</div>
             </div>
-            <div flex layout="column" layout-align="start start" class="testBenefits2 exact30h box2 ">
-                <div layout="column" layout-align="center center " class="width100 padding5 exact10h "><i class="fa fa-hourglass-half font48 " aria-hidden="true"></i></div>
-                <div layout="column" layout-align="start start" class="width100 text-center exact20h ">
-                    <div class="bold width100 h3Font benefitTitle ">Timer</div>
-                    <div class="baseFont wideLine width100 ">Simulate the pressure of the ticking clock</div>
-                </div>
+        </div>
+        <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box2 ">
+            <div layout="column" layout-align="center center " class="width100 padding20 exact10h "><i class="fa fa-hourglass-half font40 " aria-hidden="true"></i></div>
+            <div flex layout="column" layout-align="start center" class="width100 text-center">
+                <div class="bold width100 h3Font benefitTitle ">Timer</div>
+                <div class="baseFont wideLine width100 ">Simulate the pressure of the ticking clock</div>
             </div>
-            <div flex layout="column" layout-align="start start" class="testBenefits2 exact30h box3 ">
-                <div layout="column" layout-align="center center " class="width100 padding5 exact10h"><i class="fa fa-star-o font48" aria-hidden="true"></i></div>
-                <div layout="column" layout-align="start start" class="width100 text-center exact20h">
-                    <div class="bold width100 h3Font benefitTitle">Mark for Review</div>
-                    <div class="baseFont wideLine width100">Mark questions to review later before submitting</div>
-                </div>
+        </div>
+        <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box3 ">
+            <div layout="column" layout-align="center center " class="width100 padding20 exact10h"><i class="fa fa-star-o font40" aria-hidden="true"></i></div>
+            <div flex layout="column" layout-align="start center" class="width100 text-center">
+                <div class="bold width100 h3Font benefitTitle">Mark for Review</div>
+                <div class="baseFont wideLine width100">Mark questions to review later before submitting</div>
             </div>
-</div>
-        <div layout="row" layout-align="center start" class="width100 textDarkGrey ">
-            <div flex layout="column" layout-align="start start" class="testBenefits2 exact30h box4 ">
-                <div layout="column" layout-align="center center " class="width100 padding5 exact10h "><i class="fa fa-plus font48" aria-hidden="true"></i></div>
-                <div layout="column" layout-align="start start" class="width100 text-center exact20h">
-                    <div class="bold width100 h3Font benefitTitle ">Marking Scheme</div>
-                    <div class="baseFont wideLine width100 ">Marking Scheme visible for each question individually</div>
-                </div>
+        </div>
+        <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box4 ">
+            <div layout="column" layout-align="center center " class="width100 padding20 exact10h "><i class="fa fa-plus font40" aria-hidden="true"></i></div>
+            <div flex layout="column" layout-align="start center" class="width100 text-center">
+                <div class="bold width100 h3Font benefitTitle ">Marking Scheme</div>
+                <div class="baseFont wideLine width100 ">Marking Scheme visible for each question individually</div>
             </div>
-            <div flex layout="column" layout-align="start start" class="testBenefits2 exact30h box5 paddingLR80">
-                <div layout="column" layout-align="center center " class="width100 padding5 exact10h"><i class="fa fa-braille font48" aria-hidden="true"></i></div>
-                <div layout="column" layout-align="start start" class="width100 text-center exact20h">
-                    <div class="bold width100 h3Font benefitTitle">Quick Summary</div>
-                    <div class="baseFont wideLine width100">See Attempted, Marked, Seen questions in one glance</div>
-                </div>
+        </div>
+        <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box5">
+            <div layout="column" layout-align="center center " class="width100 padding20 exact10h"><i class="fa fa-braille font40" aria-hidden="true"></i></div>
+            <div flex layout="column" layout-align="start center" class="width100 text-center">
+                <div class="bold width100 h3Font benefitTitle">Quick Summary</div>
+                <div class="baseFont wideLine width100">See Attempted, Marked, Seen questions in one glance</div>
             </div>
-            <div flex layout="column" layout-align="start start" class="testBenefits2 exact30h box6">
-                <div layout="column" layout-align="center center " class="width100 padding5 exact10h"><i class="fa fa-bar-chart font48" aria-hidden="true"></i></div>
-                <div layout="column" layout-align="start start" class="width100 text-center exact20h">
-                    <div class="bold width100 h3Font benefitTitle">Smart Analytics</div>
-                    <div class="baseFont wideLine width100">Analyse your performance with detailed review and solutions</div>
-                </div>
+        </div>
+        <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box6">
+            <div layout="column" layout-align="center center " class="width100 padding20 exact10h"><i class="fa fa-bar-chart font40" aria-hidden="true"></i></div>
+            <div flex layout="column" layout-align="start center" class="width100 text-center">
+                <div class="bold width100 h3Font benefitTitle">Smart Analytics</div>
+                <div class="baseFont wideLine width100">Analyse your performance with detailed review and solutions</div>
             </div>
-</div>
+        </div>
     </div>
-    <div layout="column" layout-align="center start" class="width100 exact10h" >
-    </div>
+</div>
 </div>

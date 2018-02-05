@@ -2151,7 +2151,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.hideLoginDialog();
 
             $rootScope.pageTitle = 'Best Coaching Classes in India for more than 50 exams | Exambazaar.com';
-            $rootScope.pageDescription = "Search and apply to the best coaching classes and get the education that you deserve. Browse through courses, photos, videos and results for 26000+ institutes in 90+ cities";
+            $rootScope.pageDescription = "Search and apply to the best coaching classes and get the education that you deserve. Browse through courses, photos, videos and results for 28,000+ institutes in 100+ cities";
             $rootScope.pageKeywords = "Exambazaar, Exam Bazaar, Exambazaar.com, Best Coaching Classes, Best Coaching, Top Coaching Classes, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT Coaching, GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
 
             $scope.scrollPageDown = function(){
@@ -10760,13 +10760,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var allExams = data;
                 allExams.forEach(function(thisExam, eIndex){
                     var thisStream = thisExam.stream.displayname;
+                    var thisStreamLogo = thisExam.stream.logo;
                     var dIndex = doNotShow.indexOf(thisStream);
                     if(thisExam.active && dIndex == -1){
                         var sIndex = streamNames.indexOf(thisStream);
                         if(sIndex == -1){
                             streamNames.push(thisStream);
                             var streamExamObj = {
+                                streamName: thisExam.stream.name,
                                 stream: thisStream,
+                                logo: thisStreamLogo,
+                                rank: thisExam.stream.rank,
                                 active: thisExam.stream.active,
                                 rank: thisExam.stream.rank,
                                 exams: []
@@ -10779,6 +10783,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }            
                 });
                 $rootScope.streamExams = streamExams;
+                console.log($rootScope.streamExams);
             })
             .error(function (data, status, header, config) {
                 console.log('Error ' + data + ' ' + status);
@@ -12948,7 +12953,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.searchFocusIn = function(){
                 console.log('Focus In');
                 $rootScope.searchMode = true;
-                $rootScope.searchPlaceholder = "Search Exambazaar for over 26,000 coaching classes for 50+ Exams in 90+ cities";
+                $rootScope.searchPlaceholder = "Search Exambazaar for over 28,000 coaching classes for 50+ Exams in 100+ cities";
             };
             $scope.searchFocusOut = function(){
                 console.log('Focus Out');
@@ -18910,7 +18915,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
             $scope.instructions = [
                 "Welcome to Exambazaar!",
-                "Exambazaar is India's largest education discovery platform which provides comprehensive information for test preparation for entrance exams, colleges, courses, universities and career options in India. You can find information about more than 100 exams and how to prepare for them. Students can also find exclusive videos and photographs of thousands of coaching institutes in every nook and corner of India. We currently cover 93 cities across India with over 26,000 education providers",
+                "Exambazaar is India's largest education discovery platform which provides comprehensive information for test preparation for entrance exams, colleges, courses, universities and career options in India. You can find information about more than 100 exams and how to prepare for them. Students can also find exclusive videos and photographs of thousands of coaching institutes in every nook and corner of India. We currently cover 100+ cities across India with over 28,000 education providers",
 
             ];
             $scope.markAnswer = function(question, subquestion, option){
@@ -31575,6 +31580,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.assessments = assessments.data;
             var testNames = testNames.data;
             $scope.examList = examList.data;
+            $scope.existingExams = [];
             var examListIds = $scope.examList.map(function(a) {return a._id.toString();});
             var testNameIds = testNames.map(function(a) {return a._id.toString();});
             var allAssessments = [];
@@ -31586,7 +31592,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if(eIndex != -1){
                     thisTest.exam = $scope.examList[eIndex];
                 }
-                
+                var eEIndex = $scope.existingExams.indexOf(thisTest.exam.displayname);
+                if(eEIndex == -1 && thisTest.exam.displayname){
+                    $scope.existingExams.push(thisTest.exam.displayname);
+                }
             });
             
              $scope.assessments.forEach(function(thisAssessment, aindex){
@@ -31603,8 +31612,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     assessmentTestIds = $scope.assessments.map(function(a) {return a.test.toString();});
                 }
             });
-            
-            
+            $scope.filterExamName = '';
+            $scope.setFilterExam = function(existingExam){
+                $scope.filterExamName = existingExam;
+            };
+            $scope.clearFilterExam = function(){
+                $scope.filterExamName = '';
+            };
             $scope.userevaluate = function(thisAssessment){
                 
                 var assessmentForm = {
@@ -38668,7 +38682,7 @@ function getLatLng(thisData) {
             
             
             var internshipEmailList = [
-"team@exambazaar.com"
+"gaurav@exambazaar.com"
 
 
             ];
