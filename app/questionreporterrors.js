@@ -32,6 +32,32 @@ router.get('/remove/:questionreporterrorId', function(req, res) {
     
     
 });
+
+router.get('/markReviewed/:questionreporterrorId', function(req, res) {
+    var questionreporterrorId = req.params.questionreporterrorId;
+    console.log(questionreporterrorId);
+    var thisReport = questionreporterror
+        .findOne({_id: questionreporterrorId})
+        .exec(function (err, thisReport) {
+        if (!err){
+            if(thisReport){
+                thisReport.reviewed = true;
+                thisReport.save(function(err, thisReport) {
+                    if (err) return console.error(err);
+                    console.log('QuestionReportError saved: ' + thisReport._id);
+                    res.json(true);
+                }); 
+            }else{
+                res.json(false);
+            }
+            
+            
+            
+        } else {throw err;}
+    });
+    
+    
+});
 //to add an questionreporterror
 router.post('/save', function(req, res) {
     console.log('Starting questionreporterror save!');
@@ -86,8 +112,12 @@ router.get('/', function(req, res) {
                 
             allQuestionReportErrors.forEach(function(thisQuestionReport, qIndex){
                 var newQuestionReport = {
+                    _id: thisQuestionReport._id,
                     test: thisQuestionReport.test,
                     user: thisQuestionReport.user,
+                    reasons: thisQuestionReport.reasons,
+                    comment: thisQuestionReport.comment,
+                    reviewed: thisQuestionReport.reviewed,
                     _created: thisQuestionReport._created,
                 };
                 finalReports.push(newQuestionReport);

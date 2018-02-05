@@ -30,18 +30,18 @@
     </div>
     <div layout="column" layout-align="start start" ng-if="authorized">
         <div layout="row" layout-align="center center" class="font20 text-primary bold width100">
-            Question Errors - Report for {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{totalQuestions}}</span>
+            Question Errors Report for {{user.basic.name}}&nbsp;<span class="badge" id="badge">{{questionReport.length}}</span>
         </div>
         
-        <div flex layout="row" layout-align="start center" class="width100 greyBottomBorder marginT20 font10 bold">
+        <div flex layout="row" layout-align="start center" class="width100 greyBottomBorder marginT20 smallFont bold">
             <div flex="5">
                 S. No.
             </div>
-            <div flex="25">
+            <div flex="20">
                 Test
             </div>
-            <div flex="10">
-                Exam
+            <div flex="5">
+                Q. No.
             </div>
             <div flex="10">
                 Added By
@@ -49,52 +49,56 @@
             <div flex="10">
                 Created on
             </div>
-            <div flex="10">
-                Question Set
+            <div flex="20">
+                Reasons
             </div>
-            <div flex="10">
-                #Questions
+            <div flex="20">
+                Comment
             </div>
             
             <div flex="10">
-                #Images
+                Review
             </div>
             <!--<div flex="10">
                 #Email | Websites
             </div>-->
         </div>
-        <div flex layout="row" layout-align="start center" ng-repeat="question in questionReports | orderBy:['-_created']" class="width100 greyDashedBottomBorder font10">
+        <div flex layout="row" layout-align="start center" ng-repeat="question in questionReports | orderBy:['reviewed','-_created']" class="width100 smallerFont greyDashedBottomBorder ">
             <div flex="5">
                 {{$index+1}}
             </div>
-            <div flex="25" class="font12">
+            <div flex="20" class="">
                 <a ui-sref="addQuestion({ testId:{{'question.test._id'}} })" target="_blank" id="link">
                 <strong>{{question.test.name}}</strong>
                 </a>
             </div>
-            <div flex="10" class="font10">
+            <div flex="5" class="">
                 {{question.qno}}
                 
             </div>
-            <div flex="10" class="font10">
+            <div flex="10" class="">
                 {{question.username}}
             </div>
-            <div flex="10" class="font10">
+            <div flex="10" class="">
                 {{question._created | date: "dd-MMM-yy HH:mm"}}
             </div>
-            <div flex="10" class="font10">
-                {{question._startnumber}}<span ng-if="question._endnumber && question._endnumber!=''"> - {{question._endnumber}}</span>
-            </div>
-            <div flex="10" class="font10">
-                {{question.questions.length}}
+            <div flex="20" class="">
+                {{question.reasons}}
             </div>
             
-            <div flex="10" class="font10">
-                {{question.images.length}}
+            <div flex="20" class="">
+                {{question.comment}}
             </div>
-            <!--<div flex="10" class="font10">
-                {{institute.email.length}} | {{institute.website.length}}
-            </div>-->
+            <div flex="10" class="">
+                <span ng-if="!question.reviewed">
+                    <span class="smallFont bold danger" ng-click="markReviewed(question)">
+                        Mark Done
+                    </span>
+                </span>
+                <span ng-if="question.reviewed" class="smallFont text-primary">
+                    <i class="fa fa-check-circle" aria-hidden="true" ></i>&nbsp;Done
+                </span>
+            </div>
         </div>
         
         

@@ -603,6 +603,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.removeQuestionReportError = function(questionreporterrorId) {
             return $http.get('/api/questionreporterrors/remove/'+questionreporterrorId, {questionreporterrorId: questionreporterrorId});
         };
+        this.markReviewed = function(questionreporterrorId) {
+            return $http.get('/api/questionreporterrors/markReviewed/'+questionreporterrorId, {questionreporterrorId: questionreporterrorId});
+        };
+        
     }]);
     exambazaar.service('questionresponseService', ['$http', function($http) {
         this.saveQuestionResponse = function(questionresponse) {
@@ -14059,13 +14063,27 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("questionReportErrorController", 
-        [ '$scope', '$http','$state','$rootScope', '$mdDialog', '$cookies','questionReports', 'testNames', function($scope, $http, $state, $rootScope, $mdDialog, $cookies, questionReports, testNames){
+        [ '$scope', '$http','$state','$rootScope', '$mdDialog', '$cookies','questionReports', 'testNames', 'Notification', 'questionreporterrorService', function($scope, $http, $state, $rootScope, $mdDialog, $cookies, questionReports, testNames, Notification, questionreporterrorService){
             $scope.questionReports = questionReports.data;
             
+            $scope.markReviewed = function(questionReport){
+                console.log(questionReport);
+                questionreporterrorService.markReviewed(questionReport._id).success(function (filldata, status, headers) {
+                    if(filldata){
+                        Notification.primary({message: "Great, changes saved!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    }else{
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                
+            };
             
             $scope.testNames = testNames.data;
             var testNameIds = $scope.testNames.map(function(a) {return a._id.toString();});
-            console.log($scope.questionReports);
             $scope.questionReports.forEach(function(thisReport, index){
                 var thisTestId = null;
                 if(thisReport.test){
@@ -18547,6 +18565,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("assessmentController", 
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService ){
             
+            
+        
             $scope.saveUserRating = function(rating){
                 var ratingForm = {
                     test: $scope.test._id,    
@@ -18563,7 +18583,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 .error(function (data, status, header, config) {
                     Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
                 });
-                console.log(rating);
             };
         
             $scope.openAddQuestion = function(){
@@ -19022,7 +19041,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
                 testService.suggestTests(testUserForm).success(function (data, status, headers) {
                     $scope.suggestedTests = data;
-                    console.log($scope.suggestedTests);
                 })
                 .error(function (data, status, header, config) {
                     console.log('Error ' + data + ' ' + status);
@@ -19302,6 +19320,57 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });
             };
+            $scope.reasons = [
+                "Question does not appear correctly in Exambazaar User Interface",
+                "The images in the Question do not appear correctly",
+                "Question has more than one correct answer",
+                "Question has no correct answer",
+                "Question has two options which are the same",
+                "Question has typing error",
+                "Any other reason",
+             ];
+        
+            $scope.questionReport = null;
+            $scope.selected = [];
+
+            $scope.toggle = function (item, list) {
+                var idx = list.indexOf(item);
+                if (idx > -1) {
+                  list.splice(idx, 1);
+                }
+                else {
+                  list.push(item);
+                }
+              };
+
+              $scope.exists = function (item, list) {
+                return list.indexOf(item) > -1;
+              };
+            $scope.showReportErrorDialog = function(question, subquestion, ev) {
+                $scope.selected = [];
+                $scope.questionReport = {
+                    question: question,    
+                    subquestion: subquestion,
+                    reasons: [],
+                    comment: '',
+                    
+                };
+                $mdDialog.show({
+                  contentElement: '#reportErrorDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true,
+                  escapeToClose: true,
+                }).finally(function() {
+                    //$scope.userReviewMode = true;
+                });
+            };
+            $scope.reportQuestionHelper = function(){
+                var valid = true;
+                $scope.questionReport.reasons = $scope.selected;
+                
+                $scope.markQuestionError($scope.questionReport.question, $scope.questionReport.subquestion);
+            };
         
             $scope.markQuestionErrorDialog = function(question, subquestion){
                 var confirm = $mdDialog.confirm()
@@ -19319,24 +19388,38 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 });   
             };
             $scope.markQuestionError = function(question, subquestion){
-                var questionreporterrorForm = {
-                    user: $scope.user._id,
-                    test: $scope.test._id,
-                    question: question._id,
-                    subquestion: subquestion._id,
-                };
+                $mdDialog.hide();
+                if($scope.questionReport){
+                    var questionreporterrorForm = {
+                        user: $scope.user._id,
+                        test: $scope.test._id,
+                        question: question._id,
+                        subquestion: subquestion._id,
+                        reasons: $scope.questionReport.reasons,
+                        comment: $scope.questionReport.comment,
+                    };
 
-                questionreporterrorService.saveQuestionReportError(questionreporterrorForm).success(function (data, status, headers) {
-                    subquestion.errorReported = true;
-                    Notification.primary({message: "Question error has been reported!",  positionY: 'top', positionX: 'left', delay: 2000});
-                    //getUserResponses();
-                    getUserQMarkForReview();
-                    //getUserQView();
-                })
-                .error(function (data, status, header, config) {
-                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
-                    console.log('Error ' + data + ' ' + status);
-                });
+                    questionreporterrorService.saveQuestionReportError(questionreporterrorForm).success(function (data, status, headers) {
+                        $scope.questionReport = null;
+                        $scope.selected = [];
+                        subquestion.errorReported = true;
+                        
+                        Notification.primary({message: "Question error has been reported!",  positionY: 'top', positionX: 'left', delay: 2000});
+                        //getUserResponses();
+                        getUserQMarkForReview();
+                        
+                        //getUserQView();
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'left', delay: 10000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                    
+                }else{
+                    
+                }
+                
+                
             };
             $scope.clearQuestionMarkForReview = function(subquestion){
                 
@@ -19383,7 +19466,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             
 
-
+            
             
 
             $scope.showInstructionDialog = function(ev) {

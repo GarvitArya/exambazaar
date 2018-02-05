@@ -7,7 +7,7 @@ var questionreporterrorSchema = mongoose.Schema({
     test: { type: Schema.ObjectId, ref: 'test'},
     question: { type: Schema.ObjectId, ref: 'question'},
     subquestion: { type: String},
-    reason: { type: String},
+    reasons: { type: String },
     comment: { type: String},
     _created: { type: Date, default: Date.now },
     reviewed: { type: Boolean, default: false},

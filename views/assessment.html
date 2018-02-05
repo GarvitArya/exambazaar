@@ -387,7 +387,7 @@
                     
                     </div>
                     <div class="danger paddingLR10" >
-                        <span ng-if="!subquestion.errorReported" ng-click="markQuestionErrorDialog(question, subquestion)">
+                        <span ng-if="!subquestion.errorReported" ng-click="showReportErrorDialog(question, subquestion)">
                             <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
                             <md-tooltip>
                             Report Error in this Question
@@ -644,6 +644,37 @@
             <div layout="row" layout-align="start center" class="width100 marginT20">
                 <md-button class="md-next md-large tolowercase margin0 " ng-click="closeInstructionDialog()">
                     Resume
+                </md-button>
+            </div>
+        </div>
+        
+    </div>
+    </md-dialog>
+    </div>    
+</div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="reportErrorDialog">
+    <md-dialog class="halfscreen-dialog2">
+
+    <div class="paddingTB20 paddingLR40" layout="column" layout-align="start center" layout-fill>
+        
+        <div layout="column" layout-align="start center" class="width100 editFont" >
+            <div layout="row" layout-align="start center" class="blogFont bold font20 width100 paddingB20">
+            Why are you reporting this question?
+            </div>
+            <div class="width100 smallFont" ng-repeat="item in reasons">
+              <md-checkbox ng-click="toggle(item, selected)" ng-checked="exists(item, selected)">
+                {{ item }}
+              </md-checkbox>
+            </div>
+            <div layout="row" layout-align="start center" class="width100">
+                <div flex><textarea class="width100 font14" ng-model="questionReport.comment" placeholder="Any other comments you would like to add.." rows="2"></textarea></div>
+            </div>
+            <div layout="row" layout-align="end center" class="width100 marginTB20">
+                <md-button class="md-next md-large tolowercase margin0 " ng-click="reportQuestionHelper()">
+                    Report
                 </md-button>
             </div>
         </div>
