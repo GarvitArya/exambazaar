@@ -19085,7 +19085,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $rootScope.pageTitle = $scope.test.name + " | " + $scope.user.basic.name;
                     $scope.getSuggestedTests();
                     
-                    if($scope.user.userType == 'Master' || $scope.user._id == '5a1831f0bd2adb260055e352'){
+                    if($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development'){
                         $scope.fullScope = true;
                     }
                     var viewForm = {
