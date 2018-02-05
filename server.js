@@ -50,8 +50,6 @@ app.get('/*', function (req, res, next) {
    next();
 });
 
-
-
 var productionMode = true;
 
 if(productionMode){
