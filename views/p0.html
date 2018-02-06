@@ -195,7 +195,7 @@
                     <div layout="column" layout-align="center center" flex-gt-sm="25" flex-xs="50" ng-repeat="stream in streamranks | orderBy:['-rank']" ng-if="stream.active && stream.stream != 'Other'" class="paddingTB5 paddingLR10">
                     <div layout="row" layout-align="center center" class="p0Button width100" ui-sref="category({ categoryName:{{'stream.name'}} })">
                         <div>
-                            <img class="pageLogo" ng-src="{{stream.logo.white}}"/>
+                            <img class="sectionPageLogo" ng-src="{{stream.logo.white}}"/>
                         </div>
                         <div flex class="marginL10">
                             <h1 class="h3Font text-white spacedLetter1">{{stream.stream}}</h1>

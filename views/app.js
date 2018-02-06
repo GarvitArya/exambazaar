@@ -2176,7 +2176,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 sectionsColor: ['#FFFFFF', '#FFFFFF', '#161616'],
                 navigation: true,
                 navigationPosition: 'right',
-                scrollingSpeed: 2000
+                scrollingSpeed: 2000,
             };
           
             
