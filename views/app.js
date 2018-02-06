@@ -2481,7 +2481,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
              $scope.allCoachings.items.forEach(function(thisGroup, gindex){
                  var oldCirf = thisGroup.examCirf;
                  thisGroup.examCirf = Math.round(thisGroup.examCirf*2)/2;
-                 console.log(oldCirf + " " + thisGroup.examCirf);
                  
                 if(!thisGroup.examsOffered || thisGroup.examsOffered.length == 0){
                     thisGroup.examsOffered = [];

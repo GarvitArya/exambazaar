@@ -301,11 +301,11 @@
     
     
 </div>
-<div class="section">
-    <div layout="row" layout-align="center center" class="font12 width100 footer" ng-controller="footerController">
+<div class="section" >
+    <div layout="row" layout-align="center center" class="font12 width100 footer" ng-controller="footerController" hide-xs>
     <div flex="90" layout="column" layout-align="start start" class="textWhite" ng-if="!maintenance">
         
-        <div  layout="column" layout-align="center center" class="width100 marginTB10" hide-xs>
+        <div  layout="column" layout-align="center center" class="width100 marginTB10" >
         <div  layout="row" layout-align="center center"  class="font14 width100 marginT20 bold spacedLetter2">
             POPULAR EXAMS IN INDIA
         </div>
@@ -438,5 +438,141 @@
     
 </div>
     
+    <div layout="row" layout-align="center center" class="font10 width100 footer" ng-controller="footerController" hide-gt-xs>
+        <div flex="90" layout="column" layout-align="start start" class="textWhite" ng-if="!maintenance">
+
+            <div  layout="column" layout-align="center center" class="width100 marginTB10">
+            <div  layout="row" layout-align="center center"  class="font14 width100 marginT20 bold spacedLetter2">
+                POPULAR EXAMS IN INDIA
+            </div>
+            <div layout="column" layout-align="start start" class="width100 paddingTB20 footerBottomBorder">
+                <div layout="row" layout-align="start start" class=" width100 marginT10" >
+                    <div layout="column" layout-align="center center" flex ng-repeat="streamExam in streamExams | orderBy: '-rank'" ng-if="$index < 4">
+
+                        <div layout="row" layout-align="center center" class="width100 bold spacedLetter2 text-center">
+                            {{streamExam.stream | uppercase}}
+                        </div>
+                        <div layout="row" layout-align="center center" class="width100 spacedLetter1 text-center" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
+                            <a ui-sref="exam({ examName:{{'exam.name'}} })" target="_blank" id="footerLink">
+                                {{exam.seoname}}
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="start start" class=" width100 marginT30 marginB20" >
+                    <div layout="column" layout-align="center center" flex ng-repeat="streamExam in streamExams | orderBy: '-rank'" ng-if="$index >= 4 && $index < 8">
+
+                        <div layout="row" layout-align="center center" class="width100 bold spacedLetter2 text-center">
+                            {{streamExam.stream | uppercase}}
+                        </div>
+                        <div layout="row" layout-align="center center" class="width100 spacedLetter1 text-center" ng-repeat="exam in streamExam.exams | orderBy: '-rank'">
+                            <a ui-sref="exam({ examName:{{'exam.name'}} })" target="_blank" id="footerLink">
+                                {{exam.seoname}}
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+
+            <div layout="column" layout-align="start start" class="width100 paddingB20">
+            <div layout="row" layout-align="start center" class=" width100 marginT20">
+                <div flex layout="row" layout-align="start center" class="footer-brand narrowLine font22 height100">
+                    <a href="https://www.exambazaar.com/" class="" id="headerLogo">
+                        EXAMBAZAAR
+                    </a>
+                </div>
+
+                <div layout="row" layout-align="end center" class="">
+                    <div layout="row" layout-align="start center" class="marginL10">
+                        <a href="https://www.facebook.com/exambazaar/" target="_blank">
+                            <img src="icons/footer-facebook.png" class="footerIcon"/>
+                        </a>
+                    </div>
+                    <div layout="row" layout-align="start center" class="marginL10">
+                        <a href="https://twitter.com/exambazaar" target="_blank">
+                            <img src="icons/footer-twitter.png" class="footerIcon"/>
+                        </a>
+                    </div>
+                    <div layout="row" layout-align="start center" class="marginL10">
+                        <a href="https://www.pinterest.com/exambazaar/" target="_blank">
+                            <img src="icons/footer-pinterest.png" class="footerIcon"/>
+                        </a>
+                    </div>
+                    <!--<div layout="row" layout-align="start center" class="">
+                        <a href="https://www.exambazaar.com/blog">
+                            <img src="icons/eb.png" class="footerIcon"/>
+                        </a>
+                    </div>-->
+                </div>
+
+            </div>
+
+            <div layout="row" layout-xs="column" layout-align="start start" class="marginT5 width100">
+                <div flex layout="row" layout-align="start center" class="" id="footerLink">
+                    <div layout="row" layout-align="start start" class="marginR10">
+                        &#169; 2017
+                    </div>
+                    <div layout="row" layout-align="start start" class="marginR10">
+                        |
+                    </div>
+                    <div layout="row" layout-align="start start" class="marginR10">
+                        <a href="https://www.exambazaar.com/about" id="footerLink">
+                            About Us
+                        </a>
+                    </div>
+                    <div layout="row" layout-align="start start" class="marginR10">
+                        |
+                    </div>
+                    <div layout="row" layout-align="start start" class="marginR10">
+                        <!--href="https://www.exambazaar.com/contact"-->
+                        <a href="https://www.exambazaar.com/contact" id="footerLink">
+                            Contact
+                        </a>
+                    </div>
+
+                </div>
+                <div layout="row" layout-align="end center">
+                    <div layout="row" layout-align="end start" class="marginL10">
+                        <a href="https://www.exambazaar.com/blogpost/content-guidelines-at-exambazaar" id="footerLink">
+                            Content Guidelines
+                        </a>
+                    </div>
+                    <div layout="row" layout-align="start start" class="marginL10">
+                        |
+                    </div>
+                    <div layout="row" layout-align="end start" class="marginL10">
+                        <a href="https://www.exambazaar.com/privacy" id="footerLink">
+                            Privacy
+                        </a>
+                    </div>
+                    <div layout="row" layout-align="start start" class="marginL10">
+                        |
+                    </div>
+                    <div layout="row" layout-align="end start" class="marginL10">
+                        <a href="https://www.exambazaar.com/privacy" id="footerLink">
+                            Terms of Use
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+            <div layout="row" layout-align="start start" class="width100">
+                <div layout="row" layout-align="start start" class="marginR10" hide-xs>
+                    <a href="mailto:always@exambazaar.com?Subject=Hello" target="_top" id="footerLink">
+                        Email: always@exambazaar.com
+                    </a>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+    </div>
 </div>
+    
 </div>
