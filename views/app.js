@@ -25627,7 +25627,7 @@ function getLatLng(thisData) {
             /*if($scope.totalyears.min == '' || $scope.totalyears.min == ''){
                 $scope.totalyears = null;
             }*/
-            console.log($scope.allStreams);
+            
             $scope.allStreams = $scope.allStreams.sort(function(a,b){
               return new Date(b.rank) - new Date(a.rank);
             });
@@ -25650,7 +25650,7 @@ function getLatLng(thisData) {
                 }
                 $scope.exam = $scope.allStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
                 $scope.$apply();
-                console.log($scope.exam);
+                //console.log($scope.exam);
             }, 5000);
             
             $rootScope.pageImage = $scope.defaultCoverPhoto;
