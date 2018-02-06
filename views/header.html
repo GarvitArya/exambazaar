@@ -51,19 +51,20 @@
         height: auto;
         max-height: 500px;
         overflow-x: hidden;
-    }    
+    }
+    
 </style>
 
-<nav class="navbar navbar-default navbar-fixed-top nav-justified secondFont font14 spacedLetter09" role="navigation" id="mainNav" ng-class="headerBackgroundCSS()" ng-if="!maintenance">
+<nav class="navbar navbar-default navbar-fixed-top nav-justified secondFont font14 spacedLetter09" role="navigation" id="mainNav" ng-class="headerBackgroundCSS()" ng-if="!isOpenLeft()">
     
     <div layout="row" layout-align="start center" class="" >
-        <div hide-gt-sm ng-if="!showMobileSearch" layout="row" layout-align="start center" class="paddingL20" sidebarjs-toggle>
-            <i class="fa fa-bars font32" aria-hidden="true" ng-class="headerLogoCSS()"></i>
-            <a class="navbar-brand" href="/">
+        <div hide-gt-sm ng-if="!showMobileSearch" layout="row" layout-align="start center" class="paddingL20">
+            <i class="fa fa-bars font32" aria-hidden="true" ng-class="headerLogoCSS()" ng-click="toggleLeft()"></i>
+            <!--<a class="navbar-brand" href="/">
                 <span ng-class="headerLogoCSS()">
                     EB
                 </span>
-            </a>
+            </a>-->
         </div>
         
         <div  layout="row" layout-align="start center" flex>
@@ -427,7 +428,7 @@
             </li> 
             </ul>
         </div>
-        <div  layout="row" layout-align="end center" flex class="paddingL10 paddingR40" >
+        <div  layout="row" layout-align="end center" flex class="paddingL10 paddingR40" hide-xs>
             <ul hide-sm hide-xs flex class="nav navbar-nav navbar-right" ng-controller="autocompleteController as ctrl" ng-if="headerShowOptions()" >
                 <div flex layout="row" layout-align="end center">
                     <md-autocomplete id="custom" md-input-name="headerSearch" 
@@ -547,3 +548,39 @@
 
 </nav>
 
+
+
+<md-sidenav class="md-sidenav-left" md-component-id="left">
+
+    <md-toolbar class="">
+        <h1 class="">
+            <a class="navbar-brand" href="/">
+                <span ng-class="headerLogoCSS()">
+                    EXAMBAZAAR
+                </span>
+            </a>  
+        </h1>
+    </md-toolbar>
+    <div layout="column" layout-align="start start" class="width100 paddingTB20 min90vh">
+        <div layout="column" layout-align="center center" class="sidebarItem width100 whiteSmokeBottomBorder paddingB10 paddingLR20 marginTB10" ui-sref="blog">
+            <a class="sidebarTitle">Blog</a>
+            <div class="sidebarDescription">Resources, tips & material to help you ace your exam preparation</div>
+        </div>
+        <div layout="column" layout-align="center center" class="sidebarItem width100 whiteSmokeBottomBorder paddingB10 paddingLR20 marginTB10" ui-sref="eligibility">
+            <a class="sidebarTitle">Exam Eligibility</a>
+            <div class="sidebarDescription">Checkout all exams you can write right now!</div>
+        </div>
+        <div layout="column" layout-align="center center" class="sidebarItem width100 whiteSmokeBottomBorder paddingB10 paddingLR20 marginTB10" ui-sref="aroundme">
+            <a class="sidebarTitle">Coachings near you!</a>
+            <div class="sidebarDescription">Find coaching classes around your home or office</div>
+        </div>
+        <div flex></div>
+        <div layout="row" layout-align="end center" class="width100 paddingR10">
+            <md-button ng-click="closeLeftBar()" class="md-primary">
+              Close
+            </md-button>
+        </div>
+        
+    </div>
+
+</md-sidenav>
