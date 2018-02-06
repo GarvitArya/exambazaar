@@ -120,6 +120,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               ]
             },
             {
+              name: 'angularFullPage',
+              files: [
+                    'jquery.fullPage.js',
+                    'angular-fullpage.min.js',
+                    'jquery.fullPage.css',
+              ]
+            },
+            {
               name: 'UICarousel',
               files: [
                     'ui-carousel.min.css',
@@ -2164,7 +2172,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $state.go('city');
             };*/
         
-            
+            $scope.mainOptions = {
+                sectionsColor: ['#FFFFFF', '#FFFFFF', '#161616'],
+                navigation: true,
+                navigationPosition: 'right',
+                scrollingSpeed: 2000
+            };
           
             
     }]);
@@ -10783,7 +10796,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }            
                 });
                 $rootScope.streamExams = streamExams;
-                console.log($rootScope.streamExams);
             })
             .error(function (data, status, header, config) {
                 console.log('Error ' + data + ' ' + status);
@@ -41341,7 +41353,16 @@ function getLatLng(thisData) {
                 'footer': {
                     templateUrl: 'footer.html'
                 }
+            },
+            resolve: {
+                loadAngularFullPage: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularFullPage'], {serie: true});
+                }],
+                
+                
             }
+        
+        
         })
         
         .state('login', {
@@ -43484,6 +43505,7 @@ function getLatLng(thisData) {
                 loadAngularFileSaver: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularFileSaver'], {serie: true});
                 }],
+                
                 
             }
         })
