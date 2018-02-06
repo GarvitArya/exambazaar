@@ -1,0 +1,364 @@
+<style>
+.box {
+  position: relative;
+}
+.ribbon {
+  position: absolute;
+  left: -5px; top: -5px;
+  z-index: 1;
+  overflow: hidden;
+  width: 75px; height: 75px;
+  text-align: right;
+}
+.ribbon span {
+  font-size: 10px;
+  font-weight: bold;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 20px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  width: 100px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#3e476c 0%, #29335C 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 19px; left: -21px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid #29335C;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #29335C;
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid transparent;
+  border-right: 3px solid #29335C;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #29335C;
+}
+    
+    
+    .profileBar{
+        background-color: #29335C;
+        color: white;
+    }
+    .profileBar a{
+        color: white;
+        text-decoration: none;
+        
+    }
+    
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        
+    }
+    .fieldRow{
+        min-height: 5vh;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .fieldRow div.col1{
+        color: gray;
+        font-family: 'Roboto Condensed', sans-serif;
+    }
+    .fieldRow div.col2{
+        color: black;
+    }
+    
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    .active{
+        color: white;
+        font-weight: bold;
+        border-bottom: 2px solid white;
+    }
+    #topBar{
+        color: white;
+    }
+    #topBar.active{
+        color: white;
+    }
+    #topBar:hover{
+        font-weight: bold;
+    }
+    .leftBar{
+        border-right: 2px solid whitesmoke;
+    }
+    #leftBarButton{
+        border-bottom: 2px solid whitesmoke;
+    }
+    #leftBarButton:hover{
+        border-bottom: 2px solid #20C39A;
+    }
+    #leftBarButton.sideactive{
+        /*border: 2px solid #20C39A;
+        color: #20C39A;
+        font-weight: bold;*/
+        background: whitesmoke;
+        
+    }
+    .emptyTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    
+    .edLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .edLevelTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledEdLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .badge{
+        font-size: 14px;
+        white-space: normal;
+        margin-top: 0px;
+    }
+    .subSectionHeader{
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid whitesmoke;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .academicSubSection{
+        border-bottom: 1px solid #20C39A;
+        
+    }
+    .academicSubHeader{
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    .nextButton{
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    #profilePicSection{
+        margin-bottom: 20px;
+    }
+</style>
+
+<div full-page options="mainOptions">
+<div class="section">
+    <div id="spacer1" class="hidden-xs ">
+    </div>
+    <div id="spacer1" class="hidden-sm hidden-md hidden-lg ">
+    </div>
+    <div class=" baseFont width100">
+        <!--<div layout="row" layout-align="center center" hide-xs layout="row" class="profileBar width100" layout-align="start start" hide-xs> 
+            <nav class=" spacedLetter09 headerBlue navbar-default" flex>
+                <ul ng-repeat="stream in officialPapersStreamExam | orderBy: ['-rank']" class="nav navbar-nav paddingLR20 " flex>
+                <li class="dropdown " flex>
+                <a href="" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" flex>{{stream.displayname}}
+                </a>
+                <ul class="dropdown-menu" flex>
+                    <li ng-repeat="exam in stream.exams">
+                        <a ui-sref="questionpapers({ examName:{{'exam.name'}} })">{{exam.displayname}}
+                        </a>
+                    </li>
+                </ul>
+                </li>  
+                </ul>
+            </nav>
+            </div>-->
+        <div layout="column" layout-align="center center" class="h1Font padding20">
+            <h1 class="text-center">Official Question Papers of all {{exam.exam | uppercase}}</h1>
+        </div>
+        <div id="testHeader" class="width100">
+        <div layout="column" layout-align="center center" class="width100 min40vh paddingTB10" ui-sref="questionpapers({ examName:{{'exam.examName'}} })">
+
+            <a id="linkFont" ui-sref="questionpapers({ examName:{{'exam.examName'}} })">
+                <h1 class="margin0 padding10 h1Font bold text-center " >
+                    {{exam.exam | uppercase}} Question Papers
+                </h1>
+            </a>
+            
+            <h3 class="margin0 padding10 h3Font text-center ">
+                Seal your {{exam.exam | uppercase}} preparation by attempting the Official {{exam.exam | uppercase}} Papers for<span ng-if="!exam.examSummary.years">&nbsp;years&nbsp;</span><span ng-if="exam.examSummary.years">&nbsp;{{exam.examSummary.years.min}} - {{exam.examSummary.years.max}}&nbsp;</span>in a Live, Timed, Exam Environment for FREE
+            </h3>
+            <div class="h2Font paddingT30 bold text-center ">
+                {{exam.examSummary.papers}} Papers | {{exam.examSummary.hours}} Hours | {{exam.examSummary.questions}} Questions
+            </div>
+        </div>
+        </div>
+        <div layout="row" layout-align="center center" class="width100 exact10h" ng-click="scrollPageDown()">
+            <svg class="blackarrows">
+                <!--<path class="a1" d="M0 0 L30 32 L60 0"></path>-->
+                <path class="a2" d="M0 20 L30 52 L60 20"></path>
+                <path class="a3" d="M0 40 L30 72 L60 40"></path>
+
+            </svg>
+        </div>
+        
+
+
+
+    </div>
+</div>
+<div class="section" class="">
+    <div id="spacer1" class="hidden-xs ">
+    </div>
+    <div id="spacer1" class="hidden-sm hidden-md hidden-lg ">
+    </div>
+    <div layout="row" layout-align="center center" class="width100 textBlack" layout-wrap>
+        <div layout="column" layout-align="start center" ng-repeat="stream in allStreams" flex-xs="50" flex="25" class="min30vh">
+            <div class="h2Font">{{stream.stream}}</div>
+            <div layout="column" layout-align="center center" ng-repeat="thisExam in stream.exams"  class="padding10" ui-sref="questionpapers({ examName:{{'thisExam.examName'}} })">
+                <div class="baseFont">{{thisExam.exam}}</div>
+                <div class="smallFont">{{thisExam.examSummary.papers}} Papers | {{thisExam.examSummary.hours}} Hours | {{thisExam.examSummary.questions}} Questions</div>
+            
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section">
+    <div id="spacer1" class="hidden-xs ">
+    </div>
+    <div id="spacer1" class="hidden-sm hidden-md hidden-lg ">
+    </div>
+    <div layout="row" layout-xs="column" layout-align="center center" class="primaryBackground pageTitleFont width100 paddingTB20" hide-xs hide-sm>
+        All Exambazaar Official Papers are free!
+    </div>
+    <div layout="row" layout-xs="column" layout-align="center center" class="width100">
+        <div layout="column" layout-align="center center" class="textDarkGrey box1 min40vh padding20" flex>
+            <div layout="column" layout-align="end center" class="max50h width100 padding10">
+                <i class="fa fa-desktop font75" aria-hidden="true"></i>
+            </div>
+            <div layout="column" layout-align="start center" class="max50h width100 padding10">
+                <div layout="column" layout-align="center center" class="h1Font bold width100 text-center">
+                    Accustom Yourself
+                </div>
+                <div layout="column" layout-align="center center" class="h2Font textLightGrey width100 text-center">Get used to the online features like Online "Page Turn"</div>
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" class="textDarkGrey box2 min40vh padding20" flex>
+            <div layout="column" layout-align="end center" class="max50h width100 padding10">
+                <i class="fa fa-hourglass-half font75" aria-hidden="true"></i>
+            </div>
+            <div layout="column" layout-align="start center" class="max50h width100 padding10">
+                <div layout="column" layout-align="center center" class="h1Font bold width100 text-center">
+                    Timer
+                </div>
+                <div layout="column" layout-align="center center" class="h2Font textLightGrey width100 text-center">Simulate the pressure of the ticking clock</div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<div class="section">
+    <div id="spacer1" class="hidden-xs ">
+    </div>
+    <div id="spacer1" class="hidden-sm hidden-md hidden-lg ">
+    </div>
+    <div layout="row" layout-xs="column" layout-align="center center" class="dangerBackground pageTitleFont width100 paddingTB20" hide-xs hide-sm>
+        Simulate real-exam like environment!
+    </div>
+    <div layout="row" layout-xs="column" layout-align="center center" class="width100">
+        <div layout="column" layout-align="center center" class="textDarkGrey box3 min40vh padding20" flex>
+            <div layout="column" layout-align="end center" class="max50h width100 padding10">
+                <i class="fa fa-star-o font75" aria-hidden="true"></i>
+            </div>
+            <div layout="column" layout-align="start center" class="max50h width100 padding10">
+                <div layout="column" layout-align="center center" class="h1Font bold width100 text-center">
+                    Mark for Review
+                </div>
+                <div layout="column" layout-align="center center" class="h2Font textLightGrey width100 text-center">Mark questions to review later before submitting</div>
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" class="textDarkGrey box4 min40vh padding20" flex>
+            <div layout="column" layout-align="end center" class="max50h width100 padding10">
+                <i class="fa fa-plus font75" aria-hidden="true"></i>
+            </div>
+            <div layout="column" layout-align="start center" class="max50h width100 padding10">
+                <div layout="column" layout-align="center center" class="h1Font bold width100 text-center">
+                    Marking Scheme
+                </div>
+                <div layout="column" layout-align="center center" class="h2Font textLightGrey width100 text-center">Marking Scheme visible for each question individually</div>
+            </div>
+        </div>
+    </div>
+</div>    
+
+    
+<div class="section">
+    <div id="spacer1" class="hidden-xs">
+    </div>
+    <div id="spacer1" class="hidden-sm hidden-md hidden-lg">
+    </div>
+    <div layout="row" layout-xs="column" layout-align="center center" class="darkGreyBackground pageTitleFont width100 paddingTB20" hide-xs hide-sm>
+        Analyze your result & identify weak areas
+    </div>
+    <div layout="row" layout-xs="column" layout-align="center center" class="width100">
+        <div layout="column" layout-align="center center" class="textDarkGrey box5 min40vh padding20" flex>
+            <div layout="column" layout-align="end center" class="max50h width100 padding10">
+                <i class="fa fa-braille font75" aria-hidden="true"></i>
+            </div>
+            <div layout="column" layout-align="start center" class="max50h width100 padding10">
+                <div layout="column" layout-align="center center" class="h1Font bold width100 text-center">
+                    Quick Summary
+                </div>
+                <div layout="column" layout-align="center center" class="h2Font textLightGrey width100 text-center">See Attempted, Marked, Seen questions in one glance</div>
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" class="textDarkGrey box6 min40vh padding20" flex>
+            <div layout="column" layout-align="end center" class="max50h width100 padding10">
+                <i class="fa fa-bar-chart font75" aria-hidden="true"></i>
+            </div>
+            <div layout="column" layout-align="start center" class="max50h width100 padding10">
+                <div layout="column" layout-align="center center" class="h1Font bold width100 text-center">
+                    Smart Analytics
+                </div>
+                <div layout="column" layout-align="center center" class="h2Font textLightGrey width100 text-center">Analyse your performance with detailed review and solutions</div>
+            </div>
+        </div>
+    </div>
+</div>     

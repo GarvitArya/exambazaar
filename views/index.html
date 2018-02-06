@@ -432,7 +432,22 @@
             animation: arrow 2s infinite;
             -webkit-animation: arrow 2s infinite; 
         }
+        .blackarrows {
+            width: 60px;
+            height: 72px;
+            position: absolute;
+            left: 50%;
+            margin-left: -30px;
+            bottom: 20px;
+        }
 
+        .blackarrows path {
+            stroke: black;
+            fill: transparent;
+            stroke-width: 1px;	
+            animation: arrow 2s infinite;
+            -webkit-animation: arrow 2s infinite; 
+        }
         @keyframes arrow
         {
         0% {opacity:0}
@@ -846,6 +861,9 @@
         .font60{
             font-size:60px;
         }
+        .font75{
+            font-size:75px;
+        }
         .font100{
             font-size:100px;
             font-weight: 100;
@@ -908,6 +926,9 @@
         }
         .exact50h{
             height: 50vh;
+        }
+        .max50h{
+            max-height: 50vh;
         }
         .exact40h{
             height: 40vh;

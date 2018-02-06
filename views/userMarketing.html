@@ -19,6 +19,7 @@
 
 <div id="spacer1" class="hidden-xs whiteBackground">
 </div>
+<div ng-if="authorized" class="width100">
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
 </div>
 <div flex layout="row" layout-align="center center" class="whiteBackground">
@@ -66,9 +67,13 @@
     </div>
 </div>
 </div>
+</div>
 
-
-
+<div layout="row" layout-align="center center" ng-if="!authorized" class="width100 min50vh paddingLR40">
+    <h1 class="text-center">
+    You do not have access to view this information. Login above to try again.
+    </h1>
+</div>
 <div class="bottomOfferBar" ng-cloak>
     <div layout="row" layout-align="start center" class="width100">
         <div flex layout="row" layout-align="start center" class="textWhite">

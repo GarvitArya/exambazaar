@@ -1001,6 +1001,16 @@ router.get('/officialPapers/:examName', function(req, res) {
     });
 });
 
+router.get('/allOfficialPapers', function(req, res) {
+    var allTests = test
+    .find({official: true, simulationactive: true}, {name: 1, description: 1, duration: 1, simulationactive: 1, year: 1, nQuestions: 1, simulationrank: 1, downloadable: 1, url: 1, _actualdate: 1})
+    .exec(function (err, allTests) {
+    if (!err){
+        res.json(allTests);
+    } else {throw err;}
+});
+});
+
 router.get('/test/:testId', function(req, res) {
     var testId = req.params.testId;
     var thisTest = test

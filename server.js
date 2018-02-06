@@ -254,6 +254,7 @@ var allStates = [
 '/ebinternal/editExam/:examId',
 /*'/ebinternal/error',*/
 '/exam/:examName',
+'/questionpapers',
 '/questionpapers/:examName',
 '/ebinternal/extractEmails',
 '/ebinternal/master/:masterId/addMaster',
@@ -301,7 +302,7 @@ var allStates = [
 '/ebinternal/user/:userId/sendEmail',
 '/ebinternal/user/:userId/shortlisted',
 '/ebinternal/user/:userId/suggestCoaching',
-'/ebinternal/user/:userId/userMarketing',
+'/ebinternal/userMarketing',
 '/ebinternal/user/:userId/userSurvey',
 '/ebinternal/user/:userId/viewed',
 '/ebinternal/verify/:userId/',
