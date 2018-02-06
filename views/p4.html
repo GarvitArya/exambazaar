@@ -428,7 +428,7 @@
                                 <a ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
                             </div>
                             <div layout="row" layout-align="end center" class="width100">
-                            <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT15 width100">
+                            <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT15 width100" flex>
                                 <div layout="row" layout-align="start center" class="bold wideLine basicFont" ng-if="coachingGroup.examsOffered.length > 0">
                                     {{category.displayname}} Courses at {{coachingGroup.groupName}}
                                 </div>
@@ -444,7 +444,7 @@
                                     </div>-->
                                 </div>
                             </div>
-                            <div layout="row" layout-align="end center" >
+                            <div layout="row" layout-align="end start" flex="20">
                                 <button class="btn actionButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
                                     <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
                                 </button>
@@ -461,8 +461,8 @@
                             <div layout="row" class="width100 marginT5 marginB10" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
                                 
                             <div flex-xs="25" flex-gt-xs="10" layout="row" layout-align="start center" ng-repeat="result in coachingGroup.groupResults" ng-if="$index < 9" class="padding5">
-                                <div class="width100" id="imageContainer2">
-                                <img ng-src="{{result.image}}" id="thumbnailImage2"/>
+                                <div class="width100" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}" title="{{result.name}}">
+                                <!--id="imageContainer2"<img ng-src="{{result.image}}" id="thumbnailImage2"/>-->
                                 <!--<div layout="row" layout-align="end center" class="text-white font10 paddingR5" id="thumbnailResultTextTop">
                                     {{result.name}}
                                 </div>-->

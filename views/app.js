@@ -5899,7 +5899,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.groupPhotos = $scope.groupPhotos.concat(thisGroupPhoto);
             $scope.groupVideos = $scope.groupVideos.concat(thisGroupVideo);
             $scope.groupFaculties = $scope.groupFaculties.concat(thisGroupFaculty);
-            $scope.groupResults = $scope.groupResults.concat(thisGroupResults);
+            if(thisGroupResults.length > 0){
+                $scope.groupResults = thisGroupResults;
+            }
+            
+            
             $scope.groupCourses = $scope.groupCourses.concat(thisGroupCourse);
         });
         
