@@ -69,11 +69,11 @@
             <div layout="row" layout-align="center center" class="width100" flex-xs="100" flex-gt-sm="80" layout-wrap>
                 <div flex-xs="100" flex-sm="33" flex-gt-md="25" layout="row" layout-align="center center" layout-wrap ng-repeat="city in cities" ng-if="$index<11" class="paddingLR10">
                     <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city.city'}} })">
-                        <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city.city'}} })" id="categoryLink">{{city.city | uppercase}} | {{city.count}}
+                        <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city.city'}} })" id="categoryLink">{{city.city | uppercase}}
                         </a>
                     </div>
                 </div>
-                
+                <!-- | {{city.count}}-->
                 <div flex-xs="100" flex-sm="33" flex-gt-md="25" layout="row" layout-align="center center" layout-wrap class="paddingLR10">
                     <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ng-click="showPrerenderedDialog($event)">
                         OTHER
