@@ -71,7 +71,7 @@
     <div layout="column" layout-align="center center" flex-xs="90" flex-gt-xs="80" class="width100" id="landingPage" layout-wrap>
         <div id="breadcrumbContainer" hide-xs class="width100 text-center editFont">
             <div class="width100" id="breadcrumb">
-            <span><a ui-sref="main">{{category.displayname | uppercase}}</a></span>
+            <span><a ui-sref="landing">{{category.stream | uppercase}}</a></span>
             <span class="inactiveBreadCrumb"> > <span class="activeSection">EXAM</span></span>
             <span class="inactiveBreadCrumb"> > CITY</span>
             </div>
@@ -87,7 +87,7 @@
                 <div flex-xs="100" flex-sm="33" flex-gt-md="25" layout="row" layout-align="center center" layout-wrap ng-repeat="subcategory in exams | orderBy:'-rank'" ng-if="subcategory.active" class="paddingLR10">
                     <div layout="row" layout-align="center center" id="categoryFont" class="text-center categoryToolTip" ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })" >
                     <!--tooltips tooltip-template="{{subcategory.briefDescription}}"-->
-                        <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })" id="categoryLink">{{subcategory.displayname | uppercase}}
+                        <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })" id="categoryLink">{{subcategory.seoname | uppercase}}
                         </a>
                     </div>
                 </div>

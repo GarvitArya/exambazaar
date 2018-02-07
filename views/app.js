@@ -128,6 +128,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               ]
             },
             {
+              name: 'angularTypeWrite',
+              files: [
+                    'angular-typewrite.css',
+                    
+                    'angular-typewrite.js',/*
+                    'typewrite-directive.js',*/
+              ]
+            },
+            {
               name: 'UICarousel',
               files: [
                     'ui-carousel.min.css',
@@ -147,8 +156,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
           ]
         });
     })
-    .controller('streamController', streamController);
-    function streamController(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope,  $location) {
+    .controller('p1Controller', p1Controller);
+    function p1Controller(streamList,$scope,$window,$http,$state, $document,OTPService,$cookies,categories, $rootScope,  $location) {
         $scope.hideLoginDialog();
         if($cookies.getObject('location')){
             $scope.location = $cookies.getObject('location'); 
@@ -2129,30 +2138,52 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
             
     }]); 
-    exambazaar.controller("categoryController", 
-        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope','examList',  function($scope,$stateParams,$cookies,$state,categories,$rootScope,examList){
+    exambazaar.controller("p2Controller", 
+        [ '$scope','$stateParams','$cookies','$state','categories','$rootScope',  function($scope,$stateParams,$cookies,$state,categories,$rootScope){
         $scope.hideLoginDialog();
-        $scope.exams = examList.data;
-            $scope.categoryName = $stateParams.categoryName;
-        if($scope.exams[0].stream){
-            $scope.category = $scope.exams[0].stream;
-        }
-        var examNames = '';
-        var examNamesCoaching = '';
-        $scope.exams.forEach(function(thisExam, examIndex){
-            examNames += thisExam.displayname;
-            examNamesCoaching += thisExam.displayname + ' Coaching';
-            if(examIndex < $scope.exams.length - 1){
-                examNames += ', ';
-                examNamesCoaching += ', ';
+            
+        $scope.$watch('streamranks', function (newValue, rootscope){
+            if(newValue){
+                //console.log($rootScope.streamexams);
+                //console.log($rootScope.streamranks);
+                var streamNames = $rootScope.streamranks.map(function(a) {return a.name;});
+                var sIndex = streamNames.indexOf($stateParams.categoryName);
+                if(sIndex != -1){
+                    $scope.category = $rootScope.streamranks[sIndex];
+                    var streamExams = $rootScope.streamexams[$scope.category.stream];
+                    if(streamExams && streamExams.length > 0){
+                        $scope.exams = streamExams;
+                    }
+
+                    //console.log($scope.exams);    
+                    //console.log($scope.category);
+
+                    var examNames = '';
+                    var examNamesCoaching = '';
+                    $scope.exams.forEach(function(thisExam, examIndex){
+                        examNames += thisExam.displayname;
+                        examNamesCoaching += thisExam.displayname + ' Coaching';
+                        if(examIndex < $scope.exams.length - 1){
+                            examNames += ', ';
+                            examNamesCoaching += ', ';
+                        }
+                    });
+
+
+                    $rootScope.pageTitle = "Choose exam within " + $scope.category.displayname + " Stream";
+                    $rootScope.pageDescription = "Study for " + examNames + " at the best coaching classes across 90 cities of India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Classes in India";
+                    var streamKeywords = "Exambazaar " + $scope.category.displayname + " Coaching, "+ "Best " + $scope.category.displayname + " Coaching Classes, " + "Top " + $scope.category.displayname + " Coaching Centre, " + $scope.category.displayname + " Coaching in India, ";
+                    $rootScope.pageKeywords = "Exambazaar, " + streamKeywords + examNamesCoaching;
+                }
             }
-        });
+        }, true);    
+            
+            
         
+        //$scope.category = thisStream.data;
+        $scope.categoryName = $stateParams.categoryName;
+         
         
-        $rootScope.pageTitle = "Choose exam within " + $scope.category.displayname + " Stream";
-        $rootScope.pageDescription = "Study for " + examNames + " at the best coaching classes across 90 cities of India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Classes in India";
-        var streamKeywords = "Exambazaar " + $scope.category.displayname + " Coaching, "+ "Best " + $scope.category.displayname + " Coaching Classes, " + "Top " + $scope.category.displayname + " Coaching Centre, " + $scope.category.displayname + " Coaching in India, ";
-        $rootScope.pageKeywords = "Exambazaar, " + streamKeywords + examNamesCoaching;
             
     }]); 
     exambazaar.controller("p0Controller", 
@@ -10910,6 +10941,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });
             }
+            
             if(!$rootScope.streamranks || !$rootScope.streamexams){
                 ExamService.streamexam().success(function (data, status, headers) {
                     if(data){
@@ -25512,15 +25544,7 @@ function getLatLng(thisData) {
             $scope.officialPapers = officialPapers.data;
             
             $scope.officialPapersStreamExam = officialPapersStreamExam.data;
-            var opStreamIds = $scope.officialPapersStreamExam.map(function(a) {return a._id.toString();});
-            /*
-            var streamId = $scope.exam.stream._id.toString();
-            var sIndex = opStreamIds.indexOf(streamId);
-            $scope.thisStream = $scope.officialPapersStreamExam[sIndex];
-            
-            console.log(streamId);*/
-            
-            $scope.allStreams = [];
+            $scope.opStreams = [];
             $scope.totalpapers = $scope.officialPapers.length;
             $scope.totalhours = 0;
             $scope.totalquestions = 0;
@@ -25621,14 +25645,14 @@ function getLatLng(thisData) {
                 }    
                 });
                 
-                $scope.allStreams.push(newStream);
+                $scope.opStreams.push(newStream);
             });
             
             /*if($scope.totalyears.min == '' || $scope.totalyears.min == ''){
                 $scope.totalyears = null;
             }*/
             
-            $scope.allStreams = $scope.allStreams.sort(function(a,b){
+            $scope.opStreams = $scope.opStreams.sort(function(a,b){
               return new Date(b.rank) - new Date(a.rank);
             });
             $scope.totalhours = $scope.totalhours / 60;
@@ -25637,18 +25661,18 @@ function getLatLng(thisData) {
                 stream: 0,
                 exam: 0
             };
-            $scope.exam = $scope.allStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
+            $scope.exam = $scope.opStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
             window.setInterval(function(){
-                var thisStream = $scope.allStreams[$scope.showcase.stream];
+                var thisStream = $scope.opStreams[$scope.showcase.stream];
                 $scope.showcase.exam += 1;
                 if($scope.showcase.exam >= thisStream.exams.length){
                     $scope.showcase.stream += 1;
                     $scope.showcase.exam = 0;
-                    if($scope.showcase.stream >= $scope.allStreams.length){
+                    if($scope.showcase.stream >= $scope.opStreams.length){
                         $scope.showcase.stream = 0;
                     }
                 }
-                $scope.exam = $scope.allStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
+                $scope.exam = $scope.opStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
                 $scope.$apply();
                 //console.log($scope.exam);
             }, 5000);
@@ -31295,6 +31319,9 @@ function getLatLng(thisData) {
                 loadAngularFullPage: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularFullPage'], {serie: true});
                 }],
+                /*loadAngularTypeWrite: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularTypeWrite'], {serie: true});
+                }],*/
                 
                 
             }
@@ -31327,7 +31354,7 @@ function getLatLng(thisData) {
                 },
                 'body':{
                     templateUrl: 'p1.html',
-                    controller: 'streamController'
+                    controller: 'p1Controller'
                 },
                 'footer': {
                     templateUrl: 'footer.html'
@@ -31366,18 +31393,21 @@ function getLatLng(thisData) {
                 },
                 'body':{
                     templateUrl: 'p2.html',
-                    controller: 'categoryController'
+                    controller: 'p2Controller'
                 },
                 'footer': {
                     templateUrl: 'footer.html'
                 }
             },
             resolve: {
+                /*thisStream: ['StreamService','$stateParams',
+                    function(StreamService,$stateParams){
+                    return StreamService.getStreamByName($stateParams.categoryName);
+                }],
                 examList: ['ExamService','$stateParams',
                     function(ExamService,$stateParams){
                     return ExamService.getStreamExams($stateParams.categoryName);
-                }],
-                exam: function() { return {}; }
+                }],*/
             }
         })
         .state('city', {
@@ -34782,7 +34812,71 @@ function compare(dateTimeA, dateTimeB) {
 
 
 
+/*exambazaar.directive('typewrite', ['$timeout', function ($timeout) {
+    function linkFunction (scope, iElement, iAttrs) {
+        var timer = null,
+            initialDelay = iAttrs.initialDelay ? getTypeDelay(iAttrs.initialDelay) : 200,
+            typeDelay = iAttrs.typeDelay ? getTypeDelay(iAttrs.typeDelay) : 200,
+            blinkDelay = iAttrs.blinkDelay ? getAnimationDelay(iAttrs.blinkDelay) : false,
+            cursor = iAttrs.cursor ? iAttrs.cursor : '|',
+            blinkCursor = iAttrs.blinkCursor ? iAttrs.blinkCursor === "true" : true,
+            auxStyle;
+        if (iAttrs.text) {
+            timer = $timeout(function() {
+                updateIt(iElement, 0, iAttrs.text);
+            }, initialDelay);
+        }
 
+        function updateIt(element, i, text){
+            if (i <= text.length) {
+                element.html(text.substring(0, i) + cursor);
+                i++;
+                timer = $timeout(function() {
+                    updateIt(iElement, i, text);
+                }, typeDelay);
+                return;
+            } else {
+                if (blinkCursor) {
+                    if (blinkDelay) {
+                        auxStyle = '-webkit-animation:blink-it steps(1) ' + blinkDelay + ' infinite;-moz-animation:blink-it steps(1) ' + blinkDelay + ' infinite ' +
+                                    '-ms-animation:blink-it steps(1) ' + blinkDelay + ' infinite;-o-animation:blink-it steps(1) ' + blinkDelay + ' infinite; ' +
+                                    'animation:blink-it steps(1) ' + blinkDelay + ' infinite;';
+                        element.html(text.substring(0, i) + '<span class="blink" style="' + auxStyle + '">' + cursor + '</span>');
+                    } else {
+                        element.html(text.substring(0, i) + '<span class="blink">' + cursor + '</span>');
+                    }
+                } else {
+                    element.html(text.substring(0, i));
+                }
+            }
+        }
+
+        function getTypeDelay(delay) {
+            if (typeof delay === 'string') {
+                return delay.charAt(delay.length - 1) === 's' ? parseInt(delay.substring(0, delay.length - 1), 10) * 1000 : +delay;
+            }
+        }
+
+        function getAnimationDelay(delay) {
+            if (typeof delay === 'string') {
+                return delay.charAt(delay.length - 1) === 's' ? delay : parseInt(delay.substring(0, delay.length - 1), 10) / 1000;
+            }
+        }
+
+        scope.$on('$destroy', function() {
+            if(timer) {
+                $timeout.cancel(timer);
+            }
+        });
+    }
+
+    return {
+        restrict: 'A',
+        link: linkFunction,
+        scope: false
+    };
+
+}]);*/
 
 exambazaar.directive('focusMe', ['$timeout', '$parse', function ($timeout, $parse) {
     return {

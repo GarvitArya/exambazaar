@@ -66,7 +66,7 @@ router.get('/blogpostsCount', function(req, res) {
 });
 router.get('/suggestedblogs/:examName', function(req, res) {
     var examName = req.params.examName;
-    var limit = 8;
+    var limit = 4;
     var thisExam = exam
         .findOne({'name': examName}, {_id:1, name:1})
         .exec(function (err, thisExam) {

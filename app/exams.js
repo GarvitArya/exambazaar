@@ -151,23 +151,28 @@ router.get('/markTrueFalse', function(req, res) {
 
 router.get('/stream/:streamName', function(req, res) {
     var streamName = req.params.streamName;
-    var allExams = exam
-        .find({})
-        .deepPopulate('stream')
-        .exec(function (err, allExams) {
-        if (!err){
-            var streamExams = [];
-            //console.log(allExams);
-            allExams.forEach(function(thisExam, index){
-                //console.log(thisExam);
-                if(thisExam.stream && thisExam.stream.name == streamName){
-                    streamExams.push(thisExam);
-                }
+    
+    var thisStream = stream
+        .findOne({ 'name': streamName },{_id: 1})
+        .exec(function (err, thisStream) {
+        if (!err){ 
+            if(thisStream){
+                var streamId = thisStream._id.toString();
+                var allExams = exam
+                .find({stream: streamId, active: true}, {name:1, displayname:1, seoname: 1})
+                .exec(function (err, allExams) {
+                if (!err){
+                    res.json(allExams);
+                } else {throw err;}
             });
-            //console.log(streamExams);
-            res.json(streamExams);
+                
+            }else{
+                res.json([]);
+            }
         } else {throw err;}
     });
+    
+    
     
 });
 
