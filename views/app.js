@@ -2338,8 +2338,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Varanasi", 
             "Vellore", 
             "Vijayawada",
-            "Visakhapatnam", 
-            
+            "Visakhapatnam",
             "Warangal", 
         ];
         
@@ -24926,8 +24925,10 @@ function getLatLng(thisData) {
                 $scope.thisTestQuestions.forEach(function(thisQuestion, index){
                     var start = thisQuestion._startnumber;
                     var end = thisQuestion._endnumber;
+                    var questions = thisQuestion.questions;
+                    var actualEnd = start + thisQuestion.questions.length - 1;
                     if(end && end != ''){
-                        for (var i = start; i <= end; i++) { 
+                        for (var i = start; i <= actualEnd; i++) { 
                             var qIndex = qnos.indexOf(i);
                             qnos.splice(qIndex, 1);
                         }

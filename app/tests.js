@@ -407,6 +407,7 @@ router.post('/markSimulate', function(req, res) {
                     var counter = 0;
 
                     testQuestions.forEach(function(thisQuestion, qIndex){
+                        console.log(thisQuestion._startnumber);
                         nQuestions += thisQuestion.questions.length;
                     });
 
@@ -497,9 +498,19 @@ router.post('/markSimulate', function(req, res) {
                                 if(existingTest.nQuestions && Number(existingTest.nQuestions) == nQuestions){
 
                                 }else{
-                                    valid = false;
-                                    var comment = "Total number of questions in the test not marked";
-                                    existingTest.simulate.comments.push(comment);
+                                    if(!existingTest.nQuestions){
+                                        valid = false;
+                                        var comment = "Total number of questions in the test not marked";
+                                        existingTest.simulate.comments.push(comment);
+                                    }
+                                    if(existingTest.nQuestions && existingTest.nQuestions != nQuestions){
+                                        valid = false;
+                                        var comment = "Total number of questions in the test are " + nQuestions + " and not " + existingTest.nQuestions;
+                                        existingTest.simulate.comments.push(comment);
+                                    }
+                                    console.log(existingTest.nQuestions);
+                                    console.log(nQuestions);
+                                    
                                 }
                                 //console.log(existingTest._id + " " + existingTest.duration);
                                 if(existingTest.duration && existingTest.duration != '' && Number(existingTest.duration) > 0){
