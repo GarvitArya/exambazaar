@@ -209,6 +209,39 @@
                </ul>
             </li>
             
+            
+            
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Question Papers</a>
+              <ul class="dropdown-menu">
+                  <li>
+                    <a ui-sref="allquestionpapers">
+                    <div flex layout="row" layout-align="start center" class="">
+                        <div layout="row" layout-align="start center" class="paddingR10">
+                            <img src="icons/eb.png" id="userPic" class="img-circle"/>
+                        </div>
+                        <div flex layout="column" layout-align="start start">
+                            <div class="bold">Official Question Papers</div>
+                            <div layout="row" layout-align="start center" class="subheader">
+                                Previous year question papers for Free!
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                    </li>
+                <li class="menu-item dropdown dropdown-submenu" ng-repeat="stream in opStreams | orderBy:['-rank']">
+                    <a href="#">{{stream.stream}}</a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="exam in stream.exams | orderBy:['-rank']">
+                            <a ui-sref="questionpapers({ examName:{{'exam.examName'}} })">{{exam.exam}} | {{exam.examSummary.papers}} Papers</a>
+                        </li>
+
+                    </ul>
+                </li>  
+
+               </ul>
+            </li>
+            
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="aroundme">Around Me</a></li>
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="review">Review a Coaching</a></li>
             <li ng-if="sessionuser.userType=='Student'"><a ui-sref="eligibility">Exam Eligibility&nbsp;<i class="fa fa-star" aria-hidden="true"></i></a></li>
@@ -573,6 +606,10 @@
         <div layout="column" layout-align="center center" class="sidebarItem width100 whiteSmokeBottomBorder paddingB10 paddingLR20 marginTB10" ui-sref="aroundme">
             <a class="sidebarTitle">Coachings near you!</a>
             <div class="sidebarDescription">Find coaching classes around your home or office</div>
+        </div>
+        <div layout="column" layout-align="center center" class="sidebarItem width100 whiteSmokeBottomBorder paddingB10 paddingLR20 marginTB10" ui-sref="allquestionpapers">
+            <a class="sidebarTitle">Official Question Papers</a>
+            <div class="sidebarDescription">Previous year question papers for Free!</div>
         </div>
         <div flex></div>
         <div layout="row" layout-align="end center" class="width100 paddingR10">

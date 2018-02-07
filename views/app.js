@@ -10842,7 +10842,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);     
     exambazaar.controller("headerController", 
-        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'ExamService', 'SidebarJS','$timeout', '$window', '$mdSidenav', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, ExamService, SidebarJS,$timeout, $window, $mdSidenav){
+        [ '$scope','$rootScope','$state', '$stateParams','$cookies','$http','UserService', 'OTPService','NotificationService','ipService','blogpostService','$geolocation', '$facebook', '$mdDialog', 'EmailService', 'ExamService', 'testService', 'SidebarJS','$timeout', '$window', '$mdSidenav', function($scope,$rootScope,$state, $stateParams,$cookies,$http,UserService, OTPService, NotificationService, ipService, blogpostService, $geolocation, $facebook, $mdDialog, EmailService, ExamService, testService, SidebarJS,$timeout, $window, $mdSidenav){
             
             $scope.maintenance = false;
             
@@ -10932,6 +10932,119 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 '5a1831f0bd2adb260055e352',
                 
             ];
+            
+            
+            if(!$rootScope.allOfficialPapers){
+                testService.officialPapersStreamExam().success(function (data, status, headers) {
+                    $rootScope.allOfficialPapersStreamExam = data;
+                    testService.allOfficialPapers().success(function (opdata, status, headers) {
+                        $rootScope.allOfficialPapers = opdata;
+                        
+                        
+                        
+                        $rootScope.opStreams = [];
+                        $scope.totalpapers = $rootScope.allOfficialPapers.length;
+                        $scope.totalhours = 0;
+                        $scope.totalquestions = 0;
+                        $scope.totalyears = {
+                            min: '',
+                            max: '',
+                        };
+                        $rootScope.allOfficialPapersStreamExam.forEach(function(thisStream, sindex){
+                            var newStream = {
+                                stream: thisStream.displayname,
+                                rank: thisStream.rank,
+                                exams: [],
+                            };
+                            thisStream.exams.forEach(function(thisExam, eindex){
+                            if(thisExam.tests && thisExam.tests.length > 0){
+                                var examPapers = thisExam.tests.map(function(a) {return a.toString();});
+                                var newExam = {
+                                    exam: thisExam.displayname,
+                                    examName: thisExam.name,
+                                };
+                                var years = {
+                                    min: '',
+                                    max: '',
+                                };
+                                var examSummary = {
+                                    papers: thisExam.tests.length,
+                                    hours: 0,
+                                    questions: 0,
+                                    years: '',
+                                };
+
+                                $rootScope.allOfficialPapers.forEach(function(thisPaper, index){
+                                    var pIndex = examPapers.indexOf(thisPaper._id.toString());
+                                    if(pIndex != -1){
+                                        examSummary.hours += Number(thisPaper.duration);
+                                        $scope.totalhours += Number(thisPaper.duration);
+                                        examSummary.questions += Number(thisPaper.nQuestions);
+                                        $scope.totalquestions += Number(thisPaper.nQuestions);
+
+                                        thisPaper.durationFormatted = '';
+                                        var hours = Math.floor( thisPaper.duration / 60);
+                                        var minutes = thisPaper.duration % 60;
+                                        if(hours > 0){
+                                            var hText = 'hours';
+                                            if(hours == 1){
+                                                hText = 'hour';
+                                            }
+                                            thisPaper.durationFormatted += hours + ' ' + hText;
+                                        }
+                                        if(minutes > 0){
+                                            thisPaper.durationFormatted += ' and ' + minutes + ' minutes';
+                                        }
+
+                                        var thisYear = thisPaper.year;
+                                        if(years.min == ''){
+                                            years.min = thisYear;
+                                        }
+                                        if(years.max == ''){
+                                            years.max = thisYear;
+                                        }
+
+                                        if(years.min > thisYear){
+                                            years.min = thisYear;
+                                        }
+                                        if(years.max < thisYear){
+                                            years.max = thisYear;
+                                        }
+                                        if(years.min == '' || years.min == ''){
+                                            years = null;
+                                        }
+                                }
+                                if(index == $rootScope.allOfficialPapers.length - 1){
+                                    examSummary.hours = examSummary.hours/60;
+                                    examSummary.years = years;
+                                    newExam.examSummary = examSummary;
+                                    newStream.exams.push(newExam);
+                                }    
+                            });
+                            }else{
+
+                            }    
+                            });
+                            $rootScope.opStreams.push(newStream);
+                        });
+                        $rootScope.opStreams = $rootScope.opStreams.sort(function(a,b){
+                          return new Date(b.rank) - new Date(a.rank);
+                        });
+                        
+                        console.log($rootScope.opStreams);
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+            }
+            
             
             if(!$rootScope.headerBlogs){
                 blogpostService.headerBlogs().success(function (data, status, headers) {
@@ -25543,151 +25656,35 @@ function getLatLng(thisData) {
                 return classname;
             };
             
-            $scope.officialPapers = officialPapers.data;
             
-            $scope.officialPapersStreamExam = officialPapersStreamExam.data;
-            $scope.opStreams = [];
-            $scope.totalpapers = $scope.officialPapers.length;
-            $scope.totalhours = 0;
-            $scope.totalquestions = 0;
-            $scope.totalyears = {
-                min: '',
-                max: '',
-            };
-            $scope.officialPapersStreamExam.forEach(function(thisStream, sindex){
-                var newStream = {
-                    stream: thisStream.displayname,
-                    rank: thisStream.rank,
-                    exams: [],
-                };
-                thisStream.exams.forEach(function(thisExam, eindex){
-                if(thisExam.tests && thisExam.tests.length > 0){
-                    var examPapers = thisExam.tests.map(function(a) {return a.toString();});
-                    var newExam = {
-                        exam: thisExam.displayname,
-                        examName: thisExam.name,
-                    };
-                    var years = {
-                        min: '',
-                        max: '',
-                    };
-                    var examSummary = {
-                        papers: thisExam.tests.length,
-                        hours: 0,
-                        questions: 0,
-                        years: '',
-                    };
-                    
-                    $scope.officialPapers.forEach(function(thisPaper, index){
-                        var pIndex = examPapers.indexOf(thisPaper._id.toString());
-                        if(pIndex != -1){
-                            examSummary.hours += Number(thisPaper.duration);
-                            $scope.totalhours += Number(thisPaper.duration);
-                            examSummary.questions += Number(thisPaper.nQuestions);
-                            $scope.totalquestions += Number(thisPaper.nQuestions);
-
-                            thisPaper.durationFormatted = '';
-                            var hours = Math.floor( thisPaper.duration / 60);
-                            var minutes = thisPaper.duration % 60;
-                            if(hours > 0){
-                                var hText = 'hours';
-                                if(hours == 1){
-                                    hText = 'hour';
-                                }
-                                thisPaper.durationFormatted += hours + ' ' + hText;
-                            }
-                            if(minutes > 0){
-                                thisPaper.durationFormatted += ' and ' + minutes + ' minutes';
-                            }
-
-                            var thisYear = thisPaper.year;
-                            if(years.min == ''){
-                                years.min = thisYear;
-                            }
-                            if(years.max == ''){
-                                years.max = thisYear;
-                            }
-
-                            if(years.min > thisYear){
-                                years.min = thisYear;
-                            }
-                            if(years.max < thisYear){
-                                years.max = thisYear;
-                            }
-                            if(years.min == '' || years.min == ''){
-                                years = null;
-                            }
-
-                            if($scope.totalyears.min == ''){
-                                $scope.totalyears.min = thisYear;
-                            }
-                            if($scope.totalyears.max == ''){
-                                $scope.totalyears.max = thisYear;
-                            }
-
-                            if($scope.totalyears.min > thisYear){
-                                $scope.totalyears.min = thisYear;
-                            }
-                            if($scope.totalyears.max < thisYear){
-                                $scope.totalyears.max = thisYear;
-                            }
-                            
-                            
-                        
-                    }
-                    if(index == $scope.officialPapers.length - 1){
-                        examSummary.hours = examSummary.hours/60;
-                        examSummary.years = years;
-                        newExam.examSummary = examSummary;
-                        newStream.exams.push(newExam);
-                    }    
-                });
-                }else{
-                    
-                }    
-                });
-                
-                $scope.opStreams.push(newStream);
-            });
             
-            /*if($scope.totalyears.min == '' || $scope.totalyears.min == ''){
-                $scope.totalyears = null;
-            }*/
-            
-            $scope.opStreams = $scope.opStreams.sort(function(a,b){
-              return new Date(b.rank) - new Date(a.rank);
-            });
-            $scope.totalhours = $scope.totalhours / 60;
             
             $scope.showcase ={
                 stream: 0,
                 exam: 0
             };
-            $scope.exam = $scope.opStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
+            $scope.exam = $rootScope.opStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
             window.setInterval(function(){
-                var thisStream = $scope.opStreams[$scope.showcase.stream];
+                var thisStream = $rootScope.opStreams[$scope.showcase.stream];
                 $scope.showcase.exam += 1;
                 if($scope.showcase.exam >= thisStream.exams.length){
                     $scope.showcase.stream += 1;
                     $scope.showcase.exam = 0;
-                    if($scope.showcase.stream >= $scope.opStreams.length){
+                    if($scope.showcase.stream >= $rootScope.opStreams.length){
                         $scope.showcase.stream = 0;
                     }
                 }
-                $scope.exam = $scope.opStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
+                $scope.exam = $rootScope.opStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
                 $scope.$apply();
                 //console.log($scope.exam);
             }, 5000);
             
             $rootScope.pageImage = $scope.defaultCoverPhoto;
-            $rootScope.pageTitle = "Official Question Papers | " + $scope.totalpapers + " Papers, " + $scope.totalhours + " Hours, " + $scope.totalquestions + " Questions";
-            var yearString = "years";
-            if($scope.totalyears.min && $scope.totalyears.max && $scope.totalyears.min != $scope.totalyears.max){
-                yearString = $scope.totalyears.min + ' - ' + $scope.totalyears.max;
-            }
+            $rootScope.pageTitle = "Official Question Papers of all Major Exams in India | ";
             
             
-            $rootScope.pageDescription = 'Seal your Exan Preparation preparation by attempting the Official Exam Papers for ' + yearString + ' in a Live, Timed, Exam Environment for FREE!';
+            
+            $rootScope.pageDescription = 'Seal your Exan Preparation preparation by attempting the Official Exam Papers for the last 10 years in a Live, Timed, Exam Environment for FREE!';
             var keywordString = '';
             var suffix = [' Question Papers ', ' Question Papers PDF ', ' Question Papers & Answers PDF ' , ' Official Papers '];
             var examNames = ['IIT JEE', 'GATE'];
@@ -25759,8 +25756,7 @@ function getLatLng(thisData) {
             var sIndex = opStreamIds.indexOf(streamId);
             $scope.thisStream = $scope.officialPapersStreamExam[sIndex];
             
-            console.log(streamId);
-            console.log($scope.officialPapersStreamExam);
+            
             $scope.years = {
                 min: '',
                 max: '',

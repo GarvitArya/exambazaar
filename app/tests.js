@@ -965,11 +965,11 @@ router.get('/officialPapersStreamExam', function(req, res) {
                             var thisStream = streamExamOfficialPapers[sIndex];
                             var seopExamIds = thisStream.exams.map(function(a) {return a._id.toString();});
                             var eIndex = seopExamIds.indexOf(examId);
-                            console.log(streamExamOfficialPapers[sIndex].exams[eIndex]);
+                            
                             streamExamOfficialPapers[sIndex].exams[eIndex].tests.push(thisTest.test._id);
                         });    
                         //streamExamOfficialPapers
-                        console.log(streamExamOfficialPapers);
+                        
                         res.json(streamExamOfficialPapers);
                         }
                         }else{
