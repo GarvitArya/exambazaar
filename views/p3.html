@@ -67,9 +67,9 @@
         </div>
         <div layout="row" layout-align="center center" layout-wrap class="width100">
             <div layout="row" layout-align="center center" class="width100" flex-xs="100" flex-gt-sm="80" layout-wrap>
-                <div flex-xs="100" flex-sm="33" flex-gt-md="25" layout="row" layout-align="center center" layout-wrap ng-repeat="city in rankedCities" ng-if="$index<11" class="paddingLR10">
-                    <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })">
-                        <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })" id="categoryLink">{{city | uppercase}}
+                <div flex-xs="100" flex-sm="33" flex-gt-md="25" layout="row" layout-align="center center" layout-wrap ng-repeat="city in cities" ng-if="$index<11" class="paddingLR10">
+                    <div layout="row" layout-align="center center" id="categoryFont" class="text-center" ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city.city'}} })">
+                        <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city.city'}} })" id="categoryLink">{{city.city | uppercase}} | {{city.count}}
                         </a>
                     </div>
                 </div>
@@ -110,9 +110,9 @@
     </p>
 
     <p class="text-center">
-      <span  ng-repeat="city in rankedCities" ng-if="$index>=11">
+      <span  ng-repeat="city in cities | orderBy:'city'" ng-if="$index>=11">
           <span class="text md-subhead">
-            <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}} })" id="otherCategoryLink">{{city | uppercase}}
+            <a ui-sref="findCoaching({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city.city'}} })" id="otherCategoryLink">{{city.city | uppercase}}
             </a>
             <span ng-if="!$last">&nbsp;&#8226;&nbsp;</span>
           </span>

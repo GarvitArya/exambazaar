@@ -1685,6 +1685,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getProviders = function(city) {
             return $http.get('/api/coachings/city/'+city, {city: city});
         };
+        this.examcities = function(examName) {
+            return $http.get('/api/coachings/examcities/'+examName, {examName: examName});
+        };
         this.contacts = function() {
             return $http.get('/api/coachings/contacts');
         };
@@ -2246,9 +2249,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("cityController", 
-        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog','thisStream','thisExam',  function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog,thisStream,thisExam){
+        [ '$scope','$stateParams','$cookies','$state','cities','$rootScope','categories','$mdDialog','thisStream','thisExam', 'examCities',  function($scope,$stateParams,$cookies,$state,cities,$rootScope,categories,$mdDialog,thisStream,thisExam, examCities){
         $scope.hideLoginDialog();
-        $scope.rankedCities = [
+            $scope.examCities = examCities.data;
+            console.log($scope.examCities);
+            /*$scope.rankedCities = [
             "Delhi","Mumbai","New Delhi","Ahmedabad","Chennai","Kolkata","Hyderabad","Pune","Bangalore","Chandigarh","Jaipur",
             "Agartala", 
             "Agra", 
@@ -2262,7 +2267,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Belgaum", 
             "Bhilwara", 
             "Bhopal", 
-            /*"Bhubaneshwar", */
+            "Bhubaneshwar", 
             "Bhubaneswar", 
             "Bikaner", 
             "Bilaspur", 
@@ -2341,8 +2346,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             "Visakhapatnam",
             "Warangal", 
         ];
-        
-        $scope.cities = cities;
+        */
+        $scope.cities = $scope.examCities;
+        console.log($scope.cities);
         $scope.exam = thisExam.data;
         $scope.category = thisStream.data;
         $scope.categoryName = $stateParams.categoryName;
@@ -2371,10 +2377,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
         var cityNames = '';
         var cityNamesCoaching = '';
-        $scope.rankedCities.forEach(function(thisCity, cityIndex){
+        $scope.cities.forEach(function(thisCity, cityIndex){
             
             if(cityIndex < 11){
-                cityNames += thisCity;
+                cityNames += thisCity.city;
                 cityNamesCoaching += "Best " + $scope.subcategory.displayname + " Coaching in " + thisCity;
                 if(cityIndex < 10){
                 cityNames += ', ';
@@ -11031,7 +11037,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                           return new Date(b.rank) - new Date(a.rank);
                         });
                         
-                        console.log($rootScope.opStreams);
 
                     })
                     .error(function (data, status, header, config) {
@@ -18357,37 +18362,23 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     };
                     assessmentService.getAssessment(assessmentForm).success(function (adata, status, headers) {
                         $scope.userAssessment = adata;
+                        //console.log($scope.userAssessment);
                         if($scope.userAssessment && !$scope.userAssessment.userRating){
                             $scope.userAssessment.userRating = 0;
                         }
                        
                         $scope.testOver = false;
-                        $scope.testStarted = false;
+                       
 
-
-                        if($scope.userAssessment && $scope.userAssessment.submitted){
+                        if($scope.userAssessment && $scope.userAssessment.evaluation.score && $scope.userAssessment.evaluation.score != ''){
                             $scope.testOver = true;
-                            $scope.testStarted = true;
-                            
-
-                        }else{
-                            $scope.testOver = false;
-                            
-                            $scope.endTime = moment($scope.userAssessment._end);
-                            var timeNow = moment();
-                            if($scope.endTime - timeNow < 0 &&  !$scope.userAssessment.submitted){
-                                
-                                console.log('Need to submit the test');
-
-                            }
-                        }
-                        if($scope.testStarted && !$scope.testOver){
                             getUserAnswers();
                             getUserResponses();
                             getUserQMarkForReview();
                             getUserQView();
                             $scope.setQuestion($scope.testQuestions[0], 0);
                         }
+                        
                         
                     })
                     .error(function (data, status, header, config) {
@@ -31432,6 +31423,11 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams){
                     return ExamService.getExamBasicByName($stateParams.subCategoryName);
                 }],
+                examCities: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams){
+                    return coachingService.examcities($stateParams.subCategoryName);
+                }],
+                
             }
         
         

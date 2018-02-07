@@ -1134,7 +1134,7 @@ router.get('/answerKey/:testId', function(req, res) {
             }
 
             if(counter == nQuestions){
-                console.log(solutionKey);
+                //console.log(solutionKey);
                 res.json(solutionKey);
             }
         });

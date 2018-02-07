@@ -331,6 +331,7 @@ router.post('/userevaluate', function(req, res) {
                         var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
                         if(userresponses){
                         var attempted = userresponses.length;
+                        //console.log(nQuestions);
                         var unattempted = nQuestions - attempted;
                         var correct = [];    
                         var incorrect = [];    

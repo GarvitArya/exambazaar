@@ -340,14 +340,14 @@
                         <div layout="row" layout-align="center center" class="width100 paddingTB5">
                             <div flex layout="row" layout-align="center center" class="">
                                 <div flex="25">
-                                    <div class="legendTag seenTag" layout="row" layout-align="center center">{{userAssessment.evaluation.marked.correct.length + userAssessment.evaluation.marked.incorrect.length}}</div>
+                                    <div class="legendTag seenTag" layout="row" layout-align="center center">{{userAssessment.evaluation.questions.attemped}}</div>
                                 </div>
                                 <div flex class="paddingL5">Attempted</div>
                             </div>
                             <div flex>
                             <div flex layout="row" layout-align="center center">
                                 <div flex="25">
-                                    <div class="legendTag" layout="row" layout-align="center center">{{totalQuestions - userAssessment.evaluation.marked.correct.length - userAssessment.evaluation.marked.incorrect.length}}</div>
+                                    <div class="legendTag" layout="row" layout-align="center center">{{userAssessment.evaluation.questions.unattemped}}</div>
 
                                 </div>
                                 <div flex class="paddingL5">Not Attempted</div>
@@ -536,7 +536,6 @@
 
     </div>
 </div>
-
 
 <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="!testOver && user && !disabled">
     <div layout="column" layout-align="center center" class="width100 blogFont exact90h">

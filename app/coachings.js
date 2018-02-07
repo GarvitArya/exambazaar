@@ -24,8 +24,52 @@ mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
 
 
+router.get('/examcities/:examName', function(req, res) {
+    var examName = req.params.examName;
+    var thisExam = exam.findOne({active: true, name: examName}, {_id: 1},function(err, thisExam) {
+        if (!err){
+            var ObjectId = require('mongodb').ObjectID;
+            if(thisExam){
+                var examId = ObjectId(thisExam._id.toString());
+                console.log(examId);
+                /*coaching.aggregate(
+                [
+                    {$match: { disabled: false, type: 'Coaching', { $in: [ examId, "$exams" ] } } },
+                    {"$group": { "_id": { city: "$city" }, count:{$sum:1} } }
+                ],function(err, docs) {
+                if (!err){
+                    console.log(docs);
+                    
+                    res.json(docs);
+                } else {throw err;}
+                });*/
+                
+                coaching.aggregate([
+                    { "$unwind": "$exams" },
+                    { "$group": {
+                          _id: { city: "$city" },
+                          exams: { $push: "$exams" },
+                          mcount: { $sum: {$cond: [{$eq: [examId,"$exams"]},1,0]}}
+                        }
+                    },
+                    { $match: {mcount: {$gt: 10}}},
+                    { "$project": { "city": "$_id.city", "_id": 0, count: "$mcount" }},
+                    {$sort:{"count":-1}}
+                ],function(err, docs) {
+                    if (!err){
+                        console.log(docs);
 
-//to get all providers
+                        res.json(docs);
+                    } else {throw err;}
+                });
+                
+            }else{
+                res.json([]);
+            }
+        }
+    });
+});
+
 router.get('/cities', function(req, res) {
     
             
