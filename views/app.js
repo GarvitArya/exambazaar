@@ -2415,17 +2415,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.userPosition = null;     
         if($cookies.getObject('userlocation')){
             $scope.userlocation = $cookies.getObject('userlocation');
-            //console.log($scope.userlocation);
+            
             if(!$scope.userPosition || $scope.userPosition.length < 4){
                 //console.log('Empty object');
                 $geolocation.getCurrentPosition({
                 timeout: 60000
                  }).then(function(position) {
                     $cookies.putObject('userlocation', position);
+                    
                     $scope.userlocation = position;
                     if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
                         $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
                         $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+                        console.log($scope.userlocation);
                         //console.log($scope.userPosition);
                         
                     }
@@ -2500,7 +2502,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             cityName: $scope.city,
         };
         $scope.allCoachings = new CoachingStream(streamInfo);
-        console.log($scope.allCoachings);
         $scope.allBlogs = new SuggestedBlogStream(streamInfo);
         
         $scope.uniqueProviders = [];
