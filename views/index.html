@@ -403,12 +403,7 @@
         .blogHeaderFont2{
             font-family: 'Montserrat', sans-serif;
         }
-        .blogFont{
-            /*font-family: 'Open Sans', sans-serif;*/
-            font-family: 'Roboto Condensed', sans-serif;
-            font-size: 18px;
-            color: black;
-        }
+        
         .rankersWallFont{
             font-family: 'Seaweed Script', sans-serif;
             
@@ -422,7 +417,7 @@
             position: absolute;
             left: 50%;
             margin-left: -30px;
-            bottom: 20px;
+            bottom: 40px;
         }
 
         .arrows path {
@@ -482,27 +477,38 @@
         
         /*Start of new fonts - 22nd December*/
         .pageTitleFont{
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Avenir', sans-serif;
             font-size: 42px;
+            font-size: 7vmin;
         }
         .h1Font{
             font-family: 'Roboto Condensed', sans-serif;
             font-size: 32px;
+            font-size: 5vmin;
+            
         }
         .h2Font{
             font-family: 'Roboto Condensed', sans-serif;
             font-size: 22px;
             color: black;
+            font-size: 3.2vmin;
         }
         
         .h3Font{
-            font-family: 'Roboto Condensed', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 16px;
             color: black;
+            font-size: 2.5vmin;
         }
         .baseFont{
             font-family: 'Roboto', sans-serif;
             font-size: 14px;
+            color: black;
+        }
+        .blogFont{
+            /*font-family: 'Open Sans', sans-serif;*/
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 18px;
             color: black;
         }
         .subBaseFont{
@@ -1117,15 +1123,7 @@
             max-height: 50px;
             max-width: 100px;
         }
-        #fullPage{
-            min-height: 100vh;
-            margin: 0px;
-            padding-top: 10vh;
-
-            background-image: url("images/background/background-min.jpg");
-            background-size: cover;
-            background-position: center center;
-        }
+        
         #fullPage2{
             min-height: 100vh;
             margin: 0px;
@@ -1463,19 +1461,61 @@
             color: white;
             box-shadow: 0 0 5px #20C39A;
         }
+        #fullPage{
+            /*min-height: 100vh;*/
+            margin: 0px;
+            background-image: url("images/background/greenboard.jpg");
+            background-size: cover;
+            background-position: center center;
+            
+            /*background: #FF5A5F;
+            background: -webkit-linear-gradient(to right, #FF5A5F, #ff7478, #FF5A5F);
+            background: linear-gradient(to right, #FF5A5F, #ff7478, #FF5A5F);*/
+
+
+        }
         .p0Button{
-            padding-left: 30px;
-            padding-right: 15px;
-            padding-top: 10px;
-            padding-bottom: 10px;
+            padding-left: 3vh;
+            padding-right: 2vh;
+            padding-top: 2vh;
+            padding-bottom: 2vh;
             border: 2px solid white;
-            color: white;
-            background: rgba(0,0,0,0.8);
+            color: black;
+            font-weight: bold;
+            background: white;
             border-radius: 10px;
         }
+        
+        .p0CityButton{
+            padding-left: 3vh;
+            padding-right: 2vh;
+            padding-top: 2vh;
+            padding-bottom: 2vh;
+            border: 2px solid white;
+            color: black;
+            background: rgba(255,255,255,0.8);
+            border-radius: 10px;
+        }
+        .p0Icon{
+            padding-right: 2vh;
+        }
         .p0Button:hover{
-            background: #20C39A;
-            box-shadow: 0 0 5px #20C39A;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 5px #FF5A5F;
+        }
+        .p0SideButton{
+            color: white;
+            
+        }
+        .p0SideButton:hover{
+            /*background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 5px #FF5A5F;
+            box-shadow: 0 0 5px #20C39A;*/
+            
+        }
+        .section{
+            padding-top: 6vh;
+            height: 100vh;
         }
         .sectionPageLogo{
             height: 32px;
@@ -1857,6 +1897,9 @@
         #spacerXS{
             min-height: 7vh;
         }
+        #spacerXS2{
+            min-height: 10vh;
+        }
         #imageContainer{
             padding: 5px;
             padding-left: 0px;
@@ -2105,6 +2148,10 @@
             padding-left: 40px;
             padding-right: 40px;
         }
+        .paddingLR4vw{
+            padding-left: 4vw;
+            padding-right: 4vw;
+        }
         .paddingLR80{
             padding-left: 80px;
             padding-right: 80px;
@@ -2293,6 +2340,10 @@
         }
         .italic{
             font-style: italic;
+        }
+        .underline{
+            text-decoration: underline;
+            text-decoration-style: dashed;
         }
         .inactiveBreadCrumb{
             color: whitesmoke;
@@ -2507,7 +2558,7 @@
             font-weight: bold;
         }
         
-        button:focus, md-radio-button:focus {outline:0;}
+        button:focus, md-radio-button:focus, i:focus {outline:0;}
         #iOSFix{flex: 1 0 auto !important;}
         div:focus {outline:0;}
         a:focus {outline:0;}
@@ -2580,6 +2631,12 @@
         #linkFont:hover{
             color:#20C39A;
         }
+        #linkFont2{
+            color:white;
+        }
+        #linkFont2:hover{
+            color:#20C39A;
+        }
         #footerLink{
             color: lightgray;
         }
@@ -2628,6 +2685,13 @@
             max-height: 80%;
             top: 5vh;
             border-radius: 0;
+        }
+        md-dialog.topHalf{
+            overflow: hidden;
+            z-index: 20000;
+            width: 100%;
+            height: 100%;
+            top: 0vh;
         }
         md-dialog.halfscreen-dialog2{
             z-index: 20000;
@@ -2928,6 +2992,12 @@
             border-width: 1px;
             border-color: lightgray;
         }
+        .bottomBorderWhiteSmoke{
+            border-bottom: 1px solid whitesmoke;
+        }
+        .bottomBorderWhiteSmokeDashed{
+            border-bottom: 1px dashed whitesmoke;
+        }
     </style>
     
     <!-- Start of Google Analytics Code -->
@@ -3175,6 +3245,7 @@
         </div>    
 
 
+<!--
 
         <div style="visibility: hidden">    
             <div class="md-dialog-container" id="userReviewSearchDialog">
@@ -3293,6 +3364,7 @@
               </md-dialog>
             </div>    
         </div>        
+-->
 
 
 

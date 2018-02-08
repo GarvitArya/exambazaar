@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <div ng-if="bulkAddMode" layout="column" layout-margin layout-padding>
+   <!-- <div ng-if="bulkAddMode" layout="column" layout-margin layout-padding>
     <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange}"
            row-headers="false"
            min-spare-rows="5"
@@ -82,10 +82,10 @@
         <hot-column data="group" title="'Group <br/>(eg. Jamboree)'"></hot-column>
     </hot-table>
         <md-button class="md-raised md-primary" ng-click="addGroups()">Add Groups</md-button>
-    </div>
+    </div>-->
     
     
-    <div layout="column" layout-align="center center" class="width100 paddingTB20 boxShadow marginTB20">
+    <!--<div layout="column" layout-align="center center" class="width100 paddingTB20 boxShadow marginTB20">
         <div layout="row" layout-align="center center" ng-repeat="exam in uniqueExams" class="width100 greyBottomBorder">
             <div flex layout="row" layout-align="center center" class="">
                 {{exam.name}}
@@ -115,6 +115,21 @@
             </div>
             
         </div>
+    </div>-->
+    {{userlocation}}
+    <div layout="column" layout-margin layout-padding>
+        <md-button class="md-raised md-primary" ng-click="addCities()">Add Cities</md-button>
+        <hot-table settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange}"
+               row-headers="false"
+               min-spare-rows="5"
+               datarows="newcities"
+               >
+            <hot-column data="name" title="'City Name <br/>(eg. Jaipur)'"></hot-column>
+            <hot-column data="lat" title="'Lat'"></hot-column>
+            <hot-column data="lng" title="'Lng'"></hot-column>
+            <hot-column data="metro" title="'Metro'"></hot-column>
+        </hot-table>
+        
     </div>
 </div>
 <div>

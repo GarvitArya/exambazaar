@@ -1620,7 +1620,38 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
     }]);
         
-    
+    exambazaar.service('cityService', ['$http', function($http) {
+        this.saveCity = function(city) {
+            return $http.post('/api/cities/save', city);
+        };
+        this.aroundme = function(queryForm) {
+            return $http.post('/api/cities/aroundme', queryForm);
+        };
+        
+        this.getCity = function(cityId) {
+            return $http.get('/api/cities/edit/'+cityId, {cityId: cityId});
+        };
+        this.findstates = function() {
+            return $http.get('/api/cities/findstates');
+        };
+        this.getCitys = function() {
+            return $http.get('/api/cities');
+        };
+        this.topcities = function() {
+            return $http.get('/api/cities/topcities');
+        };
+        
+        this.getAllCitys = function() {
+            return $http.get('/api/cities/all');
+        };
+        this.getCityByName = function(cityName) {
+            return $http.get('/api/cities/city/'+cityName, {cityName: cityName});
+        };
+        this.addLogo = function(newLogoForm) {
+            return $http.post('/api/cities/addLogo',newLogoForm);
+        };
+        
+    }]);
         
     exambazaar.service('StreamService', ['$http', function($http) {
         this.saveStream = function(stream) {
@@ -2190,20 +2221,151 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     exambazaar.controller("p0Controller", 
-        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', '$location', '$anchorScroll', function($scope, $cookies, $state, $rootScope, $mdDialog, $location, $anchorScroll){
-            //var allExams = examList.data;
-            
-            //console.log(streamExams);
+        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', '$geolocation', 'cityService', function($scope, $cookies, $state, $rootScope, $mdDialog, $geolocation, cityService){
             $scope.hideLoginDialog();
+            
+            $scope.getTopCities = function(){
+                if(!$rootScope.top5Cities){
+                    $scope.detectLocation();
+                }
+                
+                if(!$rootScope.topStates){
+                cityService.topcities().success(function (data, status, headers) {
+                    var top100Cities = data;
+                    var topStates = [];
+                    var topStateNames = [];
+                    top100Cities.forEach(function(thisCityState, cIndex){
+                        if(topStates.length > 0){
+                            topStateNames = topStates.map(function(a) {return a.state;});
+                        }
+                        var sIndex = topStateNames.indexOf(thisCityState.state);
+                        if(sIndex == -1){
+                            var newState = {
+                                state: thisCityState.state,
+                                count: Number(thisCityState.count),
+                                cities:[thisCityState.name],
+                            };
+                            topStates.push(newState);
+                        }else{
+                            topStates[sIndex].cities.push(thisCityState.name);
+                            topStates[sIndex].count += Number(thisCityState.count);
+                            
+                        }
+                    });
+                    $scope.showTopCitiesDialog();
+                    $rootScope.topStates = topStates;
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                });
+                }else{
+                    $scope.showTopCitiesDialog();
+                }    
+            };
+            
+            $scope.showTopCitiesDialog = function(ev) {
+            $mdDialog.show({
+                  contentElement: '#topCitiesDialog',
+                  parent: angular.element(document.body),
+                  targetEvent: ev,
+                  clickOutsideToClose: true
+                });
+            };
+            
+            
+            $scope.setSearchCity = function(cityName){
+                $mdDialog.hide();
+                $rootScope.searchCity = cityName;
+            };
+            var getLocationFromIP = function(){
+                if($cookies.getObject('ip')){
+                    var ip = $cookies.getObject('ip');
+                    console.log(ip);
+                    $scope.userlatlng = {
+                        lat: ip.lat,    
+                        lng: ip.long,
+                    };
+                    
+                    var queryForm = {
+                        latlng: $scope.userlatlng,
+                        distanceinKm: 500,
+                        //serId: $scope.user._id
+                    };
+                    cityService.aroundme(queryForm).success(function (data, status, headers) {
+                        $rootScope.top5Cities = data;
+                       if($rootScope.top5Cities && $rootScope.top5Cities.length > 0){
+                           $scope.setSearchCity($rootScope.top5Cities[0].name);
+                           //Notification.success({message: "Nearby cities found!",  positionY: 'top', positionX: 'right', delay: 5000});
+                       }else{
+                           //Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                       }
 
+                    })
+                    .error(function (data, status, header, config) {
+                        $rootScope.searchCity = 'Delhi';
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                    });
+                }    
+            };
+            $scope.detectLocation = function(){
+                $geolocation.getCurrentPosition({
+                timeout: 60000
+                 }).then(function(position) {
+                    $cookies.putObject('userlocation', position);
+                    $scope.userlocation = position;
+                    if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                        $scope.userlatlng = {
+                            lat: $scope.userlocation.coords.latitude, lng: $scope.userlocation.coords.longitude,
+
+                        };
+                        $cookies.putObject('userlatlng', $scope.userlatlng);
+                        var queryForm = {
+                            latlng: $scope.userlatlng,
+                            distanceinKm: 500,
+                            //serId: $scope.user._id
+                        };
+                        cityService.aroundme(queryForm).success(function (data, status, headers) {
+                            $rootScope.top5Cities = data;
+                            
+                           if($rootScope.top5Cities && $rootScope.top5Cities.length > 0){
+                               $scope.setSearchCity($rootScope.top5Cities[0].name);
+                               //Notification.success({message: "Nearby cities found!",  positionY: 'top', positionX: 'right', delay: 5000});
+                           }else{
+                               $rootScope.searchCity = 'Delhi';
+                               //Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                           }
+
+                        })
+                        .error(function (data, status, header, config) {
+                            $rootScope.searchCity = 'Delhi';
+                            Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        });
+
+                        //console.log($scope.userlatlng);
+                    }else{
+                        getLocationFromIP();
+                    }
+
+                 }).then(
+                    function() {
+                        // Display items here
+                    }, 
+                    function(error) {
+                        console.log(error);
+                        getLocationFromIP();
+                        // Common error handling
+                    }
+                );   
+            };
+            $scope.detectLocation();
+            
+            
+            
             $rootScope.pageTitle = 'Best Coaching Classes in India for more than 50 exams | Exambazaar.com';
             $rootScope.pageDescription = "Search and apply to the best coaching classes and get the education that you deserve. Browse through courses, photos, videos and results for 28,000+ institutes in 100+ cities";
             $rootScope.pageKeywords = "Exambazaar, Exam Bazaar, Exambazaar.com, Best Coaching Classes, Best Coaching, Top Coaching Classes, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT Coaching, GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
 
-            $scope.scrollPageDown = function(){
-                $location.hash('page2');
-                $anchorScroll();      
-            };
+            
 
             /*$scope.goToCity = function(subcategory){ 
                 $cookies.putObject('subcategory', subcategory);
@@ -2211,9 +2373,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };*/
         
             $scope.mainOptions = {
-                sectionsColor: ['#FFFFFF', '#FFFFFF', '#161616'],
+                sectionsColor: ['#003C2B', '#FFFFFF', '#161616'],
                 navigation: true,
-                navigationPosition: 'right',
+                navigationPosition: 'left',
                 scrollingSpeed: 2000,
             };
           
@@ -2433,7 +2595,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
                         $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
                         $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
-                        console.log($scope.userlocation);
+                        //console.log($scope.userlocation);
                         //console.log($scope.userPosition);
                         
                     }
@@ -10808,8 +10970,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     
     exambazaar.controller("footerController", 
         [ '$scope', '$rootScope', 'ExamService', function($scope, $rootScope, ExamService){
-        $scope.maintenance = false;    
-        if(!$rootScope.streamExams || $rootScope.streamExams.length == 0){
+        $scope.maintenance = false;
+        if(!$rootScope.streamExams){
             ExamService.getExamsBasic().success(function (data, status, headers) {
                 var doNotShow = ['Other', 'Insurance', 'School'];
                 var streamNames = [];
@@ -11067,7 +11229,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         $rootScope.streamranks = data.streamranks;
                         
                         $rootScope.streamexams = data.streamexams;
-                        
+                       
                     }
                     
                 })
@@ -11075,6 +11237,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });
             }
+            
+            
             
             //"findCoaching", "showCoaching", "showGroup"
             var headerGreenStates = [];
@@ -24494,8 +24658,56 @@ function getLatLng(thisData) {
         };
     }]); 
     exambazaar.controller("addGroupController", 
-        [ '$scope',  'groupList','GroupService', 'coachingService','$http','$state', 'examList', function($scope, groupList, GroupService, coachingService,$http,$state, examList){
+        [ '$scope',  'groupList','GroupService', 'coachingService', 'cityService','$http','$state', 'examList', 'Notification', '$cookies', '$geolocation', function($scope, groupList, GroupService, coachingService, cityService, $http,$state, examList, Notification, $cookies, $geolocation){
+        $scope.userlocation = null;
+        $geolocation.getCurrentPosition({
+        timeout: 60000
+         }).then(function(position) {
+            $cookies.putObject('userlocation', position);
+            $scope.userlocation = position;
+            if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                $scope.userlatlng = {
+                    lat: $scope.userlocation.coords.latitude, lng: $scope.userlocation.coords.longitude,
+                
+                };
+                var queryForm = {
+                    latlng: $scope.userlatlng,
+                    distanceinKm: 500,
+                    //serId: $scope.user._id
+                };
+                cityService.aroundme(queryForm).success(function (data, status, headers) {
+                    console.log(data);
+                   if(data && data.length > 0){
+                       Notification.success({message: "Nearby cities found!",  positionY: 'top', positionX: 'right', delay: 5000});
+                   }else{
+                       Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                   }
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                });
+                
+                console.log($scope.userlatlng);
+            }
+
+         });
         
+        $scope.findStates = function(){
+            cityService.findstates().success(function (data, status, headers) {
+                console.log(data);
+               if(data && data.length > 0){
+                   Notification.success({message: "All Done!",  positionY: 'top', positionX: 'right', delay: 5000});
+               }else{
+                   Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+               }
+
+            })
+            .error(function (data, status, header, config) {
+                Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+            });    
+        }; 
+        $scope.findStates();    
         $scope.oneOff = function(){
             coachingService.oneOff().success(function (data, status, headers) {
                 console.log(data);
@@ -24514,6 +24726,9 @@ function getLatLng(thisData) {
                 group: 'Jamboree'
             }
         ];
+        $scope.newcities = [
+            
+        ];
         $scope.bulkAddMode = true;
         $scope.setBulkAddMode = function(){
             $scope.bulkAddMode = !$scope.bulkAddMode;
@@ -24529,6 +24744,45 @@ function getLatLng(thisData) {
             });
         };
             
+        $scope.addCities = function(){
+            $scope.newcities.pop();
+            $scope.newcities.pop();
+            $scope.newcities.pop();
+            $scope.newcities.pop();
+            $scope.newcities.pop();
+            console.log($scope.newcities);
+            $scope.newcities.forEach(function(thisCity, cIndex){
+                $scope.addCity(thisCity);
+            });
+            //$scope.addCity();
+        };    
+        $scope.addCity = function (city) {
+            
+            
+            var cityForm = {
+                name: city.name,
+                latlng: {
+                    lat: city.lat,    
+                    lng: city.lng,    
+                },
+                metro: false
+            };
+            if(city.metro && city.metro.toLowerCase()=='true'){
+                cityForm.metro = true;
+            }
+             cityService.saveCity(cityForm).success(function (data, status, headers) {
+               if(data){
+                   Notification.success({message: "All done!",  positionY: 'top', positionX: 'right', delay: 5000});
+               }else{
+                   Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+               }
+                
+            })
+            .error(function (data, status, header, config) {
+                Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+            });
+        };    
+        //$scope.addCity();
         $scope.addGroups = function(){
             $scope.newgroups.pop();
             $scope.newgroups.pop();
@@ -24613,13 +24867,13 @@ function getLatLng(thisData) {
             console.log("Error ");
         });*/
             
-        coachingService.coachingMaintenance().success(function (data, status, headers) {
+        /*coachingService.coachingMaintenance().success(function (data, status, headers) {
             
             console.log(data);
         })
         .error(function (data, status, header, config) {
             console.log("Error ");
-        });    
+        }); */   
     }]);
         
     function median(values){
@@ -25635,7 +25889,7 @@ function getLatLng(thisData) {
             $scope.mainOptions = {
                 sectionsColor: ['#FFFFFF', '#FFFFFF', ,'#FFFFFF', '#FFFFFF'],
                 navigation: true,
-                navigationPosition: 'right',
+                navigationPosition: 'left',
                 scrollingSpeed: 2000,
             };
             

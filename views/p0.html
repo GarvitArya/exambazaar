@@ -32,6 +32,7 @@
     }
     #pageHeaderFont{
         letter-spacing: 2px;
+        max-width: 1000px;
     }
     a:hover{
         text-decoration: none;
@@ -145,12 +146,12 @@
         color: #6A6968;
     }
     #subheading{
-        letter-spacing: 4px;
+        letter-spacing: 1px;
         font-family: 'Roboto', sans-serif;
         font-weight: 400;
         color: white;
         text-shadow: 0 0 10px #383838;
-        max-width: 700px;
+        max-width: 1000px;
     }
     
 
@@ -158,87 +159,99 @@
 
 
 <div full-page options="mainOptions">
-<div class="section">
-    <div layout="column" layout-align="center center" class="text-white exact100h" id="fullPage">
-        <div layout="column" layout-align="start center" class="width100" id="landingPage">
-            <!--<p class="h2Font textWhite" typewrite text="or the blinking frequency"></p>-->
-            <h1 layout="row" layout-align="center center" class="h1Font bold text-white paddingLR20" id="pageHeaderFont" layout-wrap>
-                <div class="marginR20">
-                    SEARCH
-                </div>
-                <div class="marginR20">
-                    &#8226;
-                </div>
-                <div class="marginR20">
-                    COMPARE
-                </div>
-                <div class="marginR20">
-                    &#8226;
-                </div>
-                <div>
-                    APPLY
-                </div>
+<div  class="section " id="fullPage">
+    
+    <div layout="row" layout-align="center center" class="width100 min80vh " >
+        <div layout="row" layout-align="center center" hide-xs flex-gt-xs="10">
+        </div>
+        <div layout="column" layout-align="center start" class="text-white  " ng-if="streamranks">
+            <h1 layout="row" layout-align="start center" class="pageTitleFont bold text-white width100 paddingLR10" id="pageHeaderFont" layout-wrap>
+                Book a Free Counselling Session
             </h1>
 
-            <div  layout="row" layout-align="center center" class="text-center width100 paddingLR20" id="subheading" hide-xs>
-                <div layout="column" layout-align="center center" class="">
-                    <div layout="column" layout-align="center center" class="h3Font text-white bold width100 paddingTB10">
-                        SEARCH THROUGH 28,000+ COACHING INSTITUTES IN 100+ CITIES
-                    </div>
-                    <!--<div layout="column" layout-align="center center" class="font16 letterspacing2 marginT10 width100">Explore photos, videos, discounts, reviews and more</div>-->
-                    <!--Browse through thousands of Coaching Institutes offering Amazing Discounts and Find the one Right For You!-->
+            <span class="h3Font width100 padding10 " id="subheading">
+               
+                Choose your Coaching Class by scheduling a free visit or demo lecture in
+                &nbsp;<span ng-click="getTopCities()" class="h2Font bottomBorderWhiteSmokeDashed text-white" ng-if="searchCity">{{searchCity}}&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></span>
+                <i class="fa fa-crosshairs font18 marginLR10" aria-hidden="true" ng-click="detectLocation()"></i>
+                
+                <!--<span ng-if="top5Cities" class="font10">
+                    Other cities around you:&nbsp;
+                    <span ng-repeat="thisCity in top5Cities" ng-if="$index == 0 && thisCity.name != searchCity" class="marginL10" ng-click="setSearchCity(thisCity.name)" id="linkFont2">{{thisCity.name}}</span>
+                    <span ng-repeat="thisCity in top5Cities" ng-if="$index > 0" class="marginL10" ng-click="setSearchCity(thisCity.name)" id="linkFont2">{{thisCity.name}}</span>
+                </span>-->
+            </span>
+            <!--<div layout="row" layout-align="center center" class=" padding10 ">
+                
+                <div layout="row" layout-align="start center" ng-if="top5Cities">
+                    <div>Other cities around you: </div>
+                    <span ng-repeat="thisCity in top5Cities" ng-if="$index == 0 && thisCity.name != searchCity" class="marginL10" ng-click="setSearchCity(thisCity.name)" id="linkFont2">{{thisCity.name}}</span>
+                    <span ng-repeat="thisCity in top5Cities" ng-if="$index > 0" class="marginL10" ng-click="setSearchCity(thisCity.name)" id="linkFont2">{{thisCity.name}}</span>
                 </div>
-            </div>
+            </div>-->
             <!--<div class="marginT40">
                 <md-button type="submit" class="md-large md-start width100 mainFont font20" ui-sref="main">Search Now</md-button>
             </div>-->
 
-            <div layout="row" layout-align="center center" class="paddingTB10 text-center width100">
-                <div flex-gt-xs="70" layout="row" layout-align="center center" class="" layout-wrap ng-if="streamranks">
+            <div layout="row" layout-align="center center" class="paddingTB10 text-center width100 ">
+                <div layout="row" layout-align="center center" class="width100" layout-wrap>
                     <div layout="column" layout-align="center center" flex-gt-sm="25" flex-xs="50" ng-repeat="stream in streamranks | orderBy:['-rank']" ng-if="stream.active && stream.stream != 'Other'" class="paddingTB5 paddingLR10">
-                    <div layout="row" layout-align="center center" class="p0Button width100" ui-sref="category({ categoryName:{{'stream.name'}} })">
-                        <div>
-                            <img class="sectionPageLogo" ng-src="{{stream.logo.white}}"/>
+                    <div layout="row" layout-align="center center" class="p0Button width100" ui-sref="findCoaching({ categoryName:{{'stream.name'}}, subCategoryName:{{'streamexams[stream.stream][0].name'}}, cityName:{{'searchCity'}} })">
+                    <!--ui-sref="category({ categoryName:{{'stream.name'}} })"-->    
+                        <div class="p0Icon">
+                            <img class="sectionPageLogo" ng-src="{{stream.logo.black}}"/>
                         </div>
-                        <div flex class="marginL10">
-                            <h1 class="h3Font text-white spacedLetter1">{{stream.stream}}</h1>
+                        <div flex layout="row" layout-align="start center" class="">
+                            <h1 class="h3Font spacedLetter1">{{stream.stream}}</h1>
                         </div>
                     </div>
                     </div>
                 </div>
             </div>
-            <!--<div layout="row" layout-align="center center" class="width100">
-                <div flex-gt-xs="70" layout="row" layout-align="center center" ng-if="streamranks">
-                    <button class="btn actionButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
-                        <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
-                    </button>
-                    <md-button class="md-danger md-small font14 primaryFont spacedLetter1 padding5" ng-click="showUserReviewSearchDialog()" ng-controller="offerController">
-                    Review Your Coaching
-                    </md-button>   
-                </div>
-            </div>-->
+
+
+            <div layout="row" layout-align="center center" class="width100 exact10h" hide-xs>
+            </div>
+
+
         </div>
-
-
-            <div layout="row" layout-align="center center" class="width100 exact10h">
-                <svg class="arrows">
-                    <!--<path class="a1" d="M0 0 L30 32 L60 0"></path>-->
-                    <path class="a2" d="M0 20 L30 52 L60 20"></path>
-                    <path class="a3" d="M0 40 L30 72 L60 40"></path>
-
-                </svg>
+        
+        <div layout="row" layout-align="center center" hide-xs flex-gt-xs="15">
+        </div>
+        
+        <div layout="column" layout-align="space-around center" hide-xs flex-gt-xs="10" class="baseFont width100 text-white " ng-if="streamranks">
+            <div layout="column" layout-align="center center" class="p0SideButton bottomBorderWhiteSmoke padding20 marginB20 width100 " ui-sref="review" id="subheading">
+                <div><i class="fa fa-pencil font28" aria-hidden="true"></i></div>
+                <div class="text-center">Review your Coaching</div>
+                
             </div>
-
-
+            <div layout="column" layout-align="center center" class="p0SideButton bottomBorderWhiteSmoke padding20 marginB20 width100" id="subheading">
+                <div><i class="fa fa-percent font28" aria-hidden="true"></i></div>
+                <div class="text-center">Avail Discount</div>
+            </div>
+            <div layout="column" layout-align="center center" class="p0SideButton padding20 marginB20 width100" ui-sref="allquestionpapers" id="subheading">
+                <div><i class="fa fa-file-text font28" aria-hidden="true"></i></div>
+                <div class="text-center">Previous Papers</div>
+            </div>
+        </div>
+        
     </div>
+    
+    <div layout="row" layout-align="center center" class="width100 exact10h ">
+        <svg class="arrows">
+            <!--<path class="a1" d="M0 0 L30 32 L60 0"></path>-->
+            <path class="a2" d="M0 20 L30 52 L60 20"></path>
+            <path class="a3" d="M0 40 L30 72 L60 40"></path>
 
+        </svg>
+    </div>
 </div>
 <div class="section">
-    <div layout="row" layout-align="center center" class="width100">
-    <div layout="column" layout-align="center center" class="exact100h width100"  id="page2" flex-xs="90" flex-gt-xs="80">
+    <div layout="row" layout-align="center start" class="width100">
+    <div layout="column" layout-align="start start" class="width100 min90vh " flex-xs="90" flex-gt-xs="80">
 
-        <div layout="row" layout-align="start start" class="width100 exact30vh" >
-            <div layout="column" layout-align="center start" class="min30vh width100">
+        <div layout="row" layout-align="center center" class="width100 exact20h " >
+            <div layout="column" layout-align="center start" class="min20vh width100">
                 <div layout="row" layout-align="start start" class="width100">
                     <a ui-sref="allquestionpapers" class="text-primary" id="reviewLink">
                         <h1 class="h1Font bold">
@@ -255,47 +268,47 @@
 
 
 
-        <div layout="row" layout-align="center center" class="width100 whiteBackground textDarkGrey" ui-sref="questionpapers({ examName:'JEE Main' })" layout-wrap>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box1 ">
+        <div layout="row" layout-align="center center" class="width100 whiteBackground textDarkGrey min50vh " ui-sref="questionpapers({ examName:'JEE Main' })" layout-wrap>
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 min20vh box1 ">
                 <div layout="column" layout-align="center center " class="width100 padding20 exact10h "><i class="fa fa-desktop font40" aria-hidden="true"></i></div>
                 <div flex layout="column" layout="column" layout-align="start center" class="width100 text-center paddingLR10">
                     <div class="bold width100 h3Font benefitTitle">Accustom Yourself</div>
-                    <div class="baseFont wideLine width100">Get used to the online features like Online "Page Turn"</div>
+                    <div class="h3Font wideLine width100">Get used to the online features like Online "Page Turn"</div>
                 </div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box2 ">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 min20vh box2 ">
                 <div layout="column" layout-align="center center " class="width100 padding20 exact10h "><i class="fa fa-hourglass-half font40 " aria-hidden="true"></i></div>
                 <div flex layout="column" layout="column" layout-align="start center" class="width100 text-center paddingLR10">
                     <div class="bold width100 h3Font benefitTitle ">Timer</div>
-                    <div class="baseFont wideLine width100 ">Simulate the pressure of the ticking clock</div>
+                    <div class="h3Font wideLine width100 ">Simulate the pressure of the ticking clock</div>
                 </div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box3 ">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 min20vh box3 ">
                 <div layout="column" layout-align="center center " class="width100 padding20 exact10h"><i class="fa fa-star-o font40" aria-hidden="true"></i></div>
                 <div flex layout="column" layout="column" layout-align="start center" class="width100 text-center paddingLR10">
                     <div class="bold width100 h3Font benefitTitle">Mark for Review</div>
-                    <div class="baseFont wideLine width100">Mark questions to review later before submitting</div>
+                    <div class="h3Font wideLine width100">Mark questions to review later before submitting</div>
                 </div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box4 ">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 min20vh box4 ">
                 <div layout="column" layout-align="center center " class="width100 padding20 exact10h "><i class="fa fa-plus font40" aria-hidden="true"></i></div>
                 <div flex layout="column" layout="column" layout-align="start center" class="width100 text-center paddingLR10">
                     <div class="bold width100 h3Font benefitTitle ">Marking Scheme</div>
-                    <div class="baseFont wideLine width100 ">Marking Scheme visible for each question individually</div>
+                    <div class="h3Font wideLine width100 ">Marking Scheme visible for each question individually</div>
                 </div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box5">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 min20vh box5">
                 <div layout="column" layout-align="center center " class="width100 padding20 exact10h"><i class="fa fa-braille font40" aria-hidden="true"></i></div>
                 <div flex layout="column" layout="column" layout-align="start center" class="width100 text-center paddingLR10">
                     <div class="bold width100 h3Font benefitTitle">Quick Summary</div>
-                    <div class="baseFont wideLine width100">See Attempted, Marked, Seen questions in one glance</div>
+                    <div class="h3Font wideLine width100">See Attempted, Marked, Seen questions in one glance</div>
                 </div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 exact25h box6">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="testBenefits2 min20vh box6">
                 <div layout="column" layout-align="center center " class="width100 padding20 exact10h"><i class="fa fa-bar-chart font40" aria-hidden="true"></i></div>
                 <div flex layout="column" layout="column" layout-align="start center" class="width100 text-center paddingLR10">
                     <div class="bold width100 h3Font benefitTitle">Smart Analytics</div>
-                    <div class="baseFont wideLine width100">Analyse your performance with detailed review and solutions</div>
+                    <div class="h3Font wideLine width100">Analyse your performance with detailed review and solutions</div>
                 </div>
             </div>
         </div>
@@ -305,7 +318,9 @@
     
 </div>
 <div class="section" >
-    <div layout="row" layout-align="center center" class="font12 width100 footer" ng-controller="footerController" hide-xs>
+    
+    
+    <div layout="row" layout-align="center center" class="font12 width100 footer" hide-xs>
     <div flex="90" layout="column" layout-align="start start" class="textWhite" ng-if="!maintenance">
         
         <div  layout="column" layout-align="center center" class="width100 marginTB10" >
@@ -381,7 +396,7 @@
         <div layout="row" layout-xs="column" layout-align="start start" class="marginT5 width100">
             <div flex layout="row" layout-align="start center" class="" id="footerLink">
                 <div layout="row" layout-align="start start" class="marginR10">
-                    &#169; 2017
+                    &#169; 2018
                 </div>
                 <div layout="row" layout-align="start start" class="marginR10">
                     |
@@ -441,7 +456,7 @@
     
 </div>
     
-    <div layout="row" layout-align="center center" class="font10 width100 footer" ng-controller="footerController" hide-gt-xs>
+    <div layout="row" layout-align="center center" class="font10 width100 footer" hide-gt-xs>
         <div flex="90" layout="column" layout-align="start start" class="textWhite" ng-if="!maintenance">
 
             <div  layout="column" layout-align="center center" class="width100 marginTB10">
@@ -578,4 +593,41 @@
     </div>
 </div>
     
+</div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="topCitiesDialog">
+    <md-dialog class="topHalf width100">
+        <div layout="column" layout-align="center center" class="paddingTB20 paddingLR4vw width100">
+            <div layout="row" layout-align="center center" class="width100 paddingB10 marginB10 bottomBorder" ng-if="top5Cities">
+                <div flex="20" hide-xs>Suggested Cities</div>
+                <div flex>
+                    <span class="marginR2 marginB2 smallFont" ng-repeat="thisCity in top5Cities">
+                        <a id="linkFont" ng-click="setSearchCity(thisCity.name)">{{thisCity.name}}</a><span ng-if="!$last"> | </span>
+                    </span>
+                </div>
+            
+            </div>
+            <div layout="row" layout-align="center center" ng-repeat="state in topStates" class="width100" hide-xs>
+                <div flex="20">{{state.state}}</div>
+                <div flex>
+                    <span class="marginR2 marginB2 smallFont" ng-repeat="thisCity in state.cities">
+                        <a id="linkFont" ng-click="setSearchCity(thisCity)">{{thisCity}}</a><span ng-if="!$last"> | </span>
+                    </span>
+                </div>
+            
+            </div>
+            <div layout="row" layout-align="center center" ng-repeat="state in topStates | orderBy:['-count']" ng-if="$index < 15" class="width100" hide-gt-xs>
+                
+                <div flex layout-wrap>
+                    <span class="marginR2 marginB2 smallFont" ng-repeat="thisCity in state.cities | orderBy:['-count']" ng-if="$index < 5">
+                        <a id="linkFont" ng-click="setSearchCity(thisCity)">{{thisCity}}</a><span ng-if="!$last"> | </span>
+                    </span>
+                </div>
+            
+            </div>
+        </div>
+    </md-dialog>
+    </div>    
 </div>
