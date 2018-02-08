@@ -31554,9 +31554,9 @@ function getLatLng(thisData) {
                     templateUrl: 'p0.html',
                     controller: 'p0Controller'
                 },
-                'footer': {
+                /*'footer': {
                     templateUrl: 'footer.html'
-                }
+                }*/
             },
             resolve: {
                 loadAngularFullPage: ['$ocLazyLoad', function($ocLazyLoad) {
