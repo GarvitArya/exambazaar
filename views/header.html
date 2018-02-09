@@ -354,7 +354,7 @@
                     <a href="#">Coaching Related</a>
                     <ul class="dropdown-menu">
                         <li><a ui-sref="cirf">CIRF</a></li>
-                        <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Default Dataset</a></li>
+                        <li><a ui-sref="coachings({ city:'Jaipur' })">Default Dataset</a></li>
                         <li><a ui-sref="coachingGroupSummary">Coaching Group Summary</a></li>
                         <li><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
                         
@@ -404,7 +404,7 @@
             </ul>
 
             <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Intern - Business Development'">
-            <li><a ui-sref="targetStudyProviders({ city:'New Delhi' })">Home</a></li>
+            <li><a ui-sref="coachings({ city:'New Delhi' })">Home</a></li>
             <li class="dropdown">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
@@ -432,7 +432,7 @@
               <ul class="dropdown-menu">
                 <li><a ui-sref="colleges">Colleges</a></li>
                 
-                <li><a ui-sref="targetStudyProviders({ city:'Jaipur' })">Default Dataset</a></li>
+                <li><a ui-sref="coachings({ city:'Jaipur' })">Default Dataset</a></li>
                 <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
                 <li ng-if="permittedToAdd.indexOf(sessionuser.userId)!=-1"><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
                 <li ng-if="permittedToDisable.indexOf(sessionuser.userId)!=-1"><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>

@@ -417,7 +417,7 @@
             position: absolute;
             left: 50%;
             margin-left: -30px;
-            bottom: 40px;
+            bottom: 0px;
         }
 
         .arrows path {
@@ -990,6 +990,9 @@
         .min25vh{
             min-height: 25vh;
         }
+        .min22vh{
+            min-height: 22vh;
+        }
         .min20vh{
             min-height: 20vh;
         }
@@ -1461,19 +1464,7 @@
             color: white;
             box-shadow: 0 0 5px #20C39A;
         }
-        #fullPage{
-            /*min-height: 100vh;*/
-            margin: 0px;
-            background-image: url("images/background/greenboard.jpg");
-            background-size: cover;
-            background-position: center center;
-            
-            /*background: #FF5A5F;
-            background: -webkit-linear-gradient(to right, #FF5A5F, #ff7478, #FF5A5F);
-            background: linear-gradient(to right, #FF5A5F, #ff7478, #FF5A5F);*/
-
-
-        }
+        
         .p0Button{
             padding-left: 3vh;
             padding-right: 2vh;
@@ -1513,9 +1504,21 @@
             box-shadow: 0 0 5px #20C39A;*/
             
         }
-        .section{
-            padding-top: 6vh;
+        #fullPage{
+            background-image: url("images/background/greenboard.jpg");
+            background-size: cover;
+            background-position: center center;
             height: 100vh;
+            /*background: #FF5A5F;
+            background: -webkit-linear-gradient(to right, #FF5A5F, #ff7478, #FF5A5F);
+            background: linear-gradient(to right, #FF5A5F, #ff7478, #FF5A5F);*/
+
+
+        }
+        .section{
+            
+            height: 100vh;
+            
         }
         .sectionPageLogo{
             height: 32px;
@@ -2476,8 +2479,10 @@
             
         }
         .testBenefits2{
-            min-height: 20vh;
-            
+            min-height: 25vh;
+            max-height: 30vh;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
         .testBenefits{
             min-height: 18vh;
