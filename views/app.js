@@ -11180,6 +11180,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 '5a29000d2742b6164f1a7024',
                 '5a2bf98207932b2309259431',
                 '5a20e929799c4c2e6d4e120a',
+                '5a75f6205ec14a5b282302b7',
+                '5a75e08785affc541a2cc49c',
+                '5a73dd82f8b1427b98c73b4a',
+                '5a76bbeaade31812d19036d1',
+                '5a74972eaf879559a1ed5214',
+                '5a74b56c43000e660d01f2b5',
             ];
             
             $rootScope.permittedToDisable = [
