@@ -1,6 +1,6 @@
 
 //'ngHandsontable','angular-medium-editor','angular-timeline', 'chart.js', ui.bootstrap, mgcrea.bootstrap.affix
-var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver']);
+var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-google-gapi','angular-loading-bar','duScroll','youtube-embed', 'material.svgAssetsCache', 'ngAnimate','ngAria','ngCookies', 'ngGeolocation', 'ngMap', 'ngMaterial', 'ngMaterialDatePicker', 'ngSanitize', 'ngSidebarJS', 'ngtweet','ngFacebook','oc.lazyLoad', '720kb.socialshare', 'ui.router', 'ui-notification', 'matchMedia', 'angularLazyImg', 'ngFileSaver', 'jlareau.bowser']);
 //,'ngHandsontable''ngHandsontable',,'ng','seo', 'angular-medium-editor-insert-plugin', 'htmlToPdfSave', ui.bootstrap
     (function() {
     'use strict';
@@ -34829,8 +34829,9 @@ function getLatLng(thisData) {
         
     })();
 
-exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, $anchorScroll, $state, $cookies, $mdDialog) {
-    
+
+exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, $anchorScroll, $state, $cookies, $mdDialog, bowser) {
+    console.log(bowser.name + " " + bowser.version);
     
     
     $rootScope.navBarTitle = 'Exambazaar: Exclusive Deals and Videos for test preparation';
