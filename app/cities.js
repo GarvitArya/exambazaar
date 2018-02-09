@@ -152,7 +152,7 @@ router.post('/aroundme', function(req, res) {
 
 router.get('/', function(req, res) {
     //console.log('Here');
-    city.find({active: true}, function(err, docs) {
+    city.find({active: true, count: {$gte: 10}}, {name:1, count: 1}, function(err, docs) {
     if (!err){ 
         //console.log(docs);
         res.json(docs);

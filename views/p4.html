@@ -158,11 +158,20 @@
         max-height: 100%;
         max-width: 80%;
     }
+    .badge.streamBadge{
+        padding: 10px;
+        border: 1px solid #FF5A5F;
+        background: white;
+        color: black;
+    }
 </style>
 <div id="spacer1" hide-xs>
 </div>
 <div id="spacerXS" hide-gt-xs>
 </div>
+
+
+
 <!--<div layout="row" layout-align="start end"  hide-xs class="editFont text-primary font11 width100 min8vh paddingB5" id="breadcrumb">
     <div hide-xs flex="5">
     </div>
@@ -294,8 +303,65 @@
     <div layout="row" layout-align="start start" class="width100">
     
     <div layout="column" layout-align="start start" class="width100">
+        <div layout="row" layout-align="start end" class="width100 min10vh textBlack">
+        <div hide-xs flex="5">
+        </div>    
         
-        
+        <div flex-gt-xs="25" flex-xs="40" layout="row" layout-align="start end" class="paddingLR10">
+            <md-input-container class="margin0 width100 textBlack">
+            <!--<label>Stream</label>-->
+            <md-select ng-model="selectedStream"
+            md-on-close="clearSearchTermStream()"
+            data-md-container-class="p4SelectHeader">
+            <md-select-header class="demo-select-header">
+            <input ng-model="searchTermStream"
+            type="search"
+            class="demo-header-searchbox md-text">
+                <!--placeholder="Search for a Stream.."-->
+            </md-select-header>
+            <md-optgroup label="streamExams">
+            <md-option ng-value="newStream" ng-repeat="newStream in streamExams | orderBy:['-rank'] |
+            filter:searchTermStream">{{newStream.stream}}</md-option>
+            </md-optgroup>
+            </md-select>
+            </md-input-container>
+        </div>
+        <div  flex-gt-xs="25" flex-xs="40"  layout="row" layout-align="start end" class="paddingLR10">   
+            <md-input-container class="margin0 width100 textBlack">
+            <!--<label>City</label>-->
+            <md-select ng-model="selectedCity"
+            md-on-close="clearSearchTermCity()"
+            data-md-container-class="p4SelectHeader">
+            <md-select-header class="demo-select-header">
+            <input ng-model="searchTermCity"
+            type="search"
+            class="demo-header-searchbox md-text">
+                <!--placeholder="Search for a City.."-->
+            </md-select-header>
+            <md-optgroup label="allCities">
+            <md-option ng-value="city" ng-repeat="city in allCities | orderBy:['-count'] |
+            filter:searchTermCity">{{city.name}}</md-option>
+            </md-optgroup>
+            </md-select>
+            </md-input-container>
+        </div>
+        <div  flex="10"  layout="row" layout-align="start center" class="paddingLR10">
+            <md-button class="md-next md-large tolowercase margin0  width100" ng-click="setSearch()">
+                Go
+            </md-button>
+        </div>
+    </div>
+        <div layout="row" layout-align="start center" class="width100 min10vh textBlack">
+        <div hide-xs flex="5">
+        </div>
+        <div flex layout-wrap class="paddingLR10">
+            <span class="marginR10">Other {{currentStream.stream}} Exams</span>
+            <span ng-repeat="thisExam in currentStream.exams" class="badge streamBadge padding5 marginR10" ng-click="setExam(thisExam)">
+                {{thisExam.seoname}}
+            </span>
+            
+        </div>
+        </div>
         <!--
         <div layout="row" layout-xs="column" layout-align="start center" class="width100 thirdFont headingBottomBorder2 font14 paddingB10 marginB30 paddingLR20">
             <div layout="column" layout-align="center center"  id="pageLogoHolder2"  flex-gt-xs="15" flex-xs="100" class="" hide-xs>
@@ -343,7 +409,7 @@
         
         
         
-        <div layout="row" layout-align="start start" class="width100 marginT20">
+        <div layout="row" layout-align="start start" class="width100 marginT10">
             <div hide-xs flex="5">
             </div>
             <div flex class="paddingLR10">

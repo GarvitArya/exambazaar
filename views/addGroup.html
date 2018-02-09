@@ -34,6 +34,9 @@
         margin-top: 10px;
         margin-bottom: 10px;
     }
+    
+    
+    
 </style>
 <div class="container">
     <div id="spacer1">
@@ -133,4 +136,49 @@
     </div>
 </div>
 <div>
+</div>
+
+
+
+<div ng-controller="SelectStreamController" class="md-padding" ng-cloak>
+    <div>
+
+    <div layout="row">
+        <md-input-container class="margin0 width25">
+        <label>Stream</label>
+        <md-select ng-model="selectedStream"
+        md-on-close="clearSearchTermStream()"
+        data-md-container-class="selectdemoSelectHeader">
+        <md-select-header class="demo-select-header">
+        <input ng-model="searchTermStream"
+        type="search"
+        placeholder="Search for a Stream.."
+        class="demo-header-searchbox md-text">
+        </md-select-header>
+        <md-optgroup label="streamExams">
+        <md-option ng-value="stream" ng-repeat="stream in streamExams | orderBy:['-rank'] |
+        filter:searchTermStream">{{stream.stream}}</md-option>
+        </md-optgroup>
+        </md-select>
+        </md-input-container>
+        
+        <md-input-container class="margin0 width25">
+        <label>City</label>
+        <md-select ng-model="selectedCity"
+        md-on-close="clearSearchTermCity()"
+        data-md-container-class="selectdemoSelectHeader">
+        <md-select-header class="demo-select-header">
+        <input ng-model="searchTermCity"
+        type="search"
+        placeholder="Search for a City.."
+        class="demo-header-searchbox md-text">
+        </md-select-header>
+        <md-optgroup label="allCities">
+        <md-option ng-value="city" ng-repeat="city in allCities | orderBy:['-count'] |
+        filter:searchTermCity">{{city.name}}</md-option>
+        </md-optgroup>
+        </md-select>
+        </md-input-container>
+    </div>    
+    </div>
 </div>

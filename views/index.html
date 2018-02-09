@@ -99,6 +99,27 @@
     </script>
     
     <style>
+        
+        .p4SelectHeader {
+  /* Please note: All these selectors are only applied to children of elements with the 'p4SelectHeader' class */ }
+  .p4SelectHeader .demo-header-searchbox {
+    border: none;
+    outline: none;
+    height: 100%;
+    width: 100%;
+    padding: 0; }
+  .p4SelectHeader .demo-select-header {
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12);
+    padding-left: 10.667px;
+    height: 48px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: auto; }
+  .p4SelectHeader md-content._md {
+    max-height: 240px; }
+        
         [sidebarjs-container] {
             width: 60%;
         }
@@ -1523,6 +1544,9 @@
         .sectionPageLogo{
             height: 32px;
             width: 32px;
+        }
+        .p0Logo{
+            height: 72px;
         }
         .md-button.md-green:hover{
             border: 2px solid #FF5A5F;
