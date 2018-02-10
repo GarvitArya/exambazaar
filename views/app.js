@@ -2302,6 +2302,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                            //Notification.success({message: "Nearby cities found!",  positionY: 'top', positionX: 'right', delay: 5000});
                        }else{
                            //Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                           $rootScope.searchCity = 'Delhi';
                        }
 
                     })
