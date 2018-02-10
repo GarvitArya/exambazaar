@@ -164,6 +164,12 @@
         background: white;
         color: black;
     }
+    .badge.currentBadge{
+        padding: 10px;
+        border: 1px solid darkgray;
+        background: gainsboro;
+        color: darkgray;
+    }
 </style>
 <div id="spacer1" hide-xs>
 </div>
@@ -183,13 +189,13 @@
     >
     </div>
     <div layout="row" layout-align="start start" class="marginR5">
-        <a ui-sref="category({ categoryName:{{'category.name'}} })">{{subcategory.displayname | uppercase}}</a>
+        <a ui-sref="category({ categoryName:{{'categoryName'}} })">{{subcategory.displayname | uppercase}}</a>
     </div>
     <div layout="row" layout-align="start start" class="marginR5">
     >
     </div>
     <div layout="row" layout-align="start start" class="marginR5">
-        <a ui-sref="city({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}} })">{{city | uppercase}}</a>
+        <a ui-sref="city({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}} })">{{city | uppercase}}</a>
     </div>
     </div>
 </div>-->
@@ -235,7 +241,7 @@
                 </div>
             </div>
             <div class="width100 marginT40 marginB20">
-                <md-button class="md-danger md-small tolowercase font12 width100 margin0" ui-sref="exam({ examName:{{'subcategory.name'}} })" target="_blank"> 
+                <md-button class="md-danger md-small tolowercase font12 width100 margin0" ui-sref="exam({ examName:{{'subCategoryName'}} })" target="_blank"> 
                     Read More
                 </md-button>
             </div>
@@ -290,7 +296,7 @@
             
         </div>
         <div class="width100 marginTB20">
-            <md-button class="md-danger md-small tolowercase font12 width100 margin0" ui-sref="exam({ examName:{{'subcategory.name'}} })" target="_blank"> 
+            <md-button class="md-danger md-small tolowercase font12 width100 margin0" ui-sref="exam({ examName:{{'subCategoryName'}} })" target="_blank"> 
                 Read More
             </md-button>
         </div>
@@ -298,12 +304,12 @@
     </div>
     </div>
 </div>-->
-<div class="whiteBackground mainContent" >
+<div class="whiteBackground" >
     
     <div layout="row" layout-align="start start" class="width100">
     
     <div layout="column" layout-align="start start" class="width100">
-        <div layout="row" layout-align="start end" class="width100 min10vh textBlack">
+        <div layout="row" layout-align="start end" class="width100 min15vh textBlack">
         <div hide-xs flex="5">
         </div>    
         
@@ -355,9 +361,12 @@
         <div hide-xs flex="5">
         </div>
         <div flex layout-wrap class="paddingLR10">
-            <span class="marginR10">Other {{currentStream.stream}} Exams</span>
-            <span ng-repeat="thisExam in currentStream.exams" class="badge streamBadge padding5 marginR10" ng-click="setExam(thisExam)">
-                {{thisExam.seoname}}
+            <span class="marginR10">All {{currentStream.stream}} Exams</span>
+            <span ng-repeat="thisExam in currentStream.exams" class="padding5">
+                <span class="badge padding5" ng-class="examBadgeClass(thisExam)" ng-click="setExam(thisExam)">
+                    {{thisExam.seoname}}
+                </span>
+                
             </span>
             
         </div>
@@ -399,7 +408,7 @@
                     </div>
                 </div>
                 <div layout="row" layout-align="start start" class="width100 marginLR20 marginT40">
-                    <md-button class="md-danger md-small tolowercase font12 width50 margin0" ui-sref="exam({ examName:{{'subcategory.name'}} })" target="_blank"> 
+                    <md-button class="md-danger md-small tolowercase font12 width50 margin0" ui-sref="exam({ examName:{{'subCategoryName'}} })" target="_blank"> 
                         Read More
                     </md-button>
                 </div>
@@ -452,7 +461,7 @@
                         </md-button>
                     </div>
                     <div layout="row" layout-align="start start" layout-xs="column" id="subcategory">
-                        <div layout="row" layout-align="center start" id="pageLogoHolder" class="marginL20" hide-xs ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
+                        <div layout="row" layout-align="center start" id="pageLogoHolder" class="marginL20" hide-xs ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                             <img src='ebloader2.gif' lazy-img="{{coachingGroup.logo}}" alt="{{coachingGroup.groupName}}" class="pageLogo" ng-if="coachingGroup.logo"/>
                             <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup.logo"/>
                         </div>
@@ -491,7 +500,7 @@
                                 </span>-->
                             </div>
                             <div class="width100 marginT5 paddingB5 gainsboroBottomBorder font14">
-                                <a ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
+                                <a ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
                             </div>
                             <div layout="row" layout-align="end center" class="width100">
                             <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT15 width100" flex>
@@ -511,10 +520,10 @@
                                 </div>
                             </div>
                             <div layout="row" layout-align="end start" flex="20">
-                                <button class="btn actionButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                                <button class="btn actionButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
                                     <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
                                 </button>
-                                <button class="btn actionButton  tolowercase" ui-sref="availDiscount({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
+                                <button class="btn actionButton  tolowercase" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
                                     <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
                                 </button>
                             </div>
@@ -524,7 +533,7 @@
                                  {{subcategory.displayname}}&nbsp;Results of {{coachingGroup.groupName}}
 
                             </div>
-                            <div layout="row" class="width100 marginT5 marginB10" ui-sref="showGroup({ categoryName:{{'category.name'}}, subCategoryName:{{'subcategory.name'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
+                            <div layout="row" class="width100 marginT5 marginB10" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
                                 
                             <div flex-xs="25" flex-gt-xs="10" layout="row" layout-align="start center" ng-repeat="result in coachingGroup.groupResults" ng-if="$index < 9" class="padding5">
                                 <div class="width100" id="thumbnailImage" ng-style="{'background-image':'url({{result.image}})'}" title="{{result.name}}">

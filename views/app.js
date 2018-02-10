@@ -122,9 +122,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             {
               name: 'angularFullPage',
               files: [
-                    'jquery.fullPage.js',
-                    'angular-fullpage.min.js',
-                    'jquery.fullPage.css',
+                  'jquery.min.js',
+                'jquery.fullPage.css',  
+                'jquery.fullPage.js',
+                'angular-fullpage.min.js',
+                    
               ]
             },
             {
@@ -2373,10 +2375,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };*/
         
             $scope.mainOptions = {
-                sectionsColor: ['#003C2B', '#FFFFFF', '#161616'],
-                navigation: true,
+                sectionsColor: ['#003C2B', '#ededed','#FFFFFF', '#ededed','#FFFFFF', '#ededed', '#161616'],
+                navigation: false,
                 navigationPosition: 'left',
-                scrollingSpeed: 2000,
+                scrollingSpeed: 700,
+                menu: true
             };
           
             
@@ -2575,7 +2578,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.p4StreamExams = p4StreamExams.data.map(function(a) {return a.name;});
         console.log(p4StreamExamsData);
         console.log(p4StreamExamsIds);*/
-        
+        $scope.examBadgeClass = function(thisExam){
+            
+            var classname = "streamBadge";
+            if(thisExam.name == $scope.subCategoryName){
+                classname = "currentBadge";
+            }
+            return classname;
+        };
         
         $element.find('input').on('keydown', function(ev) {
           ev.stopPropagation();
@@ -5961,7 +5971,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
    
     exambazaar.controller("p5Controller", 
-    [ '$scope','$rootScope', 'coachingService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', 'examList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, coachingService,thisGroup, thisStream, thisExam, streamList, examList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
+    [ '$scope','$rootScope', 'coachingService', 'thisGroup', 'thisStream', 'thisExam', 'streamList', '$state','$stateParams', '$cookies', 'UserService', '$mdDialog', '$timeout',  'viewService', 'reviewService','thisGroupResults', function($scope,$rootScope, coachingService,thisGroup, thisStream, thisExam, streamList,$state,$stateParams, $cookies, UserService, $mdDialog, $timeout,  viewService, reviewService,thisGroupResults){
         $rootScope.reviewStream = null;
         $rootScope.reviewExam = null;
         $rootScope.reviewCity = null;
@@ -5988,8 +5998,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.subCategoryName = $stateParams.subCategoryName;
         $scope.subcategory = $scope.exam;
         $scope.city = $stateParams.cityName; 
-        $scope.allExams = examList.data;
+        //$scope.allExams = examList.data;
         $scope.allStreams = streamList.data;
+        
         $scope.playerVars = {
             controls: 1,
             showinfo: 0
@@ -6101,7 +6112,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.components = [
             /*'Overview',*/
             'Contact',
-            'Exams',
+            /*'Exams',*/
             'Results',
             'Courses',
             'Photos',
@@ -13968,7 +13979,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             var ebteam = ebteam.data;
             var ebteamIds = ebteam.map(function(a) {return a._id;});
-            
+           
             var listedUsers = [];
             
             if($scope.user && ($scope.user.userType == 'Master' || $scope.user.userType == 'Intern - Business Development')){
@@ -14000,22 +14011,31 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         
                         $scope.addedInstitutes.forEach(function(thisInstitute, index){
                             
-                            var addedByUser = thisInstitute._createdBy;
+                            var addedByUser = thisInstitute._createdBy.toString();
                             if(listedUsers.indexOf(addedByUser) == -1){
                                 listedUsers.push(addedByUser);
                             }
                             var uIndex = ebteamIds.indexOf(addedByUser);
                             if(uIndex != -1){
                                 thisInstitute._createdBy = ebteam[uIndex];
+                            }else{
+                                console.log(uIndex + " " + addedByUser);
                             }
                             
                         });
                         $scope.listedUsers = [];
                         listedUsers.forEach(function(thisUser, index){
-                            var uIndex = ebteamIds.indexOf(thisUser);
-                            $scope.listedUsers.push(ebteam[uIndex]);
+                            var uIndex = ebteamIds.indexOf(thisUser.toString());
+                           
+                            if(uIndex != -1){
+                                $scope.listedUsers.push(ebteam[uIndex]);    
+                            }else{
+                                console.log(uIndex + " " + thisUser._id);
+                            }
+                            
 
                         });
+                        
                         
                         //Summary code starts here
                         var reportSummary = [];
@@ -14083,7 +14103,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         }
                         $scope.summaryStrings = summaryStrings;
                         //Summary code ends here
-                        
                         
                         
 
@@ -23453,7 +23472,6 @@ function getLatLng(thisData) {
             if(sessionuser && sessionuser._id){
                 UserService.getUser(sessionuser._id).success(function (data, status, headers) {
                     $scope.user = data;
-                    console.log($scope.user);
                     $scope.sanitizeEligibility();
                     Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
                     if($scope.user.basic)
@@ -26006,9 +26024,9 @@ function getLatLng(thisData) {
             
             $scope.mainOptions = {
                 sectionsColor: ['#FFFFFF', '#FFFFFF', ,'#FFFFFF', '#FFFFFF'],
-                navigation: true,
+                navigation: false,
                 navigationPosition: 'left',
-                scrollingSpeed: 2000,
+                scrollingSpeed: 700,
             };
             
             $scope.sideBarButtonClass = function(thisexam){
@@ -32005,10 +32023,10 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams){
                     return ExamService.getExamByName($stateParams.subCategoryName);
                 }],
-                examList: ['ExamService',
+                /*examList: ['ExamService',
                     function(ExamService){
                     return ExamService.getExams();
-                }],
+                }],*/
                 streamList: ['StreamService',
                     function(StreamService){
                     return StreamService.getStreams();
@@ -35324,7 +35342,7 @@ exambazaar.directive('scrollpercentage', function ($window) {
                 scrolledPercentage = (offSet / height * 100);
                 //console.log(scrolledPercentage);
                 if (scrolledPercentage >= 60) {
-                  console.log(scrolledPercentage + ' over 60');
+                  //console.log(scrolledPercentage + ' over 60');
                 }
             });                      
         }
