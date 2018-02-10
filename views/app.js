@@ -2652,8 +2652,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //console.log();
                 
             }else if(newValue){
+                //console.log($rootScope.streamExams);
                 var allStreams = $rootScope.streamExams.map(function(a) {return a.streamName;});
+                //console.log(allStreams);
                 var sIndex = allStreams.indexOf($scope.categoryName);
+                
+                //console.log($scope.categoryName);
                 if(sIndex != -1){
                     $scope.selectedStream = $rootScope.streamExams[sIndex];
                     $scope.currentStream = $rootScope.streamExams[sIndex];
@@ -6185,7 +6189,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     if(groupStreamIds.indexOf(thisStream._id) == -1){ $scope.groupStreams.push(thisStream);
                     }
                     $scope.groupExams.push(newGroupExam);
-                    if($scope.category._id.toString() == thisExam.stream._id.toString()){
+                    if($scope.category._id.toString() == thisExam.stream._id.toString() && thisExam.active){
                         $scope.currStreamExams.push(thisExam);
                     }
                 }else{
@@ -11072,7 +11076,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.maintenance = false;
         if(!$rootScope.streamExams){
             ExamService.getExamsBasic().success(function (data, status, headers) {
-                var doNotShow = ['Other', 'Insurance', 'School'];
+                var doNotShow = ['Other']; //, 'Insurance', 'School'
                 var streamNames = [];
                 var streamExams = [];
                 var allExams = data;
@@ -11334,6 +11338,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         $rootScope.streamranks = data.streamranks;
                         
                         $rootScope.streamexams = data.streamexams;
+                       
                        
                     }
                     

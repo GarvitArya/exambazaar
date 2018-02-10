@@ -331,7 +331,7 @@ router.post('/cirf', function(req, res) {
     allProviders.forEach(function(this_Provider, index){
         var groupName = this_Provider.groupName;
         
-        var thisProvider = coaching.findOne( {"groupName" : groupName, type: 'Coaching', $and: [{"rating": {$exists: true}},{"rating.n_exams": {$exists: true}}]}, {rating: 1, name: 1, groupName: 1},function(err, thisProvider) {
+        var thisProvider = coaching.findOne( {"groupName" : groupName, type: 'Coaching', $and: [{"rating": {$exists: true}},{"rating.n_exams": {$exists: true}}]}, {rating: 1, name: 1, groupName: 1, cirf: 1},function(err, thisProvider) {
         if (!err){
             
         if(thisProvider){
@@ -341,13 +341,20 @@ router.post('/cirf', function(req, res) {
         var rating = thisProvider.rating;
 
         var allCIRFs = cirffactor.find( {exam : examId}, {},function(err, allCIRFs) {
-    if (!err){
+        if (!err){
         var cCounter = 0;
         var nCIRFs = allCIRFs.length;
         var providerScore = 0;
         var totalScore = 0;
 
         if(allCIRFs && allCIRFs.length > 0){
+            var providerExamCIRFScore = {
+                exam: examId,
+                cirf: null,
+                unscaledScore: null,
+                unscaledWeight: null,
+                factors: [],
+            };
             console.log('------------------------');
             statements.push('------------------------');
             console.log('Coaching: ' + thisProvider.name);
@@ -356,6 +363,13 @@ router.post('/cirf', function(req, res) {
                 var factorScore = 0;
                 var factorWeight = Number(thisCIRF.weight);
                 totalScore += factorWeight;
+                
+                var newFactor = {
+                    name: thisCIRF.name,  
+                    weight: thisCIRF.weight,
+                    factorScore: null,
+                    subfactors: [],
+                };
                 
                 var subfactors = thisCIRF.subfactors;
                 var examCIRF = false;
@@ -484,7 +498,13 @@ router.post('/cirf', function(req, res) {
                         //console.log("      Scored " + weight + " out of 100!");
                         subfactorScore = weight;
                     }
-                    console.log(subfactorScore);
+                    //console.log(subfactorScore);
+                    var newSubFactor = {
+                        name: thisSubfactor.name,  
+                        weight: thisSubfactor.weight,
+                        score: subfactorScore,
+                    };
+                    newFactor.subfactors.push(newSubFactor);
                     var subFactorScore = Number(subfactorScore * Number(thisSubfactor.weight) * factorWeight / 100 / 100);
                     console.log("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
                     statements.push("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
@@ -494,12 +514,18 @@ router.post('/cirf', function(req, res) {
                     //console.log(sindex + ". " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight);
 
                 });
-                
+                newFactor.factorScore = factorScore;
+                providerExamCIRFScore.factors.push(newFactor);
                 console.log(thisCIRF.name + " | Factor Weight: " + thisCIRF.weight + " | " + factorScore);
                 statements.push(thisCIRF.name + " | Factor Weight: " + thisCIRF.weight + " | " + factorScore);
                 providerScore += Number(factorScore);
             });
+            
             var scaledScore = Number(providerScore * 100 / totalScore);
+            scaledScore = Math.round(scaledScore * 100) / 100;
+            providerExamCIRFScore.unscaledWeight = totalScore;
+            providerExamCIRFScore.unscaledScore = providerScore;
+            providerExamCIRFScore.cirf = scaledScore;
             console.log(thisProvider.name + ' rating is: ' + scaledScore + " .i.e. " + providerScore + ' out of ' + totalScore);
             statements.push(thisProvider.name + ' rating is: ' + scaledScore + " .i.e. " + providerScore + ' out of ' + totalScore);
             console.log('------------------------');
@@ -507,6 +533,29 @@ router.post('/cirf', function(req, res) {
         }
         counter = counter +1;
         if(counter == nLength){
+            console.log(providerExamCIRFScore);
+            if(!thisProvider.cirf){
+                thisProvider.cirf = [];
+            }
+            var cIndex = -1;
+            if(thisProvider.cirf.length > 0){
+                var cirfExamIds = thisProvider.cirf.map(function(a) {return a.exam.toString();});
+                cIndex = cirfExamIds.indexOf(examId);
+            }
+            
+            if(cIndex != -1){
+                thisProvider.cirf.splice(cIndex, 1);
+                thisProvider.cirf.push(providerExamCIRFScore);
+                
+            }else{
+                thisProvider.cirf.push(providerExamCIRFScore);
+            }
+            console.log(thisProvider.cirf);
+            thisProvider.save(function(err, thisProvider) {
+                if (err) return console.error(err);
+                console.log("CIRF saved for: "+ thisProvider._id);
+            });
+               
             res.json(statements);
         }
     } else {throw err;}

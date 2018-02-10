@@ -204,7 +204,7 @@
                 <md-button type="submit" class="md-large md-start width100 mainFont font20" ui-sref="main">Search Now</md-button>
             </div>-->
 
-            <div layout="row" layout-align="start center" class="paddingTB10 text-center width100 ">
+            <div layout="row" layout-align="start center" class="paddingTB5h text-center width100" hide-xs>
                 <div layout="row" layout-align="start center" class="width100" layout-wrap>
                     <div layout="column" layout-align="center center" flex-gt-sm="25" flex-xs="50" ng-repeat="stream in streamranks | orderBy:['-rank']" ng-if="stream.active && stream.stream != 'Other'" class="paddingTB5 paddingLR10">
                     <div layout="row" layout-align="center center" class="p0Button width100" ui-sref="findCoaching({ categoryName:{{'stream.name'}}, subCategoryName:{{'streamexams[stream.stream][0].name'}}, cityName:{{'searchCity'}} })">
@@ -219,6 +219,24 @@
                     </div>
                 </div>
             </div>
+                
+            <div layout="row" layout-align="start center" class="paddingTB5h text-center width100" hide-gt-xs>
+                <div layout="row" layout-align="start center" class="width100" layout-wrap>
+                    <div layout="column" layout-align="center center" flex-xs="50" ng-repeat="stream in streamranks | orderBy:['-rank']" ng-if="stream.active && stream.stream != 'Other'" class="paddingTB5 paddingLR10">
+                    <div layout="row" layout-align="center center" class="p0ButtonXS width100" ui-sref="findCoaching({ categoryName:{{'stream.name'}}, subCategoryName:{{'streamexams[stream.stream][0].name'}}, cityName:{{'searchCity'}} })">
+                    <!--ui-sref="category({ categoryName:{{'stream.name'}} })"-->    
+                        <div class="p0Icon">
+                            <img class="sectionPageLogo" ng-src="{{stream.logo.black}}"/>
+                        </div>
+                        <div flex layout="row" layout-align="start center" class="">
+                            <h1 class="h3Font spacedLetter1">{{stream.stream}}</h1>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>    
+                
+                
             </div>
 
             
@@ -263,12 +281,12 @@
     <div layout="row" layout-align="center start" class="width100">
     <div layout="column" layout-align="start start" class="width100 min90vh " flex-xs="90" flex-gt-xs="80">
         
-        <div layout="row" layout-align="end center" class="width100 exact20h" >
+        <div layout="row" layout-align="start center" class="width100 exact20h" hide-xs>
             <div layout="column" layout-align="center start" class=" width100">
                 <div layout="row" layout-align="start start" class="width100">
                     <a class="text-primary" id="reviewLink">
                         <h1 class="h1Font bold">
-                            Our Presence
+                            Our Pan India Presence
                         </h1>
                     </a>
                 </div>
@@ -278,39 +296,54 @@
             </div>
 
         </div>
-        <div layout="row" layout-xs="column" layout-align="center center" class="width100 textDarkGrey min40vh paddingTB10h" layout-wrap hide-xs>
-            <div layout="column" layout-align="center center" class="p0Number" flex-gt-xs="25">
-                <img ng-src="icons/p0/s0/coaching.png" class="p0s3Logo">
-                <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">28,000+ Coachings</div>
-                <!--<div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>-->
+        <div layout="row" layout-align="start center" class="width100 exact10h" hide-gt-xs>
+            <div layout="column" layout-align="center start" class=" width100">
+                <div layout="row" layout-align="start start" class="width100">
+                    <a class="text-primary" id="reviewLink">
+                        <h1 class="h1Font bold">
+                            Our Pan India Presence
+                        </h1>
+                    </a>
+                </div>
+                <h3 class=" h3Font">
+                    <!--In publishing and graphic design, lorem ipsum is a filler text or greeking commonly used to demonstrate the textual elements of a graphic document or visual presentation. Replacing meaningful content with placeholder text allows designers to design the form of the content before the content itself has been produced.-->
+                </h3>
             </div>
-            <div layout="column" layout-align="center center" class="p0Number" flex-gt-xs="25">
+
+        </div>
+        <div layout="row" layout-xs="column" layout-align="center start" class="width100 textDarkGrey min50vh paddingTB5h" layout-wrap hide-xs>
+            <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs>
+                <img ng-src="icons/p0/s0/coaching.png" class="p0s3Logo">
+                <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">28,000+ Coaching Classes</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Coaching Classes - Online or Offline, Experienced or Upcoming, Giants or Boutique,  we've got you covered. We're adding more than 200 Coaching Classes a Day!</div>
+            </div>
+            <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs>
                 <img ng-src="icons/p0/s0/city.png" class="p0s3Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">100+ Cities</div>
-                <!--<div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>-->
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Our network already covers all Tier 1, 2 and 3 cities, including Coaching Hubs like Kota, Hyderabad,  and is constantly expanding to towns where distances are small but ambitions are big.</div>
             </div>
-            <div layout="column" layout-align="center center" class="p0Number" flex-gt-xs="25">
+            <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs>
                 <img ng-src="icons/p0/s0/exam.png" class="p0s3Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">50+ Exams</div>
-                <!--<div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>-->
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Our reach spans all 12 Major Streams, 50+ Nationals Exams and 100+ regional exams across school, college and recruitment categories. Whatever you want to learn, we provide.</div>
             </div>
         </div>
         
         <div layout="row" layout-xs="column" layout-align="center center" class="width100 textDarkGrey min60vh" layout-wrap hide-gt-xs>
-            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs="25">
+            <div layout="column" layout-align="center center" class="p0NumberXS">
                 <img ng-src="icons/p0/s0/coaching.png" class="p0s3LogoXS">
-                <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">Choose Coaching & Course</div>
-                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10"><!--Find your coaching and course!--></div>
+                <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">28,000+ Coaching Classes</div>
+                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Coaching Classes - Online or Offline, Experienced or Upcoming, Giants or Boutique,  we've got you covered. We're adding more than 200 Coaching Classes a Day!</div>
             </div>
-            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs="25">
+            <div layout="column" layout-align="center center" class="p0NumberXS">
                 <img ng-src="icons/p0/s0/city.png" class="p0s3LogoXS">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">100+ Cities</div>
-                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10"><!--Find your coaching and course!--></div>
+                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Our network already covers all Tier 1, 2 and 3 cities, including Coaching Hubs like Kota, Hyderabad,  and is constantly expanding to towns where distances are small but ambitions are big.</div>
             </div>
-            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs="25">
+            <div layout="column" layout-align="center center" class="p0NumberXS">
                 <img ng-src="icons/p0/s0/exam.png" class="p0s3LogoXS">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">50+ Exams</div>
-                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10"><!--Find your coaching and course!--></div>
+                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Our reach spans all 12 Major Streams, 50+ Nationals Exams and 100+ regional exams across school, college and recruitment categories. Whatever you want to learn, we provide.</div>
             </div>
         </div>
         
@@ -329,7 +362,22 @@
     <div layout="row" layout-align="center start" class="width100">
     <div layout="column" layout-align="start start" class="width100 min90vh " flex-xs="90" flex-gt-xs="80">
 
-        <div layout="row" layout-align="end center" class="width100 exact20h " >
+        <div layout="row" layout-align="start center" class="width100 exact20h" hide-xs>
+            <div layout="column" layout-align="center start" class=" width100">
+                <div layout="row" layout-align="start start" class="width100">
+                    <a href="https://www.exambazaar.com/blogpost/you-must-know-these-things-before-choosing-your-coaching-class" target="_blank" class="text-primary" id="reviewLink">
+                        <h1 class="h1Font bold">
+                            How to Choose your Coaching Class?
+                        </h1>
+                    </a>
+                </div>
+                <h3 class=" h3Font">
+                    Make the best decision in the most crucial part of your academic career 
+                </h3>
+            </div>
+
+        </div>
+        <div layout="row" layout-align="start center" class="width100 exact10h" hide-gt-xs>
             <div layout="column" layout-align="center start" class=" width100">
                 <div layout="row" layout-align="start start" class="width100">
                     <a href="https://www.exambazaar.com/blogpost/you-must-know-these-things-before-choosing-your-coaching-class" target="_blank" class="text-primary" id="reviewLink">
@@ -346,37 +394,36 @@
         </div>
 
 
-
-        <div layout="row" layout-align="center center" class="width100 whiteBackground textDarkGrey min50vh " layout-wrap hide-xs>
+        <div layout="row" layout-align="center center" class="width100 whiteBackground textDarkGrey min50vh paddingTB5h" layout-wrap hide-xs>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box0">
                 <img ng-src="icons/p0/s1/faculty.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Experienced Faculty</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Get used to the online features like Online "Page Turn"</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Good or bad teachers can make or break your preparation</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box0">
                 <img ng-src="icons/p0/s1/test_series.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Competitive Test Series</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Simulate the pressure of the ticking clock</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">The more you test yourself the faster you get over exam nerves</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box0">
                 <img ng-src="icons/p0/s1/infrastructure.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Infrastructure and Course Content</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Mark questions to review later before submitting</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Structured Study Material saves you precious time and effort</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box0">
                 <img ng-src="icons/p0/s1/past_results.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Past Results</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Marking Scheme visible for each question individually</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Don't fall prey to flashy marketing and no substance</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box0">
                 <img ng-src="icons/p0/s1/value_for_money.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Value for Money</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">See Attempted, Marked, Seen questions in one glance</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Don’t overspend. Invest in the right guidance at the right price</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box0">
                 <img ng-src="icons/p0/s1/travel_time.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Low Travel time</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Analyse your performance with detailed review and solutions</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">No amount of coaching can make up for self-study. Travel less, study more</div>
             </div>
         </div>
         
@@ -384,32 +431,32 @@
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box0">
                 <img ng-src="icons/p0/s1/faculty.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Experienced Faculty</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Get used to the online features like Online "Page Turn"</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Good or bad teachers can make or break your preparation</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box0">
                 <img ng-src="icons/p0/s1/test_series.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Competitive Test Series</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Simulate the pressure of the ticking clock</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">The more you test yourself the faster you get over exam nerves</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box0">
                 <img ng-src="icons/p0/s1/infrastructure.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Infrastructure and Course Content</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Mark questions to review later before submitting</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">The more you test yourself the faster you get over exam nerves</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box0">
                 <img ng-src="icons/p0/s1/past_results.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Past Results</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Marking Scheme visible for each question individually</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Don't fall prey to flashy marketing and no substance</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box0">
                 <img ng-src="icons/p0/s1/value_for_money.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Value for Money</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">See Attempted, Marked, Seen questions in one glance</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Don’t overspend. Invest in the right guidance at the right price</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box0">
                 <img ng-src="icons/p0/s1/travel_time.png" class="p0Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Low Travel time</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Analyse your performance with detailed review and solutions</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">No amount of coaching can make up for self-study. Travel less, study more</div>
             </div>
         </div>
     </div>
@@ -425,54 +472,69 @@
     </div>
     <div layout="row" layout-align="center start" class="width100">
     <div layout="column" layout-align="start start" class="width100 min90vh " flex-xs="90" flex-gt-xs="80">
-        <div layout="row" layout-align="end center" class="width100 exact20h" >
+        <div layout="row" layout-align="start center" class="width100 exact20h" hide-xs>
             <div layout="column" layout-align="center start" class=" width100">
                 <div layout="row" layout-align="start start" class="width100">
                     <a class="text-primary" id="reviewLink">
                         <h1 class="h1Font bold">
-                            Avail Discount via Exambazaar
+                            Avail Coaching Discount
                         </h1>
                     </a>
                 </div>
                 <h3 class=" h3Font">
-                    Apply for Discount at coaching classes around you!
+                    Receive a discount on your Coaching Class Fees hassle-free
                 </h3>
             </div>
 
         </div>
-        <div layout="row" layout-xs="column" layout-align="center center" class="width100 textDarkGrey min40vh paddingTB10h " layout-wrap hide-xs>
-            <div layout="column" layout-align="center center" class="p0Number" flex-gt-xs="25">
+        <div layout="row" layout-align="start center" class="width100 exact10h" hide-gt-xs>
+            <div layout="column" layout-align="center start" class=" width100">
+                <div layout="row" layout-align="start start" class="width100">
+                    <a class="text-primary" id="reviewLink">
+                        <h1 class="h1Font bold">
+                            Avail Coaching Discount
+                        </h1>
+                    </a>
+                </div>
+                <h3 class=" h3Font">
+                    Receive a discount on your Coaching Class Fees hassle-free
+                </h3>
+            </div>
+
+        </div>
+        <div layout="row" layout-xs="column" layout-align="center center" class="width100 textDarkGrey min50vh paddingTB5h " layout-wrap hide-xs>
+            <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs>
                 <img ng-src="icons/p0/s3/1.png" class="p0s3Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">Choose Coaching & Course</div>
-                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10"><!--Find your coaching and course!--></div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Help us understand the exam and course that you would like to be enrolled in at your preferred coaching class. We will provide you all your options based on your preferences.</div>
             </div>
-            <div layout="column" layout-align="center center" class="p0Number" flex-gt-xs="25">
+            <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs>
                 <img ng-src="icons/p0/s3/2.png" class="p0s3Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">Add your academic details</div>
-                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10"><!--Find your coaching and course!--></div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Fill in your academic details and contact information. This helps us understand your prior inclinations and helps you get a better price.</div>
             </div>
-            <div layout="column" layout-align="center center" class="p0Number" flex-gt-xs="30">
+            <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs="30">
                 <img ng-src="icons/p0/s3/3.png" class="p0s3Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">Receive Discount Confirmation</div>
-                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10"><!--Find your coaching and course!--></div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Once you let us know of your preferences, our team will contact you to tie any loose ends and you will receive your discount confirmation over email.</div>
             </div>
         </div>
         
         <div layout="row" layout-xs="column" layout-align="center center" class="width100 textDarkGrey min60vh" layout-wrap hide-gt-xs>
-            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs="25">
+            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs>
                 <img ng-src="icons/p0/s3/1.png" class="p0s3LogoXS">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">Choose Coaching & Course</div>
-                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>
+                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Help us understand the exam and course that you would like to be enrolled in at your preferred coaching class. We will provide you all your options based on your preferences.</div>
             </div>
-            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs="25">
+            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs>
                 <img ng-src="icons/p0/s3/2.png" class="p0s3LogoXS">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">Add your academic details</div>
-                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>
+                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Fill in your academic details and contact information. This helps us understand your prior inclinations and helps you get a better price.</div>
             </div>
-            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs="25">
+            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs>
                 <img ng-src="icons/p0/s3/3.png" class="p0s3LogoXS">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">Receive Discount Confirmation</div>
-                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>
+                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Once you let us know of your preferences, our team will contact you to tie any loose ends and you will receive your discount confirmation over email.</div>
             </div>
         </div>
     </div>
@@ -487,7 +549,7 @@
     <div layout="row" layout-align="center start" class="width100">
     <div layout="column" layout-align="start start" class="width100 min90vh " flex-xs="90" flex-gt-xs="80">
 
-        <div layout="row" layout-align="end center" class="width100 exact20h " >
+        <div layout="row" layout-align="start center" class="width100 exact20h" hide-xs>
             <div layout="column" layout-align="center start" class=" width100">
                 <div layout="row" layout-align="start start" class="width100">
                     <a ui-sref="allquestionpapers" class="text-primary" id="reviewLink">
@@ -502,37 +564,51 @@
             </div>
 
         </div>
+        <div layout="row" layout-align="start center" class="width100 exact10h" hide-gt-xs>
+            <div layout="column" layout-align="center start" class=" width100">
+                <div layout="row" layout-align="start start" class="width100">
+                    <a ui-sref="allquestionpapers" class="text-primary" id="reviewLink">
+                        <h1 class="h1Font bold">
+                            Official Previous Year Question Papers&nbsp;&nbsp;<i class="fa fa-chevron-right font24" aria-hidden="true"></i>
+                        </h1>
+                    </a>
+                </div>
+                <h3 class=" h3Font">
+                    Seal your Exam Preparation by attempting the Last 10 Year Question Papers for all exams in a Live, Timed, Exam Environment for FREE
+                </h3>
+            </div>
 
-        <div layout="row" layout-align="center center" class="width100 whiteBackground textDarkGrey min50vh " layout-wrap ui-sref="questionpapers" hide-xs>
+        </div>
+        <div layout="row" layout-align="center center" class="width100 whiteBackground textDarkGrey min50vh paddingTB5h" layout-wrap ui-sref="questionpapers" hide-xs>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box1">
                 <img ng-src="icons/p0/s2/accustom_yourself.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Accustom Yourself</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Get used to the online features like Online "Page Turn"</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Get used to the online features like Online "Page Turn"</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box2">
                 <img ng-src="icons/p0/s2/timer.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Timer</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Simulate the pressure of the ticking clock</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Simulate the pressure of the ticking clock</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box3">
                 <img ng-src="icons/p0/s2/mark_for_review.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Mark for Review</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Mark questions to review later before submitting</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Mark questions to review later before submitting</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box4">
                 <img ng-src="icons/p0/s2/marking_scheme.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Marking Scheme</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Marking Scheme visible for each question individually</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Marking Scheme visible for each question individually</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box5">
                 <img ng-src="icons/p0/s2/quick_summary.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Quick Summary</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">See Attempted, Marked, Seen questions in one glance</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">See Attempted, Marked, Seen questions in one glance</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box6">
                 <img ng-src="icons/p0/s2/smart_analytics.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Smart Analytics</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Analyse your performance with detailed review and solutions</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Analyse your performance with detailed review and solutions</div>
             </div>
         </div>
         
@@ -541,32 +617,32 @@
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box1">
                 <img ng-src="icons/p0/s2/accustom_yourself.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Accustom Yourself</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Get used to the online features like Online "Page Turn"</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Get used to the online features like Online "Page Turn"</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box2">
                 <img ng-src="icons/p0/s2/timer.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Timer</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Simulate the pressure of the ticking clock</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Simulate the pressure of the ticking clock</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box3">
                 <img ng-src="icons/p0/s2/mark_for_review.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Mark for Review</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Mark questions to review later before submitting</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Mark questions to review later before submitting</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box4">
                 <img ng-src="icons/p0/s2/marking_scheme.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Marking Scheme</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Marking Scheme visible for each question individually</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Marking Scheme visible for each question individually</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box5">
                 <img ng-src="icons/p0/s2/quick_summary.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Quick Summary</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">See Attempted, Marked, Seen questions in one glance</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">See Attempted, Marked, Seen questions in one glance</div>
             </div>
             <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box6">
                 <img ng-src="icons/p0/s2/smart_analytics.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Smart Analytics</div>
-                <div layout="column" layout-align="center center" class="p0baseFont wideLine width100 text-center paddingLR10">Analyse your performance with detailed review and solutions</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Analyse your performance with detailed review and solutions</div>
             </div>
         </div>
         
@@ -584,54 +660,67 @@
     </div>
     <div layout="row" layout-align="center start" class="width100">
     <div layout="column" layout-align="start start" class="width100 min90vh " flex-xs="90" flex-gt-xs="80">
-        <div layout="row" layout-align="end center" class="width100 exact20h" >
+        <div layout="row" layout-align="start center" class="width100 exact20h" hide-xs>
             <div layout="column" layout-align="center start" class=" width100">
                 <div layout="row" layout-align="start start" class="width100">
                     <a class="text-primary" id="reviewLink">
                         <h1 class="h1Font bold">
-                            Free Tools
+                            Unique Tools to Help You Discover
                         </h1>
                     </a>
                 </div>
                 <h3 class=" h3Font">
-                    <!--In publishing and graphic design, lorem ipsum is a filler text or greeking commonly used to demonstrate the textual elements of a graphic document or visual presentation. Replacing meaningful content with placeholder text allows designers to design the form of the content before the content itself has been produced.-->
+                    Discover your preferences - Exams, Coaching Institutes, Degrees, Careers, and YOURSELF
                 </h3>
             </div>
-
         </div>
-        <div layout="row" layout-xs="column" layout-align="center center" class="width100 textDarkGrey min40vh paddingTB10h" layout-wrap hide-xs>
-            <div layout="column" layout-align="center center" class="p0Number" flex-gt-xs="25" ui-sref="eligibility">
-                <img ng-src="icons/p0/s5/exam_eligibility.png" class="p0s3Logo">
-                <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">Exam Eligibility</div>
-                <!--<div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>-->
+        <div layout="row" layout-align="start center" class="width100 exact10h" hide-gt-xs>
+            <div layout="column" layout-align="center start" class=" width100">
+                <div layout="row" layout-align="start start" class="width100">
+                    <a class="text-primary" id="reviewLink">
+                        <h1 class="h1Font bold">
+                            Unique Tools to Help You Discover
+                        </h1>
+                    </a>
+                </div>
+                <h3 class=" h3Font">
+                    Discover your preferences - Exams, Coaching Institutes, Degrees, Careers, and YOURSELF
+                </h3>
             </div>
-            <div layout="column" layout-align="center center" class="p0Number" flex-gt-xs="25" ui-sref="aroundme">
+        </div>
+        <div layout="row" layout-xs="column" layout-align="center center" class="width100 textDarkGrey min60vh paddingTB5h" layout-wrap hide-xs>
+            <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs ui-sref="eligibility">
+                <img ng-src="icons/p0/s5/exam_eligibility.png" class="p0s3Logo">
+                <div layout="column" layout-align="start center" class="bold width100 h2Font marginT40 text-center">Exam Eligibility</div>
+                <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Yes, it's that simple. Input your academic details and see all the exams you are eligible to write, across 12 streams. Never miss an opportunity because you didn't know.</div>
+            </div>
+            <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs ui-sref="aroundme">
                 <img ng-src="icons/p0/s5/coaching_around_you.png" class="p0s3Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">Coaching Around You</div>
-                <!--<div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>-->
+                <div layout="column" layout-align="start center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Not Every Coaching is for Everyone. Find your ideal coaching by searching for coaching classes for your exams by the minimum travel distance.</div>
             </div>
-            <div layout="column" layout-align="center center" class="p0Number" flex-gt-xs="25" >
+            <div layout="column" layout-align="start center" class="p0Number" flex-gt-xs >
                 <img ng-src="icons/p0/s5/courses_after_12.png" class="p0s3Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT40 text-center">Courses after 12th</div>
-                <!--<div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>-->
+                <div layout="column" layout-align="start center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">The world is more than Engineering, Medical and CA. Explore all degrees and careers that will really let you nurture and exploit your prolific talents.</div>
             </div>
         </div>
         
         <div layout="row" layout-xs="column" layout-align="center center" class="width100 textDarkGrey min60vh" layout-wrap hide-gt-xs>
-            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs="25" ui-sref="eligibility">
+            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs ui-sref="eligibility">
                 <img ng-src="icons/p0/s5/exam_eligibility.png" class="p0s3LogoXS">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">Exam Eligibility</div>
-                <!--<div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>-->
+                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Yes, it's that simple. Input your academic details and see all the exams you are eligible to write, across 12 streams. Never miss an opportunity because you didn't know.</div>
             </div>
-            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs="25" ui-sref="aroundme">
+            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs ui-sref="aroundme">
                 <img ng-src="icons/p0/s5/coaching_around_you.png" class="p0s3LogoXS">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">100+ Cities</div>
-                <!--<div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>-->
+                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Not Every Coaching is for Everyone. Find your ideal coaching by searching for coaching classes for your exams by the minimum travel distance.</div>
             </div>
-            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs="25">
+            <div layout="column" layout-align="center center" class="p0NumberXS" flex-gt-xs>
                 <img ng-src="icons/p0/s5/courses_after_12.png" class="p0s3LogoXS">
                 <div layout="column" layout-align="center center" class="bold width100 h2Font marginT10 text-center">Courses after 12th</div>
-                <!--<div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">Find your coaching and course!</div>-->
+                <div layout="column" layout-align="center center" class="h3Font wideLine width100 text-center paddingLR10">The world is more than Engineering, Medical and CA. Explore all degrees and careers that will really let you nurture and exploit your prolific talents.</div>
             </div>
         </div>
     </div>
