@@ -2055,6 +2055,9 @@
         .bigstar .ngrateit-star{
             background-size: 32px;
         }
+        .mediumstar .ngrateit-star{
+            background-size: 26px;
+        }
         .smallstar .ngrateit-star{
             background-size: 20px;
         }
@@ -2499,6 +2502,15 @@
             background: transparent;
             color: black;
         }
+        .scrollToTop{
+            width: 100px;
+            height: 72px;
+            position: absolute;
+            right: 2%;
+            margin-left: -50px;
+            bottom: 20px;
+            
+        }
         .leftMidButton{
             position:fixed; 
             top:25%;
@@ -2623,6 +2635,19 @@
         .actionButton:hover, .actionButton:visited:hover, .actionButton:link:hover{
             background-color: white;
             color: #FF5A5F;
+            font-weight: bold;
+        }
+        
+        
+        .bookButton, .bookButton:active, .bookButton:visited, .bookButton:link{
+            background-color: #29335C;
+            color:white;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        .bookButton:hover, .bookButton:visited:hover, .bookButton:link:hover{
+            background-color: white;
+            color: #29335C;
             font-weight: bold;
         }
         
@@ -3095,7 +3120,7 @@
     <!--twitter-widget-initialize-->
     <body id="exambazaar" ng-cloak>
      
-    <div  layout="column" ng-controller="headerController" class="min100vh">
+    <div  layout="column" ng-controller="headerController" class="min100vh" autoscroll="true">
         <div ui-view="header"></div>
         <div ui-view="body" class="min100vh" ></div>
         <div ui-view="footer"></div>

@@ -2223,9 +2223,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     exambazaar.controller("p0Controller", 
-        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', '$geolocation', 'cityService', function($scope, $cookies, $state, $rootScope, $mdDialog, $geolocation, cityService){
+        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', '$geolocation', 'cityService', '$window', '$location', function($scope, $cookies, $state, $rootScope, $mdDialog, $geolocation, cityService, $window, $location){
             $scope.hideLoginDialog();
-            
+            $scope.scrollToTop = function(){
+                $window.scrollTop();
+            };
             $scope.getTopCities = function(){
                 if(!$rootScope.top5Cities){
                     $scope.detectLocation();
@@ -26694,7 +26696,7 @@ function getLatLng(thisData) {
         $scope.$watch('exam.exampattern', function (newValue, oldValue, scope) {
             //Do anything with $scope.letters
             if(newValue != null){
-                $scope.verifyOTP();
+                //$scope.verifyOTP();
             }
             
         }, true);
@@ -31904,7 +31906,9 @@ function getLatLng(thisData) {
                 loadInfiniteScroll: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['infiniteScroll'], {serie: true});
                 }],
-                
+                NgRateit: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngRateit'], {serie: true});
+                }],
                 
             }
         })

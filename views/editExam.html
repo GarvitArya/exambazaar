@@ -96,10 +96,10 @@
         border: solid 1px #A3A3A3;
         box-shadow: 0 0 1px 1px #eaeaea;
     }
-    .sectionBorder{
+    .eeSectionBorder{
         border: 1px solid #eaeaea;
     }
-    .subsectionBorder2{
+    .subeeSectionBorder2{
         border: 1px dashed #D1DEDE;
     }
     input[type="text"]
@@ -129,7 +129,7 @@
     #cancelLink{
         color: #FF5A5F;
     }
-    .section{
+    .eeSection{
         border-bottom: 2px solid #20C39A;
         
         padding-bottom: 30px;
@@ -152,7 +152,7 @@
             {{exam.displayname}} Exam
         </div>
     </div>
-    <div layout="column" layout-align="start start" class="width100 section">
+    <div layout="column" layout-align="start start" class="width100 eeSection">
         <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
             Exam Basic Information
         </div>
@@ -228,7 +228,7 @@
         </div>
     </div>
     
-    <div layout="column" layout-align="start start" class="width100 section" ><!--ng-if="masterUser"-->
+    <div layout="column" layout-align="start start" class="width100 eeSection" ><!--ng-if="masterUser"-->
         <div layout="row" layout-align="start center"  class="width100 marginTB10 text-primary font16 bold">
             EB Parameters
         </div>
@@ -301,7 +301,7 @@
         
         </div>
     </div>
-    <div layout="column" layout-align="start start" class="width100 section">
+    <div layout="column" layout-align="start start" class="width100 eeSection">
         <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
             Exam Registration
         </div>
@@ -386,7 +386,7 @@
     
     
     
-    <div layout="column" layout-align="start start" class="width100 section">
+    <div layout="column" layout-align="start start" class="width100 eeSection">
         <div layout="row" layout-align="start start"  class="width100 marginTB10 text-primary font16 bold">
             Exam Cycles for {{exam.displayname}}
         </div>
@@ -401,7 +401,7 @@
                 </div>
             </div>
             
-            <div flex layout="column" layout-align="start start" ng-if="newExamCycle" class="width100 padding20 sectionBorder">
+            <div flex layout="column" layout-align="start start" ng-if="newExamCycle" class="width100 padding20 eeSectionBorder">
             <div layout="column" layout-align="start start" class="greyDashedBottomBorder width100">
                 
                 <div layout="row" layout-align="start center"  class="width100 text-primary padding5 font16 bold marginB10">
@@ -638,7 +638,7 @@
                     <div layout="row" layout-align="start start"  class="width100 marginTB10" layout-wrap>
                         <div flex="33" layout="column" layout-align="start start" class="padding10 min10vh marginTB10" ng-repeat="examStep in newExamCycle.examSteps" >
 
-                            <div layout="column" layout-align="start start" class="width100 padding5 sectionBorder">
+                            <div layout="column" layout-align="start start" class="width100 padding5 eeSectionBorder">
                                 <div layout="row" layout-align="start start" class="width100">
                                     <div flex layout="row" layout-align="center center" class="text-primary width100 bold marginB10 font16">
                                         Step {{$index + 1}}
@@ -679,7 +679,7 @@
                     </div>
                         
                         
-                    <div layout="column" layout-align="start start"  class="width100 margin10 padding10 subsectionBorder2" ng-if="newExamStep">
+                    <div layout="column" layout-align="start start"  class="width100 margin10 padding10 subeeSectionBorder2" ng-if="newExamStep">
                         <div layout="row" layout-align="start center" class="width100 text-primary bold marginTB10 font16 padding5">
                             <div class="marginR10 bold">
                                 {{newExamStep.stepType}}
@@ -819,7 +819,7 @@
                             </div>
                         </div>
                         <div layout="row" layout-align="start start"  class="width100 marginB20">
-                            <div layout="column" layout-align="start start" flex class="margin10 padding10 sectionBorder min10vh">
+                            <div layout="column" layout-align="start start" flex class="margin10 padding10 eeSectionBorder min10vh">
                                 <div layout="row" layout-align="center start" class="bold width100" layout-wrap>
                                     Exam Step Dates
                                 </div>
@@ -829,7 +829,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div layout="column" layout-align="start start" flex class="margin10 padding10 sectionBorder min10vh">
+                            <div layout="column" layout-align="start start" flex class="margin10 padding10 eeSectionBorder min10vh">
                                 <div layout="row" layout-align="center start" class="bold width100" layout-wrap>
                                     Exam Step Time Slot
                                 </div>
@@ -842,7 +842,7 @@
                         </div>
                         <div layout="row" layout-align="start start"  class="width100 marginB20" layout-wrap>
                             <div layout="row" layout-align="start start"  flex="25"  ng-repeat="dateRange in newExamStep.stepDate.dates" class="padding10">
-                                <div layout="column" layout-align="center center" class="width100 sectionBorder padding10 font12">
+                                <div layout="column" layout-align="center center" class="width100 eeSectionBorder padding10 font12">
                                     <div layout="row" layout-align="end center" class="width100 marginB10">
                                         <i class="fa fa-times-circle text-black" aria-hidden="true" ng-click="removeDates($index)"></i>
                                     </div>

@@ -393,7 +393,7 @@ router.post('/cirf', function(req, res) {
                             if(!option){
                                 option = '';
                             }
-                            console.log(providerVariable);
+                            //console.log(providerVariable);
                             if(option.indexOf('-') != -1){
                                 var splits = option.split("-");
                                 var sum = 0;
@@ -484,10 +484,11 @@ router.post('/cirf', function(req, res) {
                         //console.log("      Scored " + weight + " out of 100!");
                         subfactorScore = weight;
                     }
-                    
+                    console.log(subfactorScore);
                     var subFactorScore = Number(subfactorScore * Number(thisSubfactor.weight) * factorWeight / 100 / 100);
                     console.log("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
                     statements.push("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
+                    
                     
                     factorScore += subFactorScore;
                     //console.log(sindex + ". " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight);
@@ -555,7 +556,7 @@ router.post('/cirfrating', function(req, res) {
         var rating = thisProvider.rating;
 
         var allCIRFs = cirffactor.find( {exam : examId}, {},function(err, allCIRFs) {
-    if (!err){
+        if (!err){
         var cCounter = 0;
         var nCIRFs = allCIRFs.length;
         var providerScore = 0;
@@ -607,7 +608,7 @@ router.post('/cirfrating', function(req, res) {
                             if(!option){
                                 option = '';
                             }
-                            console.log(providerVariable);
+                            //console.log(providerVariable);
                             if(option.indexOf('-') != -1){
                                 var splits = option.split("-");
                                 var sum = 0;
@@ -702,7 +703,7 @@ router.post('/cirfrating', function(req, res) {
                     var subFactorScore = Number(subfactorScore * Number(thisSubfactor.weight) * factorWeight / 100 / 100);
                     console.log("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
                     statements.push("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
-                    
+                    //console.log(subFactorScore);
                     factorScore += subFactorScore;
                     //console.log(sindex + ". " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight);
 

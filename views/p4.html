@@ -135,6 +135,7 @@
     }
     
     #distanceBadge{
+        font-size: 10px;
         border: 1px solid #6A6968;
         background: transparent;
         color: #6A6968;
@@ -362,7 +363,7 @@
         </div>
         <div flex layout-wrap class="paddingLR10">
             <span class="marginR10">All {{currentStream.stream}} Exams</span>
-            <span ng-repeat="thisExam in currentStream.exams" class="padding5">
+            <span ng-repeat="thisExam in currentStream.exams | orderBy: ['-rank']" class="padding5">
                 <span class="badge padding5" ng-class="examBadgeClass(thisExam)" ng-click="setExam(thisExam)">
                     {{thisExam.seoname}}
                 </span>
@@ -467,38 +468,44 @@
                         </div>
                         <div flex layout="column" layout-align="center start" class="paddingL20">
                             <div layout="row" layout-align="start center" class="width100">
+                            <div layout="column" layout-align="start start">
                                 <h2 class=" text-primary thirdFont font18 bold">
                                     <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                                         {{coachingGroup.groupName}}
                                     </a>
                                 </h2>
-                                <div layout="row" layout-align="end center" flex>
-                                <!--<div>
-                                    <i class="fa fa-star reviewStar font16 marginR2" aria-hidden="true"></i>
-                                    <i class="fa fa-star reviewStar font16 marginR2" aria-hidden="true"></i>  
-                                    <i class="fa fa-star reviewStar font16 marginR2" aria-hidden="true"></i>  
-                                    <i class="fa fa-star-half reviewStar font16 marginR2" aria-hidden="true"></i>
-                                    
-                                </div> -->   
-                                    
-                                    
-                                
+                                <div layout="row" layout-align="start center" class="width100 marginTB5 " layout-wrap>
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
+                                    <span>{{coachingGroup.count}} centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
+                                    </span>
+                                    <span class="marginLR5">
+                                        <span ng-repeat="distance in coachingGroup.distances | orderBy: 'value'" class="badge marginR2" id="distanceBadge" ng-if="$index < 1">
+                                            Nearest Centre: {{distance.text}}
+                                        </span>
+                                    </span>
+
+                                    <!--<span>
+                                      <img src="images/icons/thinking.svg" alt="Kiwi standing on oval" class="width32px" >
+                                    </span>-->
                                 </div>
                             </div>
-                            <div layout="row" layout-align="start center" class="width100 marginT5 " layout-wrap>
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
-                                <span>{{coachingGroup.count}} centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
-                                </span>
-                                <span class="marginLR5">
-                                    <span ng-repeat="distance in coachingGroup.distances | orderBy: 'value'" class="badge marginR5" id="distanceBadge">
-                                        {{distance.text}}
-                                    </span>
-                                </span>
-
-                                <!--<span>
-                                  <img src="images/icons/thinking.svg" alt="Kiwi standing on oval" class="width32px" >
-                                </span>-->
+                            <div layout="row" layout-align="end center" flex>
+                                <button class="btn bookButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                                    <i class="fa fa-handshake-o" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Book a Visit
+                                </button>
+                                <button class="btn bookButton  tolowercase" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
+                                    <i class="fa fa-handshake-o" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
+                                </button>
                             </div>
+                            </div>
+                            
+                            
+                            <!--<div layout="row" layout-align="start center" flex>
+                                <ng-rate-it ng-model="coachingGroup.examCirf" read-only = "true" resetable="false" star-width="20" star-height="20" class="smallstar custom">
+                                </ng-rate-it>
+                                    
+                                
+                            </div>-->
                             <div class="width100 marginT5 paddingB5 gainsboroBottomBorder font14">
                                 <a ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
                             </div>
@@ -519,14 +526,14 @@
                                     </div>-->
                                 </div>
                             </div>
-                            <div layout="row" layout-align="end start" flex="20">
+                            <!--<div layout="row" layout-align="end start" flex="20">
                                 <button class="btn actionButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
                                     <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
                                 </button>
                                 <button class="btn actionButton  tolowercase" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
                                     <i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
                                 </button>
-                            </div>
+                            </div>-->
                             </div>
 
                             <div layout="row" class="font14 bold narrowLine width100 marginT10 basicFont" ng-if="coachingGroup.groupResults.length > 0">
