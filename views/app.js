@@ -11873,6 +11873,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if($state.current.name == 'questionpapers'){
                     $state.reload();
                 }
+                if($state.current.name == 'userInstitutes'){
+                    $state.reload();
+                }
                 //$state.reload();
             }
         };
