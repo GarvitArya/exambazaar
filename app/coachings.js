@@ -22,13 +22,13 @@ db.on('error', console.error);
 db.once('open', function() {});
 mongoose.createConnection(config.url);
 mongoose.Promise = require('bluebird');
-
+var ObjectId = require('mongodb').ObjectID;
 
 router.get('/examcities/:examName', function(req, res) {
     var examName = req.params.examName;
     var thisExam = exam.findOne({active: true, name: examName}, {_id: 1},function(err, thisExam) {
         if (!err){
-            var ObjectId = require('mongodb').ObjectID;
+            
             if(thisExam){
                 var examId = ObjectId(thisExam._id.toString());
                 console.log(examId);
@@ -578,217 +578,285 @@ router.post('/cirf', function(req, res) {
     
 });
 
-router.post('/cirfrating', function(req, res) {
-    var cirfForm = req.body;
-    var instituteIds = cirfForm.instituteIds;
-    var examId = cirfForm.examId;
-    var statements = [];
-    
-    var allProviders = coaching.find( {"_id" : {$in: instituteIds}, type: 'Coaching'}, {rating: 1, name: 1, groupName: 1},function(err, allProviders) {
+router.post('/cirfRatingJEEMainAdvanced', function(req, res) {
+    console.log('CIRF Bulk Started');
+    res.json(true);
+    var examId = ObjectId('58ac27030be6311eccbbc3a6');
+    var groupNames = coaching.aggregate(
+    [
+        {$match: {exams: examId, disabled: false} },
+        {"$group": { "_id": { name: "$name" }, count:{$sum:1}, oneid: { $first: "$_id" } } },
+        {$sort:{"count":-1}},
+        { "$project": { "_id": "$_id.name", "_id": 0, oneid: "$oneid" }},
+        //, count: "$count"
+    ],function(err, groupNames) {
     if (!err){
-    var nLength = allProviders.length;
-    var counter = 0;
+        var groupIds = groupNames.map(function(a) {return a.oneid.toString();});
+        var statements = [];
+        var allProviders = coaching.find( {_id: {$in: groupIds}}, {rating: 1, name: 1, groupName: 1, exams: 1, disabled: 1},function(err, allProviders) {
+            if (!err){
+            var nLength = allProviders.length;
 
-    if(nLength == 0){
-        res.json(false);
-    }
-    allProviders.forEach(function(this_Provider, index){
-        var groupName = this_Provider.groupName;
-        
-        var thisProvider = coaching.findOne( {"groupName" : groupName, type: 'Coaching', $and: [{"rating": {$exists: true}},{"rating.n_exams": {$exists: true}}]}, {rating: 1, name: 1, groupName: 1},function(err, thisProvider) {
-        if (!err){
-            
-        if(thisProvider){
-            
-        console.log('Coaching Id is: ' + thisProvider._id);
-        statements.push('Coaching Id is: ' + thisProvider._id);
-        var rating = thisProvider.rating;
 
-        var allCIRFs = cirffactor.find( {exam : examId}, {},function(err, allCIRFs) {
-        if (!err){
-        var cCounter = 0;
-        var nCIRFs = allCIRFs.length;
-        var providerScore = 0;
-        var totalScore = 0;
+            if(nLength == 0){
+                //res.json(false);
+            }
+                console.log('Number of coachings: ' + allProviders.length);
+            allProviders.forEach(function(this_Provider, index){
+                var groupName = this_Provider.groupName;
+                //console.log('Rating for: ' + groupName);
+                var thisProvider = coaching.findOne( {"groupName" : groupName, type: 'Coaching', $and: [{"rating": {$exists: true}},{"rating.n_exams": {$exists: true}}]}, {rating: 1, name: 1, groupName: 1, cirf: 1},function(err, thisProvider) {
+                if (!err){
 
-        if(allCIRFs && allCIRFs.length > 0){
-            console.log('------------------------');
-            statements.push('------------------------');
-            console.log('Coaching: ' + thisProvider.name);
-            statements.push('Coaching: ' + thisProvider.name);
-            allCIRFs.forEach(function(thisCIRF, index){
-                var factorScore = 0;
-                var factorWeight = Number(thisCIRF.weight);
-                totalScore += factorWeight;
-                
-                var subfactors = thisCIRF.subfactors;
-                var examCIRF = false;
-                if(thisCIRF.exam.length == 1){
-                    examCIRF = true;
-                }
-                subfactors.forEach(function(thisSubfactor, sindex){
-                    var subfactorScore = 0;
-                    
-                    if(thisSubfactor.type == 'Bucket'){
-                        var buckets = thisSubfactor.buckets;
-                        var defaultBucket = null;
-                        
-                        var validBuckets = [];
-                        var ratingVariable = thisSubfactor.variable;
-                        var providerVariable = rating[ratingVariable];
-                        
-                        if(examCIRF){
-                            if(rating.examRating && rating.examRating.length > 0){
-                                rating.examRating.forEach(function(thisExamRating, eindex){
-                                    if(thisExamRating.exam.toString() == examId.toString()){
-                                        
-                                        providerVariable = thisExamRating.rating[ratingVariable];
-                                        //console.log('I am here ' + JSON.stringify(providerVariable));
+                if(thisProvider){
+                var counter = 0;
+                //console.log('We are rating coaching Id is: ' + thisProvider._id);
+                statements.push('Coaching Id is: ' + thisProvider._id);
+                var rating = thisProvider.rating;
+
+                var allCIRFs = cirffactor.find( {exam : examId}, {},function(err, allCIRFs) {
+                if (!err){
+                var cCounter = 0;
+                var nCIRFs = allCIRFs.length;
+                var providerScore = 0;
+                var totalScore = 0;
+                if(allCIRFs && allCIRFs.length > 0){
+                    var providerExamCIRFScore = {
+                        exam: examId,
+                        cirf: null,
+                        unscaledScore: null,
+                        unscaledWeight: null,
+                        factors: [],
+                    };
+                    //console.log('------------------------');
+                    statements.push('------------------------');
+                    //console.log('Coaching: ' + thisProvider.name);
+                    statements.push('Coaching: ' + thisProvider.name);
+                    allCIRFs.forEach(function(thisCIRF, index){
+                        var factorScore = 0;
+                        var factorWeight = Number(thisCIRF.weight);
+                        totalScore += factorWeight;
+
+                        var newFactor = {
+                            name: thisCIRF.name,  
+                            weight: thisCIRF.weight,
+                            factorScore: null,
+                            subfactors: [],
+                        };
+
+                        var subfactors = thisCIRF.subfactors;
+                        var examCIRF = false;
+                        if(thisCIRF.exam.length == 1){
+                            examCIRF = true;
+                        }
+                        subfactors.forEach(function(thisSubfactor, sindex){
+                            var subfactorScore = 0;
+
+                            if(thisSubfactor.type == 'Bucket'){
+                                var buckets = thisSubfactor.buckets;
+                                var defaultBucket = null;
+
+                                var validBuckets = [];
+                                var ratingVariable = thisSubfactor.variable;
+                                var providerVariable = rating[ratingVariable];
+
+                                if(examCIRF){
+                                    if(rating.examRating && rating.examRating.length > 0){
+                                        rating.examRating.forEach(function(thisExamRating, eindex){
+                                            if(thisExamRating.exam.toString() == examId.toString()){
+
+                                                providerVariable = thisExamRating.rating[ratingVariable];
+                                                //console.log('I am here ' + JSON.stringify(providerVariable));
+                                            }
+
+                                        });
                                     }
-                                    
+                                }
+                                if(providerVariable.value && providerVariable.value.indexOf('%') != -1){
+                                    providerVariable.value = parseFloat(providerVariable.value);
+                                }
+                                if(providerVariable && providerVariable.value == ''){
+                                    var option = providerVariable.option;
+                                    if(!option){
+                                        option = '';
+                                    }
+                                    //console.log(providerVariable);
+                                    if(option.indexOf('-') != -1){
+                                        var splits = option.split("-");
+                                        var sum = 0;
+                                        splits.forEach(function(thisValue, vindex){
+                                            sum += parseFloat(thisValue);
+                                            //console.log(thisValue);
+                                        });
+                                        sum = sum/splits.length;
+                                        providerVariable.value = sum;
+                                    }
+                                    if(option.indexOf('>') != -1){
+                                        var opt1 = option.replace(">", "");
+
+                                        providerVariable.value = parseFloat(opt1) + 1;
+
+                                    }
+                                    if(option.indexOf('<') != -1){
+                                        var opt1 = option.replace(">", "");
+                                        providerVariable.value = parseFloat(opt1) - 1;
+
+                                    }
+                                }
+                                //console.log(ratingVariable + " " + providerVariable);
+
+                                if(buckets && buckets.length > 0){
+                                    buckets.forEach(function(thisBucket, bindex){
+                                        if(!defaultBucket){
+                                            defaultBucket = thisBucket;
+                                        }
+                                        if(thisBucket.score < defaultBucket.score){
+                                            defaultBucket = thisBucket;
+                                        }
+                                    });
+                                    if(!providerVariable.value){
+                                        //console.log('Alert: ' + providerVariable);
+                                    }
+                                    buckets.forEach(function(thisBucket, bindex){
+
+                                    var valid = false;
+
+                                    if(Number(thisBucket.range.min) <= Number(providerVariable.value) && Number(thisBucket.range.max) >= Number(providerVariable.value)){
+                                        valid = true;
+                                    }
+                                    if(valid){
+                                        validBuckets.push(thisBucket);
+                                    }
+
+                                    });
+
+                                    var providerBucket = null;
+                                    validBuckets.forEach(function(thisBucket, bindex){
+                                        if(!providerBucket){
+                                            providerBucket = thisBucket;
+                                        }
+                                        if(thisBucket.score > providerBucket.score){
+                                            providerBucket = thisBucket;
+                                        }
+                                    });
+
+                                    if(!providerBucket){
+                                        providerBucket = defaultBucket;
+                                    }
+                                    //console.log("      " + providerVariable.value + " -- " + JSON.stringify(providerBucket));
+                                    //console.log("      Scored " + providerBucket.score + " out of 100!");
+
+                                    subfactorScore = providerBucket.score;
+
+                                }
+
+
+
+                                //console.log(thisSubfactor.name + " " + thisSubfactor.weight + " " + thisSubfactor.variable + " " + rating[thisSubfactor.variable]);
+                            }
+                            if(thisSubfactor.type == 'Checklist'){
+                                var weight = 0;
+                                var checklists = thisSubfactor.checklists;
+                                var ratingVariable = thisSubfactor.variable;
+                                var providerVariable = rating[ratingVariable];
+
+                                checklists.forEach(function(thisChecklist, cindex){
+                                    var checklistVariable = thisChecklist.variable;
+                                    if(providerVariable[checklistVariable]){
+                                        weight += Number(thisChecklist.score);
+                                    }
+
                                 });
-                            }
-                        }
-                        if(providerVariable.value && providerVariable.value.indexOf('%') != -1){
-                            providerVariable.value = parseFloat(providerVariable.value);
-                        }
-                        if(providerVariable && providerVariable.value == ''){
-                            var option = providerVariable.option;
-                            if(!option){
-                                option = '';
-                            }
-                            //console.log(providerVariable);
-                            if(option.indexOf('-') != -1){
-                                var splits = option.split("-");
-                                var sum = 0;
-                                splits.forEach(function(thisValue, vindex){
-                                    sum += parseFloat(thisValue);
-                                    //console.log(thisValue);
-                                });
-                                sum = sum/splits.length;
-                                providerVariable.value = sum;
-                            }
-                            if(option.indexOf('>') != -1){
-                                var opt1 = option.replace(">", "");
-                                
-                                providerVariable.value = parseFloat(opt1) + 1;
-                                
-                            }
-                            if(option.indexOf('<') != -1){
-                                var opt1 = option.replace(">", "");
-                                providerVariable.value = parseFloat(opt1) - 1;
-                                
-                            }
-                        }
-                        //console.log(ratingVariable + " " + providerVariable);
 
-                        if(buckets && buckets.length > 0){
-                            buckets.forEach(function(thisBucket, bindex){
-                                if(!defaultBucket){
-                                    defaultBucket = thisBucket;
-                                }
-                                if(thisBucket.score < defaultBucket.score){
-                                    defaultBucket = thisBucket;
-                                }
-                            });
-                            if(!providerVariable.value){
-                                //console.log('Alert: ' + providerVariable);
+                                //console.log("      Scored " + weight + " out of 100!");
+                                subfactorScore = weight;
                             }
-                            buckets.forEach(function(thisBucket, bindex){
-                            
-                            var valid = false;
-                            
-                            if(Number(thisBucket.range.min) <= Number(providerVariable.value) && Number(thisBucket.range.max) >= Number(providerVariable.value)){
-                                valid = true;
-                            }
-                            if(valid){
-                                validBuckets.push(thisBucket);
-                            }
-                                
-                            });
-                            
-                            var providerBucket = null;
-                            validBuckets.forEach(function(thisBucket, bindex){
-                                if(!providerBucket){
-                                    providerBucket = thisBucket;
-                                }
-                                if(thisBucket.score > providerBucket.score){
-                                    providerBucket = thisBucket;
-                                }
-                            });
-                            
-                            if(!providerBucket){
-                                providerBucket = defaultBucket;
-                            }
-                            //console.log("      " + providerVariable.value + " -- " + JSON.stringify(providerBucket));
-                            //console.log("      Scored " + providerBucket.score + " out of 100!");
-                            
-                            subfactorScore = providerBucket.score;
-                            
-                        }
+                            //console.log(subfactorScore);
+                            var newSubFactor = {
+                                name: thisSubfactor.name,  
+                                weight: thisSubfactor.weight,
+                                score: subfactorScore,
+                            };
+                            newFactor.subfactors.push(newSubFactor);
+                            var subFactorScore = Number(subfactorScore * Number(thisSubfactor.weight) * factorWeight / 100 / 100);
+                            //console.log("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
+                            statements.push("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
 
 
+                            factorScore += subFactorScore;
+                            //console.log(sindex + ". " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight);
 
-                        //console.log(thisSubfactor.name + " " + thisSubfactor.weight + " " + thisSubfactor.variable + " " + rating[thisSubfactor.variable]);
-                    }
-                    if(thisSubfactor.type == 'Checklist'){
-                        var weight = 0;
-                        var checklists = thisSubfactor.checklists;
-                        var ratingVariable = thisSubfactor.variable;
-                        var providerVariable = rating[ratingVariable];
-                        
-                        checklists.forEach(function(thisChecklist, cindex){
-                            var checklistVariable = thisChecklist.variable;
-                            if(providerVariable[checklistVariable]){
-                                weight += Number(thisChecklist.score);
-                            }
-                            
                         });
-                        
-                        //console.log("      Scored " + weight + " out of 100!");
-                        subfactorScore = weight;
+                        newFactor.factorScore = factorScore;
+                        providerExamCIRFScore.factors.push(newFactor);
+                        //console.log(thisCIRF.name + " | Factor Weight: " + thisCIRF.weight + " | " + factorScore);
+                        statements.push(thisCIRF.name + " | Factor Weight: " + thisCIRF.weight + " | " + factorScore);
+                        providerScore += Number(factorScore);
+                    });
+
+                    var scaledScore = Number(providerScore * 100 / totalScore);
+                    scaledScore = Math.round(scaledScore * 100) / 100;
+                    providerExamCIRFScore.unscaledWeight = totalScore;
+                    providerExamCIRFScore.unscaledScore = providerScore;
+                    providerExamCIRFScore.cirf = scaledScore;
+                    //console.log(thisProvider.name + ' rating is: ' + scaledScore + " .i.e. " + providerScore + ' out of ' + totalScore);
+                    statements.push(thisProvider.name + ' rating is: ' + scaledScore + " .i.e. " + providerScore + ' out of ' + totalScore);
+                    //console.log('------------------------');
+                    statements.push('------------------------');
+                }
+                counter = counter +1;
+                if(counter == 1){
+                    //console.log(providerExamCIRFScore);
+                    if(!thisProvider.cirf){
+                        thisProvider.cirf = [];
                     }
-                    
-                    var subFactorScore = Number(subfactorScore * Number(thisSubfactor.weight) * factorWeight / 100 / 100);
-                    console.log("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
-                    statements.push("      => Subfactor Name: " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight + " | Subfactor Score: " + subFactorScore + " out of " + thisSubfactor.weight * thisCIRF.weight / 100);
-                    //console.log(subFactorScore);
-                    factorScore += subFactorScore;
-                    //console.log(sindex + ". " + thisSubfactor.name + " | Subfactor Weight: " + thisSubfactor.weight);
+                    var cIndex = -1;
+                    if(thisProvider.cirf.length > 0){
+                        var cirfExamIds = thisProvider.cirf.map(function(a) {return a.exam.toString();});
+                        console.log(cirfExamIds);
+                        cIndex = cirfExamIds.indexOf(examId.toString());
+                    }
+                    console.log(cIndex);
 
-                });
-                
-                console.log(thisCIRF.name + " | Factor Weight: " + thisCIRF.weight + " | " + factorScore);
-                statements.push(thisCIRF.name + " | Factor Weight: " + thisCIRF.weight + " | " + factorScore);
-                providerScore += Number(factorScore);
+                    if(cIndex != -1){
+                        thisProvider.cirf.splice(cIndex, 1);
+                        thisProvider.cirf.push(providerExamCIRFScore);
+
+                    }else{
+                        thisProvider.cirf.push(providerExamCIRFScore);
+                    }
+                    //console.log(thisProvider.cirf);
+                    thisProvider.save(function(err, thisProvider) {
+                        if (err) return console.error(err);
+                        console.log("CIRF saved for: "+ thisProvider._id);
+                    });
+
+                    //res.json(statements);
+                }
+            } else {throw err;}
             });
-            var scaledScore = Number(providerScore * 100 / totalScore);
-            console.log(thisProvider.name + ' rating is: ' + scaledScore + " .i.e. " + providerScore + ' out of ' + totalScore);
-            statements.push(thisProvider.name + ' rating is: ' + scaledScore + " .i.e. " + providerScore + ' out of ' + totalScore);
-            console.log('------------------------');
-            statements.push('------------------------');
-        }
-        counter = counter +1;
-        if(counter == nLength){
-            res.json(statements);
-        }
-    } else {throw err;}
-    });
-        
-        }else{
-            console.log('Could not find rating for the coaching!');
-            statements.push('Could not find rating for the coaching!');
-            res.json(statements);
-        }    
 
-        }
-        });
-    
-    });
+                }else{
+                    //console.log('Could not find rating for the coaching: ' + this_Provider._id + " " + groupName);
+                    statements.push('Could not find rating for the coaching!');
+                    //res.json(statements);
+                }    
+
+                }
+                });
+
+            });
+
+
+            } else {throw err;}
+            });
         
         
+        //console.log(groupNames);
     } else {throw err;}
     });
+    
+    
     
 });
 
@@ -2780,40 +2848,102 @@ router.post('/CoachingStream', function(req, res) {
                         allGroupInstitutes = allGroupInstitutes.map(function(a) {return a._id;});
                         
                         var groupResults = result
-                            .find({provider: { $in : allGroupInstitutes }, active: true, exam: thisExam._id, image: {$exists: true}})
-                            .limit(20)
-                            .exec(function(err, groupResults) {
-                            if (!err){
-                            newProvider.groupResults = groupResults;
-                                
-                                
-                                
-                            var expertReview = blogpost
-                            .findOne({blogSeries: 'Expert Reviews', coachingGroups: newProvider.groupName, exams: thisExam._id, active: true}, {title:1, urlslug: 1,seoDescription: 1, coverPhoto: 1, _published: 1})
-                            .exec(function(err, expertReview) {
-                            if (!err){
-                                
-                                newProvider.expertReview = expertReview;
-                                allProviders.push(newProvider);
-                                counter += 1;
-                                if(counter == nCoachings){
+                        .find({provider: { $in : allGroupInstitutes }, active: true, exam: thisExam._id, image: {$exists: true}})
+                        .limit(20)
+                        .exec(function(err, groupResults) {
+                        if (!err){
+                        newProvider.groupResults = groupResults;
 
-                                    allProviders.sort(function(a,b){
-                                      return new Date(b.count) - new Date(a.count);
-                                    });
-                                    //abcd
-                                    allProviders.forEach(function(thisProvider, pIndex){
-                                        thisProvider.examCirf = Math.random() * 2 + 3;
-                                    });
-                                   res.json(allProviders);
+
+
+                        var expertReview = blogpost
+                        .findOne({blogSeries: 'Expert Reviews', coachingGroups: newProvider.groupName, exams: thisExam._id, active: true}, {title:1, urlslug: 1,seoDescription: 1, coverPhoto: 1, _published: 1})
+                        .exec(function(err, expertReview) {
+                        if (!err){
+
+                        newProvider.expertReview = expertReview;
+                        allProviders.push(newProvider);
+                        counter += 1;
+                        if(counter == nCoachings){
+                            
+                            allProviders.sort(function(a,b){
+                              return new Date(b.count) - new Date(a.count);
+                            });
+                            
+                            var allGroupNames = null;
+
+                            if(allProviders && allProviders.length > 0){
+                                allGroupNames = allProviders.map(function(a) {return a.groupName;});
+
+                                var allRatedInstitutes = coaching.find({ 'groupName': allGroupNames, cirf: {$exists: true}, $where: "this.cirf.length > 1" },{_id:1, groupName: 1, cirf: 1},function (err, allRatedInstitutes) {
+                                if (!err){
+                                    
+                                    
+                                    
+                                if(allRatedInstitutes && allRatedInstitutes.length > 0){
+                                var nRatings = allRatedInstitutes.length;
+                                var rCounter = 0;
+                                allRatedInstitutes.forEach(function(thisProvider, pIndex){
+
+                                var pCIRFs = thisProvider.cirf;
+                                if(pCIRFs && pCIRFs.length > 0){
+                                    var pCIRFexams = pCIRFs.map(function(a) {return a.exam.toString();});
+
+                                    var pcIndex = pCIRFexams.indexOf(thisExam._id.toString());
+
+                                    if(pcIndex != -1){
+                                        var thisRating = pCIRFs[pcIndex];
+                                        var gName = thisProvider.groupName;
+                                        var gIndex = allGroupNames.indexOf(gName);
+                                        if(gIndex != -1){
+                                            allProviders[gIndex].examCirf = thisRating;
+                                        }
+                                        
+                                    }else{
+                                        
+                                    }
+
+
+
+
+                                }
+
+
+                                if(pIndex == allRatedInstitutes.length - 1){
+                                    res.json(allProviders);
                                 }
                                 
-                            } else {throw err;}    
-                            });
-                                
+
+
+                                });
+
+
+
+                                }else{
+                                    res.json(allProviders);
+                                }
+                               
+                                }
+                                });
+
+
+                            } 
+
+                            /*allProviders.forEach(function(thisProvider, pIndex){
+                                thisProvider.examCirf = Math.random() * 2 + 3;
+                            });*/
                             
-                            } else {throw err;}
+                            //abcd
+
+                           
+                        }
+
+                        } else {throw err;}    
                         });
+
+
+                        } else {throw err;}
+                    });
 
 
                         }else {throw err;}

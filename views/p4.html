@@ -363,8 +363,8 @@
         </div>
         <div flex layout-wrap class="paddingLR10">
             <span class="marginR10">All {{currentStream.stream}} Exams</span>
-            <span ng-repeat="thisExam in currentStream.exams | orderBy: ['-rank']" class="padding5">
-                <span class="badge padding5" ng-class="examBadgeClass(thisExam)" ng-click="setExam(thisExam)">
+            <span ng-repeat="thisExam in currentStream.exams | orderBy: ['-rank']" class="">
+                <span class="badge padding5 margin5" ng-class="examBadgeClass(thisExam)" ng-click="setExam(thisExam)">
                     {{thisExam.seoname}}
                 </span>
                 
@@ -454,7 +454,7 @@
             
             <div infinite-scroll='allCoachings.nextPage()' infinite-scroll-disabled='allCoachings.busy' infinite-scroll-distance='1' layout="column" layout-align="start start" class="width100">
                 
-                <div layout="column"  ng-repeat="coachingGroup in allCoachings.items | orderBy: 'expertReview'" class="fourthFont width100 marginB20">
+                <div layout="column"  ng-repeat="coachingGroup in allCoachings.items | orderBy: ['-examCirfScore','expertReview', 'logo']" class="fourthFont width100 marginB20">
                     <div layout="row" layout-align="center center" layout-xs="column" ng-if="$index%7 == 1" class="min10vh padding20 width100 blueBackground text-white marginB20 font14">
                         <div class="marginR20">Would you like us to do an Expert Review for you?</div>
                         <md-button class="md-danger md-small tolowercase font14 margin0" ui-sref="contact" target="_blank"> 
@@ -500,12 +500,12 @@
                             </div>
                             
                             
-                            <!--<div layout="row" layout-align="start center" flex>
-                                <ng-rate-it ng-model="coachingGroup.examCirf" read-only = "true" resetable="false" star-width="20" star-height="20" class="smallstar custom">
+                            <div layout="row" layout-align="start center" flex>
+                                <ng-rate-it ng-model="coachingGroup.examCirfScore" ng-if="coachingGroup.examCirfScore > 0" read-only = "true" resetable="false" star-width="20" star-height="20" class="smallstar custom">
                                 </ng-rate-it>
                                     
                                 
-                            </div>-->
+                            </div>
                             <div class="width100 marginT5 paddingB5 gainsboroBottomBorder font14">
                                 <a ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}}, '#': 'Reviews' })" class="basicFont" id="reviewLink">Write a Review</a>
                             </div>

@@ -1821,6 +1821,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.cirf = function(cirfForm) {
             return $http.post('/api/coachings/cirf',cirfForm);
         };
+        this.cirfRatingJEEMainAdvanced = function() {
+            return $http.post('/api/coachings/cirfRatingJEEMainAdvanced');
+        };
         this.groupProviders = function(query) {
             return $http.get('/api/coachings/group/'+query, {query: query});
         };
@@ -2818,8 +2821,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var p4StreamExamsData = $scope.currentStream.exams;
                 var p4StreamExamsIds = $scope.currentStream.exams.map(function(a) {return a._id;});
              $scope.allCoachings.items.forEach(function(thisGroup, gindex){
-                 var oldCirf = thisGroup.examCirf;
-                 thisGroup.examCirf = Math.round(thisGroup.examCirf*2)/2;
+                 
+                 if(thisGroup.examCirf && thisGroup.examCirf.cirf){
+                     thisGroup.examCirfScore = Number(thisGroup.examCirf.cirf) * 5/ 100;
+                     //console.log(thisGroup.examCirfScore);
+                     thisGroup.examCirfScore = Math.round(thisGroup.examCirfScore*2)/2;
+                 }else{
+                     thisGroup.examCirfScore = 0;
+                 }
+                 //console.log(thisGroup.examCirf);
+                 //thisGroup.examCirf = Math.round(thisGroup.examCirf*2)/2;
                  
                 if(!thisGroup.examsOffered || thisGroup.examsOffered.length == 0){
                     thisGroup.examsOffered = [];
@@ -8725,6 +8736,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             .error(function (data, status, header, config) {
                 console.log("Error ");
             });    
+        };
+        $scope.cirfRatingJEEMainAdvanced = function(){
+            coachingService.cirfRatingJEEMainAdvanced().success(function (data, status, headers) {
+                
+                console.log(data);
+            })
+            .error(function (data, status, header, config) {
+                console.log("Error ");
+            });
         };
         
         $scope.showStatementsDialog = function(ev) {
