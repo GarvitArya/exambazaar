@@ -314,7 +314,7 @@
         <div hide-xs flex="5">
         </div>    
         
-        <div flex-gt-xs="25" flex-xs="40" layout="row" layout-align="start end" class="paddingLR10">
+        <div flex-gt-xs="25" flex-xs="35" layout="row" layout-align="start end" class="paddingLR10">
             <md-input-container class="margin0 width100 textBlack">
             <!--<label>Stream</label>-->
             <md-select ng-model="selectedStream"
@@ -333,7 +333,7 @@
             </md-select>
             </md-input-container>
         </div>
-        <div  flex-gt-xs="25" flex-xs="40"  layout="row" layout-align="start end" class="paddingLR10">   
+        <div  flex-gt-xs="25" flex-xs="35"  layout="row" layout-align="start end" class="paddingLR10">   
             <md-input-container class="margin0 width100 textBlack">
             <!--<label>City</label>-->
             <md-select ng-model="selectedCity"
@@ -352,8 +352,8 @@
             </md-select>
             </md-input-container>
         </div>
-        <div  flex="10"  layout="row" layout-align="start center" class="paddingLR10">
-            <md-button class="md-next md-large tolowercase margin0  width100" ng-click="setSearch()">
+        <div  flex="20"  layout="row" layout-align="start center" class="paddingLR10">
+            <md-button class="md-next md-large tolowercase margin0 width100" ng-click="setSearch()">
                 Go
             </md-button>
         </div>
@@ -489,11 +489,11 @@
                                     </span>-->
                                 </div>
                             </div>
-                            <div layout="row" layout-align="end center" flex>
-                                <button class="btn bookButton heroButton tolowercase" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
+                            <div layout="row" layout-align="end start" flex class="">
+                                <button class="btn bookButton heroButton tolowercase margin0" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-xs>
                                     <i class="fa fa-handshake-o" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Book a Visit
                                 </button>
-                                <button class="btn bookButton  tolowercase" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
+                                <button class="btn bookButton tolowercase margin0" ui-sref="availDiscount({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" hide-gt-xs>
                                     <i class="fa fa-handshake-o" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
                                 </button>
                             </div>
