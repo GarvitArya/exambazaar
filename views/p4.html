@@ -466,9 +466,9 @@
                             <img src='ebloader2.gif' lazy-img="{{coachingGroup.logo}}" alt="{{coachingGroup.groupName}}" class="pageLogo" ng-if="coachingGroup.logo"/>
                             <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup.logo"/>
                         </div>
-                        <div flex layout="column" layout-align="center start" class="paddingL20">
-                            <div layout="row" layout-align="start center" class="width100">
-                            <div layout="column" layout-align="start start">
+                        <div flex layout="column" layout-align="center start" class="paddingL20 width100">
+                            <div layout="row" layout-align="start center" class="width100 ">
+                            <div layout="column" layout-align="start start" class="paddingR20">
                                 <h2 class=" text-primary thirdFont font18 bold">
                                     <a id="coachingHeader" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
                                         {{coachingGroup.groupName}}

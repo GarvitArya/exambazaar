@@ -2226,11 +2226,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]); 
     exambazaar.controller("p0Controller", 
-        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', '$geolocation', 'cityService', '$window', '$location', function($scope, $cookies, $state, $rootScope, $mdDialog, $geolocation, cityService, $window, $location){
+        [ '$scope','$cookies','$state','$rootScope', '$mdDialog', '$geolocation', 'cityService', '$document', function($scope, $cookies, $state, $rootScope, $mdDialog, $geolocation, cityService, $document){
             $scope.hideLoginDialog();
-            $scope.scrollToTop = function(){
-                $window.scrollTop();
-            };
+            $scope.scrollToTop = function() {
+                var top = 400;
+                /*var duration = 2000; //milliseconds
+                $document.scrollTop(top, duration).then(function() {
+                    console && console.log('You just scrolled to the top!');
+                });*/
+              };
             $scope.getTopCities = function(){
                 if(!$rootScope.top5Cities){
                     $scope.detectLocation();
