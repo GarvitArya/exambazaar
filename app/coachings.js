@@ -581,7 +581,7 @@ router.post('/cirf', function(req, res) {
 router.post('/cirfRatingJEEMainAdvanced', function(req, res) {
     console.log('CIRF Bulk Started');
     res.json(true);
-    var examId = ObjectId('58ac27030be6311eccbbc3a6');
+    var examId = ObjectId('58ac27997d227b1fa8208ff1');
     var groupNames = coaching.aggregate(
     [
         {$match: {exams: examId, disabled: false} },

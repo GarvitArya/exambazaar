@@ -135,6 +135,7 @@ var coachingSchema = mongoose.Schema({
     addContactInfoDone: {type: Boolean,default: false},
     contactInfoState: {type: String},
     rank: {type: Number,default: 0},
+    fillable: {type: Boolean,default: false},
     ebNote: [{
         note: String,
         user: { type: Schema.ObjectId, ref: 'User' },

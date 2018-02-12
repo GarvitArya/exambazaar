@@ -76,7 +76,7 @@
 <div class="whiteBackground mainContent padded" >
     <div id="spacer">
     </div>
-    <div flex layout="column" layout-align="start center" ng-if="showLevel>5">
+    <div flex layout="column" layout-align="start center" ng-show="showLevel>5">
         <form class="width100" name="addInstituteForm">
         <div class="secondFont listingHeader bold">
             Add Details of the Institutes
@@ -98,6 +98,9 @@
             </hot-table>
         </div>    
            
+        
+        
+            
         <div class="secondFont listingHeader bold">
             Mark the common exams taught at each center&nbsp;<span class="badge">{{commonExams.length}}</span>
         </div>
@@ -117,7 +120,15 @@
             </div>
         </div>
             
-            
+        <div class="secondFont listingHeader bold">
+            Fillable Institutes?
+            <div class="smallFont">Do you think that there is enough information for EB team to add info about this coaching?</div>
+        </div>
+        <div layout="row" layout-align="start center">
+            <md-switch ng-model="fillable" aria-label="Fillable?" class="margin0">
+                  Fillable?
+            </md-switch>
+        </div>     
         <div flex layout="column" layout-align="center center" class="width100 marginB20 marginT40">
             <div layout="column" layout-align="center center" class="width100">
                 <md-button class="md-green md-small width50" ng-click="addInstitutes()" ng-disabled="adding">Add</md-button>

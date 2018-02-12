@@ -26089,7 +26089,7 @@ function getLatLng(thisData) {
                 $scope.exam = $rootScope.opStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
                 $scope.$apply();
                 //console.log($scope.exam);
-            }, 5000);
+            }, 2000);
             
             $rootScope.pageImage = $scope.defaultCoverPhoto;
             $rootScope.pageTitle = "Official Question Papers of all Major Exams in India | ";
@@ -29322,6 +29322,7 @@ function getLatLng(thisData) {
         /*if($scope.user._id == '59a9749112e754442af93d43' || $scope.user._id == '59a24d743011356248da915e'  || $scope.user._id == '59085f0fc7289d0011d6ea8c'){
             $scope.showLevel = 10;
         }*/
+        $scope.fillable = false;
             
         $scope.newinstitutes =[];
         $scope.commonExams = [];
@@ -29371,52 +29372,52 @@ function getLatLng(thisData) {
             $scope.adding = true;
             var institutes = [];
             $scope.newinstitutes.forEach(function(thisinstitute, iIndex){
-                if(thisinstitute.name && thisinstitute.name != ''){
-                    thisinstitute.name = thisinstitute.name.trim();
-                    thisinstitute.groupName = thisinstitute.name;
-                    
-                    
-                    if(thisinstitute.city && thisinstitute.city != ''){
-                        thisinstitute.city = titleCase(thisinstitute.city);
-                    }
-                    if(thisinstitute.state && thisinstitute.state != ''){
-                        thisinstitute.state = titleCase(thisinstitute.state);
-                    }
-                    if(thisinstitute.email && thisinstitute.email != ''){
-                        thisinstitute.email = thisinstitute.email.replace(/\s+/g, '');
-                        thisinstitute.email = thisinstitute.email.toLowerCase();
-                    }
-                    if(thisinstitute.phone && thisinstitute.phone != ''){
-                        thisinstitute.phone = thisinstitute.phone.replace(/\s+/g, '');
-                    }
-                    if(thisinstitute.mobile && thisinstitute.mobile != ''){
-                        thisinstitute.mobile = thisinstitute.mobile.replace(/\s+/g, '');
-                    }
-                    if(thisinstitute.website && thisinstitute.website != ''){
-                        thisinstitute.website = thisinstitute.website.replace(/\s+/g, '');
-                        thisinstitute.website = thisinstitute.website.toLowerCase();
-                        
-                        var find ="http";
-                        var fIndex = thisinstitute.website.indexOf(find);
-                        if(fIndex == -1){
-                            thisinstitute.website = "http://" + thisinstitute.website;
-                        }
-                    }
-                    if(thisinstitute.pincode && thisinstitute.pincode != ''){
-                        thisinstitute.pincode = thisinstitute.pincode.replace(/\s+/g, '');
-                    }
-                    
-                    var saveProvider = {
-                        coaching:thisinstitute,
-                        user: $scope.user._id,
-                        
-                    };
-                    if($scope.commonExams.length > 0){
-                        saveProvider.coaching.exams = $scope.commonExams;
-                    }
-                        
-                    institutes.push(saveProvider);
+            if(thisinstitute.name && thisinstitute.name != ''){
+                thisinstitute.name = thisinstitute.name.trim();
+                thisinstitute.groupName = thisinstitute.name;
+                thisinstitute.fillable = $scope.fillable;
+
+                if(thisinstitute.city && thisinstitute.city != ''){
+                    thisinstitute.city = titleCase(thisinstitute.city);
                 }
+                if(thisinstitute.state && thisinstitute.state != ''){
+                    thisinstitute.state = titleCase(thisinstitute.state);
+                }
+                if(thisinstitute.email && thisinstitute.email != ''){
+                    thisinstitute.email = thisinstitute.email.replace(/\s+/g, '');
+                    thisinstitute.email = thisinstitute.email.toLowerCase();
+                }
+                if(thisinstitute.phone && thisinstitute.phone != ''){
+                    thisinstitute.phone = thisinstitute.phone.replace(/\s+/g, '');
+                }
+                if(thisinstitute.mobile && thisinstitute.mobile != ''){
+                    thisinstitute.mobile = thisinstitute.mobile.replace(/\s+/g, '');
+                }
+                if(thisinstitute.website && thisinstitute.website != ''){
+                    thisinstitute.website = thisinstitute.website.replace(/\s+/g, '');
+                    thisinstitute.website = thisinstitute.website.toLowerCase();
+
+                    var find ="http";
+                    var fIndex = thisinstitute.website.indexOf(find);
+                    if(fIndex == -1){
+                        thisinstitute.website = "http://" + thisinstitute.website;
+                    }
+                }
+                if(thisinstitute.pincode && thisinstitute.pincode != ''){
+                    thisinstitute.pincode = thisinstitute.pincode.replace(/\s+/g, '');
+                }
+
+                var saveProvider = {
+                    coaching:thisinstitute,
+                    user: $scope.user._id,
+
+                };
+                if($scope.commonExams.length > 0){
+                    saveProvider.coaching.exams = $scope.commonExams;
+                }
+
+                institutes.push(saveProvider);
+            }
             });
             coachingService.bulkSaveProviders(institutes).success(function (data, status, headers) {
                 $scope.addedInstituteIds = data;
@@ -29427,6 +29428,8 @@ function getLatLng(thisData) {
             .error(function (data, status, header, config) {
                 console.log("Error ");
             });
+            
+            
         };
         $scope.claimInstitute = function(){
             if($scope.addedInstituteId){
@@ -35110,7 +35113,8 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
                 var user = $cookies.getObject('sessionuser');
                 
                 var userType = user.userType;
-                if(userType == 'Master'){
+                var userId = user._id;
+                if(userType == 'Master' || userId == '5a1831f0bd2adb260055e352'){
                     console.log('SEO Title: ' + $rootScope.pageTitle);
                     console.log('SEO Description: ' + $rootScope.pageDescription);
                     console.log('SEO Keywords: ' + $rootScope.pageKeywords);
