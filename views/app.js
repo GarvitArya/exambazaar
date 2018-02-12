@@ -35100,7 +35100,17 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
             $mdDialog.hide();
         }
         
-        
+        if($cookies.getObject('sessionuser')){
+            var user = $cookies.getObject('sessionuser');
+
+            var userType = user.userType;
+            var userId = user._id;
+            if(userType == 'Master' || userId == '5a1831f0bd2adb260055e352'){
+                console.log('SEO Title: ' + $rootScope.pageTitle);
+                console.log('SEO Description: ' + $rootScope.pageDescription);
+                console.log('SEO Keywords: ' + $rootScope.pageKeywords);
+            }
+        }
         
         if(fIndex != -1){
             //console.log(stateTo.name);
@@ -35113,12 +35123,6 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
                 var user = $cookies.getObject('sessionuser');
                 
                 var userType = user.userType;
-                var userId = user._id;
-                if(userType == 'Master' || userId == '5a1831f0bd2adb260055e352'){
-                    console.log('SEO Title: ' + $rootScope.pageTitle);
-                    console.log('SEO Description: ' + $rootScope.pageDescription);
-                    console.log('SEO Keywords: ' + $rootScope.pageKeywords);
-                }
                 
                 if(mIndex != -1 && userType != 'Master'){
                     $cookies.remove('sessionuser');
