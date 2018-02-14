@@ -1,0 +1,681 @@
+<style>
+    input[type="text"],input[type="email"]
+    {
+        font-size: 14px;
+        color: #333333;
+        padding: 10px;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus{
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    #profileSection{
+        min-height: 20vh;
+    }
+    .profileBar{
+        background-color: #29335C;
+        color: white;
+    }
+    .profileBar a{
+        color: white;
+        text-decoration: none;
+        
+    }
+    
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        
+    }
+    .fieldRow{
+        min-height: 5vh;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .fieldRow div.col1{
+        color: gray;
+        font-family: 'Roboto', sans-serif;
+        
+    }
+    .fieldRow div.col2{
+        color: black;
+    }
+    
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    .active{
+        color: white;
+        font-weight: bold;
+        border-bottom: 2px solid white;
+    }
+    #topBar{
+        color: white;
+    }
+    #topBar.active{
+        color: white;
+    }
+    #topBar:hover{
+        font-weight: bold;
+    }
+    .leftBar{
+        border-right: 2px solid whitesmoke;
+    }
+    #leftBarButton{
+        border-bottom: 2px solid whitesmoke;
+    }
+    #leftBarButton:hover{
+        border-bottom: 2px solid #20C39A;
+    }
+    #leftBarButton.sideactive{
+        /*border: 2px solid #20C39A;
+        color: #20C39A;
+        font-weight: bold;*/
+        background: whitesmoke;
+        
+    }
+    .emptyTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    
+    .edLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .edLevelTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledEdLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .badge{
+        font-size: 14px;
+        white-space: normal;
+        margin-top: 0px;
+    }
+    .subSectionHeader{
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid whitesmoke;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .academicSubSection{
+        border-bottom: 1px solid #20C39A;
+        
+    }
+    .academicSubHeader{
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    academicSubHeader2{
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .nextButton{
+    }
+    .previousButton{
+        margin-right: 20px;
+    }
+    
+    #profilePicSection{
+        margin-bottom: 20px;
+    }
+    
+    .pageLogo{
+        max-width: 80px;
+        max-height: 80px;
+    }
+    .pageLogoXS{
+        max-width: 50px;
+        max-height: 50px;
+    }
+    #pageLogoHolder{
+        height: 80px;
+        width: 80px;
+    }
+    #pageLogoHolderXS{
+        padding: 5px;
+    }
+    .timeBadge{
+        color: black;
+        border: 1px solid #FF5A5F;
+        background: transparent;
+    }
+    .selectedTimeBadge{
+        color: white;
+        border: 1px solid #FF5A5F;
+        background: #FF5A5F;
+    }
+    /*#fixed {
+        position: fixed;
+    }*/
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+
+<div class="textBlack whiteBackground baseFont " ng-if="user">
+    <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
+    
+    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
+        <div layout="column" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100" >
+            <div layout="row" layout-align="start start"  class="width100">
+                <div layout="row" layout-align="start start" ng-repeat="component in components" class="paddingLR20">
+                <span layout="row" layout-align="start center" >
+                    <!-- ng-click="setPage(component.name)"
+                    ui-sref="{{component.state}}"-->
+                    <span id="topBar"  ng-class="{ active: component.name == activeCategory.name}" >
+                        {{component.name}}
+                    </span>
+                </span>
+                <span class="marginL40" ng-if="!$last">
+                >
+                </span>
+                </div>    
+            </div>
+            
+        </div>
+    </div>
+    <div layout="row" layout-align="center start" class="width100">
+    <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
+        <div layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar" hide-xs>
+            <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }">
+                {{subcategory.name}}
+            </div>
+        </div>
+        <div flex layout="row" layout-align="center center">
+            <div flex-xs="90" flex-gt-xs="90" layout="row" layout-align="start start">
+            <div layout="column" layout-align="start start" class="width100 min100vh" flex>
+                
+                
+                <div layout="row" class="affixBar width100 whiteSmokeBackground padding10 marginB10" layout-align="start start"> 
+                <div layout="row"  layout-xs="column" layout-align="start start" flex-xs="100" flex-gt-xs="100" class="width100">
+                    <div class="paddingLR20 paddingTB10 pageLogoHolder">
+                        <img src='ebloader2.gif' lazy-img="{{coachingLogo}}" alt="{{coachingGroup[0].groupName}}" class="pageLogo" ng-if="coachingLogo"/>
+                        <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingLogo"/>
+                    </div>
+                    <div flex layout="column" layout-align="start start" class=" width100">
+                        <div class="paddingLR20 h2Font bold">
+                        {{groupName}}
+                        </div>
+                        <div layout="column"  layout-align="start start" ng-repeat="centre in coachingGroup" ng-if="centre._id == bookAppointment.institute" class="subBaseFont greyBottomBorder width100 paddingLR20 paddingB5">
+                            <span>
+                            {{centre.address}}, {{centre.city}} <span ng-if="centre.pincode"> - {{centre.pincode}}</span>
+                            </span>
+                        </div>
+                        <div layout="row"  layout-align="start start" class="paddingTB10 baseFont spacedLetter1 paddingLR20" hide-xs>
+                            
+                            <div layout="row"  layout-align="start center" class="paddingR20">
+                                <img  src="icons/book/exam.png" class="bookLogo"/>
+                                <div class="paddingL10">
+                                    {{exam.seoname}}
+                                </div>
+                            </div>
+                            <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
+                            <div layout="row"  layout-align="start center" class="paddingLR20">
+                                <img  src="icons/book/date.png" class="bookLogo"/>
+                                <div class="paddingL10">
+                                    {{bookAppointment._requestDate | date: "MMMM dd, yyyy"}}
+                                </div>
+                            </div>
+                            <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
+                            <div layout="row"  layout-align="start center" class="paddingL20">
+                                <img  src="icons/book/time.png" class="bookLogo"/>
+                                <div class="paddingL10">
+                                    {{bookAppointment._requestDate | date: "hh:mm a"}}
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div layout="column"  layout-align="start start" class="paddingTB10 baseFont spacedLetter1 paddingLR20" hide-gt-xs>
+                            
+                            <div layout="row"  layout-align="start center">
+                                <img  src="icons/book/exam.png" class="bookLogo"/>
+                                <div class="paddingL10">
+                                    {{exam.seoname}}
+                                </div>
+                            </div>
+                            
+                            <div layout="row"  layout-align="start center" class="">
+                                <img  src="icons/book/date.png" class="bookLogo"/>
+                                <div class="paddingL10">
+                                    {{bookAppointment._requestDate | date: "MMMM dd, yyyy"}}
+                                </div>
+                            </div>
+                            <div layout="row"  layout-align="start center">
+                                <img  src="icons/book/time.png" class="bookLogo"/>
+                                <div class="paddingL10">
+                                    {{bookAppointment._requestDate | date: "hh:mm a"}}
+                                </div>
+                            </div>
+                        
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+                
+                
+                <h2 class="width100 pageTitleFont marginT20" hide-gt-xs>
+                {{activeCategory.name}}
+                </h2>
+                <div layout="row" layout-align="start center" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20" id="fixed">
+                    <div layout="row" layout-align="end center">{{activeSubcategory.name}}</div>
+                    
+                    
+                </div>
+                <div layout="column" layout-align="center start" class="width100">
+                     
+                    
+                <div layout="column" layout-align="center start" class="width100">
+                    <div layout="column" layout-align="center start" class="width100 " ng-if="activeSubcategory.name =='Contact'">
+                        <div layout="column" layout-align="start start" class="academicRow paddingB20">
+                            <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow">
+                                <div layout="row" layout-align="start start" flex-gt-xs="{{col1WidthAcademic}}" flex-xs="100" class="col1">Student Name</div>
+                                <div layout="row" layout-align="start start" flex class="col2">
+                                    <input type="text" class="width100" ng-model="user.basic.name"  placeholder="Student Name" disabled>
+                                </div>
+                            </div>
+                            <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow">
+                                <div layout="row" layout-align="start start" flex-gt-xs="{{col1WidthAcademic}}" flex-xs="100" class="col1">Mobile</div>
+                                <div layout="row" layout-align="start start" flex class="col2" ng-show="user.mobile">
+                                    <input type="text" class="width100" ng-minlength="10" ng-maxlength="10" only-digits ng-model="user.mobile"  placeholder="Mobile Number" disabled>
+                                </div>
+                                <div layout="row" layout-align="start start" flex class="col2" ng-show="!user.mobile">
+                                    <input type="text" class="width100" ng-minlength="10" ng-maxlength="10" only-digits ng-model="user.newmobile"  placeholder="Mobile Number">
+                                </div>
+                            </div>
+                            <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow">
+                                <div layout="row" layout-align="start start" flex-gt-xs="{{col1WidthAcademic}}" flex-xs="100" class="col1">Email</div>
+                                <div layout="row" layout-align="start start" flex class="col2" ng-show="user.email">
+                                    <input type="text" class="width100" ng-model="user.email"  placeholder="Email Address" disabled>
+                                </div>
+                                <div layout="row" layout-align="start start" flex class="col2" ng-show="!user.email">
+                                    <input type="text" class="width100" ng-model="user.newemail"  placeholder="Email">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="center start" class="width100 " ng-if="activeSubcategory.name =='Academic Details'">
+                        <div layout="column" layout-align="start start" class="academicRow academicSubSection">
+                        
+                            <div layout="row" layout-align="start start" class="font16 marginB10 width100 academicSubHeader">
+                                Choose your Education Level
+                            </div>
+                            <div layout="row" layout-align="start start" class="fieldRow" layout-wrap>
+                                <div flex-xs="50" flex="20" ng-repeat="educationLevel in educationLevels" class="padding10">
+                                    <span layout="row" layout-align="center center" class="wrap edLevelTag width100 min15vh text-center" ng-class="{ filledEdLevelTag: user.eligibility.educationLevel.name=='{{educationLevel.name}}' }" ng-click="setEducationLevel(educationLevel)">
+                                        {{educationLevel.name}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 1">
+                            
+                        <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
+                            School Class XII
+                        </div>
+                        <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Subjects</div>
+                            <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
+                                <div flex-xs="50" flex-gt-xs="25" ng-repeat="class12Subject in class12Subjects" class="padding10">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.class12Subjects[class12Subject.name] }" ng-click="setClass12Subjects(class12Subject.name)">
+                                        {{class12Subject.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow paddingB20 width100">
+                            <div flex-gt-xs="{{col1WidthAcademic}}" class="col1">Class XII Percentage</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingLR20 width100">
+                                <span class="marginR10">40</span>
+                                <md-slider class="width100" md-discrete ng-model="user.eligibility.class12Percentage" step="1" min="40" max="100" aria-label="Class 12th Percentage">
+                                </md-slider>
+                                <span class="marginL10">100</span>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 3">
+                            
+                        <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
+                            Undergraduate
+                        </div>
+                        <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
+                            
+                            <div flex layout="column" layout-align="start start" class="width100">
+                            
+                            <div flex layout="column" layout-align="start start" class="width100 marginB10">
+                            <div layout="row" layout-align="start start" class="width100 paddingL10">
+                                Engineering
+                            </div>    
+                            <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='engineering'">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                        {{undergradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                                
+                            <div flex layout="column" layout-align="start start" class="width100 marginB10">    
+                            <div layout="row" layout-align="start start" class="width100 paddingL10">
+                                Medical
+                            </div>    
+                            <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='medical'">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                        {{undergradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                                
+                            <div flex layout="column" layout-align="start start" class="width100 marginB10">    
+                            <div layout="row" layout-align="start start" class="width100 paddingL10">
+                                Law
+                            </div>    
+                            <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='law'">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                        {{undergradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                            
+                            <div flex layout="column" layout-align="start start" class="width100 marginB10">    
+                            <div layout="row" layout-align="start start" class="width100 paddingL10">
+                                Other
+                            </div>    
+                            <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='other'">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
+                                        {{undergradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>     
+                            </div>
+                            </div>
+                            
+                        </div>
+                        <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow paddingB20 width100">
+                            <div flex-gt-xs="{{col1WidthAcademic}}" class="col1">Equivalent Percentage</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingLR20 width100">
+                                <span class="marginR10">40</span>
+                                <md-slider class="width100" md-discrete ng-model="user.eligibility.undergradPercentage" step="1" min="40" max="100" aria-label="Undergrad Percentage">
+                                </md-slider>
+                                <span class="marginL10">100</span>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        
+                        <div layout="column" layout-align="start start" class="academicRow" ng-if="user.eligibility.educationLevel.level >= 5">
+                            
+                        <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
+                            Postgraduate
+                        </div>
+                        <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow">
+                            <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
+                            <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="postgradMajor in postgradMajors" class="padding10">
+                                    <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.postgradMajor[postgradMajor.name] }" ng-click="setPostgradMajor(postgradMajor.name)" layout-wrap>
+                                        {{postgradMajor.displayname}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow paddingB20 width100">
+                            <div flex-gt-xs="{{col1WidthAcademic}}" class="col1">Equivalent Percentage</div>
+                            <div layout="row" layout-align="start center" flex class="col2 paddingLR20 width100">
+                                <span class="marginR10">40</span>
+                                <md-slider class="width100" md-discrete ng-model="user.eligibility.postgradPercentage" step="1" min="40" max="100" aria-label="Postgrad Percentage">
+                                </md-slider>
+                                <span class="marginL10">100</span>
+                            </div>
+                        </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div layout="column" layout-align="center start" class="width100 " ng-if="activeSubcategory.name =='Visit Time'">
+                        <div layout="column" layout-align="start start" class="academicRow paddingB20 width100">
+                            
+                            <!--<div layout="row" layout-xs="column" layout-align="start start" class="fieldRow width100">
+                                <div layout="row" layout-align="start center" flex-xs="100" flex-gt-xs="{{col1WidthAcademic}}" class="col1">Exam</div>
+                                <div layout="row" layout-align="start center" flex class="col2">
+                                    {{exam.seoname}}
+                                </div>
+                            </div>-->
+                            <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow width100">
+                                <div layout="row" layout-align="start center" flex-xs="100" flex-gt-xs="{{col1WidthAcademic}}" class="col1">Centre</div>
+                                <div layout="row" layout-align="start center" flex class="col2 width100" layout-wrap>
+                                    
+                                <md-select ng-model="bookAppointment.institute" placeholder="Select coaching centre" class="margin0  width100">
+                                    <md-option ng-repeat="centre in coachingGroup" ng-value="centre._id" class=" width100">
+                                    {{centre.address}}, {{centre.city}} <span ng-if="centre.pincode"> - {{centre.pincode}}</span>
+                                    
+                                    </md-option>
+                                </md-select>
+                                    
+                                </div>
+                            </div>
+                            <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow width100">
+                                <div layout="row" layout-align="start center" flex-xs="100" flex-gt-xs="{{col1WidthAcademic}}" class="col1">Schedule Date</div>
+                                <div layout="row" layout-align="start center" flex class="col2 width100">
+                                    <md-datepicker ng-model="bookAppointment._requestDate" md-placeholder="Appointment Date" md-min-date="appointmentDates.min" md-max-date="appointmentDates.max" class="margin0"></md-datepicker>
+                                </div>
+                            </div>
+                            <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow width100">
+                                <div layout="row" layout-align="start center" flex-xs="100" flex-gt-xs="{{col1WidthAcademic}}" class="col1">Schedule Time</div>
+                                <div layout="row" layout-align="start center" flex class="col2 width100" layout-wrap>
+                                    <span class="paddingR10 paddingB10" ng-repeat="timeSlot in appointmentDates.timeSlots">
+                                        
+                                        
+                                        <span class="badge" ng-class="timeSlotBackground(timeSlot)" ng-click="setTimeSlot(timeSlot)">
+                                            {{timeSlot.start }} to {{timeSlot.end}}
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <!--<div layout="row" layout-xs="column" layout-align="start start" class="fieldRow width100">
+                                <div layout="row" layout-align="start center" flex-xs="100" flex-gt-xs="{{col1WidthAcademic}}" class="col1">Course Name</div>
+                                <div layout="row" layout-align="start center" flex class="col2 width100">
+                                    <input type="text" class="width100" ng-model="bookAppointment.course.name"  placeholder="Course Name">
+                                </div>
+                            </div>
+                            <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow width100">
+                                <div layout="row" layout-align="start center" flex-xs="100" flex-gt-xs="{{col1WidthAcademic}}" class="col1">Course Duration</div>
+                                <div layout="row" layout-align="start center" flex class="col2 width100">
+                                    <input type="text" class="width100" ng-model="bookAppointment.course.duration"  placeholder="Course Duration (months or years)">
+                                </div>
+                            </div>-->
+                            <div layout="row" layout-xs="column" layout-align="start start" class="fieldRow width100">
+                                <div layout="row" layout-align="start center" flex-xs="100" flex-gt-xs="{{col1WidthAcademic}}" class="col1">Target Year</div>
+                                <div layout="row" layout-align="start center" flex class="col2 width100" layout-wrap>
+                                    
+                                <md-select ng-model="bookAppointment.course.targetYear" placeholder="Select target year" class="margin0  width100">
+                                    <md-option ng-repeat="targetYear in targetYears" ng-value="targetYear" class=" width100">
+                                    {{targetYear}}
+                                    </md-option>
+                                </md-select>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="center start" class="width100 " ng-if="activeSubcategory.name =='Coaching Appointment'">
+                        <div layout="column" layout-align="start start" class="fieldRow width100" ng-if="appointmentCentre">
+                            
+                            <div layout="column" layout-align="start start" class="width100 greyBottomBorder paddingB20">
+                            <div layout="row" layout-align="start center" class="h1Font width100">
+                                <div>
+                                    <img  src="icons/calendar.png" class="calendarLogo"/>
+                                </div>
+                                <div class="paddingL20 bold">Appointment Request Received</div>
+                            </div>
+                            <div class="marginT20 baseFont width100">
+                                {{user.basic.name}}, Thanks for choosing Exambazaar! We have received your appointment request. We will confirm your appointment shortly and send a confirmation email.
+                            </div>
+                            </div>
+                            
+                            <div layout="column" layout-align="start start" class="width100 greyBottomBorder paddingB20">
+                                <div layout="row" layout-align="start start" class="width100 marginT20 marginB10 bold">
+                                    APPOINTMENT DETAILS
+                                </div>
+                                <div layout="row" layout-xs="column"  layout-align="start start" class="width100">
+                                    <div flex-gt-xs="{{col1WidthAcademic}}" class="col1">
+                                        Name
+                                    </div>
+                                    <div flex>
+                                        {{user.basic.name}}
+                                    </div>
+                                </div>
+                                <div layout="row" layout-xs="column"  layout-align="start start" class="width100">
+                                    <div flex-gt-xs="{{col1WidthAcademic}}" class="col1">
+                                        Mobile
+                                    </div>
+                                    <div flex>
+                                        {{user.mobile}}
+                                    </div>
+                                </div>
+                                <div layout="row" layout-xs="column"  layout-align="start start" class="width100">
+                                    <div flex-gt-xs="{{col1WidthAcademic}}" class="col1">
+                                        Email
+                                    </div>
+                                    <div flex>
+                                        {{user.email}}
+                                    </div>
+                                </div>
+                                <div layout="row" layout-xs="column"  layout-align="start start" class="width100">
+                                    <div flex-gt-xs="{{col1WidthAcademic}}" class="col1">
+                                        Exam
+                                    </div>
+                                    <div flex>
+                                        {{exam.seoname}}
+                                    </div>
+                                </div>
+                                <div layout="row" layout-xs="column"  layout-align="start start" class="width100">
+                                    <div flex-gt-xs="{{col1WidthAcademic}}" class="col1">
+                                        Time
+                                    </div>
+                                    <div flex>
+                                        {{bookAppointment._requestDate | date: "dd-MMM-yyyy HH:mm a"}}
+                                    </div>
+                                </div>
+                                
+                                
+                                <div layout="row" class="width100 textLightGrey paddingT10">
+                                You can write to us at team@exambazaar.com for any followups!
+                                </div>
+                            </div>
+                            
+                            
+                            <div layout="column" layout-align="start start" class="width100 marginT20 greyBottomBorder paddingB10">
+                            <div class="h2Font bold">
+                            {{groupName}}
+                            </div>
+                            <div layout="row" layout-xs="column"  layout-align="start start" class="width100">
+                                {{appointmentCentre.address}}, {{appointmentCentre.city}} <span ng-if="appointmentCentre.pincode"> - {{appointmentCentre.pincode}}</span>
+                            </div>
+                                
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 top-buffer" id="map">
+                            
+                            <ng-map center="{{appointmentCentre.mapAddress}}" minimum-zoom="12" scrollwheel="false" maximum-zoom="15">
+                                <marker position="{{appointmentCentre.mapAddress}}"
+                                  title="{{appointmentCentre.name}}"
+                                  animation="Animation.BOUNCE"
+                                  centered="true"></marker>
+                            </ng-map>    
+                                
+                             
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div layout="row" layout-xs="column" layout-align="start start" class="fieldRow">
+                        
+
+                    </div>-->
+                        
+                        
+                </div>
+                    
+                <div layout="row" layout-align="start center" class="paddingTB20 width100">
+                    <md-button class="md-black md-large tolowercase margin0 previousButton" ng-click="setPreviousActiveCategory()" ng-if="activeCategory.name != components[0].name && activeCategory.name != components[components.length-1].name">
+                        Previous
+                    </md-button>
+                    <md-button class="md-next md-large tolowercase margin0 nextButton" ng-click="setNextActiveCategory()" ng-if="activeCategory.name != components[components.length-1].name">
+                        Next
+                    </md-button>
+                </div>    
+                    
+                    
+               </div>    
+            </div>
+        
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!--<div class="bottomBar width100" hide-gt-xs>
+    <div layout="row" layout-align="start center" flex-xs="100" flex-gt-xs="90" class="width100 paddingLR20 showBorder">
+        <div class="pageLogoHolderXS showBorder">
+            <img src='ebloader2.gif' lazy-img="{{coachingLogo}}" alt="{{coachingGroup[0].groupName}}" class="pageLogoXS" ng-if="coachingLogo"/>
+            <img ng-src="{{defaultCoachingLogo}}" class="pageLogoXS" ng-if="!coachingLogo"/>
+        </div>
+        <div flex layout="column" layout-align="start start" class="paddingLR20 width100 showBorder">
+            <div class="h2Font bold">
+            {{groupName}}
+            </div>
+        </div>
+    </div>
+</div>-->

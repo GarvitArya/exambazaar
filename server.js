@@ -137,6 +137,7 @@ var otps = require('./app/otps.js',otps);
 var exams = require('./app/exams.js',exams); 
 var tests = require('./app/tests.js',tests); 
 var availDiscounts = require('./app/availDiscounts.js',availDiscounts); 
+var bookAppointments = require('./app/bookAppointments.js',bookAppointments); 
 var questions = require('./app/questions.js',questions); 
 var questionresponses = require('./app/questionresponses.js',questionresponses); 
 var questionreporterrors = require('./app/questionreporterrors.js',questionreporterrors); 
@@ -198,6 +199,7 @@ app.use('/api/qviews', qviews);
 app.use('/api/cirffactors', cirffactors);
 app.use('/api/assessments', assessments);
 app.use('/api/availDiscounts', availDiscounts);
+app.use('/api/bookAppointments', bookAppointments);
 app.use('/api/eligibilitys', eligibilitys);
 app.use('/api/streams', streams);
 app.use('/api/locations', locations);
@@ -311,6 +313,7 @@ var allStates = [
 '/ebinternal/why',
 '/group/:categoryName/:subCategoryName/:cityName/:groupName',
 '/availDiscount/:categoryName/:subCategoryName/:cityName/:groupName',
+'/bookAppointment/:categoryName/:subCategoryName/:cityName/:groupName',
 '/login',
 '/privacy',
 '/rankerswall/:examName/:year',

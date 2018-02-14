@@ -813,22 +813,22 @@ router.post('/cirfRatingJEEMainAdvanced', function(req, res) {
                     var cIndex = -1;
                     if(thisProvider.cirf.length > 0){
                         var cirfExamIds = thisProvider.cirf.map(function(a) {return a.exam.toString();});
-                        console.log(cirfExamIds);
                         cIndex = cirfExamIds.indexOf(examId.toString());
                     }
-                    console.log(cIndex);
 
                     if(cIndex != -1){
                         thisProvider.cirf.splice(cIndex, 1);
                         thisProvider.cirf.push(providerExamCIRFScore);
+                        
 
                     }else{
                         thisProvider.cirf.push(providerExamCIRFScore);
+                        console.log("New CIRF added for: "+ thisProvider._id);
                     }
                     //console.log(thisProvider.cirf);
                     thisProvider.save(function(err, thisProvider) {
                         if (err) return console.error(err);
-                        console.log("CIRF saved for: "+ thisProvider._id);
+                        console.log("Saved: "+ thisProvider._id);
                     });
 
                     //res.json(statements);
@@ -2370,8 +2370,25 @@ router.post('/showGroupHelperById', function(req, res) {
     } else {throw err;}
     }); //.limit(500) .sort( { rank: -1 } )
 });
+function onlyUnique(value, index, self) { 
+    return self.indexOf(value) === index;
+}
 
-
+router.post('/allExamsInAll/', function(req, res) {
+    var groupExamForm = req.body;
+    var instituteArray = groupExamForm.instituteArray;
+    var examArray = groupExamForm.examArray;
+    var allGroupProviders = coaching.find({_id:{$in: instituteArray}}, {exams:1},function(err, allGroupProviders) {
+    if (!err){
+        var allExams = [];
+        allGroupProviders.forEach(function(thisGroup, index){
+            var thisExams = thisGroup.exams;
+            allExams = allExams.concat(thisExams);
+        });
+        res.json(allExams);
+    } else {throw err;}
+    }); //.limit(500) .sort( { rank: -1 } )
+});
 router.post('/commonExamsInAll/', function(req, res) {
     var groupExamForm = req.body;
     var instituteArray = groupExamForm.instituteArray;
@@ -3449,6 +3466,23 @@ router.post('/coachingGroup', function(req, res) {
     var thisGroup = coaching
         .find({'groupName': groupName, disabled:false, type: 'Coaching'})
         .deepPopulate('exams exams.stream location results.exam')
+        .exec(function (err, thisGroup) {
+        if (!err){
+            //console.log(thisGroup);
+            res.json(thisGroup);
+        } else {throw err;}
+    });
+});
+
+router.post('/coachingGroupCityCentres', function(req, res) {
+    var groupCity = req.body;
+    var groupName = groupCity.groupName;
+    var cityName = groupCity.cityName;
+    
+    //city: cityName,
+    var thisGroup = coaching
+        .find({'groupName': groupName, disabled:false, type: 'Coaching', city: cityName}, {location:1, name:1, address:1, city:1, state:1, pincode:1, phone:1, mobile: 1, email:1, logo:1})
+        .deepPopulate('location')
         .exec(function (err, thisGroup) {
         if (!err){
             //console.log(thisGroup);

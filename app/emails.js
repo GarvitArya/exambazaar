@@ -8,7 +8,7 @@ var college = require('../app/models/college');
 var coaching = require('../app/models/coaching');
 var subscriber = require('../app/models/subscriber');
 var sendGridCredential = require('../app/models/sendGridCredential');
-
+var moment = require('moment');
 
 var transporter = nodemailer.createTransport('smtps://gaurav%40educhronicle.com:Amplifier@9@smtp.gmail.com');
 
@@ -870,6 +870,154 @@ router.post('/contactEmail', function(req, res) {
         }
     });
     
+    
+});
+
+router.post('/bookAppointmentEmail', function(req, res) {
+    var thisEmail = req.body;
+    var templateName = thisEmail.templateName;
+    var fromEmail = {
+        email: 'team@exambazaar.com',
+        name: 'Team Exambazaar'
+    };
+    
+    var student = thisEmail.student;
+    var thisCoaching = thisEmail.coaching;
+    var thisAppointment = thisEmail.appointment;
+    var coachingId = thisCoaching.institute;
+    var course = thisEmail.course;
+    var to = student.email;
+    var mobile = student.mobile;
+    console.log(coachingId);
+    
+    var existingCoaching = coaching.findOne({_id: coachingId}, {address: 1, city:1, state: 1, pincode: 1, mobile:1, phone: 1},function (err, existingCoaching) {
+    var coachingAddress = existingCoaching.address;
+    var coachingPhone = '';
+    var coachingMobile = '';
+    if(existingCoaching.city){
+        coachingAddress += ", " + existingCoaching.city;
+    }
+    if(existingCoaching.state){
+        coachingAddress += ", " + existingCoaching.state;
+    }
+    if(existingCoaching.pincode){
+        coachingAddress += ", " + existingCoaching.pincode;
+    }
+    if(existingCoaching.phone){
+        existingCoaching.phone.forEach(function(thisPhone, index){
+            coachingPhone += thisPhone;
+            if(index != existingCoaching.phone.length - 1){
+                coachingPhone += ", ";
+            }
+        });
+    }   
+    if(existingCoaching.mobile){
+        existingCoaching.mobile.forEach(function(thisMobile, index){
+            coachingMobile += thisMobile;
+            if(index != existingCoaching.mobile.length - 1){
+                coachingMobile += ", ";
+            }
+        });
+    }
+        
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+            if(thisEmailTemplate.name == templateName){
+                templateFound = true;
+                templateId = thisEmailTemplate.templateKey;
+                var from_email = new helper.Email(fromEmail);
+                var to_email = new helper.Email(to);
+                var to_email2 = new helper.Email('team@exambazaar.com');
+                var html = ' ';
+                var subject = student.name + ', you are booking an appointment at ' + thisCoaching.name;
+                var subject2 = student.name + ' (' + student.mobile + ') '+' is booking an appoitment at ' + thisCoaching.name;
+                var requestDateTime = moment(thisAppointment._requestDate);
+                var requestDateTimeFormat = requestDateTime.format('DD-MMM-YYYY HH:mm');
+                
+                var content = new helper.Content('text/html', html);
+                var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                var mail2 = new helper.Mail(fromEmail, subject2, to_email2, content);
+
+                mail.setTemplateId(templateId);
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-student.name-', student.name));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-student.email-', to));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-student.mobile-', mobile));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-coaching.name-', thisCoaching.name));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-coaching.address-', coachingAddress));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-coaching.phone-', coachingPhone));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-coaching.mobile-', coachingMobile));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-coaching.exam-', thisCoaching.exam));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-course.name-', course.name));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-course.duration-', course.duration));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-appointment.dateTime-', requestDateTimeFormat));
+                
+                mail2.setTemplateId(templateId);
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-student.name-', student.name));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-student.email-', to));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-student.mobile-', mobile));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-coaching.name-', thisCoaching.name));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-coaching.address-', coachingAddress));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-coaching.phone-', coachingPhone));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-coaching.mobile-', coachingMobile));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-coaching.exam-', thisCoaching.exam));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-course.name-', course.name));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-course.duration-', course.duration));
+                mail2.personalizations[0].addSubstitution(new helper.Substitution('-appointment.dateTime-', requestDateTimeFormat));
+
+                var request = sg.emptyRequest({
+                  method: 'POST',
+                  path: '/v3/mail/send',
+                  body: mail.toJSON(),
+                });
+                sg.API(request, function(error, response) {
+                    if(error){
+                        res.json('Could not send email! ' + error);
+                    }else{
+
+                        var request = sg.emptyRequest({
+                          method: 'POST',
+                          path: '/v3/mail/send',
+                          body: mail2.toJSON(),
+                        });
+                        sg.API(request, function(error, response) {
+                            if(error){
+                                res.json('Could not send email! ' + error);
+                            }else{
+                                res.json(response);
+                            }
+                        });
+
+
+                        //res.json(response);
+                    }
+                });
+            }
+            if(counter == nLength){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+    
+    });
     
 });
 

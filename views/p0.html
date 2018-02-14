@@ -273,10 +273,10 @@
     </div>
     <div id="spacer1" hide-xs>
     </div>
-    <div layout="column" layout-align="center center" class="width100 textBlack scrollToTop" ng-click="scrollToTop()">
+    <!--<div layout="column" layout-align="center center" class="width100 textBlack scrollToTop" ng-click="scrollToTop()">
         <i class="fa fa-arrow-circle-up font32 textBlack" aria-hidden="true"></i>
         <div class="text-center">Scroll to Top</div>
-    </div>
+    </div>-->
     
     <div layout="row" layout-align="center start" class="width100">
     <div layout="column" layout-align="start start" class="width100 min90vh " flex-xs="90" flex-gt-xs="80">
@@ -1022,23 +1022,21 @@
                 </div>
             
             </div>
-            <div layout="row" layout-align="center center" ng-repeat="state in topStates" class="width100" hide-xs>
+            <div layout="row" layout-align="center center" ng-repeat="state in topStates | orderBy:['state']" class="width100" hide-xs>
                 <div flex="20">{{state.state}}</div>
                 <div flex>
-                    <span class="marginR2 marginB2 smallFont" ng-repeat="thisCity in state.cities">
+                    <span class="marginR2 marginB2 smallFont" ng-repeat="thisCity in state.cities | orderBy:'toString()'">
                         <a id="linkFont" ng-click="setSearchCity(thisCity)">{{thisCity}}</a><span ng-if="!$last"> | </span>
                     </span>
                 </div>
             
             </div>
-            <div layout="row" layout-align="center center" ng-repeat="state in topStates | orderBy:['-count']" ng-if="$index < 15" class="width100" hide-gt-xs>
+            <div layout="row" layout-align="start start" class="width100" hide-gt-xs layout-wrap hide-gt-xs>
+            <span ng-repeat="thisCity in top75Cities | orderBy:'name'">
+                <a id="linkFont" ng-click="setSearchCity(thisCity.name)">{{thisCity.name}}</a><span ng-if="!$last">&nbsp;|&nbsp;</span>
                 
-                <div flex layout-wrap>
-                    <span class="marginR2 marginB2 smallFont" ng-repeat="thisCity in state.cities | orderBy:['-count']" ng-if="$index < 5">
-                        <a id="linkFont" ng-click="setSearchCity(thisCity)">{{thisCity}}</a><span ng-if="!$last"> | </span>
-                    </span>
-                </div>
             
+            </span>
             </div>
         </div>
     </md-dialog>

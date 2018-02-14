@@ -523,6 +523,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.availDiscountEmail = function(email) {
             return $http.post('/api/emails/availDiscountEmail', email);
         };
+        this.bookAppointmentEmail = function(email) {
+            return $http.post('/api/emails/bookAppointmentEmail', email);
+        };
         this.contactEmail = function(email) {
             return $http.post('/api/emails/contactEmail', email);
         };
@@ -568,6 +571,20 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             return $http.get('/api/eligibilitys');
         };
         
+    }]);
+    exambazaar.service('bookAppointmentService', ['$http', function($http) {
+        this.saveBookAppointment = function(bookAppointment) {
+            return $http.post('/api/bookAppointments/save', bookAppointment);
+        };
+        this.findBookAppointment = function(bookAppointment) {
+            return $http.post('/api/bookAppointments/find', bookAppointment);
+        };
+        this.getBookAppointments = function() {
+            return $http.get('/api/bookAppointments');
+        };
+        this.getBookAppointment = function(bookAppointmentId) {
+            return $http.get('/api/bookAppointments/edit/'+bookAppointmentId, {bookAppointmentId: bookAppointmentId});
+        };
     }]);
     exambazaar.service('availDiscountService', ['$http', function($http) {
         this.saveAvailDiscount = function(availDiscount) {
@@ -1785,6 +1802,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.commonExamsInAll = function(groupExamForm) {
             return $http.post('/api/coachings/commonExamsInAll',groupExamForm);
         };
+        this.allExamsInAll = function(groupExamForm) {
+            return $http.post('/api/coachings/allExamsInAll',groupExamForm);
+        };
+        
         this.searchCityProviders = function(cityQueryForm) {
             return $http.post('/api/coachings/cityQuery',cityQueryForm);
         };
@@ -1891,6 +1912,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.getGroupCity = function(groupCity) {
             return $http.post('/api/coachings/coachingGroup/',groupCity);
+        };
+        this.getGroupCityCentres = function(groupCity) {
+            return $http.post('/api/coachings/coachingGroupCityCentres/',groupCity);
         };
         this.getProviderBasic = function(coachingId) {
             return $http.get('/api/coachings/basiccoaching/'+coachingId, {coachingId: coachingId});
@@ -2245,6 +2269,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     var top100Cities = data;
                     var topStates = [];
                     var topStateNames = [];
+                    $rootScope.top100Cities = top100Cities;
+                    $rootScope.top75Cities = $rootScope.top100Cities.slice(0,74);
                     top100Cities.forEach(function(thisCityState, cIndex){
                         if(topStates.length > 0){
                             topStateNames = topStates.map(function(a) {return a.state;});
@@ -2287,6 +2313,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.setSearchCity = function(cityName){
                 $mdDialog.hide();
                 $rootScope.searchCity = cityName;
+                
             };
             var getLocationFromIP = function(){
                 if($cookies.getObject('ip')){
@@ -4150,8 +4177,1061 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };   
     }]);      
         
+    exambazaar.controller("bookAppointmentController", 
+        [ '$scope', '$http','$state', '$stateParams', '$rootScope', '$cookies', 'UserService', 'bookAppointmentService', 'EmailService', '$mdDialog', '$timeout', 'Notification', 'thisGroup', 'thisExam', function($scope,$http,$state, $stateParams, $rootScope, $cookies, UserService, bookAppointmentService, EmailService, $mdDialog, $timeout, Notification, thisGroup, thisExam){
+        $scope.col1Width = 40;
+        $scope.col1WidthAcademic = 20;
+        $scope.groupName = $stateParams.groupName;
+        $scope.appointmentCentre = null;
+        $scope.exam = thisExam.data;    
+        $scope.coachingGroup = thisGroup.data;
+        $scope.coachingLogo = null;
+        $scope.$watch('bookAppointment.institute', function (newValue, oldValue, scope) {
+            if(newValue && newValue != oldValue){
+                var coachingIds = $scope.coachingGroup.map(function(a) {return a._id.toString();});
+                
+               
+                var cIndex = coachingIds.indexOf($scope.bookAppointment.institute.toString());
+                
+                if(cIndex != -1){
+                    $scope.appointmentCentre = $scope.coachingGroup[cIndex];
+                    console.log($scope.appointmentCentre);
+                    if($scope.appointmentCentre.latlng){
+                        $scope.appointmentCentre.mapAddress = [$scope.appointmentCentre.latlng.lat, $scope.appointmentCentre.latlng.lng];
+                    }else{
+                        if($scope.appointmentCentre.pincode){
+                            $scope.appointmentCentre.mapAddress = $scope.appointmentCentre.name + ', ' + $scope.appointmentCentre.address + ' ' +
+                            $scope.appointmentCentre.city + ' ' +
+                            $scope.appointmentCentre.pincode;
+                        }else{
+                            $scope.appointmentCentre.mapAddress = $scope.appointmentCentre.name + ', ' + $scope.appointmentCentre.address + ' ' + $scope.appointmentCentre.city;   
+                        }
+                    }
+                    
+                    
+                }
+            }else{
+            }
+        }, true);
+            
+        $scope.appointmentDates = {
+            min: moment().add(2, 'hours').toDate(),
+            max: moment().add(30, 'days').toDate(),
+            timeSlots: [
+                {
+                    start: 'Morning 9 am',    
+                    end: '12 noon',
+                    hours: '9',
+                },
+                {
+                    start: 'Evening 4 pm',    
+                    end: '7 pm',
+                    hours: '16',
+                },
+                /*{
+                    start: '9 am',    
+                    end: '10 am',
+                    hours: '9',
+                },
+                {
+                    start: '10 am',    
+                    end: '11 am',
+                    hours: '10',
+                },
+                {
+                    start: '11 am',    
+                    end: '12 noon',
+                    hours: '11',
+                },
+                {
+                    start: '12 noon',    
+                    end: '1 pm',
+                    hours: '12',
+                },
+                {
+                    start: '1 pm',    
+                    end: '2 pm',
+                    hours: '13',
+                },
+                {
+                    start: '2 pm',    
+                    end: '3 pm',
+                    hours: '14',
+                },
+                {
+                    start: '3 pm',    
+                    end: '4 pm',
+                    hours: '15',
+                },
+                {
+                    start: '4 pm',    
+                    end: '5 pm',
+                    hours: '16',
+                },
+                {
+                    start: '5 pm',    
+                    end: '6 pm',
+                    hours: '17',
+                },
+                {
+                    start: '6 pm',    
+                    end: '7 pm',
+                    hours: '18',
+                },*/
+            ],
+        };
+        $scope.timeSlotBackground = function(timeslot){
+            var className = "emptyTag";
+            if($scope.bookAppointment._requestDate){
+                var thisHours = Number(moment($scope.bookAppointment._requestDate).hours());
+                var timeslotHours = Number(timeslot.hours);
+                if(timeslotHours == thisHours){
+                    className = "filledTag";
+                }
+            }
+            return className;
+        };
+        $scope.setTimeSlot = function(timeslot){
+            if($scope.bookAppointment._requestDate){
+                var thisDate = moment($scope.bookAppointment._requestDate);
+                var setHours = Number(timeslot.hours);
+                thisDate.set({h: setHours, m: 0});
+                $scope.bookAppointment._requestDate = thisDate.toDate();
+            }
+        };
+        
+            
+        $scope.coachingGroup.forEach(function(thisCoaching, cindex){
+            if(thisCoaching.logo && !$scope.coachingLogo){
+                $scope.coachingLogo = thisCoaching.logo;
+            }
+            
+        });
+            //console.log($scope.coachingGroup);
+        $scope.setPage = function(pageName){
+             $scope.components.forEach(function(thisCategory, index){
+                if(thisCategory.name == pageName){
+                    thisCategory.active = true;
+                    $scope.activeCategory = thisCategory;
+                    $scope.currentSubcategories = thisCategory.subcategories;
+                    
+                    $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
+                }else{
+                    thisCategory.active = false;
+                }
+            });
+        };
+        $scope.newemail = null;
+        $scope.newmobile = null;
+        $scope.components = [
+            {
+                name: 'Visit Details',
+                active: false,
+                state: 'reviewed',
+                subcategories: [
+                    {
+                        name: 'Visit Time',
+                    },
+                    {
+                        name: 'Contact',
+                    },
+                ],
+            },
+            /*{
+                name: 'Personal Details',
+                active: false,
+                state: 'profile',
+                subcategories: [
+                    {
+                        name: 'Contact Information',
+                    },
+                ],
+            },*/
+            {
+                name: 'Academic Details',
+                active: false,
+                state: 'academics',
+                subcategories: [
+                    {
+                        name: 'Academic Details',
+                    },
+                ],
+                /*subcategories: [
+                    {
+                        name: 'Education Level',
+                    },
+                    {
+                        name: 'School Class XII',
+                    },
+                    {
+                        name: 'Undergraduate',
+                    },
+                    {
+                        name: 'Postgraduate',
+                    },
+                ],*/
+            },
+            
+            {
+                name: 'Acknowledgment',
+                active: false,
+                state: 'userInstitutes',
+                subcategories: [
+                    {
+                        name: 'Coaching Appointment',
+                    },
+                ],
+            },
+        ];
+        $scope.setPage('Visit Details');
+        
+            
+        $scope.educationLevels = [
+            {
+                level: 0,
+                name: "I-X"
+            },
+            {
+                level: 2,
+                name: "XI / XII / After XII"
+            },
+            /*{
+                level: 2,
+                name: "After XII (Drop Year)"
+            },*/
+            {
+                level: 3,
+                name: "In UG or equivalent"
+            },
+            {
+                level: 4,
+                name: "During or After Final Year of UG"
+            },
+            {
+                level: 5,
+                name: "During or After Final Year of PG"
+            },
+        ];
+        $scope.class12Subjects = [
+            {
+                name: "english",
+                displayname: "English"
+            },
+            {
+                name: "physics",
+                displayname: "Physics"
+            },
+            {
+                name: "chemistry",
+                displayname: "Chemistry"
+            },
+            {
+                name: "mathematics",
+                displayname: "Mathematics"
+            },
+            {
+                name: "biology",
+                displayname: "Biology"
+            },
+            {
+                name: "biotechnology",
+                displayname: "Biotechnology"
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+        ];
+        $scope.undergradMajors = [
+            {
+                name: "btech",
+                displayname: "B.Tech.",
+                stream:{
+                    name: "engineering",
+                    displayname: "Engineering",
+                },
+            },
+            {
+                name: "be",
+                displayname: "B.E.",
+                stream:{
+                    name: "engineering",
+                    displayname: "Engineering",
+                },
+            },
+            {
+                name: "mbbs",
+                displayname: "M.B.B.S.",
+                stream:{
+                    name: "medical",
+                    displayname: "Medical",
+                },
+            },
+            {
+                name: "bds",
+                displayname: "B.D.S.",
+                stream:{
+                    name: "medical",
+                    displayname: "Medical",
+                },
+            },
+            {
+                name: "bsc",
+                displayname: "B.Sc.",
+                stream:{
+                    name: "other",
+                    displayname: "Other",
+                },
+            },
+            {
+                name: "ba",
+                displayname: "B.A.",
+                stream:{
+                    name: "other",
+                    displayname: "Other",
+                },
+            },
+            {
+                name: "bftech",
+                displayname: "NIFT B.F.Tech.",
+                stream:{
+                    name: "other",
+                    displayname: "Other",
+                },
+            },
+            {
+                name: "bcom",
+                displayname: "B.Com.",
+                stream:{
+                    name: "other",
+                    displayname: "Other",
+                },
+            },	
+            {
+                name: "barch",
+                displayname: "B. Arch.",
+                stream:{
+                    name: "engineering",
+                    displayname: "Engineering",
+                },
+            },
+            {
+                name: "llb",
+                displayname: "LL.B.",
+                stream:{
+                    name: "law",
+                    displayname: "Law",
+                },
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+            {
+                name: "fiveyearballb",
+                displayname: "Five Year B.A. LL.B.",
+                stream:{
+                    name: "law",
+                    displayname: "Law",
+                },
+            },
+            {
+                name: "fiveyearintegratedllb",
+                displayname: "Five Year Integrated LL.B. (Hons.)",
+                stream:{
+                    name: "law",
+                    displayname: "Law",
+                },
+            },
+            
+            {
+                name: "lawdegreeequivalenttollb",
+                displayname: "Law Degree equivalent to LL.B.",
+                stream:{
+                    name: "law",
+                    displayname: "Law",
+                },
+            },
+            {
+                name: "professionalcourseequivalenttobtech",
+                displayname: "Professional Courses equivalent to B.E. / B.Tech.",
+                stream:{
+                    name: "other",
+                    displayname: "Other",
+                },
+            },
+
+        ];
+        $scope.postgradMajors = [
+            {
+                name: "mba",
+                displayname: "M.B.A."
+            },
+            {
+                name: "ms",
+                displayname: "M.S."
+            },
+            {
+                name: "mtech",
+                displayname: "M.Tech."
+            },
+            {
+                name: "mcom",
+                displayname: "M.Com."
+            },
+            {
+                name: "msc",
+                displayname: "M.Sc."
+            },
+            {
+                name: "ma",
+                displayname: "M.A."
+            },
+            {
+                name: "mca",
+                displayname: "M.C.A."
+            },
+            {
+                name: "llm",
+                displayname: "LL.M."
+            },
+            {
+                name: "others",
+                displayname: "Others"
+            },
+
+        ];
+        $scope.sanitizeEligibility = function(){
+            if($scope.user.eligibility){
+                if($scope.user.eligibility.age){
+                    $scope.user.eligibility.age = Number($scope.user.eligibility.age);
+                }
+                if($scope.user.eligibility.class12Percentage){
+                    $scope.user.eligibility.class12Percentage = Number($scope.user.eligibility.class12Percentage);
+                }
+                if($scope.user.eligibility.undergradPercentage){
+                    $scope.user.eligibility.undergradPercentage = Number($scope.user.eligibility.undergradPercentage);
+                }
+                if($scope.user.eligibility.postgradPercentage){
+                    $scope.user.eligibility.postgradPercentage = Number($scope.user.eligibility.postgradPercentage);
+                }
+            }
+        };    
+        $scope.boxBackground = function(coaching){
+            var classname = "";
+            if($scope.bookAppointment.institute && $scope.bookAppointment.institute._id){
+                classname = "selected";
+            }else if(coaching._id == $scope.bookAppointment.institute){
+                classname = "selected";
+            }
+            return classname;
+        };
+        $scope.setAppointmentCentre = function(coaching){
+            $scope.bookAppointment.institute = coaching._id;
+        }; 
+            
+            
+        $scope.targetYears = ['2018', '2019', '2020'];    
+        $scope.bookAppointment = {};
+        if($cookies.getObject('sessionuser')){
+            
+            var sessionuser = $cookies.getObject( 'sessionuser');
+            if(sessionuser && sessionuser._id){
+                UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    $scope.sanitizeEligibility();
+                    Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    $rootScope.pageTitle = 'Book Appointment at ' + $stateParams.groupName;
+                    var defaultAppointmentDate = moment().add(2, 'days').set({h: 9, m: 0}).toDate();
+                   
+                    $scope.bookAppointment = {
+                        user: $scope.user._id,
+                        exam: $scope.exam._id,
+                        institute: null,
+                        _requestDate: defaultAppointmentDate,
+                        course: {
+                            targetYear: $scope.targetYears[1],
+                            city: $stateParams.cityName,
+                            groupname: $stateParams.groupName,
+                            name: '',
+                            duration: ''
+                        }
+                    };
+                    $scope.setAppointmentCentre($scope.coachingGroup[0]);
+                    
+                    bookAppointmentService.findBookAppointment($scope.bookAppointment).success(function (thisData, status, headers) {
+                        if(!thisData){
+                            
+                        }else{
+                            $scope.bookAppointment = thisData;
+                            $scope.setPage('Acknowledgment');
+                            Notification.success({message: "Great we have registered your interest in " + $scope.groupName +". We are following up with them!",  positionY: 'top', positionX: 'right', delay: 10000});
+                        }
+                        //Notification.primary({message: "Great we will reach out to " + $scope.groupName + ' for you!',  positionY: 'top', positionX: 'right', delay: 1000});
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }else{
+                $cookies.remove("sessionuser");
+                $rootScope.$emit("CallBlogLogin", {});
+                
+            }
+            
+        }else{
+            $cookies.remove("sessionuser");
+            $rootScope.$emit("CallBlogLogin", {});
+        }
+        
+        $scope.saveBookAppointment = function(){
+            bookAppointmentService.saveBookAppointment($scope.bookAppointment).success(function (data, status, headers) {
+                $scope.bookAppointment = data;
+                var emailForm = {
+                    templateName: 'Book Appointment Receipt',
+                    student: {
+                        name: $scope.user.basic.name,
+                        email: $scope.user.email,
+                        mobile: $scope.user.mobile,
+                    },
+                    coaching: {
+                        name: $stateParams.groupName,
+                        city: $stateParams.cityName,
+                        exam: $scope.exam.seoname,
+                        institute: $scope.bookAppointment.institute,
+                    },
+                    appointment:{
+                        _requestDate: $scope.bookAppointment._requestDate
+                    },
+                    course: {
+                        name: $scope.bookAppointment.course.name,
+                        duration: $scope.bookAppointment.course.duration,
+                    }
+                };
+                //console.log(emailForm);
+                EmailService.bookAppointmentEmail(emailForm).success(function (thisData, status, headers) {
+                    
+                    Notification.primary({message: "Great we will reach out to " + $scope.groupName + ' for you!',  positionY: 'top', positionX: 'right', delay: 10000});
+
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+        };
+        
+        $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
+        
+        $scope.setActiveSubcategory = function(subcategoryName){
+            $scope.activeCategory.subcategories.forEach(function(thisSubcategory, index){
+                if(thisSubcategory.name == subcategoryName){
+                    $scope.activeSubcategory = thisSubcategory;
+                }
+            });
+        };
+        
+        
+        $scope.setPreviousActiveCategory = function(){
+            var thisIndex = null;
+            var nCategories = $scope.components.length;
+            $scope.components.forEach(function(thisCategory, index){
+                if(thisCategory.name == $scope.activeCategory.name){
+                    thisIndex = index;
+                }
+            });
+            if(thisIndex != null){
+                if(thisIndex == 0){
+                    console.log('Do nothing');
+                }else{
+                    $scope.activeCategory = $scope.components[thisIndex - 1];
+                    
+                    $scope.currentSubcategories = $scope.activeCategory.subcategories;
+                    $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
+                }
+            }
+        }; 
+        $scope.setNextActiveCategory = function(){
+            var thisIndex = null;
+            var thisSubIndex = null;
+            var nCategories = $scope.components.length;
+            var nSubcategories = $scope.activeCategory.subcategories.length;
+            $scope.components.forEach(function(thisCategory, index){
+                if(thisCategory.name == $scope.activeCategory.name){
+                    thisIndex = index;
+                    thisCategory.subcategories.forEach(function(thisSubCategory, sindex){
+                    
+                        if(thisSubCategory.name == $scope.activeSubcategory.name){
+                            thisSubIndex = sindex;
+                            
+                        }
+
+                    });
+                }
+                
+            });
+            
+            if(thisIndex != null && thisSubIndex != null){
+                if(thisIndex == nCategories - 1){
+                    console.log('Do nothing');
+                }else{
+                    var validTransition = true;
+                    
+                    if(thisIndex == 0 && thisSubIndex == 0){
+                        if(!$scope.bookAppointment.institute){
+                            validTransition = false;
+                            Notification.warning({message: "Please select the centre!" ,  positionY: 'top', positionX: 'right', delay: 2000});
+                        }
+                        
+                        /*if(!$scope.bookAppointment.course.name || $scope.bookAppointment.course.name.length < 2){
+                            validTransition = false;
+                        }
+                        if(!$scope.bookAppointment.course.duration || $scope.bookAppointment.course.duration.length < 2){
+                            validTransition = false;
+                        }*/
+                       
+                        
+                        //$scope.saveBookAppointment();
+                    }
+                    if(thisIndex == 0 && thisSubIndex == 1){
+                        if($scope.user.newemail && $scope.user.newemail != ''){
+                            $scope.user.email = $scope.user.newemail;
+                        }
+                        if($scope.user.newmobile && $scope.user.newmobile != ''){
+                            $scope.user.mobile = $scope.user.newmobile;
+                        }
+                        if(!$scope.user.basic.name){
+                            validTransition = false;
+                            Notification.warning({message: "Please mention your name!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        }
+                        if(!$scope.user.mobile){
+                            validTransition = false;
+                            Notification.warning({message: "Please mention your mobile number!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        }
+                        if(!$scope.user.email){
+                            validTransition = false;
+                            Notification.warning({message: "Please mention your email address!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        }
+                    }
+                    if(validTransition){
+                        var nextMove = false;
+                        if(thisIndex == 0 && thisSubIndex == 1){
+                            nextMove = true;
+                            $scope.saveUser(thisIndex);
+                        }
+                        if(thisIndex == 0 && thisSubIndex == 0){
+                            nextMove = true;
+                        }
+                        if(thisIndex == 1){
+                            if(checkEligibility(thisIndex)){
+                                nextMove = true;
+                            }
+                        }
+                        
+                        
+                        if(nextMove){
+                            
+                            if(thisSubIndex == nSubcategories - 1){
+                                $scope.activeCategory = $scope.components[thisIndex + 1];
+
+                                $scope.currentSubcategories = $scope.activeCategory.subcategories;
+                                $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
+                            }else{
+
+                                $scope.activeSubcategory = $scope.activeCategory.subcategories[thisIndex + 1];
+                            }
+                            
+                            if(thisIndex == nCategories - 2 && thisSubIndex == nSubcategories - 1){
+                                $scope.saveBookAppointment();
+                            
+                            
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+            }
+        };    
+            
+        $scope.elgInput = {
+            category: {
+                general: true,
+                sc: false,
+                st: false,
+                obc: false,
+                pwd: false,
+            },
+            age: null,
+            educationLevel:{
+                level: null,
+                name: null
+            },
+            class12Subjects:{
+                biology: false,
+                chemistry: false,
+                biotechnology: false,
+                physics: false,
+                mathematics: false,
+                english: false,
+                others: false
+            },
+            class12Percentage: null,
+            undergradMajor:{
+                mbbs: false,
+                bds: false,
+                bsc: false,
+                bftech: false,
+                be: false,
+                btech: false,
+                bcom: false,
+                ba: false,
+                barch: false,
+                llb: false,
+                fiveyearintegratedllb: false,
+                fiveyearballb: false,
+                lawdegreeequivalenttollb: false,
+                others: false,
+            },
+            undergradPercentage: null,
+            postgradMajor:{
+                mcom: false,
+                msc: false,
+                ma: false,
+                mca: false,
+                mtech: false,
+                mba: false,
+                ms: false,
+                llm: false,
+                others: false,
+            },
+            postgradPercentage: null,
+            
+        };    
+        $scope.userVariables ={
+            genders: [
+                "Male",
+                "Female",
+            ],
+            categories:[
+                'GENERAL',    
+                'OBC-NCL',    
+                'SC',
+                'ST',
+            ],
+        };
+        $scope.setGender = function(gender){
+            if(!$scope.user.basic){
+                $scope.user.basic = {};
+            }
+            $scope.user.basic.gender = gender;
+        };
+        $scope.setCategory = function(caste){
+            if(!$scope.user.basic){
+                $scope.user.basic = {};
+            }
+            $scope.user.basic.category = caste;
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.category){
+                $scope.user.eligibility.category = {};
+            }
+            if(caste == 'GENERAL'){
+                $scope.user.eligibility.category.general = true;
+                $scope.user.eligibility.category.sc = false;
+                $scope.user.eligibility.category.st = false;
+                $scope.user.eligibility.category.obc = false;
+            }
+            if(caste == 'OBC-NCL'){
+                $scope.user.eligibility.category.general = false;
+                $scope.user.eligibility.category.sc = false;
+                $scope.user.eligibility.category.st = false;
+                $scope.user.eligibility.category.obc = true;
+            }
+            if(caste == 'SC'){
+                $scope.user.eligibility.category.general = false;
+                $scope.user.eligibility.category.sc = true;
+                $scope.user.eligibility.category.st = false;
+                $scope.user.eligibility.category.obc = false;
+            }
+            if(caste == 'ST'){
+                $scope.user.eligibility.category.general = false;
+                $scope.user.eligibility.category.sc = false;
+                $scope.user.eligibility.category.st = true;
+                $scope.user.eligibility.category.obc = false;
+            }
+        };    
+        $scope.setPwD = function(PwD){
+            if(!$scope.user.basic){
+                $scope.user.basic = {};
+            }
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.category){
+                $scope.user.eligibility.category = {};
+            }
+            $scope.user.basic.PwD = PwD;
+            $scope.user.eligibility.category.pwd = PwD;
+        };
+        
+        $scope.setAge = function(){
+            if($scope.user.basic && $scope.user.basic.dob){
+                var dob = moment($scope.user.basic.dob);
+                var age = moment().diff(dob, 'years');
+                if(!$scope.user.eligibility){
+                    $scope.user.eligibility = {};
+                }
+                $scope.user.eligibility.age = age;
+            }
+        };
+        
+        $scope.setEducationLevel = function(educationLevel){
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.educationLevel){
+                $scope.user.eligibility.educationLevel = {};
+            }
+            
+            $scope.user.eligibility.educationLevel = educationLevel;
+            
+            /*if($scope.user.eligibility.educationLevel.name == 'I-X'){
+                console.log('I am here');
+                $scope.components[0].subcategories = [];
+            }
+            if($scope.user.eligibility.educationLevel.name == 'XI / XII / After XII'){
+                $scope.components[0].subcategories = [];
+                $scope.components[0].subcategories.push({name: 'School Class XII'});
+            }
+            if($scope.user.eligibility.educationLevel.name == 'In UG or equivalent' || $scope.user.eligibility.educationLevel.name == 'During or After Final Year of UG'){
+                $scope.components[0].subcategories = [];
+                $scope.components[0].subcategories.push({name: 'School Class XII'});
+                $scope.components[0].subcategories.push({name: 'Undergraduate'});
+            }
+            if($scope.user.eligibility.educationLevel.name == 'During or After Final Year of PG'){
+                $scope.components[0].subcategories = [];
+                $scope.components[0].subcategories.push({name: 'School Class XII'});
+                $scope.components[0].subcategories.push({name: 'Undergraduate'});
+                $scope.components[0].subcategories.push({name: 'Postgraduate'});
+            }*/
+            
+            
+        };
+            
+        $scope.setClass12Subjects = function(subjectName){
+            console.log($scope.user.eligibility.class12Subjects);
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.class12Subjects){
+                $scope.user.eligibility.class12Subjects = {};
+            }
+            
+            if(!$scope.user.eligibility.class12Subjects[subjectName]){
+                $scope.user.eligibility.class12Subjects[subjectName] = true;
+            }else{
+                $scope.user.eligibility.class12Subjects[subjectName] = false;
+            }
+        };     
+        $scope.setUndergradMajor = function(degreeName){
+            
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.undergradMajor){
+                $scope.user.eligibility.undergradMajor = {};
+            }
+            $scope.undergradMajors.forEach(function(thisDegree, index){
+                if(thisDegree.name == degreeName){
+                    if(!$scope.user.eligibility.undergradMajor[degreeName]){
+                        $scope.user.eligibility.undergradMajor[degreeName] = true;
+                    }else{
+                        $scope.user.eligibility.undergradMajor[degreeName] = false;
+                    }
+                    
+                }else{
+                    $scope.user.eligibility.undergradMajor[thisDegree.name] = false;   
+                }
+            });
+            
+        };  
+            
+        $scope.setPostgradMajor = function(degreeName){
+            if(!$scope.user.eligibility){
+                $scope.user.eligibility = {};
+            }
+            if(!$scope.user.eligibility.postgradMajor){
+                $scope.user.eligibility.postgradMajor = {};
+            }
+            $scope.postgradMajors.forEach(function(thisDegree, index){
+                if(thisDegree.name == degreeName){
+                    if(!$scope.user.eligibility.postgradMajor[degreeName]){
+                        $scope.user.eligibility.postgradMajor[degreeName] = true;
+                    }else{
+                        $scope.user.eligibility.postgradMajor[degreeName] = false;
+                    }
+                    
+                }else{
+                    $scope.user.eligibility.postgradMajor[thisDegree.name] = false;   
+                }
+            });
+            
+        };
+            
+        var checkEligibility = function(thisIndex){
+            if(!$scope.user.eligibility){
+                 $scope.user.eligibility = $scope.elgInput;
+            }
+            $scope.elgInput = $scope.user.eligibility;
+            var error = false;
+            var errorClass12Subjects = true;
+            var errorUnderGradMajor = true;
+            var errorPostGradMajor = true;
+            var errorMessages = [];
+            
+            if(!$scope.elgInput.age){
+                error = true;
+                errorMessages.push("Please select your age");
+            }
+            
+            if($scope.elgInput.educationLevel){
+            if($scope.elgInput.educationLevel.level == null){
+                error = true;
+                errorMessages.push("Please select your current education level");
+            }
+           
+            
+                
+            
+            if($scope.elgInput.educationLevel.level>=1){
+                
+                $scope.class12Subjects.forEach(function(thisSubject, index){
+                    if($scope.elgInput.class12Subjects && $scope.elgInput.class12Subjects[thisSubject.name]){
+                        errorClass12Subjects = false;
+                    }
+                    
+                });
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=1 && errorClass12Subjects){
+                error = true;
+                errorMessages.push("Please select your Class XII Subjects");
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=3){
+                if(!$scope.elgInput.class12Percentage){
+                    error = true;
+                    errorMessages.push("Please select your Class XII Percentage");
+                }
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=3){
+                $scope.undergradMajors.forEach(function(thisMajor, index){
+                    if($scope.elgInput.undergradMajor && $scope.elgInput.undergradMajor[thisMajor.name]){
+                        errorUnderGradMajor = false;
+                    }
+                    if(index == $scope.undergradMajors.length - 1 && errorUnderGradMajor){
+                        error = errorUnderGradMajor;
+                        errorMessages.push("Please select your Undergraduate Major");
+                    }
+                });
+            }
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=4){
+                if(!$scope.elgInput.undergradPercentage){
+                    error = true;
+                    errorMessages.push("Please select your Undergraduate Percentage (or equivalent CGPA)");
+                }
+            }
+            
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=5){
+                $scope.postgradMajors.forEach(function(thisMajor, index){
+                    if($scope.elgInput.postgradMajor[thisMajor.name]){
+                        errorPostGradMajor = false;
+                    }
+                    if(index == $scope.postgradMajors.length - 1 && errorPostGradMajor){
+                        error = errorPostGradMajor;
+                        errorMessages.push("Please select your Postgraduate Major");
+                    }
+                });
+            }
+            if($scope.elgInput.educationLevel.level && $scope.elgInput.educationLevel.level>=5){
+                if(!$scope.elgInput.postgradPercentage){
+                    error = true;
+                    errorMessages.push("Please select your achieved or expected Postgraduate Percentage (or equivalent CGPA)");
+                }
+            }
+            
+            }else{
+                error = true;
+                errorMessages.push("Please select your current education level");
+            }
+            
+            
+            //console.log(error);
+            //console.log(errorMessages);
+            if(error){
+                
+                Notification.warning({message: "Please fill all academic details to proceed ahead!",  positionY: 'top', positionX: 'right', delay: 1000});
+                return false;
+            }else{
+                $scope.saveEligibility();
+                return true;
+            
+            }
+            
+        };
+            
+        $scope.saveUser = function(thisIndex){
+            
+            $scope.setAge();
+            UserService.updateUser($scope.user).success(function (data, status, headers) {
+                if(thisIndex == 0){
+                    //Notification.success({message: "Your contact details are saved!",  positionY: 'top', positionX: 'right', delay: 1000});
+                }
+                
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });    
+        };
+            
+        $scope.saveEligibility = function(){
+            if($scope.user && $scope.user._id){
+                var eligibilityForm = {
+                    user: $scope.user._id,
+                    eligibility: $scope.elgInput
+                };
+                UserService.saveEligibility(eligibilityForm).success(function (data, status, headers) {
+                    Notification.success({message: "Your academic details are saved!",  positionY: 'top', positionX: 'right', delay: 1000});
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }   
+        };   
+    }]);      
+        
+        
+        
     exambazaar.controller("availDiscountController", 
         [ '$scope', '$http','$state', '$stateParams', '$rootScope', '$cookies', 'UserService', 'availDiscountService', 'EmailService', '$mdDialog', '$timeout', 'Notification', 'thisGroup', 'thisExam', function($scope,$http,$state, $stateParams, $rootScope, $cookies, UserService, availDiscountService, EmailService, $mdDialog, $timeout, Notification, thisGroup, thisExam){
+        
+            
         $scope.col1Width = 40;
         $scope.col1WidthAcademic = 20;
         $scope.groupName = $stateParams.groupName;
@@ -4519,6 +5599,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
         }else{
             $cookies.remove("sessionuser");
+            $rootScope.$emit("CallBlogLogin", {});
         }
         
         $scope.saveAvailDiscount = function(){
@@ -10495,11 +11576,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             var rightNow = new Date();
             
             $scope.tofillciList.forEach( function(thisTask, index){
-               
-                console.log(JSON.stringify(thisTask));
+                
+                
+                //console.log(JSON.stringify(thisTask));
                 var iIndex = internIds.indexOf(thisTask.user._id);
                 
-                if($scope.compareDates(thisTask._deadline, $scope.days[0]) == 1){
+                if($scope.compareDates(thisTask._deadline, $scope.days[0]) == 1 && iIndex != -1){
                     console.log($scope.internDueList[iIndex]);
                     $scope.internDueList[iIndex].taskList.push(thisTask);
                 }
@@ -10510,6 +11592,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     var internIndex = internIds.indexOf(thisTask.user._id);
                     console.log(thisTask);
                     console.log(internIndex);
+                    console.log(thisTask.user._id);
                     $scope.internDueList[internIndex].assigned += 1;
                     
                     //console.log(thisTask._deadline + ' ' + rightNow + ' ' + compare(rightNow, new Date(thisTask._deadline)));
@@ -11906,6 +12989,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $state.reload();
                 }
                 if($state.current.name == 'userInstitutes'){
+                    $state.reload();
+                }
+                if($state.current.name == 'availDiscount'){
+                    $state.reload();
+                }
+                if($state.current.name == 'bookAppointment'){
                     $state.reload();
                 }
                 //$state.reload();
@@ -14074,11 +15163,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         
                         //Summary code starts here
                         var reportSummary = [];
-                        var reportSummaryIds = []; 
-                         $scope.addedInstitutes.forEach(function(thisInstitute, index){
+                        var reportSummaryIds = []; $scope.addedInstitutes.forEach(function(thisInstitute, index){
                              var user = thisInstitute._createdBy;
                              var userName = null;
-                             if(user.basic.name){
+                             if(user.basic && user.basic.name){
                                  userName = user.basic.name;
                              }
                             var thisDateString = moment(thisInstitute._created).format("DD-MMM-YYYY");
@@ -14105,6 +15193,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         var uniqueDateStrings = [];
                         var uniqueUserNames = [];
                         var finalSummary = {};
+                        
                         
                          reportSummary.forEach(function(thisElement, index){
                             if(uniqueDateStrings.indexOf(thisElement.dateString) == -1){
@@ -16150,6 +17239,39 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     });
                     $scope.showCommonExamDialog();
                     console.log($scope.commonExams);
+                    //$scope.showSavedDialog();
+                    //$scope.showSavedDialog();
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });       
+            };
+            
+            $scope.allExamsInAll = function(){
+                var allInstitutes = $scope.spreadSheetCoachings;
+                if(allInstitutes[0]._id == 'EB Id'){
+                    allInstitutes.splice(0,1);
+                }
+                var allExamIds =  $scope.allExams.map(function(a) {return a._id;});
+                
+                var instituteArray =  allInstitutes.map(function(a) {return a._id;});
+                var groupExamForm = {
+                    instituteArray: instituteArray,
+                    examArray: allExamIds,
+                };
+                
+                coachingService.allExamsInAll(groupExamForm).success(function (data, status, headers) {
+                    var commonExams = data;
+                    $scope.commonExamIds = data;
+                    var allExamIds =  $scope.allExams.map(function(a) {return a._id;});
+                    $scope.commonExams = [];
+                    commonExams.forEach(function(thisExam, index){
+                        var eIndex = allExamIds.indexOf(thisExam);
+                        
+                        $scope.commonExams.push($scope.allExams[eIndex]);
+                    });
+                    $scope.showCommonExamDialog();
                     //$scope.showSavedDialog();
                     //$scope.showSavedDialog();
                     
@@ -31977,6 +33099,68 @@ function getLatLng(thisData) {
                 
             }
         })
+        .state('bookAppointment', {
+            url: '/bookAppointment/:categoryName/:subCategoryName/:cityName/:groupName',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'bookAppointment.html',
+                    controller: 'bookAppointmentController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisGroup: ['coachingService','$stateParams',
+                    function(coachingService,$stateParams) {
+                    var groupCity = {
+                        groupName: $stateParams.groupName,
+                        cityName: $stateParams.cityName,
+                    };
+                    return coachingService.getGroupCityCentres(groupCity);
+                }],
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamByName($stateParams.subCategoryName);
+                }],
+                /*thisStream: ['StreamService','$stateParams',
+                    function(StreamService,$stateParams){
+                    return StreamService.getStreamByName($stateParams.categoryName);
+                }],
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamByName($stateParams.subCategoryName);
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
+                
+                thisGroupResults: ['resultService','$stateParams',
+                    function(resultService,$stateParams) {
+                    var groupCity = {
+                        groupName: $stateParams.groupName,
+                        cityName: $stateParams.cityName,
+                        examName: $stateParams.subCategoryName
+                    };
+                    return resultService.groupResults(groupCity);
+                }],
+                bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
+                }],*/
+                
+                
+                
+            }
+        })
         .state('availDiscount', {
             url: '/availDiscount/:categoryName/:subCategoryName/:cityName/:groupName',
             views: {
@@ -35100,7 +36284,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         
         var fIndex = stateToURL.indexOf(filterPattern);
         
-        if(stateTo != 'claim' && stateTo != 'eligibility'  && stateTo != 'showGroup'){
+        if(stateTo != 'claim' && stateTo != 'eligibility'  && stateTo != 'showGroup' && stateTo != 'bookAppointment' && stateTo != 'availDiscount'){
             $mdDialog.hide();
         }
         
