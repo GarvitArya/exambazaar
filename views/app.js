@@ -33166,7 +33166,7 @@ function getLatLng(thisData) {
             }
         })
         .state('availDiscount', {
-            url: '/availDiscount/:categoryName/:subCategoryName/:cityName/:groupName',
+            url: '/ebinternal/availDiscount/:categoryName/:subCategoryName/:cityName/:groupName',
             views: {
                 'header':{
                     templateUrl: 'header.html',
