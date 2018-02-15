@@ -11593,15 +11593,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log(thisTask);
                     console.log(internIndex);
                     console.log(thisTask.user._id);
-                    $scope.internDueList[internIndex].assigned += 1;
+                    if(internIndex != -1){
+                        $scope.internDueList[internIndex].assigned += 1;
+                        if(compare(rightNow, new Date(thisTask._deadline)) == 1){
+                            $scope.internDueList[internIndex].due += 1;
+
+
+                            $scope.fillsDue += 1;
+                        }
+                    }
+                    
                     
                     //console.log(thisTask._deadline + ' ' + rightNow + ' ' + compare(rightNow, new Date(thisTask._deadline)));
-                    if(compare(rightNow, new Date(thisTask._deadline)) == 1){
-                        $scope.internDueList[internIndex].due += 1;
-                        
-                        
-                        $scope.fillsDue += 1;
-                    }
+                    
                 }else{
                     var thisEmail = thisTask.institute.email;
                     if(!thisEmail || thisEmail.length == 0){
