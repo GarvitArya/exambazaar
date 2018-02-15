@@ -33104,7 +33104,7 @@ function getLatLng(thisData) {
             }
         })
         .state('bookAppointment', {
-            url: '/bookAppointment/:categoryName/:subCategoryName/:cityName/:groupName',
+            url: '/ebinternal/bookAppointment/:categoryName/:subCategoryName/:cityName/:groupName',
             views: {
                 'header':{
                     templateUrl: 'header.html',
