@@ -30716,6 +30716,7 @@ function getLatLng(thisData) {
             sitemapText += xmlStart;
             sitemapText += urlsetStart;
             urls.forEach(function(thisURL, uIndex){
+                if(uIndex<135000 && uIndex >= 90000){
                 thisURLText = "";
                 thisURLText += urlStart;
                 thisURLText += locStart;
@@ -30733,6 +30734,7 @@ function getLatLng(thisData) {
                 }
                 thisURLText += urlEnd;
                 sitemapText += thisURLText;
+                }
             });
             sitemapText += urlsetEnd;
             
