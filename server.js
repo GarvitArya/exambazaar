@@ -282,6 +282,7 @@ var allStates = [
 '/ebinternal/user/:userId/filledColleges',
 '/ebinternal/user/:userId/addIntern',
 '/ebinternal/fci',
+'/ebinternal/rci',
 '/ebinternal/user/:userId/assignedToAddContactInfo',
 '/ebinternal/user/:userId/assignedToRate',
 '/ebinternal/user/:userId/assignedToVerify',

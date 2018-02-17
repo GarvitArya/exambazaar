@@ -71,8 +71,8 @@ router.get('/institutesRated', function(req, res) {
             var counter = 0;
             var nLength = allfills.length;
             //console.log(allfills);
-            allfills.forEach(function(thisFillTask, index){
-                var institute = thisFillTask.institute;
+            allfills.forEach(function(thisRateInstituteTask, index){
+                var institute = thisRateInstituteTask.institute;
                 var instituteId = institute;
                 //console.log(instituteId);
                 var thisInstitute = coaching
@@ -122,8 +122,8 @@ router.get('/prevRated/:instituteId', function(req, res) {
                     var counter = 0;
                     var nLength = allfills.length;
                     //console.log(allfills);
-                    allfills.forEach(function(thisFillTask, index){
-                        var institute = thisFillTask.institute;
+                    allfills.forEach(function(thisRateInstituteTask, index){
+                        var institute = thisRateInstituteTask.institute;
                         var instituteId = institute;
                         //console.log(instituteId);
                         var thisInstitute = coaching
@@ -205,13 +205,13 @@ router.get('/', function(req, res) {
         .find({})
         .exec(function (err, rateInstitutes) {
         if (!err){
-            var basicFillTasks = [];
+            var basicRateInstituteTasks = [];
             var counter = 0;
             var nLength = rateInstitutes.length;
             
-            rateInstitutes.forEach(function(thisFillTask, index){
-                var instituteId = thisFillTask.institute;
-                var userId = thisFillTask.user;
+            rateInstitutes.forEach(function(thisRateInstituteTask, index){
+                var instituteId = thisRateInstituteTask.institute;
+                var userId = thisRateInstituteTask.user;
                 var thisProvider = coaching
                     .findOne({'_id': instituteId}, {name:1, city:1, email:1, groupName:1})
                     .exec(function (err, thisProvider) {
@@ -223,19 +223,19 @@ router.get('/', function(req, res) {
                         .exec(function (err, thisUser) {
                         if (!err){
                             var newTask = {
-                            _id: thisFillTask._id,
+                            _id: thisRateInstituteTask._id,
                             user: thisUser,
                             institute: thisProvider,
-                            _created: thisFillTask._created,
-                            _deadline: thisFillTask._deadline,
-                            _finished: thisFillTask._finished,
-                            active: thisFillTask.active,
+                            _created: thisRateInstituteTask._created,
+                            _deadline: thisRateInstituteTask._deadline,
+                            _finished: thisRateInstituteTask._finished,
+                            active: thisRateInstituteTask.active,
 
                         };
                         counter = counter + 1;
-                        basicFillTasks.push(newTask);
+                        basicRateInstituteTasks.push(newTask);
                         if(counter == nLength){
-                            res.json(basicFillTasks);
+                            res.json(basicRateInstituteTasks);
                         }    
                             
                         } else {throw err;}
@@ -253,46 +253,121 @@ router.get('/', function(req, res) {
 });
 //to get all rateInstitutes for a user
 router.get('/user/:userId', function(req, res) {
+    var limit = 100;
     var userId = req.params.userId;
-    var rateInstitutes = rateInstitute
-        .find({user: userId})
-        .deepPopulate('institute user')
-        .exec(function (err, rateInstitutes) {
-        if (!err){
-            var basicFillTasks = [];
-            var counter = 0;
-            var nLength = rateInstitutes.length;
-            rateInstitutes.forEach(function(thisFillTask, index){
-                var newTask = {
-                    user: {
-                        _id: thisFillTask.user._id,
-                        name: thisFillTask.user.basic.name,
-                    },
-                    institute: {
-                        _id: thisFillTask.institute._id,
-                        name: thisFillTask.institute.name,
-                        address: thisFillTask.institute.address,
-                        city: thisFillTask.institute.city,
-                        pincode: thisFillTask.institute.pincode
-                    },
-                    _created: thisFillTask._created,
-                    _deadline: thisFillTask._deadline,
-                    _finished: thisFillTask._finished,
-                    active: thisFillTask.active,
+    var fullAccessUsers = ["5a1831f0bd2adb260055e352"];
+    var thisUser = user.findOne({_id: userId}, {basic: 1, userType: 1}, function(err, thisUser) {
+    if (!err){
+        if(thisUser){
+            if(thisUser.userType == "Master" || fullAccessUsers.indexOf(thisUser._id.toString()) != -1){
+                var rateInstitutes = rateInstitute
+                .find({})
+                //.limit(limit)
+                .sort( { _created: -1 } )
+                .deepPopulate('institute user')
+                .exec(function (err, rateInstitutes) {
+                if (!err){
+                    var basicRateInstituteTasks = [];
+                    var counter = 0;
+                    var nLength = rateInstitutes.length;
+                    rateInstitutes.forEach(function(thisRateInstituteTask, index){
+                        var newTask = {
+                            user: {
+                                _id: thisRateInstituteTask.user._id,
+                                name: thisRateInstituteTask.user.basic.name,
+                            },
+                            institute: {
+                                _id: thisRateInstituteTask.institute._id,
+                                name: thisRateInstituteTask.institute.name,
+                                address: thisRateInstituteTask.institute.address,
+                                city: thisRateInstituteTask.institute.city,
+                                pincode: thisRateInstituteTask.institute.pincode
+                            },
+                            _created: thisRateInstituteTask._created,
+                            _deadline: thisRateInstituteTask._deadline,
+                            _finished: thisRateInstituteTask._finished,
+                            active: thisRateInstituteTask.active,
 
-                };
-                counter = counter + 1;
-                basicFillTasks.push(newTask);
-                if(counter == nLength){
-                    res.json(basicFillTasks);
-                }
+                        };
+                        counter = counter + 1;
+                        basicRateInstituteTasks.push(newTask);
+                        if(counter == nLength){
+                            res.json(basicRateInstituteTasks);
+                        }
+                    });
+
+                    if(nLength == 0){
+                        res.json([]);
+                    }
+                } else {throw err;}
             });
-            
-            if(nLength == 0){
-                res.json([]);
+            }else{
+                var rateInstitutes = rateInstitute
+                .find({user: userId})
+                .limit(limit)
+                .sort( { _created: -1 } )
+                .deepPopulate('institute user')
+                .exec(function (err, rateInstitutes) {
+                if (!err){
+                    var basicRateInstituteTasks = [];
+                    var counter = 0;
+                    var nLength = rateInstitutes.length;
+                    rateInstitutes.forEach(function(thisRateInstituteTask, index){
+                        var newTask = {
+                            user: {
+                                _id: thisRateInstituteTask.user._id,
+                                name: thisRateInstituteTask.user.basic.name,
+                            },
+                            institute: {
+                                _id: thisRateInstituteTask.institute._id,
+                                name: thisRateInstituteTask.institute.name,
+                                address: thisRateInstituteTask.institute.address,
+                                city: thisRateInstituteTask.institute.city,
+                                pincode: thisRateInstituteTask.institute.pincode
+                            },
+                            _created: thisRateInstituteTask._created,
+                            _deadline: thisRateInstituteTask._deadline,
+                            _finished: thisRateInstituteTask._finished,
+                            active: thisRateInstituteTask.active,
+
+                        };
+                        counter = counter + 1;
+                        basicRateInstituteTasks.push(newTask);
+                        if(counter == nLength){
+                            res.json(basicRateInstituteTasks);
+                        }
+                    });
+
+                    if(nLength == 0){
+                        res.json([]);
+                    }
+                } else {throw err;}
+            });
+                
+                
             }
-        } else {throw err;}
+        }else{
+            res.json([]);
+        }
+
+
+
+    } else {throw err;}
     });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 });
 

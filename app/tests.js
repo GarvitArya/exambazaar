@@ -883,7 +883,7 @@ router.get('/officialPapersStreamExam', function(req, res) {
             .find({active: true}, {})
             .exec(function (err, allStreams) {
                 var allExams = exam
-                .find({active: true, stream: {$exists: true}}, {name:1, displayname:1, seoname: 1, stream:1, rank: 1})
+                .find({active: true, stream: {$exists: true}}, {name:1, displayname:1, seoname: 1, stream:1, rank: 1, logo: 1})
                 .exec(function (err, allExams) {
                     var allExamIds = allExams.map(function(a) {return a._id.toString();});
                     var allStreamIds = allStreams.map(function(a) {return a._id.toString();});
@@ -953,6 +953,7 @@ router.get('/officialPapersStreamExam', function(req, res) {
                                 seoname: thisExam.seoname,
                                 active: thisExam.active,
                                 rank: thisExam.rank,
+                                logo: thisExam.logo,
                                 tests: []
                             };
                             streamExamOfficialPapers[sIndex].exams.push(newExam);

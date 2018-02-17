@@ -321,7 +321,7 @@ router.get('/user/:userId', function(req, res) {
             if(thisUser.userType == "Master" || fullAccessUsers.indexOf(thisUser._id.toString()) != -1){
                 var tofillcis = tofillci
                 .find({})
-                .limit(limit)
+                //.limit(limit)
                 .sort( { _created: -1 } )
                 .deepPopulate('institute user')
                 .exec(function (err, tofillcis) {

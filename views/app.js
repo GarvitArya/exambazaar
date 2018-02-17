@@ -2402,7 +2402,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             $rootScope.pageTitle = 'Best Coaching Classes in India for more than 50 exams | Exambazaar.com';
             $rootScope.pageDescription = "Search and apply to the best coaching classes and get the education that you deserve. Browse through courses, photos, videos and results for 28,000+ institutes in 100+ cities";
-            $rootScope.pageKeywords = "Exambazaar, Exam Bazaar, Exambazaar.com, Best Coaching Classes, Best Coaching, Top Coaching Classes, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT Coaching, GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching";
+            $rootScope.pageKeywords = "Exambazaar, Exam Bazaar, Exambazaar.com, Best Coaching Classes, Best Coaching, Top Coaching Classes, Coaching Reviews, Engineering Coaching, Medical Coaching, CA & CS Coaching, NTSE Coaching, CAT Coaching, CLAT Coaching, SAT Coaching, GMAT Coaching, IAS Coaching, SSC Coaching, Bank PO Coaching, Defence Coaching, 926e173632ea3a4e567a";
 
             
 
@@ -12351,6 +12351,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                                 var newExam = {
                                     exam: thisExam.displayname,
                                     examName: thisExam.name,
+                                    rank: thisExam.rank,
+                                    logo: thisExam.logo,
                                 };
                                 var years = {
                                     min: '',
@@ -12404,7 +12406,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                                         }
                                 }
                                 if(index == $rootScope.allOfficialPapers.length - 1){
-                                    examSummary.hours = examSummary.hours/60;
+                                    examSummary.hours = Math.round(examSummary.hours/60);
                                     examSummary.years = years;
                                     newExam.examSummary = examSummary;
                                     newStream.exams.push(newExam);
@@ -23261,7 +23263,231 @@ function getLatLng(thisData) {
         $rootScope.pageTitle =$scope.user.basic.name;
     }]);    
         
+    exambazaar.controller("rciController", 
+        [ '$scope' ,  '$http','$state','$rootScope', '$cookies', 'UserService', 'rateInstituteService', 'coachingService', 'Notification', 'ebteam', 'tofillciList', 'torateciList', function($scope, $http, $state, $rootScope, $cookies, UserService, rateInstituteService, coachingService, Notification, ebteam, tofillciList, torateciList){
+            $scope.ebteam = ebteam.data;
+            $scope.fullScope = false;
+            var fullScopeUsers = ["5a1831f0bd2adb260055e352"];
         
+        if($cookies.getObject('sessionuser')){
+            var sessionuser = $cookies.getObject( 'sessionuser');
+            if(sessionuser && sessionuser._id){
+                UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    $scope.authorized = true;
+                    $rootScope.pageTitle ="RCI Report for " + $scope.user.basic.name;
+                    
+                    rateInstituteService.getuserrateInstitute($scope.user._id).success(function (adata, status, headers) {
+                        $scope.assigned = adata;
+                        //console.log($scope.assigned);
+                        $scope.assignedCount = 0;
+                        $scope.dueDeadlineCount = 0;
+                        Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                        $scope.assigned.forEach(function(thisAssigned, index){
+                            $scope.assignedCount += 1;
+                           
+                            if(thisAssigned.active && moment(thisAssigned._deadline).diff(moment()) < 0){
+                                $scope.dueDeadlineCount += 1;
+                            }
+                            
+                            if(fullScopeUsers.indexOf($scope.user._id) != -1 || $scope.user.userType == "Master"){
+                                $scope.fullScope =  true;
+                            }
+                        });
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            }else{
+                $cookies.remove("sessionuser");
+                $rootScope.$emit("CallBlogLogin", {});
+            }
+            
+        }else{
+            $cookies.remove("sessionuser");
+        }
+            
+        $scope.tofillciList = tofillciList.data;
+        $scope.torateciList = torateciList.data;
+            
+        $scope.newAssign = {
+            coachingId: '',
+            intern: null,
+            deadline: moment(),
+            
+        };
+            
+        var tofillGroupNames = $scope.tofillciList.map(function(a) {return a.institute.groupName;});
+        var toRateGroupNames = $scope.torateciList.map(function(a) {return a.institute.groupName;});
+        
+            
+        $scope.assignToRate = function(){
+            var assignable = true;
+            if(!$scope.newAssign.coachingId || $scope.newAssign.coachingId == '' || $scope.newAssign.coachingId.length < 15){
+                assignable = false;
+            }
+            if(!$scope.newAssign.deadline){
+                assignable = false;
+            }
+            if(!$scope.newAssign.intern || $scope.newAssign.intern == ''){
+                assignable = false;
+            }
+            if($scope.newAssign.deadline){
+                $scope.newAssign.deadline = moment($scope.newAssign.deadline);
+                $scope.newAssign.deadline = $scope.newAssign.deadline.endOf('day');
+               
+            }
+            if($scope.newAssign.coachingId){
+                var newValueArr = $scope.newAssign.coachingId.split("/");
+                $scope.newAssign.coachingId = newValueArr[newValueArr.length-1];
+            }
+            
+            
+            if(assignable){
+                var torateciForm = {
+                    institute: $scope.newAssign.coachingId,
+                    user: $scope.newAssign.intern,
+                    _deadline: $scope.newAssign.deadline,
+                };
+                console.log(JSON.stringify(torateciForm));
+                rateInstituteService.saverateInstitute(torateciForm).success(function (data, status, headers) {
+                    Notification.primary({message: "Ok cool, assigned!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.log(status + " " + data);
+                });
+            }else{
+                Notification.warning({message: "Please fill all details correctly!",  positionY: 'top', positionX: 'right', delay: 1000});
+            }
+        };
+            
+        $scope.assignToFill = function(){
+            var assignable = true;
+            if(!$scope.newAssign.coachingId || $scope.newAssign.coachingId == '' || $scope.newAssign.coachingId.length < 15){
+                assignable = false;
+            }
+            if(!$scope.newAssign.deadline){
+                assignable = false;
+            }
+            if(!$scope.newAssign.intern || $scope.newAssign.intern == ''){
+                assignable = false;
+            }
+            if($scope.newAssign.deadline){
+                $scope.newAssign.deadline = moment($scope.newAssign.deadline);
+                $scope.newAssign.deadline = $scope.newAssign.deadline.endOf('day')
+               
+            }
+            if($scope.newAssign.coachingId){
+                var newValueArr = $scope.newAssign.coachingId.split("/");
+                $scope.newAssign.coachingId = newValueArr[newValueArr.length-1];
+            }
+            
+            
+            if(assignable){
+                var tofillciForm = {
+                    institute: $scope.newAssign.coachingId,
+                    user: $scope.newAssign.intern,
+                    _deadline: $scope.newAssign.deadline,
+                };
+                console.log(JSON.stringify(tofillciForm));
+                tofillciService.savetofillci(tofillciForm).success(function (data, status, headers) {
+                    Notification.primary({message: "Ok cool, assigned!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.log(status + " " + data);
+                });
+            }else{
+                Notification.warning({message: "Please fill all details correctly!",  positionY: 'top', positionX: 'right', delay: 1000});
+            }
+        };
+            
+        $scope.assignCIFill = function(){
+            var intern = $scope.ciIntern;
+            var coaching = $scope.instituteInput;
+            var ciDeadline = $scope.ciDeadline;
+            ciDeadline.setHours(23,59,59);
+            var res = coaching.split("/");
+            var coaching = res[res.length-1];
+            if(coaching.length < 15 || !ciDeadline){
+                alert('Check Coaching Id or URL and deadline date');
+            }else{
+
+                var tofillciForm = {
+                    institute: coaching,
+                    user: intern,
+                    _deadline: ciDeadline,
+                };
+                console.log(JSON.stringify(tofillciForm));
+                tofillciService.savetofillci(tofillciForm).success(function (data, status, headers) {
+                    $scope.showSavedDialog();
+                    $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    console.log(status + " " + data);
+                });
+            }
+        };    
+            
+        $scope.$watch('newAssign.coachingId', function (newValue, oldValue, scope){
+            if(newValue != null && newValue != ''){
+                
+                var newValueArr = newValue.split("/");
+                newValue = newValueArr[newValueArr.length-1];
+                
+                if(newValue.length > 5){
+                    
+                    $scope.fetching = true;
+                    $scope.assignError = false;
+                    
+                    coachingService.getGroupName(newValue).success(function (data, status, headers) {
+                        
+                        if(data){
+                            $scope.assignGroup = data;
+                            if(toRateGroupNames.indexOf(data) == -1){
+                                $scope.prevFilledLength = 0;
+                            }else{
+                                $scope.prevFilledLength = 1;
+                            }
+                        }else{
+                            $scope.assignError = true;
+                        }
+                        
+                        $scope.fetching = false;
+                    }).error(function (data, status, header, config) {
+                        console.log("Error ");
+                    });
+                    
+                    //tofillGroupNames 
+                    /*tofillciService.prevFilled(newValue).success(function (prevfilleddata, status, headers) {
+                        $scope.prevFilledLength = prevfilleddata;
+                        
+                        $scope.fetching = false;
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log(status + " " + data);
+                    });*/
+                    
+                    
+                    
+                    
+                }
+
+            }
+
+            }, true);
+        
+        
+        //console.log($scope.assignedCount);
+        
+    }]);    
         
     exambazaar.controller("fciController", 
         [ '$scope' ,  '$http','$state','$rootScope', '$cookies', 'UserService', 'tofillciService', 'coachingService', 'Notification', 'ebteam', 'tofillciList', function($scope, $http, $state, $rootScope, $cookies, UserService, tofillciService, coachingService, Notification, ebteam, tofillciList){
@@ -27200,8 +27426,7 @@ function getLatLng(thisData) {
             
             
             
-            
-            $scope.showcase ={
+            /*$scope.showcase ={
                 stream: 0,
                 exam: 0
             };
@@ -27218,8 +27443,7 @@ function getLatLng(thisData) {
                 }
                 $scope.exam = $rootScope.opStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
                 $scope.$apply();
-                //console.log($scope.exam);
-            }, 2000);
+            }, 2000);*/
             
             $rootScope.pageImage = $scope.defaultCoverPhoto;
             $rootScope.pageTitle = "Official Question Papers of all Major Exams in India | ";
@@ -27230,7 +27454,7 @@ function getLatLng(thisData) {
             var keywordString = '';
             var suffix = [' Question Papers ', ' Question Papers PDF ', ' Question Papers & Answers PDF ' , ' Official Papers '];
             var examNames = ['IIT JEE', 'GATE'];
-            for(var i = $scope.totalyears.max; i >= $scope.totalyears.min; i--) {
+            for(var i = 2018; i >= 2008; i--) {
                 
                 examNames.forEach(function(thisExam, eindex){
                     suffix.forEach(function(thisSuffix, index){
@@ -27348,7 +27572,7 @@ function getLatLng(thisData) {
                     thisPaper.fromnow = moment(thisPaper._actualdate).fromNow();
                 }
             });
-            $scope.examSummary.hours = $scope.examSummary.hours/60;
+            $scope.examSummary.hours = Math.round($scope.examSummary.hours/60);
             
             $rootScope.pageImage = $scope.defaultCoverPhoto;
             $rootScope.pageTitle = $scope.exam.displayname + " Question Papers | " + $scope.examSummary.papers + " Papers, " + $scope.examSummary.hours + " Hours, " + $scope.examSummary.questions + " Questions";
@@ -35300,6 +35524,36 @@ function getLatLng(thisData) {
                 tofillciList: ['tofillciService',
                     function(tofillciService) {
                     return tofillciService.gettofillcis();
+                }],
+            }
+        })
+        .state('rci', {
+            url: '/ebinternal/rci',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'rci.html',
+                    controller: 'rciController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                ebteam: ['UserService',
+                    function(UserService){
+                    return UserService.getEBTeam();
+                }],
+                tofillciList: ['tofillciService',
+                    function(tofillciService) {
+                    return tofillciService.gettofillcis();
+                }],
+                torateciList: ['rateInstituteService',
+                    function(rateInstituteService) {
+                    return rateInstituteService.getrateInstitutes();
                 }],
             }
         })
