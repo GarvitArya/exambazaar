@@ -2617,9 +2617,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         console.log(p4StreamExamsIds);*/
         $scope.examBadgeClass = function(thisExam){
             
-            var classname = "streamBadge";
+            var classname = "emptyTag";
             if(thisExam.name == $scope.subCategoryName){
-                classname = "currentBadge";
+                classname = "filledTag";
             }
             return classname;
         };
@@ -3212,7 +3212,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 state: 'reviewed',
                 subcategories: [
                     {
-                        name: 'Your Exams',
+                        name: 'All Exams',
                     },
                 ],
             }
