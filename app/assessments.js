@@ -344,9 +344,9 @@ router.post('/userevaluate', function(req, res) {
                         var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
                         
                         
-                        if(k1Index != -1){
-                        var subQuestionType = solutionKey[k1Index].type;
-                        var subQuestionMarking = solutionKey[k1Index].marking;
+                        if(k2Index != -1){
+                        var subQuestionType = solutionKey[k2Index].type;
+                        var subQuestionMarking = solutionKey[k2Index].marking;
                             
                         var thisPair = {
                             questionId: thisQuestionId,
@@ -365,7 +365,7 @@ router.post('/userevaluate', function(req, res) {
                             if(thisResponse.option){
                                 thisOptionId = thisResponse.option.toString();
 
-                                if(thisOptionId == solutionKey[k1Index].option){
+                                if(thisOptionId == solutionKey[k2Index].option){
                                     
                                     correct.push(thisPair);
                                 }else{
@@ -376,11 +376,11 @@ router.post('/userevaluate', function(req, res) {
                             var thisNumericalAnswer = null;
                             if(thisResponse.numericalAnswer){
                                 thisNumericalAnswer = Number(thisResponse.numericalAnswer);
-                                var numericalType = solutionKey[k1Index].numericalAnswerType;
+                                var numericalType = solutionKey[k2Index].numericalAnswerType;
 
                                 if(numericalType == 'Exact'){
                                     var correctResponse = false;
-                                    var numericalAnswers = solutionKey[k1Index].numericalAnswers;
+                                    var numericalAnswers = solutionKey[k2Index].numericalAnswers;
                                     numericalAnswers.forEach(function(thisAnswer, aIndex){
                                         if(thisNumericalAnswer == Number(thisAnswer)){
                                             correctResponse = true;
@@ -393,7 +393,7 @@ router.post('/userevaluate', function(req, res) {
                                         incorrect.push(thisPair);
                                     }
                                 }else if(numericalType == 'Range'){
-                                    var numericalAnswerRange = solutionKey[k1Index].numericalAnswerRange;
+                                    var numericalAnswerRange = solutionKey[k2Index].numericalAnswerRange;
                                     var minRange = Number(numericalAnswerRange.min);
                                     var maxRange = Number(numericalAnswerRange.max);
                                     
@@ -599,12 +599,12 @@ router.post('/userevaluate', function(req, res) {
 
                         var k1Index = solutionKeyQuestionIds.indexOf(thisQuestionId);
                         var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
-                        console.log(k1Index);
+                        console.log(k2Index);
                         console.log(k2Index);
                         
-                        if(k1Index != -1){
-                        var subQuestionType = solutionKey[k1Index].type;
-                        var subQuestionMarking = solutionKey[k1Index].marking;
+                        if(k2Index != -1){
+                        var subQuestionType = solutionKey[k2Index].type;
+                        var subQuestionMarking = solutionKey[k2Index].marking;
                             
                         var thisPair = {
                             questionId: thisQuestionId,
@@ -623,7 +623,7 @@ router.post('/userevaluate', function(req, res) {
                             if(thisResponse.option){
                                 thisOptionId = thisResponse.option.toString();
 
-                                if(thisOptionId == solutionKey[k1Index].option){
+                                if(thisOptionId == solutionKey[k2Index].option){
                                     
                                     correct.push(thisPair);
                                 }else{
@@ -634,11 +634,11 @@ router.post('/userevaluate', function(req, res) {
                             var thisNumericalAnswer = null;
                             if(thisResponse.numericalAnswer){
                                 thisNumericalAnswer = Number(thisResponse.numericalAnswer);
-                                var numericalType = solutionKey[k1Index].numericalAnswerType;
+                                var numericalType = solutionKey[k2Index].numericalAnswerType;
 
                                 if(numericalType == 'Exact'){
                                     var correctResponse = false;
-                                    var numericalAnswers = solutionKey[k1Index].numericalAnswers;
+                                    var numericalAnswers = solutionKey[k2Index].numericalAnswers;
                                     numericalAnswers.forEach(function(thisAnswer, aIndex){
                                         if(thisNumericalAnswer == Number(thisAnswer)){
                                             correctResponse = true;
@@ -651,7 +651,7 @@ router.post('/userevaluate', function(req, res) {
                                         incorrect.push(thisPair);
                                     }
                                 }else if(numericalType == 'Range'){
-                                    var numericalAnswerRange = solutionKey[k1Index].numericalAnswerRange;
+                                    var numericalAnswerRange = solutionKey[k2Index].numericalAnswerRange;
                                     var minRange = Number(numericalAnswerRange.min);
                                     var maxRange = Number(numericalAnswerRange.max);
                                     
