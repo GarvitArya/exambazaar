@@ -2842,6 +2842,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             cityName: $scope.city,
         };
         $scope.allCoachings = new CoachingStream(streamInfo);
+        
         $scope.allBlogs = new SuggestedBlogStream(streamInfo);
         
         $scope.uniqueProviders = [];
@@ -2853,6 +2854,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         $scope.$watch('[allCoachings.items, currentStream]', function (newValue, oldValue, scope){
             if(newValue[0] && newValue[0].length > 0 && newValue[1]){
+                
                 var p4StreamExamsData = $scope.currentStream.exams;
                 var p4StreamExamsIds = $scope.currentStream.exams.map(function(a) {return a._id;});
              $scope.allCoachings.items.forEach(function(thisGroup, gindex){

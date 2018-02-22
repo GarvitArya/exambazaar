@@ -484,7 +484,7 @@
                     </div>
                     <div layout="row" layout-align="start start" layout-xs="column" id="subcategory">
                         <div layout="row" layout-align="center start" id="pageLogoHolder" class="marginL20" hide-xs ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })">
-                            <img src="{{coachingGroup.logo}}" alt="{{coachingGroup.groupName}}" class="pageLogo" ng-if="coachingGroup.logo"/>
+                            <img src='ebloader2.gif' lazy-img="{{coachingGroup.logo}}" alt="{{coachingGroup.groupName}}" class="pageLogo" ng-if="coachingGroup.logo"/>
                             <img ng-src="{{defaultCoachingLogo}}" class="pageLogo" ng-if="!coachingGroup.logo"/>
                         </div>
                         <div flex layout="column" layout-align="center start" class="paddingL20 width100">
@@ -671,7 +671,7 @@
                 <div layout="column" layout-align="center start" class="width100" id="blogpost" >
                 <div layout="column" layout-align="center center" class="suggestedblogpostImage width100">
                 <!--ng-style="{'background-image':'url({{blogpost.coverPhoto}})'}"-->    
-                <img src="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">    
+                <img src='ebloader2.gif' lazy-img="{{blogpost.coverPhoto}}" alt="{{blogpost.title}}">    
                     
                 <div layout="row" layout-align="start center" id="blogPostRead" class="width100 paddingLR20 paddingB20">
                     <div flex layout="row" layout-align="start center">
