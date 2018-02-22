@@ -15813,6 +15813,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var examQuestionCounts = $scope.addedQuestions.map(function(a) {return a.questions;});
                 $scope.totalQuestions = 0;
                 var counts = {};
+                $scope.totalQuestions = 0;
                 for (var i = 0; i < examQuestionIds.length; i++) {
                     var thisLength = 0;
                     if(examQuestionCounts[i] && examQuestionCounts[i].length > 0){
@@ -20524,7 +20525,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var userErrorReportsSubQuestionIds = $scope.userErrorReports.map(function(a) {return a.subquestion.toString();});
                 
                 if($scope.userErrorReports){
-                    
+                    $scope.totalQuestions = 0;
                     $scope.testQuestions.forEach(function(thisQuestion, index){
 
                         var anyAnswer = false;
@@ -20918,7 +20919,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
 
 
-            }
+            };
 
             $scope.userevaluate = function(){
                 var assessmentForm = {

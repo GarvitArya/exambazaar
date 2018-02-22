@@ -251,7 +251,6 @@ router.post('/userevaluate', function(req, res) {
             if(existingAssessment){
                 var testId = existingAssessment.test._id.toString();
                 var testSimulate = existingAssessment.test.simulate;
-                //console.log(testSimulate);
                 
                 var solutionKey = [];
                 var testQuestions = question
@@ -267,7 +266,6 @@ router.post('/userevaluate', function(req, res) {
                     testQuestions.forEach(function(thisQuesiton, qIndex){
                         nQuestions += thisQuesiton.questions.length;
                     });
-                    //console.log(nQuestions);
                     testQuestions.forEach(function(thisQuesiton, qIndex){
                     var questionId = thisQuesiton._id;
                     thisQuesiton.questions.forEach(function(subQuestion, sIndex){
@@ -331,7 +329,6 @@ router.post('/userevaluate', function(req, res) {
                         var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
                         if(userresponses){
                         var attempted = userresponses.length;
-                        //console.log(nQuestions);
                         var unattempted = nQuestions - attempted;
                         var correct = [];    
                         var incorrect = [];    
@@ -347,7 +344,7 @@ router.post('/userevaluate', function(req, res) {
                         var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
                         
                         
-                        if(k1Index == k2Index && k1Index != -1){
+                        if(k1Index != -1){
                         var subQuestionType = solutionKey[k1Index].type;
                         var subQuestionMarking = solutionKey[k1Index].marking;
                             
@@ -414,9 +411,7 @@ router.post('/userevaluate', function(req, res) {
                         }else{
                             console.log('SOMETHING WENT VERY WRONG!!!');
                         }
-                            
-                        //console.log(correct);
-                        //console.log(incorrect);
+                        
                             
                         
 
@@ -426,7 +421,7 @@ router.post('/userevaluate', function(req, res) {
                             
                         var correctAnswers = correct.length;
                         var incorrectAnswers = incorrect.length;
-
+                            
                         console.log('Attempted: ' + attempted);
                         console.log('Unattempted: ' + unattempted);
                         console.log('Correct: ' + correctAnswers);
@@ -604,9 +599,10 @@ router.post('/userevaluate', function(req, res) {
 
                         var k1Index = solutionKeyQuestionIds.indexOf(thisQuestionId);
                         var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
+                        console.log(k1Index);
+                        console.log(k2Index);
                         
-                        
-                        if(k1Index == k2Index && k1Index != -1){
+                        if(k1Index != -1){
                         var subQuestionType = solutionKey[k1Index].type;
                         var subQuestionMarking = solutionKey[k1Index].marking;
                             
@@ -675,7 +671,7 @@ router.post('/userevaluate', function(req, res) {
                         }
                             
                         //console.log(correct);
-                        //console.log(incorrect);
+                        console.log(incorrect);
                             
                         
 
