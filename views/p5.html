@@ -627,7 +627,7 @@
                     </button>
                     <button class="btn actionButton  tolowercase" ng-click="availDiscount()"><i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>
                     </button>
-                    <button class="btn actionButton  tolowercase"><i class="fa fa-calendar-plus-o" aria-hidden="true" title="Schedule Appointment at {{provider.name}}"></i>
+                    <button class="btn actionButton  tolowercase" ui-sref="bookAppointment({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'provider.name'}} })"><i class="fa fa-calendar-plus-o" aria-hidden="true" title="Schedule Appointment at {{provider.name}}"></i>
                     </button>
                 </span>
                 <span hide-xs>
@@ -642,7 +642,7 @@
                     </button>
                     <button class="btn actionButton heroButton tolowercase" ng-click="availDiscount()"><i class="fa fa-inr" aria-hidden="true" title="{{provider.name}} Course Fees"></i>&nbsp;&nbsp;Avail Discount
                     </button>
-                    <button class="btn actionButton heroButton tolowercase"><i class="fa fa-calendar-plus-o" aria-hidden="true" title="Schedule Appointment at {{provider.name}}"></i>&nbsp;&nbsp;Schedule Demo
+                    <button class="btn actionButton heroButton tolowercase" ui-sref="bookAppointment({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'provider.name'}} })"><i class="fa fa-calendar-plus-o" aria-hidden="true" title="Schedule Appointment at {{provider.name}}"></i>&nbsp;&nbsp;Schedule Demo
                     </button>
                 </span>
             </div>
