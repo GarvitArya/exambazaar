@@ -29,7 +29,7 @@ mongoose.connect(configDB.url,  { server: { socketOptions: { connectTimeoutMS: 1
     }
 });
 require('./config/passport')(passport);
-var prerender = require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted(['^/ebinternal', '^/claim', '^/verifyClaim']);
+var prerender = require('prerender-node').set('prerenderServiceUrl', 'https://service.prerender.io/').set('prerenderToken', 'iVgzdEtOLriSvmSTfKFm').blacklisted(['^/ebinternal','^/availDiscount', '^/claim', '^/verifyClaim']);
 prerender.crawlerUserAgents.push('dotbot');
 prerender.crawlerUserAgents.push('ia_archiver');
 app.use(prerender);
