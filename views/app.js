@@ -679,6 +679,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getAssessments = function() {
             return $http.get('/api/assessments/');
         };
+        this.revaluateAll = function() {
+            return $http.get('/api/assessments/revaluateAll');
+        };
+        
         this.submitAssessment = function(assessment) {
             return $http.post('/api/assessments/submit', assessment);
         };
@@ -22923,6 +22927,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
                     console.log(edata);
                     $state.reload();
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
+            
+            $scope.revaluateAll = function(){
+                
+                assessmentService.revaluateAll().success(function (edata, status, headers) {
+                    console.log(edata);
                 })
                 .error(function (data, status, header, config) {
                     Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});

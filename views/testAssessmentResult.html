@@ -95,8 +95,11 @@
         <div ng-repeat="existingExam in existingExams" ng-click="setFilterExam(existingExam)" ng-if="existingExam" class="marginR10">
             {{existingExam}}
         </div>
-        <div ng-click="clearFilterExam()" class="danger">
+        <div ng-click="clearFilterExam()" class="marginLR5 danger">
             Clear Filter
+        </div>
+        <div ng-click="revaluateAll()" class="marginLR5 text-primary">
+            Revaluate All
         </div>
     </div>
     <div layout="column" layout-align="center center" class="marginT20 width100">
