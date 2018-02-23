@@ -179,23 +179,6 @@
         height: 10px;
         border-radius: 3px;
     }
-    .noreview{background-color: #CBCBCB;}
-    .review1{background-color:#CD1C26;}
-    .review2{background-color:#DE1D0F;}
-    .review3{background-color:#FF7800;}
-    .review4{background-color:#FFBA00;}
-    .review5{background-color:#CDD614;}
-    .review6{background-color:#9ACD32;}
-    .review7{background-color:#5BA829;}
-    .review8{background-color:#3F7E00;}
-    .review9{background-color:#305D02;}
-    .hover{background-color: red;}
-    
-    .notselected{}
-    .selected{
-        background-color: #FF5A5F;
-        color: white;
-    }
     
     
 </style>
@@ -227,45 +210,59 @@
             <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
             <div layout="column" layout-align="start start" class="width100 min100vh" flex>
                 <div layout="column" layout-align="center start" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20">
-                    {{activeSubcategory.name}} of {{user.basic.name}}
+                    {{activeSubcategory.name}} attempted by {{user.basic.name}}
                 </div>
                 <div layout="column" layout-align="center start" class="width100 marginB40">
                      
-                <div layout="row" layout-align="center center" ng-if="userBookAppointments.length == 0" class="secondFont textBlack width100 paddingT20">
-                    You have not booked appointment with any institute yet.&nbsp;
-                    <a ui-sref="landing" class="bold" id="dangerLink" target="_blank">Set up an appointment now!</a>
+                <div layout="row" layout-align="center center" ng-if="userTests.length == 0" class="secondFont textBlack width100 paddingT20">
+                    You have not taken any tests yet.&nbsp;
+                    <a ui-sref="allquestionpapers" class="bold" id="dangerLink" target="_blank">Start with 100s of Free Previous Year Papers!</a>
                 </div>
-                <div layout="row" layout-align="start center" layout-wrap ng-if="userBookAppointments.length > 0" class="width100">
-                    <div layout="column" layout-align="center center" ng-repeat="userReview in userBookAppointments | orderBy:'-_date'" flex="100" class="width100 paddingB20">
+                <div layout="row" layout-align="start center" layout-wrap ng-if="userTests.length > 0" class="width100">
+                    <div layout="column" layout-align="center center" ng-repeat="userTest in userTests | orderBy:'-_date'" flex="100" class="width100 paddingB20">
                         <div layout="column" layout-align="start start" class="width100 gainsboroBorder padding10">
                         <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder">
                             <div layout="row" layout-align="start start" id="logoHolder" flex-gt-xs="15">
-                                <img ng-src="{{userReview.institute.logo}}" id="logo"/>
+                                <img ng-src="{{userTest.test.exam.logo}}" id="logo"/>
                             </div>
                             <div layout="column" layout-align="start start" class="paddingL20">
                             <div layout="column" layout-align="start start" class="secondFont">
                                 <div layout="row" layout-align="start start">
-                                    <a ui-sref="showGroup({ categoryName:{{'userReview.institute.exams[0].stream.name'}}, subCategoryName:{{'userReview.institute.exams[0].name'}}, cityName:{{'userReview.institute.city'}}, groupName:{{'userReview.institute.groupName'}} })" target="_blank">
-                                    {{userReview.institute.groupName}}
+                                    <a ui-sref="assessment({ testId:{{'userTest.test._id'}} })" target="_blank">
+                                    {{userTest.test.name}}
                                     </a>
                                 </div>
-                                <div layout="row" layout-align="start start" layout-wrap class="width100 editFont">
-
-                                    {{userReview.institute.address}}, {{userReview.institute.city}}
-
-                                </div>
+                                
                             </div>
                             </div>
                         </div>
 
                         <div layout="column" layout-align="start start" class="paddingTB10 paddingLR20 width100">
                             <div layout="row" layout-align="start start" class="width100">
-                                <div flex-gt-xs="25">Exam</div>    
-                                <div flex>{{userReview.exam.seoname}}</div>    
+                                <div flex-gt-xs="35">Score</div>    
+                                <div flex>{{userTest.evaluation.score}}</div>    
                             </div>
                             <div layout="row" layout-align="start start" class="width100">
-                                <div flex-gt-xs="25">Requested Date</div>    
-                                <div flex>{{userReview._requestDate | date: "MMMM dd yyyy hh:mm a"}}</div>    
+                                <div flex-gt-xs="35">Date</div>    
+                                <div flex>{{userTest._start | date: "MMMM dd yyyy hh:mm a"}}</div>    
+                            </div>
+                            <div layout="row" layout-align="start start" class="width100">
+                                <div flex-gt-xs="35">Questions Attempted</div>    
+                                <div flex>{{userTest.evaluation.questions.attemped}}
+                                ({{userTest.evaluation.questions.correct}} Correct & {{userTest.evaluation.questions.incorrect}} Incorrect)
+                                </div>    
+                            </div>
+                            <div layout="row" layout-align="start start" class="width100">
+                                <div flex-gt-xs="35">Questions Unattempted</div>    
+                                <div flex>{{userTest.evaluation.questions.unattemped}}</div>    
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 paddingT20">
+                                
+                                <md-button class="md-danger md-large tolowercase margin0 " ui-sref="reportassessment({ testId:{{'userTest.test._id'}} })" target="_blank" ng-if="userTest.test.analyzeable">
+                                    Analyze your result
+                                </md-button>
+                                
+                                <a ui-sref="questionpapers({ examName:{{'userTest.test.exam.name'}} })" target="_blank" id="reviewLink" class="marginL20">or Attempt all {{userTest.test.exam.seoname}} Papers</a>
                             </div>
                         </div>      
                         </div>

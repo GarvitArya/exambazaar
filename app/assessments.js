@@ -803,6 +803,7 @@ router.get('/user/:userId', function(req, res) {
     var userId = req.params.userId;
     var allAssessments = assessment
         .find({user: userId})
+        .deepPopulate('test test.exam')
         .exec(function (err, allAssessments) {
         if (!err){
             res.json(allAssessments);

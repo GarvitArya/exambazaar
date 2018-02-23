@@ -23860,6 +23860,16 @@ function getLatLng(thisData) {
                         },
                     ],
                 },
+                {
+                    name: 'Your Tests',
+                    active: false,
+                    state: 'userTests',
+                    subcategories: [
+                        {
+                            name: 'Tests',
+                        },
+                    ],
+                },
             ];
         setPage('Academic Details');
         
@@ -24661,6 +24671,16 @@ function getLatLng(thisData) {
                     },
                 ],
             },
+            {
+                name: 'Your Tests',
+                active: false,
+                state: 'userTests',
+                subcategories: [
+                    {
+                        name: 'Tests',
+                    },
+                ],
+            },
         ];
         setPage('Profile');    
             
@@ -25459,7 +25479,226 @@ function getLatLng(thisData) {
     }]);    
     
     
-        
+        exambazaar.controller("userTestsController", 
+        [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'assessmentService', 'coachingService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, assessmentService, coachingService, $location, Notification){
+            $scope.col1Width = 40;
+            $scope.col1WidthAcademic = 20;
+
+            var setPage = function(pageName){
+                $scope.components.forEach(function(thisCategory, index){
+                    if(thisCategory.name == pageName){
+                        thisCategory.active = true;
+                        $scope.activeCategory = thisCategory;
+                        $scope.currentSubcategories = thisCategory.subcategories;
+                    }
+                });
+            };
+            $scope.components = [
+                {
+                    name: 'Profile',
+                    active: false,
+                    state: 'profile',
+                    subcategories: [
+                        {
+                            name: 'Personal',
+                        },
+                        {
+                            name: 'Social',
+                        },
+                        {
+                            name: 'Blogging',
+                        },
+                        {
+                            name: 'Contact',
+                        },
+                        /*{
+                            name: 'Preferences',
+                        },*/
+
+                    ],
+                },
+                {
+                    name: 'Academic Details',
+                    active: false,
+                    state: 'academics',
+                    subcategories: [
+                        {
+                            name: 'Education Level',
+                        },
+                        {
+                            name: 'School Class XII',
+                        },
+                        {
+                            name: 'Undergraduate',
+                        },
+                        {
+                            name: 'Postgraduate',
+                        },
+                    ],
+                },
+                {
+                    name: 'Your Reviews',
+                    active: false,
+                    state: 'reviewed',
+                    subcategories: [
+                        {
+                            name: 'Coaching Reviews',
+                        },
+                    ],
+                },
+                {
+                    name: 'Your Coachings',
+                    active: false,
+                    state: 'userInstitutes',
+                    subcategories: [
+                        {
+                            name: 'Coachings Viewed',
+                        },
+                        {
+                            name: 'Coachings Shortlisted',
+                        },
+                    ],
+                },
+                {
+                    name: 'Your Appointments',
+                    active: false,
+                    state: 'userAppointments',
+                    subcategories: [
+                        {
+                            name: 'Coaching Appointments',
+                        },
+                    ],
+                },
+                {
+                    name: 'Your Tests',
+                    active: false,
+                    state: 'userTests',
+                    subcategories: [
+                        {
+                            name: 'Tests',
+                        },
+                    ],
+                },
+            ];
+            setPage('Your Tests');
+
+            $scope.components.forEach(function(thisCategory, index){
+                if(thisCategory.active){
+                    $scope.activeCategory = thisCategory;
+                    $scope.currentSubcategories = thisCategory.subcategories;
+                }
+            });
+            $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
+            if($cookies.getObject('sessionuser')){
+                var sessionuser = $cookies.getObject( 'sessionuser');
+                if(sessionuser && sessionuser._id){
+                    UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                        $scope.user = data;
+
+                        assessmentService.getUserAssessments($scope.user._id).success(function (rdata, status, headers) {
+                            $scope.userTests = rdata;
+
+
+                            $rootScope.pageTitle ='Tests taken by ' + $scope.user.basic.name;
+
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });
+
+
+
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                }else{
+                    $cookies.remove("sessionuser");
+                    $rootScope.$emit("CallBlogLogin", {});
+                }
+
+            }else{
+                $cookies.remove("sessionuser");
+            }
+
+
+            $scope.reviews = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
+            $scope.reviewsClasses = ["review1","review2","review3","review4","review5","review6","review7","review8","review9"];
+            $scope.reviewParams = [
+                {name: "faculty", displayname:"Faculty and Teaching Experience", hoverVal: -1},
+                {name: "competitive_environment", displayname:"Competitive Environment", hoverVal: -1},
+                {name: "quality_of_material", displayname:"Quality of material", hoverVal: -1},
+                {name: "infrastructure", displayname:"Infrastructure", hoverVal: -1},
+            ];
+            var paramNames = $scope.reviewParams.map(function(a) {return a.name;});
+
+            $scope.getBackgroundColour = function(reviewParam, paramIndex, userReview){
+                var pIndex = paramNames.indexOf(reviewParam.name);
+                var className = "noreview";
+
+                var propName = $scope.reviewParams[pIndex].name;
+
+                if(userReview && userReview[propName]){
+                    var review = userReview[propName];
+                    var rIndex = $scope.reviews.indexOf(Number(review));
+                    if(paramIndex <= rIndex){
+                        var rIndex2 = rIndex + 1;
+                        className = "review" + rIndex2;    
+                    }
+                }
+
+                if($scope.reviewParams[pIndex].hoverVal >= 0){
+                    className = "noreview";
+                };
+
+                if($scope.reviewParams[pIndex].hoverVal >= paramIndex){
+
+                    var paramIndex2 = paramIndex + 1;
+                    className = "review" + paramIndex2;
+                }
+
+                //console.log(propName + " " + className);
+                return className;
+            };
+
+
+            $scope.logMouseEvent = function(reviewParam,  paramIndex) {
+                switch (event.type) {
+                  case "mouseenter":
+                        console.log("Hey Mouse Entered");
+                        break;
+                  case "mouseover":{
+                        var pIndex = paramNames.indexOf(reviewParam.name);
+                        $scope.reviewParams[pIndex].hoverVal = paramIndex;
+                        break;
+                  }
+                  case "mouseout":{
+                        var pIndex = paramNames.indexOf(reviewParam.name);
+                        $scope.reviewParams[pIndex].hoverVal = -1;
+                        break;
+                  }
+
+                  case "mouseleave":
+                    console.log("Mouse Gone");
+                    break;
+
+                  default:
+                    console.log(event.type);
+                    break;
+                };
+            };
+
+
+            //$scope.showCouponOptions = false;
+            $scope.flipShowCoupon = function(userReview){
+                $state.go('availOffer', {userId: $scope.user._id, reviewId: userReview._id});
+
+            };
+
+            /*var currURL = $location.absUrl();
+            $rootScope.pageURL = currURL;*/
+            $rootScope.pageImage = 'https://www.exambazaar.com/images/logo/cover.png';
+        }]);
         exambazaar.controller("userAppointmentsController", 
         [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'bookAppointmentService', 'coachingService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, bookAppointmentService, coachingService, $location, Notification){
             $scope.col1Width = 40;
@@ -25547,6 +25786,16 @@ function getLatLng(thisData) {
                     subcategories: [
                         {
                             name: 'Coaching Appointments',
+                        },
+                    ],
+                },
+                {
+                    name: 'Your Tests',
+                    active: false,
+                    state: 'userTests',
+                    subcategories: [
+                        {
+                            name: 'Tests',
                         },
                     ],
                 },
@@ -25762,6 +26011,16 @@ function getLatLng(thisData) {
                         },
                     ],
                 },
+                {
+                    name: 'Your Tests',
+                    active: false,
+                    state: 'userTests',
+                    subcategories: [
+                        {
+                            name: 'Tests',
+                        },
+                    ],
+                },
             ];
             setPage('Your Reviews');
             
@@ -25971,6 +26230,16 @@ function getLatLng(thisData) {
                     subcategories: [
                         {
                             name: 'Coaching Appointments',
+                        },
+                    ],
+                },
+                {
+                    name: 'Your Tests',
+                    active: false,
+                    state: 'userTests',
+                    subcategories: [
+                        {
+                            name: 'Tests',
                         },
                     ],
                 },
@@ -34827,6 +35096,24 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'userInstitutes.html',
                     controller: 'userInstitutesController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+            }
+        })
+        .state('userTests', {
+            url: '/ebinternal/userTests',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'userTests.html',
+                    controller: 'userTestsController',
                 },
                 'footer': {
                     templateUrl: 'footer.html'
