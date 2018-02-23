@@ -2818,7 +2818,7 @@ router.post('/CoachingStream', function(req, res) {
                     logo: { $addToSet: "$logo" },
                     latlng: { $addToSet: "$latlng" },
                 }},
-                {$sort:{"count":-1}},
+                {$sort:{"count":-1, "_id.groupName": 1 }},
                 {$limit: skip + limit},
                 {$skip: skip},
 
@@ -2884,7 +2884,7 @@ router.post('/CoachingStream', function(req, res) {
                         if(counter == nCoachings){
                             
                             allProviders.sort(function(a,b){
-                              return new Date(b.count) - new Date(a.count);
+                              return (b.count - a.count);
                             });
                             
                             var allGroupNames = null;
@@ -2927,6 +2927,7 @@ router.post('/CoachingStream', function(req, res) {
 
 
                                 if(pIndex == allRatedInstitutes.length - 1){
+                                    console.log(allProviders.map(function(a) {return a.groupName;}));
                                     res.json(allProviders);
                                 }
                                 
@@ -2937,6 +2938,7 @@ router.post('/CoachingStream', function(req, res) {
 
 
                                 }else{
+                                    console.log(allProviders.map(function(a) {return a.groupName;}));
                                     res.json(allProviders);
                                 }
                                
