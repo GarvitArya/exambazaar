@@ -2812,7 +2812,7 @@ router.post('/CoachingStream', function(req, res) {
                 /*{$unwind:"$exams"},*/
                 {"$group": { 
                     "_id": { groupName: "$groupName"}, 
-                    count:{$sum:1}, 
+                    count: {$sum:1}, 
                     _ids: { $addToSet: "$_id" },
                     exams: { $addToSet: "$exams" },
                     logo: { $addToSet: "$logo" },
