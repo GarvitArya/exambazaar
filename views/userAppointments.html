@@ -1,0 +1,297 @@
+<style>
+    input[type="text"],input[type="email"]
+    {
+        font-size: 14px;
+        color: #333333;
+        padding: 10px;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus{
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    #profileSection{
+        min-height: 20vh;
+    }
+    
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        
+    }
+    .fieldRow{
+        min-height: 5vh;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .fieldRow div.col1{
+        color: gray;
+        font-family: 'Roboto Condensed', sans-serif;
+    }
+    .fieldRow div.col2{
+        color: black;
+    }
+    
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    .active{
+        color: white;
+        font-weight: bold;
+        border-bottom: 2px solid white;
+    }
+    #topBar{
+        color: white;
+    }
+    #topBar.active{
+        color: white;
+    }
+    #topBar:hover{
+        font-weight: bold;
+    }
+    .leftBar{
+        border-right: 2px solid whitesmoke;
+    }
+    #leftBarButton{
+        border-bottom: 2px solid whitesmoke;
+    }
+    #leftBarButton:hover{
+        border-bottom: 2px solid #20C39A;
+    }
+    #leftBarButton.sideactive{
+        /*border: 2px solid #20C39A;
+        color: #20C39A;
+        font-weight: bold;*/
+        background: whitesmoke;
+        
+    }
+    .emptyTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    
+    .edLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: #333333;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .edLevelTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .filledEdLevelTag{
+        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+        border-radius: 5px;
+        box-shadow: 0 0 5px whitesmoke;
+    }
+    .badge{
+        font-size: 14px;
+        white-space: normal;
+        margin-top: 0px;
+    }
+    .subSectionHeader{
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid whitesmoke;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .academicSubSection{
+        border-bottom: 1px solid #20C39A;
+        
+    }
+    .academicSubHeader{
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    .nextButton{
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    #profilePicSection{
+        margin-bottom: 20px;
+    }
+    
+    #instituteHolder{
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #logoHolder{
+        height: 50px;
+    }
+    
+    #link{
+        color: rgba(0,0,0,0.6);
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    
+    #badge{
+        background: #20C39A;
+    }
+    #smallreviewCell{
+        margin: 1px;
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+    }
+    
+    #smallreviewCellEmpty{
+        margin: 1px;
+        margin-left: 10px;
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+    }
+    .noreview{background-color: #CBCBCB;}
+    .review1{background-color:#CD1C26;}
+    .review2{background-color:#DE1D0F;}
+    .review3{background-color:#FF7800;}
+    .review4{background-color:#FFBA00;}
+    .review5{background-color:#CDD614;}
+    .review6{background-color:#9ACD32;}
+    .review7{background-color:#5BA829;}
+    .review8{background-color:#3F7E00;}
+    .review9{background-color:#305D02;}
+    .hover{background-color: red;}
+    
+    .notselected{}
+    .selected{
+        background-color: #FF5A5F;
+        color: white;
+    }
+    
+    
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+
+<div class="textBlack whiteBackground secondFont font14" ng-if="user">
+    <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
+    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
+        <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100">
+            <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="paddingLR20">
+                <span id="topBar" ng-class="{ active: component.active }" >
+                    {{component.name}}
+                </span>       
+            </a>
+        </div>
+    </div>
+    <div layout="row" layout-align="center start" class="width100">
+    <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
+        <div layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
+            <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }">
+                {{subcategory.name}}
+            </div>
+        </div>
+        <div flex layout="row" layout-align="center center">
+            <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
+            <div layout="column" layout-align="start start" class="width100 min100vh" flex>
+                <div layout="column" layout-align="center start" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20">
+                    {{activeSubcategory.name}} of {{user.basic.name}}
+                </div>
+                <div layout="column" layout-align="center start" class="width100 marginB40">
+                     
+                <div layout="row" layout-align="center center" ng-if="userBookAppointments.length == 0" class="secondFont textBlack width100 paddingT20">
+                    You have not booked appointment with any institute yet.&nbsp;
+                    <a ui-sref="landing" class="bold" id="dangerLink" target="_blank">Set up an appointment now!</a>
+                </div>
+                <div layout="row" layout-align="start center" layout-wrap ng-if="userBookAppointments.length > 0" class="width100">
+                    <div layout="column" layout-align="center center" ng-repeat="userReview in userBookAppointments | orderBy:'-_date'" flex="100" class="width100 paddingB20">
+                        <div layout="column" layout-align="start start" class="width100 gainsboroBorder padding10">
+                        <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder">
+                            <div layout="row" layout-align="start center" id="logoHolder">
+                                <img ng-src="{{userReview.institute.logo}}" id="logo"/>
+                            </div>
+                            <div layout="column" layout-align="start start" class="paddingL20">
+                            <div layout="column" layout-align="start start" class="secondFont">
+                                <div layout="row" layout-align="start center">
+                                    <a ui-sref="showGroup({ categoryName:{{'userReview.institute.exams[0].stream.name'}}, subCategoryName:{{'userReview.institute.exams[0].name'}}, cityName:{{'userReview.institute.city'}}, groupName:{{'userReview.institute.groupName'}} })" target="_blank">
+                                    {{userReview.institute.groupName}}
+                                    </a>
+                                </div>
+                                <div layout="row" layout-align="start start" layout-wrap class="width100 editFont">
+
+                                    {{userReview.institute.address}}, {{userReview.institute.city}}
+
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div layout="column" layout-align="start start" class="paddingTB10 paddingLR20 width100">
+                            <div layout="row" layout-align="start start" class="width100">
+                                <div flex-gt-xs="25">Exam</div>    
+                                <div flex>{{userReview.exam.seoname}}</div>    
+                            </div>
+                            <div layout="row" layout-align="start start" class="width100">
+                                <div flex-gt-xs="25">Requested Date</div>    
+                                <div flex>{{userReview._requestDate | date: "MMMM dd yyyy hh:mm a"}}</div>    
+                            </div>
+                        </div>      
+                        </div>
+                    </div>
+
+                </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                </div>    
+            </div>
+        
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

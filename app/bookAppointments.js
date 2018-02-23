@@ -3,6 +3,7 @@ var router = express.Router();
 
 var config = require('../config/mydatabase.js');
 var exam = require('../app/models/exam');
+var coaching = require('../app/models/coaching');
 var test = require('../app/models/test');
 var bookAppointment = require('../app/models/bookAppointment');
 var cisaved = require('../app/models/cisaved');
@@ -106,6 +107,58 @@ router.get('/edit/:bookAppointmentId', function(req, res) {
             res.json(thisBookAppointment);
 
         } else {throw err;}
+    });
+});
+
+router.get('/user/:userId', function(req, res) {
+    
+    var userId = req.params.userId;
+    
+    var bookAppointments = bookAppointment
+    .find({user: userId})
+    .sort( { _created: -1 } )
+    .deepPopulate('exam')
+    //.deepPopulate('institute institute.exams institute.exams.stream')
+    .exec(function (err, bookAppointments) {
+    if (!err){
+        var basicBookAppointments = [];
+        var groupNames = [];
+        var counter = 0;
+        var nLength = bookAppointments.length;
+        
+        var bookAppointmentInstituteIds =  bookAppointments.map(function(a) {return a.institute;});
+        
+        var allProviderBookAppointments = coaching
+            .find({_id : { $in : bookAppointmentInstituteIds }, disabled: {$ne: true}},{name:1 , groupName:1, exams:1, disabled: 1, city:1, logo:1, address:1, pincode:1})
+            .exec(function (err, allProviderBookAppointments) {
+            if (!err){
+                
+            var instituteIds = allProviderBookAppointments.map(function(a) {return a._id.toString();});
+
+            bookAppointments.forEach(function(thisBookAppointment, rindex){
+                var iIndex = instituteIds.indexOf(thisBookAppointment.institute.toString());
+                thisBookAppointment.institute = allProviderBookAppointments[iIndex];
+
+                if(thisBookAppointment.institute && !thisBookAppointment.institute.disabled){
+                    
+                    basicBookAppointments.push(thisBookAppointment);
+                 
+                }
+                counter = counter + 1;
+                if(counter == nLength){
+
+                    res.json(basicBookAppointments);
+                }
+                });
+                
+                
+            } else {throw err;}
+        });
+
+        if(nLength == 0){
+            res.json([]);
+        }
+    } else {throw err;}
     });
 });
 

@@ -295,6 +295,7 @@ var allStates = [
 '/ebinternal/profile',
 '/ebinternal/cirf',
 '/ebinternal/reviewed',
+'/ebinternal/userAppointments',
 '/ebinternal/userInstitutes',
 '/ebinternal/academics',
 '/ebinternal/eqad/:examName/:eqadDate',
