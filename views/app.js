@@ -19444,7 +19444,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         if(sIndex != -1){
                             thisQuestion.answer = $scope.answerkey[sIndex];
                         }else{
-                            console.log('Did not find answer: ' + thisQuestion._id + " | " + question._id);
+                            //console.log('Did not find answer: ' + thisQuestion._id + " | " + question._id);
                         }
                         
                         thisQuestion.question = thisQuestion.question.replace(/\n/ig, '<br/>');
@@ -19567,19 +19567,36 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             if(cIndex != -1){
                                 thisSubQuestion.userevaluation = {
                                     correct: true,    
-                                    incorrect: false,    
-                                    notattempted: false,    
+                                    incorrect: false,
+                                    partial: false,
+                                    notattempted: false,  
                                 };
+                                thisSubQuestion.userevaluation.userScore = correct[cIndex];
                             }else if(icIndex != -1){
-                                thisSubQuestion.userevaluation = {
-                                    correct: false,    
-                                    incorrect: true,    
-                                    notattempted: false,    
-                                };
+                              
+                                if(  !incorrect[icIndex].anyIncorrect && incorrect[icIndex].countMatch > 0){
+                                    thisSubQuestion.userevaluation = {
+                                        correct: false,    
+                                        incorrect: false,    
+                                        partial: true,    
+                                        notattempted: false,    
+                                    };
+                                    thisSubQuestion.userevaluation.userScore = incorrect[icIndex];
+                                }else{
+                                    thisSubQuestion.userevaluation = {
+                                        correct: false,    
+                                        incorrect: true,
+                                        partial: false,
+                                        notattempted: false,    
+                                    };
+                                    thisSubQuestion.userevaluation.userScore = incorrect[icIndex];
+                                }
+                                
                             }else if(cIndex == -1 && icIndex == -1){
                                 thisSubQuestion.userevaluation = {
                                     correct: false,    
-                                    incorrect: false,    
+                                    incorrect: false,
+                                    partial: false,
                                     notattempted: true,    
                                 };
                             }
@@ -19795,6 +19812,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     }
                     if(subquestion.userevaluation.incorrect){
                         classname = 'incorrectTag';
+                    }
+                    
+                    if(subquestion.userevaluation.partial){
+                        classname = 'partiallycorrectTag';
                     }
                     return(classname);
                 };
@@ -20460,30 +20481,70 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             var subanyAnswer = false;
                             var thisSubQuestionId = thisSubQuestion._id.toString();
                             
-                            var qIndex = userResponseSubQuestionIds.indexOf(thisSubQuestionId);
-
-                            if(qIndex != -1){
-                                var thisQuestionResponse = $scope.userResponses[qIndex];
-                                anyAnswer = true;
-                                subanyAnswer = true;
-                               
-                                if(thisQuestionResponse.option){
-                                    $scope.testQuestions[index].questions[sindex].userAnswer = thisQuestionResponse.option.toString();
-                                }
-                                if(thisQuestionResponse.numericalAnswer){
-                                    $scope.testQuestions[index].questions[sindex].userNumericalAnswer = Number(thisQuestionResponse.numericalAnswer);
-                                }
+                            if(thisSubQuestion.type =='mcq' && thisSubQuestion.mcqma){
+                                
+                                $scope.userResponses.forEach(function(thisResponse, rindex){
+                                    if(thisResponse.subquestion == thisSubQuestion._id){
+                                        if(!$scope.testQuestions[index].questions[sindex].userAnswer){
+                                            $scope.testQuestions[index].questions[sindex].userAnswer = [];
+                                        }
+                                        
+                                        var exIndex = $scope.testQuestions[index].questions[sindex].userAnswer.indexOf(thisResponse.option.toString());
+                                        if(exIndex == -1){
+                                           $scope.testQuestions[index].questions[sindex].userAnswer.push(thisResponse.option.toString()); 
+                                        }
+                                        
+                                        
+                                        
+                                        
+                                    }
+                                    
+                                });
                                 
                                 
                                 
-                                $scope.answered += 1;
-
+                                
                             }else{
-                                $scope.testQuestions[index].questions[sindex].userAnswer = null;
-                                $scope.testQuestions[index].questions[sindex].userNumericalAnswer = null;
-                            }
+                                
+                                var qIndex = userResponseSubQuestionIds.indexOf(thisSubQuestionId);
 
-                            thisSubQuestion.anyAnswer = subanyAnswer;
+                                if(qIndex != -1){
+                                    var thisQuestionResponse = $scope.userResponses[qIndex];
+                                    anyAnswer = true;
+                                    subanyAnswer = true;
+
+                                    if(thisQuestionResponse.option){
+
+
+                                        if($scope.testQuestions[index].questions[sindex].mcqma){
+                                            
+                                        }else{
+                                           $scope.testQuestions[index].questions[sindex].userAnswer = thisQuestionResponse.option.toString(); 
+                                        }
+
+                                    }
+                                    if(thisQuestionResponse.numericalAnswer){
+                                        $scope.testQuestions[index].questions[sindex].userNumericalAnswer = Number(thisQuestionResponse.numericalAnswer);
+                                    }
+
+
+
+                                    $scope.answered += 1;
+
+                                }else{
+                                    $scope.testQuestions[index].questions[sindex].userAnswer = null;
+                                    $scope.testQuestions[index].questions[sindex].userNumericalAnswer = null;
+                                }
+
+                                thisSubQuestion.anyAnswer = subanyAnswer;
+                                
+                                
+                                
+                            }
+                            
+                            
+                            
+                            
                         });
                         thisQuestion.anyAnswer = anyAnswer;
 
@@ -20586,10 +20647,21 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     subquestion: subquestion._id,
                     option: option._id,
                 };
-
+                //console.log(subquestion.userAnswer);
+                var oIndex = - 1;
+                if(subquestion.userAnswer){
+                    oIndex = subquestion.userAnswer.indexOf(option._id.toString());
+                }
+                
+                
+                
+                //abcd1234
                 questionresponseService.saveQuestionResponse(questionresponseForm).success(function (data, status, headers) {
                     question.anyAnswer = true;
                     Notification.primary({message: "Your answer has been marked!",  positionY: 'top', positionX: 'left', delay: 2000});
+                    if(oIndex != -1){
+                        subquestion.userAnswer.splice(oIndex, 1);
+                    }
                     getUserResponses();
                     getUserQMarkForReview();
                     getUserQView();
@@ -20907,7 +20979,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
             };
             $scope.submitAssessment = function(){
-                console.log($scope.isFullScreen);
+                //console.log($scope.isFullScreen);
                 var confirm = $mdDialog.confirm()
                 .title('Would you like to submit your test?')
                 .textContent('You will not be able to access it again!' )
@@ -20937,7 +21009,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 };
 
                 assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
-                    console.log(edata);
+                    //console.log(edata);
 
                 })
                 .error(function (data, status, header, config) {
@@ -21205,7 +21277,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('2');
                     $scope.startErrors.push('Please enter name');
                 }
-                console.log(assessmentInfo.mobile);
                 if(assessmentInfo.mobile.length < 9){
                     valid = false;
                     console.log('4');
@@ -28057,6 +28128,7 @@ function getLatLng(thisData) {
             };
             
             $scope.officialPapers = officialPapers.data;
+            console.log($scope.officialPapers);
             $scope.officialPapersStreamExam = officialPapersStreamExam.data;
             var opStreamIds = $scope.officialPapersStreamExam.map(function(a) {return a._id.toString();});
             

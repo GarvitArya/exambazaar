@@ -131,7 +131,17 @@
         background: #B22222;
         border: 1px solid #B22222;
     }
-    
+    .partiallycorrectTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        height:30px;
+        color: white;
+        background: #e5a72b;
+        border: 1px solid #e5a72b;
+    }
     .emptyTag{
         padding-left: 4px;
         padding-right: 4px;
@@ -326,14 +336,14 @@
                                     <div class="legendTag correctTag" layout="row" layout-align="center center">{{userAssessment.evaluation.marked.correct.length}}</div>
 
                                 </div>
-                                <div flex class="paddingL5">Correct</div>
+                                <div flex class="paddingL5 font10">Correct</div>
                             </div>
                             <div flex>
                             <div flex layout="row" layout-align="center center">
                                 <div flex="25">
                                     <div class="legendTag incorrectTag" layout="row" layout-align="center center">{{userAssessment.evaluation.marked.incorrect.length}}</div>
                                 </div>
-                                <div flex class="paddingL5">Incorrect</div>
+                                <div flex class="paddingL5 font10">Incorrect</div>
                             </div>
                             </div>
                         </div>
@@ -342,7 +352,7 @@
                                 <div flex="25">
                                     <div class="legendTag seenTag" layout="row" layout-align="center center">{{userAssessment.evaluation.questions.attemped}}</div>
                                 </div>
-                                <div flex class="paddingL5">Attempted</div>
+                                <div flex class="paddingL5 font10">Attempted</div>
                             </div>
                             <div flex>
                             <div flex layout="row" layout-align="center center">
@@ -350,7 +360,7 @@
                                     <div class="legendTag" layout="row" layout-align="center center">{{userAssessment.evaluation.questions.unattemped}}</div>
 
                                 </div>
-                                <div flex class="paddingL5">Not Attempted</div>
+                                <div flex class="paddingL5 font10">Not Attempted</div>
                             </div>
                             </div>
                         </div>
@@ -399,7 +409,7 @@
                     <div flex layout="row" layout-align="end center">
                         <div ng-if="subquestion.userevaluation.correct" layout="row" layout-align="end center">
                             <div class="">
-                            Your score
+                            Your Score
                             </div>
                             <div layout="row" layout-align="center center" class="marginLR5 correctTag"> 
                                 <span ng-if="subquestion.marking.correct[0] != '+'">
@@ -415,17 +425,30 @@
                         </div>
                         <div ng-if="subquestion.userevaluation.incorrect" layout="row" layout-align="end center">
                             <div class="">
-                            Your score
+                            Your Score
                             </div>
-                            <div layout="row" layout-align="center center" class="marginLR5 incorrectTag"> {{subquestion.marking.incorrect}}
+                            <div layout="row" layout-align="center center" class="marginLR5 incorrectTag" ng-if="!subquestion.userevaluation.userScore.score"> {{subquestion.marking.incorrect}}
                                 <md-tooltip>
                                 You have scored {{subquestion.marking.incorrect}} marks for incorrect answer of this question
                                 </md-tooltip>
                             </div>
                         </div>
+                        <div ng-if="subquestion.userevaluation.partial" layout="row" layout-align="end center">
+                            <div class="">
+                            Your Score
+                            </div>
+                            <div layout="row" layout-align="center center" class="marginLR5 partiallycorrectTag" ng-if="subquestion.userevaluation.userScore.score"> {{subquestion.userevaluation.userScore.score}}
+                                <md-tooltip>
+                                You have scored {{subquestion.userevaluation.userScore.score}} marks for partially correct answer of this question
+                                </md-tooltip>
+                            </div>
+                        </div>
+                        
+                        
+                        
                         <div ng-if="subquestion.userevaluation.notattempted" layout="row" layout-align="end center">
                             <div class="">
-                            Your score
+                            Your Score
                             </div>
                             <div layout="row" layout-align="center center" class="marginLR5 notattemptedTag"> 0
                                 <md-tooltip>

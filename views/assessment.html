@@ -430,10 +430,15 @@
                             <!--<div>Question {{activeQuestionNo}}</div>-->
                             <div ng-bind-html="subquestion.question" class="width100 paddingTB10">
                             </div>
-                               
-                            <md-radio-group ng-model="subquestion.userAnswer" ng-if="subquestion.type =='mcq'" class="width100">
+                            <div ng-repeat="option in subquestion.options" class="width100" ng-if="subquestion.type =='mcq' && subquestion.mcqma">
+                              <md-checkbox ng-checked="subquestion.userAnswer && subquestion.userAnswer.length > 0 && subquestion.userAnswer.indexOf(option._id) != -1" ng-click="markAnswer(question, subquestion, option)" class="paddingTB2 widht100">
+                                {{option.option}}
+                              </md-checkbox>
+                            </div>    
+                                
+                            <md-radio-group ng-model="subquestion.userAnswer" ng-if="subquestion.type =='mcq' && !subquestion.mcqma" class="width100">
 
-                            <md-radio-button value="{{option._id}}" ng-model="userAnswer" ng-repeat="option in subquestion.options"  ng-click="markAnswer(question, subquestion, option)" class="paddingTB2 widht100">
+                            <md-radio-button value="{{option._id}}" ng-model="userAnswer" ng-repeat="option in subquestion.options" ng-click="markAnswer(question, subquestion, option)" class="paddingTB2 widht100">
                                 <div flex>{{option.option}}</div>
                             </md-radio-button>
 

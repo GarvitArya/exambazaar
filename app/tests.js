@@ -858,9 +858,10 @@ router.get('/examByName/:examName', function(req, res) {
             //console.log(thisExam);
             var examId = thisExam._id;
             var allTests = test
-                .find({exam: examId, watermarked: true})
+                .find({exam: examId})
                 .exec(function (err, allTests) {
                 if (!err){
+                    
                     res.json(allTests);
                 } else {throw err;}
             });

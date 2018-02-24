@@ -263,34 +263,62 @@ router.post('/userevaluate', function(req, res) {
                         
                     var counter = 0;
                         
-                    testQuestions.forEach(function(thisQuesiton, qIndex){
-                        nQuestions += thisQuesiton.questions.length;
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                        nQuestions += thisQuestion.questions.length;
                     });
-                    testQuestions.forEach(function(thisQuesiton, qIndex){
-                    var questionId = thisQuesiton._id;
-                    thisQuesiton.questions.forEach(function(subQuestion, sIndex){
+                     testQuestions.forEach(function(thisQuestion, qIndex){
+                    var questionId = thisQuestion._id;
+                    thisQuestion.questions.forEach(function(subQuestion, sIndex){
                         var subQuestionId = subQuestion._id;
                         var correctOptionId = null;
                         var correctNumericalAnswers = null;
                        
                         if(subQuestion.type == 'mcq'){
+                            if(subQuestion.mcqma){
+                            var thisKey = {
+                                question: questionId.toString(),
+                                subquestion: subQuestionId.toString(),
+                                marking: subQuestion.marking,
+                                type: subQuestion.type,
+                                mcqma: subQuestion.mcqma,
+                                options: [],
+                            };
                             subQuestion.options.forEach(function(thisOption, oIndex){
-                                if(thisOption._correct){
-                                    correctOptionId = thisOption._id;
-
-                                    var thisKey = {
-                                        question: questionId.toString(),
-                                        subquestion: subQuestionId.toString(),
-                                        marking: subQuestion.marking,
-                                        type: subQuestion.type,
-                                        option: correctOptionId.toString(),
-                                    };
+                            if(thisOption._correct){
+                                correctOptionId = thisOption._id.toString();
+                                thisKey.options.push(correctOptionId);
+                                
+                                
+                                counter += 1;
+                                if(oIndex == subQuestion.options.length - 1){
                                     solutionKey.push(thisKey);
-                                    counter += 1;
                                 }
+                            }    
+                            });    
+                                
+                                
+                            }else{
+                            subQuestion.options.forEach(function(thisOption, oIndex){
+                            if(thisOption._correct){
+                                correctOptionId = thisOption._id;
+
+                                var thisKey = {
+                                    question: questionId.toString(),
+                                    subquestion: subQuestionId.toString(),
+                                    marking: subQuestion.marking,
+                                    type: subQuestion.type,
+                                    option: correctOptionId.toString(),
+                                };
+                                solutionKey.push(thisKey);
+                                counter += 1;
+                            }
 
 
                             });
+                                
+                                
+                            }
+                            
                         }
                         
                         if(subQuestion.type == 'numerical'){
@@ -328,14 +356,48 @@ router.post('/userevaluate', function(req, res) {
                             
                         var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
                         if(userresponses){
-                        var attempted = userresponses.length;
-                        var unattempted = nQuestions - attempted;
+                            
+                            
+                            
+                        
                         var correct = [];    
                         var incorrect = [];    
 
                         var solutionKeyQuestionIds =  solutionKey.map(function(a) {return a.question;});
                         var solutionKeySubQuestionIds =  solutionKey.map(function(a) {return a.subquestion;});
+                        var pivoteduserresponses = [];
+                        
                         userresponses.forEach(function(thisResponse, rIndex){
+                            var sqIds = [];
+                            if(pivoteduserresponses.length > 0){
+                                sqIds = pivoteduserresponses.map(function(a) {return a.subquestion.toString();});
+                            }
+                            var thisIndex = sqIds.indexOf(thisResponse.subquestion.toString());
+                            if(thisIndex == -1){
+                            var newResponse = {
+                                option: thisResponse.option,
+                                subquestion: thisResponse.subquestion,
+                                question: thisResponse.question,
+                                user: thisResponse.user,
+                            };
+                            if(newResponse){
+                                newResponse.numericalAnswer = thisResponse.numericalAnswer;
+                            }
+                            pivoteduserresponses.push(newResponse);
+                            }else{
+                            if(!pivoteduserresponses[thisIndex].options){
+                                pivoteduserresponses[thisIndex].options = [pivoteduserresponses[thisIndex].option];
+                            }
+                            pivoteduserresponses[thisIndex].options.push(thisResponse.option);
+                            }
+
+                            
+                        });    
+                        //abcd1234
+                            
+                        var attempted = pivoteduserresponses.length;
+                        var unattempted = nQuestions - attempted;
+                        pivoteduserresponses.forEach(function(thisResponse, rIndex){
 
                         var thisQuestionId = thisResponse.question.toString();
                         var thisSubQuestionId = thisResponse.subquestion.toString();
@@ -343,9 +405,9 @@ router.post('/userevaluate', function(req, res) {
                         var k1Index = solutionKeyQuestionIds.indexOf(thisQuestionId);
                         var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
                         
-                        
                         if(k2Index != -1){
                         var subQuestionType = solutionKey[k2Index].type;
+                        var subQuestionMCQMA = solutionKey[k2Index].mcqma;
                         var subQuestionMarking = solutionKey[k2Index].marking;
                             
                         var thisPair = {
@@ -359,19 +421,64 @@ router.post('/userevaluate', function(req, res) {
                             marking: subQuestionMarking,
                             //userresponse: thisResponse,
                         };
-
                         if(subQuestionType == 'mcq'){
-                            var thisOptionId = null;
-                            if(thisResponse.option){
-                                thisOptionId = thisResponse.option.toString();
-
-                                if(thisOptionId == solutionKey[k2Index].option){
-                                    
+                            if(subQuestionMCQMA){
+                                
+                                var thisOptions = [];
+                                if(thisResponse.options){
+                                    thisOptions = thisResponse.options;
+                                }else if(thisResponse.option){
+                                    thisOptions = [thisResponse.option];
+                                }
+                                var answerKeyOptions = [];
+                                
+                                if(solutionKey[k2Index].options){
+                                    answerKeyOptions = solutionKey[k2Index].options;
+                                }else if(solutionKey[k2Index].option){
+                                    answerKeyOptions = [solutionKey[k2Index].option];
+                                }
+                                var exactMatch = true;
+                                if(thisOptions.length != answerKeyOptions.length){
+                                    exactMatch = false;
+                                }
+                                thisOptions.forEach(function(thisUserOption, aIndex){
+                                    var oIndex = answerKeyOptions.indexOf(thisUserOption.toString());
+                                    if(oIndex == -1){
+                                        exactMatch = false;
+                                    }else{
+                                        answerKeyOptions.splice(oIndex, 1);
+                                    }
+                                });
+                                
+                                if(answerKeyOptions.length > 0){
+                                    exactMatch = false;
+                                }
+                                
+                                if(exactMatch && thisOptions.length > 0){
                                     correct.push(thisPair);
-                                }else{
+                                }else if(!exactMatch && thisOptions.length > 0){
                                     incorrect.push(thisPair);
                                 }
+                                
+                                
+                                
+                            }else{
+                                var thisOptionId = null;
+                                if(thisResponse.option){
+                                    thisOptionId = thisResponse.option.toString();
+
+                                    if(thisOptionId == solutionKey[k2Index].option){
+
+                                        correct.push(thisPair);
+                                    }else{
+                                        incorrect.push(thisPair);
+                                    }
+                                }
+                                
+                                
                             }
+                            
+                            
                         }else if (subQuestionType == 'numerical'){
                             var thisNumericalAnswer = null;
                             if(thisResponse.numericalAnswer){
@@ -411,7 +518,6 @@ router.post('/userevaluate', function(req, res) {
                         }else{
                             console.log('SOMETHING WENT VERY WRONG!!!');
                         }
-                        
                             
                         
 
@@ -421,7 +527,7 @@ router.post('/userevaluate', function(req, res) {
                             
                         var correctAnswers = correct.length;
                         var incorrectAnswers = incorrect.length;
-                            
+
                         console.log('Attempted: ' + attempted);
                         console.log('Unattempted: ' + unattempted);
                         console.log('Correct: ' + correctAnswers);
@@ -506,7 +612,6 @@ router.post('/userevaluate', function(req, res) {
             if(existingAssessment){
                 var testId = existingAssessment.test._id.toString();
                 var testSimulate = existingAssessment.test.simulate;
-                //console.log(testSimulate);
                 
                 var solutionKey = [];
                 var testQuestions = question
@@ -519,35 +624,63 @@ router.post('/userevaluate', function(req, res) {
                         
                     var counter = 0;
                         
-                    testQuestions.forEach(function(thisQuesiton, qIndex){
-                        nQuestions += thisQuesiton.questions.length;
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                        nQuestions += thisQuestion.questions.length;
                     });
-                    //console.log(nQuestions);
-                    testQuestions.forEach(function(thisQuesiton, qIndex){
-                    var questionId = thisQuesiton._id;
-                    thisQuesiton.questions.forEach(function(subQuestion, sIndex){
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                    var questionId = thisQuestion._id;
+                    thisQuestion.questions.forEach(function(subQuestion, sIndex){
                         var subQuestionId = subQuestion._id;
                         var correctOptionId = null;
                         var correctNumericalAnswers = null;
                        
                         if(subQuestion.type == 'mcq'){
+                            if(subQuestion.mcqma){
+                            var thisKey = {
+                                question: questionId.toString(),
+                                subquestion: subQuestionId.toString(),
+                                marking: subQuestion.marking,
+                                type: subQuestion.type,
+                                mcqma: subQuestion.mcqma,
+                                options: [],
+                            };
                             subQuestion.options.forEach(function(thisOption, oIndex){
-                                if(thisOption._correct){
-                                    correctOptionId = thisOption._id;
+                                
+                            if(thisOption._correct){
+                                correctOptionId = thisOption._id.toString();
+                                thisKey.options.push(correctOptionId);
+                                
+                                counter += 1;
+                                
+                            }
+                            if(oIndex == subQuestion.options.length - 1){
+                                solutionKey.push(thisKey);
+                            }    
+                            });    
+                                
+                                
+                            }else{
+                            subQuestion.options.forEach(function(thisOption, oIndex){
+                            if(thisOption._correct){
+                                correctOptionId = thisOption._id;
 
-                                    var thisKey = {
-                                        question: questionId.toString(),
-                                        subquestion: subQuestionId.toString(),
-                                        marking: subQuestion.marking,
-                                        type: subQuestion.type,
-                                        option: correctOptionId.toString(),
-                                    };
-                                    solutionKey.push(thisKey);
-                                    counter += 1;
-                                }
+                                var thisKey = {
+                                    question: questionId.toString(),
+                                    subquestion: subQuestionId.toString(),
+                                    marking: subQuestion.marking,
+                                    type: subQuestion.type,
+                                    option: correctOptionId.toString(),
+                                };
+                                solutionKey.push(thisKey);
+                                counter += 1;
+                            }
 
 
                             });
+                                
+                                
+                            }
+                            
                         }
                         
                         if(subQuestion.type == 'numerical'){
@@ -585,25 +718,58 @@ router.post('/userevaluate', function(req, res) {
                             
                         var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
                         if(userresponses){
-                        var attempted = userresponses.length;
-                        var unattempted = nQuestions - attempted;
+                            
+                            
+                            
+                        
                         var correct = [];    
-                        var incorrect = [];    
-
-                        var solutionKeyQuestionIds =  solutionKey.map(function(a) {return a.question;});
-                        var solutionKeySubQuestionIds =  solutionKey.map(function(a) {return a.subquestion;});
+                        var incorrect = [];
+                            
+                        var solutionKeyQuestionIds =  solutionKey.map(function(a) {return a.question.toString();});
+                        var solutionKeySubQuestionIds =  solutionKey.map(function(a) {return a.subquestion.toString();});
+                        var pivoteduserresponses = [];
+                        
                         userresponses.forEach(function(thisResponse, rIndex){
+                            var sqIds = [];
+                            if(pivoteduserresponses.length > 0){
+                                sqIds = pivoteduserresponses.map(function(a) {return a.subquestion.toString();});
+                            }
+                            var thisIndex = sqIds.indexOf(thisResponse.subquestion.toString());
+                            if(thisIndex == -1){
+                            var newResponse = {
+                                option: thisResponse.option,
+                                subquestion: thisResponse.subquestion,
+                                question: thisResponse.question,
+                                user: thisResponse.user,
+                            };
+                            if(newResponse){
+                                newResponse.numericalAnswer = thisResponse.numericalAnswer;
+                            }
+                            pivoteduserresponses.push(newResponse);
+                            }else{
+                            if(!pivoteduserresponses[thisIndex].options){
+                                pivoteduserresponses[thisIndex].options = [pivoteduserresponses[thisIndex].option];
+                            }
+                            pivoteduserresponses[thisIndex].options.push(thisResponse.option);
+                            }
+
+                            
+                        });    
+                        //abcd1234
+                            
+                        var attempted = pivoteduserresponses.length;
+                        var unattempted = nQuestions - attempted;
+                        pivoteduserresponses.forEach(function(thisResponse, rIndex){
 
                         var thisQuestionId = thisResponse.question.toString();
                         var thisSubQuestionId = thisResponse.subquestion.toString();
 
                         var k1Index = solutionKeyQuestionIds.indexOf(thisQuestionId);
                         var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
-                        console.log(k2Index);
-                        console.log(k2Index);
                         
                         if(k2Index != -1){
                         var subQuestionType = solutionKey[k2Index].type;
+                        var subQuestionMCQMA = solutionKey[k2Index].mcqma;
                         var subQuestionMarking = solutionKey[k2Index].marking;
                             
                         var thisPair = {
@@ -617,19 +783,70 @@ router.post('/userevaluate', function(req, res) {
                             marking: subQuestionMarking,
                             //userresponse: thisResponse,
                         };
-
                         if(subQuestionType == 'mcq'){
-                            var thisOptionId = null;
-                            if(thisResponse.option){
-                                thisOptionId = thisResponse.option.toString();
-
-                                if(thisOptionId == solutionKey[k2Index].option){
-                                    
+                            if(subQuestionMCQMA){
+                                
+                                var thisOptions = [];
+                                if(thisResponse.options){
+                                    thisOptions = thisResponse.options;
+                                }else if(thisResponse.option){
+                                    thisOptions = [thisResponse.option];
+                                }
+                                var answerKeyOptions = [];
+                                
+                                if(solutionKey[k2Index].options){
+                                    answerKeyOptions = solutionKey[k2Index].options;
+                                }else if(solutionKey[k2Index].option){
+                                    answerKeyOptions = [solutionKey[k2Index].option];
+                                }
+                                var exactMatch = true;
+                                var countMatch = 0;
+                                var anyIncorrect = false;
+                                if(thisOptions.length != answerKeyOptions.length){
+                                    exactMatch = false;
+                                }
+                                thisOptions.forEach(function(thisUserOption, aIndex){
+                                    var oIndex = answerKeyOptions.indexOf(thisUserOption.toString());
+                                    if(oIndex == -1){
+                                        exactMatch = false;
+                                        anyIncorrect = true;
+                                    }else{
+                                        answerKeyOptions.splice(oIndex, 1);
+                                        countMatch += 1;
+                                    }
+                                });
+                                
+                                if(answerKeyOptions.length > 0){
+                                    exactMatch = false;
+                                }
+                                
+                                if(exactMatch && thisOptions.length > 0){
                                     correct.push(thisPair);
-                                }else{
+                                }else if(!exactMatch && thisOptions.length > 0){
+                                    thisPair.countMatch = countMatch;
+                                    thisPair.anyIncorrect = anyIncorrect;
                                     incorrect.push(thisPair);
                                 }
+                                
+                                
+                                
+                            }else{
+                                var thisOptionId = null;
+                                if(thisResponse.option){
+                                    thisOptionId = thisResponse.option.toString();
+
+                                    if(thisOptionId == solutionKey[k2Index].option){
+
+                                        correct.push(thisPair);
+                                    }else{
+                                        incorrect.push(thisPair);
+                                    }
+                                }
+                                
+                                
                             }
+                            
+                            
                         }else if (subQuestionType == 'numerical'){
                             var thisNumericalAnswer = null;
                             if(thisResponse.numericalAnswer){
@@ -697,7 +914,7 @@ router.post('/userevaluate', function(req, res) {
                             if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.incorrect){
                                 incorrectScore = Number(thisSubQuestionAttempt.marking.incorrect);
                             }
-                            
+                            thisSubQuestionAttempt.score = correctScore;
                             score += correctScore;
                         });
                         incorrect.forEach(function(thisSubQuestionAttempt, aIndex){
@@ -709,8 +926,18 @@ router.post('/userevaluate', function(req, res) {
                             if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.incorrect){
                                 incorrectScore = Number(thisSubQuestionAttempt.marking.incorrect);
                             }
+                           
+                            if(thisSubQuestionAttempt.anyIncorrect){
+                                score += incorrectScore;
+                                thisSubQuestionAttempt.score = incorrectScore;
+                            }else if(!thisSubQuestionAttempt.anyIncorrect && thisSubQuestionAttempt.countMatch &&  thisSubQuestionAttempt.countMatch > 0){
+                                score += Number(thisSubQuestionAttempt.countMatch);
+                                thisSubQuestionAttempt.score = Number(thisSubQuestionAttempt.countMatch);
+                            }else{
+                                score += incorrectScore;
+                                thisSubQuestionAttempt.score = incorrectScore;
+                            }
                             
-                            score += incorrectScore;
                         });
                         score = Math.round(score * 100) / 100;
                         console.log('Score is: ' + score);
@@ -725,6 +952,7 @@ router.post('/userevaluate', function(req, res) {
                             marked:{
                                 correct: correct,
                                 incorrect: incorrect,
+                                //partiallycorrect: partiallycorrect,
                             },
                             score: score
                         };
@@ -892,12 +1120,12 @@ router.get('/revaluateAll', function(req, res) {
                         
                     var counter = 0;
                         
-                    testQuestions.forEach(function(thisQuesiton, qIndex){
-                        nQuestions += thisQuesiton.questions.length;
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                        nQuestions += thisQuestion.questions.length;
                     });
-                    testQuestions.forEach(function(thisQuesiton, qIndex){
-                    var questionId = thisQuesiton._id;
-                    thisQuesiton.questions.forEach(function(subQuestion, sIndex){
+                    testQuestions.forEach(function(thisQuestion, qIndex){
+                    var questionId = thisQuestion._id;
+                    thisQuestion.questions.forEach(function(subQuestion, sIndex){
                         var subQuestionId = subQuestion._id;
                         var correctOptionId = null;
                         var correctNumericalAnswers = null;

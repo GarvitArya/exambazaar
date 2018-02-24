@@ -2927,7 +2927,7 @@ router.post('/CoachingStream', function(req, res) {
 
 
                                 if(pIndex == allRatedInstitutes.length - 1){
-                                    console.log(allProviders.map(function(a) {return a.groupName;}));
+                                    //console.log(allProviders.map(function(a) {return a.groupName;}));
                                     res.json(allProviders);
                                 }
                                 
@@ -2938,7 +2938,7 @@ router.post('/CoachingStream', function(req, res) {
 
 
                                 }else{
-                                    console.log(allProviders.map(function(a) {return a.groupName;}));
+                                    //console.log(allProviders.map(function(a) {return a.groupName;}));
                                     res.json(allProviders);
                                 }
                                

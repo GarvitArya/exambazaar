@@ -12,7 +12,8 @@ var questionSchema = mongoose.Schema({
     context: {type: String},
     images: [{type: String}],
     questions: [{
-        type: {type: String}, //mcq or numerical
+        type: {type: String}, //mcq or numerical or mcqma  (mcq with multiple answers)
+        mcqma: {type: Boolean, default: false},
         numericalAnswers: [{type: String}], //all answers are correct
         numericalAnswerType: {type: String, default: 'Range'}, //Exact for exact match, Range for within the range
         numericalAnswerRange:{
