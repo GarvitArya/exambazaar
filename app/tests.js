@@ -1086,23 +1086,45 @@ router.get('/answerKey/:testId', function(req, res) {
             var correctNumericalAnswers = null;
 
             if(subQuestion.type == 'mcq'){
-                subQuestion.options.forEach(function(thisOption, oIndex){
-                    if(thisOption._correct){
-                        correctOptionId = thisOption._id;
+                if(!subQuestion.mcqma){
+                    subQuestion.options.forEach(function(thisOption, oIndex){
+                        if(thisOption._correct){
+                            correctOptionId = thisOption._id;
 
-                        var thisKey = {
-                            question: questionId.toString(),
-                            subquestion: subQuestionId.toString(),
-                            marking: subQuestion.marking,
-                            type: subQuestion.type,
-                            option: correctOptionId.toString(),
-                        };
-                        solutionKey.push(thisKey);
-                        counter += 1;
-                    }
-
-
-                });
+                            var thisKey = {
+                                question: questionId.toString(),
+                                subquestion: subQuestionId.toString(),
+                                marking: subQuestion.marking,
+                                type: subQuestion.type,
+                                option: correctOptionId.toString(),
+                            };
+                            solutionKey.push(thisKey);
+                            counter += 1;
+                        }
+                    });
+                }else{
+                    var thisKey = {
+                        question: questionId.toString(),
+                        subquestion: subQuestionId.toString(),
+                        marking: subQuestion.marking,
+                        type: subQuestion.type,
+                        options: [],
+                    };
+                    subQuestion.options.forEach(function(thisOption, oIndex){
+                        if(thisOption._correct){
+                            correctOptionId = thisOption._id;
+                            thisKey.options.push(correctOptionId);
+                            
+                            
+                        }
+                        if(oIndex == subQuestion.options.length - 1){
+                            solutionKey.push(thisKey);
+                            counter += 1;
+                        }
+                    });
+                    
+                }
+                
             }
 
             if(subQuestion.type == 'numerical'){
@@ -1121,6 +1143,7 @@ router.get('/answerKey/:testId', function(req, res) {
                     counter += 1;
                 }else if (subQuestion.numericalAnswerType == 'Range'){
                     numericalAnswerRange = subQuestion.numericalAnswerRange;
+                    
                     var thisKey = {
                         question: questionId.toString(),
                         subquestion: subQuestionId.toString(),

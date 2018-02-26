@@ -427,7 +427,7 @@
                             <div class="">
                             Your Score
                             </div>
-                            <div layout="row" layout-align="center center" class="marginLR5 incorrectTag" ng-if="!subquestion.userevaluation.userScore.score"> {{subquestion.marking.incorrect}}
+                            <div layout="row" layout-align="center center" class="marginLR5 incorrectTag" ng-if="subquestion.marking.incorrect"> {{subquestion.marking.incorrect}}
                                 <md-tooltip>
                                 You have scored {{subquestion.marking.incorrect}} marks for incorrect answer of this question
                                 </md-tooltip>
@@ -474,8 +474,14 @@
                             <!--<div>Question {{activeQuestionNo}}</div>-->
                             <div ng-bind-html="subquestion.question" class="width100 paddingTB10">
                             </div>
-                               
-                            <md-radio-group ng-model="subquestion.userAnswer" ng-if="subquestion.type =='mcq'" class="width100">
+                            <div ng-repeat="option in subquestion.options" class="width100" ng-if="subquestion.type =='mcq' && subquestion.mcqma">
+                              <md-checkbox ng-checked="subquestion.userAnswer && subquestion.userAnswer.length > 0 && subquestion.userAnswer.indexOf(option._id) != -1" layout="row" layout-align="start center" class="paddingTB2 width100 " ng-disabled="true">
+                                {{option.option}} <span ng-if="subquestion.answer.correctOptions.indexOf(option._id) != -1" class="marginL20 baseFont text-primary ">
+                                        <i class="fa fa-check-circle text-primary font20  bold" aria-hidden="true" ></i>&nbsp;Correct
+                                </span>
+                              </md-checkbox>
+                            </div>     
+                            <md-radio-group ng-model="subquestion.userAnswer" ng-if="subquestion.type =='mcq' && !subquestion.mcqma" class="width100">
 
                             <md-radio-button value="{{option._id}}" ng-model="userAnswer" ng-repeat="option in subquestion.options"  class="paddingTB2 widht100" ng-disabled="true">
                                 <div layout="row" layout-align="start center" flex>
@@ -489,6 +495,7 @@
                             </md-radio-group>
 
                             <div layout="row" layout-align="center center" class="width100 paddingTB10" ng-if="subquestion.type =='numerical'">
+                                
                                 <div flex="25">Your Answer</div>
                                 <div flex>
                                     <input type="number" class="text-center width100" ng-model="subquestion.userNumericalAnswer" placeholder="Type your numerical answer here" disabled>
@@ -496,13 +503,13 @@
 
 
                             </div>
-
                             <div layout="column" layout-align="start start" ng-if="subquestion.answer.type =='numerical'" class="width100 boxShadow baseFont marginT20">
                                 <div layout="column" layout-align="start start" class=" width100 answerBoxHeader bold padding5">
                                     Answer Key
                                 </div>
                                 
                                 <div ng-if="subquestion.answer.numericalAnswerType == 'Range' " class = "padding5">
+                                    
                                     <span ng-if="subquestion.answer.numericalAnswerRange.min != subquestion.answer.numericalAnswerRange.max">
                                     Between the values: {{subquestion.answer.numericalAnswerRange.min}} and {{subquestion.answer.numericalAnswerRange.max}}
                                     </span>

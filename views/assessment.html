@@ -259,7 +259,11 @@
         border: 1px solid #ccc;
         background: whitesmoke;
     }
-    
+    .mcaBadge{
+        background: #e5a72b;
+        border: 1px solid #e5a72b;
+        font-size: 10px;
+    }
     
     
     
@@ -394,7 +398,15 @@
                             </md-tooltip>
                         </span>
                     </div>
-                    <div flex layout="row" layout-align="end start" class="width100 subBaseFont paddingLR20">
+                    <div flex layout="row" layout-align="end center" class="width100 subBaseFont paddingLR20">
+                            <div layout="row" layout-align="center center" class="marginLR5 " ng-if="subquestion.type =='mcq' && subquestion.mcqma">
+                                <span class="badge mcaBadge">Multiple Correct Answers
+                                <md-tooltip>
+                                The question may have more than one correct options. Please mark them carefully.
+                                </md-tooltip>
+                                </span>
+                                
+                            </div>
 
                             <div layout="row" layout-align="center center" class="marginLR5 correctTag"> 
                                 <span ng-if="subquestion.marking.correct[0] != '+'">
