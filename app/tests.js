@@ -433,6 +433,7 @@ router.post('/markSimulate', function(req, res) {
                         }
                         if(subQuestion.type == 'mcq'){
                             var answerMarked = false;
+                            var nAnswers = 0;
                             subQuestion.options.forEach(function(thisOption, oIndex){
                             if(thisOption.option.length < 1 ){
                                 valid = false;
@@ -443,6 +444,7 @@ router.post('/markSimulate', function(req, res) {
                             }
                             if(thisOption._correct){
                                 answerMarked = true;
+                                nAnswers += 1;
                             }
 
 
@@ -454,7 +456,12 @@ router.post('/markSimulate', function(req, res) {
                                 comment += ": as correct option answer is not marked!";
                                 existingTest.simulate.comments.push(comment);
                             }
-
+                            if(nAnswers > 1 && !subQuestion.mcqma){
+                                valid = false;
+                                var comment = "Invalid Q No: " + qno;
+                                comment += ": as MCQMA is not marked even though multiple answers are correct!";
+                                existingTest.simulate.comments.push(comment);
+                            }
                         }
                         if(subQuestion.type == 'numerical'){
                             //
