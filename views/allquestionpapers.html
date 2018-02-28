@@ -299,7 +299,12 @@
     <div id="spacer1" class="hidden-sm hidden-md hidden-lg "></div>
     <div layout="column" layout-align="start start" class="width100 min90vh " flex-xs="90" flex-gt-xs="80">
     <div layout="row" layout-xs="column" class="paddingLR10 paddingTB10 width100" ng-repeat="streamExam in opStreams | orderBy:'-rank'">
-    <div flex-gt-xs="15" class="bold h3Font">
+    <div flex-gt-xs="15" class="bold h3Font" hide-xs>
+        <div class="width100 padding10">
+        {{streamExam.stream}}
+        </div>
+    </div>
+    <div class="bold h1Font" hide-gt-xs>
         <div class="width100 padding10">
         {{streamExam.stream}}
         </div>
@@ -404,43 +409,40 @@
                 <div layout="row" layout-align="start start" class="width100">
                     <a ui-sref="allquestionpapers" class="text-primary" id="reviewLink">
                         <h1 class="h1Font bold">
-                            Official Previous Year Question Papers&nbsp;&nbsp;<i class="fa fa-chevron-right font24" aria-hidden="true"></i>
+                            Why Attempt Question Papers Online?
                         </h1>
                     </a>
                 </div>
-                <h3 class=" h3Font">
-                    Seal your Exam Preparation by attempting the Last 10 Year Question Papers for all exams in a Live, Timed, Exam Environment for FREE
-                </h3>
             </div>
 
         </div>
         <div layout="row" layout-align="center center" class="width100 textDarkGrey min50vh paddingTB5h" layout-wrap hide-xs>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box1">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefits box1">
                 <img ng-src="icons/p0/s2/accustom_yourself.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Accustom Yourself</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Get used to the online features like Online "Page Turn"</div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box2">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefits box2">
                 <img ng-src="icons/p0/s2/timer.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Timer</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Simulate the pressure of the ticking clock</div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box3">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefits box3">
                 <img ng-src="icons/p0/s2/mark_for_review.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Mark for Review</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Mark questions to review later before submitting</div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box4">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefits box4">
                 <img ng-src="icons/p0/s2/marking_scheme.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Marking Scheme</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Marking Scheme visible for each question individually</div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box5">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefits box5">
                 <img ng-src="icons/p0/s2/quick_summary.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Quick Summary</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">See Attempted, Marked, Seen questions in one glance</div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefits box6">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefits box6">
                 <img ng-src="icons/p0/s2/smart_analytics.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Smart Analytics</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Analyse your performance with detailed review and solutions</div>
@@ -449,32 +451,32 @@
         
         
         <div layout="row" layout-align="center center" class="width100 textDarkGrey min50vh " layout-wrap hide-gt-xs>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box1">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefitsXS box1">
                 <img ng-src="icons/p0/s2/accustom_yourself.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Accustom Yourself</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Get used to the online features like Online "Page Turn"</div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box2">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefitsXS box2">
                 <img ng-src="icons/p0/s2/timer.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Timer</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Simulate the pressure of the ticking clock</div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box3">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefitsXS box3">
                 <img ng-src="icons/p0/s2/mark_for_review.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Mark for Review</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Mark questions to review later before submitting</div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box4">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefitsXS box4">
                 <img ng-src="icons/p0/s2/marking_scheme.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Marking Scheme</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Marking Scheme visible for each question individually</div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box5">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefitsXS box5">
                 <img ng-src="icons/p0/s2/quick_summary.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Quick Summary</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">See Attempted, Marked, Seen questions in one glance</div>
             </div>
-            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="start center" class="ebBenefitsXS box6">
+            <div flex-xs="50" flex-gt-xs="33" layout="column" layout-align="center center" class="ebBenefitsXS box6">
                 <img ng-src="icons/p0/s2/smart_analytics.png" class="p0s2Logo">
                 <div layout="column" layout-align="center center" class="bold width100 h3Font marginT10 text-center">Smart Analytics</div>
                 <div layout="column" layout-align="center center" class="p0baseFont narrowLine2 width100 text-center paddingLR10">Analyse your performance with detailed review and solutions</div>
