@@ -5,6 +5,7 @@ var config = require('../config/mydatabase.js');
 var exam = require('../app/models/exam');
 var coaching = require('../app/models/coaching');
 var test = require('../app/models/test');
+var user = require('../app/models/user');
 var bookAppointment = require('../app/models/bookAppointment');
 var cisaved = require('../app/models/cisaved');
 var mongoose = require('mongoose');
@@ -73,18 +74,59 @@ router.post('/find', function(req, res) {
 //to get all bookAppointments
 router.get('/', function(req, res) {
     //console.log('Here');
-    bookAppointment
-        .find({ })
-        //.deepPopulate('exam')
-        .exec(function (err, docs) {
+    var allAppointments = bookAppointment
+        .find({})
+        //.deepPopulate('user')
+        .exec(function (err, allAppointments) {
         if (!err){
-            //var bookAppointmentIds = docs.map(function(a) {return a.name;});
-            //console.log(docs);
-            res.json(docs);
+            var bookAppointmentUsers = allAppointments.map(function(a) {return a.user.toString();});
+            
+            
+            
+            var appointmentUsers = user.find({ _id: {$in: bookAppointmentUsers } }, {basic: 1},function (err, appointmentUsers) {
+                if(appointmentUsers){
+                    var appointmentUserIds = appointmentUsers.map(function(a) {return a._id.toString();});
+                    var sendAppointments = [];
+                    allAppointments.forEach(function(thisAppointment, aindex){
+                        var thisUser = thisAppointment.user.toString();
+                        var uIndex = appointmentUserIds.indexOf(thisUser);
+                        if(uIndex != -1){
+                            thisAppointment.user = appointmentUsers[uIndex];
+                            var newAppointment = {
+                                _id: thisAppointment._id,
+                                user: appointmentUsers[uIndex],
+                                institute: thisAppointment.institute,
+                                exam: thisAppointment.exam,
+                                _requestDate: thisAppointment._requestDate,
+                                _confirmation: thisAppointment._confirmation,
+                                course: thisAppointment.course,
+                                _created: thisAppointment._created,
+                                _status: thisAppointment._status,
+                            };
+                            sendAppointments.push(newAppointment);
+                        }
+                        
+                        if(aindex == allAppointments.length - 1){
+                            res.json(sendAppointments);
+                        }
+                        
+                    });
+                    
+                    
+                    
+                }else{
+                    res.json([]);
+                }
+            });
+            
+            
+            
+            
         } else {throw err;}
     });
     
 });
+
 
 
 router.get('/count', function(req, res) {
@@ -100,11 +142,30 @@ router.get('/count', function(req, res) {
 //to get a particular user with _id userId
 router.get('/edit/:bookAppointmentId', function(req, res) {
     var bookAppointmentId = req.params.bookAppointmentId.toString();
-    var thisBookAppointment = bookAppointment
+    var thisAppointment = bookAppointment
         .findOne({'_id': bookAppointmentId})
-        .exec(function (err, thisBookAppointment) {
+        .deepPopulate('exam user')
+        .exec(function (err, thisAppointment) {
         if (!err){
-            res.json(thisBookAppointment);
+            var thisInstitute = coaching.findOne({ _id: thisAppointment.institute }, {address: 1, city: 1, pincode: 1, state: 1, mobile:1, phone:1, website: 1, logo: 1, name: 1, email: 1},function (err, thisInstitute) {
+                var newAppointment = {
+                    _id: thisAppointment._id,
+                    user: thisAppointment.user,
+                    institute: thisAppointment.institute,
+                    exam: thisAppointment.exam,
+                    _requestDate: thisAppointment._requestDate,
+                    _confirmation: thisAppointment._confirmation,
+                    course: thisAppointment.course,
+                    _created: thisAppointment._created,
+                    _status: thisAppointment._status,
+                };
+                
+                if(thisInstitute){
+                    newAppointment.institute = thisInstitute;
+                }
+                res.json(newAppointment);
+            });
+            
 
         } else {throw err;}
     });

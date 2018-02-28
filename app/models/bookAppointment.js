@@ -3,11 +3,18 @@ var Schema = mongoose.Schema;
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var bookAppointmentSchema = mongoose.Schema({
-    user: { type: Schema.ObjectId, ref: 'user', required: true  },
+    user: { type: Schema.ObjectId, ref: 'User', required: true  },
     institute: { type: Schema.ObjectId, ref: 'coaching' },
     exam: { type: Schema.ObjectId, ref: 'exam', required: true},
     _requestDate: { type: Date },
-    _confirmedDate: { type: Date },
+    _status: { type: String, default: 'Requested' }, //Request, Confirmed, Rescheduled
+    _confirmation: [
+        { 
+            _date: { type: Date },
+            _createdBy: { type: Schema.ObjectId, ref: 'User' },
+            _created: { type: Date, default: Date.now },
+        }
+    ],
     course: {
         targetYear: { type: 'String' },
         groupname: { type: 'String' },
@@ -18,4 +25,5 @@ var bookAppointmentSchema = mongoose.Schema({
     _created: { type: Date, default: Date.now },
 });
 bookAppointmentSchema.plugin(deepPopulate);
-module.exports = mongoose.model('bookAppointment', bookAppointmentSchema);
+var bookAppointment = mongoose.model('bookAppointment', bookAppointmentSchema);
+module.exports = bookAppointment;

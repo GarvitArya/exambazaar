@@ -2892,7 +2892,7 @@ router.post('/CoachingStream', function(req, res) {
                             if(allProviders && allProviders.length > 0){
                                 allGroupNames = allProviders.map(function(a) {return a.groupName;});
 
-                                var allRatedInstitutes = coaching.find({ 'groupName': allGroupNames, cirf: {$exists: true}, $where: "this.cirf.length > 1" },{_id:1, groupName: 1, cirf: 1},function (err, allRatedInstitutes) {
+                                var allRatedInstitutes = coaching.find({ 'groupName': allGroupNames, cirf: {$exists: true}, $where: "this.cirf.length > 0" },{_id:1, groupName: 1, cirf: 1},function (err, allRatedInstitutes) {
                                 if (!err){
                                     
                                     
@@ -2905,6 +2905,7 @@ router.post('/CoachingStream', function(req, res) {
                                 var pCIRFs = thisProvider.cirf;
                                 if(pCIRFs && pCIRFs.length > 0){
                                     var pCIRFexams = pCIRFs.map(function(a) {return a.exam.toString();});
+                                    
 
                                     var pcIndex = pCIRFexams.indexOf(thisExam._id.toString());
 

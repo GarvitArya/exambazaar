@@ -137,7 +137,7 @@ var otps = require('./app/otps.js',otps);
 var exams = require('./app/exams.js',exams); 
 var tests = require('./app/tests.js',tests); 
 var availDiscounts = require('./app/availDiscounts.js',availDiscounts); 
-var bookAppointments = require('./app/bookAppointments.js',bookAppointments); 
+
 var questions = require('./app/questions.js',questions); 
 var questionresponses = require('./app/questionresponses.js',questionresponses); 
 var questionreporterrors = require('./app/questionreporterrors.js',questionreporterrors); 
@@ -161,7 +161,7 @@ var images = require('./app/images.js',images);
 var awsCredentials = require('./app/awsCredentials.js',awsCredentials); 
 var s3Utils = require('./app/s3Utils.js',s3Utils); 
 var socialMediaCredentials = require('./app/socialMediaCredentials.js',socialMediaCredentials); 
-var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredentials); 
+var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredentials); var bookAppointments = require('./app/bookAppointments.js',bookAppointments); 
 
 
 app.use('/api/providers', providers);
@@ -199,7 +199,7 @@ app.use('/api/qviews', qviews);
 app.use('/api/cirffactors', cirffactors);
 app.use('/api/assessments', assessments);
 app.use('/api/availDiscounts', availDiscounts);
-app.use('/api/bookAppointments', bookAppointments);
+
 app.use('/api/eligibilitys', eligibilitys);
 app.use('/api/streams', streams);
 app.use('/api/locations', locations);
@@ -217,7 +217,7 @@ app.use('/api/awsCredentials', awsCredentials);
 app.use('/api/s3Utils', s3Utils);
 app.use('/api/socialMediaCredentials', socialMediaCredentials);
 app.use('/api/sendGridCredentials', sendGridCredentials);
-
+app.use('/api/bookAppointments', bookAppointments);
 
 var allStates = [
 '/',
@@ -241,6 +241,8 @@ var allStates = [
 '/ebinternal/addStream',
 '/ebinternal/addSubscriber',
 '/ebinternal/allOffers',
+'/ebinternal/manageAppointment/:appointmentId',
+'/ebinternal/appointments',
 '/ebinternal/allreviews',
 '/ebinternal/allblogtags',
 '/ebinternal/allTests',
@@ -315,8 +317,8 @@ var allStates = [
 '/ebinternal/verify/:userId/',
 '/ebinternal/why',
 '/group/:categoryName/:subCategoryName/:cityName/:groupName',
-'/availDiscount/:categoryName/:subCategoryName/:cityName/:groupName',
-'/bookAppointment/:categoryName/:subCategoryName/:cityName/:groupName',
+'/ebinternal/availDiscount/:categoryName/:subCategoryName/:cityName/:groupName',
+'/ebinternal/bookAppointment/:categoryName/:subCategoryName/:cityName/:groupName',
 '/login',
 '/privacy',
 '/rankerswall/:examName/:year',

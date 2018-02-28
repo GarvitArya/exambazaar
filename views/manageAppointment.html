@@ -1,0 +1,88 @@
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center start" class="width100">
+    
+    
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB20 height100 width100">
+    <div layout="row" layout-align="center center" class="width100 headingBottomBorder2 paddingB5 marginTB10 h2Font">
+        Manage Appointment
+    </div>
+    <div layout="row" layout-align="start start" class="width100 greyBottomBorder marginTB10 paddingB10">
+        <div layout="column" layout-align="center center" flex>
+            <img id="userPicProfile2" ng-src="{{appointment.user.image}}" ng-if="appointment.user.image" class="img-circle" />
+            <div layout="row" layout-align="center center" class="width100 h3Font marginT10">{{appointment.user.basic.name}}</div>
+            <div layout="row" layout-align="center center" class="width100">{{appointment.user.mobile}}</div>
+            <div layout="row" layout-align="center center" class="width100">{{appointment.user.email}}</div>
+        </div>
+        <div layout="column" layout-align="center center" flex>
+            <img id="userPicSmall" ng-src="{{appointment.institute.logo}}" ng-if="appointment.institute.logo && appointment.institute.logo != ''" class="" />
+            <div layout="row" layout-align="center center" class="width100 h3Font marginTB5">
+                Coaching:&nbsp;<a ui-sref="claim({ coachingId:{{'appointment.institute._id'}} })"  id="reviewLink" target="_blank">
+                    {{appointment.institute.name}}
+                </a>
+            </div>
+            <div layout="row" layout-align="center center" class="width100 text-center smallFont">{{appointment.institute.address}}, {{appointment.institute.city}}, {{appointment.institute.state}} - {{appointment.institute.pincode}}
+            </div>
+            <div layout="row" layout-align="center center" class="width100 smallFont" ng-if="appointment.institute.mobile.length > 0">Mobile:&nbsp;
+                <span ng-repeat="mobile in appointment.institute.mobile" class="marginR5">
+                    {{mobile}}
+                </span>
+            </div>
+            <div layout="row" layout-align="center center" class="width100 smallFont" ng-if="appointment.institute.phone.length > 0">Phone:&nbsp;
+                <span ng-repeat="phone in appointment.institute.phone" class="marginR5">
+                    {{phone}}
+                </span>
+            </div>
+            <div layout="row" layout-align="center center" class="width100 smallFont" ng-if="appointment.institute.email.length > 0">Email:&nbsp;
+                <span ng-repeat="email in appointment.institute.email" class="marginR5">
+                    {{email}}
+                </span>
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" flex>
+            <div layout="row" layout-align="center center" class="width100 h3Font">Exam:&nbsp;{{appointment.exam.displayname}}
+            </div>
+            <div layout="row" layout-align="center center" class="width100">Year:&nbsp; {{appointment.course.targetYear}}
+            </div>
+            <div layout="row" layout-align="center center" class="width100 h3Font">Request Date:&nbsp;{{appointment._requestDate | date:'MMM d, y hh:mm a'}}
+            </div>
+        </div>
+        
+    </div>
+    
+    <div layout="row" layout-align="start start" class="width100 greyBottomBorder marginTB10 paddingB10">
+        <div layout="column" layout-align="center center" flex>
+            <div layout="row" layout-align="center center" class="width100">Appointment Status</div>
+            <div layout="row" layout-align="center center" class="width100">{{appointment._status}}</div>
+        </div>
+        <div layout="column" layout-align="center center" flex ng-if="appointment._status == 'Requested'">
+            <div layout="row" layout-align="center center" class="width100">Confirm Appointment</div>
+            <div layout="column" layout-align="center center" class="width100">
+                <div flex class="paddingLR10">
+                    <md-datepicker ng-model="appointmentDate" md-placeholder="Start Date" class="margin0"></md-datepicker>
+                </div>
+                <div flex class="paddingLR10 marginT10">
+                    <md-select ng-model="appointmentTime" placeholder="Appointment time" class="margin0 marginR10 width100">
+                        <md-option ng-repeat="appointmentTime in appointmentTimes" ng-value="appointmentTime" class="width100">
+                        {{appointmentTime}}
+                        </md-option>
+                    </md-select>
+                </div>
+            
+            </div>
+            <div layout="row" layout-align="center center" class="width100 marginT20">
+                <md-button class="md-next tolowercase margin0 baseFont" ng-click="confirmAppointment(appointmentDate, appointmentTime)">
+                    Get Started
+                </md-button>
+                
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" flex>
+            
+        </div>
+    </div>
+    
+</div>
+</div>

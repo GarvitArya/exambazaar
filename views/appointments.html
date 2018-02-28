@@ -1,0 +1,47 @@
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+<div flex layout="row" layout-align="center start" class="width100">
+    
+    
+<div flex-xs="100" flex-gt-xs="90" layout="column" layout-align="center center" class="paddingTB20 height100 width100">
+    <div layout="row" layout-align="center center" class="width100 greyBottomBorder marginB5 bold">
+        <div flex="5">S. No.</div>
+        <div flex="15">User</div>
+        <div flex="10">Exam</div>
+        <div flex="30" class="paddingR10">Coaching</div>
+        <div flex="10">City</div>
+        <div flex="10">Target Year</div>
+        <div flex="10">Edit</div>
+        <div flex="10">Status</div>
+    </div>
+    <div layout="row" layout-align="center center" ng-repeat="appointment in allAppointments" class="width100 greyDashedBottomBorder">
+        <div flex="5">{{$index+1}}</div>
+        <div flex="15">{{appointment.user.basic.name}}</div>
+        <div flex="10">{{appointment.exam.displayname}}</div>
+        <div flex="30" class="paddingR10">
+            <a ui-sref="claim({ coachingId:{{'appointment.institute'}} })"  id="reviewLink" target="_blank">
+                {{appointment.course.groupname}}
+            </a>
+        </div>
+        <div flex="10">
+            {{appointment.course.city}}
+        </div>
+        <div flex="10">
+            {{appointment.course.targetYear}}
+        </div>
+        <div flex="10">
+            <a ui-sref="manageAppointment({ appointmentId:{{'appointment._id'}} })"  id="reviewLink" target="_blank">
+            Edit
+            </a>
+        </div>
+        <div flex="10">
+            {{appointment._status}}
+        </div>
+    </div>
+    
+    
+    
+</div>
+</div>

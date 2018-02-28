@@ -1808,6 +1808,242 @@ router.post('/EventsEmail', function(req, res) {
     });
 });
 
+
+router.post('/OfficialPapersEmail', function(req, res) {
+    console.log('Starting Official Papers Email');
+    var fromEmail = {
+        email: 'always@exambazaar.com',
+        name: 'Always Exambazaar'
+    };
+    
+    var templateName = 'Official Question Papers';
+    res.json(true);
+    
+    
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+        var apiKey = existingSendGridCredential.apiKey;
+        var sg = require("sendgrid")(apiKey);
+        var emailTemplate = existingSendGridCredential.emailTemplate;
+        var templateFound = false;
+        var nLength = emailTemplate.length;
+        var counter = 0;
+        var templateId;
+        emailTemplate.forEach(function(thisEmailTemplate, index){
+        if(thisEmailTemplate.name == templateName){
+            templateFound = true;
+            templateId = thisEmailTemplate.templateKey;
+            var from_email = new helper.Email(fromEmail);
+            
+            var limit = 200;
+            var skip = 0;
+            //email: {$exists: true}, mobile: "9829685919"
+            var allUsers = user.find({email: {$exists: true}, mobile: "9829685919"}, {basic: 1, email: 1, _id: 1}, function(err, allUsers) {
+            if (!err){
+                var emailcounter = 0;
+                var counter = 0;
+                var nUsers = allUsers.length;
+                console.log("Total " + nUsers + " users!");
+                allUsers.forEach(function(thisUser, index){
+
+                    var to = thisUser.email;
+                    var username = "Student";
+                    var subject = " ";
+                    if(thisUser.basic && thisUser.basic.name){
+                        username = thisUser.basic.name;
+                    }
+
+
+                    var to_email = new helper.Email(to);
+                    var html = ' ';
+
+                    var content = new helper.Content('text/html', html);
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                     mail.personalizations[0].addSubstitution(new helper.Substitution('-username-', username));
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+
+
+                    if(thisUser.email && thisUser.email != ''){
+                        
+                        sg.API(request, function(error, response) {
+                        if(error){
+                            counter += 1;
+                            console.log(index + '. Could not send email! ' + error);
+                            console.log(response);
+                            if(counter == nUsers){
+                                console.log("Total " + emailcounter + " emails delivered " + " out of " + counter + " attempts!" );
+                                //console.log('All Done');
+                            }
+                        }else{
+                            
+                            counter += 1;
+                            emailcounter += 1;
+                            console.log(index  + '. Email sent to ' + username + ' at ' + to);
+                            //console.log(counter + "/" + nUsers + " done!");
+                            if(counter == nUsers){
+                                console.log("Total " + emailcounter + " emails delivered " + " out of " + counter + " attempts!" );
+                                //console.log('All Done');
+                            }
+                        }
+                    });
+
+
+                    }else{
+                        counter += 1;
+                        if(counter == nUsers){
+                            console.log('All Done');
+                        }
+                    }
+                });
+
+
+
+            } else {throw err;}
+            }).limit(limit).skip(skip);
+            
+            
+
+        }
+        if(counter == nLength){
+            if(!templateFound){
+                console.log('Could not send email as there is no template with name: ' + templateName);
+                res.json(false);
+            }
+        }
+        });
+        if(nLength == 0){
+            if(!templateFound){
+                console.log('Could not send email as there is no template with name: ' + templateName);
+                res.json(false);
+            }
+        }
+        }else{
+            console.log('No Active SendGrid API Key');
+            res.json(false);
+        }
+    });
+});
+
+
+router.post('/OfficialPapersEmailUnsolicited', function(req, res) {
+    console.log('Starting Official Papers Email Unsolicited');
+    var fromEmail = {
+        email: 'always@exambazaar.com',
+        name: 'Always Exambazaar'
+    };
+    
+    var templateName = 'Official Question Papers';
+    res.json(true);
+    
+    
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        if(existingSendGridCredential){
+        var apiKey = existingSendGridCredential.apiKey;
+        var sg = require("sendgrid")(apiKey);
+        var emailTemplate = existingSendGridCredential.emailTemplate;
+        var templateFound = false;
+        var nLength = emailTemplate.length;
+        var counter = 0;
+        var templateId;
+        emailTemplate.forEach(function(thisEmailTemplate, index){
+        if(thisEmailTemplate.name == templateName){
+            templateFound = true;
+            templateId = thisEmailTemplate.templateKey;
+            var from_email = new helper.Email(fromEmail);
+            
+            var allUsers = [];
+            var emailcounter = 0;
+            var counter = 0;
+            
+            var skip = 0;
+            var limit = 200;
+            var nUsers = allUsers.length;
+            if(limit < nUsers){
+                nUsers = limit;
+            }
+            
+            console.log("Total " + nUsers + " users!");
+            allUsers.forEach(function(thisUser, index){
+                if(index >= skip && index < skip + limit){
+                
+                var to = thisUser;
+                var username = "Student";
+                var subject = " ";
+                var to_email = new helper.Email(to);
+                var html = ' ';
+
+                var content = new helper.Content('text/html', html);
+                var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                mail.setTemplateId(templateId);
+                
+                var request = sg.emptyRequest({
+                  method: 'POST',
+                  path: '/v3/mail/send',
+                  body: mail.toJSON(),
+                });
+
+
+                if(thisUser && thisUser != ''){
+
+                    sg.API(request, function(error, response) {
+                    if(error){
+                        counter += 1;
+                        console.log(index + '. Could not send email! ' + error);
+                        if(counter == nUsers){
+                            console.log("Total " + emailcounter + " emails delivered " + " out of " + counter + " attempts!" );
+                        }
+                    }else{
+
+                        counter += 1;
+                        emailcounter += 1;
+                        console.log(index  + '. Email sent at ' + to);
+                        if(counter == nUsers){
+                            console.log("Total " + emailcounter + " emails delivered " + " out of " + counter + " attempts!" );
+                            //console.log('All Done');
+                        }
+                    }
+                });
+
+
+                }else{
+                    counter += 1;
+                    if(counter == nUsers){
+                        console.log('All Done');
+                    }
+                }
+                
+                
+                }
+            });
+
+        }
+        if(counter == nLength){
+            if(!templateFound){
+                console.log('Could not send email as there is no template with name: ' + templateName);
+                res.json(false);
+            }
+        }
+        });
+        if(nLength == 0){
+            if(!templateFound){
+                console.log('Could not send email as there is no template with name: ' + templateName);
+                res.json(false);
+            }
+        }
+        }else{
+            console.log('No Active SendGrid API Key');
+            res.json(false);
+        }
+    });
+});
+
 router.get('/', function(req, res) {
     email
         .find({ })

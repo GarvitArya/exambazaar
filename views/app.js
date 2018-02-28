@@ -541,6 +541,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.EventsEmail = function() {
             return $http.post('/api/emails/EventsEmail');
         };
+        this.OfficialPapersEmail = function() {
+            return $http.post('/api/emails/OfficialPapersEmail');
+        };
+        this.OfficialPapersEmailUnsolicited = function() {
+            return $http.post('/api/emails/OfficialPapersEmailUnsolicited');
+        };
+        
         this.internshipEmail = function(emailForm) {
             return $http.post('/api/emails/internshipEmail', emailForm);
         };
@@ -12684,49 +12691,50 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
         }
             
-        
-        
-        if($cookies.getObject('userlocation')){
-            $scope.userlocation = $cookies.getObject('userlocation');
-            
-            if(!$scope.userPosition || $scope.userPosition.length < 4){
-                //console.log('Empty object');
+        var stateName = $state.current.name;
+        var locationStates = ["landing", "main", "category", "city", "topCoaching", "findCoaching", "showCoaching", "showGroup"];
+        if(locationStates.indexOf(stateName) != -1){
+            if($cookies.getObject('userlocation')){
+                $scope.userlocation = $cookies.getObject('userlocation');
+
+                if(!$scope.userPosition || $scope.userPosition.length < 4){
+                    //console.log('Empty object');
+                    $geolocation.getCurrentPosition({
+                    timeout: 60000
+                     }).then(function(position) {
+                        $cookies.putObject('userlocation', position);
+                        $scope.userlocation = position;
+                        if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                            $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
+
+                            $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+                            $cookies.putObject('userPosition', $scope.userPosition);
+
+                        }
+                     });
+                }
+
+
+                if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                    $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
+
+
+                    $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+                }
+
+            }else{
                 $geolocation.getCurrentPosition({
                 timeout: 60000
                  }).then(function(position) {
                     $cookies.putObject('userlocation', position);
                     $scope.userlocation = position;
                     if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
-                        $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
-                        
-                        $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
-                        $cookies.putObject('userPosition', $scope.userPosition);
-                        
+                        $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude); 
                     }
+
                  });
             }
-            
-            
-            if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
-                $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
-                
-                
-                $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
-            }
-            
-        }else{
-            $geolocation.getCurrentPosition({
-            timeout: 60000
-             }).then(function(position) {
-                $cookies.putObject('userlocation', position);
-                $scope.userlocation = position;
-                if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
-                    $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude); 
-                }
-                
-             });
         }
-        
             
         $scope.showLoginForm = function(){
             $scope.showLoginDialog();
@@ -22804,6 +22812,53 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             $scope.sortByDate();
     }]); 
+    exambazaar.controller("manageAppointmentController", 
+        [ '$scope', '$http', '$rootScope','bookAppointmentService','thisAppointment', 'coachingService','$state', '$mdDialog', function($scope, $http, $rootScope, bookAppointmentService, thisAppointment, coachingService, $state, $mdDialog){
+            $scope.appointment = thisAppointment.data;
+            $scope.appointmentTimes = ['07:00', '07:15', '07:30', '07:45', '08:00', '08:15', '08:30', '08:45', '09:00', '09:15', '09:30', '09:45', '10:00', '10:15', '10:30', '10:45', '11:00', '11:15', '11:30', '11:45', '12:00', '12:15', '12:30', '12:45', '13:00', '13:15', '13:30', '13:45', '14:00', '14:15', '14:30', '14:45', '15:00', '15:15', '15:30', '15:45', '16:00', '16:15', '16:30', '16:45', '17:00', '17:15', '17:30', '17:45', '18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45', '21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45'];
+            
+            
+            $rootScope.pageTitle = 'Manage Appointment';
+            
+            $scope.confirmAppointment = function(appointmentDate, appointmentTime){
+                appointmentDate = moment(appointmentDate).set({hour:0,minute:0,second:0,millisecond:0}).format('YYYY-MM-DD');
+                var appointmentDateTime = moment(appointmentDate +' '+ appointmentTime);
+                console.log(appointmentDateTime);    
+            
+            };
+            
+            
+    }]);     
+        
+    exambazaar.controller("appointmentsController", 
+        [ '$scope', '$http', '$rootScope','bookAppointmentService','allAppointments', 'coachingService','$state', '$mdDialog', function($scope, $http, $rootScope, bookAppointmentService, allAppointments, coachingService, $state, $mdDialog){
+            $scope.allAppointments = allAppointments.data;
+            
+            $rootScope.pageTitle = 'All Appointments';
+            
+            $scope.$watch('streamExams', function (newValue, oldValue, rootScope){
+                if(newValue){
+                var allExams = [];
+                $rootScope.streamExams.forEach(function(thisStream, sindex){
+                    allExams = allExams.concat(thisStream.exams);
+                });
+                
+                var allExamIds =  allExams.map(function(a) {return a._id.toString();});
+                    
+                $scope.allAppointments.forEach(function(thisAppointment, aindex){
+                    var thisExam = thisAppointment.exam.toString();
+                    var eIndex = allExamIds.indexOf(thisExam);
+
+                    if(eIndex != -1){
+                        thisAppointment.exam = allExams[eIndex];
+                    }
+
+                });
+            }
+        }, true);
+            
+            
+    }]);    
     exambazaar.controller("allreviewsController", 
         [ '$scope', '$http', '$rootScope','reviewService','allReviews', 'coachingService','$state', '$mdDialog', function($scope, $http, $rootScope, reviewService, allReviews, coachingService, $state, $mdDialog){
             $scope.allReviews = allReviews.data;
@@ -30864,6 +30919,50 @@ function getLatLng(thisData) {
                 
                     
             };
+            $scope.OfficialPapersEmail = function(userId){
+                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                    var marketingUser = data;
+                    if(marketingUser.mobile == '9829685919'){
+                         EmailService.OfficialPapersEmail().success(function (thisData, status, headers) {
+                            
+                            Notification.success("All done!");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });
+                        
+                        
+                    }
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                    
+            };
+            
+            $scope.OfficialPapersEmailUnsolicited = function(userId){
+                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                    var marketingUser = data;
+                    if(marketingUser.mobile == '9829685919'){
+                         EmailService.OfficialPapersEmailUnsolicited().success(function (thisData, status, headers) {
+                            
+                            Notification.success("All done!");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });   
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                    
+            };
+            
             
             $scope.CATEmail = function(userId){
                 console.log(userId);
@@ -34527,6 +34626,53 @@ function getLatLng(thisData) {
                     return offerService.getOffers();
                 }],
                 
+                
+            }
+        })
+    
+        .state('manageAppointment', {
+            url: '/ebinternal/manageAppointment/:appointmentId',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'manageAppointment.html',
+                    controller: 'manageAppointmentController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisAppointment: ['bookAppointmentService','$stateParams',
+                    function(bookAppointmentService, $stateParams){
+                    return bookAppointmentService.getBookAppointment($stateParams.appointmentId);
+                }],
+                
+            }
+        })
+        .state('appointments', {
+            url: '/ebinternal/appointments',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'appointments.html',
+                    controller: 'appointmentsController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                allAppointments: ['bookAppointmentService',
+                    function(bookAppointmentService) {   
+                    return bookAppointmentService.getBookAppointments();
+                }],
                 
             }
         })

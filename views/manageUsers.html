@@ -150,6 +150,16 @@
                         Send Events Email
                         </md-button>
                     </div>
+                    <div layout="column" layout-align="start start">
+                        <md-button class="md-signup md-small editFont" ng-click="OfficialPapersEmail(thisuser._id)" ng-if="thisuser.userType == 'Master'">
+                        Send Official Papers Email
+                        </md-button>
+                    </div>
+                    <div layout="column" layout-align="start start">
+                        <md-button class="md-signup md-small editFont" ng-click="OfficialPapersEmailUnsolicited(thisuser._id)" ng-if="thisuser.userType == 'Master'">
+                        Send Official Papers Email Unsolicited
+                        </md-button>
+                    </div>
                 </div>
                 
                 
