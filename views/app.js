@@ -27869,7 +27869,7 @@ function getLatLng(thisData) {
                 $scope.exam = $rootScope.opStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
                 $scope.$apply();
             }, 2000);*/
-            
+            $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.jpg';
             $rootScope.pageImage = $scope.defaultCoverPhoto;
             $rootScope.pageTitle = "Official Question Papers of all Major Exams in India | ";
             
