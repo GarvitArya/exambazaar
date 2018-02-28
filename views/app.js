@@ -27875,7 +27875,7 @@ function getLatLng(thisData) {
             
             
             
-            $rootScope.pageDescription = 'Seal your Exan Preparation preparation by attempting the Official Exam Papers for the last 10 years in a Live, Timed, Exam Environment for FREE!';
+            $rootScope.pageDescription = 'Seal your Exam Preparation preparation by attempting the Official Exam Papers for the last 10 years in a Live, Timed, Exam Environment for FREE!';
             var keywordString = '';
             var suffix = [' Question Papers ', ' Question Papers PDF ', ' Question Papers & Answers PDF ' , ' Official Papers '];
             var examNames = ['IIT JEE', 'GATE'];
