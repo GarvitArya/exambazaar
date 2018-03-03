@@ -547,6 +547,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.OfficialPapersEmailUnsolicited = function() {
             return $http.post('/api/emails/OfficialPapersEmailUnsolicited');
         };
+        this.officialPapersInvite = function() {
+            return $http.post('/api/emails/officialPapersInvite');
+        };
+        
         
         this.internshipEmail = function(emailForm) {
             return $http.post('/api/emails/internshipEmail', emailForm);
@@ -27869,7 +27873,7 @@ function getLatLng(thisData) {
                 $scope.exam = $rootScope.opStreams[$scope.showcase.stream].exams[$scope.showcase.exam];
                 $scope.$apply();
             }, 2000);*/
-            $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.jpg';
+            $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.png';
             $rootScope.pageImage = $scope.defaultCoverPhoto;
             $rootScope.pageTitle = "Official Question Papers of all Major Exams in India | ";
             
@@ -27926,7 +27930,7 @@ function getLatLng(thisData) {
         [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'officialPapers', 'officialPapersStreamExam', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, officialPapers, officialPapersStreamExam, viewService, $location, screenSize){
             $scope.slideCount = 2;
             $scope.exam = thisexam.data;
-            $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.jpg';
+            $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.png';
             if($scope.exam.officialpaperscoverphoto && $scope.exam.officialpaperscoverphoto != ''){
                 $scope.defaultCoverPhoto = $scope.exam.officialpaperscoverphoto;
             };
@@ -30963,6 +30967,25 @@ function getLatLng(thisData) {
                     
             };
             
+            $scope.officialPapersInvite = function(userId){
+                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                    var marketingUser = data;
+                    if(marketingUser.mobile == '9829685919'){
+                         EmailService.officialPapersInvite().success(function (thisData, status, headers) {
+                            
+                            Notification.success("All done!");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });   
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                    
+            };
             
             $scope.CATEmail = function(userId){
                 console.log(userId);

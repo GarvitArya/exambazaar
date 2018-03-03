@@ -482,6 +482,160 @@ var fromEmail = {
     
     
 });
+
+router.post('/officialPapersInvite', function(req, res) {
+
+var templateName = 'Official Question Papers';
+
+var from = 'always@exambazaar.com';
+var sender = 'Always Exambazaar';
+var senderId = '59a7eb973d71f10170dbb468';
+var eCounter = 0;
+//sender = 'Always Exambazaar';
+var fromEmail = {
+    email: from,
+    name: sender
+};
+    
+    var coachingIds = ['58821266fe400914343a5074'];
+    
+    var allProviders = coaching
+    .find({ '_id': { $in : coachingIds},  email: {$exists: true}, disabled: false }, { name: 1, email:1 })
+    //.limit(1)
+    .exec(function (err, allProviders) {
+
+    if (!err){
+    if(allProviders){
+        res.json(true);
+        console.log('There are: ' + allProviders.length + ' providers!');
+        allProviders.forEach(function(thisProvider, pindex){
+        var thisEmails = thisProvider.email;
+        var instituteName = thisProvider.name;
+        var instituteId = thisProvider._id;
+        thisEmails.forEach(function(thisEmail, eindex){
+            var emailSent = false;
+            
+            var to = thisEmail;
+            //to = 'ayush@exambazaar.com';
+            var subject = instituteName + " - Increase Revenue with FREE Previous Papers for Students";
+            var html = ' ';
+            if(!html){
+                html = ' ';
+            }
+            var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+            if (err) return handleError(err);
+
+            if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+
+
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+            if(thisEmailTemplate.name == templateName){
+                templateFound = true;
+                templateId = thisEmailTemplate.templateKey;
+                
+                var from_email = new helper.Email(fromEmail);
+                //var to = 'saloni@exambazaar.com';
+                var to_email = new helper.Email(to);
+                //var subject = subject;
+                var content = new helper.Content('text/html', html);
+                var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                mail.setTemplateId(templateId);
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteName-', instituteName));
+
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-instituteId-', instituteId));
+
+                var request = sg.emptyRequest({
+                  method: 'POST',
+                  path: '/v3/mail/send',
+                  body: mail.toJSON(),
+                });
+                
+                var existingEmail = email.findOne({ to: to, _date: {$gte: new Date('2018-02-28T00:00:00.000Z')}}, {templateId: 1, _date: 1, to: 1},function (err, existingEmail) {
+                    if (err) return handleError(err);
+                    if(existingEmail){
+                        console.log("Email to " + to + " already sent at: " + existingEmail._date);
+                    }else{
+                        //console.log("Will send to " + to);
+                        sg.API(request, function(error, response) {
+                            if(error){
+                                console.log('Could not send email! ' + error);
+                            }else{
+
+                            var this_email = new email({
+                                institute: instituteId,
+                                user: senderId,
+                                templateId: templateId,
+                                fromEmail: {
+                                    email: from,
+                                    name: sender
+                                },
+                                to: to,
+                                response: {
+                                    status: response.statusCode,
+                                    _date: response.headers.date,
+                                    xMessageId: response.headers["x-message-id"]
+                                }
+
+                            });
+
+                            this_email.save(function(err, this_email) {
+                                if (err) return console.error(err);
+                                eCounter += 1;
+                                console.log(eCounter + '. Email sent to ' + instituteName + ' at ' + this_email.to);
+                            });
+                            //res.json(response);
+                            }
+
+                        });
+                    }
+                });
+                
+                /**/
+
+            }
+            if(counter == nLength){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+
+
+
+            }else{
+                res.json('No Active SendGrid API Key');
+            }
+        });
+
+
+
+
+        });
+
+
+        });
+    }
+    } else {throw err;}
+});
+    
+    
+    
+    
+    
+});
+
 router.post('/introductionofEB', function(req, res) {
     console.log('Starting introduction Email');
     
@@ -1698,8 +1852,8 @@ router.post('/CATEmail', function(req, res) {
 router.post('/EventsEmail', function(req, res) {
     console.log('Starting Events Email');
     var fromEmail = {
-        email: 'always@exambazaar.com',
-        name: 'Always Exambazaar'
+        email: 'team@exambazaar.com',
+        name: 'Team Exambazaar'
     };
     
     var templateName = 'Events';
@@ -1722,6 +1876,10 @@ router.post('/EventsEmail', function(req, res) {
             templateId = thisEmailTemplate.templateKey;
             var from_email = new helper.Email(fromEmail);
             //email: {$exists: true}, mobile: "9829685919"
+            
+            var limit = 200;
+            var skip = 3200;
+            
             var allUsers = user.find({email: {$exists: true}}, {basic: 1, email: 1, _id: 1}, function(err, allUsers) {
             if (!err){
                 var emailcounter = 0;
@@ -1783,7 +1941,7 @@ router.post('/EventsEmail', function(req, res) {
 
 
             } else {throw err;}
-            });
+            }).limit(limit).skip(skip);
             
             
 
