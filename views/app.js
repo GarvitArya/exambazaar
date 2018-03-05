@@ -18756,7 +18756,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.blogStream = stream;
                 
                 EdbitesStreamInfo.streamId = stream._id;
-                InspirationStreamInfo.streamId = stream._id;
+                //InspirationStreamInfo.streamId = stream._id;
                 ExamPreparationStreamInfo.streamId = stream._id;
                 InformationStreamInfo.streamId = stream._id;
                 BestCoachingStreamInfo.streamId = stream._id;
@@ -31635,9 +31635,9 @@ function getLatLng(thisData) {
                     mobile: ''
                 },
                 templateName: 'Press Coverage',
-                sender: 'Vikrant',//$scope.user.basic.name,
+                sender: 'Ayush',//$scope.user.basic.name,
                 senderId: $scope.user._id,
-                from: 'vikrant@exambazaar.com',//$scope.user.email,
+                from: 'ayush@exambazaar.com',//$scope.user.email,
                 subject: '[Press Release] Story coverage of Exambazaar (IIT-IIM alumni Jaipur based startup)',
                 html: '',
             };

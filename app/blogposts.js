@@ -1809,7 +1809,7 @@ router.get('/recommenedBlogs/:blogpostSlug', function(req, res) {
         coachingBlogs: [],
     };
     var excludedList = ['EdBites'];
-    var examBlogsExcludedList = ['Expert Reviews', 'Degrees'];
+    var examBlogsExcludedList = ['Expert Reviews']; //'Degrees'
     var blogpostSlug = req.params.blogpostSlug;
     
     var thisBlogpost = blogpost
