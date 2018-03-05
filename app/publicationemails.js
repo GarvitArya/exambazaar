@@ -31,7 +31,7 @@ router.post('/publications', function(req, res) {
         //console.log(result);
         sender = result[0] + " from Exambazaar";
     }else{
-        sender = "Vikrant from Exambazaar";
+        sender = "Ayush from Exambazaar";
     }
     var senderId = thisEmail.senderId;
     //sender = 'Always Exambazaar';

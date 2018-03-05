@@ -1689,7 +1689,30 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
     }]);
+    exambazaar.service('urlslugService', ['$http', function($http) {
+        this.saveUrlslug = function(urlslug) {
+            return $http.post('/api/urlslugs/save', urlslug);
+        };
+        this.bulksave = function(urlslug) {
+            return $http.post('/api/urlslugs/bulksave', urlslug);
+        };
+        this.getUrlslug = function(urlslugId) {
+            return $http.get('/api/urlslugs/edit/'+urlslugId, {urlslugId: urlslugId});
+        };
+        this.getUrlslugs = function() {
+            return $http.get('/api/urlslugs');
+        };
+        this.getAllUrlslugs = function() {
+            return $http.get('/api/urlslugs/all');
+        };
+        this.getUrlslugByName = function(urlslugName) {
+            return $http.get('/api/urlslugs/urlslug/'+urlslugName, {urlslugName: urlslugName});
+        };
+        this.addLogo = function(newLogoForm) {
+            return $http.post('/api/urlslugs/addLogo',newLogoForm);
+        };
         
+    }]);    
     exambazaar.service('StreamService', ['$http', function($http) {
         this.saveStream = function(stream) {
             return $http.post('/api/streams/save', stream);
@@ -1711,6 +1734,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
     }]);
+    
     exambazaar.service('ProviderService', ['$http', function($http) {
         this.getProviders = function(city) {
             return $http.get('/api/providers/'+city, {city: city});
@@ -2618,6 +2642,316 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $rootScope.pageKeywords = "Exambazaar, " + examKeywords + cityNamesCoaching;
             
     }]);    
+    
+    
+    exambazaar.controller("p4Controller2", 
+    [ '$scope', '$element','$rootScope', 'coachingService', 'cityService', 'cities', '$state', '$stateParams', '$cookies', '$mdDialog', '$geolocation', 'CoachingStream', 'SuggestedBlogStream', 'Notification', 'thisStreamExamCity', function($scope, $element, $rootScope, coachingService, cityService, cities, $state, $stateParams, $cookies, $mdDialog, $geolocation, CoachingStream, SuggestedBlogStream, Notification, thisStreamExamCity){
+        
+        var topURLSlug = $stateParams.topURLSlug;
+        var slugInfo = thisStreamExamCity.data;
+        console.log(slugInfo);
+        
+        $scope.categoryName = slugInfo.streamName;
+        $scope.subCategoryName = slugInfo.examName;
+        $scope.city = slugInfo.cityName;
+        
+        $scope.examBadgeClass = function(thisExam){
+            
+            var classname = "emptyTag";
+            if(thisExam.name == $scope.subCategoryName){
+                classname = "filledTag";
+            }
+            return classname;
+        };
+        
+        $element.find('input').on('keydown', function(ev) {
+          ev.stopPropagation();
+        });
+        $scope.setSearch = function(){
+            if($scope.selectedStream && $scope.selectedCity){
+                
+                var title = $rootScope.streamexams[$scope.selectedStream.stream][0].seoname + " Coaching in " + $scope.selectedCity.name;
+                var slug = slugify(title);
+                $state.go('findCoaching2', {topURLSlug: slug});
+                //$state.go('findCoaching', {categoryName: $scope.selectedStream.streamName, subCategoryName: $rootScope.streamexams[$scope.selectedStream.stream][0].name, cityName: $scope.selectedCity.name});
+            
+            }else{
+                Notification.warning({message: 'Please select stream & city!',  positionY: 'top', positionX: 'right', delay: 5000});
+            }
+            
+        };
+        $scope.setExam = function(exam){
+            
+            if($scope.selectedStream && $scope.selectedCity){
+                var title = exam.seoname + " Coaching in " + $scope.selectedCity.name;
+                var slug = slugify(title);
+                $state.go('findCoaching2', {topURLSlug: slug});
+            
+            }else{
+                Notification.warning({message: 'Please select stream & city!',  positionY: 'top', positionX: 'right', delay: 5000});
+            }
+            
+        };
+        
+        $scope.searchTermStream;
+        $scope.clearSearchTermStream = function() {
+            $scope.searchTermStream = '';
+        };
+        $scope.searchTermCity;
+        $scope.clearSearchTermCity = function() {
+            $scope.searchTermCity = '';
+        };
+        
+        $scope.$watch('allCities', function (newValue, oldValue, rootScope){
+            if(!newValue){
+                cityService.getCities().success(function (data, status, headers) {
+                    $rootScope.allCities = data;
+                    var allCityNames = $rootScope.allCities.map(function(a) {return a.name;});
+                    var cIndex = allCityNames.indexOf($scope.city);
+                    if(cIndex != -1){
+                        $scope.selectedCity = $rootScope.allCities[cIndex];
+                    }
+                    
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                });
+                
+            }else if(newValue){
+                var allCityNames = $rootScope.allCities.map(function(a) {return a.name;});
+                var cIndex = allCityNames.indexOf($scope.city);
+                if(cIndex != -1){
+                    $scope.selectedCity = $rootScope.allCities[cIndex];
+                }
+            }
+        }, true);
+        
+        $scope.$watch('streamExams', function (newValue, oldValue, rootScope){
+            if(!newValue){
+                //console.log();
+                
+            }else if(newValue){
+                //console.log($rootScope.streamExams);
+                var allStreams = $rootScope.streamExams.map(function(a) {return a.streamName;});
+                //console.log(allStreams);
+                var sIndex = allStreams.indexOf($scope.categoryName);
+                if(sIndex != -1){
+                    $scope.selectedStream = $rootScope.streamExams[sIndex];
+                    $scope.currentStream = $rootScope.streamExams[sIndex];
+                    
+                    var allExams =  $scope.currentStream.exams.map(function(a) {return a.name;});
+                    var eIndex = allExams.indexOf($scope.subCategoryName);
+                    
+                    if(eIndex != -1){
+                    $scope.subcategory = $scope.currentStream.exams[eIndex];
+                    /* Starting of SEO Meta Data */
+                    var seoExamName = $scope.subcategory.seoname;
+                    $rootScope.pageTitle = "Best " + seoExamName + " Coaching in " + $scope.city + " for " + seoExamName + " Preparation";
+                    $rootScope.pageDescription = "Find best " + seoExamName + " Coaching in " + $scope.city + " | Explore Courses, Fees, Reviews, Past Results, Faculty, Photos and Videos for " + seoExamName + " Preparation";
+                    var coachingKeywordArray = [];
+                    coachingKeywordArray.push(seoExamName + " Coaching in " + $scope.city);
+                    coachingKeywordArray.push("Best " + seoExamName + " Coaching in " + $scope.city);
+                    coachingKeywordArray.push("Top " + seoExamName + " Coaching in " + $scope.city);
+                    coachingKeywordArray.push(seoExamName + " Coaching Classes in " + $scope.city);
+                    coachingKeywordArray.push(seoExamName + " Coaching Institutes in " + $scope.city);
+                    coachingKeywordArray.push(seoExamName + " Classes in " + $scope.city);
+                    coachingKeywordArray.push(seoExamName + " Courses in " + $scope.city);
+                    coachingKeywordArray.push(seoExamName + " Online Coaching");
+                    coachingKeywordArray.push(seoExamName + " Exam");
+                    coachingKeywordArray.push("How to prepare for " + seoExamName);
+                    coachingKeywordArray.push(seoExamName + " Preparation");
+                    coachingKeywordArray.push(seoExamName + " Tests");
+                    coachingKeywordArray.push(coachingGroupNamesCity);
+                    var coachingKeywords = "";
+                    coachingKeywordArray.forEach(function(thisKeyword, kindex){
+                        coachingKeywords += thisKeyword;
+                        if(kindex < coachingKeywordArray.length - 1){
+                            coachingKeywords += ", ";
+                        }
+                    });
+                    $rootScope.pageKeywords = coachingKeywords;
+                    /* End of SEO Meta Data */    
+                    }
+                    
+                    
+                }
+            }
+        }, true);
+        
+        
+        
+        /* Starting of User Info */
+        if($cookies.getObject('sessionuser')){
+            var user = $cookies.getObject('sessionuser');
+            if(user.userType=='Master'){
+                $scope.editable = true;
+            }
+        }
+        $scope.userPosition = null;     
+        if($cookies.getObject('userlocation')){
+            $scope.userlocation = $cookies.getObject('userlocation');
+            
+            if(!$scope.userPosition || $scope.userPosition.length < 4){
+                //console.log('Empty object');
+                $geolocation.getCurrentPosition({
+                timeout: 60000
+                 }).then(function(position) {
+                    $cookies.putObject('userlocation', position);
+                    
+                    $scope.userlocation = position;
+                    if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                        $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
+                        $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+                        //console.log($scope.userlocation);
+                        //console.log($scope.userPosition);
+                        
+                    }
+                 });
+            }
+            
+            if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude);
+                console.log($scope.userlatlng);
+                
+                $scope.userPosition = $scope.userlocation.coords.latitude.toString() + "," + $scope.userlocation.coords.longitude.toString();
+                $cookies.putObject('userlocation', $scope.userlocation);
+                $cookies.putObject('userPosition', $scope.userPosition);
+                console.log($scope.userPosition);
+            }
+            
+        }else{
+            $geolocation.getCurrentPosition({
+            timeout: 60000
+             }).then(function(position) {
+                $cookies.putObject('userlocation', position);
+                $scope.userlocation = position;
+                if($scope.userlocation && $scope.userlocation.coords && $scope.userlocation.coords.latitude &&  $scope.userlocation.coords.longitude){
+                    $scope.userlatlng = new google.maps.LatLng($scope.userlocation.coords.latitude, $scope.userlocation.coords.longitude); 
+                }
+                
+             });
+        }
+        /* Ending of User Info */
+        var dIndex = null;
+        var distances = [];
+        var distancesValues = [];
+        var directionsService = new google.maps.DirectionsService;
+        var getDrivingDistance = function(origin, destination, index){
+            
+            directionsService.route({
+              origin: origin,
+              destination: destination,
+              travelMode: 'DRIVING'
+            }, function(response, status) {
+                if (status === 'OK') {
+                    if(!$scope.allCoachings.items[index].distances){
+                        $scope.allCoachings.items[index].distances = [];
+                    }
+                    $scope.allCoachings.items[index].distances.push(response.routes[0].legs[0].distance);
+                    
+                    distances = [];
+                    $scope.allCoachings.items[index].distances.forEach(function(thisDistance, dindex){
+                        distancesValues = distances.map(function(a) {return a.value;});
+                        dIndex = distancesValues.indexOf(thisDistance.value);
+                        if(dIndex == -1){
+                            distances.push(thisDistance);
+                        }
+                    });
+                    $scope.allCoachings.items[index].distances = distances;
+                }
+                else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
+                    setTimeout(function() {
+                        getDrivingDistance(origin, destination, index);
+                    }, 10 );
+                }
+                else {
+                    console.log("Geocode was not successful for the following reason: " + status);
+                }
+            });
+        };
+        var origins = [];
+        var destinations = [];
+        
+        
+        
+        var streamInfo = {
+            categoryName: $scope.categoryName,
+            subCategoryName: $scope.subCategoryName,
+            cityName: $scope.city,
+        };
+        $scope.allCoachings = new CoachingStream(streamInfo);
+        
+        $scope.allBlogs = new SuggestedBlogStream(streamInfo);
+        
+        $scope.uniqueProviders = [];
+        $scope.uniqueInstitutes = [];
+        var coachingGroupNames = '';
+        var coachingGroupNamesCity = '';
+        var howmany = 5;
+        var howmany2 = 5;
+        
+        $scope.$watch('[allCoachings.items, currentStream]', function (newValue, oldValue, scope){
+            if(newValue[0] && newValue[0].length > 0 && newValue[1]){
+                
+                var p4StreamExamsData = $scope.currentStream.exams;
+                var p4StreamExamsIds = $scope.currentStream.exams.map(function(a) {return a._id;});
+             $scope.allCoachings.items.forEach(function(thisGroup, gindex){
+                 
+                 if(thisGroup.examCirf && thisGroup.examCirf.cirf){
+                     thisGroup.examCirfScore = Number(thisGroup.examCirf.cirf) * 5/ 100;
+                    
+                     thisGroup.examCirfScore = Math.round(thisGroup.examCirfScore*2)/2;
+                 }else{
+                     thisGroup.examCirfScore = 0;
+                 }
+                 
+                if(!thisGroup.examsOffered || thisGroup.examsOffered.length == 0){
+                    thisGroup.examsOffered = [];
+                    thisGroup.exams.forEach(function(thisExam, eIndex){
+                        var examIndex = p4StreamExamsIds.indexOf(thisExam);
+                        if(examIndex != -1){
+                        thisGroup.examsOffered.push(p4StreamExamsData[examIndex]);
+                        }
+                    });
+                }
+                if($scope.userlatlng){
+                if(thisGroup.latlngs){
+                if(!thisGroup.distances || (thisGroup.distances && thisGroup.distances.length == 0)){
+                  
+                    thisGroup.latlngs.forEach(function(thisLatLng, index){
+                        if(thisLatLng && thisLatLng.lat && thisLatLng.lng && thisLatLng.lat !='' && thisLatLng.lng !=''){
+                            var gLatLng = new google.maps.LatLng(thisLatLng.lat, thisLatLng.lng);
+                            var distance = google.maps.geometry.spherical.computeDistanceBetween($scope.userlatlng, gLatLng)/1000;
+                            origins.push($scope.userlatlng);
+                            destinations.push(gLatLng);
+                            var origin1 = $scope.userlatlng;
+                            var destination1 = gLatLng;
+                            getDrivingDistance(origin1, destination1, gindex);
+                        };
+                    });
+                }
+                }
+                }
+                 
+                if(gindex < howmany && coachingGroupNames ==''){
+                    coachingGroupNames += thisGroup.groupName;
+                    if(gindex < howmany - 1){
+                        coachingGroupNames += ", ";
+                    }
+                }
+                if(gindex < howmany2 && coachingGroupNames ==''){
+                    coachingGroupNamesCity += thisGroup.groupName + " " + $scope.city;
+                    if(gindex < howmany2 - 1){
+                        coachingGroupNamesCity += ", ";
+                    }
+                }
+            }); 
+            }
+        }, true);
+        
+        
+        
+    }]); 
     
     exambazaar.controller("p4Controller", 
     [ '$scope', '$element','$rootScope', 'coachingService', 'cityService', 'cities', '$state', '$stateParams', '$cookies', '$mdDialog', '$geolocation', 'CoachingStream', 'SuggestedBlogStream', 'Notification', function($scope, $element, $rootScope, coachingService, cityService, cities, $state, $stateParams, $cookies, $mdDialog, $geolocation, CoachingStream, SuggestedBlogStream, Notification){
@@ -16627,7 +16961,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.disabled = false;
                 }
                 
-                if($scope.user.userType == 'Master' || $scope.user._id == '58c8e895bbaebf3560545f19' || $scope.user._id == '5a1831f0bd2adb260055e352'){
+                if($scope.user.userType == 'Master' || $scope.user._id == '5a1831f0bd2adb260055e352' || $scope.user._id == '5a1831f0bd2adb260055e352'){
                     $scope.canAssign = true;
                 };
                 
@@ -16759,7 +17093,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);    
     exambazaar.controller("coachingGroupController", 
-        [ '$scope', '$http','$state','$rootScope','coachingService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, coachingService, $mdDialog, $timeout,thisuser, examList, streamList){
+        [ '$scope', '$http','$state','$rootScope','coachingService', 'urlslugService', '$mdDialog', '$timeout','thisuser', 'examList', 'streamList', function($scope, $http, $state, $rootScope, coachingService, urlslugService, $mdDialog, $timeout,thisuser, examList, streamList){
             
             $scope.user = thisuser.data;
             $scope.allExams = examList.data;
@@ -16955,6 +17289,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 .error(function (data, status, header, config) {
                     console.log('Error ' + data + ' ' + status);
                 });       
+            };
+            
+            $scope.buildUrlslugs = function(){
+                var urlslugForm = {};
+                urlslugService.bulksave(urlslugForm).success(function (data, status, headers) {
+                    console.log('Done');
+                    $scope.showSavedDialog();
+                    //$scope.showSavedDialog();
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
             };
             
             $scope.renameAllGroupName = function(){
@@ -21503,7 +21850,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //console.log(examArray);
                 questionService.questionToPost(examArray).success(function (data, status, headers) {
                     var question = data;
-                    
+                    console.log(question);
                     if(question){
                         $scope.postToFBPage(page, question);
                         
@@ -31613,7 +31960,7 @@ function getLatLng(thisData) {
             $rootScope.pageTitle = "Send Email to Publications";
             $scope.allEmails = allEmails.data;
             $scope.enabled = false;
-            $scope.idsEnabled = ['58c8e895bbaebf3560545f19', '59a7eb973d71f10170dbb468'];
+            $scope.idsEnabled = ['5a1831f0bd2adb260055e352', '59a7eb973d71f10170dbb468'];
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser'); 
                 if($scope.user && $scope.user.userType == 'Master'){
@@ -31801,7 +32148,7 @@ function getLatLng(thisData) {
                 $scope.email.senderId = $scope.user._id;
             }else{
                 if($scope.user.userType=='Intern - Business Development'){
-                    if($scope.user._id == '58c8e895bbaebf3560545f19' || $scope.user._id == '5a1831f0bd2adb260055e352'){
+                    if($scope.user._id == '5a1831f0bd2adb260055e352' || $scope.user._id == '5a1831f0bd2adb260055e352'){
                         $scope.showLevel = 10;
                         $scope.email.from = $scope.user.email;
                         $scope.email.sender = $scope.user.basic.name +" from Exambazaar";
@@ -32028,7 +32375,6 @@ function getLatLng(thisData) {
                         innerMostBlockNumber = thisStart;
                     }
                 });
-                console.log(innerMostBlockNumber);
                 if(innerMostBlockNumber != -1){
                     var closestBlockOpen = possibleBlocks[innerMostBlockIndex];
                     var closestBlockClose = possibleBlocksClose[innerMostBlockIndex];
@@ -32241,7 +32587,6 @@ function getLatLng(thisData) {
             $scope.urlslugDone = function(){
                 //console.log($scope.newUrlslug);
                 $scope.blogpost.urlslug = $scope.newUrlslug;
-                console.log($scope.blogpost.urlslug);
                 $mdDialog.hide();    
             };
             $scope.markExamsDone = function(){
@@ -33781,6 +34126,35 @@ function getLatLng(thisData) {
                     function(blogpostService,$stateParams){
                     return blogpostService.suggestedblogs($stateParams.subCategoryName);
                 }],*/
+                loadInfiniteScroll: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['infiniteScroll'], {serie: true});
+                }],
+                NgRateit: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngRateit'], {serie: true});
+                }],
+                
+            }
+        })
+        .state('findCoaching2', {
+            url: '/ebinternal/c/:topURLSlug',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'p4.html',
+                    controller: 'p4Controller2',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisStreamExamCity: ['urlslugService','$stateParams',
+                    function(urlslugService,$stateParams){
+                    return urlslugService.getUrlslugByName($stateParams.topURLSlug);
+                }],
                 loadInfiniteScroll: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['infiniteScroll'], {serie: true});
                 }],
@@ -36318,7 +36692,7 @@ function getLatLng(thisData) {
             resolve: {
                 streamList: ['StreamService',
                     function(StreamService){
-                    return StreamService.getStreams();
+                    return StreamService.getAllStreams();
                 }],
                 ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
@@ -36528,7 +36902,7 @@ function getLatLng(thisData) {
                 }],
                 streamList: ['StreamService',
                     function(StreamService){
-                    return StreamService.getStreams();
+                    return StreamService.getAllStreams();
                 }],
                 /*markTrueFalse: ['ExamService',
                     function(ExamService){

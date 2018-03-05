@@ -147,6 +147,7 @@ var cirffactors = require('./app/cirffactors.js',cirffactors);
 var assessments = require('./app/assessments.js',assessments); 
 var eligibilitys = require('./app/eligibilitys.js',eligibilitys); 
 var streams = require('./app/streams.js',streams); 
+var urlslugs = require('./app/urlslugs.js',urlslugs); 
 var locations = require('./app/locations.js',locations); 
 var mediaTags = require('./app/mediaTags.js',mediaTags); 
 var cisaveds = require('./app/cisaveds.js',cisaveds); 
@@ -202,6 +203,7 @@ app.use('/api/availDiscounts', availDiscounts);
 
 app.use('/api/eligibilitys', eligibilitys);
 app.use('/api/streams', streams);
+app.use('/api/urlslugs', urlslugs);
 app.use('/api/locations', locations);
 app.use('/api/mediaTags', mediaTags);
 app.use('/api/cisaveds', cisaveds);
@@ -329,6 +331,7 @@ var allStates = [
 '/stream/:categoryName/:subCategoryName',
 '/topCoaching/:categoryName/:subCategoryName',
 '/stream/:categoryName/:subCategoryName/:cityName',
+'/ebinternal/c/:topURLSlug',
 '/stream/:categoryName/:subCategoryName/:cityName/:coachingId',
 '/thankyou',
 '/verifyClaim/:coachingId',

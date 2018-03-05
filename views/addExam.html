@@ -86,27 +86,37 @@
         <div layout="row" layout-align="start center" class="">
             <div class="marginR10">   
                 All Exams listed on Exambazaar
+                <span class="badge">{{exams.length}}</span>
             </div>
             <div ng-click="addNewExam()" class="font14 badge" id="badge">
                 Add a New Exam
             </div>
-            <div ng-click="changeQuestionUsers()" class="font14 badge marginL10" id="badge">
+            <!--<div ng-click="changeQuestionUsers()" class="font14 badge marginL10" id="badge">
                 Change Users
-            </div>
+            </div>-->
         </div>
     </div>
-    <div layout="row" layout-align="start start" layout-wrap ng-if="showAllExams" class="paddingTB20">
-        <div flex="25" layout="column" layout-align="start start" ng-repeat="stream in streams" class="marginB10">
-            <div class="font16 bold">
-                {{stream.displayname}}
+    <div layout="column" layout-align="start start" layout-wrap ng-if="showAllExams" class="paddingTB20 width100">
+        <div layout="column" layout-align="start start" ng-repeat="stream in streams | orderBy: ['-active', '-rank']" class="width100 marginTB10 boxShadow paddingTB10 paddingLR40 font12">
+            <div class="h2Font bold width100 paddingB5 marginB10 subhheadingBottomBorder3">
+                {{$index + 1}}. {{stream.displayname}}
             </div>
-            <div layout="row" layout-align="start center" layout-wrap >
-                <div layout="column" layout-align="center center" ng-repeat="existingExam in exams | orderBy: '-rank'" ng-if="existingExam.stream._id == stream._id">
-                    <div layout="row" layout-align="start start" class="font12 marginR5 marginB5 badge" id="examTagHolder"  >
-                        <a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank">{{existingExam.displayname}}</a>
-                    </div>
-                    <a ui-sref="exam({ examName:{{'existingExam.name'}} })" target="_blank" class="font12 marginB5" ng-if="masteruser">See</a>
+            <div layout="row" layout-align="start center" ng-repeat="existingExam in exams | orderBy: ['-active', '-rank']" ng-if="existingExam.stream._id == stream._id" class="width100 greyDashedBottomBorder">
+                
+                <div flex="20" layout="row" layout-align="start center" class="bold "><a ui-sref="exam({ examName:{{'existingExam.name'}} })" target="_blank"  id="reviewLink">{{existingExam.displayname}}</a></div>
+                
+                <div layout="row" layout-align="start center" flex="5">
+                    <span ng-if="existingExam.active">
+                        <i class="fa fa-eye font16" aria-hidden="true"></i>
+                    </span>
+                    <span ng-if="!existingExam.active">
+                        <i class="fa fa-eye-slash font16 danger" aria-hidden="true"></i>
+                    </span>
                 </div>
+                <div flex="5" layout="row" layout-align="start center"><a ui-sref="editExam({ examId:{{'existingExam._id'}} })" target="_blank">Edit</a></div>
+                
+                
+                
                 
                 
             </div>

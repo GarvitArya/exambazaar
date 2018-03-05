@@ -39,14 +39,15 @@ router.get('/changeUser', function(req, res) {
 
 router.post('/questionToPost', function(req, res) {
     var examArray = req.body;
-    console.log(examArray);
     //, images: { $exists: true, $ne: null }
     var thisQuestion = question
         .findOne({exam: {$in: examArray}, images: { $exists: true, $eq: null }}) //, $where: "this.questions.length == 1"
-        .deepPopulate('exam test')
+        //.deepPopulate('exam test')
         .exec(function (err, thisQuestion) {
         if (!err){
-            console.log(thisQuestion);
+            console.log(thisQuestion._id);
+            console.log(thisQuestion.exam);
+            console.log(thisQuestion.test);
             res.json(thisQuestion);
         } else {throw err;}
     });
