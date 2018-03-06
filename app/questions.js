@@ -148,6 +148,31 @@ router.get('/', function(req, res) {
     
 });
 
+/*
+router.get('/oneoff', function(req, res) {
+    //console.log('Here');
+    var allQuestions = question
+        .find({ test: '5995907daf57cb1c5a250b5b'})
+        //.deepPopulate('exam')
+        .exec(function (err, allQuestions) {
+        if (!err){
+            res.json(true);
+            console.log('Total Questions: ' + allQuestions.length);
+            allQuestions.forEach(function(thisQuestion, qIndex){
+                thisQuestion.test = '59940222b347717c5992287f';
+                thisQuestion.exam = '58ac27997d227b1fa8208ff1';
+                
+                thisQuestion.save(function(err, thisQuestion) {
+                    if (err) return console.error(err);
+                    console.log(qIndex + '. Question changed: ' + thisQuestion._id);
+                });
+            });
+        } else {throw err;}
+    });
+    
+});
+*/
+
 router.get('/markMCQs', function(req, res) {
     console.log('Marking MCQ subquestions');
     var allQuestions = question

@@ -712,7 +712,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveQuestion = function(question) {
             return $http.post('/api/questions/save', question);
         };
-        
+        this.oneoff = function() {
+            return $http.get('/api/questions/oneoff');
+        };
         this.markSection = function(sectionForm) {
             return $http.post('/api/questions/markSection', sectionForm);
         };
@@ -12542,7 +12544,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.maintenance = false;
         if(!$rootScope.streamExams){
             ExamService.getExamsBasic().success(function (data, status, headers) {
-                var doNotShow = ['Other']; //, 'Insurance', 'School'
+                var doNotShow = ['Other','Insurance',]; //, 'Insurance', 'School'
                 var streamNames = [];
                 var streamExams = [];
                 var allExams = data;
@@ -27320,6 +27322,7 @@ function getLatLng(thisData) {
             
             
             
+            
             $scope.customMarking = {
                 correct: '',
                 incorrect: ''
@@ -36935,7 +36938,7 @@ function getLatLng(thisData) {
                 }],
                 streamList: ['StreamService',
                     function(StreamService){
-                    return StreamService.getStreams();
+                    return StreamService.getAllStreams();
                 }],
                 testList: ['testService', '$stateParams',
                     function(testService, $stateParams){

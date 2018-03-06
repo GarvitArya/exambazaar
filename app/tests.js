@@ -902,6 +902,7 @@ router.get('/officialPapersStreamExam', function(req, res) {
                         var thisExam = null;
                         var thisStream = null;
                         var sIndex = -1;
+                        
                         if(eIndex != -1){
                         thisExam = allExams[eIndex];
                         streamId = thisExam.stream.toString();
@@ -983,7 +984,7 @@ router.get('/officialPapersStreamExam', function(req, res) {
                         }
                         }else{
                             counter += 1;
-                            console.log('Something went wrong!');
+                            console.log('Something went wrong! ' + examId);
                         }
                     });
                     

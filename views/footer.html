@@ -13,7 +13,7 @@
         </div>
         <div layout="column" layout-align="start start" class="width100 paddingTB20 footerBottomBorder">
             <div layout="row" layout-align="start start" class=" width100 marginT10" >
-                <div layout="column" layout-align="center center" flex ng-repeat="streamExam in streamExams | orderBy: '-rank'" ng-if="$index < 5">
+                <div layout="column" layout-align="center center" flex ng-repeat="streamExam in streamExams | orderBy: '-rank'" ng-if="$index < 6">
 
                     <div layout="row" layout-align="center center" class="width100 bold spacedLetter2">
                         {{streamExam.stream | uppercase}}
@@ -66,6 +66,11 @@
                 <div layout="row" layout-align="start center" class="marginL10">
                     <a href="https://www.pinterest.com/exambazaar/" target="_blank">
                         <img src="icons/footer-pinterest.png" class="footerIcon"/>
+                    </a>
+                </div>
+                <div layout="row" layout-align="start center" class="marginL10">
+                    <a href="https://www.linkedin.com/company/exambazaar/" target="_blank">
+                        <img src="icons/footer-linkedin.png" class="footerIcon"/>
                     </a>
                 </div>
                 <!--<div layout="row" layout-align="start center" class="">
