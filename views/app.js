@@ -1691,6 +1691,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
     }]);
+        
+    exambazaar.service('cbseService', ['$http', function($http) {
+        this.bulksave = function(affiliationForm) {
+            return $http.post('/api/cbses/bulksave', affiliationForm);
+        };
+        
+    }]);
     exambazaar.service('urlslugService', ['$http', function($http) {
         this.saveUrlslug = function(urlslug) {
             return $http.post('/api/urlslugs/save', urlslug);
@@ -2645,7 +2652,70 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
     }]);    
     
-    
+        
+    exambazaar.controller("schoolController", 
+    [ '$scope', 'cbseService', 'Notification', '$cookies', function($scope, cbseService, Notification, $cookies){
+        
+        function getIndicesOf(searchStr, str, caseSensitive) {
+            var searchStrLen = searchStr.length;
+            if (searchStrLen == 0) {
+                return [];
+            }
+            var startIndex = 0, index, indices = [];
+            if (!caseSensitive) {
+                str = str.toLowerCase();
+                searchStr = searchStr.toLowerCase();
+            }
+            while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+                indices.push(index);
+                startIndex = index + searchStrLen;
+            }
+            return indices;
+        };
+        $scope.user = null;
+        if($cookies.getObject('sessionuser')){
+            var user = $cookies.getObject('sessionuser');
+            $scope.user = user._id;
+        }
+        
+        $scope.pageText = '';
+        $scope.startExtraction = function(){
+            //console.log($scope.pageText);
+            var indices = getIndicesOf("Affiliation No.", $scope.pageText);
+            var affiliationNumbers = [];
+            indices.forEach(function(thisIndex, dindex){
+                var thisAffiliationNumber = $scope.pageText.substr(thisIndex + 15, 8);
+                thisAffiliationNumber = thisAffiliationNumber.match(/\d+/)[0];
+                if(thisAffiliationNumber){
+                    affiliationNumbers.push(thisAffiliationNumber);
+                }
+                
+            });
+            
+            if(affiliationNumbers && affiliationNumbers.length > 0 && $scope.user){
+                var affiliationForm = {
+                    affiliationNumbers: affiliationNumbers ,
+                    _createdBy: $scope.user
+                };
+                cbseService.bulksave(affiliationForm).success(function (data, status, headers) {
+                    
+                    if(data){
+                        Notification.success({message: "Added " + data + " new affiliation numbers!",  positionY: 'top', positionX: 'right', delay: 5000});
+                    }else{
+                        Notification.warning({message: "Found no new affiliation numbers!",  positionY: 'top', positionX: 'right', delay: 5000});
+                        
+                    }
+                    
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+                });
+            }
+            
+            console.log(affiliationNumbers);
+        };
+    }]); 
     exambazaar.controller("p4Controller2", 
     [ '$scope', '$element','$rootScope', 'coachingService', 'cityService', 'cities', '$state', '$stateParams', '$cookies', '$mdDialog', '$geolocation', 'CoachingStream', 'SuggestedBlogStream', 'Notification', 'thisStreamExamCity', function($scope, $element, $rootScope, coachingService, cityService, cities, $state, $stateParams, $cookies, $mdDialog, $geolocation, CoachingStream, SuggestedBlogStream, Notification, thisStreamExamCity){
         
@@ -34165,6 +34235,22 @@ function getLatLng(thisData) {
                      return $ocLazyLoad.load(['ngRateit'], {serie: true});
                 }],
                 
+            }
+        })
+        .state('school', {
+            url: '/ebinternal/school',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'school.html',
+                    controller: 'schoolController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
             }
         })
         .state('showCoaching', {

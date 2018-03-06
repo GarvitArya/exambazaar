@@ -112,6 +112,7 @@ var routes = require('./app/routes.js')(app, passport);
 var providers = require('./app/providers.js',providers); 
 var coachings = require('./app/coachings.js',coachings); 
 var cities = require('./app/cities.js',cities); 
+var cbses = require('./app/cbses.js',cbses); 
 var colleges = require('./app/colleges.js',colleges); 
 var results = require('./app/results.js',results); 
 var offers = require('./app/offers.js',offers); 
@@ -168,6 +169,7 @@ var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredent
 app.use('/api/providers', providers);
 app.use('/api/coachings', coachings);
 app.use('/api/cities', cities);
+app.use('/api/cbses', cbses);
 app.use('/api/colleges', colleges);
 app.use('/api/results', results);
 app.use('/api/offers', offers);
@@ -332,6 +334,7 @@ var allStates = [
 '/topCoaching/:categoryName/:subCategoryName',
 '/stream/:categoryName/:subCategoryName/:cityName',
 '/ebinternal/c/:topURLSlug',
+'/ebinternal/school',
 '/stream/:categoryName/:subCategoryName/:cityName/:coachingId',
 '/thankyou',
 '/verifyClaim/:coachingId',

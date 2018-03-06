@@ -1,0 +1,36 @@
+
+<style>
+    textarea{
+        width:100%;
+        padding: 5px 5px;
+        display: inline-block;
+        border: 1px solid #969696;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    textarea:hover {
+        border: 1px solid #969696;
+    }
+    textarea:focus {
+        border: 1px solid #969696;
+    }
+</style>
+<div id="spacer1" class="hidden-xs ">
+    </div>
+    <div id="spacer1" class="hidden-sm hidden-md hidden-lg "></div>
+<div layout="row" layout-align="center center marginT40">
+    
+    <div flex="90" layout="column" layout-align="start start" class="width100 smallFont marginT20">
+        <textarea class="width100 font14" ng-model="pageText" placeholder="Copy Paste the Page here" rows="10"></textarea>
+        <div layout="column" layout-align="start start" class="width100 smallFont marginT20" ng-if="user">
+            <md-button class="md-next md-large tolowercase margin0 nextButton width50" ng-click="startExtraction()">
+            Start
+        </md-button>
+        </div>
+        <div layout="column" layout-align="start start" class="width100 smallFont marginT20 danger" ng-if="!user">
+            Please login.
+        </div>
+    </div>
+</div>
