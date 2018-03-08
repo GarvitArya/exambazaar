@@ -795,7 +795,7 @@
                         </span>
                     </div>
                     </div>
-                    <div layout="row" layout-align="center center" ng-repeat="examRatingParam in examRatingParams" class="marginTB5 width100 gainsboroBottomBorder">
+                    <div layout="row" layout-align="center center" ng-repeat="examRatingParam in examParamMapping[examRatingParamValue.exam._id]" class="marginTB5 width100 gainsboroBottomBorder">
                         <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5" class="showBorder">
                             <span >
                                 {{examRatingParam.displayname}}
@@ -3175,6 +3175,9 @@
     </md-button></div>
     <div class="paddingB10"><md-button class="md-next md-small font10 margin0" ng-click="cirf('58ac27997d227b1fa8208ff1')">
     CIRF for NEET UG
+    </md-button></div>
+    <div class="paddingB10"><md-button class="md-next md-small font10 margin0" ng-click="cirf('58ac2b8c7f7f514550cd3aea')">
+    CIRF for IAS
     </md-button></div>
     <div class="paddingB10"><md-button class="md-next md-small font10 margin0" ng-click="cirfRatingJEEMainAdvanced()">
     CIRF Bulk

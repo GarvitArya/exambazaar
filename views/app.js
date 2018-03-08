@@ -11340,6 +11340,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
         ];
         
+        
         $scope.examRatingParams = [
             {
                 name: "percent_students_selected",
@@ -11361,6 +11362,38 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             },
         ];
         
+        $scope.examRatingParams2 = [
+            {
+                name: "number_students_selected",
+                displayname: "Number of students selected in the Exam",
+                options: [">200", "125 - 200", "50 - 125", "10 - 50", "1- 10", "0"],
+                
+            },
+            {
+                name: "ranks_top10",
+                displayname: "Ranks of students in top 10",
+                options: ["> 4","2 - 3","1", "0"],
+                
+            },
+            {
+                name: "ranks_top100",
+                displayname: "Ranks of students in top 100",
+                options: ["> 25","15 - 25","10 - 15","5 - 10","1 - 5","0"],
+                
+            },
+            
+        ];
+        
+        $scope.examParamMapping = {
+            "58cedb079eef5e0011c17e91": $scope.examRatingParams,
+            "58ac27030be6311eccbbc3a6": $scope.examRatingParams,
+            "58ac27997d227b1fa8208ff1": $scope.examRatingParams,
+            "58ac27ae7d227b1fa8208ff2": $scope.examRatingParams,
+            
+            "58ac2b8c7f7f514550cd3aea": $scope.examRatingParams2,
+            
+                
+        };
         $scope.editRating = false;
         $scope.editRatings = function(){
             $scope.editRating = true;
@@ -11401,16 +11434,21 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     estimate: false, 
                     value: '',
             },*/
-            $scope.examRatingParams.forEach(function(thisRP, rpIndex){
-                examRating.rating[thisRP.name] = {
-                    option: null, 
-                    estimate: false, 
-                    value: '',
-                };
-            });
-            $scope.examRatingParamValues.push(examRating);
+            var examRatingParams = $scope.examParamMapping[thisExam._id];
+            
+            if(examRatingParams){
+                examRatingParams.forEach(function(thisRP, rpIndex){
+                    examRating.rating[thisRP.name] = {
+                        option: null, 
+                        estimate: false, 
+                        value: '',
+                    };
+                });
+                $scope.examRatingParamValues.push(examRating);
+            }
+            
         });
-        //console.log($scope.examRatingParamValues);
+        console.log($scope.examRatingParamValues);
         
         if($scope.provider.rating){
             for (var property in $scope.ratingParamValues) {
@@ -11469,6 +11507,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.ratingFacilitiesValues[ratingFacility.name] = false;
         };
         $scope.setExamRatingParam = function(examRatingParamValue, examRatingParam, option){
+            console.log(examRatingParamValue);
             examRatingParamValue.rating[examRatingParam.name].option = option;
             //console.log($scope.examRatingParamValues);
         };

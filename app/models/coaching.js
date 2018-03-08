@@ -178,7 +178,9 @@ var coachingSchema = mongoose.Schema({
             exam: { type: Schema.ObjectId, ref: 'exam' },
             resultType: {type: String, default: 'CLP+DLP'},
             rating: {
+                number_students_selected: {option: String, estimate: Boolean, value: String,},
                 percent_students_selected: {option: String, estimate: Boolean, value: String,},
+                ranks_top10: {option: String, estimate: Boolean, value: String,},
                 ranks_top100: {option: String, estimate: Boolean, value: String,},
                 ranks_top1000: {option: String, estimate: Boolean, value: String,},
             }
