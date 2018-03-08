@@ -1696,6 +1696,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.bulksave = function(affiliationForm) {
             return $http.post('/api/cbses/bulksave', affiliationForm);
         };
+        this.extract = function() {
+            return $http.post('/api/cbses/extract');
+        };
+        
         
     }]);
     exambazaar.service('urlslugService', ['$http', function($http) {
@@ -2673,8 +2677,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             return indices;
         };
         $scope.user = null;
+        $scope.fullScope = false;
         if($cookies.getObject('sessionuser')){
             var user = $cookies.getObject('sessionuser');
+            if(user.userType == 'Master'){
+                $scope.fullScope = true;
+            }
             $scope.user = user._id;
         }
         
@@ -2714,6 +2722,23 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }
             
             console.log(affiliationNumbers);
+        };
+        
+        $scope.startFetch = function(){
+            cbseService.extract().success(function (data, status, headers) {
+                    
+                if(data){
+                    Notification.success({message: "Starting Process!",  positionY: 'top', positionX: 'right', delay: 5000});
+                }else{
+                    Notification.warning({message: "Found no new affiliation numbers!",  positionY: 'top', positionX: 'right', delay: 5000});
+
+                }
+
+
+            })
+            .error(function (data, status, header, config) {
+                Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 5000});
+            });
         };
     }]); 
     exambazaar.controller("p4Controller2", 
@@ -3151,7 +3176,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             coachingKeywords += ", ";
                         }
                     });
+                    
                     $rootScope.pageKeywords = coachingKeywords;
+                        
+                        
+                    console.log('SEO Title: ' + $rootScope.pageTitle);
+                    console.log('SEO Description: ' + $rootScope.pageDescription);
+                    console.log('SEO Keywords: ' + $rootScope.pageKeywords);    
+                        
                     /* End of SEO Meta Data */    
                     }
                     
@@ -20433,9 +20465,20 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
     }]); 
     exambazaar.controller("assessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService ){
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare){
             
             
+        $scope.currURL = $location.absUrl();
+        $scope.shareFacebook = function(){
+            Socialshare.share({
+              'provider': 'facebook',
+              'attrs': {
+                'socialshareType': 'send',
+                'socialshareUrl': $scope.currURL,
+                'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
+              }
+            });
+        };
         
             $scope.saveUserRating = function(rating){
                 var ratingForm = {
@@ -37592,7 +37635,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
 
             var userType = user.userType;
             var userId = user._id;
-            if(userType == 'Master' || userId == '5a1831f0bd2adb260055e352'){
+            if((userType == 'Master' || userId == '5a1831f0bd2adb260055e352') && stateTo != 'findCoaching'){
                 console.log('SEO Title: ' + $rootScope.pageTitle);
                 console.log('SEO Description: ' + $rootScope.pageDescription);
                 console.log('SEO Keywords: ' + $rootScope.pageKeywords);

@@ -24,13 +24,17 @@
     
     <div flex="90" layout="column" layout-align="start start" class="width100 smallFont marginT20">
         <textarea class="width100 font14" ng-model="pageText" placeholder="Copy Paste the Page here" rows="10"></textarea>
-        <div layout="column" layout-align="start start" class="width100 smallFont marginT20" ng-if="user">
+        <div layout="row" layout-align="start start" class="width100 smallFont marginT20" ng-if="user">
             <md-button class="md-next md-large tolowercase margin0 nextButton width50" ng-click="startExtraction()">
             Start
-        </md-button>
+            </md-button>
+            <md-button class="md-danger md-large tolowercase margin0 nextButton width50" ng-click="startFetch()" ng-if="fullScope">
+                Scrape
+            </md-button>
         </div>
         <div layout="column" layout-align="start start" class="width100 smallFont marginT20 danger" ng-if="!user">
             Please login.
         </div>
+        
     </div>
 </div>

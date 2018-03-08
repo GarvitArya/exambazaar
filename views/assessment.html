@@ -509,33 +509,11 @@
 
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="min90h" ng-if="testOver">
             <div flex layout="column" layout-align="center center" class="blogFont exact90h width100 paddingTB20">
-                <div layout="column" layout-align="start start" class="baseFont exact50h boxShadow paddingTB10 paddingLR40">
-                <div layout="column" layout-align="center center" class="h2Font bold width100 exact5h">Help us improve!</div>
-                <div layout="column" layout-align="center center" class="exact10h text-center width100">
-                    {{user.basic.name}}, how was this exam simulation? Please rate it on a scale of 1-5.
-                </div>
-                <div layout="column" layout-align="center center" class="exact15h width100">
-                    <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" class="bigstar custom">
-                    </ng-rate-it>
-
-                    <!--<jk-rating-stars max-rating="5" rating="userAssessment.userRating" read-only="false" ng-click="saveUserRating(userAssessment.userRating)">
-                    </jk-rating-stars>-->
-                    <div layout="column" layout-align="center center" ng-if="userAssessment.userRating > 0" class="smallFont text-center width100">
-                        Your rating: {{userAssessment.userRating}} out of 5
-                    </div>
-                </div>
-                <div layout="column" layout-align="center center" class="exact20h width100" ng-if="userAssessment.userRating && userAssessment.userRating > 0">
-                    <div layout="column" layout-align="center center" ng-if="testExam.seoname" class="marginTB20">Also, have you taken any coaching classes for {{testExam.seoname}}? Help others with a quick review!</div>
-                    <div layout="column" layout-align="center center" ng-if="!testExam.seoname" class="marginTB20">Have you taken any coaching for any exam? Help the Exambazaar community with a quick review!</div>
-                    <md-button class="md-saveNext md-large tolowercase margin0 " ui-sref="review" target="_blank">
-                        Review Your Coaching
-                    </md-button>
-                </div>
-                </div>
+                
                 <div layout="row" layout-align="center center" class="exact40h width100">
                 <div layout="column" layout-align="center center" flex class="exact40h baseFont">
                     <div class="h2Font">
-                        Thank you, your responses have been submitted!
+                        Thank you for taking the test!
                     </div>
                     <div class="baseFont textGray">
                         You have attempted {{answered}} out of {{totalQuestions}} questions!
@@ -549,11 +527,36 @@
                         <span class="" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">or Retake the Test</span>
 
                     </div>
+                    <div class="marginT10">
+                        <a ng-click="shareFacebook()">
+                            <img src="icons/facebook.png" class="socialIcon"/>
+                        </a>
+                    </div>
                 </div>
                 
                 </div>
+                <div layout="column" layout-align="start start" class="">
+                <div layout="column" layout-align="center center" class="h2Font bold width100">Help us improve!</div>
+                <div layout="column" layout-align="center center" class="exact10h text-center width100">
+                    Please rate exam simulation on a scale of 1-5.
+                </div>
+                <div layout="column" layout-align="center center" class="width100">
+                    <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" class="bigstar custom">
+                    </ng-rate-it>
+
+                    <div layout="column" layout-align="center center" ng-if="userAssessment.userRating > 0" class="smallFont text-center width100">
+                        Your rating: {{userAssessment.userRating}} out of 5
+                    </div>
+                </div>
                 
-                
+                </div>
+                <div layout="column" layout-align="center center" class="width100 ">
+                    <div layout="column" layout-align="center center" ng-if="testExam.seoname" class="marginTB20 text-center">Have you taken any coaching classes for {{testExam.seoname}}?<br/> Help others with a quick review!</div>
+                    <div layout="column" layout-align="center center" ng-if="!testExam.seoname" class="marginTB20">Have you taken any coaching for any exam? Help others with a quick review!</div>
+                    <md-button class="md-saveNext md-large tolowercase margin0 " ui-sref="review" target="_blank">
+                        Review Your Coaching
+                    </md-button>
+                </div>
                 
                 <!--<div class="padding10">
                     <span class="marginL10" ng-click="openAddQuestion()" ng-if="fullScope">QPage</span> 
