@@ -20472,20 +20472,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments){
             
             
-        $scope.currURL = $location.absUrl();
-        $scope.recentAssessments = recentAssessments.data;
-        console.log($scope.recentAssessments);
         
-        $scope.shareFacebook = function(blogpost){
-            Socialshare.share({
-              'provider': 'facebook',
-              'attrs': {
-                'socialshareType': 'feed',
-                'socialshareUrl': $scope.currURL,
-                'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
-              }
-            });    
-        };
+        $scope.recentAssessments = recentAssessments.data;
+        
         
         
             $scope.saveUserRating = function(rating){
@@ -21025,12 +21014,24 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
                 
             };
-        
+            $scope.currURL = $location.absUrl();
+            $scope.shareFacebook = function(blogpost){
+                Socialshare.share({
+                  'provider': 'facebook',
+                  'attrs': {
+                    'socialshareType': 'feed',
+                    'socialshareUrl': $scope.currURL,
+                    'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
+                  }
+                });    
+            };
             $scope.user = {};
             if($cookies.getObject('sessionuser')){
                 var sessionuser = $cookies.getObject( 'sessionuser');
                 $scope.test = thistest.data;
                 $scope.testExam = thistestExam.data;
+                //console.log($scope.testExam);
+                $scope.currURL = "https://www.exambazaar.com/questionpapers/" + $scope.testExam.name;
                 if($scope.test.instructions && $scope.test.instructions.length > 0){
                     $scope.instructions = $scope.test.instructions;    
                 }
