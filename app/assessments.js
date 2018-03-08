@@ -181,6 +181,67 @@ router.post('/submit', function(req, res) {
     });
 });
 
+router.post('/recent', function(req, res) {
+    console.log('Starting latest assessments');
+    var limit = 8;
+    
+    var existingAssessments = assessment.find({$and: [ {"evaluation.score": {$exists: true}}, { "evaluation.score": {$ne: "0"} } ]}, {evaluation: 1, info: 1, user: 1, test: 1, _end: 1},function (err, existingAssessments) {
+        if(existingAssessments){
+            var nAssessments = existingAssessments.length;
+            var counter = 0;
+            
+            var allTestIds = existingAssessments.map(function(a) {return a.test.toString();});
+            var allUserIds = existingAssessments.map(function(a) {return a.user.toString();});
+            
+            var allAssessments = [];
+            
+            var allTests = test.find({_id: allTestIds}, {name: 1, maxScore: 1},function (err, allTests) {
+                
+                var allUsers = user.find({_id: allUserIds}, {basic: 1, image: 1},function (err, allUsers) {
+                    var theseTestIds = allTests.map(function(a) {return a._id.toString();});
+                    var theseUserIds = allUsers.map(function(a) {return a._id.toString();});
+                    existingAssessments.forEach(function(thisAssessment, aIndex){
+                        var testId = thisAssessment.test.toString();
+                        var userId = thisAssessment.user.toString();
+                        var tIndex = theseTestIds.indexOf(testId);
+                        var uIndex = theseUserIds.indexOf(userId);
+                        if(tIndex != -1 && uIndex != -1){
+                            var newAssessment = {
+                                test: {
+                                    _id: testId,
+                                    name: allTests[tIndex].name,
+                                    maxScore: allTests[tIndex].maxScore,
+                                },
+                                user:{
+                                    _id: thisAssessment.user,
+                                    name: allUsers[uIndex].basic.name,
+                                    image: allUsers[uIndex].image,
+                                },
+                                evaluation:{
+                                    score: thisAssessment.evaluation.score,
+                                    questions: thisAssessment.evaluation.questions,
+                                },
+                            };
+                            allAssessments.push(newAssessment);
+                        }
+                        counter += 1;
+                        if(counter == nAssessments){
+                            //console.log(allAssessments);
+                            res.json(allAssessments);
+                        }
+                });
+                });
+            });
+            
+            
+            
+            
+        }else{
+            res.json(null);
+        }
+    }).limit(limit).sort("-_end");
+});
+
 router.post('/rate', function(req, res) {
     console.log('Starting assessment rate!');
     var thisAssessment = req.body;

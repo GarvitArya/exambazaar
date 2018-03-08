@@ -675,6 +675,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveAssessment = function(assessment) {
             return $http.post('/api/assessments/save', assessment);
         };
+        this.recent = function() {
+            return $http.post('/api/assessments/recent');
+        };
+        
         this.rate = function(ratingForm) {
             return $http.post('/api/assessments/rate', ratingForm);
         };
@@ -20465,20 +20469,24 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
     }]); 
     exambazaar.controller("assessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare){
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments){
             
             
         $scope.currURL = $location.absUrl();
-        $scope.shareFacebook = function(){
+        $scope.recentAssessments = recentAssessments.data;
+        console.log($scope.recentAssessments);
+        
+        $scope.shareFacebook = function(blogpost){
             Socialshare.share({
               'provider': 'facebook',
               'attrs': {
-                'socialshareType': 'send',
+                'socialshareType': 'feed',
                 'socialshareUrl': $scope.currURL,
                 'socialshareVia':"1236747093103286",  'socialshareRedirectUri': 'https://www.exambazaar.com',
               }
-            });
+            });    
         };
+        
         
             $scope.saveUserRating = function(rating){
                 var ratingForm = {
@@ -21603,7 +21611,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //console.log('Here');
                 if($scope.userAssessment){
                     var timeNow = moment();
-                    if($scope.endTime - timeNow < 0 && !$scope.userAssessment.submitted){
+                    var endTime = moment($scope.endTime);
+                    if(timeNow.diff(endTime)  > 0 && !$scope.userAssessment.submitted){
                         console.log('Test is over');
                         $scope.testOver = true;
                         $scope.submitAssessmentHelper();
@@ -34985,6 +34994,10 @@ function getLatLng(thisData) {
                 thistest: ['testService','$stateParams',
                     function(testService, $stateParams){
                     return testService.getTest($stateParams.testId);
+                }],
+                recentAssessments: ['assessmentService',
+                    function(assessmentService){
+                    return assessmentService.recent();
                 }],
                 thistestExam: ['testService','$stateParams',
                     function(testService, $stateParams){

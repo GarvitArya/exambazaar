@@ -507,38 +507,58 @@
             </div>
         </div>
 
-        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="min90h" ng-if="testOver">
-            <div flex layout="column" layout-align="center center" class="blogFont exact90h width100 paddingTB20">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start"  ng-if="testOver">
+            <div flex="90" layout="row" layout-align="center start" class="">
+            <div flex layout="column" layout-align="start center " class=" paddingTB20 width100">
                 
-                <div layout="row" layout-align="center center" class="exact40h width100">
-                <div layout="column" layout-align="center center" flex class="exact40h baseFont">
+                <div layout="row" layout-align="center center" class="width100 paddingLR40 marginT20 paddingTB20 greyBorder">
+                <div flex="60" layout="column" layout-align="center center" class="width100 padding20">
                     <div class="h2Font">
-                        Thank you for taking the test!
+                        Good job on taking the test!
                     </div>
-                    <div class="baseFont textGray">
+                    <div class="smallFont">
                         You have attempted {{answered}} out of {{totalQuestions}} questions!
                     </div>
-                    <div class="marginT20">
+                    
+                    <div layout="row" layout-align="center center" class="marginT40 width100 baseFont">
+                    
+                    <div flex layout="column" layout-align="center center" class="">
                         <md-button class="md-danger md-large tolowercase margin0 " ng-click="seeAssessmentResult()" ng-if="test.analyzeable">
                             Analyze your result
                         </md-button>
+                        <span class="smallFont marginT10" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">or Retake the Test</span>
                     </div>
-                    <div class="smallFont">
-                        <span class="" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">or Retake the Test</span>
-
-                    </div>
-                    <div class="marginT10">
+                    <div flex layout="column" layout-align="center center" class="">
                         <a ng-click="shareFacebook()">
-                            <img src="icons/facebook.png" class="socialIcon"/>
+                            <img src="icons/facebook.png" class="socialIcon3"/>
                         </a>
+                        <span class="smallFont marginT10">
+                        Challenge your friends
+                        </span>
                     </div>
+                        
+                    </div>    
                 </div>
                 
+                <div flex layout="column" layout-align="center center" class="smallFont greyLeftBorder paddingLR20">
+                    <div layout="column" layout-align="center center" class="width100"  ng-if="suggestedTests && suggestedTests.length > 0">
+                    <div layout="column" layout-align="center center" class="width100" class="h3Font width100">
+                        Other Tests For You
+                    </div>
+                    <div layout="column" layout-align="center center" class="width100">
+                        <a ui-sref="assessment({ testId:{{'suggestedTest._id'}} })" target="_blank" id="link" class="" ng-repeat="suggestedTest in suggestedTests">{{suggestedTest.name}}</a>
+                    </div>
+                    </div>
+                </div>    
+                    
                 </div>
-                <div layout="column" layout-align="start start" class="">
-                <div layout="column" layout-align="center center" class="h2Font bold width100">Help us improve!</div>
-                <div layout="column" layout-align="center center" class="exact10h text-center width100">
-                    Please rate exam simulation on a scale of 1-5.
+                
+                <div layout="row" layout-align="center start" class="marginT20 padding20 baseFont width100">
+                <div layout="column" layout-align="start center" flex >
+                <img src="icons/assessment/rocket.png" class="socialIcon2"/>    
+                <div layout="column" layout-align="center center" class="h3Font bold width100 marginT10">Help us improve!</div>
+                <div layout="column" layout-align="center center" class="text-center width100">
+                    Please rate exam simulation on a scale of 1 to 5.
                 </div>
                 <div layout="column" layout-align="center center" class="width100">
                     <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" class="bigstar custom">
@@ -550,14 +570,20 @@
                 </div>
                 
                 </div>
-                <div layout="column" layout-align="center center" class="width100 ">
-                    <div layout="column" layout-align="center center" ng-if="testExam.seoname" class="marginTB20 text-center">Have you taken any coaching classes for {{testExam.seoname}}?<br/> Help others with a quick review!</div>
-                    <div layout="column" layout-align="center center" ng-if="!testExam.seoname" class="marginTB20">Have you taken any coaching for any exam? Help others with a quick review!</div>
+                <div layout="column" layout-align="start center" flex>
+                    <img src="icons/p0/s0/coaching.png" class="socialIcon2"/>
+                    <div layout="column" layout-align="center center" ng-if="testExam.seoname" class="text-center marginT10 h3Font bold">Attended any coaching for {{testExam.seoname}}?</div>
+                    
+                    <div layout="column" layout-align="center center" ng-if="!testExam.seoname" class="h3Font text-center">Have you taken any coaching for any exam?</div>
+                    
+                    <div layout="column" layout-align="center center" class="smallFont width100 marginB20">
+                        Help others with a quick review!
+                    </div>
                     <md-button class="md-saveNext md-large tolowercase margin0 " ui-sref="review" target="_blank">
                         Review Your Coaching
                     </md-button>
                 </div>
-                
+                </div>
                 <!--<div class="padding10">
                     <span class="marginL10" ng-click="openAddQuestion()" ng-if="fullScope">QPage</span> 
                 </div>-->
@@ -565,15 +591,33 @@
                     Score: {{userAssessment.evaluation.score}} <span ng-if="test.maxScore">out of maximum {{test.maxScore}}</span>
                 </div>-->
             </div>
-            <div layout="column" layout-align="center center" flex="25" class="padding20 width100 smallFont paddingTB20" ng-if="suggestedTests && suggestedTests.length > 0">
-                <div class="h2Font width100">
-                    Other Suggested Tests
+            <!--id="blogTags"-->
+            <div layout="column" layout-align="center center" flex="25" class="padding20 width100 smallFont exact90h" >
+                <div layout="column" layout-align="center center" class="width100 marginT20 paddingL20 smallFont" ng-if="recentAssessments && recentAssessments.length > 0">
+                <div class="h3Font width100">
+                    Recent Assessments
                 </div>
                 <div layout="column" layout-align="center start" class=" width100">
-                    <a ui-sref="assessment({ testId:{{'suggestedTest._id'}} })" target="_blank" id="link" class="bold" ng-repeat="suggestedTest in suggestedTests">{{suggestedTest.name}}</a>
+                    <div layout="row" layout-align="start center" class="marginT10 width100" ng-repeat="thisAssessment in recentAssessments">
+                        <div flex="25">
+                            <img ng-src="{{thisAssessment.user.image}}" ng-if="thisAssessment.user.image" id="userPicSmall" class="img-circle"/>
+                            <img src="images/user.png" ng-if="!thisAssessment.user.image" id="userPicSmall" class="img-circle"/>
+                        </div>
+                        <div layout="column" layout-align="center start" class="wideLine">
+                            <div>{{thisAssessment.user.name}}</div>
+                            <a ui-sref="assessment({ testId:{{'thisAssessment.test._id'}} })" target="_blank" id="link" class="" >
+                                {{thisAssessment.test.name}}
+                            </a>
+                            <div>Score: {{thisAssessment.evaluation.score}} out of {{thisAssessment.test.maxScore}}</div>
+                        </div>
+                    </div>
                 </div>
-
+                </div>
+                
+                
             </div>
+                
+            </div>    
         </div>
 
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="blogFont paddingLR40" ng-if="!testStarted">
