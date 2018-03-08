@@ -592,13 +592,13 @@
                 </div>-->
             </div>
             <!--id="blogTags"-->
-            <div layout="column" layout-align="center center" flex="25" class="padding20 width100 smallFont exact90h" >
+            <div layout="column" layout-align="center center" flex="25" class="padding20 width100 smallFont " >
                 <div layout="column" layout-align="center center" class="width100 marginT20 paddingL20 smallFont" ng-if="recentAssessments && recentAssessments.length > 0">
                 <div class="h3Font width100">
                     Recent Assessments
                 </div>
                 <div layout="column" layout-align="center start" class=" width100">
-                    <div layout="row" layout-align="start center" class="marginT10 width100" ng-repeat="thisAssessment in recentAssessments">
+                    <div layout="row" layout-align="start center" class=" paddingB5 marginB10 width100 greyBottomBorder" ng-repeat="thisAssessment in recentAssessments">
                         <div flex="25">
                             <img ng-src="{{thisAssessment.user.image}}" ng-if="thisAssessment.user.image" id="userPicSmall" class="img-circle"/>
                             <img src="images/user.png" ng-if="!thisAssessment.user.image" id="userPicSmall" class="img-circle"/>
