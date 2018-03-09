@@ -21151,9 +21151,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             $scope.testStarted = true;
                             $scope.endTime = moment($scope.userAssessment._end);
                             var timeNow = moment();
-                            if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
+                            if($scope.endTime.diff(timeNow) < 0 || $scope.userAssessment.submitted){
                                 $scope.testOver = true;
-                                console.log('Test is over or submitted');
+                                console.log('3. Test is over or submitted');
 
                             }else{
                                 $scope.testOver = false;
@@ -21233,9 +21233,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         $scope.testStarted = true;
                         $scope.endTime = moment($scope.userAssessment._end);
                         var timeNow = moment();
-                        if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
+                        if($scope.endTime.diff(timeNow) < 0 || $scope.userAssessment.submitted){
                             $scope.testOver = true;
-                            console.log('Test is over or submitted');
+                            console.log('1. Test is over or submitted');
 
                         }else{
                             $scope.testOver = false;
@@ -21653,7 +21653,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     var timeNow = moment();
                     var endTime = moment($scope.endTime);
                     if(timeNow.diff(endTime)  > 0 && !$scope.userAssessment.submitted){
-                        console.log('Test is over');
+                        console.log('2. Test is over');
                         $scope.testOver = true;
                         $scope.submitAssessmentHelper();
                     }
