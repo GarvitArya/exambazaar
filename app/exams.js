@@ -97,6 +97,47 @@ router.get('/basic', function(req, res) {
     
 });
 
+function slugify(string) {
+      return string
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w\-]+/g, "")
+        .replace(/\-\-+/g, "-")
+        .replace(/^-+/, "")
+        .replace(/-+$/, "");
+    };
+
+router.get('/generateurlslugs', function(req, res) {
+    res.json(true);
+    
+    
+    var allExams = exam
+        .find({active: true}, {name:1, exam_page_name: 1})
+        //.deepPopulate('stream')
+        .exec(function (err, allExams) {
+        if (!err){
+            
+            allExams.forEach(function(thisExam, index){
+                var examName = thisExam.exam_page_name + " Exam";
+                
+                thisExam.urlslug = slugify(examName);
+                
+                
+                thisExam.save(function(err, thisExam) {
+                if (err) return console.error(err);
+                    console.log("Exam saved " + thisExam._id);
+                    //res.json('Done');
+                });
+                
+            });
+            
+        } else {throw err;}
+    });
+    
+});
+
 router.get('/markTrueFalse', function(req, res) {
     //console.log('Here');
     exam
@@ -260,6 +301,19 @@ router.get('/exam/:examName', function(req, res) {
         } else {throw err;}
     });
 });
+
+router.get('/examUrlSlug/:examUrlSlug', function(req, res) {
+    var examUrlSlug = req.params.examUrlSlug;
+    var thisExam = exam
+        .findOne({'urlslug': examUrlSlug})
+        .deepPopulate('stream')
+        .exec(function (err, thisExam) {
+        if (!err){
+            //console.log(thisExam);
+            res.json(thisExam);
+        } else {throw err;}
+    });
+});
 router.get('/exambasic/:examName', function(req, res) {
     var examName = req.params.examName;
     var thisExam = exam
@@ -286,7 +340,21 @@ router.get('/pattern/:examName', function(req, res) {
         } else {throw err;}
     });
 });
-
+router.get('/patternUrlSlug/:examUrlSlug', function(req, res) {
+    var examUrlSlug = req.params.examUrlSlug;
+    var thisExam = exam
+        .findOne({'urlslug': examUrlSlug},{exampattern:1})
+        .deepPopulate('exampattern')
+        .exec(function (err, thisExam) {
+        if (!err){
+            var exampattern = null;
+            if(thisExam.exampattern){
+                exampattern = thisExam.exampattern;
+            }
+            res.json(exampattern);
+        } else {throw err;}
+    });
+});
 router.get('/books/:examName', function(req, res) {
     var examName = req.params.examName;
     var thisExam = exam
@@ -302,7 +370,21 @@ router.get('/books/:examName', function(req, res) {
         } else {throw err;}
     });
 });
-
+router.get('/booksUrlSlug/:examUrlSlug', function(req, res) {
+    var examUrlSlug = req.params.examUrlSlug;
+    var thisExam = exam
+        .findOne({'urlslug': examUrlSlug},{exambooks:1})
+        .deepPopulate('exambooks')
+        .exec(function (err, thisExam) {
+        if (!err){
+            var exambooks = null;
+            if(thisExam.exambooks){
+                exambooks = thisExam.exambooks;
+            }
+            res.json(exambooks);
+        } else {throw err;}
+    });
+});
 router.get('/degrees/:examName', function(req, res) {
     var examName = req.params.examName;
     var thisExam = exam
@@ -336,7 +418,39 @@ router.get('/degrees/:examName', function(req, res) {
         } else {throw err;}
     });
 });
-
+router.get('/degreesUrlSlug/:examUrlSlug', function(req, res) {
+    var examUrlSlug = req.params.examUrlSlug;
+    var thisExam = exam
+        .findOne({'urlslug': examUrlSlug},{examdegrees:1})
+        //.deepPopulate('examdegrees')
+        .exec(function (err, thisExam) {
+        if (!err){
+            var examdegrees = null;
+            if(thisExam.examdegrees){
+                examdegrees = thisExam.examdegrees;
+            }
+            var fullexamdegrees = [];
+            if(!examdegrees){
+                examdegrees = [];
+                res.json(null);
+            }else{
+                
+                examdegrees.forEach(function(thisBlogId, index){
+                    examdegrees[index] = thisBlogId.toString();
+                });
+                var blogposts = blogpost
+                    .find({_id: { $in : examdegrees }, active: true}, {title:1, coverPhoto: 1, urlslug: 1, readingTime: 1, seoDescription: 1})
+                    .exec(function(err, blogposts) {
+                    if (!err){
+                        res.json(blogposts);
+                    } else {throw err;}
+                });
+            }
+            
+            
+        } else {throw err;}
+    });
+});
 router.get('/count', function(req, res) {
     exam.count({}, function(err, docs) {
     if (!err){ 

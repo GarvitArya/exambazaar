@@ -264,6 +264,7 @@ var allStates = [
 '/ebinternal/editExam/:examId',
 /*'/ebinternal/error',*/
 '/exam/:examName',
+'/ebinternal/e/:examUrlSlug',
 '/questionpapers',
 '/questionpapers/:examName',
 '/ebinternal/extractEmails',

@@ -5,8 +5,14 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var examSchema = mongoose.Schema({
     name: {type: String,required: true,unique:true},
     displayname: {type: String},
-    fullname: {type: String},
     seoname: {type: String},
+    
+    fullname: {type: String},
+    exam_page_name: {type: String},
+    coaching_page_name: {type: String},
+    top_coaching_name: {type: String},
+    urlslug: {type: String},
+    
     frequency: {type: String},
     logo: String,
     briefDescription: {type: String},

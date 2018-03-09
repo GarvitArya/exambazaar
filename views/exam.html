@@ -217,15 +217,15 @@
         <div class="min8vh"></div>
         <img  ng-src="{{exam.logo}}" class="pageLogo" ng-if="exam.logo !=''"/>
     </div>
-    <div layout="column" layout-align="start start" flex class="paddingLR20 min40vh">
+    <div layout="column" layout-align="start start" flex class="paddingLR20 min40vh ">
         <div class="min8vh"></div>
-        <div class="width100 font36 bold narrowLine marginB10">
-            {{exam.seoname}} Exam
-        </div>
+        <h1 class="width100 font36 bold  text-white  margin0">
+            {{exam.exam_page_name}} Exam
+        </h1>
         <div layout="column" layout-align="start start" flex flex-xs="100">
-            <div layout="row" layout-align="start start" class="width100">
+            <h2 layout="row" layout-align="start start" class="width100 margin0 baseFont">
                 <a ng-href="{{exam.website}}" target="_blank" class="bold">{{exam.website}}</a>
-            </div>
+            </h2>
             <div layout="row" layout-align="start start" class="width100">
                 {{exam.briefDescription}}
             </div>
@@ -273,9 +273,9 @@
     
     <div layout="row" layout-xs="column" layout-align="start start" class="width100">
         <div layout="column" layout-align="start start" flex-xs="100" flex-gt-xs="70" class="paddingLR20">
-            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
-                {{exam.seoname}} Registration
-            </div>
+            <h2 layout="column" layout-align="start start" class=" textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
+                {{exam.exam_page_name}} Registration
+            </h2>
             <div layout="column" layout-align="start start" class="width100  marginTB10">
                 <div layout="row" layout-align="start start" class="width100" ng-if="exam.registration.website">
                     <div flex="40">Website</div>
@@ -329,9 +329,9 @@
             </div>
             <div layout="column" layout-align="start start" class="width100" ng-if="activeExamCycle">
             
-            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="activeExamCycle && (activeExamCycle.syllabus && activeExamCycle.syllabus.length > 0 || activeExamCycle.brochure && activeExamCycle.brochure.length > 0)">
+            <h2 layout="column" layout-align="start start" class="  textBlack width100 marginTB20 subhheadingBottomBorder2 font20 bold" ng-if="activeExamCycle && (activeExamCycle.syllabus && activeExamCycle.syllabus.length > 0 || activeExamCycle.brochure && activeExamCycle.brochure.length > 0)">
                 {{activeExamCycle.name}} Syllabus & Brochure
-            </div>
+            </h2>
             <div layout="row" layout-align="start center" class="width100  marginTB10">
                 <div layout="column" layout-align="center center" flex ng-if="activeExamCycle.syllabus && activeExamCycle.syllabus.length > 0">
                     <div class="font16 bold">Syllabus</div>
@@ -355,9 +355,9 @@
                 </div>
                 
             </div>
-            <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold">
+            <h2 layout="column" layout-align="start start" class="  textBlack width100 marginTB20 subhheadingBottomBorder2 font20 bold">
                 {{activeExamCycle.name}} Dates
-            </div>
+            </h2>
             <div layout="row" layout-align="start start" class="width100 marginTB10">
 
                 <timeline class="width100 padding20">
@@ -369,24 +369,24 @@
                       <timeline-panel class="{{event.badgeClass}}">
                         <timeline-heading>
                             <div class="basicFont font16 paddingLR10 textBlack bold">
-                              {{event.title}}
+                              {{exam.exam_page_name}} {{event.title}}
                             </div>
                         </timeline-heading>
-                            <div class="marginTB10 paddingLR10">
+                            <h3 class="marginTB10 paddingLR10 baseFont">
                                 {{event.dateString}}
-                            </div>
-                            <div class="marginTB10 paddingLR10">
+                            </h3>
+                            <h3 class="marginTB10 paddingLR10 baseFont">
                                 {{event.timeString}}
-                            </div>
+                            </h3>
                       </timeline-panel>
                     </timeline-event>
                   </timeline>
 
             </div>
             </div>
-            <div layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold" ng-if="exam.pattern && exam.pattern._id">
-                {{exam.seoname}} Pattern
-            </div>
+            <h2 layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold" ng-if="exam.pattern && exam.pattern._id">
+                {{exam.exam_page_name}} Pattern
+            </h2>
             <div layout="column" layout-align="start start" ng-if="exam.pattern">
                 <div class="width100  marginT40" ng-if="exam.pattern.coverPhoto">
                     <img ng-src="{{exam.pattern.coverPhoto}}" class="width100"/>
@@ -395,9 +395,9 @@
                 </div>
             </div>
             
-            <div layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold marginB20" ng-if="exam.examdegrees && exam.examdegrees.length > 0">
-                {{exam.seoname}} Related Degrees
-            </div>
+            <h2 layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold marginB20" ng-if="exam.examdegrees && exam.examdegrees.length > 0">
+                {{exam.exam_page_name}} Related Degrees
+            </h2>
             
             
             <div layout="column" layout-align="start start" ng-if="exam.examdegrees && exam.examdegrees.length > 0" class="width100 marginB10">
@@ -429,9 +429,9 @@
             </div>
             
             <div layout="column" layout-align="start start" ng-if="exam.books" class="width100">
-                <div layout="column" layout-align="start start" class="  textBlack width100 marginTB10 subhheadingBottomBorder2 font20 bold" ng-if="exam.books && exam.books._id">
+                <h2 layout="column" layout-align="start start" class="  textBlack width100 marginTB20 subhheadingBottomBorder2 font20 bold" ng-if="exam.books && exam.books._id">
                     Recommended {{exam.stream.displayname}} Preparation Books
-                </div>
+                </h2>
 
                 <div class="width100 marginT20">
                     <img ng-src="{{exam.books.coverPhoto}}" class="width100"/>
@@ -440,9 +440,9 @@
                 </div>
             </div>
             
-            <div layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold">
-                {{exam.seoname}} Recommended Reading
-            </div>
+            <h2 layout="column" layout-align="start start" class="  textBlack width100 subhheadingBottomBorder2 font20 bold marginTB20">
+                {{exam.exam_page_name}} Recommended Reading
+            </h2>
             <div class="width100 marginT20 ">
                 <ui-carousel slides="suggestedblogs" slides-to-show="slideCount" slides-to-scroll="slideCount"  autoplay="true" autoplay-speed="5000" dots="true">
                   <carousel-item>
@@ -491,12 +491,12 @@
             </div>
             
             <div layout="column" layout-align="start start" ng-if="exam.tests && exam.tests.length > 0" class="width100">
-                <div layout="column" layout-align="start start" class="  textBlack width100 paddingB10 marginTB10 subhheadingBottomBorder2">
-                    <div class=" font20 bold">
-                        {{exam.seoname}} Previous Papers
-                    </div>
+                <div layout="column" layout-align="start start" class="  textBlack width100 paddingB10 marginTB20 subhheadingBottomBorder2">
+                    <h2 class=" font20 bold">
+                        {{exam.exam_page_name}} Previous Question Papers
+                    </h2>
                     <div class="font14">
-                        Download from {{exam.tests.length}} {{exam.seoname}} papers brought to you by Exambazaar.com&nbsp;&nbsp;<i class="fa fa-download" aria-hidden="true"></i>
+                        Download from {{exam.tests.length}} {{exam.exam_page_name}} papers brought to you by Exambazaar.com&nbsp;&nbsp;<i class="fa fa-download" aria-hidden="true"></i>
                     </div>
                 </div>
                 <div layout="row" layout-xs="column" layout-align="start start" class="width100  editFont marginTB20" layout-wrap>
@@ -506,9 +506,9 @@
                                 <img src="icons/download.png" class="width100"/>
                             </div>
                             <div flex layout="column" layout-align="center center" class="width100 padding20">
-                                <div layout="row" layout-align="start center" class="width100 font14 textBlack">
+                                <h3 layout="row" layout-align="start center" class="width100 font14 textBlack baseFont margin0">
                                     {{test.name}}
-                                </div>
+                                </h3>
                                 <div layout="row" layout-align="start center" class="width100 text-center font10 textDarkGrey">
                                     {{test.description}}
                                 </div>
@@ -531,9 +531,9 @@
         <div layout="row" layout-align="start start" hide-xs flex-gt-xs="5">
         </div>
         <div layout="column" layout-align="start start" flex-gt-xs="25" class="min50vh paddingLR10" ng-if="suggestedcoachings.length > 0">
-            <h3 class="marginTB10 font20 bold textBlack subhheadingBottomBorder2 width100">
-            {{exam.seoname}} Coaching<!-- around you-->
-            </h3>
+            <h2 class="marginTB10 font20 bold textBlack subhheadingBottomBorder2 width100">
+            {{exam.exam_page_name}} Coaching<!-- around you-->
+            </h2>
             <div layout="column" layout-align="center center" ng-repeat="coachingGroup in suggestedcoachings | orderBy:'distance'" class="min10vh fourthFont width100 marginB20 padding10" ng-click="goToCoaching(coachingGroup)">
                 
                 <div layout="column" layout-align="center center" class="width100 padding20 boxShadow">

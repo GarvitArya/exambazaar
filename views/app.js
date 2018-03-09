@@ -830,7 +830,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExamTestsByExamName = function(examName) {
             return $http.get('/api/tests/examByName/'+examName, {examName: examName});
         };
-        
+        this.getExamTestsByExamUrlSlug = function(examUrlSlug) {
+            return $http.get('/api/tests/examUrlSlug/'+examUrlSlug, {examUrlSlug: examUrlSlug});
+        };
         this.allOfficialPapers = function() {
             return $http.get('/api/tests/allOfficialPapers');
         };
@@ -856,6 +858,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExam = function(examId) {
             return $http.get('/api/exams/edit/'+examId, {examId: examId});
         };
+        this.generateurlslugs = function() {
+            return $http.get('/api/exams/generateurlslugs/');
+        };
+        
         this.streamexam = function(examId) {
             return $http.get('/api/exams/streamexam');
         };
@@ -874,17 +880,32 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExamByName = function(examName) {
             return $http.get('/api/exams/exam/'+examName, {examName: examName});
         };
+        this.getExamByUrlSlug = function(examUrlSlug) {
+            return $http.get('/api/exams/examUrlSlug/'+examUrlSlug, {examUrlSlug: examUrlSlug});
+        };
         this.getExamBasicByName = function(examName) {
             return $http.get('/api/exams/exambasic/'+examName, {examName: examName});
         };
         this.getExamPatternByName = function(examName) {
             return $http.get('/api/exams/pattern/'+examName, {examName: examName});
         };
+        this.getExamPatternByUrlSlug = function(examUrlSlug) {
+            return $http.get('/api/exams/patternUrlSlug/'+examUrlSlug, {examUrlSlug: examUrlSlug});
+        };
+        
+        
+        
         this.getExamBooksByName = function(examName) {
             return $http.get('/api/exams/books/'+examName, {examName: examName});
         };
+        this.getExamBooksByUrlSlug = function(examUrlSlug) {
+            return $http.get('/api/exams/booksUrlSlug/'+examUrlSlug, {examUrlSlug: examUrlSlug});
+        };
         this.getDegreesByName = function(examName) {
             return $http.get('/api/exams/degrees/'+examName, {examName: examName});
+        };
+        this.getDegreesByUrlSlug = function(examUrlSlug) {
+            return $http.get('/api/exams/degreesUrlSlug/'+examUrlSlug, {examUrlSlug: examUrlSlug});
         };
         this.addLogo = function(newLogoForm) {
             return $http.post('/api/exams/addLogo',newLogoForm);
@@ -1320,6 +1341,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         this.suggestedblogs = function(examName) {
             return $http.get('/api/blogposts/suggestedblogs/'+examName, {examName: examName});
+        };
+        this.suggestedblogsByUrlSlug = function(examUrlSlug) {
+            return $http.get('/api/blogposts/suggestedblogsbyUrlSlug/'+examUrlSlug, {examUrlSlug: examUrlSlug});
         };
         this.topCoaching = function(examName) {
             return $http.get('/api/blogposts/topCoaching/'+examName, {examName: examName});
@@ -17247,6 +17271,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.allStreams = streamList.data;
             $scope.spreadsheetMode = false;
             
+            $scope.rank0 = function(){
+                coachingService.rank0().success(function (data, status, headers) {
+                    console.log("Done");
+                })
+                .error(function (data, status, header, config) {
+                    console.log("Error ");
+                });
+            };
             
             if($scope.user.userType =='Master'){
                 $scope.spreadsheetMode = true;
@@ -28572,6 +28604,300 @@ function getLatLng(thisData) {
             
             
     }]);
+    
+    exambazaar.controller("examUrlSlugController", 
+        [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'thisExamDegrees', 'suggestedblogs', 'Carousel', 'coachingService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, thisExamDegrees, suggestedblogs, Carousel, coachingService, viewService, $location, screenSize){
+            $scope.slideCount = 2;
+            $scope.mobileDevice = false;
+            if (screenSize.is('xs, sm')){
+                //console.log('Mobile or tablet');
+                $scope.mobileDevice = true;
+                $scope.slideCount = 1;
+            }else{
+                //console.log('Laptop');
+                $scope.mobileDevice = false;
+                $scope.slideCount = 2;
+            }
+            $scope.components = [
+                /*'Overview',*/
+                'Contact',
+                'Exams',
+                'Results',
+                'Courses',
+                'Photos',
+                'Videos',
+                'Faculty',
+                'Location',
+                'Reviews'
+            ];
+            $scope.exam = thisexam.data;
+            $scope.suggestedblogs = suggestedblogs.data;
+            var thisExamPattern = thisExamPattern.data;
+            var thisExamBooks = thisExamBooks.data;
+            var thisExamDegrees = thisExamDegrees.data;
+            $scope.exam.tests = testList.data;
+            if(thisExamPattern){
+                $scope.exam.pattern = thisExamPattern;
+            }
+            if(thisExamBooks){
+                $scope.exam.books = thisExamBooks;
+            }
+            if(thisExamDegrees && thisExamDegrees.length > 0){
+                $scope.exam.examdegrees = thisExamDegrees;
+                $scope.examdegrees = thisExamDegrees;
+            }
+            
+            //console.log($scope.suggestedblogs);
+            //console.log($scope.exam.examdegrees);
+            if($cookies.getObject('sessionuser')){
+                $scope.user = $cookies.getObject('sessionuser');
+            }else{
+                //$scope.signupNeeded = true;
+            }
+            var viewForm = {
+                state: $state.current.name,
+                claim: false,
+                url: $location.url()
+            };
+            if($scope.user && $scope.user.userId){
+                viewForm.user = $scope.user.userId
+            }
+            //console.log(JSON.stringify(viewForm));
+            if($cookies.getObject('ip')){
+                var ip = $cookies.getObject('ip');
+                viewForm.ip = ip;
+            }
+            viewService.saveview(viewForm).success(function (data, status, headers) {
+                //console.log('View Marked');
+            })
+            .error(function (data, status, header, config) {
+                console.log();
+            });
+            
+            $scope.currCity = null;
+            $scope.currCountry = null;
+            
+            function latlngfromIP(){
+                if($cookies.getObject('ip')){
+                    var thisIP = $cookies.getObject('ip');
+                    //console.log("Using IP to geolocate user");
+                    //console.log(thisIP);
+                    $scope.currLocation = [thisIP.lat, thisIP.long];
+                    $scope.currCity = thisIP.city;
+                    $scope.currCountry = thisIP.country;
+                    Notification.warning("Exambazaar couldn't locate you with accuracy");
+                }
+            };
+            if (navigator.geolocation) {
+              var timeoutVal = 10 * 1000 * 1000;
+              navigator.geolocation.getCurrentPosition(
+                displayPosition, 
+                displayError,
+                { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
+              );
+            }
+            else {
+                alert("Geolocation is not supported by your browser");
+                latlngfromIP();
+                //use ip info
+            }
+            
+            
+
+            function displayPosition(position) {
+                $scope.currLocation = [position.coords.latitude, position.coords.longitude];
+                //console.log($scope.currLocation);
+            }
+            function displayError(error) {
+              var errors = { 
+                1: 'Permission denied',
+                2: 'Position unavailable',
+                3: 'Request timeout'
+              };
+              console.log("Error: " + errors[error.code]);
+                //use ip info
+                latlngfromIP();
+            }
+            //suggestedcoachings
+            
+            $scope.$watch('currLocation', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue != ''){
+                    
+                    if(newValue && newValue.length == 2){
+                        $scope.currLatLng = {
+                            lat: newValue[0],
+                            lng: newValue[1],
+                        }
+                        
+                        var examUserinfo = {
+                            exam: $scope.exam._id,
+                            userinfo: {
+                                user: null,
+                                latlng: $scope.currLatLng,
+                                city: $scope.currCity,
+                                country: $scope.currCountry,
+                            },
+                        };
+                        if($scope.user && $scope.user._id){
+                            examUserinfo.userinfo.user = $scope.user._id;
+                        }
+                        coachingService.suggestedcoachings(examUserinfo).success(function (data, status, headers) {
+                            $scope.suggestedcoachings = data;
+                            //console.log(data);
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log("Error ");
+                        });
+                    }
+                    
+                    
+                    
+                }
+            }, true);
+            
+            var badgeIconClasses = ['fa fa-user-plus', 'fa fa-bath'];
+            var badgeClasses = ['info', 'warning'];
+            var badgeIcons = {
+                "Registration": "fa fa-user-circle",
+                "Admit Card": "fa fa-id-card",
+                "Written": "fa fa-pencil",
+                "Counselling": "fa fa-users",
+                "Interview": "fa fa-black-tie",
+            };
+            var badgeBackgrounds = {
+                "Registration": "warning",
+                "Admit Card": "warning",
+                "Written": "primary",
+                "Counselling": "info",
+                "Interview": "primary",
+            };
+            
+            //console.log($scope.user);
+            $scope.noUserDownload = function(){
+                if(!$scope.user || !$scope.user.userId){
+                    $rootScope.$emit("CallShowLogin", {});
+                    if($cookies.getObject('sessionuser')){
+                        $scope.user = $cookies.getObject('sessionuser');
+                    }else{
+                        $scope.signupNeeded = true;
+                    }
+                }
+            }
+            
+            $scope.activeExamCycle = null;
+            $scope.exam.cycle.forEach(function(thisCycle, index){
+                //console.log(thisCycle);
+                if(thisCycle.active){
+                    $scope.activeExamCycle = thisCycle;
+                }
+            });
+            
+            if(!$scope.activeExamCycle && $scope.exam.cycle && $scope.exam.cycle.length > 0){
+                $scope.activeExamCycle = $scope.exam.cycle[$scope.exam.cycle.length-1];
+            }
+            
+            $scope.setCycle = function(examCycle){
+                $scope.events = [];
+                $scope.activeExamCycle = examCycle;
+                if($scope.activeExamCycle){
+                    var steps = $scope.activeExamCycle.examSteps;
+                    //console.log($scope.activeExamCycle); 
+                    steps.forEach(function(thisStep, index){
+                        var random = Math.floor(Math.random() * badgeIconClasses.length);
+                        var dateRange = thisStep.stepDate.dateRange;
+                        var timeRanges = thisStep.stepDate.timeRange;
+                        var dateRanges = thisStep.stepDate.dates;
+                        var dateArray = thisStep.stepDate.dateArray;
+                        
+                        var allDay = false;
+                        var dateString = '';
+                        var timeString = '';
+                        var fullString = '';
+                        timeRanges.forEach(function(timeRange, index){
+                            if(timeRange && timeRange.startTime && timeRange.endTime){
+                                if(timeRange.startTime == "00:00" && timeRange.endTime == "23:00"){
+                                    allDay = true;
+                                }else{
+                                    //console.log(timeRange);
+                                    if(index > 0){
+                                        timeString += " & "
+                                    }
+                                    timeString += dateRanges[index].name + " (" + timeRange.startTime + " to " + timeRange.endTime + ")";
+                                }
+                            }
+                            if(!timeRange || !timeRange.startTime && !dateRange.endTime){
+                                allDay = true;
+                            }
+                        });
+                        
+                        if(dateRange && dateRange.startDate && dateRange.endDate){
+                            var startDate = moment(dateRange.startDate);
+                            var endDate = moment(dateRange.endDate);
+                            dateString = "" + moment(startDate).format('DD MMM YYYY');
+                           
+                            
+                            if(compareDates(startDate, endDate) == -1){
+                                dateString += " to " + moment(dateRange.endDate).format('DD MMM YYYY');
+                            }
+                            
+                        }
+                        if(!dateString || dateString == ''){
+                            if(dateArray && dateArray.length > 0){
+                                dateArray.forEach(function(thisDate, index){
+                                    dateString += moment(thisDate).format('DD MMM YYYY');
+                                    if(index == dateArray.length - 2){
+                                        dateString += ' & ';
+                                    }
+                                    if(index < dateArray.length - 2){
+                                        dateString += ', ';
+                                    }
+                                });
+                                
+                            }
+                        }
+                        if(allDay){
+                            timeString = "All Day ";
+                        }
+                        fullString = dateString + timeString;
+                        var newEvent = {
+                            badgeClass: badgeBackgrounds[thisStep.stepType],
+                            badgeIconClass: badgeIcons[thisStep.stepType],
+                            title: thisStep.stepType,
+                            dateString: dateString,
+                            timeString: timeString,
+                        };
+                        //console.log(thisStep);
+                        $scope.events.push(newEvent);
+                    });   
+                }
+            };
+            $scope.setCycle($scope.activeExamCycle);
+            
+            
+            $scope.goToCoaching = function(provider){
+                var coachingForm = {
+                    _id: provider._id 
+                };
+                coachingService.showGroupHelperById(coachingForm).success(function (data, status, headers) {
+                        var examStream = data;
+                        
+                        var url = $state.href('showGroup', {categoryName: examStream.stream, subCategoryName: examStream.exam, cityName: examStream.city, groupName: examStream.groupName});
+                        window.open(url,'_blank');
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log('Error ' + data + ' ' + status);
+                    });
+            };
+            
+            var examPageName = $scope.exam.exam_page_name;
+            $rootScope.pageTitle = examPageName + " 2018 Exam: Dates, Pattern, Syllabus, Question Papers";
+            $rootScope.pageDescription = "Read latest " + examPageName + " 2018 updates - " + examPageName + " Notification, Registration, Dates, Eligibility and more | Enjoy exclusive access to Previous " + examPageName + " Question Papers";
+            
+            
+            var keyWordString = examPageName + ", " + examPageName + " 2018,  " + examPageName + " 2017, " + examPageName + " 2018 Exam, " + examPageName + " Exam,  " + examPageName + " Registration, " + examPageName + " 2018 Registration, " + examPageName + " Exam Dates, " + examPageName + " 2018 Dates, " + examPageName + " Exam Syllabus, " + examPageName + " Brochure, " + examPageName + " Notification, " + examPageName + " Exam Pattern, " + examPageName + " Eligibility, " + examPageName + "  Books, " + examPageName + " Question Papers, " + examPageName + " Preparation";
+            
+            $rootScope.pageKeywords = keyWordString;
+    }]);    
     exambazaar.controller("examController", 
         [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'testList', 'thisExamPattern', 'thisExamBooks', 'thisExamDegrees', 'suggestedblogs', 'Carousel', 'coachingService', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, testList, thisExamPattern, thisExamBooks, thisExamDegrees, suggestedblogs, Carousel, coachingService, viewService, $location, screenSize){
             $scope.slideCount = 2;
@@ -28856,18 +29182,13 @@ function getLatLng(thisData) {
                     });
             };
             
+            var examPageName = $scope.exam.exam_page_name;
+            $rootScope.pageTitle = examPageName + " 2018 Exam: Dates, Pattern, Syllabus, Question Papers";
+            $rootScope.pageDescription = "Read latest " + examPageName + " 2018 updates - " + examPageName + " Notification, Registration, Dates, Eligibility and more | Enjoy exclusive access to Previous " + examPageName + " Question Papers";
             
-            $rootScope.pageTitle = $scope.exam.displayname + " Exam - All about the Exam - Recommended Readings & Previous Papers";
-            $rootScope.pageDescription = $scope.exam.displayname + " Exam - Registration, Syllabus & Brochure, Exam Dates, Pattern, Recommended Preparation Books, Online coaching resources, Recommended Reading, Previous Papers";
-            var keyWordString = '';
-            var keywordArray = ["Registration",	"Syllabus & Brochure", "Exam Dates", "Pattern", "Recommended Preparation Books", "Online coaching resources", "Recommended Reading", "Previous Papers"];
-            var years = ['','2018', '2017', '2016'];
-            years.forEach(function(thisYear, yindex){
-                keywordArray.forEach(function(thisKeyword, kindex){
-                
-                    keyWordString += $scope.exam.seoname + ' ' + thisYear + ' ' + thisKeyword + ', ';
-                });
-            });
+            
+            var keyWordString = examPageName + ", " + examPageName + " 2018,  " + examPageName + " 2017, " + examPageName + " 2018 Exam, " + examPageName + " Exam,  " + examPageName + " Registration, " + examPageName + " 2018 Registration, " + examPageName + " Exam Dates, " + examPageName + " 2018 Dates, " + examPageName + " Exam Syllabus, " + examPageName + " Brochure, " + examPageName + " Notification, " + examPageName + " Exam Pattern, " + examPageName + " Eligibility, " + examPageName + "  Books, " + examPageName + " Question Papers, " + examPageName + " Preparation";
+            
             $rootScope.pageKeywords = keyWordString;
     }]);
             
@@ -30235,6 +30556,16 @@ function getLatLng(thisData) {
                 
             };
         }; 
+            
+        $scope.generateurlslugs = function () {
+            ExamService.generateurlslugs().success(function (data, status, headers) {
+                $scope.showSavedDialog();
+            })
+            .error(function (data, status, header, config) {
+                console.log('Error ' + data + ' ' + status);
+            });
+        };
+            
         $scope.addExam = function () {
             var saveExam = ExamService.saveExam($scope.exam).success(function (data, status, headers) {
                 $scope.showSavedDialog();
@@ -37131,6 +37462,65 @@ function getLatLng(thisData) {
                 }],
                 ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],
+            }
+        })
+    
+        .state('examUrlSlug', {
+            url: '/ebinternal/e/:examUrlSlug',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'exam.html',
+                    controller: 'examUrlSlugController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                /*examUrlSlug
+                abc*/
+                thisexam: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamByUrlSlug($stateParams.examUrlSlug);    
+                }],
+                thisExamPattern: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamPatternByUrlSlug($stateParams.examUrlSlug);    
+                }],
+                thisExamBooks: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamBooksByUrlSlug($stateParams.examUrlSlug);    
+                }],
+                thisExamDegrees: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getDegreesByUrlSlug($stateParams.examUrlSlug);    
+                }],
+                testList: ['testService', '$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getExamTestsByExamUrlSlug($stateParams.examUrlSlug);
+                }],
+                loadAngularTimeline: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularTimeline'], {serie: true});
+                }],
+                loadUICarousel: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['UICarousel'], {serie: true});
+                }],
+                
+                /*
+                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                }],*/
+                suggestedblogs: ['blogpostService','$stateParams',
+                    function(blogpostService,$stateParams){
+                    return blogpostService.suggestedblogsByUrlSlug($stateParams.examUrlSlug);
+                }],
+                bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
                 }],
             }
         })

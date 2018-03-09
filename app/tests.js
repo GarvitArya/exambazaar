@@ -875,6 +875,25 @@ router.get('/examByName/:examName', function(req, res) {
         } else {throw err;}
     });
 });
+router.get('/examUrlSlug/:examUrlSlug', function(req, res) {
+    var examUrlSlug = req.params.examUrlSlug;
+    var thisExam = exam
+        .findOne({'urlslug': examUrlSlug})
+        .exec(function (err, thisExam) {
+        if (!err){
+            //console.log(thisExam);
+            var examId = thisExam._id;
+            var allTests = test
+                .find({exam: examId})
+                .exec(function (err, allTests) {
+                if (!err){
+                    
+                    res.json(allTests);
+                } else {throw err;}
+            });
+        } else {throw err;}
+    });
+});
 
 router.get('/officialPapersStreamExam', function(req, res) {
     var allTests = test

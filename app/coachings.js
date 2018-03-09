@@ -3639,8 +3639,8 @@ router.get('/cisavedUsers/:coachingId', function(req, res) {
 
 
 router.get('/setRank0', function(req, res) {
-    console.log("Starting now");
-    var allproviders =  coaching.find({type: 'Coaching'}, {},function(err, allproviders) {
+    //console.log("Starting now");
+    /*var allproviders =  coaching.find({type: 'Coaching'}, {},function(err, allproviders) {
     if (!err){
          allproviders.forEach(function(thisprovider, index){
              console.log(index);
@@ -3652,8 +3652,33 @@ router.get('/setRank0', function(req, res) {
             });
          });
     }
+    });*/
+    var examId = '5909803d7be9410011e38c61';
+    var allproviders =  coaching.find({exams: examId}, {exams: 1},function(err, allproviders) {
+    if (!err){
+         allproviders.forEach(function(thisprovider, index){
+            var thisExams = thisprovider.exams;
+            var eIndex = thisExams.indexOf(examId);
+             console.log('There are ' + allproviders.length + " providers!");
+             if(eIndex != -1){
+                 console.log(thisExams.length);
+                 thisExams.splice(eIndex, 1);
+                 //thisprovider.exams = newExams;
+                 console.log(thisExams.length);
+                 thisprovider.save(function(err, thisprovider) {
+                    if (err) return console.error(err);
+                    console.log(thisprovider._id + " saved!");
+                });
+             }
+                
+            
+            
+         });
+    }
     });
 });
+
+
 
 router.get('/checkLogo/:pageNumber', function(req, res) {
     var pageNumber = req.params.pageNumber;
