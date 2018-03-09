@@ -19518,8 +19518,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
            
             
-            $rootScope.pageTitle = "Blog | Exambazaar resources for all exams in India";
+            $rootScope.pageTitle = "Exambazaar Blog: The Ultmate Guide to Competitive Exam Preparation & Careers in India";
+            $rootScope.pageDescription = "Exambazaar is India's leading education blog for study tips, preparation strategies, best free resources and future prospects for 50 + Competitive Exams";
             $rootScope.pageImage = $scope.thisBlogCover;
+            
+            $rootScope.pageKeywords = "Competitive Exams, Exam Tips, Study Tips, Build Resume, Best Colleges in India, Exam Preparation in India, Higher Education, Job Skills, Education Blog, Top Education Blogs, Topper Interviews, Expert Reviews, Edbites, Education News, IIT preparation, NEET preparation, SSC preparation, BANK preparation, CAT preparation, IAS preparation, CA preparation, NDA preparation, CLAT preparation, SAT preparation, IELTS preparation, NTSE preparation, NIFT preparation, Exam Tips in India, Study Tips in India, India Education Blog"
             
             $scope.goToBlog = function(blog){
                 var url = $state.href('showblog', {blogpostSlug: blog.urlslug});
