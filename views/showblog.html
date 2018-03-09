@@ -259,7 +259,7 @@
                 
                 <div layout="row" layout-align="end center" class="width100 font10 danger">
                     Only for master users:&nbsp;&nbsp;<a ng-click="editBlogPost(blogpost)" ng-if="user.userType=='Master'">Go to Edit Page</a>
-                    <a ng-src="{{blogpost.coverPhoto}}" target="_blank" ng-if="user.userType=='Master'" class="marginL10">Cover Photo</a>
+                    
                 </div>
                 
                 <div class="width100 marginT20 blogContent" ng-bind-html="blogpost.content" scrollpercentage>
