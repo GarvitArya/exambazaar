@@ -197,14 +197,14 @@
         <nav class=" spacedLetter09 headerBlue navbar-default" flex>
             <ul ng-repeat="stream in officialPapersStreamExam | orderBy: ['-rank']" class="nav navbar-nav paddingLR20 " flex>
             <li class="dropdown " flex>
-            <a href="" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" flex>{{stream.displayname}}
-            </a>
-            <ul class="dropdown-menu" flex>
-                <li ng-repeat="exam in stream.exams">
-                    <a ui-sref="questionpapers({ examName:{{'exam.name'}} })">{{exam.displayname}}
-                    </a>
-                </li>
-            </ul>
+                <a href="" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" flex>{{stream.displayname}}
+                </a>
+                <ul class="dropdown-menu" flex>
+                    <li ng-repeat="exam in stream.exams">
+                        <a ui-sref="questionpapers({ examName:{{'exam.name'}} })">{{exam.exam_page_name}}
+                        </a>
+                    </li>
+                </ul>
             </li>  
             </ul>
         </nav>
@@ -214,14 +214,18 @@
     <div layout="column" layout-align="center center" class="width100 min40vh paddingTB10" >
         
         <h1 class="margin0 padding10 h1Font bold text-center ">
-            {{exam.seoname | uppercase}} Question Papers
+            {{exam.exam_page_name}} Question Papers with Answer Keys
         </h1>
-        <h3 class="margin0 padding10 h3Font text-center ">
-            Seal your {{exam.seoname | uppercase}} preparation by attempting the Official {{exam.seoname | uppercase}} Papers for<span ng-if="!years">&nbsp;years&nbsp;</span><span ng-if="years">&nbsp;{{years.min}} - {{years.max}}&nbsp;</span>in a Live, Timed, Exam Environment for FREE
+        <h2 class="margin0 padding10 h3Font text-center ">
+            <!--Seal your {{exam.exam_page_name | uppercase}} preparation by attempting the Official {{exam.exam_page_name | uppercase}} Papers for<span ng-if="!years">&nbsp;years&nbsp;</span><span ng-if="years">&nbsp;{{years.min}} - {{years.max}}&nbsp;</span>in a Live, Timed, Exam Environment for FREE-->
+            
+            
+            Attempt Official {{exam.exam_page_name}} Question Papers for <span ng-if="!years">&nbsp;years&nbsp;</span><span ng-if="years">&nbsp;{{years.min}} - {{years.max}}&nbsp;</span> for Free in a Real, Exam-like Interface or Download PDF | {{exam.exam_page_name}} Preparation
+            
+        </h2>
+        <h3 class="h2Font paddingT30 bold text-center ">
+            {{examSummary.papers}} {{exam.exam_page_name}} Papers | {{examSummary.hours}} Hours | {{examSummary.questions}} Questions
         </h3>
-        <div class="h2Font paddingT30 bold text-center ">
-            {{examSummary.papers}} Papers | {{examSummary.hours}} Hours | {{examSummary.questions}} Questions
-        </div>
     </div>
     </div>
     <div layout="row" layout-align="center start" class="width100 textDarkGrey greyBottomBorder" layout-wrap>
@@ -272,10 +276,10 @@
     <div flex-xs="100" flex-gt-xs="80"  layout="row" layout-align="center start" class="paddingTB40 width100">
         <div layout="column" layout-align="start start" class="width100 paddingL20R40 leftBar" hide-xs flex-gt-xs="20">
             <!--<div layout="row" layout-align="center center" class=" sideactive width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton" ui-sref="questionpapers({ examName:{{'exam.name'}} })">
-            {{exam.seoname | uppercase}}
+            {{exam.exam_page_name | uppercase}}
             </div>-->
             <div layout="row" layout-align="center center" class="width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton" ng-repeat="thisexam in thisStream.exams | orderBy: ['-rank']" ui-sref="questionpapers({ examName:{{'thisexam.name'}} })" ng-class="sideBarButtonClass(thisexam)">
-            {{thisexam.seoname | uppercase}}
+            {{thisexam.exam_page_name}}
             </div>
         </div>
         <div layout="row" layout-xs="column" layout-align="start start" class="width100" flex-xs="100" flex-gt-xs>
@@ -283,13 +287,13 @@
                 <div layout="row" layout-xs="column" layout-align="start start" class="box width100 paddingLR40 boxShadow min20vh marginB20 paddingTB10" ng-repeat="paper in officialPapers | orderBy: ['simulationrank', '-year', 'name']">
                     <div layout="column" layout-align="start start" flex="10">
                     </div>
-                    <div layout="column" layout-align="start start" flex="70">
+                    <div layout="column" layout-align="start start" flex-xs flex-gt-xs="70">
                         <div class="ribbon"><span>{{paper.year}}</span></div>
-                        <div hide-xs class="h2Font bold width100">{{paper.name}}</div>
-                        <div hide-gt-xs class="h3Font bold width100">{{paper.name}}</div>
-                        <div class="baseFont width100" ng-if="paper._actualdate">As officially conducted on {{paper._actualdate | date: "MMMM dd yyyy"}} <!--({{paper.fromnow}})--></div>
+                        <h2 hide-xs class="h2Font bold width100 marginT10">{{paper.name}}</h2>
+                        <h2 hide-gt-xs class="h1Font bold width100 marginT10">{{paper.name}}</h2>
+                        <div class="marginT10 baseFont width100" ng-if="paper._actualdate">As officially conducted on {{paper._actualdate | date: "MMMM dd yyyy"}} <!--({{paper.fromnow}})--></div>
                         <div class="baseFont width100" ng-if="!paper._actualdate">{{paper.description}}</div>
-                        <div class="subBaseFont width100 textLightGrey marginT5">{{paper.nQuestions}} Questions | Time: {{paper.durationFormatted}}</div>
+                        <h3 class="subBaseFont width100 textLightGrey marginT5">{{paper.nQuestions}} Questions | Time: {{paper.durationFormatted}}</h3>
                     </div>
                     <div layout="column" layout-align="end start" class="paddingR20 paddingTB10" flex>
                         <md-button class="md-saveNext md-small font16 margin0 " ui-sref="assessment({ testId:{{'paper._id'}} })" target="_blank">

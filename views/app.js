@@ -2511,7 +2511,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.exam = thisExam.data;
             $scope.topCoachings = topCoachings.data;
             $scope.stream = thisStream.data;
-            $rootScope.pageTitle = "Top Coachings for " + $scope.exam.seoname + " in India";
+            
             
             var sanitize = function(){
                 $scope.topCoachings.forEach(function(thisCoaching, cIndex){
@@ -2525,7 +2525,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
             };
             sanitize();
-            console.log($scope.topCoachings);
+            
+            //$rootScope.pageTitle = "Top Coachings for " + $scope.exam.seoname + " in India";
+            $rootScope.pageTitle = "Best " + $scope.exam.top_coaching_name + " Coaching Classes in India | " + $scope.exam.exam_page_name + " Preparation";
+            $rootScope.pageDescription = "Choose the best " + $scope.exam.top_coaching_name + " Coaching Classes in India for " + $scope.exam.exam_page_name + " Preparation with Expert Reviews and Ratings on Faculty, Infrastructure, Study Material and Environment";
+            
+            
+            $rootScope.pageKeywords = "Best " + $scope.exam.top_coaching_name + " Coaching, Best " + $scope.exam.top_coaching_name + " Coaching Classes, Best " + $scope.exam.top_coaching_name + " Coaching in India, Top " + $scope.exam.top_coaching_name + " Coaching, Best Coaching for " + $scope.exam.top_coaching_name + ", " + $scope.exam.top_coaching_name + " Coaching,  " + $scope.exam.top_coaching_name + " Classes,  " + $scope.exam.top_coaching_name + " Courses, " + $scope.exam.top_coaching_name + " Coaching Classes, " + $scope.exam.top_coaching_name + " Coaching Institutes, Coaching Classes for " + $scope.exam.top_coaching_name + ", " + $scope.exam.top_coaching_name + " Coaching, " + $scope.exam.top_coaching_name + " Preparation, ";
             //$rootScope.pageDescription = "Search for " + $scope.subcategory.displayname + " coaching classes in " + cityNames + " and 90 other cities in India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Classes in India";
 
             //var examKeywords = "Exambazaar " + $scope.subcategory.displayname + " Coaching, "+ "Best " + $scope.subcategory.displayname + " Coaching Classes, " + "Top " + $scope.subcategory.displayname + " Coaching Centre, " + $scope.subcategory.displayname + " Coaching in India, ";
@@ -12875,6 +12881,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                                 var examPapers = thisExam.tests.map(function(a) {return a.toString();});
                                 var newExam = {
                                     exam: thisExam.displayname,
+                                    exam_page_name: thisExam.exam_page_name,
                                     examName: thisExam.name,
                                     rank: thisExam.rank,
                                     logo: thisExam.logo,
@@ -28422,26 +28429,45 @@ function getLatLng(thisData) {
             }, 2000);*/
             $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.png';
             $rootScope.pageImage = $scope.defaultCoverPhoto;
-            $rootScope.pageTitle = "Official Question Papers of all Major Exams in India | ";
+            $rootScope.pageTitle = "Free Official Previous Year Question Papers of 50+ Exams in India";
             
             
             
-            $rootScope.pageDescription = 'Seal your Exam Preparation preparation by attempting the Official Exam Papers for the last 10 years in a Live, Timed, Exam Environment for FREE!';
+            $rootScope.pageDescription = 'Attempt, download and analyse last 10 Years Question Papers of IIT JEE , NEET, SSC, BANK, GATE, CAT, IAS, CA, NDA, CLAT and other competitive exams for FREE';
             var keywordString = '';
-            var suffix = [' Question Papers ', ' Question Papers PDF ', ' Question Papers & Answers PDF ' , ' Official Papers '];
-            var examNames = ['IIT JEE', 'GATE'];
-            for(var i = 2018; i >= 2008; i--) {
-                
-                examNames.forEach(function(thisExam, eindex){
-                    suffix.forEach(function(thisSuffix, index){
-                        var newKeyWord = thisExam + ' ' + i +thisSuffix;
-                        keywordString = keywordString + newKeyWord + ', ';
-                    });
-                });
-                 
-            }
+            //var suffix = [' Question Papers ', ' Question Papers PDF ', ' Question Papers & Answers PDF ' , ' Previous Papers '];
             
-            $rootScope.pageKeywords = keywordString;
+            
+            $scope.$watch('opStreams', function (newValue, oldValue, rootScope) {
+                if(newValue && newValue != oldValue){
+                    var opExams = [];
+                    $rootScope.opStreams.forEach(function(thisStream, sindex){
+                        var thisExams = thisStream.exams;
+                        opExams = opExams.concat(thisExams);
+                    });
+                    opExams = opExams.sort(function(a,b){
+                      return new Date(b.rank) - new Date(a.rank);
+                    });
+
+                    var examNames = opExams.map(function(a) {return a.exam_page_name.toString();});
+                    var suffix = ['Question Papers', 'Previous Papers'];
+                    var prefix = "All";
+                    //var examNames = ['JEE Main'];
+
+                    examNames.forEach(function(thisExam, eindex){
+                        suffix.forEach(function(thisSuffix, index){
+                            var newKeyWord = prefix + " " + thisExam + ' ' +thisSuffix;
+                            keywordString = keywordString + newKeyWord + ', ';
+                        });
+                    });
+                    keywordString = "Question Papers with Answer Keys, 10 year question papers, " + keywordString;
+                    $rootScope.pageKeywords = keywordString;
+                    console.log($rootScope.pageKeywords);
+                }
+
+            }, true);
+            
+            
             
             if($cookies.getObject('sessionuser')){
                 $scope.user = $cookies.getObject('sessionuser');
@@ -28477,6 +28503,8 @@ function getLatLng(thisData) {
         [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'officialPapers', 'officialPapersStreamExam', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, officialPapers, officialPapersStreamExam, viewService, $location, screenSize){
             $scope.slideCount = 2;
             $scope.exam = thisexam.data;
+            console.log($scope.exam);
+            
             $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.png';
             if($scope.exam.officialpaperscoverphoto && $scope.exam.officialpaperscoverphoto != ''){
                 $scope.defaultCoverPhoto = $scope.exam.officialpaperscoverphoto;
@@ -28491,7 +28519,7 @@ function getLatLng(thisData) {
             };
             
             $scope.officialPapers = officialPapers.data;
-            console.log($scope.officialPapers);
+            //console.log($scope.officialPapers);
             $scope.officialPapersStreamExam = officialPapersStreamExam.data;
             var opStreamIds = $scope.officialPapersStreamExam.map(function(a) {return a._id.toString();});
             
@@ -28552,25 +28580,24 @@ function getLatLng(thisData) {
             $scope.examSummary.hours = Math.round($scope.examSummary.hours/60);
             
             $rootScope.pageImage = $scope.defaultCoverPhoto;
-            $rootScope.pageTitle = $scope.exam.displayname + " Question Papers | " + $scope.examSummary.papers + " Papers, " + $scope.examSummary.hours + " Hours, " + $scope.examSummary.questions + " Questions";
+            //$rootScope.pageTitle = $scope.exam.displayname + " Question Papers | " + $scope.examSummary.papers + " Papers, " + $scope.examSummary.hours + " Hours, " + $scope.examSummary.questions + " Questions";
+            $rootScope.pageTitle = $scope.exam.exam_page_name + "  Question Papers with Answer Keys: Attempt, Download and Analyse";
             var yearString = "years";
             if($scope.years.min && $scope.years.max && $scope.years.min != $scope.years.max){
                 yearString = $scope.years.min + ' - ' + $scope.years.max;
             }
             
             
-            $rootScope.pageDescription = 'Seal your ' + $scope.exam.seoname + ' preparation by attempting the Official ' + $scope.exam.seoname + ' Papers for ' + yearString + ' in a Live, Timed, Exam Environment for FREE!';
-            var keywordString = '';
-            var suffix = [' Question Papers ', ' Question Papers PDF ', ' Question Papers & Answers PDF ' , ' Official Papers '];
+            $rootScope.pageDescription = "Attempt Official " + $scope.exam.exam_page_name + " Question Papers for <years> for Free in a Real, Exam-like Interface | " + $scope.exam.exam_page_name + " Preparation";
             
-            for(var i = $scope.years.max; i >= $scope.years.min; i--) {
-                suffix.forEach(function(thisSuffix, index){
-                    var newKeyWord = $scope.exam.seoname + ' ' + i +thisSuffix;
-                    keywordString = keywordString + newKeyWord + ', ';
-                });
-                
-                 
-            }
+            var keywordString = '';
+            //var suffix = [' Question Papers ', ' Question Papers PDF ', ' Question Papers & Answers PDF ' , ' Official Papers '];
+            var suffix = ["Question Papers", "Previous Papers", "Solved Papers", "Papers,2018 Question Paper", "2017 Question Paper", "2016 Question Paper", "last 10 years Papers", "Preparation", "Mock Tests", "Sample papers", "Test Series", "Question Papers with Answer Keys", "Question Papers with Solutions"];
+            
+            suffix.forEach(function(thisSuffix, index){
+                var newKeyWord = $scope.exam.exam_page_name + ' ' + thisSuffix;
+                keywordString = keywordString + newKeyWord + ', ';
+            });
             
             $rootScope.pageKeywords = keywordString;
             
@@ -38084,7 +38111,11 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
             if((userType == 'Master' || userId == '5a1831f0bd2adb260055e352') && stateTo != 'findCoaching'){
                 console.log('SEO Title: ' + $rootScope.pageTitle);
                 console.log('SEO Description: ' + $rootScope.pageDescription);
-                console.log('SEO Keywords: ' + $rootScope.pageKeywords);
+                
+                if(stateTo != 'allquestionpapers'){
+                    console.log('SEO Keywords: ' + $rootScope.pageKeywords);
+                }
+                
             }
         }
         
