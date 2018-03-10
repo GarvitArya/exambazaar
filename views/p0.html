@@ -180,11 +180,11 @@
                 Book a Free Counselling Session
             </h1>
 
-            <span class="h3Font width100 padding10" id="subheading">
+            <span class="h3Font width100 padding10 narrowLine2" id="subheading">
                
                 Choose your Coaching Class by scheduling a free visit or demo lecture in
-                &nbsp;<span ng-click="getTopCities()" class="h2Font bottomBorderWhiteSmokeDashed text-white" ng-show="searchCity">{{searchCity}}&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></span>
-                <i class="fa fa-crosshairs font18 marginLR10" aria-hidden="true" ng-click="detectLocation()"></i>
+                &nbsp;<span ng-click="getTopCities()" class="h3Font bottomBorderWhiteSmokeDashed text-white" ng-show="searchCity">{{searchCity}}&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></span>
+                <i hide-xs class="fa fa-crosshairs font18 marginLR10" aria-hidden="true" ng-click="detectLocation()" ng-show="searchCity"></i><i hide-gt-xs class="fa fa-crosshairs font14 marginLR10" aria-hidden="true" ng-click="detectLocation()" ng-show="searchCity"></i>
                 
                 <!--<span ng-if="top5Cities" class="font10">
                     Other cities around you:&nbsp;

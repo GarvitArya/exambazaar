@@ -2792,7 +2792,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         var topURLSlug = $stateParams.topURLSlug;
         var slugInfo = thisStreamExamCity.data;
-        console.log(slugInfo);
         
         $scope.categoryName = slugInfo.streamName;
         $scope.subCategoryName = slugInfo.examName;
@@ -2889,31 +2888,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.subcategory = $scope.currentStream.exams[eIndex];
                     /* Starting of SEO Meta Data */
                     var seoExamName = $scope.subcategory.seoname;
-                    $rootScope.pageTitle = "Best " + seoExamName + " Coaching in " + $scope.city + " for " + seoExamName + " Preparation";
-                    $rootScope.pageDescription = "Find best " + seoExamName + " Coaching in " + $scope.city + " | Explore Courses, Fees, Reviews, Past Results, Faculty, Photos and Videos for " + seoExamName + " Preparation";
-                    var coachingKeywordArray = [];
-                    coachingKeywordArray.push(seoExamName + " Coaching in " + $scope.city);
-                    coachingKeywordArray.push("Best " + seoExamName + " Coaching in " + $scope.city);
-                    coachingKeywordArray.push("Top " + seoExamName + " Coaching in " + $scope.city);
-                    coachingKeywordArray.push(seoExamName + " Coaching Classes in " + $scope.city);
-                    coachingKeywordArray.push(seoExamName + " Coaching Institutes in " + $scope.city);
-                    coachingKeywordArray.push(seoExamName + " Classes in " + $scope.city);
-                    coachingKeywordArray.push(seoExamName + " Courses in " + $scope.city);
-                    coachingKeywordArray.push(seoExamName + " Online Coaching");
-                    coachingKeywordArray.push(seoExamName + " Exam");
-                    coachingKeywordArray.push("How to prepare for " + seoExamName);
-                    coachingKeywordArray.push(seoExamName + " Preparation");
-                    coachingKeywordArray.push(seoExamName + " Tests");
-                    coachingKeywordArray.push(coachingGroupNamesCity);
-                    var coachingKeywords = "";
-                    coachingKeywordArray.forEach(function(thisKeyword, kindex){
-                        coachingKeywords += thisKeyword;
-                        if(kindex < coachingKeywordArray.length - 1){
-                            coachingKeywords += ", ";
-                        }
-                    });
-                    $rootScope.pageKeywords = coachingKeywords;
-                    /* End of SEO Meta Data */    
+                    
+                    $rootScope.pageTitle = $scope.subcategory.coaching_page_name + " Coaching in " + $scope.city +" | Book a Free Visit at " + $scope.subcategory.coaching_page_name + " Coaching Classes";
+                    $rootScope.pageDescription = "Book free counselling or demo lecture at the best " + $scope.subcategory.top_coaching_name + " Coaching in " + $scope.city + " | Explore Courses, Fees, Reviews, Past Results, Faculty, Photos and Videos for " + $scope.subcategory.top_coaching_name + " Coaching Classes";
+                        
+                    $rootScope.pageKeywords = $scope.subcategory.top_coaching_name + " Coaching in " + $scope.city + ", " + $scope.subcategory.top_coaching_name + " Classes in " + $scope.city + ", " + $scope.subcategory.top_coaching_name + " Courses in " + $scope.city + ", " + $scope.subcategory.top_coaching_name + " Coaching Classes in " + $scope.city + ", " + $scope.subcategory.top_coaching_name + " Coaching Institutes in " + $scope.city + ", Coaching Classes for " + $scope.subcategory.top_coaching_name + ", " + $scope.subcategory.top_coaching_name + " Coaching, " + $scope.subcategory.top_coaching_name + " Online Coaching, " + $scope.subcategory.top_coaching_name + " Coaching Classes, Best " + $scope.subcategory.top_coaching_name + " Coaching in " + $scope.city + ", Top " + $scope.subcategory.top_coaching_name + " Coaching in " + $scope.city + ", Best Coaching for " + $scope.subcategory.top_coaching_name + " in " + $scope.city;
+                    /* End of SEO Meta Data */   
+                        
+                    console.log('SEO Title: ' + $rootScope.pageTitle);
+                    console.log('SEO Description: ' + $rootScope.pageDescription);
+                    console.log('SEO Keywords: ' + $rootScope.pageKeywords);      
                     }
                     
                     
@@ -3102,14 +3086,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.categoryName = $stateParams.categoryName;
         $scope.subCategoryName = $stateParams.subCategoryName;
         $scope.city = $stateParams.cityName;
-        //$scope.category = thisStream.data;
         
-        //console.log($scope.subcategory);
-        /*var p4StreamExamsData = p4StreamExams.data;
-        var p4StreamExamsIds = p4StreamExamsData.map(function(a) {return a._id;});
-        $scope.p4StreamExams = p4StreamExams.data.map(function(a) {return a.name;});
-        console.log(p4StreamExamsData);
-        console.log(p4StreamExamsIds);*/
         $scope.examBadgeClass = function(thisExam){
             
             var classname = "emptyTag";
@@ -3199,31 +3176,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.subcategory = $scope.currentStream.exams[eIndex];
                     /* Starting of SEO Meta Data */
                     var seoExamName = $scope.subcategory.seoname;
-                    $rootScope.pageTitle = "Best " + seoExamName + " Coaching in " + $scope.city + " for " + seoExamName + " Preparation";
-                    $rootScope.pageDescription = "Find best " + seoExamName + " Coaching in " + $scope.city + " | Explore Courses, Fees, Reviews, Past Results, Faculty, Photos and Videos for " + seoExamName + " Preparation";
-                    var coachingKeywordArray = [];
-                    coachingKeywordArray.push(seoExamName + " Coaching in " + $scope.city);
-                    coachingKeywordArray.push("Best " + seoExamName + " Coaching in " + $scope.city);
-                    coachingKeywordArray.push("Top " + seoExamName + " Coaching in " + $scope.city);
-                    coachingKeywordArray.push(seoExamName + " Coaching Classes in " + $scope.city);
-                    coachingKeywordArray.push(seoExamName + " Coaching Institutes in " + $scope.city);
-                    coachingKeywordArray.push(seoExamName + " Classes in " + $scope.city);
-                    coachingKeywordArray.push(seoExamName + " Courses in " + $scope.city);
-                    coachingKeywordArray.push(seoExamName + " Online Coaching");
-                    coachingKeywordArray.push(seoExamName + " Exam");
-                    coachingKeywordArray.push("How to prepare for " + seoExamName);
-                    coachingKeywordArray.push(seoExamName + " Preparation");
-                    coachingKeywordArray.push(seoExamName + " Tests");
-                    coachingKeywordArray.push(coachingGroupNamesCity);
-                    var coachingKeywords = "";
-                    coachingKeywordArray.forEach(function(thisKeyword, kindex){
-                        coachingKeywords += thisKeyword;
-                        if(kindex < coachingKeywordArray.length - 1){
-                            coachingKeywords += ", ";
-                        }
-                    });
-                    
-                    $rootScope.pageKeywords = coachingKeywords;
+                    //$rootScope.pageTitle = "Best " + seoExamName + " Coaching in " + $scope.city + " for " + seoExamName + " Preparation";
+                    $rootScope.pageTitle = $scope.subcategory.coaching_page_name + " Coaching in " + $scope.city +" | Book a Free Visit at " + $scope.subcategory.coaching_page_name + " Coaching Classes";
+                    $rootScope.pageDescription = "Book free counselling or demo lecture at the best " + $scope.subcategory.top_coaching_name + " Coaching in " + $scope.city + " | Explore Courses, Fees, Reviews, Past Results, Faculty, Photos and Videos for " + $scope.subcategory.top_coaching_name + " Coaching Classes";
+                        
+                    $rootScope.pageKeywords = $scope.subcategory.top_coaching_name + " Coaching in " + $scope.city + ", " + $scope.subcategory.top_coaching_name + " Classes in " + $scope.city + ", " + $scope.subcategory.top_coaching_name + " Courses in " + $scope.city + ", " + $scope.subcategory.top_coaching_name + " Coaching Classes in " + $scope.city + ", " + $scope.subcategory.top_coaching_name + " Coaching Institutes in " + $scope.city + ", Coaching Classes for " + $scope.subcategory.top_coaching_name + ", " + $scope.subcategory.top_coaching_name + " Coaching, " + $scope.subcategory.top_coaching_name + " Online Coaching, " + $scope.subcategory.top_coaching_name + " Coaching Classes, Best " + $scope.subcategory.top_coaching_name + " Coaching in " + $scope.city + ", Top " + $scope.subcategory.top_coaching_name + " Coaching in " + $scope.city + ", Best Coaching for " + $scope.subcategory.top_coaching_name + " in " + $scope.city;
                         
                         
                     console.log('SEO Title: ' + $rootScope.pageTitle);
@@ -38149,7 +38106,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
 
             var userType = user.userType;
             var userId = user._id;
-            if((userType == 'Master' || userId == '5a1831f0bd2adb260055e352') && stateTo != 'findCoaching'){
+            if((userType == 'Master' || userId == '5a1831f0bd2adb260055e352') && stateTo != 'findCoaching' && stateTo != 'findCoaching2'){
                 console.log('SEO Title: ' + $rootScope.pageTitle);
                 console.log('SEO Description: ' + $rootScope.pageDescription);
                 

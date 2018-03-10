@@ -340,11 +340,11 @@
             <!--<label>Stream</label>-->
             <md-select ng-model="selectedStream"
             md-on-close="clearSearchTermStream()"
-            data-md-container-class="p4SelectHeader">
+            data-md-container-class="p4SelectHeader" aria-label="Stream?">
             <md-select-header class="demo-select-header">
             <input ng-model="searchTermStream"
             type="search"
-            class="demo-header-searchbox md-text">
+            class="demo-header-searchbox md-text" aria-label="Stream?">
                 <!--placeholder="Search for a Stream.."-->
             </md-select-header>
             <md-optgroup label="streamExams">
@@ -359,11 +359,11 @@
             <!--<label>City</label>-->
             <md-select ng-model="selectedCity"
             md-on-close="clearSearchTermCity()"
-            data-md-container-class="p4SelectHeader">
+            data-md-container-class="p4SelectHeader" aria-label="City?">
             <md-select-header class="demo-select-header">
             <input ng-model="searchTermCity"
             type="search"
-            class="demo-header-searchbox md-text">
+            class="demo-header-searchbox md-text" aria-label="City?">
                 <!--placeholder="Search for a City.."-->
             </md-select-header>
             <md-optgroup label="allCities">
@@ -445,7 +445,7 @@
             </div>
             <div flex class="paddingLR10">
             <h1 class="width100 marginT10 marginB30 font26 narrowLine spacedLetter1">
-                Best {{subcategory.seoname}} Coaching Classes  in {{city}}
+                {{subcategory.coaching_page_name}} Coaching in {{city}}
             </h1>
             </div>
         </div>
@@ -532,9 +532,9 @@
                             </div>
                             <div layout="row" layout-align="end center" class="width100">
                             <div layout="column" layout-align="start start" id="coachingCourses" class="font14 marginT15 width100" flex>
-                                <div layout="row" layout-align="start center" class="bold wideLine basicFont" ng-if="coachingGroup.examsOffered.length > 0">
+                                <h3 class="font14 bold bold wideLine basicFont margin0" ng-if="coachingGroup.examsOffered.length > 0">
                                     {{category.displayname}} Courses at {{coachingGroup.groupName}}
-                                </div>
+                                </h3>
                                 <div layout="row" layout-align="start center" layout-wrap class="marginT5">
                                     <div layout="row"  layout-align="start center" ng-repeat="exam in coachingGroup.examsOffered | orderBy:'-rank'">
                                         <div>{{exam.displayname}}</div>
@@ -557,10 +557,10 @@
                             </div>-->
                             </div>
 
-                            <div layout="row" class="font14 bold narrowLine width100 marginT10 basicFont" ng-if="coachingGroup.groupResults.length > 0">
+                            <h3 class="font14 bold narrowLine width100 marginT10 basicFont" ng-if="coachingGroup.groupResults.length > 0">
                                  {{subcategory.displayname}}&nbsp;Results of {{coachingGroup.groupName}}
 
-                            </div>
+                            </h3>
                             <div layout="row" class="width100 marginT5 marginB10" ui-sref="showGroup({ categoryName:{{'categoryName'}}, subCategoryName:{{'subCategoryName'}}, cityName:{{'city'}}, groupName:{{'coachingGroup.groupName'}} })" layout-wrap>
                                 
                             <div flex-xs="25" flex-gt-xs="10" layout="row" layout-align="start center" ng-repeat="result in coachingGroup.groupResults" ng-if="$index < 9" class="padding5">
@@ -687,15 +687,13 @@
                         </div>
 
                     </div>
-                    <div flex layout="row" layout-align="start center" class="width100 font12 textLightGrey">
-                        <div flex layout="column" layout-align="start start" class="">
-                            <div class="narrowLine">
-                                By {{blogpost.user.basic.name}}
-                            </div>
-                        </div>
-                        <div layout="column" layout-align="center start" class="">
+                    <div flex layout="row" layout-align="start center" class="width100 ">
+                        <h4 flex layout="column" layout-align="start start" class="narrowLine margin0 font12 textLightGrey">
+                            By {{blogpost.user.basic.name}}
+                        </h4>
+                        <h4 layout="column" layout-align="center start" class="narrowLine margin0 font12 textLightGrey">
                             {{blogpost._published | date: "MMMM dd"}}
-                        </div>
+                        </h4>
                     </div>
 
                 </div>    

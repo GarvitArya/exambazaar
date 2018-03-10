@@ -60,7 +60,7 @@ router.post('/save', function(req, res) {
 
 router.post('/bulksave', function(req, res) {
     
-    var allExams = exam.find({active: true}, {seoname:1, urlslug: 1}, function(err, allExams) {
+    var allExams = exam.find({active: true}, {seoname:1, urlslug: 1, coaching_page_name: 1}, function(err, allExams) {
     if (!err){
     var allCities = city.find({active: true}, {active: 1, name: 1}, function(err, allCities) {
     if (!err){
@@ -71,7 +71,7 @@ router.post('/bulksave', function(req, res) {
         
         allExams.forEach(function(thisExam, eindex){
             allCities.forEach(function(thisCity, cindex){
-                var title = thisExam.seoname + " Coaching in " + thisCity.name;
+                var title = thisExam.coaching_page_name + " Coaching in " + thisCity.name;
                 var slug = slugify(title);
                 
                 var existingUrlslug = urlslug.findOne({ 'slug': slug },function (err, existingUrlslug) {
