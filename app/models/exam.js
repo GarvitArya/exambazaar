@@ -12,6 +12,7 @@ var examSchema = mongoose.Schema({
     coaching_page_name: {type: String},
     top_coaching_name: {type: String},
     urlslug: {type: String},
+    top_coaching_urlslug: {type: String},
     
     frequency: {type: String},
     logo: String,

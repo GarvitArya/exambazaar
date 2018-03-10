@@ -114,15 +114,15 @@ router.get('/generateurlslugs', function(req, res) {
     
     
     var allExams = exam
-        .find({active: true}, {name:1, exam_page_name: 1})
+        .find({active: true}, {name:1, top_coaching_name: 1})
         //.deepPopulate('stream')
         .exec(function (err, allExams) {
         if (!err){
             
             allExams.forEach(function(thisExam, index){
-                var examName = thisExam.exam_page_name + " Exam";
+                var examName = "Best " + thisExam.top_coaching_name + " Coaching Classes";
                 
-                thisExam.urlslug = slugify(examName);
+                thisExam.top_coaching_urlslug = slugify(examName);
                 
                 
                 thisExam.save(function(err, thisExam) {
@@ -324,6 +324,21 @@ router.get('/exambasic/:examName', function(req, res) {
             res.json(thisExam);
         } else {throw err;}
     });
+});
+router.get('/exambasicByTCUrlslug/:top_coaching_urlslug', function(req, res) {
+    var top_coaching_urlslug = req.params.top_coaching_urlslug;
+    
+    
+    var thisExam = exam
+        .findOne({'top_coaching_urlslug': top_coaching_urlslug},{logo:1, name:1, displayname: 1, rank: 1, seoname: 1, website: 1, briefDescription:1, frequency: 1, cycle:1, exam_page_name: 1, top_coaching_name: 1,coaching_page_name: 1, top_coaching_urlslug: 1, stream: 1})
+        .deepPopulate('stream')
+        .exec(function (err, thisExam) {
+        if (!err){
+            res.json(thisExam);
+            
+        } else {throw err;}
+    });
+    
 });
 router.get('/pattern/:examName', function(req, res) {
     var examName = req.params.examName;

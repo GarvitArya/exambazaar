@@ -344,6 +344,71 @@ router.get('/topCoaching/:examName', function(req, res) {
     
     
 });
+
+
+router.get('/topCoachingByTCUrlslug/:top_coaching_urlslug', function(req, res) {
+    var top_coaching_urlslug = req.params.top_coaching_urlslug;
+    
+    var thisExam = exam
+        .findOne({'top_coaching_urlslug': top_coaching_urlslug}, {_id:1, name:1, top_coaching_urlslug: 1})
+        .exec(function (err, thisExam) {
+        if (!err){
+            
+            if(thisExam){
+                var examId = thisExam._id.toString();
+                var examblogposts = blogpost
+                .find({active: true, exams:examId, blogSeries: 'Expert Reviews'}, {urlslug:1, title: 1, coachingGroups: 1})
+                .exec(function (err, examblogposts) {
+                    if (!err){
+                    var allowed = ['_id', 'title', 'coachingGroups', 'urlslug'];    
+                    var nBlogs = examblogposts.length;
+                    var bCounter = 0;
+                    var allBlogs = [];
+                    examblogposts.forEach(function(thisBlogpost, rindex){
+                        var thisBlog = {};
+                        for (var property in thisBlogpost) {
+                            if(allowed.indexOf(property) != -1){
+                               thisBlog[property] = thisBlogpost[property]; 
+                            }
+                             
+                        }
+                        var groupNames = coaching.aggregate(
+                        [
+                            {$match: {disabled: false, type: 'Coaching', 'groupName': { $in : thisBlogpost.coachingGroups} } },
+                            {"$group": { "_id": { city: "$city" }, count:{$sum:1}, logo: { $first: "$logo" }, name: { $addToSet: "$name" } } },
+                            {$sort:{"count":-1}}
+
+                        ],function(err, groupNames) {
+                        if (!err){
+                            bCounter += 1;
+                            thisBlog.coachings = groupNames;
+                            allBlogs.push(thisBlog);
+                            if(bCounter == nBlogs){
+                                //console.log(allBlogs);
+                                res.json(allBlogs);
+                            }
+                            
+                        } else {throw err;}
+                        });
+                       
+                        
+
+                        
+                    });
+
+
+                    } else {throw err;}
+                });
+            }else{
+                res.json([]);
+            }
+            
+            
+        } else {throw err;}
+    });
+    
+    
+});
 router.get('/getblogs', function(req, res) {
     var blogposts = blogpost
     .find({active: true})

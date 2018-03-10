@@ -886,6 +886,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExamBasicByName = function(examName) {
             return $http.get('/api/exams/exambasic/'+examName, {examName: examName});
         };
+        this.getExamBasicByTCUrlslug = function(top_coaching_urlslug) {
+            return $http.get('/api/exams/exambasicByTCUrlslug/'+top_coaching_urlslug, {top_coaching_urlslug: top_coaching_urlslug});
+        };
+        
         this.getExamPatternByName = function(examName) {
             return $http.get('/api/exams/pattern/'+examName, {examName: examName});
         };
@@ -1348,6 +1352,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.topCoaching = function(examName) {
             return $http.get('/api/blogposts/topCoaching/'+examName, {examName: examName});
         };
+        this.topCoachingByTCUrlslug = function(top_coaching_urlslug) {
+            return $http.get('/api/blogposts/topCoachingByTCUrlslug/'+top_coaching_urlslug, {top_coaching_urlslug: top_coaching_urlslug});
+        };
+        
+        
         this.headerBlogs = function() {
             return $http.get('/api/blogposts/headerBlogs');
         };
@@ -2506,11 +2515,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     exambazaar.controller("topCoachingController", 
-        [ '$scope', '$stateParams', '$cookies', '$state', '$rootScope','$mdDialog','thisStream','thisExam', 'topCoachings',  function($scope, $stateParams, $cookies,$state, $rootScope, $mdDialog, thisStream, thisExam, topCoachings){
+        [ '$scope', '$stateParams', '$cookies', '$state', '$rootScope','$mdDialog','thisExam', 'topCoachings',  function($scope, $stateParams, $cookies,$state, $rootScope, $mdDialog, thisExam, topCoachings){
         
             $scope.exam = thisExam.data;
             $scope.topCoachings = topCoachings.data;
-            $scope.stream = thisStream.data;
+            $scope.stream = $scope.exam.stream;
+            
+            //console.log($scope.exam);
+            //$scope.stream = thisStream.data;
             
             
             var sanitize = function(){
@@ -34576,6 +34588,35 @@ function getLatLng(thisData) {
         
         
         })
+        .state('bestCoaching', {
+            url: '/ebinternal/b/:top_coaching_urlslug',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'topCoaching.html',
+                    controller: 'topCoachingController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisExam: ['ExamService','$stateParams',
+                    function(ExamService,$stateParams){
+                    return ExamService.getExamBasicByTCUrlslug($stateParams.top_coaching_urlslug);
+                }],
+                topCoachings: ['blogpostService','$stateParams',
+                    function(blogpostService,$stateParams){
+                    return blogpostService.topCoachingByTCUrlslug($stateParams.top_coaching_urlslug);
+                }],
+                
+            }
+        
+        
+        })
         .state('topCoaching', {
             url: '/topCoaching/:categoryName/:subCategoryName',
             views: {
@@ -34592,10 +34633,10 @@ function getLatLng(thisData) {
                 }
             },
             resolve: {
-                thisStream: ['StreamService','$stateParams',
+                /*thisStream: ['StreamService','$stateParams',
                     function(StreamService,$stateParams){
                     return StreamService.getStreamByName($stateParams.categoryName);
-                }],
+                }],*/
                 thisExam: ['ExamService','$stateParams',
                     function(ExamService,$stateParams){
                     return ExamService.getExamBasicByName($stateParams.subCategoryName);

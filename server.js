@@ -333,6 +333,7 @@ var allStates = [
 '/stream/:categoryName',
 '/stream/:categoryName/:subCategoryName',
 '/topCoaching/:categoryName/:subCategoryName',
+'/ebinternal/b/:top_coaching_urlslug',
 '/stream/:categoryName/:subCategoryName/:cityName',
 '/ebinternal/c/:topURLSlug',
 '/ebinternal/school',
