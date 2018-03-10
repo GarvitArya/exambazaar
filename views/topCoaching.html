@@ -35,24 +35,24 @@
 <div class="textBlack whiteBackground secondFont font14">
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center start" class="marginT20 marginB40">
-        <div layout="row" layout-align="center start" class="h1Font width100 marginB40 subhheadingBottomBorder2 paddingB10">
-            Top {{exam.seoname}} Coaching Classes in India
-        </div>
+        <h1 class="h1Font width100 marginB40 subhheadingBottomBorder2 paddingB10 text-center">
+            Best {{exam.top_coaching_name}} Coaching Classes in India
+        </h1>
         
         <div layout="row" layout-align="start start" class="width100" layout-wrap>
             <div layout="row" layout-align="start start" flex-gt-sm="50" flex-sm="50" flex-xs="100" class="padding10" ng-repeat="topCoaching in topCoachings  | orderBy:['-allcenters']" ng-if="topCoaching.allcenters > 0">
-                <div layout="row" layout-align="start start" class="width100 padding10 boxShadow">
+                <div layout="row" layout-align="start start" class="width100 padding10 boxShadow min25vh">
                     
                     <div layout="row" layout-align="end start" class="width100 paddingT10" flex="25">
                         <img ng-src="{{topCoaching.coachings[0].logo}}" id="topcoachinglogo" class="">
                     </div>
                     <div layout="column" layout-align="start start" class="width100 paddingL40 paddingR10 " flex>
-                        <div layout="row" layout-align="start center" class="width100 ">
+                        <div layout="row" layout-align="start center" class="width100 paddingT10">
                             <!--ui-sref="city({ categoryName:{{'stream.name'}}, subCategoryName:{{'exam.name'}} })" target="_blank"-->
-                           <span class="h2Font bold readLink"> {{topCoaching.coachingGroups[0]}}
-                            </span>
+                           <h2 class="h2Font bold readLink margin0"> {{topCoaching.coachingGroups[0]}}
+                            </h2>
                         </div>
-                        <div layout="row" layout-align="start center" class="width100 subBaseFont">
+                        <div layout="row" layout-align="start center" class="width100 subBaseFont marginT10">
                             <div flex>
                                 <md-select ng-model="topCoaching.currCity" placeholder="{{topCoaching.allcenters}} centers in India" class="margin0">
                                     <md-option ng-value="city._id.city" ng-repeat="city in topCoaching.coachings" class="margin0">
@@ -72,12 +72,12 @@
                         
                         
                         <div layout="row" layout-align="start end" class="width100 marginT20">
-                            <div layout="row" layout-align="start center" flex>
+                            <h3 layout="row" layout-align="start center" flex class="margin0">
                                 <a class="baseFont" ui-sref="showblog({ blogpostSlug: {{'topCoaching.urlslug'}} })" target="_blank" id="reviewLink">
                                     Read Expert Review
                                 </a>
 
-                            </div>
+                            </h3>
                             <!--<div layout="row" layout-align="end center" flex>
                                 <md-button class="btn  actionButton tolowercase" ui-sref="city({ categoryName:{{'stream.name'}}, subCategoryName:{{'exam.name'}} })" target="_blank">
                                     <span class="availText2">

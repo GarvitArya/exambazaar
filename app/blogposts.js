@@ -319,7 +319,7 @@ router.get('/topCoaching/:examName', function(req, res) {
                             thisBlog.coachings = groupNames;
                             allBlogs.push(thisBlog);
                             if(bCounter == nBlogs){
-                                console.log(allBlogs);
+                                //console.log(allBlogs);
                                 res.json(allBlogs);
                             }
                             

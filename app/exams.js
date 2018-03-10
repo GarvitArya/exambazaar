@@ -87,7 +87,7 @@ router.get('/', function(req, res) {
 router.get('/basic', function(req, res) {
     //console.log('Here');
     exam
-        .find({active: true}, {name:1, displayname: 1, stream:1, rank: 1, seoname: 1, active:1})
+        .find({active: true}, {name:1, displayname: 1, stream:1, rank: 1, seoname: 1, active:1, exam_page_name: 1, top_coaching_name: 1,coaching_page_name: 1})
         .deepPopulate('stream')
         .exec(function (err, docs) {
         if (!err){
@@ -317,7 +317,7 @@ router.get('/examUrlSlug/:examUrlSlug', function(req, res) {
 router.get('/exambasic/:examName', function(req, res) {
     var examName = req.params.examName;
     var thisExam = exam
-        .findOne({'name': examName}, {logo:1, name:1, displayname: 1, rank: 1, seoname: 1, website: 1, briefDescription:1, frequency: 1, cycle:1})
+        .findOne({'name': examName}, {logo:1, name:1, displayname: 1, rank: 1, seoname: 1, website: 1, briefDescription:1, frequency: 1, cycle:1, exam_page_name: 1, top_coaching_name: 1,coaching_page_name: 1})
         .exec(function (err, thisExam) {
         if (!err){
             //console.log(thisExam);
