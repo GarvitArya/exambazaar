@@ -461,9 +461,9 @@
                 </div>
             </div>
             
-            <div hide-xs layout="column" layout-align="start start" flex="25" class="paddingLR30">
+            <h3 hide-xs layout="column" layout-align="start start" flex="25" class="paddingLR30 h3Font margin0">
                 Recommended Reading
-            </div>
+            </h3>
         </div>
     </div>
     </div>
@@ -497,8 +497,8 @@
                                 </h2>
                                 <div layout="row" layout-align="start center" class="width100 marginTB5 " layout-wrap>
                                     <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;
-                                    <span>{{coachingGroup.count}} centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
-                                    </span>
+                                    <h4 class="margin0 subBaseFont">{{coachingGroup.count}} centre<span ng-if="coachingGroup.count > 1">s</span>&nbsp;in {{city}}
+                                    </h4>
                                     <span class="marginLR5">
                                         <span ng-repeat="distance in coachingGroup.distances | orderBy: 'value'" class="badge marginR2" id="distanceBadge" ng-if="$index < 1">
                                             Nearest Centre: {{distance.text}}
