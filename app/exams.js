@@ -234,7 +234,7 @@ router.get('/streamexam', function(req, res) {
             var streamNameRanks = allActiveStreams.map(function(a) {return {stream: a.displayname, logo: a.logo, rank: a.rank, active: a.active, name: a.name, degreeblogs: []};});
 
             var allActiveExams = exam
-                .find({stream: {$exists: true}},{stream:1, seoname:1, rank: 1, name:1, examdegrees: 1, active: 1})
+                .find({stream: {$exists: true}},{stream:1, seoname:1, rank: 1, name:1, examdegrees: 1, active: 1, urlslug: 1, exam_page_name: 1})
                 .sort("-rank")
                 .exec(function (err, allActiveExams) {
                 if (!err){

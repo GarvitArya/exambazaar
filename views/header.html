@@ -151,7 +151,7 @@
                         <a rel="nofollow" href="#">{{streamrank.stream}}</a>
                         <ul class="dropdown-menu">
                             <li ng-repeat="exam in streamexams[streamrank.stream] | orderBy:['-rank']" ng-if="exam.active">
-                                <a rel="nofollow" ui-sref="exam({ examName:{{'exam.name'}} })">{{exam.seoname}}</a>
+                                <a rel="nofollow" ui-sref="exam({ examName:{{'exam.urlslug'}} })">{{exam.exam_page_name}}</a>
                             </li>
                             
                         </ul>

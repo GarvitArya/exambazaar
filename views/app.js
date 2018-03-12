@@ -21576,7 +21576,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
                 if(!assessmentInfo.agree){
                     valid = false;
-                    console.log('1');
                     $scope.startErrors.push('Please agree to terms and conditions.');
                 }
                 if(assessmentInfo.name.length < 2){
@@ -21646,7 +21645,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             $scope.testStarted = true;
                             $scope.endTime = moment($scope.userAssessment._end);
                             var timeNow = moment();
-                            if($scope.endTime - timeNow < 0 || $scope.userAssessment.submitted){
+                            if($scope.endTime.diff(timeNow) < 0 || $scope.userAssessment.submitted){
                                 $scope.testOver = true;
                                 console.log('Test is over or submitted');
 
@@ -29017,6 +29016,14 @@ function getLatLng(thisData) {
                 $scope.examdegrees = thisExamDegrees;
             }
             
+            var eURL = $scope.exam.urlslug;
+            if(eURL){
+                eURL = "https://www.exambazaar.com/exam/" + eURL;
+                $scope.canonicalFlip = true;
+                $scope.canonicalUrl = eURL;
+                console.log("Canonical URL is: " + $scope.canonicalUrl);
+            }
+            
             //console.log($scope.suggestedblogs);
             //console.log($scope.exam.examdegrees);
             if($cookies.getObject('sessionuser')){
@@ -34627,7 +34634,7 @@ function getLatLng(thisData) {
         
         })
         .state('bestCoaching', {
-            url: '/ebinternal/b/:top_coaching_urlslug',
+            url: '/ebinternal/lists/:top_coaching_urlslug',
             views: {
                 'header':{
                     templateUrl: 'header.html',

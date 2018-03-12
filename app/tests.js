@@ -862,7 +862,7 @@ router.get('/examByName/:examName', function(req, res) {
         .findOne({'name': examName})
         .exec(function (err, thisExam) {
         if (!err){
-            //console.log(thisExam);
+            if(thisExam){
             var examId = thisExam._id;
             var allTests = test
                 .find({exam: examId})
@@ -872,6 +872,27 @@ router.get('/examByName/:examName', function(req, res) {
                     res.json(allTests);
                 } else {throw err;}
             });
+            }else{
+                var thisExam = exam
+                .findOne({'urlslug': examName})
+                .exec(function (err, thisExam) {
+                if (!err){
+                    if(thisExam){
+                    var examId = thisExam._id;
+                    var allTests = test
+                        .find({exam: examId})
+                        .exec(function (err, allTests) {
+                        if (!err){
+
+                            res.json(allTests);
+                        } else {throw err;}
+                    });
+                    }else{
+                        res.json([]);
+                    }
+                } else {throw err;}
+            });
+            }
         } else {throw err;}
     });
 });
