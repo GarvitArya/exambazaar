@@ -21649,11 +21649,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         if($scope.userAssessment){
                             $scope.testStarted = true;
                             $scope.endTime = moment($scope.userAssessment._end);
-                            var timeNow = moment();
+                            var timeNow = moment.tz();
+                            console.log($scope.endTime);
+                            console.log(timeNow);
+                            console.log($scope.endTime.diff(timeNow));
+                            
                             if($scope.endTime.diff(timeNow) < 0 || $scope.userAssessment.submitted){
-                                console.log($scope.endTime);
-                                console.log(timeNow);
-                                console.log($scope.endTime.diff(timeNow));
+                                
                                 $scope.testOver = true;
                                 console.log('Test is over or submitted');
 
