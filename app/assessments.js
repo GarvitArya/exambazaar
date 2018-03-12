@@ -14,7 +14,9 @@ var cisaved = require('../app/models/cisaved');
 var mongoose = require('mongoose');
 
 var moment = require('moment');
-moment().format();
+
+//moment.tz.add("Asia/Calcutta|HMT BURT IST IST|-5R.k -6u -5u -6u|01232|-18LFR.k 1unn.k HB0 7zX0");
+//moment.tz.link("Asia/Calcutta|Asia/Kolkata");
 
 var db = mongoose.connection;
 db.on('error', console.error);
@@ -129,9 +131,9 @@ router.post('/save', function(req, res) {
             for (var property in thisAssessment) {
                 existingAssessment[property] = thisAssessment[property];
             }
-            existingAssessment._start = moment();
-            existingAssessment._end = moment(existingAssessment._start).add(assessmentTime, 'minutes');
-            existingAssessment._endwithbreak = moment(existingAssessment._start).add(timewithbreak, 'minutes');
+            existingAssessment._start = moment.utc();
+            existingAssessment._end = moment.utc(existingAssessment._start).add(assessmentTime, 'minutes');
+            existingAssessment._endwithbreak = moment.utc(existingAssessment._start).add(timewithbreak, 'minutes');
             existingAssessment.save(function(err, existingAssessment) {
                 if (err) return console.error(err);
                 console.log('Assessment saved: ' + existingAssessment._id);
