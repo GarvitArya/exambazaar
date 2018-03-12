@@ -320,7 +320,7 @@
                 <div layout="column" layout-align="start start" class="width100">
                     <div class="width100 paddingB5 whiteSmokeBottomBorder">
                     <h1 class="h2Font bold wideLine marginB10">
-                        <a ui-sref="questionpapers({ examName:{{'thisExam.examName'}} })" target="_blank" id="reviewLink">
+                        <a ui-sref="newquestionpapers({ question_papers_urlslug: {{'thisExam.question_papers_urlslug'}} })" id="reviewLink">
                             {{thisExam.exam_page_name}} Question Papers
                         </a>
                         
@@ -344,7 +344,7 @@
 
 
                 <div layout="row" layout-align="start center" class="marginT10 width100">
-                    <md-button class="md-next tolowercase margin0 baseFont minwidth60" ui-sref="questionpapers({ examName:{{'thisExam.examName'}} })">
+                    <md-button class="md-next tolowercase margin0 baseFont minwidth60" ui-sref="newquestionpapers({ question_papers_urlslug: {{'thisExam.question_papers_urlslug'}} })">
                         Get Started
                     </md-button>
                     
@@ -370,7 +370,7 @@
         <div layout="column" layout-align="start center" ng-repeat="stream in opStreams" flex-xs="50" flex="25" class="padding20">
             <div layout="column" layout-align="center center" class="min40vh width100 padding20 boxShadow">
             <div class="h2Font">{{stream.stream}}</div>
-            <div layout="column" layout-align="center center" ng-repeat="thisExam in stream.exams"  class="padding10" ui-sref="questionpapers({ examName:{{'thisExam.examName'}} })">
+            <div layout="column" layout-align="center center" ng-repeat="thisExam in stream.exams"  class="padding10" ui-sref="newquestionpapers({ question_papers_urlslug: {{'thisExam.question_papers_urlslug'}} })">
                 <div class="baseFont">{{$index + 1}}. {{thisExam.exam_page_name}}</div>
                 <div class="smallFont">{{thisExam.examSummary.papers}} Papers | {{thisExam.examSummary.hours}} Hours | {{thisExam.examSummary.questions}} Questions</div>
             
