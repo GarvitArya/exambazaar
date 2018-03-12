@@ -21176,7 +21176,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
                         if($scope.userAssessment){
                             $scope.testStarted = true;
-                            $scope.endTime = moment.utc($scope.userAssessment._end);
+                            $scope.endTime = moment.tz($scope.userAssessment._end, "Asia/Calcutta");
                             var timeNow = moment.utc();
                             console.log($scope.endTime);
                             console.log(timeNow);
