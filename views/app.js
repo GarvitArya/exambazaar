@@ -36735,7 +36735,7 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams){
                     return UserService.getEmails($stateParams.userId);
                 }],
-                user: function() { return {}; }
+                
             }
         })
         .state('userMarketing', {
@@ -36759,7 +36759,7 @@ function getLatLng(thisData) {
                     function(UserService){
                     return UserService.getUsers();
                 }],
-                user: function() { return {}; }
+                
             }
         })
         .state('userSurvey', {
@@ -36787,7 +36787,7 @@ function getLatLng(thisData) {
                     function(UserService){
                     return UserService.getUsers();
                 }],
-                user: function() { return {}; }
+                
             }
         })
         .state('providers', {
@@ -37050,7 +37050,7 @@ function getLatLng(thisData) {
                     return UserService.getUserShortlisted($stateParams.userId);
                 }],
                 
-                user: function() { return {}; }
+                
             }
         })
         .state('viewed', {
@@ -37079,7 +37079,7 @@ function getLatLng(thisData) {
                     return viewService.getuserviews($stateParams.userId);
                 }],
                 
-                user: function() { return {}; }
+                
             }
         })
         .state('filled', {
@@ -37107,7 +37107,7 @@ function getLatLng(thisData) {
                     return UserService.getUserFilled($stateParams.userId);
                 }],
                 
-                user: function() { return {}; }
+                
             }
         })
         .state('assigned', {
@@ -37192,7 +37192,7 @@ function getLatLng(thisData) {
                         
                 }],
                 
-                user: function() { return {}; }
+                
             }
         })
         .state('assignedToRate', {
@@ -37221,7 +37221,7 @@ function getLatLng(thisData) {
                         
                 }],
                 
-                user: function() { return {}; }
+                
             }
         })
         .state('assignedToAddContactInfo', {
@@ -37250,7 +37250,7 @@ function getLatLng(thisData) {
                         
                 }],
                 
-                user: function() { return {}; }
+                
             }
         })
         .state('filledAll', {
@@ -37278,7 +37278,7 @@ function getLatLng(thisData) {
                     return UserService.getUserFilled('all');
                 }],
                 
-                user: function() { return {}; }
+                
             }
         })
         .state('group', {
@@ -37301,7 +37301,7 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
                 }],
-                user: function() { return {}; }
+                
             }
         })
         
@@ -37330,7 +37330,7 @@ function getLatLng(thisData) {
                     return coachingService.checkLogo($stateParams.pageNumber);
                 }],
                 
-                user: function() { return {}; }
+                
             }
         })
         .state('addStream', {
@@ -37986,7 +37986,7 @@ function getLatLng(thisData) {
                      return $ocLazyLoad.load(['ngHandsontable'], {serie: true});
                 }],
                 
-                user: function() { return {}; }
+                
             }
         })
         .state('addIntern', {
@@ -38105,7 +38105,7 @@ function getLatLng(thisData) {
                     function(UserService,$stateParams){
                     return UserService.getUser($stateParams.userId);
                 }],
-                user: function() { return {}; }
+                
             }
         });
         

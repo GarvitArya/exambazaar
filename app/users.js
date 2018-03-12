@@ -792,7 +792,7 @@ router.get('/', function(req, res) {
     if (!err){
         res.json(docs);
     } else {throw err;}
-    });
+    }).limit(500);
 });
 
 router.get('/allBloggers', function(req, res) {
