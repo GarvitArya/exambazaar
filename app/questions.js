@@ -45,12 +45,68 @@ router.post('/questionToPost', function(req, res) {
         //.deepPopulate('exam test')
         .exec(function (err, thisQuestion) {
         if (!err){
-            console.log(thisQuestion._id);
-            console.log(thisQuestion.exam);
-            console.log(thisQuestion.test);
-            res.json(thisQuestion);
+            
+            var testId = thisQuestion.test.toString();
+            
+            var thisTest = test.findOne({ '_id': testId }, {name: 1},function (err, thisTest) {
+                thisQuestion.test = thisTest;
+                console.log(thisQuestion);
+                res.json(thisQuestion);
+            });
+            
+            
         } else {throw err;}
     });
+});
+
+router.post('/eqadSummary', function(req, res) {
+    
+    var eqadSummary = question.aggregate(
+    [
+        {$match: {active: true} },
+        {"$group": { "_id": { exam: "$exam" }, count:{$sum:1} } },
+        {$sort:{"count":-1}},
+        { $project: { "exam": "$_id.exam", "count": "$count", _id: 0}},
+
+    ],function(err, eqadSummary) {
+    if (!err){
+        
+        res.json(eqadSummary);
+    } else {throw err;}
+    });
+});
+
+router.post('/eqadSolutionSummary', function(req, res) {
+    var allQuestions = question
+        .find({active: true}, {questions: 1, exam: 1})
+        .limit(1000)
+        .exec(function (err, allQuestions) {
+        if (!err){
+            var allExamQuestions = {};
+            allQuestions.forEach(function(existingQuestion, qIndex){
+                var thisQuestions = existingQuestion.questions;
+                var thisExam = existingQuestion.exam.toString();
+                
+                thisQuestions.forEach(function(subQuestion, sIndex){
+                    if(subQuestion.solution && subQuestion.solution.solution && subQuestion.solution.solution.length > 5){
+                        if(allExamQuestions[thisExam]){
+                            allExamQuestions[thisExam] += 1;
+                        }else{
+                            allExamQuestions[thisExam] = 0;
+                            allExamQuestions[thisExam] += 1;
+                        }
+                    }
+                });
+                if(qIndex == allQuestions.length - 1){
+                    console.log(allExamQuestions);
+                    res.json(allExamQuestions);
+                }
+            });
+        
+            
+        } else {throw err;}
+    });
+    
 });
 
 router.post('/buildPostSchedule', function(req, res) {

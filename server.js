@@ -307,6 +307,7 @@ var allStates = [
 '/ebinternal/userInstitutes',
 '/ebinternal/academics',
 '/ebinternal/eqad/:examName/:eqadDate',
+'/ebinternal/eqadSummary',
 //'/career/aptitude',
 '/career/:domainName',
 '/assessment/:testId',

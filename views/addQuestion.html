@@ -495,7 +495,16 @@
                     </div>
                 </div>    
                     
-                    
+                <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
+                    <div class="bold paddingR10" flex="40">
+                    Does the test have detailed solutions to every question?
+                    </div>
+                    <div flex class="paddingL10">
+                        <md-switch ng-model="test.solutionkey" aria-label="Solution Key?" class="margin0 danger bold">
+                            Solutions (not just correct option) in Answerkey?
+                        </md-switch>
+                    </div>
+                </div>    
                 <div layout="row" layout-align="start center" class="width100 padding10 assignBackground">
                     <div class="bold paddingR10" flex="40">
                     Can the test be reset & taken again by the candidate?

@@ -220,7 +220,7 @@
             <!--Seal your {{exam.exam_page_name | uppercase}} preparation by attempting the Official {{exam.exam_page_name | uppercase}} Papers for<span ng-if="!years">&nbsp;years&nbsp;</span><span ng-if="years">&nbsp;{{years.min}} - {{years.max}}&nbsp;</span>in a Live, Timed, Exam Environment for FREE-->
             
             
-            Attempt Official {{exam.exam_page_name}} Question Papers for <span ng-if="!years">&nbsp;years&nbsp;</span><span ng-if="years">&nbsp;{{years.min}} - {{years.max}}&nbsp;</span> for Free in a Real, Exam-like Interface or Download PDF | {{exam.exam_page_name}} Preparation
+            Attempt Official {{exam.exam_page_name}} Question Papers for <span ng-if="!years">&nbsp;years&nbsp;</span><span ng-if="years">&nbsp;{{years.min}} - {{years.max}}&nbsp;</span> for Free in a Real, Exam-like Interface or Download PDF | {{exam.top_coaching_name}} Preparation
             
         </h2>
         <h3 class="h2Font paddingT30 bold text-center ">
@@ -278,8 +278,9 @@
             <!--<div layout="row" layout-align="center center" class=" sideactive width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton" ui-sref="questionpapers({ examName:{{'exam.name'}} })">
             {{exam.exam_page_name | uppercase}}
             </div>-->
-            <div layout="row" layout-align="center center" class="width100 paddingTB10 paddingLR40 h3Font" id="leftBarButton" ng-repeat="thisexam in thisStream.exams | orderBy: ['-rank']" ui-sref="questionpapers({ examName:{{'thisexam.name'}} })" ng-class="sideBarButtonClass(thisexam)">
-            {{thisexam.exam_page_name}}
+            <div layout="row" layout-align="center center" class="width100 paddingTB10 paddingLR20 " id="leftBarButton" ng-repeat="thisexam in thisStream.exams | orderBy: ['-rank']" ui-sref="questionpapers({ examName:{{'thisexam.name'}} })" ng-class="sideBarButtonClass(thisexam)">
+                <h3 class="margin0 h3Font">{{thisexam.exam_page_name}}</h3>
+            
             </div>
         </div>
         <div layout="row" layout-xs="column" layout-align="start start" class="width100" flex-xs="100" flex-gt-xs>

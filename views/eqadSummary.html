@@ -1,0 +1,54 @@
+<style>
+    input[type="text"],input[type="email"]
+    {
+        font-size: 14px;
+        color: #333333;
+        padding: 10px;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus{
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    .availText{
+        color: white;
+    }
+    .availText:hover{
+        color: #FF5A5F;
+    }
+    a.readLink{
+        color: black;
+    }
+    a.readLink:hover{
+        color: #20C39A;
+    }
+</style>
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+
+<div class="textBlack whiteBackground secondFont font14">
+    <div layout="row" layout-align="center start" class="width100">
+    <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center start" class="marginT20 marginB40">
+        <h1 class="h1Font width100 marginB40 subhheadingBottomBorder2 paddingB10 text-center">
+            EQAD Summary
+        </h1>
+        
+        <div layout="row" layout-align="start start" class="width100" layout-wrap>
+            <div layout="row" layout-align="start start" flex-gt-sm="50" flex-sm="50" flex-xs="100" class="padding10" ng-repeat="thisEqad in eqadSummary  | orderBy:['-nQuestions']">
+                <div layout="column" layout-align="center center" class="width100 padding10 boxShadow">
+                    
+                    <div>{{thisEqad.exam.exam_page_name}}</div>
+                    <div>{{thisEqad.nQuestions}}</div>
+                    <div>{{thisEqad.nSolutions}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

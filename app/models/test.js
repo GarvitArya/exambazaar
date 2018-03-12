@@ -35,6 +35,7 @@ var testSchema = mongoose.Schema({
         _date: { type: Date, default: Date.now },
         
     },
+    solutionkey: { type: Boolean, default: false},
     resettable: { type: Boolean, default: false},
     simulationactive: { type: Boolean, default: false},
     _created: { type: Date, default: Date.now },

@@ -716,6 +716,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveQuestion = function(question) {
             return $http.post('/api/questions/save', question);
         };
+        
+        this.eqadSummary = function() {
+            return $http.post('/api/questions/eqadSummary');
+        };
+        this.eqadSolutionSummary = function() {
+            return $http.post('/api/questions/eqadSolutionSummary');
+        };
         this.oneoff = function() {
             return $http.get('/api/questions/oneoff');
         };
@@ -2539,11 +2546,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             sanitize();
             
             //$rootScope.pageTitle = "Top Coachings for " + $scope.exam.seoname + " in India";
-            $rootScope.pageTitle = "Best " + $scope.exam.top_coaching_name + " Coaching Classes in India | " + $scope.exam.exam_page_name + " Preparation";
+            $rootScope.pageTitle = "Best " + $scope.exam.top_coaching_name + " Coaching Classes in India | " + $scope.exam.top_coaching_name + " Preparation";
             $rootScope.pageDescription = "Choose the best " + $scope.exam.top_coaching_name + " Coaching Classes in India for " + $scope.exam.exam_page_name + " Preparation with Expert Reviews and Ratings on Faculty, Infrastructure, Study Material and Environment";
             
             
-            $rootScope.pageKeywords = "Best " + $scope.exam.top_coaching_name + " Coaching, Best " + $scope.exam.top_coaching_name + " Coaching Classes, Best " + $scope.exam.top_coaching_name + " Coaching in India, Top " + $scope.exam.top_coaching_name + " Coaching, Best Coaching for " + $scope.exam.top_coaching_name + ", " + $scope.exam.top_coaching_name + " Coaching,  " + $scope.exam.top_coaching_name + " Classes,  " + $scope.exam.top_coaching_name + " Courses, " + $scope.exam.top_coaching_name + " Coaching Classes, " + $scope.exam.top_coaching_name + " Coaching Institutes, Coaching Classes for " + $scope.exam.top_coaching_name + ", " + $scope.exam.top_coaching_name + " Coaching, " + $scope.exam.top_coaching_name + " Preparation, ";
+            $rootScope.pageKeywords = "Best " + $scope.exam.top_coaching_name + " Coaching, Best " + $scope.exam.top_coaching_name + " Coaching Classes, Best " + $scope.exam.top_coaching_name + " Coaching in India, Top " + $scope.exam.top_coaching_name + " Coaching, Best Coaching for " + $scope.exam.top_coaching_name + ", " + $scope.exam.top_coaching_name + " Coaching,  " + $scope.exam.top_coaching_name + " Classes,  " + $scope.exam.top_coaching_name + " Courses, " + $scope.exam.top_coaching_name + " Coaching Classes, " + $scope.exam.top_coaching_name + " Coaching Institutes, " + $scope.exam.exam_page_name + " Preparation,  Coaching Classes for " + $scope.exam.top_coaching_name + ", " + $scope.exam.top_coaching_name + " Coaching, " + $scope.exam.top_coaching_name + " Preparation, ";
             //$rootScope.pageDescription = "Search for " + $scope.subcategory.displayname + " coaching classes in " + cityNames + " and 90 other cities in India | Exambazaar - results, fees, faculty, photos, vidoes, reviews of Coaching Classes in India";
 
             //var examKeywords = "Exambazaar " + $scope.subcategory.displayname + " Coaching, "+ "Best " + $scope.subcategory.displayname + " Coaching Classes, " + "Top " + $scope.subcategory.displayname + " Coaching Centre, " + $scope.subcategory.displayname + " Coaching in India, ";
@@ -19526,11 +19533,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
            
             
-            $rootScope.pageTitle = "Exambazaar Blog: The Ultmate Guide to Competitive Exam Preparation & Careers in India";
+            $rootScope.pageTitle = "Exambazaar Blog: The Ultmate Guide to Competitive Exam Preparation & Careers";
             $rootScope.pageDescription = "Exambazaar is India's leading education blog for study tips, preparation strategies, best free resources and future prospects for 50 + Competitive Exams";
             $rootScope.pageImage = $scope.thisBlogCover;
             
-            $rootScope.pageKeywords = "Competitive Exams, Exam Tips, Study Tips, Build Resume, Best Colleges in India, Exam Preparation in India, Higher Education, Job Skills, Education Blog, Top Education Blogs, Topper Interviews, Expert Reviews, Edbites, Education News, IIT preparation, NEET preparation, SSC preparation, BANK preparation, CAT preparation, IAS preparation, CA preparation, NDA preparation, CLAT preparation, SAT preparation, IELTS preparation, NTSE preparation, NIFT preparation, Exam Tips in India, Study Tips in India, India Education Blog"
+            $rootScope.pageKeywords = "Competitive exams, exam tips, study tips, build resume, best colleges in india, exam preparation, job skills,education blog, top education blogs, India Education Blog, edbites, education news, Coaching Reviews, IIT preparation, NEET preparation, SSC preparation, BANK preparation, CAT preparation, IAS preparation, NDA preparation, CLAT preparation, IELTS preparation";
             
             $scope.goToBlog = function(blog){
                 var url = $state.href('showblog', {blogpostSlug: blog.urlslug});
@@ -21696,6 +21703,58 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });*/
 
     }]); 
+    exambazaar.controller("eqadSummaryController", 
+        [ '$scope', '$rootScope', '$mdDialog', '$timeout', 'examList', 'streamList', 'questionService', 'eqadSummary', 'eqadSolutionSummary', function($scope, $rootScope, $mdDialog, $timeout, examList, streamList, questionService, eqadSummary, eqadSolutionSummary){
+            $scope.exams = examList.data;
+            $scope.streams = streamList.data;
+            var eqadSummary = eqadSummary.data;
+            var eqadSolutionSummary = eqadSolutionSummary.data;
+            
+            console.log(eqadSolutionSummary);
+            $scope.eqadSummary = [];
+            
+            var allExamIds = $scope.exams.map(function(a) {return a._id.toString();});
+            
+            eqadSummary.forEach(function(thisExam, index){
+                var examId = thisExam.exam.toString();
+                var eIndex = allExamIds.indexOf(examId);
+                
+                if(eIndex != -1){
+                    var newEqad = {
+                        exam: $scope.exams[eIndex],
+                        nQuestions: Number(thisExam.count),
+                    };
+                    $scope.eqadSummary.push(newEqad);
+                }else{
+                    
+                }
+                
+            });
+            
+            allExamIds = $scope.eqadSummary.map(function(a) {return a.exam._id.toString();});
+            
+            for (var property in eqadSolutionSummary) {
+                if (eqadSolutionSummary.hasOwnProperty(property)) {
+                    var examId = property.toString();
+                    var eIndex = allExamIds.indexOf(examId);
+                    console.log(examId);
+                    console.log(eIndex);
+                    if(eIndex != -1){
+                        console.log($scope.eqadSummary[eIndex]);
+                        $scope.eqadSummary[eIndex].nSolutions = eqadSolutionSummary[property];
+                    }else{
+
+                    }
+                    
+                    
+                    
+                }
+            }
+            
+            console.log($scope.eqadSummary);
+            
+    }]);
+        
     exambazaar.controller("scheduleQADController", 
         [ '$scope', '$rootScope', 'thisuser', 'allPages', 'socialMediaCredentialService', '$mdDialog', '$timeout', 'examList', 'streamList', 'questionService', function($scope, $rootScope, thisuser, allPages, socialMediaCredentialService, $mdDialog, $timeout, examList, streamList, questionService){
             $scope.user = thisuser.data;
@@ -22137,7 +22196,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     var backdate = new Date(newDate).getTime();
                     //console.log(backdate);
 
-                    var scheduledTime = moment().add(60, "minutes").unix();
+                    var scheduledTime = moment().add(10, "minutes").unix();
                     //schedule time should be from 10 minutes to 6 months from now
                     
                     if(nImages == 0){
@@ -28472,7 +28531,6 @@ function getLatLng(thisData) {
         [ '$scope', '$rootScope', '$cookies', 'thisexam', 'ExamService', '$http', '$state', '$mdDialog', '$timeout', 'testService', 'Notification', 'officialPapers', 'officialPapersStreamExam', 'viewService', '$location', 'screenSize', function($scope, $rootScope, $cookies, thisexam, ExamService, $http, $state, $mdDialog, $timeout, testService, Notification, officialPapers, officialPapersStreamExam, viewService, $location, screenSize){
             $scope.slideCount = 2;
             $scope.exam = thisexam.data;
-            console.log($scope.exam);
             
             $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.png';
             if($scope.exam.officialpaperscoverphoto && $scope.exam.officialpaperscoverphoto != ''){
@@ -28557,7 +28615,7 @@ function getLatLng(thisData) {
             }
             
             
-            $rootScope.pageDescription = "Attempt Official " + $scope.exam.exam_page_name + " Question Papers for <years> for Free in a Real, Exam-like Interface | " + $scope.exam.exam_page_name + " Preparation";
+            $rootScope.pageDescription = "Attempt Official " + $scope.exam.exam_page_name + " Question Papers for <years> for Free in a Real, Exam-like Interface | " + $scope.exam.top_coaching_name + " Preparation";
             
             var keywordString = '';
             //var suffix = [' Question Papers ', ' Question Papers PDF ', ' Question Papers & Answers PDF ' , ' Official Papers '];
@@ -28565,6 +28623,10 @@ function getLatLng(thisData) {
             
             suffix.forEach(function(thisSuffix, index){
                 var newKeyWord = $scope.exam.exam_page_name + ' ' + thisSuffix;
+                if(thisSuffix == "Preparation"){
+                    newKeyWord = $scope.exam.top_coaching_name + ' ' + thisSuffix;
+                }
+                
                 keywordString = keywordString + newKeyWord + ', ';
             });
             
@@ -29183,7 +29245,7 @@ function getLatLng(thisData) {
             $rootScope.pageDescription = "Read latest " + examPageName + " 2018 updates - " + examPageName + " Notification, Registration, Dates, Eligibility and more | Enjoy exclusive access to Previous " + examPageName + " Question Papers";
             
             
-            var keyWordString = examPageName + ", " + examPageName + " 2018,  " + examPageName + " 2017, " + examPageName + " 2018 Exam, " + examPageName + " Exam,  " + examPageName + " Registration, " + examPageName + " 2018 Registration, " + examPageName + " Exam Dates, " + examPageName + " 2018 Dates, " + examPageName + " Exam Syllabus, " + examPageName + " Brochure, " + examPageName + " Notification, " + examPageName + " Exam Pattern, " + examPageName + " Eligibility, " + examPageName + "  Books, " + examPageName + " Question Papers, " + examPageName + " Preparation";
+            var keyWordString = examPageName + ", " + examPageName + " 2018,  " + examPageName + " 2017, " + examPageName + " 2018 Exam, " + examPageName + " Exam,  " + examPageName + " Registration, " + examPageName + " 2018 Registration, " + examPageName + " Exam Dates, " + examPageName + " 2018 Dates, " + examPageName + " Exam Syllabus, " + examPageName + " Brochure, " + examPageName + " Notification, " + examPageName + " Exam Pattern, " + examPageName + " Eligibility, " + examPageName + "  Books, " + examPageName + " Question Papers, " + examPageName + " Preparation, " + $scope.exam.top_coaching_name + " Coaching";
             
             $rootScope.pageKeywords = keyWordString;
     }]);
@@ -35246,6 +35308,40 @@ function getLatLng(thisData) {
                 }],
                 
                 
+            }
+        })
+        .state('eqadSummary', {
+            url: '/ebinternal/eqadSummary',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'eqadSummary.html',
+                    controller: 'eqadSummaryController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                eqadSummary: ['questionService',
+                    function(questionService){
+                    return questionService.eqadSummary();
+                }],
+                eqadSolutionSummary: ['questionService',
+                    function(questionService){
+                    return questionService.eqadSolutionSummary();
+                }],
+                examList: ['ExamService',
+                    function(ExamService){
+                    return ExamService.getExams();
+                }],
+                streamList: ['StreamService',
+                    function(StreamService){
+                    return StreamService.getStreams();
+                }],
             }
         })
         .state('scheduleQAD', {
