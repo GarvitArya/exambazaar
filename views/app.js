@@ -21176,8 +21176,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
                         if($scope.userAssessment){
                             $scope.testStarted = true;
-                            $scope.endTime = moment($scope.userAssessment._end);
-                            var timeNow = moment();
+                            $scope.endTime = moment.tz($scope.userAssessment._end, "Asia/Calcutta");
+                            var timeNow = moment.tz();
                             if($scope.endTime.diff(timeNow) < 0 || $scope.userAssessment.submitted){
                                 $scope.testOver = true;
                                 console.log($scope.endTime);
@@ -21687,9 +21687,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             window.setInterval(function(){
                 //console.log('Here');
                 if($scope.userAssessment){
-                    var timeNow = moment();
-                    var endTime = moment($scope.endTime);
-                    if(timeNow.diff(endTime)  > 0 && !$scope.userAssessment.submitted){
+                    $scope.endTime = moment.tz($scope.userAssessment._end, "Asia/Calcutta");
+                    var timeNow = moment.tz();
+                    if($scope.endTime.diff(timeNow) < 0 && !$scope.userAssessment.submitted){
                         console.log('2. Test is over');
                         $scope.testOver = true;
                         $scope.submitAssessmentHelper();
