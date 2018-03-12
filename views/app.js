@@ -21649,7 +21649,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         $scope.userAssessment = adata;
                         if($scope.userAssessment){
                             $scope.testStarted = true;
-                            $scope.endTime = moment.utc($scope.userAssessment._end, "Asia/Calcutta");
+                            $scope.endTime = moment($scope.userAssessment._end).utc();
                             var timeNow = moment.utc();
                             console.log($scope.endTime);
                             console.log(timeNow);
