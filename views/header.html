@@ -233,7 +233,7 @@
                     <a href="#">{{stream.stream}}</a>
                     <ul class="dropdown-menu">
                         <li ng-repeat="exam in stream.exams | orderBy:['-rank']">
-                            <a ui-sref="questionpapers({ examName:{{'exam.examName'}} })">{{exam.exam}} | {{exam.examSummary.papers}} Papers</a>
+                            <a ui-sref="newquestionpapers({ question_papers_urlslug:{{'exam.question_papers_urlslug'}} })">{{exam.exam}} | {{exam.examSummary.papers}} Papers</a>
                         </li>
 
                     </ul>

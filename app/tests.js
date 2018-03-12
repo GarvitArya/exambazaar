@@ -910,7 +910,7 @@ router.get('/officialPapersStreamExam', function(req, res) {
             .find({active: true}, {})
             .exec(function (err, allStreams) {
                 var allExams = exam
-                .find({active: true, stream: {$exists: true}}, {name:1, displayname:1, seoname: 1, stream:1, rank: 1, logo: 1, exam_page_name : 1})
+                .find({active: true, stream: {$exists: true}}, {name:1, displayname:1, seoname: 1, stream:1, rank: 1, logo: 1, exam_page_name : 1, question_papers_urlslug: 1})
                 .exec(function (err, allExams) {
                     var allExamIds = allExams.map(function(a) {return a._id.toString();});
                     var allStreamIds = allStreams.map(function(a) {return a._id.toString();});
@@ -979,6 +979,7 @@ router.get('/officialPapersStreamExam', function(req, res) {
                                 name: thisExam.name,
                                 displayname: thisExam.displayname,
                                 seoname: thisExam.seoname,
+                                question_papers_urlslug: thisExam.question_papers_urlslug,
                                 exam_page_name: thisExam.exam_page_name,
                                 active: thisExam.active,
                                 rank: thisExam.rank,
@@ -1025,6 +1026,32 @@ router.get('/officialPapers/:examName', function(req, res) {
         .exec(function (err, thisExam) {
         if (!err){
             //console.log(thisExam);
+            if(thisExam){
+                var examId = thisExam._id;
+                var allTests = test
+                    .find({exam: examId, official: true, simulationactive: true}, {name: 1, description: 1, duration: 1, simulationactive: 1, year: 1, nQuestions: 1, simulationrank: 1, downloadable: 1, url: 1, _actualdate: 1})
+                    .exec(function (err, allTests) {
+                    if (!err){
+                        res.json(allTests);
+                    } else {throw err;}
+                });
+            }else{
+                res.json([]);
+            }
+            
+        } else {throw err;}
+    });
+});
+
+
+router.get('/officialPapersByQPUrlSlug/:question_papers_urlslug', function(req, res) {
+    var question_papers_urlslug = req.params.question_papers_urlslug;
+    console.log(question_papers_urlslug);
+    var thisExam = exam
+        .findOne({'question_papers_urlslug': question_papers_urlslug}, {_id: 1, question_papers_urlslug: 1})
+        .exec(function (err, thisExam) {
+        if (!err){
+            console.log(thisExam);
             if(thisExam){
                 var examId = thisExam._id;
                 var allTests = test

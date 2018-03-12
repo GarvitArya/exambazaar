@@ -846,6 +846,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.officialPapersByExamName = function(examName) {
             return $http.get('/api/tests/officialPapers/'+examName, {examName: examName});
         };
+        this.officialPapersByQPUrlSlug = function(question_papers_urlslug) {
+            return $http.get('/api/tests/officialPapersByQPUrlSlug/'+question_papers_urlslug, {question_papers_urlslug: question_papers_urlslug});
+        };
+        
         this.officialPapersStreamExam = function() {
             return $http.get('/api/tests/officialPapersStreamExam');
         };
@@ -887,6 +891,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getExamByName = function(examName) {
             return $http.get('/api/exams/exam/'+examName, {examName: examName});
         };
+        this.getExamByQPUrlslug = function(examQPUrlslug) {
+            return $http.get('/api/exams/examQPUrlslug/'+examQPUrlslug, {examQPUrlslug: examQPUrlslug});
+        };
+        
         this.getExamByUrlSlug = function(examUrlSlug) {
             return $http.get('/api/exams/examUrlSlug/'+examUrlSlug, {examUrlSlug: examUrlSlug});
         };
@@ -12855,10 +12863,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             thisStream.exams.forEach(function(thisExam, eindex){
                             if(thisExam.tests && thisExam.tests.length > 0){
                                 var examPapers = thisExam.tests.map(function(a) {return a.toString();});
+                                
                                 var newExam = {
                                     exam: thisExam.displayname,
                                     exam_page_name: thisExam.exam_page_name,
                                     examName: thisExam.name,
+                                    question_papers_urlslug: thisExam.question_papers_urlslug,
                                     rank: thisExam.rank,
                                     logo: thisExam.logo,
                                 };
@@ -28532,6 +28542,15 @@ function getLatLng(thisData) {
             $scope.slideCount = 2;
             $scope.exam = thisexam.data;
             
+            
+            var qpURL = $scope.exam.question_papers_urlslug;
+            if(qpURL){
+                qpURL = "https://www.exambazaar.com/qp/" + qpURL;
+                $scope.canonicalFlip = true;
+                $scope.canonicalUrl = qpURL;
+                console.log("Canonical URL is: " + $scope.canonicalUrl);
+            }
+            
             $scope.defaultCoverPhoto = 'https://www.exambazaar.com/images/generic_question_papers.png';
             if($scope.exam.officialpaperscoverphoto && $scope.exam.officialpaperscoverphoto != ''){
                 $scope.defaultCoverPhoto = $scope.exam.officialpaperscoverphoto;
@@ -37769,19 +37788,6 @@ function getLatLng(thisData) {
                     function(ExamService,$stateParams) {
                     return ExamService.getExamByName($stateParams.examName);    
                 }],
-                
-                /*thisExamPattern: ['ExamService', '$stateParams',
-                    function(ExamService,$stateParams) {
-                    return ExamService.getExamPatternByName($stateParams.examName);    
-                }],
-                thisExamBooks: ['ExamService', '$stateParams',
-                    function(ExamService,$stateParams) {
-                    return ExamService.getExamBooksByName($stateParams.examName);    
-                }],
-                thisExamDegrees: ['ExamService', '$stateParams',
-                    function(ExamService,$stateParams) {
-                    return ExamService.getDegreesByName($stateParams.examName);    
-                }],*/
                 officialPapersStreamExam: ['testService', '$stateParams',
                     function(testService){
                     return testService.officialPapersStreamExam();
@@ -37790,24 +37796,36 @@ function getLatLng(thisData) {
                     function(testService, $stateParams){
                     return testService.officialPapersByExamName($stateParams.examName);
                 }],
-                /*loadAngularTimeline: ['$ocLazyLoad', function($ocLazyLoad) {
-                     return $ocLazyLoad.load(['angularTimeline'], {serie: true});
+            }
+        })
+        .state('newquestionpapers', {
+            url: '/qp/:question_papers_urlslug',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+                    
+                },
+                'body':{
+                    templateUrl: 'officialpapers.html',
+                    controller: 'officialPapersController',
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            },
+            resolve: {
+                thisexam: ['ExamService', '$stateParams',
+                    function(ExamService,$stateParams) {
+                    return ExamService.getExamByQPUrlslug($stateParams.question_papers_urlslug);    
                 }],
-                loadUICarousel: ['$ocLazyLoad', function($ocLazyLoad) {
-                     return $ocLazyLoad.load(['UICarousel'], {serie: true});
+                officialPapersStreamExam: ['testService', '$stateParams',
+                    function(testService){
+                    return testService.officialPapersStreamExam();
                 }],
-                */
-                /*
-                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
-                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
+                officialPapers: ['testService', '$stateParams',
+                    function(testService, $stateParams){
+                    return testService.officialPapersByQPUrlSlug($stateParams.question_papers_urlslug);
                 }],
-                suggestedblogs: ['blogpostService','$stateParams',
-                    function(blogpostService,$stateParams){
-                    return blogpostService.suggestedblogs($stateParams.examName);
-                }],*/
-                /*bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
-                     return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});
-                }],*/
             }
         })
         .state('addQuestion', {

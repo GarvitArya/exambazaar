@@ -267,6 +267,7 @@ var allStates = [
 '/ebinternal/e/:examUrlSlug',
 '/questionpapers',
 '/questionpapers/:examName',
+'/qp/:question_papers_urlslug',
 '/ebinternal/extractEmails',
 '/ebinternal/master/:masterId/addMaster',
 '/ebinternal/master/:masterId/dashboard',

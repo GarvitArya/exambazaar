@@ -114,15 +114,15 @@ router.get('/generateurlslugs', function(req, res) {
     
     
     var allExams = exam
-        .find({active: true}, {name:1, top_coaching_name: 1})
+        .find({active: true}, {name:1, exam_page_name: 1})
         //.deepPopulate('stream')
         .exec(function (err, allExams) {
         if (!err){
             
             allExams.forEach(function(thisExam, index){
-                var examName = "Best " + thisExam.top_coaching_name + " Coaching Classes";
+                var examName = thisExam.exam_page_name + " Question Papers";
                 
-                thisExam.top_coaching_urlslug = slugify(examName);
+                thisExam.question_papers_urlslug = slugify(examName);
                 
                 
                 thisExam.save(function(err, thisExam) {
@@ -293,6 +293,19 @@ router.get('/exam/:examName', function(req, res) {
     var examName = req.params.examName;
     var thisExam = exam
         .findOne({'name': examName})
+        .deepPopulate('stream')
+        .exec(function (err, thisExam) {
+        if (!err){
+            //console.log(thisExam);
+            res.json(thisExam);
+        } else {throw err;}
+    });
+});
+
+router.get('/examQPUrlslug/:examQPUrlslug', function(req, res) {
+    var examQPUrlslug = req.params.examQPUrlslug;
+    var thisExam = exam
+        .findOne({'question_papers_urlslug': examQPUrlslug})
         .deepPopulate('stream')
         .exec(function (err, thisExam) {
         if (!err){
