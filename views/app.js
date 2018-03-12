@@ -21097,7 +21097,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var sessionuser = $cookies.getObject( 'sessionuser');
                 $scope.test = thistest.data;
                 $scope.testExam = thistestExam.data;
-                //console.log($scope.testExam);
+                console.log($scope.testExam);
                 $scope.currURL = "https://www.exambazaar.com/questionpapers/" + $scope.testExam.name;
                 if($scope.test.instructions && $scope.test.instructions.length > 0){
                     $scope.instructions = $scope.test.instructions;    
@@ -37700,20 +37700,15 @@ function getLatLng(thisData) {
                     function(testService, $stateParams){
                     return testService.getExamTestsByExamName($stateParams.examName);
                 }],
+                suggestedblogs: ['blogpostService','$stateParams',
+                    function(blogpostService,$stateParams){
+                    return blogpostService.suggestedblogs($stateParams.examName);
+                }],
                 loadAngularTimeline: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['angularTimeline'], {serie: true});
                 }],
                 loadUICarousel: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['UICarousel'], {serie: true});
-                }],
-                
-                /*
-                ngFileUpload: ['$ocLazyLoad', function($ocLazyLoad) {
-                     return $ocLazyLoad.load(['ngFileUpload'], {serie: true});
-                }],*/
-                suggestedblogs: ['blogpostService','$stateParams',
-                    function(blogpostService,$stateParams){
-                    return blogpostService.suggestedblogs($stateParams.examName);
                 }],
                 bootstrapAffix: ['$ocLazyLoad', function($ocLazyLoad) {
                      return $ocLazyLoad.load(['bootstrapAffix'], {serie: true});

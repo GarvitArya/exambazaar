@@ -1036,7 +1036,26 @@ router.get('/officialPapers/:examName', function(req, res) {
                     } else {throw err;}
                 });
             }else{
-                res.json([]);
+                var thisExam = exam
+                    .findOne({'urlslug': examName})
+                    .exec(function (err, thisExam) {
+                    if (!err){
+                        //console.log(thisExam);
+                        if(thisExam){
+                            var examId = thisExam._id;
+                            var allTests = test
+                                .find({exam: examId, official: true, simulationactive: true}, {name: 1, description: 1, duration: 1, simulationactive: 1, year: 1, nQuestions: 1, simulationrank: 1, downloadable: 1, url: 1, _actualdate: 1})
+                                .exec(function (err, allTests) {
+                                if (!err){
+                                    res.json(allTests);
+                                } else {throw err;}
+                            });
+                        }else{
+                            res.json([]);
+                        }
+
+                    } else {throw err;}
+                });
             }
             
         } else {throw err;}
@@ -1281,7 +1300,7 @@ router.get('/testExam/:testId', function(req, res) {
             var examId = thisTest.exam.toString();
             
             var thisExam = exam
-            .findOne({ '_id': examId, active: true },{name: 1, displayname:1, seoname: 1})
+            .findOne({ '_id': examId},{name: 1, displayname:1, seoname: 1})
             .exec(function (err, thisExam) {
             if (!err){
                 if(thisExam && thisExam.seoname){

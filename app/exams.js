@@ -297,7 +297,20 @@ router.get('/exam/:examName', function(req, res) {
         .exec(function (err, thisExam) {
         if (!err){
             //console.log(thisExam);
-            res.json(thisExam);
+            if(thisExam){
+                res.json(thisExam);
+            }else{
+                var thisExam = exam
+                    .findOne({'urlslug': examName})
+                    .deepPopulate('stream')
+                    .exec(function (err, thisExam) {
+                    if (!err){
+                        res.json(thisExam);
+
+                    } else {throw err;}
+                });    
+            }
+            
         } else {throw err;}
     });
 });
@@ -360,11 +373,26 @@ router.get('/pattern/:examName', function(req, res) {
         .deepPopulate('exampattern')
         .exec(function (err, thisExam) {
         if (!err){
-            var exampattern = null;
-            if(thisExam.exampattern){
-                exampattern = thisExam.exampattern;
+            if(thisExam){
+                var exampattern = null;
+                if(thisExam.exampattern){
+                    exampattern = thisExam.exampattern;
+                }
+                res.json(exampattern);
+            }else{
+                var thisExam = exam
+                .findOne({'urlslug': examName},{exampattern:1})
+                .deepPopulate('exampattern')
+                .exec(function (err, thisExam) {
+                if (!err){
+                    var exampattern = null;
+                    if(thisExam.exampattern){
+                        exampattern = thisExam.exampattern;
+                    }
+                    res.json(exampattern);
+                } else {throw err;}
+            });
             }
-            res.json(exampattern);
         } else {throw err;}
     });
 });
@@ -390,11 +418,27 @@ router.get('/books/:examName', function(req, res) {
         .deepPopulate('exambooks')
         .exec(function (err, thisExam) {
         if (!err){
-            var exambooks = null;
-            if(thisExam.exambooks){
-                exambooks = thisExam.exambooks;
+            if(thisExam){
+                var exambooks = null;
+                if(thisExam.exambooks){
+                    exambooks = thisExam.exambooks;
+                }
+                res.json(exambooks);
+            }else{
+                var examName = req.params.examName;
+                var thisExam = exam
+                    .findOne({'urlslug': examName},{exambooks:1})
+                    .deepPopulate('exambooks')
+                    .exec(function (err, thisExam) {
+                    if (!err){
+                        var exambooks = null;
+                        if(thisExam.exambooks){
+                            exambooks = thisExam.exambooks;
+                        }
+                        res.json(exambooks);
+                    } else {throw err;}
+                });
             }
-            res.json(exambooks);
         } else {throw err;}
     });
 });
@@ -420,29 +464,61 @@ router.get('/degrees/:examName', function(req, res) {
         //.deepPopulate('examdegrees')
         .exec(function (err, thisExam) {
         if (!err){
-            var examdegrees = null;
-            if(thisExam.examdegrees){
-                examdegrees = thisExam.examdegrees;
-            }
-            var fullexamdegrees = [];
-            if(!examdegrees){
-                examdegrees = [];
-                res.json(null);
+            if(thisExam){
+                var examdegrees = null;
+                if(thisExam.examdegrees){
+                    examdegrees = thisExam.examdegrees;
+                }
+                var fullexamdegrees = [];
+                if(!examdegrees){
+                    examdegrees = [];
+                    res.json(null);
+                }else{
+
+                    examdegrees.forEach(function(thisBlogId, index){
+                        examdegrees[index] = thisBlogId.toString();
+                    });
+                    var blogposts = blogpost
+                        .find({_id: { $in : examdegrees }, active: true}, {title:1, coverPhoto: 1, urlslug: 1, readingTime: 1, seoDescription: 1})
+                        .exec(function(err, blogposts) {
+                        if (!err){
+                            res.json(blogposts);
+                        } else {throw err;}
+                    });
+                }
             }else{
+                var thisExam = exam
+                .findOne({'urlslug': examName},{examdegrees:1})
+                //.deepPopulate('examdegrees')
+                .exec(function (err, thisExam) {
+                if (!err){
+                    var examdegrees = null;
+                    if(thisExam.examdegrees){
+                        examdegrees = thisExam.examdegrees;
+                    }
+                    var fullexamdegrees = [];
+                    if(!examdegrees){
+                        examdegrees = [];
+                        res.json(null);
+                    }else{
+
+                        examdegrees.forEach(function(thisBlogId, index){
+                            examdegrees[index] = thisBlogId.toString();
+                        });
+                        var blogposts = blogpost
+                            .find({_id: { $in : examdegrees }, active: true}, {title:1, coverPhoto: 1, urlslug: 1, readingTime: 1, seoDescription: 1})
+                            .exec(function(err, blogposts) {
+                            if (!err){
+                                res.json(blogposts);
+                            } else {throw err;}
+                        });
+                    }
+                } else {throw err;}
+            });
                 
-                examdegrees.forEach(function(thisBlogId, index){
-                    examdegrees[index] = thisBlogId.toString();
-                });
-                var blogposts = blogpost
-                    .find({_id: { $in : examdegrees }, active: true}, {title:1, coverPhoto: 1, urlslug: 1, readingTime: 1, seoDescription: 1})
-                    .exec(function(err, blogposts) {
-                    if (!err){
-                        res.json(blogposts);
-                    } else {throw err;}
-                });
+                
+                
             }
-            
-            
         } else {throw err;}
     });
 });
