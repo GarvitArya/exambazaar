@@ -60,7 +60,7 @@
     <div layout="row" layout-align="start center" class="" >
         <div hide-gt-sm ng-if="!showMobileSearch" layout="row" layout-align="start center" class="paddingL20">
             <i class="fa fa-bars font32" aria-hidden="true" ng-class="headerLogoCSS()" ng-click="toggleLeft()"></i>
-            <!--<a class="navbar-brand" href="/">
+            <!--<a rel="nofollow" class="navbar-brand" href="/">
                 <span ng-class="headerLogoCSS()">
                     EB
                 </span>
@@ -68,17 +68,17 @@
         </div>
         
         <div  layout="row" layout-align="start center" flex>
-        <a hide-sm hide-xs class="navbar-brand" href="/">
+        <a rel="nofollow" hide-sm hide-xs class="navbar-brand" href="/">
             <span ng-class="headerLogoCSS()">
                 EXAMBAZAAR
             </span>
         </a>
         <ul hide-sm hide-xs class="nav navbar-nav" ng-if="!searchMode">
             <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog</a>
+              <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog</a>
               <ul class="dropdown-menu" >
               <li >
-                    <a ui-sref="blog">
+                    <a rel="nofollow" ui-sref="blog">
                     <div flex layout="row" layout-align="start center">
                         <div layout="row" layout-align="start center" class="paddingR10">
                             <img src="icons/eb.png" id="userPic" class="img-circle"/>
@@ -93,14 +93,14 @@
                     </a>
                 </li>
               <li >
-                <a ui-sref="blog">
+                <a rel="nofollow" ui-sref="blog">
                 <div flex layout="row" layout-align="start center" class="paddingT20">
                     Recommended Reading
                 </div>
                 </a>
                 </li> 
               <li ng-repeat="blog in headerBlogs"  ng-if="headerBlogs && headerBlogs.length > 0">
-                    <a ui-sref="showblog({ blogpostSlug:{{'blog.urlslug'}} })">
+                    <a rel="nofollow" ui-sref="showblog({ blogpostSlug:{{'blog.urlslug'}} })">
                     <div flex layout="row" layout-align="start center">
                         <div layout="row" layout-align="start center" class="paddingR10">
                             <img ng-src="{{blog.user.image}}" id="userPic" class="img-circle"/>
@@ -129,10 +129,10 @@
             </li>
            
             <li class="dropdown">
-                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Exams<!--<span class="caret"></span>--></a>
+                  <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Exams<!--<span class="caret"></span>--></a>
                   <ul class="dropdown-menu">
                     <li >
-                        <a ui-sref="eligibility">
+                        <a rel="nofollow" ui-sref="eligibility">
                         <div flex layout="row" layout-align="start center" class="">
                             <div layout="row" layout-align="start center" class="paddingR10">
                                 <img src="icons/eb.png" id="userPic" class="img-circle"/>
@@ -148,10 +148,10 @@
                     </li>
                       
                     <li class="menu-item dropdown dropdown-submenu" ng-repeat="streamrank in streamranks | orderBy:['-rank']" ng-if="streamrank.active">
-                        <a href="#">{{streamrank.stream}}</a>
+                        <a rel="nofollow" href="#">{{streamrank.stream}}</a>
                         <ul class="dropdown-menu">
                             <li ng-repeat="exam in streamexams[streamrank.stream] | orderBy:['-rank']" ng-if="exam.active">
-                                <a ui-sref="exam({ examName:{{'exam.name'}} })">{{exam.seoname}}</a>
+                                <a rel="nofollow" ui-sref="exam({ examName:{{'exam.name'}} })">{{exam.seoname}}</a>
                             </li>
                             
                         </ul>
@@ -160,16 +160,16 @@
                    </ul>
                 </li>
             <li class="dropdown">
-                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Degrees</a>
+                  <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Degrees</a>
                   <ul class="dropdown-menu">
                     
                     <li class="menu-item dropdown dropdown-submenu" ng-repeat="streamrank in streamranks | orderBy:['-rank']" ng-if="streamrank.degreeblogs.length > 0">
-                        <a href="#">{{streamrank.stream}}</a>
+                        <a rel="nofollow" href="#">{{streamrank.stream}}</a>
                         <ul class="dropdown-menu">
                             <!--<li>
                             </li>-->
                             <li ng-repeat="degreeblog in streamrank.degreeblogs">
-                                <a ui-sref="showblog({ blogpostSlug:{{'degreeblog.urlslug'}} })">{{degreeblog.title}}</a>
+                                <a rel="nofollow" ui-sref="showblog({ blogpostSlug:{{'degreeblog.urlslug'}} })">{{degreeblog.title}}</a>
                             </li>
                             
                         </ul>
@@ -179,10 +179,10 @@
                 </li>
             
             <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Top Coachings</a>
+              <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Top Coachings</a>
               <ul class="dropdown-menu">
                   <li>
-                    <a ui-sref="aroundme">
+                    <a rel="nofollow" ui-sref="aroundme">
                     <div flex layout="row" layout-align="start center" class="">
                         <div layout="row" layout-align="start center" class="paddingR10">
                             <img src="icons/eb.png" id="userPic" class="img-circle"/>
@@ -197,10 +197,10 @@
                     </a>
                     </li>
                 <li class="menu-item dropdown dropdown-submenu" ng-repeat="streamrank in streamranks | orderBy:['-rank']" ng-if="streamrank.active">
-                    <a href="#">{{streamrank.stream}}</a>
+                    <a rel="nofollow" href="#">{{streamrank.stream}}</a>
                     <ul class="dropdown-menu">
                         <li ng-repeat="exam in streamexams[streamrank.stream] | orderBy:['-rank']" ng-if="exam.active">
-                            <a ui-sref="topCoaching({ categoryName:{{'streamrank.name'}}, subCategoryName:{{'exam.name'}} })">{{exam.seoname}}</a>
+                            <a rel="nofollow" ui-sref="topCoaching({ categoryName:{{'streamrank.name'}}, subCategoryName:{{'exam.name'}} })">{{exam.seoname}}</a>
                         </li>
 
                     </ul>
@@ -212,10 +212,10 @@
             
             
             <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Question Papers</a>
+              <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">Question Papers</a>
               <ul class="dropdown-menu">
                   <li>
-                    <a ui-sref="allquestionpapers">
+                    <a rel="nofollow" ui-sref="allquestionpapers">
                     <div flex layout="row" layout-align="start center" class="">
                         <div layout="row" layout-align="start center" class="paddingR10">
                             <img src="icons/eb.png" id="userPic" class="img-circle"/>
@@ -230,10 +230,10 @@
                     </a>
                     </li>
                 <li class="menu-item dropdown dropdown-submenu" ng-repeat="stream in opStreams | orderBy:['-rank']">
-                    <a href="#">{{stream.stream}}</a>
+                    <a rel="nofollow" href="#">{{stream.stream}}</a>
                     <ul class="dropdown-menu">
                         <li ng-repeat="exam in stream.exams | orderBy:['-rank']">
-                            <a ui-sref="newquestionpapers({ question_papers_urlslug:{{'exam.question_papers_urlslug'}} })">{{exam.exam}} | {{exam.examSummary.papers}} Papers</a>
+                            <a rel="nofollow" ui-sref="newquestionpapers({ question_papers_urlslug:{{'exam.question_papers_urlslug'}} })">{{exam.exam}} | {{exam.examSummary.papers}} Papers</a>
                         </li>
 
                     </ul>
@@ -242,78 +242,78 @@
                </ul>
             </li>
             
-            <!--<li ng-if="sessionuser.userType=='Student'"><a ui-sref="aroundme">Around Me</a></li>-->
-            <li ng-if="sessionuser.userType=='Student'"><a ui-sref="review">Review a Coaching</a></li>
-            <li ng-if="sessionuser.userType=='Student'"><a ui-sref="eligibility">Exam Eligibility&nbsp;<i class="fa fa-star" aria-hidden="true"></i></a></li>
-            <!--<li ng-if="sessionuser.userType=='Student'"><a ui-sref="k21">K21 Test</a></li>-->
+            <!--<li ng-if="sessionuser.userType=='Student'"><a rel="nofollow" ui-sref="aroundme">Around Me</a></li>-->
+            <li ng-if="sessionuser.userType=='Student'"><a rel="nofollow" ui-sref="review">Review a Coaching</a></li>
+            <li ng-if="sessionuser.userType=='Student'"><a rel="nofollow" ui-sref="eligibility">Exam Eligibility&nbsp;<i class="fa fa-star" aria-hidden="true"></i></a></li>
+            <!--<li ng-if="sessionuser.userType=='Student'"><a rel="nofollow" ui-sref="k21">K21 Test</a></li>-->
         </ul>
         
         <div hide-sm hide-xs hide-md layout="row" layout-align="start center" ng-if="!searchMode && headerShowOptions()">
             
             <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Partner'">
-                <li><a ui-sref="partner-dashboard({ userId:{{'sessionuser.userId'}} })">Home</a></li>
-                <li><a ui-sref="claim({ coachingId:{{'sessionuser.partner[0]'}} })">Edit Listing</a></li>
-                <li><a ui-sref="offers({ coachingId:{{'sessionuser.partner[0]'}} })">Your Offers</a></li>
+                <li><a rel="nofollow" ui-sref="partner-dashboard({ userId:{{'sessionuser.userId'}} })">Home</a></li>
+                <li><a rel="nofollow" ui-sref="claim({ coachingId:{{'sessionuser.partner[0]'}} })">Edit Listing</a></li>
+                <li><a rel="nofollow" ui-sref="offers({ coachingId:{{'sessionuser.partner[0]'}} })">Your Offers</a></li>
             </ul>
 
             <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Master'">
-                <li><a ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
+                <li><a rel="nofollow" ui-sref="master-dashboard({ masterId:{{'sessionuser.userId'}} })">Home</a></li>
                 <!--
-                <li><a ng-click="sendWelcomeEmail()">Send Welcome Email</a></li>-->
+                <li><a rel="nofollow" ng-click="sendWelcomeEmail()">Send Welcome Email</a></li>-->
                 <li class="dropdown">
-                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports<!--<span class="caret"></span>--></a>
+                  <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports<!--<span class="caret"></span>--></a>
                         
                   <ul class="dropdown-menu">
-                    <li><a ui-sref="analytics">Analytics</a></li>
+                    <li><a rel="nofollow" ui-sref="analytics">Analytics</a></li>
                     
                     <li class="menu-item dropdown dropdown-submenu">
-                    <a href="#">Send Emails</a>
+                    <a rel="nofollow" href="#">Send Emails</a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Email to CI</a></li>
-                        <li><a ui-sref="emailToPublications({ userId:{{'sessionuser.userId'}} })">Email to Publications</a></li>
+                        <li><a rel="nofollow" ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Email to CI</a></li>
+                        <li><a rel="nofollow" ui-sref="emailToPublications({ userId:{{'sessionuser.userId'}} })">Email to Publications</a></li>
 
                     </ul>
                     </li>  
                       
                     <li class="menu-item dropdown dropdown-submenu">
-                    <a href="#">User Related</a>
+                    <a rel="nofollow" href="#">User Related</a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="manageUsers({ masterId:{{'sessionuser.userId'}} })">Manage Users</a></li>
-                        <li><a ui-sref="userSurvey({ userId:{{'sessionuser.userId'}} })">User Survey</a></li>
-                        <li><a ui-sref="activeUsers({ userId:{{'sessionuser.userId'}} })">Active Users</a></li>
-                        <li><a ui-sref="userMarketing">User Marketing</a></li>
-                        <li><a ui-sref="addIntern({ userId:{{'sessionuser.userId'}} })">Add Intern User</a></li>
-                        <li><a ui-sref="addMaster({ masterId:{{'sessionuser.userId'}} })">Add Master User</a></li>
+                        <li><a rel="nofollow" ui-sref="manageUsers({ masterId:{{'sessionuser.userId'}} })">Manage Users</a></li>
+                        <li><a rel="nofollow" ui-sref="userSurvey({ userId:{{'sessionuser.userId'}} })">User Survey</a></li>
+                        <li><a rel="nofollow" ui-sref="activeUsers({ userId:{{'sessionuser.userId'}} })">Active Users</a></li>
+                        <li><a rel="nofollow" ui-sref="userMarketing">User Marketing</a></li>
+                        <li><a rel="nofollow" ui-sref="addIntern({ userId:{{'sessionuser.userId'}} })">Add Intern User</a></li>
+                        <li><a rel="nofollow" ui-sref="addMaster({ masterId:{{'sessionuser.userId'}} })">Add Master User</a></li>
 
                     </ul>
                     </li>  
                     <li class="menu-item dropdown dropdown-submenu">
-                    <a href="#">EB Reports</a>
+                    <a rel="nofollow" href="#">EB Reports</a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="charting">Charting</a></li>
-                        <li><a ui-sref="allreviews">All Reviews</a></li>
-                        <li><a ui-sref="appointments">All Appointments</a></li>
-                        <li><a ui-sref="allTests">All Tests</a></li>
-                        <li><a ui-sref="testAssessmentResult">Test Results</a></li>
+                        <li><a rel="nofollow" ui-sref="charting">Charting</a></li>
+                        <li><a rel="nofollow" ui-sref="allreviews">All Reviews</a></li>
+                        <li><a rel="nofollow" ui-sref="appointments">All Appointments</a></li>
+                        <li><a rel="nofollow" ui-sref="allTests">All Tests</a></li>
+                        <li><a rel="nofollow" ui-sref="testAssessmentResult">Test Results</a></li>
                         
-                        <li><a ui-sref="allOffers">All Offers</a></li>
+                        <li><a rel="nofollow" ui-sref="allOffers">All Offers</a></li>
                         
-                        <li><a ui-sref="scheduleQAD({ userId:{{'sessionuser.userId'}} })">QAD</a></li>
+                        <li><a rel="nofollow" ui-sref="scheduleQAD({ userId:{{'sessionuser.userId'}} })">QAD</a></li>
                         
-                        <li><a ui-sref="contacts">Contacts</a></li>
-                        <li><a ui-sref="extractEmails">Extract Emails</a></li>
+                        <li><a rel="nofollow" ui-sref="contacts">Contacts</a></li>
+                        <li><a rel="nofollow" ui-sref="extractEmails">Extract Emails</a></li>
                     </ul>
                     </li>
                     <li class="menu-item dropdown dropdown-submenu">
-                    <a href="#">Intern Reports</a>
+                    <a rel="nofollow" href="#">Intern Reports</a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })">Added Institutes</a></li>
-                        <li><a ui-sref="addedQuestions({ userId:{{'sessionuser.userId'}} })">Added Questions</a></li>
-                        <li><a ui-sref="questionReportError">Reported Questions</a></li>
-                        <li><a ui-sref="assigned">FCI Report</a></li>
-                        <li><a ui-sref="rci">RCI Report</a></li>
-                        <li><a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">FC Report (colleges)</a></li>
-                        <li><a ui-sref="colleges">Colleges</a></li>
+                        <li><a rel="nofollow" ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })">Added Institutes</a></li>
+                        <li><a rel="nofollow" ui-sref="addedQuestions({ userId:{{'sessionuser.userId'}} })">Added Questions</a></li>
+                        <li><a rel="nofollow" ui-sref="questionReportError">Reported Questions</a></li>
+                        <li><a rel="nofollow" ui-sref="assigned">FCI Report</a></li>
+                        <li><a rel="nofollow" ui-sref="rci">RCI Report</a></li>
+                        <li><a rel="nofollow" ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">FC Report (colleges)</a></li>
+                        <li><a rel="nofollow" ui-sref="colleges">Colleges</a></li>
                         
                         
                         
@@ -321,14 +321,14 @@
                     </ul>
                     </li>  
                     
-                    <!--<li><a ui-sref="search">Quick Search</a></li>
-                    <li><a ui-sref="sandbox2({ masterId:{{'sessionuser.userId'}}, cityName:'New Delhi' } )">Show on Map</a></li>
-                    <li><a ui-sref="eligibility">Eligibility</a></li>
-                    <li><a ui-sref="socialLogin">Social Login</a></li>
+                    <!--<li><a rel="nofollow" ui-sref="search">Quick Search</a></li>
+                    <li><a rel="nofollow" ui-sref="sandbox2({ masterId:{{'sessionuser.userId'}}, cityName:'New Delhi' } )">Show on Map</a></li>
+                    <li><a rel="nofollow" ui-sref="eligibility">Eligibility</a></li>
+                    <li><a rel="nofollow" ui-sref="socialLogin">Social Login</a></li>
                     
-                    <li><a ui-sref="aroundme">Around Me</a></li>-->
+                    <li><a rel="nofollow" ui-sref="aroundme">Around Me</a></li>-->
                     
-                    <li><a ui-sref="postBlog">Post Blog</a></li>
+                    <li><a rel="nofollow" ui-sref="postBlog">Post Blog</a></li>
                     
                     
                     
@@ -336,16 +336,16 @@
                   </ul>
                 </li>
                 <li class="dropdown">
-                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Database<!--<span class="caret"></span>--></a>
+                  <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Database<!--<span class="caret"></span>--></a>
                   <ul class="dropdown-menu">
-                    <li><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
-                    <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
+                    <li><a rel="nofollow" ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
+                    <li><a rel="nofollow" ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
                     <li class="menu-item dropdown dropdown-submenu">
-                    <a href="#">Exam Related</a>
+                    <a rel="nofollow" href="#">Exam Related</a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="addExam">Add Exam</a></li>
-                        <li><a ui-sref="addEligibility">Add Eligibility</a></li>
-                        <li><a ui-sref="addStream">Add Stream</a></li>
+                        <li><a rel="nofollow" ui-sref="addExam">Add Exam</a></li>
+                        <li><a rel="nofollow" ui-sref="addEligibility">Add Eligibility</a></li>
+                        <li><a rel="nofollow" ui-sref="addStream">Add Stream</a></li>
 
                     </ul>
                     </li>
@@ -353,43 +353,43 @@
                       
                     
                     <li class="menu-item dropdown dropdown-submenu">
-                    <a href="#">Coaching Related</a>
+                    <a rel="nofollow" href="#">Coaching Related</a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="cirf">CIRF</a></li>
-                        <li><a ui-sref="coachings({ city:'Jaipur' })">Default Dataset</a></li>
-                        <li><a ui-sref="coachingGroupSummary">Coaching Group Summary</a></li>
-                        <li><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
+                        <li><a rel="nofollow" ui-sref="cirf">CIRF</a></li>
+                        <li><a rel="nofollow" ui-sref="coachings({ city:'Jaipur' })">Default Dataset</a></li>
+                        <li><a rel="nofollow" ui-sref="coachingGroupSummary">Coaching Group Summary</a></li>
+                        <li><a rel="nofollow" ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
                         
                         
-                        <li><a ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a></li>
+                        <li><a rel="nofollow" ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a></li>
                         
-                        <li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>
-                        <li><a ui-sref="addLocation">Add Location</a></li>
-                        <li><a ui-sref="addMediaTag">Add Media Tag</a></li>
-                        <li><a ui-sref="addGroup">Add Group</a></li>
-                        <li><a ui-sref="providersWithAreas">Provider Name Change</a></li>
+                        <li><a rel="nofollow" ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>
+                        <li><a rel="nofollow" ui-sref="addLocation">Add Location</a></li>
+                        <li><a rel="nofollow" ui-sref="addMediaTag">Add Media Tag</a></li>
+                        <li><a rel="nofollow" ui-sref="addGroup">Add Group</a></li>
+                        <li><a rel="nofollow" ui-sref="providersWithAreas">Provider Name Change</a></li>
                     </ul>
                     </li>
                     <li class="menu-item dropdown dropdown-submenu">
-                    <a href="#">API Related</a>
+                    <a rel="nofollow" href="#">API Related</a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="addAwsCredential({ masterId:{{'sessionuser.userId'}} })">Add AWS Credential</a></li>
-                        <li><a ui-sref="addSendGridCredential({ masterId:{{'sessionuser.userId'}} })">Add SendGrid Credential</a></li>
+                        <li><a rel="nofollow" ui-sref="addAwsCredential({ masterId:{{'sessionuser.userId'}} })">Add AWS Credential</a></li>
+                        <li><a rel="nofollow" ui-sref="addSendGridCredential({ masterId:{{'sessionuser.userId'}} })">Add SendGrid Credential</a></li>
                     </ul>
                     </li>
                     <li class="menu-item dropdown dropdown-submenu">
-                    <a href="#">Sitemap Related</a>
+                    <a rel="nofollow" href="#">Sitemap Related</a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="sitemap">Generate Sitemap</a></li>
-                        <li><a ui-sref="blogsitemap">Blog Sitemap</a></li>
+                        <li><a rel="nofollow" ui-sref="sitemap">Generate Sitemap</a></li>
+                        <li><a rel="nofollow" ui-sref="blogsitemap">Blog Sitemap</a></li>
                     </ul>
                     </li>
                     <li class="menu-item dropdown dropdown-submenu">
-                    <a href="#">Other</a>
+                    <a rel="nofollow" href="#">Other</a>
                     <ul class="dropdown-menu">
-                        <li><a ui-sref="addOffer({ userId:{{'sessionuser.userId'}} })">Add Offers</a></li>
-                        <li><a ui-sref="addSubscriber">Add Subscriber</a></li>
-                        <li><a ui-sref="checkLogo({ userId:{{'sessionuser.userId'}}, pageNumber:'1' } )">Check Logos</a></li>
+                        <li><a rel="nofollow" ui-sref="addOffer({ userId:{{'sessionuser.userId'}} })">Add Offers</a></li>
+                        <li><a rel="nofollow" ui-sref="addSubscriber">Add Subscriber</a></li>
+                        <li><a rel="nofollow" ui-sref="checkLogo({ userId:{{'sessionuser.userId'}}, pageNumber:'1' } )">Check Logos</a></li>
                     </ul>
                     </li>
                     
@@ -397,7 +397,7 @@
                 </li>
                 
                 <!--<li class="dropdown">
-                  <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global</a>
+                  <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global</a>
                   <ul class="dropdown-menu">
                     
                   </ul>
@@ -406,59 +406,59 @@
             </ul>
 
             <ul class="nav navbar-nav" ng-if="sessionuser.userType=='Intern - Business Development'">
-            <li><a ui-sref="coachings({ city:'New Delhi' })">Home</a></li>
+            <li><a rel="nofollow" ui-sref="coachings({ city:'New Delhi' })">Home</a></li>
             <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<!--<span class="caret"></span>--></a>
+              <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Global<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
-                <li ng-if="sessionuser.userId == '5a1831f0bd2adb260055e352' || sessionuser.userId == '5a1831f0bd2adb260055e352'"><a ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Email to CI</a></li>
-                <li ng-if="sessionuser.userId == '5a1831f0bd2adb260055e352' || sessionuser.userId == '59a7eb973d71f10170dbb468'"><a ui-sref="emailToPublications({ userId:{{'sessionuser.userId'}} })">Email to Publications</a></li>
-                <li><a ui-sref="group({ userId:{{'sessionuser.userId'}} })">Group</a></li>
-                <li><a ui-sref="addExam">Add Exam</a></li>
-                <li><a ui-sref="addStream">Add Stream</a></li>
-                <li><a ui-sref="addLocation">Add Location</a></li>
-                <li><a ui-sref="addMediaTag">Add Media Tag</a></li>
+                <li ng-if="sessionuser.userId == '5a1831f0bd2adb260055e352' || sessionuser.userId == '5a1831f0bd2adb260055e352'"><a rel="nofollow" ui-sref="sendEmail({ userId:{{'sessionuser.userId'}} })">Email to CI</a></li>
+                <li ng-if="sessionuser.userId == '5a1831f0bd2adb260055e352' || sessionuser.userId == '59a7eb973d71f10170dbb468'"><a rel="nofollow" ui-sref="emailToPublications({ userId:{{'sessionuser.userId'}} })">Email to Publications</a></li>
+                <li><a rel="nofollow" ui-sref="group({ userId:{{'sessionuser.userId'}} })">Group</a></li>
+                <li><a rel="nofollow" ui-sref="addExam">Add Exam</a></li>
+                <li><a rel="nofollow" ui-sref="addStream">Add Stream</a></li>
+                <li><a rel="nofollow" ui-sref="addLocation">Add Location</a></li>
+                <li><a rel="nofollow" ui-sref="addMediaTag">Add Media Tag</a></li>
               </ul>
             </li>
             <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sandbox<!--<span class="caret"></span>--></a>
+              <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sandbox<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
-                <li><a ui-sref="search">Quick Search</a></li>
-                <li><a ui-sref="postBlog">Post Blog</a></li>
-                <li><a ui-sref="eligibility">Eligibility</a></li>
-                <li><a ui-sref="aroundme">Around Me</a></li>
-                <li><a ui-sref="allTests"  ng-if="sessionuser.userId=='5a1831f0bd2adb260055e352'">All Tests</a></li>
+                <li><a rel="nofollow" ui-sref="search">Quick Search</a></li>
+                <li><a rel="nofollow" ui-sref="postBlog">Post Blog</a></li>
+                <li><a rel="nofollow" ui-sref="eligibility">Eligibility</a></li>
+                <li><a rel="nofollow" ui-sref="aroundme">Around Me</a></li>
+                <li><a rel="nofollow" ui-sref="allTests"  ng-if="sessionuser.userId=='5a1831f0bd2adb260055e352'">All Tests</a></li>
               </ul>
             </li>
             <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<!--<span class="caret"></span>--></a>
+              <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Providers<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
-                <li><a ui-sref="colleges">Colleges</a></li>
+                <li><a rel="nofollow" ui-sref="colleges">Colleges</a></li>
                 
-                <li><a ui-sref="coachings({ city:'Jaipur' })">Default Dataset</a></li>
-                <li><a ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
-                <li ng-if="permittedToAdd.indexOf(sessionuser.userId)!=-1"><a ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
-                <li ng-if="permittedToDisable.indexOf(sessionuser.userId)!=-1"><a ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
-                <li><a ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })" ng-if="sessionuser.userId=='5a1831f0bd2adb260055e352'">Added Institutes</a></li>
-                <li><a ui-sref="addedQuestions({ userId:{{'sessionuser.userId'}} })" ng-if="sessionuser.userId=='5a1831f0bd2adb260055e352'">Added Questions</a></li>
-                <li><a ui-sref="questionReportError">Reported Questions</a></li>
+                <li><a rel="nofollow" ui-sref="coachings({ city:'Jaipur' })">Default Dataset</a></li>
+                <li><a rel="nofollow" ui-sref="coachingGroup({ userId:{{'sessionuser.userId'}} })">Coaching Group</a></li>
+                <li ng-if="permittedToAdd.indexOf(sessionuser.userId)!=-1"><a rel="nofollow" ui-sref="addInstitute({ userId:{{'sessionuser.userId'}} })">Add Coaching</a></li>
+                <li ng-if="permittedToDisable.indexOf(sessionuser.userId)!=-1"><a rel="nofollow" ui-sref="bulkDisable({ userId:{{'sessionuser.userId'}} })">Bulk Disable</a></li>
+                <li><a rel="nofollow" ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })" ng-if="sessionuser.userId=='5a1831f0bd2adb260055e352'">Added Institutes</a></li>
+                <li><a rel="nofollow" ui-sref="addedQuestions({ userId:{{'sessionuser.userId'}} })" ng-if="sessionuser.userId=='5a1831f0bd2adb260055e352'">Added Questions</a></li>
+                <li><a rel="nofollow" ui-sref="questionReportError">Reported Questions</a></li>
                   
                   
-                <!--<li><a ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>-->
+                <!--<li><a rel="nofollow" ui-sref="providers({ city:'New Delhi' })">Second Dataset</a></li>-->
               </ul>
             </li>
             <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Your Work<!--<span class="caret"></span>--></a>
+              <a rel="nofollow" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Your Work<!--<span class="caret"></span>--></a>
               <ul class="dropdown-menu">
                 <li ng-if="sessionuser.userType=='Intern - Business Development'">
-                    <a ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">To fill Colleges</a>
-                    <a ui-sref="assigned">Assigned Institutes</a>
-                    <a ui-sref="assignedToVerify({ userId:{{'sessionuser.userId'}} })">To Verify Institutes</a>
-                    <a ui-sref="assignedToAddContactInfo({ userId:{{'sessionuser.userId'}} })">To Add Contact Info Institutes</a>
-                    <a ui-sref="assignedToRate({ userId:{{'sessionuser.userId'}} })">To Rate Institutes</a>
-                    <a ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a>
-                    <a ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })">Added Institutes</a>
-                    <a ui-sref="addedQuestions({ userId:{{'sessionuser.userId'}} })">Added Questions</a>
-                    <a ui-sref="scheduleQAD({ userId:{{'sessionuser.userId'}} })">QAD</a>
+                    <a rel="nofollow" ui-sref="filledColleges({ userId:{{'sessionuser.userId'}} })">To fill Colleges</a>
+                    <a rel="nofollow" ui-sref="assigned">Assigned Institutes</a>
+                    <a rel="nofollow" ui-sref="assignedToVerify({ userId:{{'sessionuser.userId'}} })">To Verify Institutes</a>
+                    <a rel="nofollow" ui-sref="assignedToAddContactInfo({ userId:{{'sessionuser.userId'}} })">To Add Contact Info Institutes</a>
+                    <a rel="nofollow" ui-sref="assignedToRate({ userId:{{'sessionuser.userId'}} })">To Rate Institutes</a>
+                    <a rel="nofollow" ui-sref="suggestCoaching({ userId:{{'sessionuser.userId'}} })">Suggest Coaching Group</a>
+                    <a rel="nofollow" ui-sref="addedInstitutes({ userId:{{'sessionuser.userId'}} })">Added Institutes</a>
+                    <a rel="nofollow" ui-sref="addedQuestions({ userId:{{'sessionuser.userId'}} })">Added Questions</a>
+                    <a rel="nofollow" ui-sref="scheduleQAD({ userId:{{'sessionuser.userId'}} })">QAD</a>
                 </li>
               </ul>
             </li> 
@@ -541,35 +541,35 @@
         <ul class="nav navbar-nav marginL10 marginR40">
             
         <li class="dropdown" ng-if="sessionuser.userType != 'Partner'">
-            <a href="" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle" id="profileMenu">
+            <a rel="nofollow" href="" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle" id="profileMenu">
                 <img ng-src="{{sessionuser.image}}" id="userPic" class="img-circle" ng-if="sessionuser.image && sessionuser.image != ''"/>
                 <div ng-if="!sessionuser.image || sessionuser.image == ''"><i class="fa fa-user-circle-o font40" aria-hidden="true"></i></div>
                 <!--<span class="caret"></span>-->
             </a>
             <ul class="dropdown-menu dropdown-menu-right"  >
                 <li>
-                <a ui-sref="profile">Profile</a>
+                <a rel="nofollow" ui-sref="profile">Profile</a>
                 </li>
                 <!--<li>
-                <a ui-sref="reviewed({ userId:{{'sessionuser.userId'}} })">Your Reviews</a>
+                <a rel="nofollow" ui-sref="reviewed({ userId:{{'sessionuser.userId'}} })">Your Reviews</a>
                 </li>
                 <li>
-                <a ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
+                <a rel="nofollow" ng-if="sessionuser.userType != 'Partner'" ui-sref="shortlisted({ userId:{{'sessionuser.userId'}} })">Your Shortlisted Institutes</a>
                 </li>
                 <li>
-                <a ng-if="sessionuser.userType != 'Partner'" ui-sref="viewed({ userId:{{'sessionuser.userId'}} })">Take a Lookback</a>
+                <a rel="nofollow" ng-if="sessionuser.userType != 'Partner'" ui-sref="viewed({ userId:{{'sessionuser.userId'}} })">Take a Lookback</a>
                 </li>-->
                 <li ng-if="sessionuser.userType=='Intern - Business Development' || sessionuser.userType=='Master'">
-                    <a ui-sref="assigned">Assigned Institutes</a>
+                    <a rel="nofollow" ui-sref="assigned">Assigned Institutes</a>
                 </li>
                 <li ng-if="sessionuser.userType=='Intern - Business Development'">
-                    <a ui-sref="filled({ userId:{{'sessionuser.userId'}} })">Your Filled Institutes</a>
+                    <a rel="nofollow" ui-sref="filled({ userId:{{'sessionuser.userId'}} })">Your Filled Institutes</a>
                 </li>
                 <li ng-if="sessionuser.userType=='Master'">
-                    <a ui-sref="filledAll({ userId:{{'sessionuser.userId'}} })">Filled Institutes</a>
+                    <a rel="nofollow" ui-sref="filledAll({ userId:{{'sessionuser.userId'}} })">Filled Institutes</a>
                 </li>
                 <li>
-                    <a ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
+                    <a rel="nofollow" ng-if="sessionuser && sessionuser.userId" href="/" ng-click="logout()">Logout</a>
                 </li>
               </ul>
         </li>
@@ -590,7 +590,7 @@
 
     <md-toolbar class="">
         <h1 class="">
-            <a class="navbar-brand" href="/">
+            <a rel="nofollow" class="navbar-brand" href="/">
                 <span ng-class="headerLogoCSS()">
                     EXAMBAZAAR
                 </span>
@@ -599,19 +599,19 @@
     </md-toolbar>
     <div layout="column" layout-align="start start" class="width100 paddingTB20 min90vh">
         <div layout="column" layout-align="center center" class="sidebarItem width100 whiteSmokeBottomBorder paddingB10 paddingLR20 marginTB10" ui-sref="blog">
-            <a class="sidebarTitle">Blog</a>
+            <a rel="nofollow" class="sidebarTitle">Blog</a>
             <div class="sidebarDescription">Resources, tips & material to help you ace your exam preparation</div>
         </div>
         <div layout="column" layout-align="center center" class="sidebarItem width100 whiteSmokeBottomBorder paddingB10 paddingLR20 marginTB10" ui-sref="eligibility">
-            <a class="sidebarTitle">Exam Eligibility</a>
+            <a rel="nofollow" class="sidebarTitle">Exam Eligibility</a>
             <div class="sidebarDescription">Checkout all exams you can write right now!</div>
         </div>
         <div layout="column" layout-align="center center" class="sidebarItem width100 whiteSmokeBottomBorder paddingB10 paddingLR20 marginTB10" ui-sref="aroundme">
-            <a class="sidebarTitle">Coachings near you!</a>
+            <a rel="nofollow" class="sidebarTitle">Coachings near you!</a>
             <div class="sidebarDescription">Find coaching classes around your home or office</div>
         </div>
         <div layout="column" layout-align="center center" class="sidebarItem width100 whiteSmokeBottomBorder paddingB10 paddingLR20 marginTB10" ui-sref="allquestionpapers">
-            <a class="sidebarTitle">Official Question Papers</a>
+            <a rel="nofollow" class="sidebarTitle">Official Question Papers</a>
             <div class="sidebarDescription">Previous year question papers for Free!</div>
         </div>
         <div flex></div>
