@@ -21181,6 +21181,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             var timeNow = moment();
                             if($scope.endTime.diff(timeNow) < 0 || $scope.userAssessment.submitted){
                                 $scope.testOver = true;
+                                console.log($scope.endTime);
+                                console.log(timeNow);
+                                console.log($scope.endTime.diff(timeNow));
                                 console.log('3. Test is over or submitted');
 
                             }else{
@@ -21263,6 +21266,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         var timeNow = moment();
                         if($scope.endTime.diff(timeNow) < 0 || $scope.userAssessment.submitted){
                             $scope.testOver = true;
+                            console.log($scope.endTime);
+                                console.log(timeNow);
+                                console.log($scope.endTime.diff(timeNow));
                             console.log('1. Test is over or submitted');
 
                         }else{
@@ -21646,6 +21652,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             $scope.endTime = moment($scope.userAssessment._end);
                             var timeNow = moment();
                             if($scope.endTime.diff(timeNow) < 0 || $scope.userAssessment.submitted){
+                                console.log($scope.endTime);
+                                console.log(timeNow);
+                                console.log($scope.endTime.diff(timeNow));
                                 $scope.testOver = true;
                                 console.log('Test is over or submitted');
 
