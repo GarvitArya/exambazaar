@@ -654,7 +654,7 @@ var templateName = 'Official Question Papers';
 
 var from = 'always@exambazaar.com';
 var sender = 'Always Exambazaar';
-var senderId = '59a7eb973d71f10170dbb468';
+var senderId = '5a9f7b184b1ece1f48a88d5e';
 var eCounter = 0;
 //sender = 'Always Exambazaar';
 var fromEmail = {
@@ -662,7 +662,7 @@ var fromEmail = {
     name: sender
 };
     
-    var schoolIds = ['5a9f7b174b1ece1f48a88d5d'];
+    var schoolIds = ['5a9f7b184b1ece1f48a88d5f'];
     
     var allSchools = school
     .find({ '_id': { $in : schoolIds},  "data.email": {$exists: true}}, { data: 1 })
@@ -706,7 +706,7 @@ var fromEmail = {
                 templateId = thisEmailTemplate.templateKey;
                 
                 var from_email = new helper.Email(fromEmail);
-                var to = 'ayush@exambazaar.com';
+                var to = 'gaurav@exambazaar.com';
                 var to_email = new helper.Email(to);
                 //var subject = subject;
                 var html = ' ';

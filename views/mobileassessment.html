@@ -1,0 +1,761 @@
+<style>
+    input[type="text"], input[type="number"]
+    {
+        padding: 5px;
+        font-size: 13px;
+        color: #333333;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="number"]:hover, input[type="number"]:focus{
+        padding: 5px;
+        font-size: 13px;
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    textarea{
+        width:100%;
+        padding: 5px 5px;
+        display: inline-block;
+        border: 1px solid #969696;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    textarea:hover {
+        border: 1px solid #969696;
+    }
+    textarea:focus {
+        border: 1px solid #969696;
+    }
+    
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        
+    }
+    .fieldRow{
+        min-height: 5vh;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .fieldRow div.col1{
+        color: gray;
+        font-family: 'Roboto Condensed', sans-serif;
+    }
+    .fieldRow div.col2{
+        color: black;
+    }
+    
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    .active{
+        color: white;
+        font-weight: bold;
+        border-bottom: 2px solid white;
+    }
+    #topBar{
+        color: white;
+    }
+    #topBar.active{
+        color: white;
+    }
+    #topBar:hover{
+        font-weight: bold;
+    }
+    .legendTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:30px;
+        height:30px;
+        background: white;
+        color: gray;
+        border: 1px solid gray;
+    }
+    .legendTag.answered{
+        background: #20C39A;
+        color: white;
+        border: 1px solid #20C39A;
+    }
+    .legendTag.review{
+        background: #8378d0;
+        color: white;
+        border: 1px solid #8378d0;
+    }
+    .legendTag.seen{
+        background: gainsboro;
+        color: black;
+        border: 1px solid gainsboro;
+    }
+    .correctTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        height:30px;
+        color: white;
+        background: #2E8B57;
+    }
+    .incorrectTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        height:30px;
+        color: white;
+        background: #B22222;
+    }
+    
+    .emptyTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        min-height:30px;
+        color: gray;
+        background: white;
+        border: 1px solid gray;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+    }
+    
+    .seenTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        min-height:30px;
+        color: black;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+    }
+    .answeredTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        min-height:30px;
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+    }
+    .reviewTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        min-height:30px;
+        color: white;
+        background: #8378d0;
+        border: 1px solid #8378d0;
+    }
+    .activeTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        min-height:30px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+    }
+    
+    .badge{
+        font-size: 14px;
+        white-space: normal;
+        margin-top: 0px;
+    }
+    .subSectionHeader{
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid whitesmoke;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .academicSubSection{
+        border-bottom: 1px solid #20C39A;
+        
+    }
+    .academicSubHeader{
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    #profilePicSection{
+        margin-bottom: 20px;
+    }
+    .questionRow{
+        width: 100%;
+        background: #ccc;
+        margin-bottom: 10px;
+    }
+    
+    
+    pre {
+        background: orange;
+        border: orange;
+        margin-left: 40px;
+        padding-left: 40px;
+        padding-right: 40px;
+        width: 80%;
+    }       
+    
+    code {
+        
+    }
+    .md-button {
+      color : currentColor;
+    }
+
+
+    .md-button[disabled] {
+        color : rgba(0, 0, 0, 0.26);
+        border-color: rgba(0, 0, 0, 0.26);
+        background-color: transparent;
+    }
+    .md-button[disabled]:hover {
+        color : rgba(0, 0, 0, 0.26);
+        border-color: rgba(0, 0, 0, 0.26);
+        background-color: transparent;
+    }
+    img.center {
+        display: block;
+        margin: 0 auto;
+        max-width: 90%;
+    }
+    
+    .vScroll{
+        overflow: auto;
+    }
+    #headerLogo{
+        max-height: 40px;
+    }
+    .leftBar{
+        border-right: 2px solid whitesmoke;
+    }
+    #legendBox{
+        border: 1px solid #ccc;
+        background: whitesmoke;
+    }
+    .mcaBadge{
+        background: #e5a72b;
+        border: 1px solid #e5a72b;
+        font-size: 10px;
+    }
+    #testHeader{
+        background: whitesmoke;
+    }
+    
+    
+    
+    
+</style>
+
+<!--<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>-->
+
+<div class="textBlack whiteBackground secondFont " ng-if="user && !disabled" www.exambazaar.com2>
+    
+    <div layout="row" layout-align="center center" class=" greyBottomBorder paddingTB10" id="testHeader">
+        <div flex-xs="100" hide-gt-xs layout="row" layout-align="start center" class="paddingLR10" >
+            <!--<div layout="row" layout-align="start center" flex="30" class="" >
+            <div layout="row" layout-align="start center" class="marginR20">
+                <a href="https://www.exambazaar.com" target="_blank"><img src="images/logo/eblogo.png" id="headerLogo"/></a>  
+            </div>
+            
+            </div>-->
+            <div flex class="h1Font bold">{{test.name}}</div>
+            <div layout="column" layout-align="center center" class="" ng-if="endTime">
+                <div layout="row" layout-align="start center" class="width100 h2Font narrowLine textDarkGrey" >
+                    <i class="fa fa-clock-o font24 marginR10" aria-hidden="true"></i>
+                    <timer end-time="endTime">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+                </div>
+                
+            </div>
+            
+            <!--<div layout="row" layout-align="end center" flex="30" class="">
+                <md-button class="md-submitTest md-small tolowercase margin0 min5vh font12" ng-click="submitAssessment()" ng-if="testStarted && !testOver">
+                    Submit Test
+                </md-button>
+                
+
+            </div> -->  
+        </div>
+    </div>
+    
+    <div layout="row" layout-align="center start" class="width100 min90vh">
+        <div flex-xs="100" hide-gt-xs layout="column" layout-align="center start" class="" ng-if="!testOver && testStarted">
+            <div layout="column" layout-align="center center" class="width100 paddingLR20 paddingTB10">
+            <div layout="row" layout-align="start center" class="width100 h2Font greyBottomBorder paddingB5 marginT10" ng-click="toggleMobileSummary()">
+                
+                <div flex>See Summary ({{questionList.length}} questions)</div>    
+                <div class="marginR10">
+                    <i class="fa fa-caret-down" aria-hidden="true" ng-if="!mobileSummary"></i>
+                    <i class="fa fa-caret-up" aria-hidden="true" ng-if="mobileSummary"></i>
+                </div>
+            </div>
+            <div hide-gt-xs layout="column" layout-align="center center"  class="smallFont" ng-show="mobileSummary">
+                <div layout="column" layout-align="center center" class=" paddingTB10 width100">
+                    <div layout="column" layout-align="center center" class="width100 padding10 " id="legendBox">
+                        <div layout="row" layout-align="center center" class="width90 paddingTB5">
+                            <div flex layout="row" layout-align="center center" class="">
+                                <div flex="25" >
+                                    <div class="legendTag answered" layout="row" layout-align="center center">{{answered}}</div>
+
+                                </div>
+                                <div flex class="paddingL5">Attempted</div>
+                            </div>
+                            <div flex>
+                            <div flex layout="row" layout-align="center center">
+                                <div flex="25">
+                                    <div class="legendTag review" layout="row" layout-align="center center">{{marked}}</div>
+                                </div>
+                                <div flex class="paddingL5">To Review</div>
+                            </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="center center" class="width90 paddingTB5">
+                            <div flex layout="row" layout-align="center center" class="">
+                                <div flex="25">
+                                    <div class="legendTag seen" layout="row" layout-align="center center">{{seen}}</div>
+                                </div>
+                                <div flex class="paddingL5">Seen</div>
+                            </div>
+                            <div flex>
+                            <div flex layout="row" layout-align="center center">
+                                <div flex="25">
+                                    <div class="legendTag" layout="row" layout-align="center center">{{totalQuestions - seen}}</div>
+
+                                </div>
+                                <div flex class="paddingL5">Unseen</div>
+                            </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!--<div layout="row" layout-align="center end" class="marginT20 marginB5 width100 ">
+                    Question List
+                </div>-->
+                <div layout="row" layout-align="center start" class="width100" layout-wrap>
+                    <div ng-repeat="showquestion in questionList" class="margin5 emptyTag" layout="row" layout-align="center center" ng-class="{ seenTag: showquestion.subquestion.seen, answeredTag: showquestion.subquestion.anyAnswer, reviewTag: showquestion.subquestion.markforreview, activeTag: showquestion.subquestion._id == subquestion._id}" ng-click="setQuestion(showquestion.question, showquestion.sno)">
+                        {{showquestion.no}}
+                    </div>
+                </div>
+                <div layout="row" layout-align="start center" class="width100 h2Font greyBottomBorder marginTB10 paddingB5" ng-click="toggleMobileSummary()">
+                
+                    <div flex>Close Summary</div>    
+                    <div class="marginR10">
+                        <i class="fa fa-caret-down" aria-hidden="true" ng-if="!mobileSummary"></i>
+                        <i class="fa fa-caret-up" aria-hidden="true" ng-if="mobileSummary"></i>
+                    </div>
+                </div>
+                <!--<div layout="row" layout-align="center center" class="width100 baseFont textDarkGrey padding10  greyTopBorder" >
+                    <div flex layout="row" layout-align="center center" class="paddingL10" ng-click="showInstructionDialog()">Test Instructions</div>
+                    
+                    <span class="marginL10 danger font8" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">Reset</span>
+                    <span class="marginL10 font8" ng-click="openAddQuestion()" ng-if="fullScope">QPage</span>
+                
+                </div>-->
+            </div>
+            
+            </div>
+            <div flex layout="column" layout-align="start start" class="baseFont paddingLR20 ">
+                <div layout="row" layout-align="start center" class="width100 greyBottomBorder paddingT10 paddingB10">
+
+                    <div flex class="" layout="column" layout-align="center start">
+                        <div layout="row" layout-align="start center" class="baseFont bold">
+                            <div class="marginR5">Q.</div> 
+                            <div ng-repeat="showquestion in questionList" class="smallFont emptyTag" layout="row" layout-align="center center" ng-class="{ seenTag: showquestion.subquestion.seen, answeredTag: showquestion.subquestion.anyAnswer, reviewTag: showquestion.subquestion.markforreview}" ng-if="showquestion.no == activeQuestionNo">
+                                {{activeQuestionNo}}
+                            </div>
+                        </div>
+                        
+                        <span ng-if="question.questions.length > 1" class="baseFont paddingT5">
+                            Question Group: ({{question._startnumber}}<span ng-if="question._endnumber">&nbsp;-&nbsp;{{question._endnumber}})</span>
+                        </span>
+                        
+                    
+                    </div>
+                    <div layout="column" layout-align="center center" flex class="h1Font text-markReview">
+                        <i class="fa fa-star-o" aria-hidden="true" ng-click="markQuestionForReview(question, subquestion)" ng-if="!subquestion.markforreview"></i>
+                        
+                        <i class="fa fa-star" aria-hidden="true" ng-click="clearQuestionMarkForReview(subquestion)" ng-if="subquestion.markforreview"></i>
+                        
+                        <!--<md-button class="md-markReview md-small tolowercase margin0 font12" ng-click="markQuestionForReview(question, subquestion)" ng-if="!subquestion.markforreview">
+                            Mark for Review
+                        </md-button>
+                        <md-button class="md-unmarkReview md-small tolowercase margin0 font12" ng-click="clearQuestionMarkForReview(subquestion)" ng-if="subquestion.markforreview">
+                            Unmark from Review
+                        </md-button>-->
+                    </div>
+                    <!--<div class="danger paddingLR10" >
+                        <span ng-if="!subquestion.errorReported" ng-click="showReportErrorDialog(question, subquestion)">
+                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                            <md-tooltip>
+                            Report Error in this Question
+                            </md-tooltip>
+                        </span>
+                    </div>-->
+                    <div flex layout="row" layout-align="end center" class="baseFont">
+                            <div layout="row" layout-align="center center" class="marginLR5 " ng-if="subquestion.type =='mcq' && subquestion.mcqma">
+                                <span class="badge mcaBadge">Multiple Correct Answers
+                                <md-tooltip>
+                                The question may have more than one correct options. Please mark them carefully.
+                                </md-tooltip>
+                                </span>
+                                
+                            </div>
+
+                            <div layout="row" layout-align="center center" class="marginLR5 correctTag"> 
+                                <span ng-if="subquestion.marking.correct[0] != '+'">
+                                +
+                                </span>
+                                <span>
+                                    {{subquestion.marking.correct}}
+                                </span>
+                                <md-tooltip>
+                                You will score {{subquestion.marking.correct}} marks for correct answer of this question
+                                </md-tooltip>
+                            </div>
+                            <div layout="row" layout-align="center center" class="marginLR5 incorrectTag"> {{subquestion.marking.incorrect}}
+                                <md-tooltip>
+                                You will score {{subquestion.marking.incorrect}} marks for incorrect answer of this question
+                                </md-tooltip>
+                            </div>
+                        </div> 
+
+                </div>
+                
+                <div layout="column" layout-align="start start" class=" width100 paddingTB20">
+                    <div layout="column" layout-align="start start" class="width100 baseFont wideLine" ng-if="question.context || question.images && question.images.length > 0">
+                        <div ng-bind-html="question.context" class="width100 text-justify">
+                        </div>
+                        
+                        <img ng-repeat="image in question.images" ng-src="{{image}}" class="center"/>
+                    </div>
+                    <div layout="column" layout-align="start start" class="width100">
+
+                        <div layout="column" layout-align="start start" class="width100 padding10" ng-if="subquestion">
+                            <div layout="column" layout-align="start start" class="width100">
+                            <div ng-bind-html="subquestion.question" class="width100 paddingTB10">
+                            </div>
+                            <div ng-repeat="option in subquestion.options" class="width100" ng-if="subquestion.type =='mcq' && subquestion.mcqma">
+                              <md-checkbox ng-checked="subquestion.userAnswer && subquestion.userAnswer.length > 0 && subquestion.userAnswer.indexOf(option._id) != -1" ng-click="markAnswer(question, subquestion, option)" class="paddingTB2 widht100">
+                                {{option.option}}
+                              </md-checkbox>
+                            </div>    
+                                
+                            <md-radio-group ng-model="subquestion.userAnswer" ng-if="subquestion.type =='mcq' && !subquestion.mcqma" class="width100">
+
+                            <md-radio-button value="{{option._id}}" ng-model="userAnswer" ng-repeat="option in subquestion.options" ng-click="markAnswer(question, subquestion, option)" class="paddingTB2 widht100">
+                                <div flex>{{option.option}}</div>
+                            </md-radio-button>
+
+                            </md-radio-group>
+
+                            <div layout="row" layout-align="center center" class="width100 paddingTB10" ng-if="subquestion.type =='numerical'">
+                                <div flex="25">Your Answer</div>
+                                <div flex>
+                                    <input type="number" class="text-center width100" ng-model="subquestion.userNumericalAnswer" placeholder="Type your numerical answer here">
+                                </div>
+
+
+                            </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div layout="row" layout-align="start center" class="h3Font paddingLR10">
+                        <div layout="row" layout-align="center center" ng-click="clearAnswer(subquestion)" ng-if="subquestion.userAnswer || subquestion.userNumericalAnswer">
+                        
+                        <i class="fa fa-times-circle-o font20" aria-hidden="true"></i>&nbsp;&nbsp;Clear your response
+                        </div>
+                        <div layout="row" layout-align="center center" ng-if="!subquestion.userAnswer && !subquestion.userNumericalAnswer">
+                        <span class="">&nbsp;</span>
+                        
+                        </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="start center" class="width100  whiteBackground greyTopBorder paddingTB10 marginTB10">
+                    
+                    
+                    
+                    <div flex layout="row" layout-align="end center" class="paddingL10">
+                        <md-button class="md-saveNext md-medium font16 tolowercase margin0 width50" ng-click="setNextQuestion(question, subquestion)">
+                            Save & Next
+                        </md-button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div flex-xs="100" hide-gt-xs layout="row" layout-align="center start"  ng-if="testOver">
+            <div flex="90" layout="column" layout-align="center start" class="">
+            <div flex layout="column" layout-align="start center " class=" paddingTB20 width100">
+                
+                <div layout="column" layout-align="center center" class="width100 marginT20 paddingTB20 greyBorder">
+                <div layout="column" layout-align="center center" class="width100 padding20">
+                    <div class="h2Font">
+                        Good job on taking the test!
+                    </div>
+                    <div class="smallFont">
+                        You have attempted {{answered}} out of {{totalQuestions}} questions!
+                    </div>
+                    
+                    <div layout="row" layout-align="center center" class="marginT40 width100 baseFont">
+                    
+                    <div flex layout="column" layout-align="center center" class="">
+                        <md-button class="md-danger md-large tolowercase margin0 " ng-click="seeAssessmentResult()" ng-if="test.analyzeable">
+                            Analyze your result
+                        </md-button>
+                        <span class="smallFont marginT10" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">or Retake the Test</span>
+                    </div>
+                    <div flex layout="column" layout-align="center center" class="">
+                        <a ng-click="shareFacebook()">
+                            <img src="icons/facebook.png" class="socialIcon3"/>
+                        </a>
+                        <span class="smallFont marginT10">
+                        Challenge your friends
+                        </span>
+                    </div>
+                        
+                    </div>    
+                </div>
+                
+                <div layout="column" layout-align="center center" class="smallFont paddingLR20 width100">
+                    <div layout="column" layout-align="center center" class="width100"  ng-if="suggestedTests && suggestedTests.length > 0">
+                    <div layout="column" layout-align="center center" class="width100" class="h3Font width100">
+                        Other Tests For You
+                    </div>
+                    <div layout="column" layout-align="center center" class="width100">
+                        <a ui-sref="assessment({ testId:{{'suggestedTest._id'}} })" target="_blank" id="link" class="" ng-repeat="suggestedTest in suggestedTests">{{suggestedTest.name}}</a>
+                    </div>
+                    </div>
+                </div>    
+                    
+                </div>
+                
+                <div layout="column" layout-align="center start" class="marginT20 padding20 baseFont width100">
+                <div layout="column" layout-align="start center" class="width100">
+                <img src="icons/assessment/rocket.png" class="socialIcon2"/>    
+                <div layout="column" layout-align="center center" class="h2Font bold width100 marginT10">Help us improve!</div>
+                <div layout="column" layout-align="center center" class="h3Font text-center width100">
+                    Please rate exam simulation on a scale of 1 to 5.
+                </div>
+                <div layout="column" layout-align="center center" class="width100">
+                    <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" class="bigstar custom">
+                    </ng-rate-it>
+
+                    <div layout="column" layout-align="center center" ng-if="userAssessment.userRating > 0" class="smallFont text-center width100">
+                        Your rating: {{userAssessment.userRating}} out of 5
+                    </div>
+                </div>
+                
+                </div>
+                <div layout="column" layout-align="start center" class="width100 marginT40">
+                    <img src="icons/p0/s0/coaching.png" class="socialIcon2"/>
+                    <div layout="column" layout-align="center center" ng-if="testExam.seoname" class="text-center marginT10 h2Font bold">Attended any coaching for {{testExam.seoname}}?</div>
+                    
+                    <div layout="column" layout-align="center center" ng-if="!testExam.seoname" class="h3Font text-center">Have you taken any coaching for any exam?</div>
+                    
+                    <div layout="column" layout-align="center center" class="smallFont width100 marginB20">
+                        Help others with a quick review!
+                    </div>
+                    <md-button class="md-saveNext md-large tolowercase margin0 " ui-sref="review" target="_blank">
+                        Review Your Coaching
+                    </md-button>
+                </div>
+                </div>
+                <!--<div class="padding10">
+                    <span class="marginL10" ng-click="openAddQuestion()" ng-if="fullScope">QPage</span> 
+                </div>-->
+                <!--<div class="" ng-if="userAssessment.evaluation.score">
+                    Score: {{userAssessment.evaluation.score}} <span ng-if="test.maxScore">out of maximum {{test.maxScore}}</span>
+                </div>-->
+            </div>
+            <!--id="blogTags"-->
+            <div layout="column" layout-align="center center" flex="25" class="padding20 width100 smallFont " >
+                <div layout="column" layout-align="center center" class="width100 marginT20 paddingL20 smallFont" ng-if="recentAssessments && recentAssessments.length > 0">
+                <div class="h3Font width100">
+                    Recent Assessments
+                </div>
+                <div layout="column" layout-align="center start" class=" width100">
+                    <div layout="row" layout-align="start center" class=" paddingB5 marginB10 width100 greyBottomBorder" ng-repeat="thisAssessment in recentAssessments">
+                        <div flex="25">
+                            <img ng-src="{{thisAssessment.user.image}}" ng-if="thisAssessment.user.image" id="userPicSmall" class="img-circle"/>
+                            <img src="images/user.png" ng-if="!thisAssessment.user.image" id="userPicSmall" class="img-circle"/>
+                        </div>
+                        <div layout="column" layout-align="center start" class="wideLine">
+                            <div>{{thisAssessment.user.name}}</div>
+                            <a ui-sref="assessment({ testId:{{'thisAssessment.test._id'}} })" target="_blank" id="link" class="" >
+                                {{thisAssessment.test.name}}
+                            </a>
+                            <div>Score: {{thisAssessment.evaluation.score}} out of {{thisAssessment.test.maxScore}}</div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+                
+            </div>
+                
+            </div>    
+        </div>
+
+        <div flex-xs="90" hide-gt-xs layout="column" layout-align="center start" class="blogFont paddingTB20" ng-if="!testStarted">
+            
+            <div layout="column" layout-align="start center" class="paddingLR10 width100">
+                <div layout="row" layout-align="start center" class="h2Font bold width100 ">
+                    Instructions for taking the test:
+                </div>
+                <div layout="column" layout-align="start center" class="paddingLR20 paddingT10 paddingB20 width100 editFont  vScroll greyBorder" >
+                    
+                    <div ng-repeat="instruction in  instructions track by $index" class="width100 padding5">
+                        <div class="blogFont font14">
+                            {{$index+1}}. {{instruction}}
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div layout="column" layout-align="start center" class="paddingLR10 width100">
+            <div layout="column" layout-align="start center" class="width100 baseFont marginT10" ng-if="user">
+                <div layout="row" layout-align="start center" class="h2Font width100 bold ">
+                    Complete the information below:
+                </div>
+                <div layout="column" layout-align="start start" class="width100 padding20  greyBorder">
+                    <div layout="row" layout-align="start center" class="width100 marginB5">
+                        <div flex="25">Name</div>
+                        <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.name"></div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 marginB5">
+                        <div flex="25">Mobile</div>
+                        <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.mobile" only-digits></div>
+                    </div>
+                    <div layout="row" layout-align="start center" class="width100 marginB5">
+                        <div flex="25">Email</div>
+                        <div flex><input type="text" class="text-center width100" ng-model="assessmentInfo.email"></div>
+                    </div>
+                </div>
+            </div>
+            <div layout="column" layout-align="center center" class="width100 blogFont marginT10" >
+                <md-switch ng-model="assessmentInfo.agree" aria-label="Agree with terms?" class="margin0 h2Font width100">
+                 Do you agree with the instructions above?
+                </md-switch>
+                <div layout="row" layout-align="center center" class="width100 padding10">
+                    <md-button class="md-next md-large tolowercase margin0  width50" ng-click="startAssessment(assessmentInfo)">
+                        Start
+                    </md-button>
+                </div>
+            </div> 
+            <div layout="column" layout-align="start center" class="paddingL20 font14 danger width100  ">
+                <div layout="row" layout-align="start start" ng-repeat="startError in startErrors">{{$index+1}}. {{startError}}
+                </div>
+            </div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="textBlack whiteBackground secondFont font14" ng-if="!user || disabled">
+    
+    <div layout="column" layout-align="center center" class="width100 min100vh blogFont">
+        <div class="font48 padding10 text-center">
+            <i class="fa fa-desktop" aria-hidden="true"></i>
+        </div>
+        <div class="h3Font paddingLR10 text-center">
+            You need to be logged in on a laptop to access this page. We don't support mobile yet!
+        </div>
+    </div>
+    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="instructionDialog">
+    <md-dialog class="halfscreen-dialog2">
+    <div class="width100" id="examinfo">
+        
+    </div>
+    <div class="paddingTB20 paddingLR40" layout="column" layout-align="start center" layout-fill>
+        
+        <div layout="column" layout-align="start center" class="width100 editFont" >
+            <div layout="row" layout-align="start center" class="blogFont bold font20 width100">
+            Instructions for Exambazaar Test:
+            </div>
+            <div ng-repeat="instruction in  instructions track by $index" class="width100">
+                <div class="blogFont font14">
+                    {{$index+1}}. {{instruction}}
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginT20">
+                <md-button class="md-next md-large tolowercase margin0 " ng-click="closeInstructionDialog()">
+                    Resume
+                </md-button>
+            </div>
+        </div>
+        
+    </div>
+    </md-dialog>
+    </div>    
+</div>
+
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="reportErrorDialog">
+    <md-dialog class="halfscreen-dialog2">
+
+    <div class="paddingTB20 paddingLR40" layout="column" layout-align="start center" layout-fill>
+        
+        <div layout="column" layout-align="start center" class="width100 editFont" >
+            <div layout="row" layout-align="start center" class="blogFont bold font20 width100 paddingB20">
+            Why are you reporting this question?
+            </div>
+            <div class="width100 smallFont" ng-repeat="item in reasons">
+              <md-checkbox ng-click="toggle(item, selected)" ng-checked="exists(item, selected)">
+                {{ item }}
+              </md-checkbox>
+            </div>
+            <div layout="row" layout-align="start center" class="width100">
+                <div flex><textarea class="width100 font14" ng-model="questionReport.comment" placeholder="Any other comments you would like to add.." rows="2"></textarea></div>
+            </div>
+            <div layout="row" layout-align="end center" class="width100 marginTB20">
+                <md-button class="md-next md-large tolowercase margin0 " ng-click="reportQuestionHelper()">
+                    Report
+                </md-button>
+            </div>
+        </div>
+        
+    </div>
+    </md-dialog>
+    </div>    
+</div>

@@ -21141,7 +21141,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("assessmentController", 
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', 'moment', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments, moment){
             
-            
+        $scope.mobileSummary = false;
+        $scope.toggleMobileSummary = function(){
+            $scope.mobileSummary = !$scope.mobileSummary;        
+        };
         
         $scope.recentAssessments = recentAssessments.data;
         
@@ -21188,7 +21191,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.testStarted = false;
             $scope.testOver = false;
             if (screenSize.is('xs, sm')){
-                $scope.disabled = true;
+                $scope.disabled = false;
             }else{
                 $scope.disabled = false;
             }
@@ -21623,7 +21626,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         $scope.subquestion = question.questions[index];
                     }
                 }
-                
+                $scope.mobileSummary = false;
             };
         
             $scope.setNextQuestion = function(question, subquestion){
@@ -21635,6 +21638,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if(sIndex < nSubQuestions - 1){
                     $scope.subquestion = question.questions[sIndex + 1];
                     markView($scope.question, $scope.subquestion);
+                    $scope.mobileSummary = false;
                     $scope.markNumericalAnswer($scope.question, $scope.subquestion);
                 }else if (sIndex == nSubQuestions - 1 ){
                     var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
@@ -21647,8 +21651,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         $scope.question = $scope.testQuestions[tIndex + 1];
                         $scope.setSubQuestion($scope.question, 0);
                         markView($scope.question, $scope.subquestion);
+                        $scope.mobileSummary = false;
                     }else if (tIndex == nQuestions- 1){
+                        
                         $scope.submitAssessment();
+                        
                     }
                     
                 }
@@ -22325,7 +22332,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               document.title = vis() ? 'Visible' : 'Not visible';
             });*/
 
-    }]); 
+    }]);
+        
+        
+        
     exambazaar.controller("eqadSummaryController", 
         [ '$scope', '$rootScope', '$mdDialog', '$timeout', 'examList', 'streamList', 'questionService', 'eqadSummary', 'eqadSolutionSummary', function($scope, $rootScope, $mdDialog, $timeout, examList, streamList, questionService, eqadSummary, eqadSolutionSummary){
             $scope.exams = examList.data;
@@ -36134,6 +36144,50 @@ function getLatLng(thisData) {
                     templateUrl: 'footer.html'
                 }
             },
+        })
+        .state('mobileassessment', {
+            url: '/mobileassessment/:testId',
+            views: {
+                /*'header':{
+                    templateUrl: 'header.html',
+                    
+                },*/
+                'body':{
+                    templateUrl: 'mobileassessment.html',
+                    controller: 'assessmentController',
+                },
+                /*'footer': {
+                    templateUrl: 'footer.html'
+                }*/
+            },
+            resolve: {
+                thistest: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getTest($stateParams.testId);
+                }],
+                recentAssessments: ['assessmentService',
+                    function(assessmentService){
+                    return assessmentService.recent();
+                }],
+                thistestExam: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getTestExam($stateParams.testId);
+                }],
+                thisTestQuestions: ['questionService','$stateParams',
+                    function(questionService, $stateParams){
+                        return questionService.getTestQuestions($stateParams.testId);
+                }],
+                angularTimer: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularTimer'], {serie: true});
+                }],
+                angularScreenfull: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularScreenfull'], {serie: true});
+                }],
+                NgRateit: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['ngRateit'], {serie: true});
+                }],
+                
+            }
         })
         .state('assessment', {
             url: '/assessment/:testId',

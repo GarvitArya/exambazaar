@@ -315,6 +315,7 @@ var allStates = [
 //'/career/aptitude',
 '/career/:domainName',
 '/assessment/:testId',
+'/mobileassessment/:testId',
 '/reportassessment/:testId',
 '/ebinternal/testAssessment',
 '/ebinternal/emailToPublications',
