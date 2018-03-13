@@ -662,7 +662,7 @@ var fromEmail = {
     name: sender
 };
     
-    var schoolIds = ['5a9f7b164b1ece1f48a88d5b'];
+    var schoolIds = ['5a9f7b174b1ece1f48a88d5d'];
     
     var allSchools = school
     .find({ '_id': { $in : schoolIds},  "data.email": {$exists: true}}, { data: 1 })
@@ -676,14 +676,17 @@ var fromEmail = {
         allSchools.forEach(function(thisSchool, sindex){
         var thisEmail = thisSchool.data.email;
         var schoolName = thisSchool.data["name-of-institution"];
+        if(!schoolName){
+            schoolName = "School";
+        }
+        schoolName = titleCase(schoolName);
         var principalName = thisSchool.data["name-of-principal-head-of-institution"];
         var attnName = "";
         if(principalName && principalName.length > 1){
-            principalName = titleCase(principalName);
-            schoolName = titleCase(schoolName);
+            //principalName = titleCase(principalName);
+            
             attnName = principalName + ", " + schoolName;
         }else{
-            schoolName = titleCase(schoolName);
             attnName =  "Principal, " + schoolName;
         }
             
@@ -703,7 +706,7 @@ var fromEmail = {
                 templateId = thisEmailTemplate.templateKey;
                 
                 var from_email = new helper.Email(fromEmail);
-                var to = 'gaurav@exambazaar.com';
+                var to = 'ayush@exambazaar.com';
                 var to_email = new helper.Email(to);
                 //var subject = subject;
                 var html = ' ';
