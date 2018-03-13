@@ -38970,7 +38970,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
                 console.log('SEO Title: ' + $rootScope.pageTitle);
                 console.log('SEO Description: ' + $rootScope.pageDescription);
                 
-                if(stateTo != 'allquestionpapers'){
+                if(stateTo != 'allquestionpapers' && stateTo != 'allquestionpapers1' && stateTo != 'allquestionpapers3'){
                     console.log('SEO Keywords: ' + $rootScope.pageKeywords);
                 }
                 
