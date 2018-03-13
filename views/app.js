@@ -550,7 +550,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.officialPapersInvite = function() {
             return $http.post('/api/emails/officialPapersInvite');
         };
-        
+        this.officialPapersInvitetoSchool = function() {
+            return $http.post('/api/emails/officialPapersInvitetoSchool');
+        };
         
         this.internshipEmail = function(emailForm) {
             return $http.post('/api/emails/internshipEmail', emailForm);
@@ -32535,6 +32537,25 @@ function getLatLng(thisData) {
                     
             };
             
+            $scope.officialPapersInvitetoSchool = function(userId){
+                UserService.getUserBasic(userId).success(function (data, status, headers) {
+                    var marketingUser = data;
+                    if(marketingUser.mobile == '9829685919'){
+                         EmailService.officialPapersInvitetoSchool().success(function (thisData, status, headers) {
+                            
+                            Notification.success("All done!");
+                        })
+                        .error(function (data, status, header, config) {
+                            console.log('Error ' + data + ' ' + status);
+                        });   
+                    }
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                    
+            };
             $scope.CATEmail = function(userId){
                 console.log(userId);
                  UserService.getUserBasic(userId).success(function (data, status, headers) {

@@ -6,9 +6,11 @@ var email = require('../app/models/email');
 var user = require('../app/models/user');
 var college = require('../app/models/college');
 var coaching = require('../app/models/coaching');
+var school = require('../app/models/school');
 var subscriber = require('../app/models/subscriber');
 var sendGridCredential = require('../app/models/sendGridCredential');
 var moment = require('moment');
+var fs = require('fs');
 
 var transporter = nodemailer.createTransport('smtps://gaurav%40educhronicle.com:Amplifier@9@smtp.gmail.com');
 
@@ -635,6 +637,146 @@ var fromEmail = {
     
     
 });
+
+/*fs.readFile('public_html/img/Report.pdf', function(err, data) {*/
+router.post('/officialPapersInvitetoSchool', function(req, res) {
+
+var templateName = 'Official Question Papers';
+
+var from = 'saloni@exambazaar.com';
+var sender = 'Saloni Khandelwal';
+var senderId = '58932d3ac419333af4aadfb4';
+var eCounter = 0;
+//sender = 'Always Exambazaar';
+var fromEmail = {
+    email: from,
+    name: sender
+};
+    
+    var schoolIds = ['5a9f7b164b1ece1f48a88d5b'];
+    
+    var allSchools = school
+    .find({ '_id': { $in : schoolIds},  "data.email": {$exists: true}}, { data: 1 })
+    //.limit(1)
+    .exec(function (err, allSchools) {
+
+    if (!err){
+    if(allSchools){
+        res.json(true);
+        console.log('There are: ' + allSchools.length + ' schools!');
+        allSchools.forEach(function(thisSchool, sindex){
+        var thisEmail = thisSchool.data.email;
+        var schoolName = thisSchool.data["name-of-institution"];
+        var principalName = thisSchool.data["name-of-principal-head-of-institution"];
+        var attnName = "";
+        if(principalName && principalName.length > 1){
+            attnName = principalName + ", " + schoolName;
+        }else{
+            attnName =  "Principal, " + schoolName;
+        }
+            
+        var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+            if (err) return handleError(err);
+            if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+            if(thisEmailTemplate.name == templateName){
+                templateFound = true;
+                templateId = thisEmailTemplate.templateKey;
+                
+                var from_email = new helper.Email(fromEmail);
+                var to = 'gaurav@exambazaar.com';
+                var to_email = new helper.Email(to);
+                //var subject = subject;
+                var html = ' ';
+                var subject = ' ';
+                var content = new helper.Content('text/html', html);
+                var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                mail.setTemplateId(templateId);
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-schoolName-', schoolName));
+                mail.personalizations[0].addSubstitution(new helper.Substitution('-attnName-', attnName));
+
+                fs.readFile('Previous.pdf', function(err, data) {
+                    fs.readFile('Previous.png', function(err, imgdata) {
+                    console.log(data);
+                    console.log(imgdata);
+                    
+                    var dataBuffer = new Buffer(data).toString('base64');
+                    var dataBuffer2 = new Buffer(imgdata).toString('base64');
+    
+                    var attachment = new helper.Attachment();    
+                    attachment.setType("application/pdf");
+                    attachment.setFilename("Previous-year-question-papers-for-competitive-exams.pdf");
+                    attachment.setDisposition("attachment");;
+                    attachment.setContent(dataBuffer);
+                    mail.addAttachment(attachment);
+                        
+                    var attachment2 = new helper.Attachment();    
+                    attachment2.setType("image/png");
+                    attachment2.setFilename("Previous-year-question-papers-for-competitive-exams.png");
+                    attachment2.setDisposition("attachment");;
+                    attachment2.setContent(dataBuffer2);
+                    mail.addAttachment(attachment2);    
+                        
+                    //console.log(data);
+                    var request = sg.emptyRequest({
+                        method: 'POST',
+                        path: '/v3/mail/send',
+                        body: mail.toJSON(),
+                    });
+
+                    sg.API(request, function(error, response) {
+                        if(error){
+                            console.log('Could not send email! ' + error);
+                        }else{
+                        console.log(response);
+                        }
+
+                    });
+                    
+                    });
+                });
+                
+
+            }
+            if(counter == nLength){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+
+
+
+            }else{
+                res.json('No Active SendGrid API Key');
+            }
+        });
+
+
+        });
+    }
+    } else {throw err;}
+});
+    
+    
+    
+    
+    
+});
+
+
 
 router.post('/introductionofEB', function(req, res) {
     console.log('Starting introduction Email');
