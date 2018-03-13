@@ -316,12 +316,13 @@ router.get('/markAnswerExists', function(req, res) {
 
 router.get('/exam/randomQuestion/:examId', function(req, res) {
     var examId = req.params.examId.toString();
+    console.log(examId);
     var allQuestions = question
         .find({exam: examId, active: true, _answerExists: true}, {_id: 1})
         .limit(100)
         .exec(function (err, allQuestions) {
         if (!err){
-            
+            console.log(allQuestions);
             var nQuestions = allQuestions.length;
             if(nQuestions > 0){
                 var rIndex = Math.floor(Math.random() * (nQuestions - 1 - 0) + 0);
@@ -472,6 +473,7 @@ router.get('/count', function(req, res) {
 //to get a particular user with _id userId
 router.get('/edit/:questionId', function(req, res) {
     var questionId = req.params.questionId.toString();
+    console.log(questionId);
     var thisQuestion = question
         .findOne({'_id': questionId})
         .exec(function (err, thisQuestion) {

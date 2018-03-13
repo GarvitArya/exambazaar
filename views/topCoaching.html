@@ -34,11 +34,13 @@
 
 <div class="textBlack whiteBackground secondFont font14">
     <div layout="row" layout-align="center start" class="width100">
-    <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center start" class="marginT20 marginB40">
-        <h1 class="h1Font width100 marginB40 subhheadingBottomBorder2 paddingB10 text-center">
-            Best {{exam.top_coaching_name}} Coaching Classes in India
+    <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center start" class="marginTB20 marginB40">
+        <h1 class="h1Font width100  subhheadingBottomBorder2 paddingB10 text-center bold">
+            Best {{exam.top_coaching_name}} Coaching in India
         </h1>
-        
+        <h2 class="h3Font marginT10 marginB40 text-center">
+            Choose the best {{exam.top_coaching_name}} Coaching Classes in India for {{exam.exam_page_name}} Preparation with Expert Reviews and Ratings on Faculty, Infrastructure, Study Material and Environment
+        </h2>
         <div layout="row" layout-align="start start" class="width100" layout-wrap>
             <div layout="row" layout-align="start start" flex-gt-sm="50" flex-sm="50" flex-xs="100" class="padding10" ng-repeat="topCoaching in topCoachings  | orderBy:['-allcenters']" ng-if="topCoaching.allcenters > 0">
                 <div layout="row" layout-align="start start" class="width100 padding10 boxShadow min25vh">
@@ -74,7 +76,7 @@
                         <div layout="row" layout-align="start end" class="width100 marginT20">
                             <h3 layout="row" layout-align="start center" flex class="margin0">
                                 <a class="baseFont" ui-sref="showblog({ blogpostSlug: {{'topCoaching.urlslug'}} })" target="_blank" id="reviewLink">
-                                    Read Expert Review
+                                    Expert Review of {{topCoaching.coachingGroups[0]}}
                                 </a>
 
                             </h3>

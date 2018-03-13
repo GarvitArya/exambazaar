@@ -120,9 +120,9 @@ router.get('/generateurlslugs', function(req, res) {
         if (!err){
             
             allExams.forEach(function(thisExam, index){
-                var examName = thisExam.exam_page_name + " Question Papers";
+                var examName = thisExam.exam_page_name;
                 
-                thisExam.question_papers_urlslug = slugify(examName);
+                thisExam.urlslug = slugify(examName);
                 
                 
                 thisExam.save(function(err, thisExam) {
@@ -385,11 +385,16 @@ router.get('/pattern/:examName', function(req, res) {
                 .deepPopulate('exampattern')
                 .exec(function (err, thisExam) {
                 if (!err){
-                    var exampattern = null;
-                    if(thisExam.exampattern){
-                        exampattern = thisExam.exampattern;
+                    if(thisExam){
+                        var exampattern = null;
+                        if(thisExam.exampattern){
+                            exampattern = thisExam.exampattern;
+                        }
+                        res.json(exampattern);
+                    }else{
+                        res.json(null);
                     }
-                    res.json(exampattern);
+                    
                 } else {throw err;}
             });
             }

@@ -183,7 +183,7 @@
             </div>
         </div>
         <div class="font10">Exam: {{exam._id}}</div>
-        <div class="font10"><a ui-sref="addQuestion({ testId:{{'question.test._id'}} })" target="_blank">Test: {{question.test._id}}</a>&nbsp;&nbsp;&nbsp;&nbsp;Q.{{question._startnumber}}&nbsp;&nbsp;&nbsp;&nbsp;{{question._id}}</div>
+        <div class="font10"><a ui-sref="assessment({ testId:{{'question.test._id'}} })" target="_blank">Test: {{question.test.name}}</a>&nbsp;&nbsp;&nbsp;&nbsp;Q.{{question._startnumber}}&nbsp;&nbsp;&nbsp;&nbsp;{{question._id}}</div>
     </div>
     
     <div layout="row" layout-align="center start" class="width100">

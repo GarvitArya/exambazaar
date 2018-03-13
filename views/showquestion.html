@@ -1,0 +1,625 @@
+<style>
+    input[type="text"], input[type="number"]
+    {
+        padding: 5px;
+        font-size: 13px;
+        color: #333333;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="number"]:hover, input[type="number"]:focus{
+        padding: 5px;
+        font-size: 13px;
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    textarea{
+        width:100%;
+        padding: 5px 5px;
+        display: inline-block;
+        border: 1px solid #969696;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    textarea:hover {
+        border: 1px solid #969696;
+    }
+    textarea:focus {
+        border: 1px solid #969696;
+    }
+    
+    .academicRow{
+        min-height: 25vh;
+        width: 100%;
+        margin-top: 20px;
+        
+    }
+    .fieldRow{
+        min-height: 5vh;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .fieldRow div.col1{
+        color: gray;
+        font-family: 'Roboto Condensed', sans-serif;
+    }
+    .fieldRow div.col2{
+        color: black;
+    }
+    
+    #link{
+        color: #20C39A;
+    }
+    #link:hover{
+        color: #20C39A;
+    }
+    .active{
+        color: white;
+        font-weight: bold;
+        border-bottom: 2px solid white;
+    }
+    #topBar{
+        color: white;
+    }
+    #topBar.active{
+        color: white;
+    }
+    #topBar:hover{
+        font-weight: bold;
+    }
+    .legendTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:30px;
+        height:30px;
+        background: white;
+        color: gray;
+        border: 1px solid gray;
+    }
+    .legendTag.answered{
+        background: #20C39A;
+        color: white;
+        border: 1px solid #20C39A;
+    }
+    .legendTag.review{
+        background: #8378d0;
+        color: white;
+        border: 1px solid #8378d0;
+    }
+    .legendTag.seen{
+        background: gainsboro;
+        color: black;
+        border: 1px solid gainsboro;
+    }
+    .notattemptedTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        height:30px;
+        color: black;
+        background: white;
+        border: 1px solid black;
+    }
+    .correctTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        height:30px;
+        color: white;
+        background: #2E8B57;
+        border: 1px solid #2E8B57;
+    }
+    .incorrectTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        height:30px;
+        color: white;
+        background: #B22222;
+        border: 1px solid #B22222;
+    }
+    .partiallycorrectTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        height:30px;
+        color: white;
+        background: #e5a72b;
+        border: 1px solid #e5a72b;
+    }
+    .emptyTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        min-height:30px;
+        color: gray;
+        background: white;
+        border: 1px solid gray;
+    }
+    .emptyTag:hover{
+        color: white;
+        background: black;
+        border: 1px solid black;
+    }
+    
+    .seenTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        min-height:30px;
+        color: black;
+        background: gainsboro;
+        border: 1px solid gainsboro;
+    }
+    .answeredTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        min-height:30px;
+        color: white;
+        background: #20C39A;
+        border: 1px solid #20C39A;
+    }
+    .reviewTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        min-height:30px;
+        color: white;
+        background: #8378d0;
+        border: 1px solid #8378d0;
+    }
+    .activeTag{
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:50px;
+        min-height:30px;
+        color: white;
+        background: black;
+        border: 1px solid black;
+    }
+    
+    .badge{
+        font-size: 14px;
+        white-space: normal;
+        margin-top: 0px;
+    }
+    .subSectionHeader{
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid whitesmoke;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .academicSubSection{
+        border-bottom: 1px solid #20C39A;
+        
+    }
+    .academicSubHeader{
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    #profilePicSection{
+        margin-bottom: 20px;
+    }
+    .questionRow{
+        width: 100%;
+        background: #ccc;
+        margin-bottom: 10px;
+    }
+    
+    
+    pre {
+        background: orange;
+        border: orange;
+        margin-left: 40px;
+        padding-left: 40px;
+        padding-right: 40px;
+        width: 80%;
+    }       
+    
+    code {
+        
+    }
+    .md-button {
+      color : currentColor;
+    }
+
+
+    .md-button[disabled] {
+        color : rgba(0, 0, 0, 0.26);
+        border-color: rgba(0, 0, 0, 0.26);
+        background-color: transparent;
+    }
+    .md-button[disabled]:hover {
+        color : rgba(0, 0, 0, 0.26);
+        border-color: rgba(0, 0, 0, 0.26);
+        background-color: transparent;
+    }
+    img.center {
+        display: block;
+        margin: 0 auto;
+        max-width: 90%;
+    }
+    
+    .vScroll{
+        overflow: auto;
+    }
+    #headerLogo{
+        max-height: 40px;
+    }
+    .leftBar{
+        border-right: 2px solid whitesmoke;
+    }
+    #legendBox{
+        border: 1px solid #ccc;
+        background: whitesmoke;
+    }
+    .answerBox{
+        background: #C2F8CB;
+        color: black;
+    }
+    .answerBoxHeader{
+        background: #20C39A;
+        color: white;
+    }
+</style>
+
+<!--<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>-->
+
+<div class="textBlack whiteBackground secondFont exact100h " ng-if="user && !disabled && testOver" www.exambazaar.com ngsf-fullscreen="fullscreenCtrl">
+    
+    <div layout="row" layout-align="center center" class=" exact10h greyBottomBorder " id="testHeader" ng-if="testOver">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="start center" class="paddingLR10" >
+            <div layout="row" layout-align="start center" flex="30" class="" >
+            <div layout="row" layout-align="start center" class="marginR20">
+                <a href="https://www.exambazaar.com" target="_blank"><img src="images/logo/eblogo.png" id="headerLogo"/></a>  
+            </div>    
+            
+            </div>
+            <div flex layout="column" layout-align="center center" class="">
+                <div class="h2Font bold">{{test.name}}</div>
+                
+            </div>
+            <div layout="row" layout-align="end center" flex="30" class="paddingR10">
+                <div layout="row" layout-align="end center" class="width100 h3Font narrowLine text-primary" >
+                    <i class="fa fa-braille font24" aria-hidden="true"></i>&nbsp;&nbsp;Submitted
+                </div>
+
+            </div>   
+        </div>
+    </div>
+    
+    <div layout="row" layout-align="center start" class="width100 exact90h">
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="">
+
+            <div flex-gt-xs="{{col1Width}}" layout="column" layout-align="center center"  class="greyRightBorder exact90h smallFont">
+                <div layout="column" layout-align="center center" class="h3Font bold paddingTB5 width100" >
+                    <div><span ng-if="user.basic.name">Candidate: {{user.basic.name}}</span></div>
+                    <div>Test Score: {{userAssessment.evaluation.score}}</div>
+                </div>
+                <div layout="column" layout-align="center center" class=" paddingTB5 width100" >
+                    <div layout="column" layout-align="center center" class="width80 padding10 exact20h" id="legendBox">
+                        <div layout="row" layout-align="center center" class="width100 paddingTB5">
+                            <div flex layout="row" layout-align="center center" class="">
+                                <div flex="25" >
+                                    <div class="legendTag correctTag" layout="row" layout-align="center center">{{userAssessment.evaluation.marked.correct.length}}</div>
+
+                                </div>
+                                <div flex class="paddingL5 font10">Correct</div>
+                            </div>
+                            <div flex>
+                            <div flex layout="row" layout-align="center center">
+                                <div flex="25">
+                                    <div class="legendTag incorrectTag" layout="row" layout-align="center center">{{userAssessment.evaluation.marked.incorrect.length}}</div>
+                                </div>
+                                <div flex class="paddingL5 font10">Incorrect</div>
+                            </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="center center" class="width100 paddingTB5">
+                            <div flex layout="row" layout-align="center center" class="">
+                                <div flex="25">
+                                    <div class="legendTag seenTag" layout="row" layout-align="center center">{{userAssessment.evaluation.questions.attemped}}</div>
+                                </div>
+                                <div flex class="paddingL5 font10">Attempted</div>
+                            </div>
+                            <div flex>
+                            <div flex layout="row" layout-align="center center">
+                                <div flex="25">
+                                    <div class="legendTag" layout="row" layout-align="center center">{{userAssessment.evaluation.questions.unattemped}}</div>
+
+                                </div>
+                                <div flex class="paddingL5 font10">Not Attempted</div>
+                            </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!--<div layout="row" layout-align="center end" class="marginT20 marginB5 width100 ">
+                    Question List
+                </div>-->
+                <div layout="row" layout-align="center start" class="width100 exact70h vScroll paddingT20 paddingB40 paddingLR20" layout-wrap>
+                    <div ng-repeat="showquestion in questionList" class="margin5 notattemptedTag" layout="row" layout-align="center center" ng-class="getQClass(showquestion.subquestion)" ng-click="setQuestion(showquestion.question, showquestion.sno)">
+                        {{showquestion.no}}
+                    </div>
+                </div>
+                <div layout="row" layout-align="center center" class="width100 subBaseFont textDarkGrey padding10 exact10h greyTopBorder" >
+                    <div flex layout="row" layout-align="center center" class="paddingL10" ng-click="showInstructionDialog()">Test Instructions</div>
+                    <div flex layout="row" layout-align="end center" class="smallFont paddingR10"  ngsf-toggle-fullscreen id="copyLink">
+                        <i class="fa fa-arrows-alt font20 marginR10" aria-hidden="true"></i>
+                        <div>Full Screen</div>
+                    </div>
+                    
+                    <span class="marginL10 danger font8" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">Reset</span>
+                    <span class="marginL10 font8" ng-click="openAddQuestion()" ng-if="fullScope">QPage</span>
+                
+                </div>
+            </div>
+            
+            
+            <div flex layout="column" layout-align="start start" class="subBaseFont paddingLR20  exact90h">
+                <div layout="row" layout-align="start center" class="width100 exact10h greyBottomBorder paddingT10">
+
+                    <div flex class="width100 " layout="column" layout-align="center start">
+                        <div layout="row" layout-align="start center" class="baseFont bold">
+                            <div class="marginR5">Q.</div> 
+                            <div ng-repeat="showquestion in questionList" class="smallFont emptyTag" layout="row" layout-align="center center" ng-class="{ seenTag: showquestion.subquestion.seen, answeredTag: showquestion.subquestion.anyAnswer, reviewTag: showquestion.subquestion.markforreview}" ng-if="showquestion.no == activeQuestionNo">
+                                {{activeQuestionNo}}
+                            </div>
+                        </div>
+                        
+                        <span ng-if="question.questions.length > 1" class="subBaseFont paddingT5">
+                            Question Group: ({{question._startnumber}}<span ng-if="question._endnumber">&nbsp;-&nbsp;{{question._endnumber}})</span>
+                        </span>
+                        
+                    
+                    </div>
+                    <div flex layout="row" layout-align="end center">
+                        <div ng-if="subquestion.userevaluation.correct" layout="row" layout-align="end center">
+                            <div class="">
+                            Your Score
+                            </div>
+                            <div layout="row" layout-align="center center" class="marginLR5 correctTag"> 
+                                <span ng-if="subquestion.marking.correct[0] != '+'">
+                                +
+                                </span>
+                                <span>
+                                    {{subquestion.marking.correct}}
+                                </span>
+                                <md-tooltip>
+                                You have scored {{subquestion.marking.correct}} marks for correct answer of this question
+                                </md-tooltip>
+                            </div>
+                        </div>
+                        <div ng-if="subquestion.userevaluation.incorrect" layout="row" layout-align="end center">
+                            <div class="">
+                            Your Score
+                            </div>
+                            <div layout="row" layout-align="center center" class="marginLR5 incorrectTag" ng-if="subquestion.marking.incorrect"> {{subquestion.marking.incorrect}}
+                                <md-tooltip>
+                                You have scored {{subquestion.marking.incorrect}} marks for incorrect answer of this question
+                                </md-tooltip>
+                            </div>
+                        </div>
+                        <div ng-if="subquestion.userevaluation.partial" layout="row" layout-align="end center">
+                            <div class="">
+                            Your Score
+                            </div>
+                            <div layout="row" layout-align="center center" class="marginLR5 partiallycorrectTag" ng-if="subquestion.userevaluation.userScore.score"> {{subquestion.userevaluation.userScore.score}}
+                                <md-tooltip>
+                                You have scored {{subquestion.userevaluation.userScore.score}} marks for partially correct answer of this question
+                                </md-tooltip>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        <div ng-if="subquestion.userevaluation.notattempted" layout="row" layout-align="end center">
+                            <div class="">
+                            Your Score
+                            </div>
+                            <div layout="row" layout-align="center center" class="marginLR5 notattemptedTag"> 0
+                                <md-tooltip>
+                                You have scored 0 marks as you have not attempted this question
+                                </md-tooltip>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div layout="row" layout-align="start start" class="exact70h width100">
+                    <div flex layout="column" layout-align="start start" class="width100 subBaseFont wideLine paddingLR10 paddingT20 paddingB40 exact70h vScroll leftBar" ng-if="question.context || question.images && question.images.length > 0">
+                        <div ng-bind-html="question.context" class="width100 paddingB20 text-justify">
+                        </div>
+                        
+                        <img ng-repeat="image in question.images" ng-src="{{image}}" class="center"/>
+                    </div>
+                    <div flex layout="column" layout-align="start start" class="width100 exact70h vScroll paddingLR10 paddingB40">
+
+                        <div layout="column" layout-align="start start" class="width100 min60vh padding10" ng-if="subquestion">
+                            <div layout="column" layout-align="start start" class="width100 min60vh padding10">
+                            <!--<div>Question {{activeQuestionNo}}</div>-->
+                            <div ng-bind-html="subquestion.question" class="width100 paddingTB10">
+                            </div>
+                            <div ng-repeat="option in subquestion.options" class="width100" ng-if="subquestion.type =='mcq' && subquestion.mcqma">
+                              <md-checkbox ng-checked="subquestion.userAnswer && subquestion.userAnswer.length > 0 && subquestion.userAnswer.indexOf(option._id) != -1" layout="row" layout-align="start center" class="paddingTB2 width100 " ng-disabled="true">
+                                {{option.option}} <span ng-if="subquestion.answer.correctOptions.indexOf(option._id) != -1" class="marginL20 baseFont text-primary ">
+                                        <i class="fa fa-check-circle text-primary font20  bold" aria-hidden="true" ></i>&nbsp;Correct
+                                </span>
+                              </md-checkbox>
+                            </div>     
+                            <md-radio-group ng-model="subquestion.userAnswer" ng-if="subquestion.type =='mcq' && !subquestion.mcqma" class="width100">
+
+                            <md-radio-button value="{{option._id}}" ng-model="userAnswer" ng-repeat="option in subquestion.options"  class="paddingTB2 widht100" ng-disabled="true">
+                                <div layout="row" layout-align="start center" flex>
+                                    {{option.option}}
+                                    <div layout="row" layout-align="start center" ng-if="option._id == subquestion.answer.option" class="marginL20 baseFont text-primary">
+                                        <i class="fa fa-check-circle text-primary font20  bold" aria-hidden="true" ></i>&nbsp;Correct
+                                    </div>
+                                </div>
+                            </md-radio-button>
+
+                            </md-radio-group>
+
+                            <div layout="row" layout-align="center center" class="width100 paddingTB10" ng-if="subquestion.type =='numerical'">
+                                
+                                <div flex="25">Your Answer</div>
+                                <div flex>
+                                    <input type="number" class="text-center width100" ng-model="subquestion.userNumericalAnswer" placeholder="Type your numerical answer here" disabled>
+                                </div>
+
+
+                            </div>
+                            <div layout="column" layout-align="start start" ng-if="subquestion.answer.type =='numerical'" class="width100 boxShadow baseFont marginT20">
+                                <div layout="column" layout-align="start start" class=" width100 answerBoxHeader bold padding5">
+                                    Answer Key
+                                </div>
+                                
+                                <div ng-if="subquestion.answer.numericalAnswerType == 'Range' " class = "padding5">
+                                    
+                                    <span ng-if="subquestion.answer.numericalAnswerRange.min != subquestion.answer.numericalAnswerRange.max">
+                                    Between the values: {{subquestion.answer.numericalAnswerRange.min}} and {{subquestion.answer.numericalAnswerRange.max}}
+                                    </span>
+                                    <span ng-if="subquestion.answer.numericalAnswerRange.min == subquestion.answer.numericalAnswerRange.max">
+                                    Correct Answer: {{subquestion.answer.numericalAnswerRange.min}}
+                                    </span>
+                                </div>
+                                <div ng-if="subquestion.answer.numericalAnswerType == 'Exact' " class = "padding5">
+                                    <div class="marginR10">
+                                       Correct Answer:
+                                    </div>
+                                    <div layout="row" layout-align="start center" class="width100" layout-wrap>
+                                        <div class="marginR5" ng-repeat="answer in subquestion.answer.numericalAnswers">
+                                            {{answer}}
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div layout="row" layout-align="start center" class="width100 exact10h whiteBackground greyTopBorder paddingT5">
+                    <!--<div layout="row" layout-align="start center">
+                        <md-button class="md-next md-large tolowercase margin0 " ng-click="setPreviousQuestion(question)" ng-if="question._id != testQuestions[0]._id">
+                            Previous
+                        </md-button>
+
+                    </div>-->
+                    
+                    <div layout="row" layout-align="start center" flex class="">
+                        <md-button class="md-next md-small font12 tolowercase margin0 " ng-click="setPreviousQuestion(question, subquestion)">
+                            Previous
+                        </md-button>
+                    </div>
+                    <div layout="row" layout-align="center center" flex class="">
+                        
+                        <!--<md-button class="md-signup md-small tolowercase margin0 font12" ng-click="clearAnswer(subquestion)" ng-disabled="!subquestion.userAnswer && !subquestion.userNumericalAnswer">
+                            Clear your response
+                        </md-button>-->
+                    </div>
+                    <div flex layout="row" layout-align="end center" class="">
+                        <md-button class="md-saveNext md-small font12 tolowercase margin0 " ng-click="setNextQuestion(question, subquestion)">
+                            Next
+                        </md-button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start" class="exact90h" ng-if="!testOver && user && !disabled">
+    <div layout="column" layout-align="center center" class="width100 blogFont exact90h">
+        <div class="h1Font">
+            {{user.basic.name}}
+        </div>
+        <div class="h2Font">
+            Thank you for visiting this page, but you haven't submitted this test yet!
+        </div>
+        <div class="baseFont textGray marginB20">
+            In case you haven't started the test yet, attempt / finish {{test.name}} now!
+        </div>
+        
+        <md-button class="md-saveNext md-small font14 tolowercase margin0 " ui-sref="assessment({ testId:{{'test._id'}} })">
+            Write {{test.name}} for Free
+        </md-button>
+    </div>
+
+</div>
+<div class="textBlack whiteBackground secondFont font14" ng-if="!user || disabled">
+    
+    <div layout="column" layout-align="center center" class="width100 min50vh blogFont">
+        <div class="font24 paddingLR20 text-center">
+            You need to be logged in on a laptop to access this page.
+        </div>
+    </div>
+    
+</div>
+
+<div style="visibility: hidden">    
+    <div class="md-dialog-container" id="instructionDialog">
+    <md-dialog class="halfscreen-dialog2">
+    <div class="width100" id="examinfo">
+        
+    </div>
+    <div class="paddingTB20 paddingLR40" layout="column" layout-align="start center" layout-fill>
+        
+        <div layout="column" layout-align="start center" class="width100 editFont" >
+            <div layout="row" layout-align="start center" class="blogFont bold font20 width100">
+            Instructions for Exambazaar Test:
+            </div>
+            <div ng-repeat="instruction in  instructions track by $index" class="width100">
+                <div class="blogFont font14">
+                    {{$index+1}}. {{instruction}}
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginT20">
+                <md-button class="md-next md-large tolowercase margin0 " ng-click="closeInstructionDialog()">
+                    Resume
+                </md-button>
+            </div>
+        </div>
+        
+    </div>
+    </md-dialog>
+    </div>    
+</div>
