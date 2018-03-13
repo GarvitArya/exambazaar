@@ -33509,7 +33509,7 @@ function getLatLng(thisData) {
         str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
       }
       return str.join(' ');
-    }    
+    };  
         
     function slugify(string) {
       return string

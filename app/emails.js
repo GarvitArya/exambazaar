@@ -639,13 +639,22 @@ var fromEmail = {
 });
 
 /*fs.readFile('public_html/img/Report.pdf', function(err, data) {*/
+
+function titleCase(str) {
+  str = str.toLowerCase();
+  str = str.split(' ');
+  for (var i = 0; i < str.length; i++) {
+    str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+  }
+  return str.join(' ');
+};
 router.post('/officialPapersInvitetoSchool', function(req, res) {
 
 var templateName = 'Official Question Papers';
 
-var from = 'saloni@exambazaar.com';
-var sender = 'Saloni Khandelwal';
-var senderId = '58932d3ac419333af4aadfb4';
+var from = 'always@exambazaar.com';
+var sender = 'Always Exambazaar';
+var senderId = '59a7eb973d71f10170dbb468';
 var eCounter = 0;
 //sender = 'Always Exambazaar';
 var fromEmail = {
@@ -670,8 +679,11 @@ var fromEmail = {
         var principalName = thisSchool.data["name-of-principal-head-of-institution"];
         var attnName = "";
         if(principalName && principalName.length > 1){
+            principalName = titleCase(principalName);
+            schoolName = titleCase(schoolName);
             attnName = principalName + ", " + schoolName;
         }else{
+            schoolName = titleCase(schoolName);
             attnName =  "Principal, " + schoolName;
         }
             
