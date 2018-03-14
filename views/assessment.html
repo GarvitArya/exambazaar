@@ -269,6 +269,7 @@
     
     
     
+    
 </style>
 
 <!--<div id="spacer1" class="hidden-xs whiteBackground">
@@ -376,7 +377,7 @@
             <div flex layout="column" layout-align="start start" class="subBaseFont paddingLR20  exact90h">
                 <div layout="row" layout-align="start center" class="width100 exact10h greyBottomBorder paddingT10">
 
-                    <div flex class="" layout="column" layout-align="center start">
+                    <div flex class="" layout="row" layout-align="start center">
                         <div layout="row" layout-align="start center" class="baseFont bold">
                             <div class="marginR5">Q.</div> 
                             <div ng-repeat="showquestion in questionList" class="smallFont emptyTag" layout="row" layout-align="center center" ng-class="{ seenTag: showquestion.subquestion.seen, answeredTag: showquestion.subquestion.anyAnswer, reviewTag: showquestion.subquestion.markforreview}" ng-if="showquestion.no == activeQuestionNo">
@@ -384,7 +385,7 @@
                             </div>
                         </div>
                         
-                        <span ng-if="question.questions.length > 1" class="subBaseFont paddingT5">
+                        <span ng-if="question.questions.length > 1" class="subBaseFont paddingL5">
                             Question Group: ({{question._startnumber}}<span ng-if="question._endnumber">&nbsp;-&nbsp;{{question._endnumber}})</span>
                         </span>
                         

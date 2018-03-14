@@ -18777,7 +18777,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.searchDistance = distance;
             };
             $scope.searchDistance = 5;
-            $scope.searchDistances = [1, 5, 10, 20, 50];
+            $scope.searchDistances = [1, 5, 10, 20, 50, 100, 200];
             $scope.searchExams = [];
             $scope.aroundme = function(){
                 $mdDialog.hide();
@@ -21139,8 +21139,54 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
     }]); 
     exambazaar.controller("assessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', 'moment', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments, moment){
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', 'moment', '$mdSidenav', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments, moment, $mdSidenav){
             
+        
+        $scope.closeLeftBar = function () {
+          $mdSidenav('left').close()
+            .then(function () {
+              //$log.debug("close RIGHT is done");
+            });
+        };
+        $scope.toggleLeft = buildToggler('left');
+        $scope.isOpenLeft = function(){
+          return $mdSidenav('left').isOpen();
+        };
+        function debounce(func, wait, context) {
+          var timer;
+
+          return function debounced() {
+            var context = $scope,
+                args = Array.prototype.slice.call(arguments);
+            $timeout.cancel(timer);
+            timer = $timeout(function() {
+              timer = undefined;
+              func.apply(context, args);
+            }, wait || 10);
+          };
+        }
+        function buildDelayedToggler(navID) {
+          return debounce(function() {
+            // Component lookup should always be available since we are not using `ng-if`
+            $mdSidenav(navID)
+              .toggle()
+              .then(function () {
+                //$log.debug("toggle " + navID + " is done");
+              });
+          }, 200);
+        }
+        function buildToggler(navID) {
+          return function() {
+            // Component lookup should always be available since we are not using `ng-if`
+            $mdSidenav(navID)
+              .toggle()
+              .then(function () {
+                //$log.debug("toggle " + navID + " is done");
+              });
+          };
+        }
+        
+        
         $scope.mobileSummary = false;
         $scope.toggleMobileSummary = function(){
             $scope.mobileSummary = !$scope.mobileSummary;        
@@ -26239,10 +26285,15 @@ function getLatLng(thisData) {
         $scope.setActiveSubcategory = function(subcategoryName){
             $scope.activeCategory.subcategories.forEach(function(thisSubcategory, index){
                 if(thisSubcategory.name == subcategoryName){
+                    $scope.saveUser();
                     $scope.activeSubcategory = thisSubcategory;
                 }
             });
         };
+        $scope.setActiveCategory = function(stateName){
+            
+            $state.go(stateName);
+        }; 
             
         $scope.elgInput = {
             category: {
@@ -26568,7 +26619,6 @@ function getLatLng(thisData) {
         }   
             
         $scope.saveUser = function(){
-            console.log($scope.user);
             $scope.setAge();
             UserService.updateUser($scope.user).success(function (data, status, headers) {
                 Notification.success({message: "Changes successfully saved!",  positionY: 'top', positionX: 'right', delay: 1000});
@@ -36233,6 +36283,41 @@ function getLatLng(thisData) {
                 
             }
         })
+        .state('mobilereportassessment', {
+            url: '/mobilereportassessment/:testId',
+            views: {
+                /*'header':{
+                    templateUrl: 'header.html',
+                    
+                },*/
+                'body':{
+                    templateUrl: 'mobilereportassessment.html',
+                    controller: 'reportassessmentController',
+                },
+                /*'footer': {
+                    templateUrl: 'footer.html'
+                }*/
+            },
+            resolve: {
+                thistest: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getTest($stateParams.testId);
+                }],
+                thisanswerkey: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.answerKey($stateParams.testId);
+                }],
+                
+                thisTestQuestions: ['questionService','$stateParams',
+                    function(questionService, $stateParams){
+                        return questionService.getTestQuestions($stateParams.testId);
+                }],
+                angularScreenfull: ['$ocLazyLoad', function($ocLazyLoad) {
+                     return $ocLazyLoad.load(['angularScreenfull'], {serie: true});
+                }],
+                
+            }
+        })
         .state('reportassessment', {
             url: '/reportassessment/:testId',
             views: {
@@ -39086,7 +39171,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         }else{
             //console.log('Not EB Internal');
         }
-        if(stateTo == 'assessment'){
+        if(stateTo == 'assessment' || stateTo == 'mobileassessment'){
             if($cookies.getObject('sessionuser')){
                 
                 

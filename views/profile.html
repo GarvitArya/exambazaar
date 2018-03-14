@@ -155,7 +155,7 @@
 
 <div class="textBlack whiteBackground secondFont font14" ng-if="user">
     <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
-    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
+    <div layout="row" layout-align="center center"  layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
         <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100">
             <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="paddingLR20">
                 <span id="topBar" ng-class="{ active: component.active }" >
@@ -166,12 +166,12 @@
     </div>
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
-        <div layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
+        <div hide-xs layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
             <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }">
                 {{subcategory.name}}
             </div>
         </div>
-        <div flex layout="row" layout-align="center center">
+        <div flex layout="row" layout-align="center center" class="paddingLR20">
             <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
             <div layout="column" layout-align="start start" class="width100 min100vh" flex>
                 <div layout="column" layout-align="center start" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20">
@@ -180,7 +180,7 @@
                 <div layout="column" layout-align="center start" class="width100">
                      
                     <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Personal'">
-                        <div layout="row" layout-align="start start" class="fieldRow academicSubSection paddingB20" id="profilePicSection">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow academicSubSection paddingB20" id="profilePicSection">
                             <div flex="20" class="col1">
                                 <div layout="column" layout-align="start start" class="editFont">
                                 <div layout="column" layout-align="center center" ng-if="user.image">
@@ -204,14 +204,14 @@
                                 <input type="text" class="width100" ng-model="user.basic.name"  placeholder="Name" disabled>
                             </div>
                         </div>
-                        <!--<div layout="row" layout-align="start start" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">Profile Picture</div>
+                        <!--<div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">Profile Picture</div>
                             <div layout="row" layout-align="start center" flex class="col2 paddingTB10">
                                 
                             </div>
                         </div>-->
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">Gender</div>
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">Gender</div>
                             <div layout="row" layout-align="start center" flex class="col2">
                                 <div ng-repeat="gender in userVariables.genders" class="marginR10">
                                     <span class="badge emptyTag" ng-class="{ filledTag: user.basic.gender=='{{gender}}' }" ng-click="setGender(gender)">
@@ -221,8 +221,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">Category</div>
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">Category</div>
                             <div layout="row" layout-align="start center" flex class="col2">
                                 <div ng-repeat="caste in userVariables.categories" class="marginR10">
                                     <span class="badge emptyTag" ng-class="{ filledTag: user.basic.category=='{{caste}}' }" ng-click="setCategory(caste)">
@@ -232,8 +232,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">Person with Disability (PwD)</div>
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">Person with Disability (PwD)</div>
                             <div layout="row" layout-align="start center" flex class="col2">
                                 <span class="badge emptyTag marginR10" ng-class="{ filledTag: user.basic.PwD==true }" ng-click="setPwD(true)">
                                     Yes
@@ -243,36 +243,132 @@
                                 </span>
                             </div>
                         </div>
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">Date of Birth</div>
-                            <div layout="row" layout-align="start center" flex class="col2 paddingTB10">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">Date of Birth</div>
+                            <div layout="row" layout-align="start center" flex class="col2">
                                 <md-datepicker ng-model="user.basic.dob" md-placeholder="Date of Birth" class="margin0"></md-datepicker>
                             </div>
                         </div>
                         
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">
-                                <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Contact')">
-                                    Next
-                                </md-button>
+                        <div layout="row" layout-align="end center" class="width100  whiteBackground greyBottomBorder paddingTB20 marginB20">
+                            <md-button class="md-next md-medium font16 tolowercase margin0 width100" ng-click="setActiveSubcategory('Social')">
+                                Save & Next
+                            </md-button>
+                        </div>
+                        
+                    </div>
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Social'">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">Referral Code</div>
+                            <div flex class="col2">
+                                <input type="text" class="width100" ng-model="user.referralcode"  placeholder="Referral Code">
                             </div>
                         </div>
+                        <span ng-if="!user.facebookId" class="editFont marginB20">
+                            You can link Facebook to your existing account to enable seamless logging in.
+                        </span>
+
+                        <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase" ng-show="!user.facebookId">
+                            <span class="font14" hide-xs>
+                                Link with Facebook
+                            </span>
+                            <span class="font12" hide-gt-xs>
+                                Link with Facebook
+                            </span>
+                        </md-button>
+
+
+                        <div layout="column" ng-if="user.facebookId" class="marginT10">
+                            <div>
+                                Facebook Linked&nbsp;&nbsp;<i class="fa fa-facebook-official" aria-hidden="true"></i>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 marginTB20">
+                                <div layout="row" layout-align="center center"  flex="20">
+                                <i class="fa fa-check font32 text-primary bold" aria-hidden="true"></i>
+                                </div>
+                                    <!--(id: {{user.facebookId}})-->
+                                <div layout="row" layout-align="start center"  class="editFont">
+                                    You are already linked to your Facebook account. Enjoy seamless logging in with Facebook to your Exambazaar account.
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                        <div layout="row" layout-align="end center" class="width100  whiteBackground greyBottomBorder paddingTB20 marginB20">
+                            <md-button class="md-next md-medium font16 tolowercase margin0 width100" ng-click="setActiveSubcategory('Blogging')">
+                                Save & Next
+                            </md-button>
+                        </div>
                     </div>
+                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Blogging'">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow" ng-if="user.blogger.active">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">
+                                <div>
+                                    Add profile credential
+                                </div>
+                                <div class="editFont font10 ">
+                                    Credentials also appear on blogs you write
+                                </div>
+                            </div>
+                            <div flex class="col2">
+                                <input type="text" class="width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
+                                
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow" ng-if="user.blogger.active">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">
+                                <div>
+                                    Add Facebook Profile
+                                </div>
+                                <div class="editFont font10 ">
+                                    Your facebook profile will be shown in articles
+                                </div>
+                            </div>
+                            <div flex class="col2">
+                                <input type="text" class="width100" ng-model="user.blogger.facebookProfile"  placeholder="https://www.facebook.com/gparashar" >
+                                
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow" ng-if="!user.blogger.active">
+                            <div layout="column" layout-align="start start" class="width100 font14">
+                                <div class="marginB20 font20">
+                                Would you like to contribute to <a ui-sref="blog" target="_blank" id="link">Exambazaar Blog</a>?
+                                </div>
+                                
+                                
+                                <span>
+                                    {{user.basic.name}}, blogging on Exambazaar has not been activated for you.<br/>
+                                    <a href="mailto:team@exambazaar.com?Subject=Blogging%20Request" target="_top" id="link">
+                                        Write to us at team@exambazaar.com
+                                    </a>
+                                    &nbsp;with your blogging experience and we will enable it for you!
+                                </span>
+                            
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="end center" class="width100  whiteBackground greyBottomBorder paddingTB20 marginB20">
+                            <md-button class="md-next md-medium font16 tolowercase margin0 width100" ng-click="setActiveSubcategory('Contact')">
+                                Save & Next
+                            </md-button>
+                        </div>
+                        
+                    </div>
+                    
                     <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Contact'">
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">Mobile</div>
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">Mobile</div>
                             <div flex class="col2">
                                 <input type="text" class="width100" ng-model="user.mobile"  placeholder="Mobile">
                             </div>
                         </div>
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">Email</div>
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">Email</div>
                             <div flex class="col2">
                                 <input type="email" class="width100" ng-model="user.email"  placeholder="Email Address">
                             </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
-                            <div layout="column" layout-align="start start" flex="{{col1Width}}" class="col1">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div layout="column" layout-align="start start" flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">
                                 <div>Location</div>
                                 <div class="font10 textLightGrey">
                                     We use your location to improve your experience in the website.
@@ -293,13 +389,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">
+                        <div layout="row" layout-align="end center" class="width100  whiteBackground greyBottomBorder paddingTB20 marginB20">
+                            <md-button class="md-next md-medium font16 tolowercase margin0 width100" ng-click="setActiveCategory('academics')">
+                                Save & Next
+                            </md-button>
+                        </div>
+                        <!--<div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">
                                 <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Academic')">
                                     Next
                                 </md-button>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     <!--<div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Academic'">
                         <div layout="column" layout-align="start start" class="academicRow academicSubSection">
@@ -307,7 +408,7 @@
                             <div layout="row" layout-align="center center" class="font16 marginB10 width100 academicSubHeader">
                                 Choose your Education Level
                             </div>
-                            <div layout="row" layout-align="start start" class="fieldRow" layout-wrap>
+                            <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow" layout-wrap>
                                 <div flex-xs="20" flex="20" ng-repeat="educationLevel in educationLevels" class="padding10">
                                     <span layout="row" layout-align="center center" class="wrap edLevelTag width100 min15vh text-center" ng-class="{ filledEdLevelTag: user.eligibility.educationLevel.name=='{{educationLevel.name}}' }" ng-click="setEducationLevel(educationLevel)">
                                         {{educationLevel.name}}
@@ -320,7 +421,7 @@
                         <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
                             School Class XII
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
                             <div flex="{{col1WidthAcademic}}" class="col1">Subjects</div>
                             <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
                                 <div flex="25" ng-repeat="class12Subject in class12Subjects" class="padding10">
@@ -330,7 +431,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="start center" class="fieldRow paddingB20">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow paddingB20">
                             <div flex="{{col1WidthAcademic}}" class="col1">Class XII Percentage</div>
                             <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
                                 <span class="marginR10">40</span>
@@ -347,7 +448,7 @@
                         <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
                             Undergraduate
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
                             <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
                             
                             <div flex layout="column" layout-align="start start" class="width100">
@@ -406,7 +507,7 @@
                             </div>
                             
                         </div>
-                        <div layout="row" layout-align="start center" class="fieldRow paddingB20">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow paddingB20">
                             <div flex="{{col1WidthAcademic}}" class="col1">Equivalent Percentage</div>
                             <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
                                 <span class="marginR10">40</span>
@@ -423,7 +524,7 @@
                         <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
                             Postgraduate
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
                             <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
                             <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
                                 <div flex="25" ng-repeat="postgradMajor in postgradMajors" class="padding10">
@@ -433,7 +534,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div layout="row" layout-align="start center" class="fieldRow paddingB20">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow paddingB20">
                             <div flex="{{col1WidthAcademic}}" class="col1">Equivalent Percentage</div>
                             <div layout="row" layout-align="start center" flex class="col2 paddingLR20">
                                 <span class="marginR10">40</span>
@@ -443,114 +544,19 @@
                             </div>
                         </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
+                            <div flex-gt-xs="{{col1Width}}" flex-xs="100" class="col1">
                                 <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Social')">
                                     Next
                                 </md-button>
                             </div>
                         </div>
                     </div>-->
-                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Social'">
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">Referral Code</div>
-                            <div flex class="col2">
-                                <input type="text" class="width100" ng-model="user.referralcode"  placeholder="Referral Code">
-                            </div>
-                        </div>
-                        <span ng-if="!user.facebookId" class="editFont marginB20">
-                            You can link Facebook to your existing account to enable seamless logging in.
-                        </span>
-
-                        <md-button ng-click="fblogin()" class="loginBtn loginBtn--facebook width100 tolowercase" ng-show="!user.facebookId">
-                            <span class="font14" hide-xs>
-                                Link with Facebook
-                            </span>
-                            <span class="font12" hide-gt-xs>
-                                Link with Facebook
-                            </span>
-                        </md-button>
-
-
-                        <div layout="column" ng-if="user.facebookId" class="marginT10">
-                            <div>
-                                Facebook Linked&nbsp;&nbsp;<i class="fa fa-facebook-official" aria-hidden="true"></i>
-                            </div>
-                            <div layout="row" layout-align="start center" class="width100 marginTB20">
-                                <div layout="row" layout-align="center center"  flex="20">
-                                <i class="fa fa-check font32 text-primary bold" aria-hidden="true"></i>
-                                </div>
-                                    <!--(id: {{user.facebookId}})-->
-                                <div layout="row" layout-align="start center"  class="editFont">
-                                    You are already linked to your Facebook account. Enjoy seamless logging in with Facebook to your Exambazaar account.
-                                </div>
-                            </div>
-
-                        </div>
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">
-                                <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Blogging')">
-                                    Next
-                                </md-button>
-                            </div>
-                        </div>
-                    </div>
-                    <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Blogging'">
-                        <div layout="row" layout-align="start center" class="fieldRow" ng-if="user.blogger.active">
-                            <div flex="{{col1Width}}" class="col1">
-                                <div>
-                                    Add profile credential
-                                </div>
-                                <div class="editFont font10 ">
-                                    Credentials also appear on blogs you write
-                                </div>
-                            </div>
-                            <div flex class="col2">
-                                <input type="text" class="width100" ng-model="user.blogger.profileCredential"  placeholder="mechanical engineer, electric car enthusiast" >
-                                
-                            </div>
-                        </div>
-                        <div layout="row" layout-align="start center" class="fieldRow" ng-if="user.blogger.active">
-                            <div flex="{{col1Width}}" class="col1">
-                                <div>
-                                    Add Facebook Profile
-                                </div>
-                                <div class="editFont font10 ">
-                                    Your facebook profile will be shown in articles
-                                </div>
-                            </div>
-                            <div flex class="col2">
-                                <input type="text" class="width100" ng-model="user.blogger.facebookProfile"  placeholder="https://www.facebook.com/gparashar" >
-                                
-                            </div>
-                        </div>
-                        <div layout="row" layout-align="start start" class="fieldRow" ng-if="!user.blogger.active">
-                            <div layout="column" layout-align="start start" class="width100 font14">
-                                <div class="marginB20 font20">
-                                Would you like to contribute to <a ui-sref="blog" target="_blank" id="link">Exambazaar Blog</a>?
-                                </div>
-                                
-                                
-                                <span>
-                                    {{user.basic.name}}, blogging on Exambazaar has not been activated for you.<br/>
-                                    <a href="mailto:team@exambazaar.com?Subject=Blogging%20Request" target="_top" id="link">
-                                        Write to us at team@exambazaar.com
-                                    </a>
-                                    &nbsp;with your blogging experience and we will enable it for you!
-                                </span>
-                            
-                            </div>
-                        </div>
-                        <div layout="row" layout-align="start center" class="fieldRow">
-                            <div flex="{{col1Width}}" class="col1">
-                                <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setActiveSubcategory('Preferences')">
-                                    Next
-                                </md-button>
-                            </div>
-                        </div>
-                    </div>
+                    
+                    
+                    
                     <div layout="column" layout-align="center start" class="width100 font14" ng-if="activeSubcategory.name =='Preferences'">
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
                             <div layout="column" layout-align="start start" class="width100 font14">
                                 <div class="marginB20 font20">
                                 This section is coming up soon!
@@ -671,23 +677,18 @@
     </div>    
 </div>-->
 
-<div class="bottomBar">
-    <div layout="row" layout-align="start center">
-        <div flex ="80">
+<!--<div class="bottomBar ">
+    <div layout="row" layout-align="start center" class="width100 ">
+        <div flex >
             <span>
-            Do you want to save changes to your profile? 
+            Save changes to your profile? 
             </span>
         </div>
-        <div layout="row" layout-align="end center" flex = "20">
-            <md-button class="md-danger md-small font10 width8" ng-click="saveUser()">
+        <div layout="row" layout-align="end center" class="">
+            <md-button class="md-next md-small font12 margin0" ng-click="saveUser()">
                 Save
             </md-button>
-            <!--
-            <md-button class="md-default md-cancel md-small font10 width8" ng-click="dontsaveChanges()">
-                Cancel
-            </md-button>
-            -->
         </div>
         
     </div>
-</div>
+</div>-->

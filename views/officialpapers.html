@@ -297,7 +297,10 @@
                         <h3 class="subBaseFont width100 textLightGrey marginT5">{{paper.nQuestions}} Questions | Time: {{paper.durationFormatted}}</h3>
                     </div>
                     <div layout="column" layout-align="end start" class="paddingR20 paddingTB10" flex>
-                        <md-button class="md-saveNext md-small font16 margin0 " ui-sref="assessment({ testId:{{'paper._id'}} })">
+                        <md-button class="md-saveNext md-small font16 margin0 " ui-sref="assessment({ testId:{{'paper._id'}} })" hide-xs>
+                            Start
+                        </md-button>
+                        <md-button class="md-saveNext md-small font16 margin0 " ui-sref="mobileassessment({ testId:{{'paper._id'}} })" hide-gt-xs>
                             Start
                         </md-button>
                         <div class="smallFont marginT5" ng-show="paper.downloadable && user">or <a ng-href="{{paper.url.question}}" target="_blank" ng-if="paper.url.question" id="reviewLink">Download PDF</a></div>

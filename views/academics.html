@@ -165,7 +165,7 @@
     </div>
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
-        <div layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
+        <div hide-xs layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
             <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }">
                 {{subcategory.name}}
             </div>
