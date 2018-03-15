@@ -13506,7 +13506,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if($state.current.name == 'profile'){
                     $state.reload();
                 }
-                if($state.current.name == 'assessment'){
+                if($state.current.name == 'assessment' || $state.current.name == 'mobileassessment'){
                     $state.reload();
                 }
                 if($state.current.name == 'claim'){

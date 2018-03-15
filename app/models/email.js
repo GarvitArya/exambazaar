@@ -3,8 +3,9 @@ var Schema = mongoose.Schema;
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var emailSchema = mongoose.Schema({
-    institute: { type: Schema.ObjectId, ref: 'coaching', required: true },
-    user: { type: Schema.ObjectId, required: true, ref: 'User' },
+    institute: { type: Schema.ObjectId, ref: 'coaching' },
+    school: { type: Schema.ObjectId, ref: 'school' },
+    user: { type: Schema.ObjectId, ref: 'User' },
     templateId : {type: String},
     fromEmail :{
         email: String,

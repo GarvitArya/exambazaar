@@ -662,33 +662,49 @@ var fromEmail = {
     name: sender
 };
     
-    var schoolIds = ['5a9f7b184b1ece1f48a88d5f'];
+    //var schoolIds = ["5a9f7b1d4b1ece1f48a88d6a","5a9f7c43ff178410c0ccd53f","5a9f7c3cff178410c0ccd53e","5a9f7b184b1ece1f48a88d5e","5a9f7c27ff178410c0ccd4ed","5a9f7b164b1ece1f48a88d5b","5a9f7b194b1ece1f48a88d61","5a9f7b244b1ece1f48a88d85","5a9f7b264b1ece1f48a88d91","5a9f7b3d4b1ece1f48a88dba","5a9f7b2a4b1ece1f48a88db3","5a9f7c33ff178410c0ccd522","5a9f7c25ff178410c0ccd4ea","5a9f7c30ff178410c0ccd510","5a9f7c33ff178410c0ccd520","5a9f7b1e4b1ece1f48a88d6d","5a9f7c36ff178410c0ccd53b","5a9f7b174b1ece1f48a88d5c","5a9f7c2eff178410c0ccd502","5a9f7c2eff178410c0ccd505"];
+    //, '_id': { $in : schoolIds} 
+     
     
+    var limit = 500;
+    var skip = 7000;
     var allSchools = school
-    .find({ '_id': { $in : schoolIds},  "data.email": {$exists: true}}, { data: 1 })
+    .find({ "data.email": {$exists: true}, "data.email": {$ne: ""}}, { data: 1 })
     //.limit(1)
+    .limit(limit).skip(skip)
     .exec(function (err, allSchools) {
 
     if (!err){
     if(allSchools){
         res.json(true);
+        
+        var nSchools = allSchools.length;
+        var scounter = 0;
+        var eCounter = 0;
+        var asCounter = 0;
         console.log('There are: ' + allSchools.length + ' schools!');
+        
+        
         allSchools.forEach(function(thisSchool, sindex){
         var thisEmail = thisSchool.data.email;
         var schoolName = thisSchool.data["name-of-institution"];
+        var schoolId = thisSchool._id;
         if(!schoolName){
             schoolName = "School";
         }
+        schoolName = schoolName.replace(".", ". ");
         schoolName = titleCase(schoolName);
         var principalName = thisSchool.data["name-of-principal-head-of-institution"];
         var attnName = "";
         if(principalName && principalName.length > 1){
-            //principalName = titleCase(principalName);
+            principalName = principalName.replace(".", ". ");
+            principalName = titleCase(principalName);
             
             attnName = principalName + ", " + schoolName;
         }else{
             attnName =  "Principal, " + schoolName;
         }
+        //console.log("Attn: " + attnName + " | Email: " + thisEmail);
             
         var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
             if (err) return handleError(err);
@@ -706,7 +722,8 @@ var fromEmail = {
                 templateId = thisEmailTemplate.templateKey;
                 
                 var from_email = new helper.Email(fromEmail);
-                var to = 'gaurav@exambazaar.com';
+                var to = thisEmail;
+                //to = "gaurav@exambazaar.com";
                 var to_email = new helper.Email(to);
                 //var subject = subject;
                 var html = ' ';
@@ -716,47 +733,93 @@ var fromEmail = {
                 mail.setTemplateId(templateId);
                 mail.personalizations[0].addSubstitution(new helper.Substitution('-schoolName-', schoolName));
                 mail.personalizations[0].addSubstitution(new helper.Substitution('-attnName-', attnName));
-
-                fs.readFile('Previous.pdf', function(err, data) {
-                    fs.readFile('Previous.png', function(err, imgdata) {
-                    console.log(data);
-                    console.log(imgdata);
-                    
-                    var dataBuffer = new Buffer(data).toString('base64');
-                    var dataBuffer2 = new Buffer(imgdata).toString('base64');
-    
-                    var attachment = new helper.Attachment();    
-                    attachment.setType("application/pdf");
-                    attachment.setFilename("Previous-year-question-papers-for-competitive-exams.pdf");
-                    attachment.setDisposition("attachment");;
-                    attachment.setContent(dataBuffer);
-                    mail.addAttachment(attachment);
-                        
-                    var attachment2 = new helper.Attachment();    
-                    attachment2.setType("image/png");
-                    attachment2.setFilename("Previous-year-question-papers-for-competitive-exams.png");
-                    attachment2.setDisposition("attachment");;
-                    attachment2.setContent(dataBuffer2);
-                    mail.addAttachment(attachment2);    
-                        
-                    //console.log(data);
-                    var request = sg.emptyRequest({
-                        method: 'POST',
-                        path: '/v3/mail/send',
-                        body: mail.toJSON(),
-                    });
-
-                    sg.API(request, function(error, response) {
-                        if(error){
-                            console.log('Could not send email! ' + error);
-                        }else{
-                        console.log(response);
+                
+                
+                var existingEmail = email.findOne({ to: to, _date: {$gte: new Date('2018-03-15T00:00:00.000Z')}}, {templateId: 1, _date: 1, to: 1},function (err, existingEmail) {
+                    if (err) return handleError(err);
+                    if(existingEmail){
+                        console.log("Email to " + to + " already sent at: " + existingEmail._date);
+                        scounter += 1;
+                        asCounter += 1;
+                        if(scounter == nSchools){
+                            console.log('Total Emails sent: ' + eCounter + " out of " + nSchools + " schools! | " + asCounter + " already sent");
                         }
+                        
+                    }else{
+                        fs.readFile('Previous.pdf', function(err, data) {
+                        fs.readFile('Previous.png', function(err, imgdata) {
+                        //console.log(data);
+                        //console.log(imgdata);
 
+                        var dataBuffer = new Buffer(data).toString('base64');
+                        var dataBuffer2 = new Buffer(imgdata).toString('base64');
+
+                        var attachment = new helper.Attachment();    
+                        attachment.setType("application/pdf");
+                        attachment.setFilename("Previous-year-question-papers-for-competitive-exams.pdf");
+                        attachment.setDisposition("attachment");;
+                        attachment.setContent(dataBuffer);
+                        mail.addAttachment(attachment);
+
+                        var attachment2 = new helper.Attachment();    
+                        attachment2.setType("image/png");
+                        attachment2.setFilename("Previous-year-question-papers-for-competitive-exams.png");
+                        attachment2.setDisposition("attachment");
+                        attachment2.setContent(dataBuffer2);
+                        mail.addAttachment(attachment2);    
+
+                        //console.log(data);
+                        var request = sg.emptyRequest({
+                            method: 'POST',
+                            path: '/v3/mail/send',
+                            body: mail.toJSON(),
+                        });
+                        sg.API(request, function(error, response) {
+                            if(error){
+                                console.log(' ---- Could not send email! ' + error + " " + response.statusCode);
+                                console.log(sindex + "." + " Email to " + attnName + " | " + thisEmail + " NOT SENT | Id: " + thisSchool._id + " ---- ");
+                                scounter += 1;
+
+                                if(scounter == nSchools){
+                                    console.log('Total Emails sent: ' + eCounter + " out of " + nSchools + " schools! | " + asCounter + " already sent");
+                                }
+                            }else{
+
+
+                                var this_email = new email({
+                                    school: schoolId,
+                                    templateId: templateId,
+                                    fromEmail: fromEmail,
+                                    to: thisEmail,
+                                    response: {
+                                        status: response.statusCode,
+                                        _date: response.headers.date,
+                                        xMessageId: response.headers["x-message-id"]
+                                    }
+                                });
+
+                                this_email.save(function(err, this_email) {
+                                    console.log(sindex + "." +" Email to " + attnName + " | " + thisEmail  + " sent | Id: " + thisSchool._id);
+                                    scounter += 1;
+                                    eCounter += 1;
+
+                                    if(scounter == nSchools){
+                                        console.log('Total Emails sent: ' + eCounter + " out of " + nSchools + " schools! | " + asCounter + " already sent");
+                                    }
+
+
+                                });
+
+
+                            }
+
+                        });
+
+                        });
                     });
-                    
-                    });
+                    }
                 });
+                
                 
 
             }
