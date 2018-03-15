@@ -1098,6 +1098,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getuserviews = function(userId) {
             return $http.get('/api/views/user/'+userId, {userId: userId});
         };
+        this.getuserCoachingViews = function(userId) {
+            return $http.get('/api/views/usercoaching/'+userId, {userId: userId});
+        };
         this.getuserBlogviews = function(userId) {
             return $http.get('/api/views/userBlog/'+userId, {userId: userId});
         };
@@ -25061,6 +25064,11 @@ function getLatLng(thisData) {
     
     exambazaar.controller("academicsController", 
         [ '$scope', '$http','$state', '$rootScope', '$cookies', 'UserService', '$mdDialog', '$timeout', 'Notification', function($scope,$http,$state,$rootScope, $cookies, UserService, $mdDialog, $timeout, Notification){
+            
+        $scope.mobileSummary = false;
+        $scope.toggleMobileSummary = function(){
+            $scope.mobileSummary = !$scope.mobileSummary;
+        };    
         $scope.col1Width = 40;
         $scope.col1WidthAcademic = 20;
         var setPage = function(pageName){
@@ -25160,7 +25168,42 @@ function getLatLng(thisData) {
                 },
             ];
         setPage('Academic Details');
-        
+        var menuLevels = {
+            "School Class XII": 1,
+            "Undergraduate": 3,
+            "Postgraduate": 5,
+        };
+        $scope.checkAcademicSubcategories = function(subcategory){
+            var valid = true;
+            var userLevel = $scope.user.eligibility.educationLevel.level;
+            
+            var menuLevel = menuLevels[subcategory.name];
+            if(!menuLevel){
+                menuLevel = 0;
+            }
+            if(userLevel >= menuLevel){
+                valid = true;
+            }else{
+                valid = false;
+            }
+            return(valid);
+        };
+            
+            
+            /*[
+            {
+                name: 'Education Level',
+            },
+            {
+                name: 'School Class XII',
+            },
+            {
+                name: 'Undergraduate',
+            },
+            {
+                name: 'Postgraduate',
+            },
+        ];*/
             
         $scope.educationLevels = [
             {
@@ -25420,18 +25463,41 @@ function getLatLng(thisData) {
         $scope.activeSubcategory = $scope.activeCategory.subcategories[0];
         
         $scope.setActiveSubcategory = function(subcategoryName){
+            var userLevel = $scope.user.eligibility.educationLevel.level;
+            var valid = false;
+            var menuLevel = menuLevels[subcategoryName];
+            if(!menuLevel){
+                menuLevel = 0;
+            }
+            if(userLevel >= menuLevel){
+                valid = true;
+            }else{
+                valid = false;
+            }
             $scope.activeCategory.subcategories.forEach(function(thisSubcategory, index){
                 if(thisSubcategory.name == subcategoryName){
-                    $scope.activeSubcategory = thisSubcategory;
+                    $scope.saveUser();
+                    if(valid){
+                        $scope.activeSubcategory = thisSubcategory;
+                    }
+                    
                 }
             });
         };
-        
+        $scope.setActiveCategory = function(stateName){
+            $scope.saveUser();
+            $state.go(stateName);
+        };
         $scope.setNextActiveSubcategory = function(){
             var thisIndex = null;
             var nSubcategories = $scope.activeCategory.subcategories.length;
+            var valid = false;
+            var userLevel = $scope.user.eligibility.educationLevel.level;
+            
+            
             $scope.activeCategory.subcategories.forEach(function(thisSubcategory, index){
                 if(thisSubcategory.name == $scope.activeSubcategory.name){
+                    
                     thisIndex = index;
                 }
             });
@@ -25439,8 +25505,23 @@ function getLatLng(thisData) {
                 if(thisIndex == nSubcategories - 1){
                     console.log('Do nothing');
                 }else{
-
-                    $scope.activeSubcategory = $scope.activeCategory.subcategories[thisIndex + 1];
+                    $scope.saveUser();
+                    var subcategoryName = $scope.activeCategory.subcategories[thisIndex + 1].name;
+                    var menuLevel = menuLevels[subcategoryName];
+                    if(!menuLevel){
+                        menuLevel = 0;
+                    }
+                    if(userLevel >= menuLevel){
+                        valid = true;
+                    }else{
+                        valid = false;
+                    }
+                    if(valid){
+                        $scope.activeSubcategory = $scope.activeCategory.subcategories[thisIndex + 1];
+                    }else{
+                        $scope.setActiveCategory('reviewed');
+                    }
+                    
                 }
             }
         };
@@ -25655,7 +25736,7 @@ function getLatLng(thisData) {
          
             
         $scope.saveUser = function(){
-            console.log($scope.user);
+            //console.log($scope.user);
             $scope.setAge();
             UserService.updateUser($scope.user).success(function (data, status, headers) {
                 Notification.success({message: "Changes successfully saved!",  positionY: 'top', positionX: 'right', delay: 1000});
@@ -25873,6 +25954,11 @@ function getLatLng(thisData) {
         [ '$scope', '$http','$state', '$rootScope', '$cookies', '$geolocation', 'Upload', 'ImageService', 'UserService', '$facebook', '$mdDialog', '$timeout', 'Notification', function($scope,$http,$state,$rootScope, $cookies, $geolocation, Upload, ImageService, UserService, $facebook, $mdDialog, $timeout, Notification){
         $scope.col1Width = 40;
         $scope.col1WidthAcademic = 20;
+        
+        $scope.mobileSummary = false;
+        $scope.toggleMobileSummary = function(){
+            $scope.mobileSummary = !$scope.mobileSummary;
+        };
             
         var setPage = function(pageName){
             $scope.components.forEach(function(thisCategory, index){
@@ -26432,7 +26518,7 @@ function getLatLng(thisData) {
             });
         };
         $scope.setActiveCategory = function(stateName){
-            
+            $scope.saveUser();
             $state.go(stateName);
         }; 
             
@@ -26773,6 +26859,11 @@ function getLatLng(thisData) {
     
         exambazaar.controller("userTestsController", 
         [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'assessmentService', 'coachingService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, assessmentService, coachingService, $location, Notification){
+            $scope.mobileSummary = false;
+            $scope.toggleMobileSummary = function(){
+                $scope.mobileSummary = !$scope.mobileSummary;
+            };
+            
             $scope.col1Width = 40;
             $scope.col1WidthAcademic = 20;
 
@@ -26891,7 +26982,7 @@ function getLatLng(thisData) {
                             $scope.userTests = rdata;
 
 
-                            $rootScope.pageTitle ='Tests taken by ' + $scope.user.basic.name;
+                            $rootScope.pageTitle ='Tests Attempted by ' + $scope.user.basic.name;
 
                         })
                         .error(function (data, status, header, config) {
@@ -26993,6 +27084,11 @@ function getLatLng(thisData) {
         }]);
         exambazaar.controller("userAppointmentsController", 
         [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'bookAppointmentService', 'coachingService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, bookAppointmentService, coachingService, $location, Notification){
+            
+            $scope.mobileSummary = false;
+            $scope.toggleMobileSummary = function(){
+                $scope.mobileSummary = !$scope.mobileSummary;
+            };
             $scope.col1Width = 40;
             $scope.col1WidthAcademic = 20;
         
@@ -27108,7 +27204,7 @@ function getLatLng(thisData) {
                         $scope.user = data;
                          
                         bookAppointmentService.getuserBookAppointments($scope.user._id).success(function (rdata, status, headers) {
-                            console.log(rdata);
+                            //console.log(rdata);
                             $scope.userBookAppointments = rdata;
                             
                             
@@ -27215,6 +27311,11 @@ function getLatLng(thisData) {
     
     exambazaar.controller("reviewedController", 
         [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'reviewService', 'coachingService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, reviewService, coachingService, $location, Notification){
+            $scope.mobileSummary = false;
+            $scope.toggleMobileSummary = function(){
+                $scope.mobileSummary = !$scope.mobileSummary;
+            };
+            
             $scope.col1Width = 40;
             $scope.col1WidthAcademic = 20;
         
@@ -27437,6 +27538,11 @@ function getLatLng(thisData) {
        
      exambazaar.controller("userInstitutesController", 
         [ '$scope', '$http','$state','$rootScope', '$cookies', 'UserService', 'coachingService', 'viewService', '$location', 'Notification', function($scope, $http, $state, $rootScope, $cookies, UserService, coachingService, viewService, $location, Notification){
+            $scope.mobileSummary = false;
+            $scope.toggleMobileSummary = function(){
+                $scope.mobileSummary = !$scope.mobileSummary;
+            };
+            
             $scope.col1Width = 40;
             $scope.col1WidthAcademic = 20;
             
@@ -27552,11 +27658,11 @@ function getLatLng(thisData) {
                 var sessionuser = $cookies.getObject( 'sessionuser');
                 if(sessionuser && sessionuser._id){
                    
-                    UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                    UserService.getUserBasic(sessionuser._id).success(function (data, status, headers) {
                         $scope.user = data;
                         $rootScope.pageTitle ='Coachings for ' + $scope.user.basic.name;
                         
-                        viewService.getuserviews($scope.user._id).success(function (vdata, status, headers) {
+                        viewService.getuserCoachingViews($scope.user._id).success(function (vdata, status, headers) {
                             $scope.viewed = vdata;
                             
                             UserService.getUserShortlisted($scope.user._id).success(function (sdata, status, headers) {

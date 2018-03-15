@@ -179,7 +179,9 @@
         height: 10px;
         border-radius: 3px;
     }
-    
+    .summarySection{
+        background: #F1FFFA;
+    }
     
 </style>
 
@@ -189,8 +191,7 @@
 </div>
 
 <div class="textBlack whiteBackground secondFont font14" ng-if="user">
-    <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
-    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
+    <div layout="row" layout-align="center center"  class="affixBar profileBar width100 paddingTB10" hide-xs> 
         <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100">
             <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="paddingLR20">
                 <span id="topBar" ng-class="{ active: component.active }" >
@@ -199,18 +200,45 @@
             </a>
         </div>
     </div>
+    <div layout="column" layout-align="center center" class="width100 paddingLR20 paddingTB10 summarySection greyBottomBorder h2Font" hide-gt-xs>
+        <div layout="row" layout-align="start center" class="width100 h1Font paddingB5 marginT10 " ng-click="toggleMobileSummary()">
+
+            <div flex class="width100">Navigation</div>    
+            <div class="marginR10">
+                <i class="fa fa-caret-down" aria-hidden="true" ng-if="!mobileSummary"></i>
+                <i class="fa fa-caret-up" aria-hidden="true" ng-if="mobileSummary"></i>
+            </div>
+        </div>
+        <div layout="column" layout-align="start start" ng-show="mobileSummary" class="width100">
+            <div hide-gt-xs layout="column" layout-align="start start"  class="width100" >
+                <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="h2Font  paddingB5 marginTB5">
+                    {{component.name}}     
+                </a>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 h1Font marginT5 paddingB5" ng-click="toggleMobileSummary()">
+
+                <div flex layout="row" layout-align="start center" class="">Close Navigation</div>    
+                <div class="marginR10">
+                    <i class="fa fa-caret-down" aria-hidden="true" ng-if="!mobileSummary"></i>
+                    <i class="fa fa-caret-up" aria-hidden="true" ng-if="mobileSummary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
-        <div layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
+        <div hide-xs layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
             <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }">
                 {{subcategory.name}}
             </div>
         </div>
-        <div flex layout="row" layout-align="center center">
+        <div flex layout="row" layout-align="center center" class="paddingLR20">
             <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
-            <div layout="column" layout-align="start start" class="width100 min100vh" flex>
+            <div layout="column" layout-align="start start" class="width100 min100vh" flex class="width100">
                 <div layout="column" layout-align="center start" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20">
-                    {{activeSubcategory.name}} attempted by {{user.basic.name}}
+                    {{activeSubcategory.name}} Attempted by {{user.basic.name}}
                 </div>
                 <div layout="column" layout-align="center start" class="width100 marginB40">
                      
@@ -221,13 +249,13 @@
                 <div layout="row" layout-align="start center" layout-wrap ng-if="userTests.length > 0" class="width100">
                     <div layout="column" layout-align="center center" ng-repeat="userTest in userTests | orderBy:'-_date'" flex="100" class="width100 paddingB20">
                         <div layout="column" layout-align="start start" class="width100 gainsboroBorder padding10">
-                        <div layout="row" layout-align="start center" class="width100 gainsboroBottomBorder">
-                            <div layout="row" layout-align="start start" id="logoHolder" flex-gt-xs="15">
+                        <div layout="row" layout-align="start center" class="paddingB5 marginB10 width100 gainsboroBottomBorder">
+                            <div flex-gt-xs="25" flex-xs="40" layout="row" layout-align="start start" id="logoHolder" flex-gt-xs="15">
                                 <img ng-src="{{userTest.test.exam.logo}}" id="logo"/>
                             </div>
-                            <div layout="column" layout-align="start start" class="paddingL20">
+                            <div flex layout="column" layout-align="start start" class="">
                             <div layout="column" layout-align="start start" class="secondFont">
-                                <div layout="row" layout-align="start start">
+                                <div layout="row" layout-align="start start" class="bold">
                                     <a ui-sref="assessment({ testId:{{'userTest.test._id'}} })" target="_blank">
                                     {{userTest.test.name}}
                                     </a>
@@ -237,32 +265,32 @@
                             </div>
                         </div>
 
-                        <div layout="column" layout-align="start start" class="paddingTB10 paddingLR20 width100">
-                            <div layout="row" layout-align="start start" class="width100">
-                                <div flex-gt-xs="35">Score</div>    
-                                <div flex>{{userTest.evaluation.score}}</div>    
+                        <div layout="column" layout-align="start start" class="padding10 width100">
+                            <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingTB5">
+                                <div flex-gt-xs="35" class="width100 bold">Score</div>    
+                                <div flex class="width100">{{userTest.evaluation.score}}</div>    
                             </div>
-                            <div layout="row" layout-align="start start" class="width100">
-                                <div flex-gt-xs="35">Date</div>    
-                                <div flex>{{userTest._start | date: "MMMM dd yyyy hh:mm a"}}</div>    
+                            <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingTB5">
+                                <div flex-gt-xs="35" class="width100 bold">Date</div>    
+                                <div flex class="width100">{{userTest._start | date: "MMMM dd yyyy hh:mm a"}}</div>    
                             </div>
-                            <div layout="row" layout-align="start start" class="width100">
-                                <div flex-gt-xs="35">Questions Attempted</div>    
-                                <div flex>{{userTest.evaluation.questions.attemped}}
+                            <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingTB5">
+                                <div flex-gt-xs="35" class="width100 bold">Questions Attempted</div>    
+                                <div flex class="width100">{{userTest.evaluation.questions.attemped}}
                                 ({{userTest.evaluation.questions.correct}} Correct & {{userTest.evaluation.questions.incorrect}} Incorrect)
                                 </div>    
                             </div>
-                            <div layout="row" layout-align="start start" class="width100">
-                                <div flex-gt-xs="35">Questions Unattempted</div>    
-                                <div flex>{{userTest.evaluation.questions.unattemped}}</div>    
+                            <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingTB5">
+                                <div flex-gt-xs="35" class="width100 bold">Questions Unattempted</div>    
+                                <div flex class="width100">{{userTest.evaluation.questions.unattemped}}</div>    
                             </div>
-                            <div layout="row" layout-align="start center" class="width100 paddingT20">
+                            <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginT20">
                                 
                                 <md-button class="md-danger md-large tolowercase margin0 " ui-sref="reportassessment({ testId:{{'userTest.test._id'}} })" target="_blank" ng-if="userTest.test.analyzeable">
                                     Analyze your result
                                 </md-button>
                                 
-                                <a ui-sref="questionpapers({ examName:{{'userTest.test.exam.name'}} })" target="_blank" id="reviewLink" class="marginL20">or Attempt all {{userTest.test.exam.seoname}} Papers</a>
+                                <a ui-sref="questionpapers({ examName:{{'userTest.test.exam.name'}} })" target="_blank" id="reviewLink" class="marginL20 paddingT10">or Attempt all {{userTest.test.exam.seoname}} Papers</a>
                             </div>
                         </div>      
                         </div>

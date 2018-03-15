@@ -146,6 +146,9 @@
     #profilePicSection{
         margin-bottom: 20px;
     }
+    .summarySection{
+        background: #F1FFFA;
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -154,8 +157,7 @@
 </div>
 
 <div class="textBlack whiteBackground secondFont font14" ng-if="user">
-    <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
-    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
+    <div layout="row" layout-align="center center"  class="affixBar profileBar width100 paddingTB10" hide-xs> 
         <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100">
             <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="paddingLR20">
                 <span id="topBar" ng-class="{ active: component.active }" >
@@ -164,14 +166,42 @@
             </a>
         </div>
     </div>
+    <div layout="column" layout-align="center center" class="width100 paddingLR20 paddingTB10 summarySection greyBottomBorder h2Font" hide-gt-xs>
+        <div layout="row" layout-align="start center" class="width100 h1Font paddingB5 marginT10 " ng-click="toggleMobileSummary()">
+
+            <div flex>Navigation</div>    
+            <div class="marginR10">
+                <i class="fa fa-caret-down" aria-hidden="true" ng-if="!mobileSummary"></i>
+                <i class="fa fa-caret-up" aria-hidden="true" ng-if="mobileSummary"></i>
+            </div>
+        </div>
+        <div layout="column" layout-align="start start" ng-show="mobileSummary" class="width100">
+            <div hide-gt-xs layout="column" layout-align="start start"  class="width100" >
+                <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="h2Font  paddingB5 marginTB5">
+                    {{component.name}}     
+                </a>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 h1Font marginT5 paddingB5" ng-click="toggleMobileSummary()">
+
+                <div flex layout="row" layout-align="start center" class="">Close Navigation</div>    
+                <div class="marginR10">
+                    <i class="fa fa-caret-down" aria-hidden="true" ng-if="!mobileSummary"></i>
+                    <i class="fa fa-caret-up" aria-hidden="true" ng-if="mobileSummary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
-        <div layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
+        <div hide-xs layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
             <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }">
                 {{subcategory.name}}
             </div>
         </div>
-        <div flex layout="row" layout-align="center center">
+        <div flex layout="row" layout-align="center center" class="paddingLR20">
             <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
             <div layout="column" layout-align="start start" class="width100 min100vh" flex>
                 <div layout="column" layout-align="center start" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20">

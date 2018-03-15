@@ -32,9 +32,11 @@
     .fieldRow div.col1{
         color: gray;
         font-family: 'Roboto Condensed', sans-serif;
+        width: 100%;
     }
     .fieldRow div.col2{
         color: black;
+        width: 100%;
     }
     
     #link{
@@ -95,7 +97,7 @@
     }
     
     .edLevelTag{
-        padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:10px;
+        padding:5px;
         color: #333333;
         background: gainsboro;
         border: 1px solid gainsboro;
@@ -145,6 +147,9 @@
     #profilePicSection{
         margin-bottom: 20px;
     }
+    .summarySection{
+        background: #F1FFFA;
+    }
 </style>
 
 <div id="spacer1" class="hidden-xs whiteBackground">
@@ -153,8 +158,7 @@
 </div>
 
 <div class="textBlack whiteBackground secondFont font14" ng-if="user">
-    <!--bs-affix data-offset-top="200" data-offset-bottom="300" -->
-    <div layout="row" layout-align="center center" hide-xs layout="row" class="affixBar profileBar width100 paddingTB10" layout-align="start start"> 
+    <div layout="row" layout-align="center center"  class="affixBar profileBar width100 paddingTB10" hide-xs> 
         <div layout="row" layout-align="start start" flex-xs="100" flex-gt-xs="90" class="width100">
             <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="paddingLR20">
                 <span id="topBar" ng-class="{ active: component.active }" >
@@ -163,21 +167,46 @@
             </a>
         </div>
     </div>
+    <div layout="column" layout-align="center center" class="width100 paddingLR20 paddingTB10 summarySection greyBottomBorder h2Font" hide-gt-xs>
+        <div layout="row" layout-align="start center" class="width100 h1Font paddingB5 marginT10 " ng-click="toggleMobileSummary()">
+
+            <div flex>Navigation</div>    
+            <div class="marginR10">
+                <i class="fa fa-caret-down" aria-hidden="true" ng-if="!mobileSummary"></i>
+                <i class="fa fa-caret-up" aria-hidden="true" ng-if="mobileSummary"></i>
+            </div>
+        </div>
+        <div layout="column" layout-align="start start" ng-show="mobileSummary" class="width100">
+            <div hide-gt-xs layout="column" layout-align="start start"  class="width100" >
+                <a layout="row" layout-align="start center" ng-repeat="component in components" ui-sref="{{component.state}}" class="h2Font  paddingB5 marginTB5">
+                    {{component.name}}     
+                </a>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 h1Font marginT5 paddingB5" ng-click="toggleMobileSummary()">
+
+                <div flex layout="row" layout-align="start center" class="">Close Navigation</div>    
+                <div class="marginR10">
+                    <i class="fa fa-caret-down" aria-hidden="true" ng-if="!mobileSummary"></i>
+                    <i class="fa fa-caret-up" aria-hidden="true" ng-if="mobileSummary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div layout="row" layout-align="center start" class="width100">
     <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="center start" class="marginTB20">
         <div hide-xs layout="column" layout-align="start center" flex="20" class="height100 paddingL20R40 leftBar">
-            <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }">
+            <div layout="column" layout-align="center center" ng-repeat="subcategory in currentSubcategories" class="paddingTB5 paddingLR20 min10vh  width100 spacedLetter09" ng-click="setActiveSubcategory(subcategory.name)" id="leftBarButton" ng-class="{ sideactive: subcategory.name == activeSubcategory.name }" ng-if="checkAcademicSubcategories(subcategory)">
                 {{subcategory.name}}
             </div>
         </div>
-        <div flex layout="row" layout-align="center center">
+        <div flex layout="row" layout-align="center center" class="paddingLR20">
             <div flex-xs="100" flex-gt-xs="90" layout="row" layout-align="start start">
             <div layout="column" layout-align="start start" class="width100 min100vh" flex>
                 <div layout="column" layout-align="center start" class="min10vh width100 blogFont bold headingBottomBorder2 marginB20">
                     {{activeSubcategory.name}} Information
                 </div>
                 <div layout="column" layout-align="center start" class="width100">
-                     
                     
                     <div layout="column" layout-align="center start" class="width100 font14">
                         <div layout="column" layout-align="start start" class="academicRow subSectionHeader" ng-if="activeSubcategory.name =='Education Level'">
@@ -186,10 +215,14 @@
                                 Choose your Education Level
                             </div>
                             <div layout="row" layout-align="start start" class="fieldRow" layout-wrap>
-                                <div flex-xs="20" flex="20" ng-repeat="educationLevel in educationLevels" class="padding10">
-                                    <span layout="row" layout-align="center center" class="wrap edLevelTag width100 min15vh text-center" ng-class="{ filledEdLevelTag: user.eligibility.educationLevel.name=='{{educationLevel.name}}' }" ng-click="setEducationLevel(educationLevel)">
+                                <div flex-xs="50" flex="20" ng-repeat="educationLevel in educationLevels" class="padding10">
+                                    <div layout="row" layout-align="center center" class="wrap badge emptyTag min10vh width100 text-center" ng-class="{ filledTag: user.eligibility.educationLevel.name=='{{educationLevel.name}}' }" ng-click="setEducationLevel(educationLevel)">
                                         {{educationLevel.name}}
-                                    </span>
+                                    </div>
+                                    
+                                    <!--<span layout="row" layout-align="center center" class="wrap edLevelTag width100 min10vh text-center h3Font" ng-class="{ filledEdLevelTag: user.eligibility.educationLevel.name=='{{educationLevel.name}}' }" ng-click="setEducationLevel(educationLevel)">
+                                        {{educationLevel.name}}
+                                    </span>-->
                                 </div>
                             </div>
                         </div>
@@ -198,10 +231,10 @@
                         <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
                             School Class XII
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
                             <div flex="{{col1WidthAcademic}}" class="col1">Subjects</div>
                             <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
-                                <div flex="25" ng-repeat="class12Subject in class12Subjects" class="padding10">
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="class12Subject in class12Subjects" class="padding10">
                                     <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.class12Subjects[class12Subject.name] }" ng-click="setClass12Subjects(class12Subject.name)">
                                         {{class12Subject.displayname}}
                                     </span>
@@ -225,7 +258,7 @@
                         <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
                             Undergraduate
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
                             <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
                             
                             <div flex layout="column" layout-align="start start" class="width100">
@@ -235,7 +268,7 @@
                                 Engineering
                             </div>    
                             <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
-                                <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='engineering'">
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='engineering'">
                                     <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
                                         {{undergradMajor.displayname}}
                                     </span>
@@ -248,7 +281,7 @@
                                 Medical
                             </div>    
                             <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
-                                <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='medical'">
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='medical'">
                                     <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
                                         {{undergradMajor.displayname}}
                                     </span>
@@ -261,7 +294,7 @@
                                 Law
                             </div>    
                             <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
-                                <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='law'">
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='law'">
                                     <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
                                         {{undergradMajor.displayname}}
                                     </span>
@@ -274,7 +307,7 @@
                                 Other
                             </div>    
                             <div layout="row" layout-align="start start" class="col2 width100" layout-wrap>
-                                <div flex="25" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='other'">
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="undergradMajor in undergradMajors" class="padding10" ng-if="undergradMajor.stream.name=='other'">
                                     <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.undergradMajor[undergradMajor.name] }" ng-click="setUndergradMajor(undergradMajor.name)" layout-wrap>
                                         {{undergradMajor.displayname}}
                                     </span>
@@ -301,10 +334,10 @@
                         <div layout="row" layout-align="start center" class="marginT20 marginB10 width100 font16 subSectionHeader">
                             Postgraduate
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow">
+                        <div layout="row" layout-align="start start" layout-xs="column" class="fieldRow">
                             <div flex="{{col1WidthAcademic}}" class="col1">Degree</div>
                             <div layout="row" layout-align="start center" flex class="col2" layout-wrap>
-                                <div flex="25" ng-repeat="postgradMajor in postgradMajors" class="padding10">
+                                <div flex-gt-xs="25" flex-xs="50" ng-repeat="postgradMajor in postgradMajors" class="padding10">
                                     <span class="badge emptyTag width100" ng-class="{ filledTag: user.eligibility.postgradMajor[postgradMajor.name] }" ng-click="setPostgradMajor(postgradMajor.name)" layout-wrap>
                                         {{postgradMajor.displayname}}
                                     </span>
@@ -321,13 +354,19 @@
                             </div>
                         </div>
                         </div>
-                        <div layout="row" layout-align="start start" class="fieldRow" ng-if="activeSubcategory.name != activeCategory.subcategories[activeCategory.subcategories.length-1].name">
+                        
+                        <div layout="row" layout-align="end center" class="width100  whiteBackground greyBottomBorder paddingTB20 marginB20" ng-if="activeSubcategory.name != activeCategory.subcategories[activeCategory.subcategories.length-1].name">
+                            <md-button class="md-next md-medium font16 tolowercase margin0 width100" ng-click="setNextActiveSubcategory()">
+                                Save & Next
+                            </md-button>
+                        </div>
+                        <!--<div layout="row" layout-align="start start" layout-xs="column" class="fieldRow" ng-if="activeSubcategory.name != activeCategory.subcategories[activeCategory.subcategories.length-1].name">
                             <div flex="{{col1Width}}" class="col1">
                                 <md-button class="md-danger md-large tolowercase margin0 nextButton" ng-click="setNextActiveSubcategory()">
                                     Next
                                 </md-button>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     
                     
@@ -344,7 +383,7 @@
 
 
 
-<div class="bottomBar">
+<!--<div class="bottomBar">
     <div layout="row" layout-align="start center">
         <div flex ="80">
             <span>
@@ -355,12 +394,12 @@
             <md-button class="md-danger md-small font10 width8" ng-click="saveUser()">
                 Save
             </md-button>
-            <!--
+            
             <md-button class="md-default md-cancel md-small font10 width8" ng-click="dontsaveChanges()">
                 Cancel
             </md-button>
-            -->
+            
         </div>
         
     </div>
-</div>
+</div>-->

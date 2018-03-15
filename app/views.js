@@ -196,7 +196,102 @@ router.get('/', function(req, res) {
     });
 });
 
+router.get('/usercoaching/:userId', function(req, res) {
+    var userId = req.params.userId;
+    
+    /*, dates: { $addToSet: "$_date" }*/
+    /*var views = view.aggregate(
+    [
+        {$match: {user: userId, institute: {$exists: true}, state: "showGroup" } },
+        {"$group": { "_id": { institute: "$institute" }, count:{$sum:1} } },
+        {$sort:{"count":-1}}
 
+    ],function(err, views) {
+    if (!err){
+        console.log(views);
+        res.json(views);
+    }
+    });*/
+    
+    
+    
+    var views = view
+        .find({user: userId, institute: {$exists: true}})
+        .sort( { _date: -1 } )
+        .exec(function (err, views) {
+        if (!err){
+            var basicViews = [];
+            var groupNames = [];
+            var counter = 0;
+            var nLength = views.length;
+            
+            var viewInstituteIds =  views.map(function(a) {return a.institute;});
+            var allProviderViews = coaching
+                .find({_id : { $in : viewInstituteIds }, disabled: {$ne: true}},{name:1 , groupName:1, exams:1, disabled: 1, city:1, logo:1})
+                .deepPopulate('exams exams.stream')
+                .exec(function (err, allProviderViews) {
+                if (!err){
+                var instituteIds = allProviderViews.map(function(a) {return a._id.toString();});
+                     
+                views.forEach(function(thisView, index){
+                    var iIndex = instituteIds.indexOf(thisView.institute.toString());
+                    thisView.institute = allProviderViews[iIndex];
+                    
+                    if(thisView.institute && !thisView.institute.disabled && thisView.institute.exams.length > 0){
+
+                    var gIndex = groupNames.indexOf(thisView.institute.groupName);
+
+                    if(gIndex == -1){
+                        var newView = {
+                            user: userId,
+                            groupName: thisView.institute.groupName,
+                            logo: thisView.institute.logo,
+
+                            viewSummary: [{
+                                exam: thisView.institute.exams[0].name,
+                                stream: thisView.institute.exams[0].stream.name,
+                                city: thisView.institute.city,
+                                _date: thisView._date
+                            }],
+
+                        };
+                        basicViews.push(newView);
+                        groupNames.push(thisView.institute.groupName);
+                    }else{
+                        var thisViewSummary = basicViews[gIndex].viewSummary;
+                        var currCities = thisViewSummary.map(function(a) {return a.city;});
+
+                        var cIndex = currCities.indexOf(thisView.institute.city);
+
+                        if(cIndex == -1){
+                            var newViewSummary = {
+                                exam: thisView.institute.exams[0].name,
+                                stream: thisView.institute.exams[0].stream.name,
+                                city: thisView.institute.city,
+                                _date: thisView._date
+                            };
+                            basicViews[gIndex].viewSummary.push(newViewSummary);
+                        }else{
+                        }
+                    }
+
+                    }
+
+
+                    counter = counter + 1;
+                    if(counter == nLength){
+                        res.json(basicViews);
+                    }
+                    });
+                } else {throw err;}
+            });
+            if(nLength == 0){
+                res.json([]);
+            }
+        } else {throw err;}
+    });
+    
+});
 
 //to get all views for a user
 router.get('/user/:userId', function(req, res) {
