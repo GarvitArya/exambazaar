@@ -482,10 +482,10 @@
                     </div>-->
                     
                     <div layout="row" layout-align="start center" flex class="">
-                        <md-button class="md-markReview md-small tolowercase margin0 font12" ng-click="markQuestionForReview(question, subquestion)" ng-if="!subquestion.markforreview">
+                        <md-button class="md-markReview md-small tolowercase margin0 font12 width80" ng-click="markQuestionForReview(question, subquestion)" ng-if="!subquestion.markforreview">
                             Mark for Review
                         </md-button>
-                        <md-button class="md-unmarkReview md-small tolowercase margin0 font12" ng-click="clearQuestionMarkForReview(subquestion)" ng-if="subquestion.markforreview">
+                        <md-button class="md-unmarkReview md-small tolowercase margin0 font12 width80" ng-click="clearQuestionMarkForReview(subquestion)" ng-if="subquestion.markforreview">
                             Unmark from Review
                         </md-button>
                     </div>
@@ -499,7 +499,7 @@
                         </md-button>-->
                     </div>
                     <div flex layout="row" layout-align="end center" class="">
-                        <md-button class="md-saveNext md-small font12 tolowercase margin0 " ng-click="setNextQuestion(question, subquestion)">
+                        <md-button class="md-saveNext md-small font12 tolowercase margin0 width80" ng-click="setNextQuestion(question, subquestion)">
                             Save & Next
                         </md-button>
                     </div>
@@ -524,7 +524,7 @@
                     <div layout="row" layout-align="center center" class="marginT40 width100 baseFont">
                     
                     <div flex layout="column" layout-align="center center" class="">
-                        <md-button class="md-danger md-large tolowercase margin0 " ng-click="seeAssessmentResult()" ng-if="test.analyzeable">
+                        <md-button class="md-danger md-large tolowercase margin0 " ui-sref="reportassessment({ testId:{{'test._id'}} })" ng-if="test.analyzeable">
                             Analyze your result
                         </md-button>
                         <span class="smallFont marginT10" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">or Retake the Test</span>

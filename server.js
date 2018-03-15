@@ -317,6 +317,7 @@ var allStates = [
 '/assessment/:testId',
 '/mobileassessment/:testId',
 '/reportassessment/:testId',
+'/mobilereportassessment/:testId',
 '/ebinternal/testAssessment',
 '/ebinternal/emailToPublications',
 '/ebinternal/user/:userId/sendEmail',

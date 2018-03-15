@@ -321,10 +321,13 @@
                 <div flex>See Summary ({{questionList.length}} questions)</div>    
                 <div class="marginR10">
                     <i class="fa fa-caret-down" aria-hidden="true" ng-if="!mobileSummary"></i>
-                    <!--<i class="fa fa-caret-up" aria-hidden="true" ng-if="mobileSummary"></i>-->
+                    <i class="fa fa-caret-up" aria-hidden="true" ng-if="mobileSummary"></i>
                 </div>
             </div>
             <div hide-gt-xs layout="column" layout-align="center center"  class="smallFont" ng-show="mobileSummary">
+                <div layout="column" layout-align="center center" class="h2Font bold paddingT10 paddingB5 width100" >
+                    <span ng-if="user.basic.name">Candidate: {{user.basic.name}}</span>
+                </div>
                 <div layout="column" layout-align="center center" class=" paddingTB10 width100">
                     <div layout="column" layout-align="center center" class="width100 padding10 " id="legendBox">
                         <div layout="row" layout-align="center center" class="width90 paddingTB5">
@@ -364,9 +367,6 @@
                     
                     </div>
                 </div>
-                <!--<div layout="row" layout-align="center end" class="marginT20 marginB5 width100 ">
-                    Question List
-                </div>-->
                 <div layout="row" layout-align="center start" class="width100" layout-wrap>
                     <div ng-repeat="showquestion in questionList" class="margin5 emptyTag" layout="row" layout-align="center center" ng-class="{ seenTag: showquestion.subquestion.seen, answeredTag: showquestion.subquestion.anyAnswer, reviewTag: showquestion.subquestion.markforreview, activeTag: showquestion.subquestion._id == subquestion._id}" ng-click="setQuestion(showquestion.question, showquestion.sno)">
                         {{showquestion.no}}
@@ -419,14 +419,7 @@
                             Unmark from Review
                         </md-button>-->
                     </div>
-                    <!--<div class="danger paddingLR10" >
-                        <span ng-if="!subquestion.errorReported" ng-click="showReportErrorDialog(question, subquestion)">
-                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                            <md-tooltip>
-                            Report Error in this Question
-                            </md-tooltip>
-                        </span>
-                    </div>-->
+                    
                     <div flex layout="row" layout-align="end center" class="baseFont">
                             <div layout="row" layout-align="center center" class="marginLR5 " ng-if="subquestion.type =='mcq' && subquestion.mcqma">
                                 <span class="badge mcaBadge">Multiple Correct Answers
@@ -534,17 +527,17 @@
                 
                 <div layout="column" layout-align="center center" class="width100 marginT20 paddingTB20 greyBorder">
                 <div layout="column" layout-align="center center" class="width100 padding20">
-                    <div class="h2Font">
+                    <div class="h1Font">
                         Good job on taking the test!
                     </div>
                     <div class="smallFont">
                         You have attempted {{answered}} out of {{totalQuestions}} questions!
                     </div>
                     
-                    <div layout="row" layout-align="center center" class="marginT40 width100 baseFont">
+                    <div layout="column" layout-align="center center" class="marginT20 width100 baseFont">
                     
                     <div flex layout="column" layout-align="center center" class="">
-                        <md-button class="md-danger md-large tolowercase margin0 " ng-click="seeAssessmentResult()" ng-if="test.analyzeable">
+                        <md-button class="md-danger md-large tolowercase margin0 " ui-sref="mobilereportassessment({ testId:{{'test._id'}} })" ng-if="test.analyzeable">
                             Analyze your result
                         </md-button>
                         <span class="smallFont marginT10" ng-click="removeAssessmentDialog()" ng-if="test.resettable || fullScope">or Retake the Test</span>

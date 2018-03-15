@@ -105,9 +105,9 @@
         padding-bottom: 1px;
         width:50px;
         height:30px;
-        color: black;
+        color: gray;
         background: white;
-        border: 1px solid black;
+        border: 1px solid gray;
     }
     .correctTag{
         padding-left: 4px;
@@ -544,18 +544,13 @@
                     </div>-->
                     
                     <div layout="row" layout-align="start center" flex class="">
-                        <md-button class="md-next md-small font12 tolowercase margin0 " ng-click="setPreviousQuestion(question, subquestion)">
+                        <md-button class="md-next md-small font12 tolowercase margin0 width80" ng-click="setPreviousQuestion(question, subquestion)">
                             Previous
                         </md-button>
                     </div>
-                    <div layout="row" layout-align="center center" flex class="">
-                        
-                        <!--<md-button class="md-signup md-small tolowercase margin0 font12" ng-click="clearAnswer(subquestion)" ng-disabled="!subquestion.userAnswer && !subquestion.userNumericalAnswer">
-                            Clear your response
-                        </md-button>-->
-                    </div>
+                    
                     <div flex layout="row" layout-align="end center" class="">
-                        <md-button class="md-saveNext md-small font12 tolowercase margin0 " ng-click="setNextQuestion(question, subquestion)">
+                        <md-button class="md-saveNext md-small font12 tolowercase margin0 width80" ng-click="setNextQuestion(question, subquestion)">
                             Next
                         </md-button>
                     </div>

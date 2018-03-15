@@ -1321,7 +1321,7 @@ router.get('/testExam/:testId', function(req, res) {
             var examId = thisTest.exam.toString();
             
             var thisExam = exam
-            .findOne({ '_id': examId},{name: 1, displayname:1, seoname: 1})
+            .findOne({ '_id': examId},{name: 1, displayname:1, seoname: 1, exam_page_name: 1, question_papers_urlslug: 1})
             .exec(function (err, thisExam) {
             if (!err){
                 if(thisExam && thisExam.seoname){

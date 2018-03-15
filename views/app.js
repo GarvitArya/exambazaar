@@ -20537,610 +20537,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
         
     exambazaar.controller("reportassessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thisanswerkey', 'thisTestQuestions', 'Notification', '$window', 'screenSize', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thisanswerkey, thisTestQuestions, Notification, $window, screenSize ){
-            
-            $scope.openAddQuestion = function(){
-                var url = $state.href('addQuestion', {testId: $scope.test._id});
-                window.open(url, '_blank');    
-            };
-            $scope.col1Width = '25';
-            $scope.pageWidth = '100';
-            $scope.question = null;
-            $scope.subquestion = null;
-            
-            $scope.disabled = false;
-            $scope.testStarted = false;
-            $scope.testOver = false;
-            if (screenSize.is('xs, sm')){
-                $scope.disabled = true;
-            }else{
-                $scope.disabled = false;
-            }
-
-            var sanitizeQuestion = function(question){
-                if(question && question.context){
-                    question.context = question.context.replace(/\n/ig, '<br/>');
-                }
-                if(question._startnumber){
-                    question._startnumber = Number(question._startnumber);
-                }
-                if(question._endnumber){
-                    question._endnumber = Number(question._endnumber);
-                }
-                if(question && question.questions){
-                    question.questions.forEach(function(thisQuestion, index){
-                        
-                        if(!thisQuestion.marking){
-                            thisQuestion.marking = {
-                                correct: 3,
-                                incorrect: -1
-                            };
-                        }
-                        
-                        var sIndex = $scope.answerkeysubquestionIds.indexOf(thisQuestion._id.toString());
-                        if(sIndex != -1){
-                            thisQuestion.answer = $scope.answerkey[sIndex];
-                        }else{
-                            console.log($scope.answerkey);
-                            console.log('Something went very wrong: ' + thisQuestion._id + " | " + question._id);
-                        }
-                        
-                        thisQuestion.question = thisQuestion.question.replace(/\n/ig, '<br/>');
-                        
-                        
-                        thisQuestion.options.forEach(function(thisOption, oindex){
-                            thisOption.option = thisOption.option.replace(/\n/ig, '<br/>');
-                            //thisOption.option = optionsPrefix[oindex] + thisOption.option;
-                        });
-                    });
-
-                }
-                return question;
-            };
-            $scope.fullScreenMode = false;
-            
-            $scope.examQuestions = [];
-            $scope.answered = 0;
-            $scope.seen = 0;
-        
-            var getUserQMarkForReview = function(){
-            if($scope.user._id){
-                qmarkforreviewService.getUserQMarkforReviews($scope.user._id).success(function (data, status, headers) {
-
-                $scope.userQMarkForReview = data;
-                var userQMarkForReviewSubQuestionIds = $scope.userQMarkForReview.map(function(a) {return a.subquestion.toString();});
-                
-                if($scope.userQMarkForReview){
-                    $scope.marked = 0;
-                    $scope.testQuestions.forEach(function(thisQuestion, index){
-
-                        var markforreview = false;
-                        
-                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
-                            var submarkforreview = false;
-                            var thisSubQuestionId = thisSubQuestion._id.toString();
-                            
-                            var qIndex = userQMarkForReviewSubQuestionIds.indexOf(thisSubQuestionId);
-
-                            if(qIndex != -1){
-                                
-                                submarkforreview = true;
-                                markforreview = true;
-                                
-                                $scope.marked += 1;
-
-                            }else{
-                                
-                            }
-                            thisSubQuestion.markforreview = submarkforreview;
-                        });
-                        thisQuestion.markforreview = markforreview;
-                    });
-
-                    
-                }
-                })
-                .error(function (data, status, header, config) {
-                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
-                    console.log('Error ' + data + ' ' + status);
-                });
-            }
-
-            };
-            var getUserQView = function(){
-            if($scope.user._id){
-                qviewService.getUserQViews($scope.user._id).success(function (data, status, headers) {
-
-                $scope.userQView = data;
-                var userQViewSubQuestionIds = $scope.userQView.map(function(a) {return a.subquestion.toString();});
-                if($scope.userQView){
-                    $scope.seen = 0;
-                    $scope.testQuestions.forEach(function(thisQuestion, index){
-                        //userQViewQuestionIds 
-                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
-                            var thisSeen = false;
-                            var sindex = userQViewSubQuestionIds.indexOf(thisSubQuestion._id);
-                            if(sindex != -1){
-                                thisSubQuestion.seen = true;
-                                $scope.seen += 1;
-                            }
-                            
-                        });
-                        
-                        
-                        
-                    });
-
-                    
-                }
-                })
-                .error(function (data, status, header, config) {
-                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
-                    console.log('Error ' + data + ' ' + status);
-                });
-            }
-
-            };
-            var getUserAnswers = function(){
-                if($scope.user._id){
-                    var correct = $scope.userAssessment.evaluation.marked.correct;
-                    var correctSubQuestionIds = [];
-                    if(correct.length > 0){
-                        correctSubQuestionIds = correct.map(function(a) {return a.subquestion.toString();});
-                    }
-                    var incorrect = $scope.userAssessment.evaluation.marked.incorrect;
-                    var incorrectSubQuestionIds = [];
-                    if(incorrect.length > 0){
-                        incorrectSubQuestionIds = incorrect.map(function(a) {return a.subquestion.toString();});
-                    }
-                   
-                    
-                    $scope.testQuestions.forEach(function(thisQuestion, index){
-                        
-                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
-                            var qno = thisQuestion._startnumber + sindex;
-                            var cIndex = correctSubQuestionIds.indexOf(thisSubQuestion._id.toString());
-                            var icIndex = incorrectSubQuestionIds.indexOf(thisSubQuestion._id.toString());
-                            
-                            if(cIndex != -1){
-                                thisSubQuestion.userevaluation = {
-                                    correct: true,    
-                                    incorrect: false,
-                                    partial: false,
-                                    notattempted: false,  
-                                };
-                                thisSubQuestion.userevaluation.userScore = correct[cIndex];
-                            }else if(icIndex != -1){
-                              
-                                if(  !incorrect[icIndex].anyIncorrect && incorrect[icIndex].countMatch > 0){
-                                    thisSubQuestion.userevaluation = {
-                                        correct: false,    
-                                        incorrect: false,    
-                                        partial: true,    
-                                        notattempted: false,    
-                                    };
-                                    thisSubQuestion.userevaluation.userScore = incorrect[icIndex];
-                                }else{
-                                    thisSubQuestion.userevaluation = {
-                                        correct: false,    
-                                        incorrect: true,
-                                        partial: false,
-                                        notattempted: false,    
-                                    };
-                                    thisSubQuestion.userevaluation.userScore = incorrect[icIndex];
-                                }
-                                
-                            }else if(cIndex == -1 && icIndex == -1){
-                                thisSubQuestion.userevaluation = {
-                                    correct: false,    
-                                    incorrect: false,
-                                    partial: false,
-                                    notattempted: true,    
-                                };
-                            }
-                            
-                        });
-                    });
-                    
-                    
-                }
-            };
-            var getUserResponses = function(){
-                if($scope.user._id){
-                questionresponseService.getUserQuestionResponses($scope.user._id).success(function (data, status, headers) {
-
-                $scope.userResponses = data;
-                var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.subquestion.toString();});
-                
-                if($scope.userResponses){
-                    $scope.answered = 0;
-                    $scope.totalQuestions = 0;
-                    
-                    var userQViewSubQuestionIds = [];
-                    if($scope.userQView){
-                        var userQViewSubQuestionIds = $scope.userQView.map(function(a) {return a.subquestion.toString();});
-                    }
-                    $scope.testQuestions.forEach(function(thisQuestion, index){
-
-                        var anyAnswer = false;
-                        
-                        $scope.totalQuestions += thisQuestion.questions.length;
-                        
-                        
-                        
-                        thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
-                            var subanyAnswer = false;
-                            var thisSubQuestionId = thisSubQuestion._id.toString();
-                            
-                            if(thisSubQuestion.type =='mcq' && thisSubQuestion.mcqma){
-                                
-                                $scope.userResponses.forEach(function(thisResponse, rindex){
-                                    if(thisResponse.subquestion == thisSubQuestion._id){
-                                        anyAnswer = true;
-                                        subanyAnswer = true;
-                                        if(!$scope.testQuestions[index].questions[sindex].userAnswer){
-                                            $scope.testQuestions[index].questions[sindex].userAnswer = [];
-                                        }
-                                        
-                                        var exIndex = $scope.testQuestions[index].questions[sindex].userAnswer.indexOf(thisResponse.option.toString());
-                                        if(exIndex == -1){
-                                           $scope.testQuestions[index].questions[sindex].userAnswer.push(thisResponse.option.toString()); 
-                                        }
-                                        
-                                        
-                                        
-                                        
-                                    }
-                                    
-                                    thisSubQuestion.anyAnswer = subanyAnswer;
-                                });
-                                
-                                if(thisSubQuestion.anyAnswer){
-                                    $scope.answered += 1;
-                                }
-                                
-                                
-                            }else{
-                                
-                                var qIndex = userResponseSubQuestionIds.indexOf(thisSubQuestionId);
-
-                                if(qIndex != -1){
-                                    var thisQuestionResponse = $scope.userResponses[qIndex];
-                                    anyAnswer = true;
-                                    subanyAnswer = true;
-
-                                    if(thisQuestionResponse.option){
-
-
-                                        if($scope.testQuestions[index].questions[sindex].mcqma){
-                                            
-                                        }else{
-                                           $scope.testQuestions[index].questions[sindex].userAnswer = thisQuestionResponse.option.toString(); 
-                                        }
-
-                                    }
-                                    if(thisQuestionResponse.numericalAnswer){
-                                        $scope.testQuestions[index].questions[sindex].userNumericalAnswer = Number(thisQuestionResponse.numericalAnswer);
-                                    }
-
-
-
-                                    $scope.answered += 1;
-
-                                }else{
-                                    $scope.testQuestions[index].questions[sindex].userAnswer = null;
-                                    $scope.testQuestions[index].questions[sindex].userNumericalAnswer = null;
-                                }
-
-                                thisSubQuestion.anyAnswer = subanyAnswer;
-                                
-                                
-                                
-                            }
-                            
-                            
-                            
-                            
-                        });
-                        thisQuestion.anyAnswer = anyAnswer;
-
-                        thisQuestion = sanitizeQuestion(thisQuestion);
-                    });
-
-                    
-                }
-                    /*if($scope.userResponses){
-                    $scope.answered = 0;
-                    $scope.testQuestions.forEach(function(thisQuestion, index){
-                        var thisQuestionId = thisQuestion._id;
-                        var qIndex = userResponseSubQuestionIds.indexOf(thisQuestionId);
-
-                        if(qIndex != -1){
-                            var thisQuestionResponse = $scope.userResponses[qIndex];
-                            thisQuestion.userAnswer = thisQuestionResponse.option.toString();
-                            $scope.answered += 1;
-
-                        }else{
-                            thisQuestion.userAnswer = null;
-                        }
-
-                        thisQuestion.questions.forEach(function(thisSubQuestion, index){
-                            var thisSubQuestionId = thisSubQuestion._id.toString();
-
-                        });
-
-                        thisQuestion = sanitizeQuestion(thisQuestion);
-                    });
-                }*/
-
-
-
-                })
-                .error(function (data, status, header, config) {
-                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
-                    console.log('Error ' + data + ' ' + status);
-                });
-                }
-
-            };
-            
-            
-            $scope.setQuestion = function(question, index){
-                $scope.question = question;
-                $scope.setSubQuestion($scope.question, index);
-            };
-            $scope.setSubQuestion = function(question, index){
-                if(question && question.questions && question.questions.length > index){
-                    if($scope.question._id != question._id){
-                        $scope.question = question;
-                    }
-                    if($scope.subquestion){
-                        if($scope.subquestion._id != question.questions[index]._id){
-                            $scope.subquestion = question.questions[index];
-                        }
-                    }else{
-                        $scope.subquestion = question.questions[index];
-                    }
-                }
-                
-            };
-        
-            $scope.setNextQuestion = function(question, subquestion){
-                var questionId = question._id;
-                var subquestionId = subquestion._id;
-                var questionSubQuestionIds = question.questions.map(function(a) {return a._id.toString();});
-                var nSubQuestions = question.questions.length;
-                var sIndex = questionSubQuestionIds.indexOf(subquestionId);
-                if(sIndex < nSubQuestions - 1){
-                    $scope.subquestion = question.questions[sIndex + 1];
-                   
-                }else if (sIndex == nSubQuestions - 1 ){
-                    var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
-                    var nQuestions = $scope.testQuestions.length;
-
-                    var tIndex = testQuestionIds.indexOf(questionId);
-
-                    if(tIndex != -1 && tIndex != nQuestions- 1){
-                       
-                        $scope.question = $scope.testQuestions[tIndex + 1];
-                        $scope.setSubQuestion($scope.question, 0);
-                    }else if (tIndex == nQuestions- 1){
-                        $scope.submitAssessment();
-                    }
-                    
-                }
-                
-            };
-            $scope.setPreviousQuestion = function(question, subquestion){
-                var questionId = question._id;
-                var subquestionId = subquestion._id;
-                var questionSubQuestionIds = question.questions.map(function(a) {return a._id.toString();});
-                var nSubQuestions = question.questions.length;
-                var sIndex = questionSubQuestionIds.indexOf(subquestionId);
-                if(sIndex > 0){
-                    $scope.subquestion = question.questions[sIndex - 1];
-                   
-                }else if (sIndex == 0){
-                    var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
-                    var nQuestions = $scope.testQuestions.length;
-
-                    var tIndex = testQuestionIds.indexOf(questionId);
-
-                    if(tIndex != -1 && tIndex != 0){
-                       
-                        $scope.question = $scope.testQuestions[tIndex - 1];
-                        $scope.setSubQuestion($scope.question, $scope.question.questions.length - 1);
-                    }else if (tIndex == 0){
-                        
-                    }
-                    
-                }
-            };
-            $scope.user = null;
-            if($cookies.getObject('sessionuser')){
-                var sessionuser = $cookies.getObject( 'sessionuser');
-                
-                $scope.test = thistest.data;
-                $scope.answerkey = thisanswerkey.data;
-                console.log($scope.answerkey);
-                $scope.answerkeysubquestionIds = $scope.answerkey.map(function(a) {return a.subquestion;});
-                if($scope.test.instructions && $scope.test.instructions.length > 0){
-                    $scope.instructions = $scope.test.instructions;    
-                }
-                
-                $scope.testQuestions = thisTestQuestions.data;
-                $scope.testQuestions.sort(function(a,b) {return (Number(a._startnumber) > Number(b._startnumber)) ? 1 : ((Number(b._startnumber) > Number(a._startnumber)) ? -1 : 0);} ); 
-                
-                
-                var nQuestions = $scope.testQuestions.length;
-                $scope.questionList = [];
-                 $scope.testQuestions.forEach(function(thisQuestion, index){
-                    thisQuestion = sanitizeQuestion(thisQuestion);
-                    thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
-                        if(thisSubQuestion.mcqma && thisSubQuestion.type == 'mcq'){
-                            var thisOptions = thisSubQuestion.options;
-                            var correctOptions = [];
-                            thisOptions.forEach(function(thisOption, oindex){
-                                if(thisOption._correct){
-                                    correctOptions.push(thisOption._id);
-                                }
-                            });
-                            //console.log(thisSubQuestion);
-                            thisSubQuestion.answer.correctOptions = correctOptions;
-                        }
-                        
-                        
-                        var newQuestionInList = {
-                            question: thisQuestion,
-                            subquestion: thisSubQuestion,
-                            no: thisQuestion._startnumber + sindex,
-                            sno: sindex,
-                        };
-                        $scope.questionList.push(newQuestionInList);
-                    });
-                     
-                });
-                $scope.getQClass = function(subquestion){
-                    
-                    var classname = '';
-                    if(subquestion.userevaluation.correct){
-                        classname = 'correctTag';
-                    }
-                    if(subquestion.userevaluation.incorrect){
-                        classname = 'incorrectTag';
-                    }
-                    
-                    if(subquestion.userevaluation.partial){
-                        classname = 'partiallycorrectTag';
-                    }
-                    return(classname);
-                };
-                $scope.fullScope = false;
-                UserService.getUser(sessionuser._id).success(function (data, status, headers) {
-                    $scope.user = data;
-                    $rootScope.pageTitle = $scope.test.name + " | " + $scope.user.basic.name;
-
-                    Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
-                    var assessmentForm = {
-                        user: $scope.user._id,
-                        test: $stateParams.testId,
-                    };
-                    assessmentService.getAssessment(assessmentForm).success(function (adata, status, headers) {
-                        $scope.userAssessment = adata;
-                        //console.log($scope.userAssessment);
-                        if($scope.userAssessment && !$scope.userAssessment.userRating){
-                            $scope.userAssessment.userRating = 0;
-                        }
-                       
-                        $scope.testOver = false;
-                       
-
-                        if($scope.userAssessment && $scope.userAssessment.evaluation.score && $scope.userAssessment.evaluation.score != ''){
-                            $scope.testOver = true;
-                            getUserAnswers();
-                            getUserResponses();
-                            getUserQMarkForReview();
-                            getUserQView();
-                            $scope.setQuestion($scope.testQuestions[0], 0);
-                        }
-                        
-                        
-                    })
-                    .error(function (data, status, header, config) {
-                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
-                        console.log('Error ' + data + ' ' + status);
-                    });
-
-
-
-                })
-                .error(function (data, status, header, config) {
-                    Notification.warning({message: "User not logged in!",  positionY: 'top', positionX: 'right', delay: 1000});
-                    console.log('Error ' + data + ' ' + status);
-                });
-            }else{
-                //$scope.user = null;
-                //$rootScope.$emit("CallBlogLogin", {});
-                
-                console.log('No User');
-            }
-            var optionsPrefix = [
-                'A) ',
-                'B) ',
-                'C) ',
-                'D) ',
-                'E) ',
-                'F) ',
-                'G) ',
-                'H) ',
-            ];
-
-
-
-            $scope.userevaluate = function(){
-                var assessmentForm = {
-                    user: $scope.user._id,
-                    test: $stateParams.testId,
-                };
-
-                assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
-                    console.log(edata);
-
-                })
-                .error(function (data, status, header, config) {
-                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
-                    console.log('Error ' + data + ' ' + status);
-                });
-            };
-
-
-            $scope.$watch('subquestion', function (newValue, oldValue, scope) {
-                if(newValue != null){
-                    $scope.activeQuestionNo = null;
-                    var questionId = $scope.question._id;
-                    var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
-
-                    var tIndex = testQuestionIds.indexOf(questionId);
-                    var thisQuestion = $scope.testQuestions[tIndex];
-                    var questionSubQuestionIds = thisQuestion.questions.map(function(a) {return a._id.toString();});
-                    var sIndex = questionSubQuestionIds.indexOf($scope.subquestion._id);
-                    
-                    if(sIndex != -1){
-                        $scope.activeQuestionNo = thisQuestion._startnumber + sIndex;
-                    }
-                    
-                    
-
-                }
-            }, true);
-
-
-            
-
-            $scope.showInstructionDialog = function(ev) {
-
-                $mdDialog.show({
-                  contentElement: '#instructionDialog',
-                  parent: angular.element(document.body),
-                  targetEvent: ev,
-                  clickOutsideToClose: false,
-                  escapeToClose: false,
-                }).finally(function() {
-                    //$scope.userReviewMode = true;
-                });
-            };
-            $scope.closeInstructionDialog = function(ev) {
-
-                $mdDialog.hide();
-            };
-        
-            
-
-
-    }]); 
-    exambazaar.controller("assessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', 'moment', '$mdSidenav', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments, moment, $mdSidenav){
-            
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'thistest', 'thistestExam', 'thisanswerkey', 'thisTestQuestions', 'Notification', '$window', 'screenSize', '$mdSidenav', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, qmarkforreviewService, qviewService, assessmentService, UserService, thistest, thistestExam, thisanswerkey, thisTestQuestions, Notification, $window, screenSize, $mdSidenav){
         
         $scope.closeLeftBar = function () {
           $mdSidenav('left').close()
@@ -21148,10 +20545,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               //$log.debug("close RIGHT is done");
             });
         };
+
         $scope.toggleLeft = buildToggler('left');
+        //$scope.toggleRight = buildToggler('right');
         $scope.isOpenLeft = function(){
           return $mdSidenav('left').isOpen();
         };
+
+        /**
+         * Supplies a function that will continue to operate until the
+         * time is up.
+         */
         function debounce(func, wait, context) {
           var timer;
 
@@ -21164,7 +20568,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
               func.apply(context, args);
             }, wait || 10);
           };
-        }
+        };
+
+        /**
+         * Build handler to open/close a SideNav; when animation finishes
+         * report completion in console
+         */
         function buildDelayedToggler(navID) {
           return debounce(function() {
             // Component lookup should always be available since we are not using `ng-if`
@@ -21174,7 +20583,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //$log.debug("toggle " + navID + " is done");
               });
           }, 200);
-        }
+        };
+
         function buildToggler(navID) {
           return function() {
             // Component lookup should always be available since we are not using `ng-if`
@@ -21184,7 +20594,723 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //$log.debug("toggle " + navID + " is done");
               });
           };
+        };
+        
+        
+        
+        $scope.mobileSummary = false;
+        $scope.toggleMobileSummary = function(){
+            $scope.mobileSummary = !$scope.mobileSummary;        
+        };    
+
+        $scope.openAddQuestion = function(){
+            var url = $state.href('addQuestion', {testId: $scope.test._id});
+            window.open(url, '_blank');    
+        };
+        $scope.col1Width = '25';
+        $scope.pageWidth = '100';
+        $scope.question = null;
+        $scope.subquestion = null;
+
+        $scope.disabled = false;
+        $scope.testStarted = false;
+        $scope.testOver = false;
+        if (screenSize.is('xs, sm')){
+            //$scope.disabled = true;
+        }else{
+            $scope.disabled = false;
         }
+
+        var sanitizeQuestion = function(question){
+            if(question && question.context){
+                question.context = question.context.replace(/\n/ig, '<br/>');
+            }
+            if(question._startnumber){
+                question._startnumber = Number(question._startnumber);
+            }
+            if(question._endnumber){
+                question._endnumber = Number(question._endnumber);
+            }
+            if(question && question.questions){
+                question.questions.forEach(function(thisQuestion, index){
+
+                    if(!thisQuestion.marking){
+                        thisQuestion.marking = {
+                            correct: 3,
+                            incorrect: -1
+                        };
+                    }
+
+                    var sIndex = $scope.answerkeysubquestionIds.indexOf(thisQuestion._id.toString());
+                    if(sIndex != -1){
+                        thisQuestion.answer = $scope.answerkey[sIndex];
+                    }else{
+                        console.log($scope.answerkey);
+                        console.log('Something went very wrong: ' + thisQuestion._id + " | " + question._id);
+                    }
+
+                    thisQuestion.question = thisQuestion.question.replace(/\n/ig, '<br/>');
+
+
+                    thisQuestion.options.forEach(function(thisOption, oindex){
+                        thisOption.option = thisOption.option.replace(/\n/ig, '<br/>');
+                        //thisOption.option = optionsPrefix[oindex] + thisOption.option;
+                    });
+                });
+
+            }
+            return question;
+        };
+        $scope.fullScreenMode = false;
+
+        $scope.examQuestions = [];
+        $scope.answered = 0;
+        $scope.seen = 0;
+
+        var getUserQMarkForReview = function(){
+        if($scope.user._id){
+            qmarkforreviewService.getUserQMarkforReviews($scope.user._id).success(function (data, status, headers) {
+
+            $scope.userQMarkForReview = data;
+            var userQMarkForReviewSubQuestionIds = $scope.userQMarkForReview.map(function(a) {return a.subquestion.toString();});
+
+            if($scope.userQMarkForReview){
+                $scope.marked = 0;
+                $scope.testQuestions.forEach(function(thisQuestion, index){
+
+                    var markforreview = false;
+
+                    thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                        var submarkforreview = false;
+                        var thisSubQuestionId = thisSubQuestion._id.toString();
+
+                        var qIndex = userQMarkForReviewSubQuestionIds.indexOf(thisSubQuestionId);
+
+                        if(qIndex != -1){
+
+                            submarkforreview = true;
+                            markforreview = true;
+
+                            $scope.marked += 1;
+
+                        }else{
+
+                        }
+                        thisSubQuestion.markforreview = submarkforreview;
+                    });
+                    thisQuestion.markforreview = markforreview;
+                });
+
+
+            }
+            })
+            .error(function (data, status, header, config) {
+                Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                console.log('Error ' + data + ' ' + status);
+            });
+        }
+
+        };
+        var getUserQView = function(){
+        if($scope.user._id){
+            qviewService.getUserQViews($scope.user._id).success(function (data, status, headers) {
+
+            $scope.userQView = data;
+            var userQViewSubQuestionIds = $scope.userQView.map(function(a) {return a.subquestion.toString();});
+            if($scope.userQView){
+                $scope.seen = 0;
+                $scope.testQuestions.forEach(function(thisQuestion, index){
+                    //userQViewQuestionIds 
+                    thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                        var thisSeen = false;
+                        var sindex = userQViewSubQuestionIds.indexOf(thisSubQuestion._id);
+                        if(sindex != -1){
+                            thisSubQuestion.seen = true;
+                            $scope.seen += 1;
+                        }
+
+                    });
+
+
+
+                });
+
+
+            }
+            })
+            .error(function (data, status, header, config) {
+                Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                console.log('Error ' + data + ' ' + status);
+            });
+        }
+
+        };
+        var getUserAnswers = function(){
+            if($scope.user._id){
+                var correct = $scope.userAssessment.evaluation.marked.correct;
+                var correctSubQuestionIds = [];
+                if(correct.length > 0){
+                    correctSubQuestionIds = correct.map(function(a) {return a.subquestion.toString();});
+                }
+                var incorrect = $scope.userAssessment.evaluation.marked.incorrect;
+                var incorrectSubQuestionIds = [];
+                if(incorrect.length > 0){
+                    incorrectSubQuestionIds = incorrect.map(function(a) {return a.subquestion.toString();});
+                }
+
+
+                $scope.testQuestions.forEach(function(thisQuestion, index){
+
+                    thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                        var qno = thisQuestion._startnumber + sindex;
+                        var cIndex = correctSubQuestionIds.indexOf(thisSubQuestion._id.toString());
+                        var icIndex = incorrectSubQuestionIds.indexOf(thisSubQuestion._id.toString());
+
+                        if(cIndex != -1){
+                            thisSubQuestion.userevaluation = {
+                                correct: true,    
+                                incorrect: false,
+                                partial: false,
+                                notattempted: false,  
+                            };
+                            thisSubQuestion.userevaluation.userScore = correct[cIndex];
+                        }else if(icIndex != -1){
+
+                            if(  !incorrect[icIndex].anyIncorrect && incorrect[icIndex].countMatch > 0){
+                                thisSubQuestion.userevaluation = {
+                                    correct: false,    
+                                    incorrect: false,    
+                                    partial: true,    
+                                    notattempted: false,    
+                                };
+                                thisSubQuestion.userevaluation.userScore = incorrect[icIndex];
+                            }else{
+                                thisSubQuestion.userevaluation = {
+                                    correct: false,    
+                                    incorrect: true,
+                                    partial: false,
+                                    notattempted: false,    
+                                };
+                                thisSubQuestion.userevaluation.userScore = incorrect[icIndex];
+                            }
+
+                        }else if(cIndex == -1 && icIndex == -1){
+                            thisSubQuestion.userevaluation = {
+                                correct: false,    
+                                incorrect: false,
+                                partial: false,
+                                notattempted: true,    
+                            };
+                        }
+
+                    });
+                });
+
+
+            }
+        };
+        var getUserResponses = function(){
+            if($scope.user._id){
+            questionresponseService.getUserQuestionResponses($scope.user._id).success(function (data, status, headers) {
+
+            $scope.userResponses = data;
+            var userResponseSubQuestionIds = $scope.userResponses.map(function(a) {return a.subquestion.toString();});
+
+            if($scope.userResponses){
+                $scope.answered = 0;
+                $scope.totalQuestions = 0;
+
+                var userQViewSubQuestionIds = [];
+                if($scope.userQView){
+                    var userQViewSubQuestionIds = $scope.userQView.map(function(a) {return a.subquestion.toString();});
+                }
+                $scope.testQuestions.forEach(function(thisQuestion, index){
+
+                    var anyAnswer = false;
+
+                    $scope.totalQuestions += thisQuestion.questions.length;
+
+
+
+                    thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                        var subanyAnswer = false;
+                        var thisSubQuestionId = thisSubQuestion._id.toString();
+
+                        if(thisSubQuestion.type =='mcq' && thisSubQuestion.mcqma){
+
+                            $scope.userResponses.forEach(function(thisResponse, rindex){
+                                if(thisResponse.subquestion == thisSubQuestion._id){
+                                    anyAnswer = true;
+                                    subanyAnswer = true;
+                                    if(!$scope.testQuestions[index].questions[sindex].userAnswer){
+                                        $scope.testQuestions[index].questions[sindex].userAnswer = [];
+                                    }
+
+                                    var exIndex = $scope.testQuestions[index].questions[sindex].userAnswer.indexOf(thisResponse.option.toString());
+                                    if(exIndex == -1){
+                                       $scope.testQuestions[index].questions[sindex].userAnswer.push(thisResponse.option.toString()); 
+                                    }
+
+
+
+
+                                }
+
+                                thisSubQuestion.anyAnswer = subanyAnswer;
+                            });
+
+                            if(thisSubQuestion.anyAnswer){
+                                $scope.answered += 1;
+                            }
+
+
+                        }else{
+
+                            var qIndex = userResponseSubQuestionIds.indexOf(thisSubQuestionId);
+
+                            if(qIndex != -1){
+                                var thisQuestionResponse = $scope.userResponses[qIndex];
+                                anyAnswer = true;
+                                subanyAnswer = true;
+
+                                if(thisQuestionResponse.option){
+
+
+                                    if($scope.testQuestions[index].questions[sindex].mcqma){
+
+                                    }else{
+                                       $scope.testQuestions[index].questions[sindex].userAnswer = thisQuestionResponse.option.toString(); 
+                                    }
+
+                                }
+                                if(thisQuestionResponse.numericalAnswer){
+                                    $scope.testQuestions[index].questions[sindex].userNumericalAnswer = Number(thisQuestionResponse.numericalAnswer);
+                                }
+
+
+
+                                $scope.answered += 1;
+
+                            }else{
+                                $scope.testQuestions[index].questions[sindex].userAnswer = null;
+                                $scope.testQuestions[index].questions[sindex].userNumericalAnswer = null;
+                            }
+
+                            thisSubQuestion.anyAnswer = subanyAnswer;
+
+
+
+                        }
+
+
+
+
+                    });
+                    thisQuestion.anyAnswer = anyAnswer;
+
+                    thisQuestion = sanitizeQuestion(thisQuestion);
+                });
+
+
+            }
+                /*if($scope.userResponses){
+                $scope.answered = 0;
+                $scope.testQuestions.forEach(function(thisQuestion, index){
+                    var thisQuestionId = thisQuestion._id;
+                    var qIndex = userResponseSubQuestionIds.indexOf(thisQuestionId);
+
+                    if(qIndex != -1){
+                        var thisQuestionResponse = $scope.userResponses[qIndex];
+                        thisQuestion.userAnswer = thisQuestionResponse.option.toString();
+                        $scope.answered += 1;
+
+                    }else{
+                        thisQuestion.userAnswer = null;
+                    }
+
+                    thisQuestion.questions.forEach(function(thisSubQuestion, index){
+                        var thisSubQuestionId = thisSubQuestion._id.toString();
+
+                    });
+
+                    thisQuestion = sanitizeQuestion(thisQuestion);
+                });
+            }*/
+
+
+
+            })
+            .error(function (data, status, header, config) {
+                Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                console.log('Error ' + data + ' ' + status);
+            });
+            }
+
+        };
+
+
+        $scope.setQuestion = function(question, index){
+            $scope.question = question;
+            $scope.setSubQuestion2($scope.question, index);
+        };
+        $scope.setSubQuestion = function(question, index){
+            if(question && question.questions && question.questions.length > index){
+                if($scope.question._id != question._id){
+                    $scope.question = question;
+                }
+                if($scope.subquestion){
+                    if($scope.subquestion._id != question.questions[index]._id){
+                        $scope.subquestion = question.questions[index];
+                    }
+                }else{
+                    $scope.subquestion = question.questions[index];
+                }
+            }
+            
+        };
+        $scope.setSubQuestion2 = function(question, index){
+            if(question && question.questions && question.questions.length > index){
+                if($scope.question._id != question._id){
+                    $scope.question = question;
+                }
+                if($scope.subquestion){
+                    if($scope.subquestion._id != question.questions[index]._id){
+                        $scope.subquestion = question.questions[index];
+                    }
+                }else{
+                    $scope.subquestion = question.questions[index];
+                }
+            }
+            $scope.mobileSummary = false;
+        };
+
+        $scope.setNextQuestion = function(question, subquestion){
+            var questionId = question._id;
+            var subquestionId = subquestion._id;
+            var questionSubQuestionIds = question.questions.map(function(a) {return a._id.toString();});
+            var nSubQuestions = question.questions.length;
+            var sIndex = questionSubQuestionIds.indexOf(subquestionId);
+            if(sIndex < nSubQuestions - 1){
+                $scope.subquestion = question.questions[sIndex + 1];
+
+            }else if (sIndex == nSubQuestions - 1 ){
+                var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
+                var nQuestions = $scope.testQuestions.length;
+
+                var tIndex = testQuestionIds.indexOf(questionId);
+
+                if(tIndex != -1 && tIndex != nQuestions- 1){
+
+                    $scope.question = $scope.testQuestions[tIndex + 1];
+                    $scope.setSubQuestion($scope.question, 0);
+                }else if (tIndex == nQuestions- 1){
+                    $scope.goBackToTestList();
+                }
+
+            }
+
+        };
+        $scope.goToPrevious = function(){
+            var confirm = $mdDialog.confirm()
+            .title('Did you hear about the mathematician who’s afraid of negative numbers?')
+            .textContent('He’ll stop at nothing to avoid them. Now lets get back to the test :)')
+            .ariaLabel('Lucky day')
+            .targetEvent()
+            .clickOutsideToClose(true)
+            .ok('Confirm')
+            .cancel('Cancel');
+            $mdDialog.show(confirm).then(function() {
+
+            }, function() {
+              //nothing
+            });
+        };
+        $scope.goBackToTestList = function(){
+            //console.log($scope.testExam);
+            var confirm = $mdDialog.confirm()
+            .title('Great, we have reached the end of the test!')
+            .textContent('Do you want to proceed back to all tests of ' + $scope.testExam.exam_page_name + "?")
+            .ariaLabel('Lucky day')
+            .targetEvent()
+            .clickOutsideToClose(true)
+            .ok('Confirm')
+            .cancel('Cancel');
+            $mdDialog.show(confirm).then(function() {
+                
+                $state.go('newquestionpapers', {question_papers_urlslug: $scope.testExam.question_papers_urlslug});
+
+            }, function() {
+              //nothing
+            });
+        };
+        
+        $scope.setPreviousQuestion = function(question, subquestion){
+            var questionId = question._id;
+            var subquestionId = subquestion._id;
+            var questionSubQuestionIds = question.questions.map(function(a) {return a._id.toString();});
+            var nSubQuestions = question.questions.length;
+            var sIndex = questionSubQuestionIds.indexOf(subquestionId);
+            if(sIndex > 0){
+                $scope.subquestion = question.questions[sIndex - 1];
+
+            }else if (sIndex == 0){
+                var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
+                var nQuestions = $scope.testQuestions.length;
+
+                var tIndex = testQuestionIds.indexOf(questionId);
+
+                if(tIndex != -1 && tIndex != 0){
+
+                    $scope.question = $scope.testQuestions[tIndex - 1];
+                    $scope.setSubQuestion($scope.question, $scope.question.questions.length - 1);
+                }else if (tIndex == 0){
+                    $scope.goToPrevious();
+                }
+
+            }
+        };
+        $scope.user = null;
+        if($cookies.getObject('sessionuser')){
+            var sessionuser = $cookies.getObject( 'sessionuser');
+
+            $scope.test = thistest.data;
+            $scope.testExam = thistestExam.data;
+            $scope.answerkey = thisanswerkey.data;
+            //console.log($scope.answerkey);
+            $scope.answerkeysubquestionIds = $scope.answerkey.map(function(a) {return a.subquestion;});
+            if($scope.test.instructions && $scope.test.instructions.length > 0){
+                $scope.instructions = $scope.test.instructions;    
+            }
+
+            $scope.testQuestions = thisTestQuestions.data;
+            $scope.testQuestions.sort(function(a,b) {return (Number(a._startnumber) > Number(b._startnumber)) ? 1 : ((Number(b._startnumber) > Number(a._startnumber)) ? -1 : 0);} ); 
+
+
+            var nQuestions = $scope.testQuestions.length;
+            $scope.questionList = [];
+             $scope.testQuestions.forEach(function(thisQuestion, index){
+                thisQuestion = sanitizeQuestion(thisQuestion);
+                thisQuestion.questions.forEach(function(thisSubQuestion, sindex){
+                    if(thisSubQuestion.mcqma && thisSubQuestion.type == 'mcq'){
+                        var thisOptions = thisSubQuestion.options;
+                        var correctOptions = [];
+                        thisOptions.forEach(function(thisOption, oindex){
+                            if(thisOption._correct){
+                                correctOptions.push(thisOption._id);
+                            }
+                        });
+                        //console.log(thisSubQuestion);
+                        thisSubQuestion.answer.correctOptions = correctOptions;
+                    }
+
+
+                    var newQuestionInList = {
+                        question: thisQuestion,
+                        subquestion: thisSubQuestion,
+                        no: thisQuestion._startnumber + sindex,
+                        sno: sindex,
+                    };
+                    $scope.questionList.push(newQuestionInList);
+                });
+
+            });
+            $scope.getQClass = function(subquestion){
+
+                var classname = '';
+                if(subquestion.userevaluation.correct){
+                    classname = 'correctTag';
+                }
+                if(subquestion.userevaluation.incorrect){
+                    classname = 'incorrectTag';
+                }
+
+                if(subquestion.userevaluation.partial){
+                    classname = 'partiallycorrectTag';
+                }
+                return(classname);
+            };
+            $scope.fullScope = false;
+            UserService.getUser(sessionuser._id).success(function (data, status, headers) {
+                $scope.user = data;
+                $rootScope.pageTitle = $scope.test.name + " | " + $scope.user.basic.name;
+
+                Notification.primary({message: "Welcome " + $scope.user.basic.name + "!",  positionY: 'top', positionX: 'right', delay: 1000});
+                var assessmentForm = {
+                    user: $scope.user._id,
+                    test: $stateParams.testId,
+                };
+                assessmentService.getAssessment(assessmentForm).success(function (adata, status, headers) {
+                    $scope.userAssessment = adata;
+                    //console.log($scope.userAssessment);
+                    if($scope.userAssessment && !$scope.userAssessment.userRating){
+                        $scope.userAssessment.userRating = 0;
+                    }
+
+                    $scope.testOver = false;
+
+
+                    if($scope.userAssessment && $scope.userAssessment.evaluation.score && $scope.userAssessment.evaluation.score != ''){
+                        $scope.testOver = true;
+                        getUserAnswers();
+                        getUserResponses();
+                        getUserQMarkForReview();
+                        getUserQView();
+                        $scope.setQuestion($scope.testQuestions[0], 0);
+                    }
+
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+
+
+
+            })
+            .error(function (data, status, header, config) {
+                Notification.warning({message: "User not logged in!",  positionY: 'top', positionX: 'right', delay: 1000});
+                console.log('Error ' + data + ' ' + status);
+            });
+        }else{
+            //$scope.user = null;
+            //$rootScope.$emit("CallBlogLogin", {});
+
+            console.log('No User');
+        }
+        var optionsPrefix = [
+            'A) ',
+            'B) ',
+            'C) ',
+            'D) ',
+            'E) ',
+            'F) ',
+            'G) ',
+            'H) ',
+        ];
+
+
+
+        $scope.userevaluate = function(){
+            var assessmentForm = {
+                user: $scope.user._id,
+                test: $stateParams.testId,
+            };
+
+            assessmentService.userevaluate(assessmentForm).success(function (edata, status, headers) {
+                console.log(edata);
+
+            })
+            .error(function (data, status, header, config) {
+                Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
+                console.log('Error ' + data + ' ' + status);
+            });
+        };
+
+
+        $scope.$watch('subquestion', function (newValue, oldValue, scope) {
+            if(newValue != null){
+                $scope.activeQuestionNo = null;
+                var questionId = $scope.question._id;
+                var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
+
+                var tIndex = testQuestionIds.indexOf(questionId);
+                var thisQuestion = $scope.testQuestions[tIndex];
+                var questionSubQuestionIds = thisQuestion.questions.map(function(a) {return a._id.toString();});
+                var sIndex = questionSubQuestionIds.indexOf($scope.subquestion._id);
+
+                if(sIndex != -1){
+                    $scope.activeQuestionNo = thisQuestion._startnumber + sIndex;
+                }
+
+
+
+            }
+        }, true);
+
+
+
+
+        $scope.showInstructionDialog = function(ev) {
+
+            $mdDialog.show({
+              contentElement: '#instructionDialog',
+              parent: angular.element(document.body),
+              targetEvent: ev,
+              clickOutsideToClose: false,
+              escapeToClose: false,
+            }).finally(function() {
+                //$scope.userReviewMode = true;
+            });
+        };
+        $scope.closeInstructionDialog = function(ev) {
+
+            $mdDialog.hide();
+        };
+
+            
+
+
+    }]); 
+    exambazaar.controller("assessmentController", 
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', 'moment', '$mdSidenav', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments, moment, $mdSidenav){
+            
+        $scope.closeLeftBar = function () {
+          $mdSidenav('left').close()
+            .then(function () {
+              //$log.debug("close RIGHT is done");
+            });
+        };
+
+        $scope.toggleLeft = buildToggler('left');
+        //$scope.toggleRight = buildToggler('right');
+        $scope.isOpenLeft = function(){
+          return $mdSidenav('left').isOpen();
+        };
+
+        /**
+         * Supplies a function that will continue to operate until the
+         * time is up.
+         */
+        function debounce(func, wait, context) {
+          var timer;
+
+          return function debounced() {
+            var context = $scope,
+                args = Array.prototype.slice.call(arguments);
+            $timeout.cancel(timer);
+            timer = $timeout(function() {
+              timer = undefined;
+              func.apply(context, args);
+            }, wait || 10);
+          };
+        };
+
+        /**
+         * Build handler to open/close a SideNav; when animation finishes
+         * report completion in console
+         */
+        function buildDelayedToggler(navID) {
+          return debounce(function() {
+            // Component lookup should always be available since we are not using `ng-if`
+            $mdSidenav(navID)
+              .toggle()
+              .then(function () {
+                //$log.debug("toggle " + navID + " is done");
+              });
+          }, 200);
+        };
+
+        function buildToggler(navID) {
+          return function() {
+            // Component lookup should always be available since we are not using `ng-if`
+            $mdSidenav(navID)
+              .toggle()
+              .then(function () {
+                //$log.debug("toggle " + navID + " is done");
+              });
+          };
+        };
         
         
         $scope.mobileSummary = false;
@@ -21674,6 +21800,21 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
                 $scope.mobileSummary = false;
             };
+            $scope.setSubQuestion2 = function(question, index){
+                if(question && question.questions && question.questions.length > index){
+                    if($scope.question._id != question._id){
+                        $scope.question = question;
+                    }
+                    if($scope.subquestion){
+                        if($scope.subquestion._id != question.questions[index]._id){
+                            $scope.subquestion = question.questions[index];
+                        }
+                    }else{
+                        $scope.subquestion = question.questions[index];
+                    }
+                }
+                //$scope.mobileSummary = false;
+            };
         
             $scope.setNextQuestion = function(question, subquestion){
                 var questionId = question._id;
@@ -21684,7 +21825,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 if(sIndex < nSubQuestions - 1){
                     $scope.subquestion = question.questions[sIndex + 1];
                     markView($scope.question, $scope.subquestion);
-                    $scope.mobileSummary = false;
+                    //$scope.mobileSummary = false;
                     $scope.markNumericalAnswer($scope.question, $scope.subquestion);
                 }else if (sIndex == nSubQuestions - 1 ){
                     var testQuestionIds = $scope.testQuestions.map(function(a) {return a._id;});
@@ -21695,9 +21836,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     if(tIndex != -1 && tIndex != nQuestions- 1){
                         $scope.markNumericalAnswer($scope.question, $scope.subquestion);
                         $scope.question = $scope.testQuestions[tIndex + 1];
-                        $scope.setSubQuestion($scope.question, 0);
+                        $scope.setSubQuestion2($scope.question, 0);
                         markView($scope.question, $scope.subquestion);
-                        $scope.mobileSummary = false;
+                        //$scope.mobileSummary = false;
                     }else if (tIndex == nQuestions- 1){
                         
                         $scope.submitAssessment();
@@ -36303,6 +36444,10 @@ function getLatLng(thisData) {
                     function(testService, $stateParams){
                     return testService.getTest($stateParams.testId);
                 }],
+                thistestExam: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getTestExam($stateParams.testId);
+                }],
                 thisanswerkey: ['testService','$stateParams',
                     function(testService, $stateParams){
                     return testService.answerKey($stateParams.testId);
@@ -36337,6 +36482,10 @@ function getLatLng(thisData) {
                 thistest: ['testService','$stateParams',
                     function(testService, $stateParams){
                     return testService.getTest($stateParams.testId);
+                }],
+                thistestExam: ['testService','$stateParams',
+                    function(testService, $stateParams){
+                    return testService.getTestExam($stateParams.testId);
                 }],
                 thisanswerkey: ['testService','$stateParams',
                     function(testService, $stateParams){
