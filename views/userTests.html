@@ -286,10 +286,12 @@
                             </div>
                             <div layout="row" layout-xs="column" layout-align="start start" class="width100 marginT20">
                                 
-                                <md-button class="md-danger md-large tolowercase margin0 " ui-sref="reportassessment({ testId:{{'userTest.test._id'}} })" target="_blank" ng-if="userTest.test.analyzeable">
+                                <md-button class="md-danger md-large tolowercase margin0 " ui-sref="reportassessment({ testId:{{'userTest.test._id'}} })" target="_blank" ng-if="userTest.test.analyzeable" hide-xs>
                                     Analyze your result
                                 </md-button>
-                                
+                                <md-button class="md-danger md-large tolowercase margin0 " ui-sref="mobilereportassessment({ testId:{{'userTest.test._id'}} })" target="_blank" ng-if="userTest.test.analyzeable" hide-gt-xs>
+                                    Analyze your result
+                                </md-button>
                                 <a ui-sref="questionpapers({ examName:{{'userTest.test.exam.name'}} })" target="_blank" id="reviewLink" class="marginL20 paddingT10">or Attempt all {{userTest.test.exam.seoname}} Papers</a>
                             </div>
                         </div>      

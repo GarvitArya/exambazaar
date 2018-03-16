@@ -27927,6 +27927,9 @@ function getLatLng(thisData) {
     exambazaar.controller("aboutController", 
         [ '$scope','$http','$state','$rootScope', function($scope, $http, $state, $rootScope){
             $rootScope.pageTitle = "About | Exambazaar";
+            $scope.aboutVideo = "https://www.youtube.com/watch?v=NXKMEDpFEW8";
+            
+            
     }]);
     function validateEmail(email) {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
