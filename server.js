@@ -111,6 +111,7 @@ app.use(flash());
 var routes = require('./app/routes.js')(app, passport);
 var providers = require('./app/providers.js',providers); 
 var coachings = require('./app/coachings.js',coachings); 
+var admissions = require('./app/admissions.js',admissions); 
 var cities = require('./app/cities.js',cities); 
 var cbses = require('./app/cbses.js',cbses); 
 var colleges = require('./app/colleges.js',colleges); 
@@ -168,6 +169,7 @@ var sendGridCredentials = require('./app/sendGridCredentials.js',sendGridCredent
 
 app.use('/api/providers', providers);
 app.use('/api/coachings', coachings);
+app.use('/api/admissions', admissions);
 app.use('/api/cities', cities);
 app.use('/api/cbses', cbses);
 app.use('/api/colleges', colleges);
@@ -348,6 +350,8 @@ var allStates = [
 '/thankyou',
 '/verifyClaim/:coachingId',
 '/verifyEmail/:userId',
+'/pbcAdmission',    
+    
 ];
 
 var errorStates =['/ebinternal/error'];

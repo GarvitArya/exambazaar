@@ -509,7 +509,33 @@
         </div>
 
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start"  ng-if="testOver">
-            <div flex="90" layout="row" layout-align="center start" class="">
+            <div flex="90" layout="column" layout-align="center start" class="">
+            <div layout="row" layout-align="start center" class="width100 marginT10 padding5 greyBorder" >
+                <div class="paddingLR10">
+                    <img src="icons/assessment/rocket.png" class="socialIcon2"/>
+                </div> 
+                <div flex="25" layout="column" layout-align="center center" class="h2Font paddingLR10">
+                    Help us improve!
+                </div>
+                <div flex="25" layout="column" layout-align="center start" class="padding10">
+                    <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" class="bigstar custom">
+                    </ng-rate-it>
+
+                    <div layout="column" layout-align="start start" ng-if="userAssessment.userRating > 0" class="smallFont text-center">
+                        Your rating: {{userAssessment.userRating}} out of 5
+                    </div>
+                </div>
+                <!--<div flex="25" layout="row" layout-align="center start" class="padding10" layout-wrap>
+                    
+                    <span class="badge margin5" ng-repeat="feedback in userRatingFeedbacks">
+                        {{feedback}}
+                    </span>
+                    
+                </div>-->
+            </div>    
+                
+                
+            <div layout="row" layout-align="center start" class="width100">   
             <div flex layout="column" layout-align="start center " class=" paddingTB20 width100">
                 
                 <div layout="row" layout-align="center center" class="width100 paddingLR40 marginT20 paddingTB20 greyBorder">
@@ -555,22 +581,7 @@
                 </div>
                 
                 <div layout="row" layout-align="center start" class="marginT20 padding20 baseFont width100">
-                <div layout="column" layout-align="start center" flex >
-                <img src="icons/assessment/rocket.png" class="socialIcon2"/>    
-                <div layout="column" layout-align="center center" class="h3Font bold width100 marginT10">Help us improve!</div>
-                <div layout="column" layout-align="center center" class="text-center width100">
-                    Please rate exam simulation on a scale of 1 to 5.
-                </div>
-                <div layout="column" layout-align="center center" class="width100">
-                    <ng-rate-it ng-model="userAssessment.userRating"  ng-click="saveUserRating(userAssessment.userRating)" resetable="false" star-width="32" star-height="32" class="bigstar custom">
-                    </ng-rate-it>
-
-                    <div layout="column" layout-align="center center" ng-if="userAssessment.userRating > 0" class="smallFont text-center width100">
-                        Your rating: {{userAssessment.userRating}} out of 5
-                    </div>
-                </div>
                 
-                </div>
                 <div layout="column" layout-align="start center" flex>
                     <img src="icons/p0/s0/coaching.png" class="socialIcon2"/>
                     <div layout="column" layout-align="center center" ng-if="testExam.seoname" class="text-center marginT10 h3Font bold">Attended any coaching for {{testExam.seoname}}?</div>
@@ -618,6 +629,7 @@
                 
             </div>
                 
+            </div>    
             </div>    
         </div>
 

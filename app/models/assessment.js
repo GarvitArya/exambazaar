@@ -5,6 +5,10 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var assessmentSchema = mongoose.Schema({
     user: { type: Schema.ObjectId, ref: 'user' },
     userRating: { type: Number },
+    userRatingFeedback: {
+        category: {type: String},
+        feedback: {type: String},
+    },
     test: { type: Schema.ObjectId, ref: 'test'},
     _start: { type: Date, default: Date.now },
     _end: { type: Date },

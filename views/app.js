@@ -1804,6 +1804,15 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         };
         
     }]);
+    exambazaar.service('admissionService', ['$http', function($http) {
+        this.saveAdmission = function(admissionForm) {
+            return $http.post('/api/admissions/save', admissionForm);
+        };
+        this.getUserAdmission = function(admissionForm) {
+            return $http.post('/api/admissions/userAdmission', admissionForm);
+        };
+        
+    }]);
     
     exambazaar.service('ProviderService', ['$http', function($http) {
         this.getProviders = function(city) {
@@ -2228,6 +2237,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             return $http.post('/api/profilePics/add', profilePic);
         };
     }]); 
+    
+    
         
         
     exambazaar.controller("signupController", 
@@ -21258,6 +21269,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("assessmentController", 
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', 'moment', '$mdSidenav', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments, moment, $mdSidenav){
             
+        
+        $scope.userRatingFeedbacks = [
+            "Loved it",
+            "Faced Tech Issue",
+            "Need more Papers",
+            "Could be better",
+        ];
         $scope.closeLeftBar = function () {
           $mdSidenav('left').close()
             .then(function () {
@@ -22524,7 +22542,163 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
     }]);
         
-        
+    exambazaar.controller("pbcAdmissionController", 
+        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'Notification', function($scope, $rootScope, $cookies, UserService, admissionService, Notification){
+            $scope.userVariables ={
+                genders: [
+                    "Male",
+                    "Female",
+                ],
+                categories:[
+                    'GENERAL',    
+                    'OBC-NCL',    
+                    'SC',
+                    'ST',
+                ],
+            };
+            $scope.col1 = 30;
+            $scope.defaultDate = new Date("1-Jan-1992");
+            $scope.admissionForm = {
+                name: null,
+                email: null,
+                mobile: null,
+                dob: null,
+                gender: null,
+                category: null,
+                course: "Bull's Eye",
+                school: null,
+                address: {
+                    line: null,
+                    city: null,
+                    state: null,
+                },
+            };
+            $scope.submitAdmissionHelper = function(){
+                var valid = true;
+                var reasons = [];
+                if(!$scope.user || !$scope.user._id){
+                    valid = false;
+                    reasons.push('Please Signup to proceed ahead.');
+                }
+                if(!$scope.admissionForm.name || $scope.admissionForm.name.length < 3){
+                    valid = false;
+                    reasons.push('Please Enter your Full Name');
+                }
+                if(!$scope.admissionForm.mobile || $scope.admissionForm.mobile.length != 10){
+                    valid = false;
+                    reasons.push('Please Enter 10 digit Mobile Number');
+                }
+                if(!$scope.admissionForm.email || $scope.admissionForm.email.length < 3){
+                    valid = false;
+                    reasons.push('Please Enter your Email Address');
+                }
+                if(!$scope.admissionForm.dob || moment().diff($scope.admissionForm.dob, "years") < 12){
+                    valid = false;
+                    reasons.push('Please Enter Correct Age');
+                }
+                if(!$scope.admissionForm.gender || $scope.admissionForm.gender.length < 1){
+                    valid = false;
+                    reasons.push('Please Select Gender');
+                }
+                if(!$scope.admissionForm.category || $scope.admissionForm.category.length < 1){
+                    valid = false;
+                    reasons.push('Please Select Category');
+                }
+                if(!$scope.admissionForm.school || $scope.admissionForm.school.length < 3){
+                    valid = false;
+                    reasons.push('Please Enter School Name');
+                }
+                if(!$scope.admissionForm.address.line || $scope.admissionForm.address.line.length < 3){
+                    valid = false;
+                    reasons.push('Please Enter Your Address');
+                }
+                if(!$scope.admissionForm.address.city || $scope.admissionForm.address.city.length < 2){
+                    valid = false;
+                    reasons.push('Please Enter Your City');
+                }
+                if(!$scope.admissionForm.address.state || $scope.admissionForm.address.state.length < 2){
+                    valid = false;
+                    reasons.push('Please Enter Your State');
+                }
+                $scope.startErrors = reasons;
+                if(!valid){
+                    Notification.warning({message: "Please submit the form correctly. See errors below!",  positionY: 'top', positionX: 'right', delay: 3000});
+                }else{
+                    $scope.submitAdmission();
+                }
+            };
+            $scope.submitAdmission = function(){
+                var admissionForm = {
+                    user: $scope.user._id,
+                    coaching: '5a97bde62aeebc5a97e8c70a',
+                    details: $scope.admissionForm
+                };
+                
+                admissionService.saveAdmission(admissionForm).success(function (data, status, headers) {
+                    Notification.primary({message: "Thank you! All saved!",  positionY: 'top', positionX: 'right', delay: 3000});
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
+            
+            if($cookies.getObject('sessionuser')){
+            var sessionuser = $cookies.getObject( 'sessionuser');
+            if(sessionuser && sessionuser._id){
+                UserService.getUserBasic(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    
+                    var admissionForm = {
+                        user: $scope.user._id,
+                        coaching: '5a97bde62aeebc5a97e8c70a',
+                    };
+                    admissionService.getUserAdmission(admissionForm).success(function (data, status, headers) {
+                        if(data){
+                            $scope.admissionForm = data.details;
+                            Notification.primary({message: "Great! We have found your previous submission!",  positionY: 'top', positionX: 'right', delay: 3000});
+                        }else{
+                            $scope.admissionForm.name = $scope.user.basic.name;
+                            $scope.admissionForm.email = $scope.user.email;
+                            $scope.admissionForm.mobile = $scope.user.mobile;
+                            if($scope.user.basic.dob){
+                                $scope.admissionForm.dob = moment($scope.user.basic.dob);
+                            }
+                            if(!$scope.admissionForm.dob){
+                                $scope.admissionForm.dob = moment($scope.defaultDate);
+                            }
+                        }
+                        
+                    })
+                    .error(function (data, status, header, config) {
+                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
+                        console.log('Error ' + data + ' ' + status);
+                    });
+                    
+                    
+                })
+                .error(function (data, status, header, config) {
+                    console.log('Error ' + data + ' ' + status);
+                });
+            
+            }else{
+                if(!$scope.admissionForm.dob){
+                    $scope.admissionForm.dob = moment($scope.defaultDate);
+                }
+                //$cookies.remove("sessionuser");
+                //$rootScope.$emit("CallBlogLogin", {});
+            }
+            
+        }else{
+            if(!$scope.admissionForm.dob){
+                $scope.admissionForm.dob = moment($scope.defaultDate);
+            }
+            //$cookies.remove("sessionuser");
+            //$rootScope.$emit("CallBlogLogin", {});
+        }
+         
+        $rootScope.pageTitle = "Admission in Pooja Bansal Classes | Exambazaar.com";
+    }]);    
         
     exambazaar.controller("eqadSummaryController", 
         [ '$scope', '$rootScope', '$mdDialog', '$timeout', 'examList', 'streamList', 'questionService', 'eqadSummary', 'eqadSolutionSummary', function($scope, $rootScope, $mdDialog, $timeout, examList, streamList, questionService, eqadSummary, eqadSolutionSummary){
@@ -35522,7 +35696,23 @@ function getLatLng(thisData) {
                         templateUrl: 'footer.html'
                     }
                 }
-            })
+        })
+        .state('pbcAdmission', {
+            url: '/pbcAdmission',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+
+                },
+                'body':{
+                    templateUrl: 'pbcAdmission.html',
+                    controller: 'pbcAdmissionController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
         .state('category', {
             url: '/stream/:categoryName',
             views: {
@@ -39429,7 +39619,7 @@ exambazaar.run(function($rootScope,$mdDialog, $location, $window, $transitions, 
         }else{
             //console.log('Not EB Internal');
         }
-        if(stateTo == 'assessment' || stateTo == 'mobileassessment'){
+        if(stateTo == 'assessment' || stateTo == 'mobileassessment' || stateTo == 'pbcAdmission'){
             if($cookies.getObject('sessionuser')){
                 
                 
