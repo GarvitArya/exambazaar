@@ -22666,12 +22666,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Payment Success');
                     console.log(response);
                     
-                    if(response.paymentId){
+                    if(response.paymentId && response.status == "success"){
                         console.log("Payment Id is: " + response.paymentId);
                         
                         var newPayment = {
                             payment_id: response.paymentId,
-                            details: JSON.parse(response),
+                            //details: JSON.parse(response),
                         };
                         $scope.userAdmit.payment = newPayment;
                         console.log(newPayment);
