@@ -22670,11 +22670,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         console.log("Payment Id is: " + paramsObject.payment_id);
                         console.log("Payment Request Id is: " + paramsObject.payment_request_id);
                         var paymentIds = [];
-                        if(!$scope.admissionForm.payments){
-                            $scope.admissionForm.payments = [];
+                        if(!$scope.admissionForm.details.payments){
+                            $scope.admissionForm.details.payments = [];
                         }
-                        if($scope.admissionForm.payments.length > 0){
-                            paymentIds = $scope.admissionForm.payments.map(function(a) {return a.payment_id.toString();});
+                        if($scope.admissionForm.details.payments.length > 0){
+                            paymentIds = $scope.admissionForm.details.payments.map(function(a) {return a.payment_id.toString();});
                             
                         }
                         var pIndex = paymentIds.indexOf(paramsObject.payment_id);
@@ -22684,7 +22684,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                                 payment_request_id: paramsObject.payment_request_id,
                                 details: JSON.parse(response),
                             };
-                            $scope.admissionForm.payments.push(newPayment);
+                            console.log(newPayment);
+                            $scope.admissionForm.details.payments.push(newPayment);
                             $scope.submitAdmissionHelper();
                         }
 
@@ -22727,7 +22728,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var admissionForm = {
                     user: $scope.user._id,
                     coaching: '5a97bde62aeebc5a97e8c70a',
-                    details: $scope.admissionForm
+                    details: $scope.admissionForm,
+                    
                 };
                 
                 admissionService.saveAdmission(admissionForm).success(function (data, status, headers) {
