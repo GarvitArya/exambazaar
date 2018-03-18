@@ -4,6 +4,7 @@ var request= require('request');
 var config = require('../config/mydatabase.js');
 var admission = require('../app/models/admission');
 var user = require('../app/models/user');
+var instamojoCredential = require('../app/models/instamojoCredential');
 var mongoose = require('mongoose');
 
 var db = mongoose.connection;
@@ -49,18 +50,19 @@ router.post('/pbcAdmission', function(req, res) {
     var admissionUser = thisAdmission.user;
     var payment = thisAdmission.payment;
     
-    
+    var instamojo = instamojoCredential.findOne({}, {},function (err, instamojo) {
+        
     var existingUser = user.findOne({ _id: admissionUser}, {mobile:1, email:1, basic: 1},function (err, existingUser) {
         if(existingUser){
-            var headers = { 'X-Api-Key': '23e3f27fe193706d864f99ba1cec0e86', 'X-Auth-Token': '367c4b36630a5a2a8807294abdf6e7cb'}
+            var headers = { 'X-Api-Key': instamojo.xapikey, 'X-Auth-Token': instamojo.xauthtoken}
             var payload = {
               purpose: 'PBC 2018 Bulls Eye Admission',
               amount: '10',
               phone: existingUser.mobile,
               buyer_name: existingUser.basic.name,
-              redirect_url: 'http://www.exambazaar.com/pbcAdmission',
+              //redirect_url: 'http://www.exambazaar.com/pbcAdmission',
               send_email: false,
-              webhook: 'http://www.exambazaar.com/webhook/instamojo/',
+              //webhook: 'http://www.exambazaar.com/webhook/instamojo/',
               send_sms: false,
               email: existingUser.email,
               allow_repeated_payments: false
@@ -83,7 +85,7 @@ router.post('/pbcAdmission', function(req, res) {
         }
 
     });
-    
+    });
 });
 
 router.post('/userAdmission', function(req, res) {

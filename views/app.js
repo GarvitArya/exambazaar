@@ -22553,7 +22553,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
         
     exambazaar.controller("pbcAdmissionController", 
-        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'Notification', function($scope, $rootScope, $cookies, UserService, admissionService, Notification){
+        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'Notification', '$location', function($scope, $rootScope, $cookies, UserService, admissionService, Notification, $location){
             $scope.userVariables ={
                 genders: [
                     "Male",
@@ -22568,6 +22568,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             };
             $scope.col1 = 30;
             $scope.defaultDate = new Date("1-Jan-1992");
+            
+            var paramsObject = {};
+            var pathArray = $location.absUrl().split('?');
+            var currUrl = pathArray[pathArray.length-1];
+            currUrl.replace(/\?/,'').split('&').map(function(o){ paramsObject[o.split('=')[0]]= o.split('=')[1]});
+            
+            
             $scope.admissionForm = {
                 name: null,
                 email: null,
@@ -22583,6 +22590,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     state: null,
                 },
             };
+            
+            
+            
             $scope.submitAdmissionHelper = function(){
                 var valid = true;
                 var reasons = [];
@@ -22655,6 +22665,31 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 function onPaymentSuccessHandler(response){
                     console.log('Payment Success');
                     console.log(response);
+                    
+                    if(paramsObject.payment_id){
+                        console.log("Payment Id is: " + paramsObject.payment_id);
+                        console.log("Payment Request Id is: " + paramsObject.payment_request_id);
+                        var paymentIds = [];
+                        if(!$scope.admissionForm.payments){
+                            $scope.admissionForm.payments = [];
+                        }
+                        if($scope.admissionForm.payments.length > 0){
+                            paymentIds = $scope.admissionForm.payments.map(function(a) {return a.payment_id.toString();});
+                            
+                        }
+                        var pIndex = paymentIds.indexOf(paramsObject.payment_id);
+                        if(pIndex == -1){
+                            var newPayment = {
+                                payment_id: paramsObject.payment_id,
+                                payment_request_id: paramsObject.payment_request_id,
+                                details: JSON.parse(response);
+                            };
+                            $scope.admissionForm.payments.push(newPayment);
+                            $scope.submitAdmissionHelper();
+                        }
+
+                    }
+                    
                 };
                 function onPaymentFailureHandler(response){
                     console.log('Payment Failure');
@@ -22685,6 +22720,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });
             };
+            
+            
             
             $scope.submitAdmission = function(){
                 var admissionForm = {

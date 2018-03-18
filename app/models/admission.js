@@ -7,6 +7,11 @@ var admissionSchema = mongoose.Schema({
     user: { type: Schema.ObjectId, required: true, ref: 'User' },
     coaching: { type: Schema.ObjectId, required: true, ref: 'coaching' },
     details: Schema.Types.Mixed,
+    payments: [{
+        payment_request_id: {type: String},
+        payment_id: {type: String},
+        details: {type: String},
+    }],
     _created: { type: Date, default: Date.now },
 });
 

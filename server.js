@@ -87,10 +87,21 @@ app.get('/auth/facebook/callback',
   });
 
 var payment = require('./app/models/payment');
-app.get('/webhook/instamojo',function(req, res) {
+var instamojoCredential = require('./app/models/instamojoCredential');
+
+/*app.get('/webhook/instamojo',function(req, res) {
     //console.log(req);
     console.log(req.body);
     var newPayment = new payment({});
+    
+    var newInstamojoCredential = new instamojoCredential({});
+    newInstamojoCredential.xapikey = "23e3f27fe193706d864f99ba1cec0e86";
+    newInstamojoCredential.xauthtoken = "367c4b36630a5a2a8807294abdf6e7cb";
+    newInstamojoCredential.save(function(err, newPayment) {
+        if (err) return console.error(err);
+        console.log('New Instamojo Credentials saved: ' + newInstamojoCredential._id);
+    });
+    
     newPayment.details = {
         body: req.body,
         source: 'Instamojo',
@@ -99,7 +110,7 @@ app.get('/webhook/instamojo',function(req, res) {
         if (err) return console.error(err);
         console.log('New Payment Request saved: ' + newPayment._id);
     }); 
-});
+});*/
 
 
 app.use(morgan('dev'));
