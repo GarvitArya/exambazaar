@@ -813,6 +813,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getTest = function(testId) {
             return $http.get('/api/tests/edit/'+testId, {testId: testId});
         };
+        this.cloneTest = function(testId) {
+            return $http.get('/api/tests/clone/'+testId, {testId: testId});
+        };
         this.getTestExam = function(testId) {
             return $http.get('/api/tests/testExam/'+testId, {testId: testId});
         };
@@ -29003,6 +29006,19 @@ function getLatLng(thisData) {
                 });       
             };
             
+            $scope.cloneTest = function(testId){
+                if($scope.user.userType = 'Master'){
+                    var testId = $scope.test._id;
+                    testService.cloneTest(testId).success(function (data, status, headers) {
+                        
+                        
+                        console.log(data);
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log("Error ");
+                    }); 
+                }
+            };
             $scope.flipwatermarked = function(testId){
                 if($scope.user.userType = 'Master'){
                     testService.flipwatermarked(testId).success(function (data, status, headers) {

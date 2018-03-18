@@ -33,6 +33,8 @@
     }
 </style>
 
+
+
 <div id="spacer1" class="hidden-xs whiteBackground">
 </div>
 <div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
@@ -150,7 +152,9 @@
                         Buy Now
                     </md-button>
                 </div>
-                
+                <button onclick="onButtonClick()">
+                  Open Instapay
+                </button>
                 <div layout="column" layout-align="start center" class="paddingL20 font12 danger width100 marginTB10">
                     <div layout="row" layout-align="start start" ng-repeat="startError in startErrors" class="width100">{{$index+1}}. {{startError}}
                     </div>

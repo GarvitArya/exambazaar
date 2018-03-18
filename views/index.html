@@ -3800,6 +3800,46 @@
     <script src="moment.min.js"></script>
     <script src="moment-timezone-with-data-2010-2020.js"></script>
     <script src="angular-moment.js"></script>
+        
+        
+    <!-- Instamojo-->    
+    <script src="https://js.instamojo.com/v1/checkout.js"></script>
+    <script>
+      /* Start client-defined Callback Handler Functions */
+      function onOpenHandler () {
+        alert('Payments Modal is Opened');
+      }
+
+      function onCloseHandler () {
+        alert('Payments Modal is Closed');
+      }
+
+      function onPaymentSuccessHandler (response) {
+        alert('Payment Success');
+        console.log('Payment Success Response', response);
+      }
+
+      function onPaymentFailureHandler (response) {
+        alert('Payment Failure');
+        console.log('Payment Failure Response', response);
+      }
+      /* End client-defined Callback Handler Functions */
+
+      /* Configuring Handlers */
+      Instamojo.configure({
+        handlers: {
+          onOpen: onOpenHandler,
+          onClose: onCloseHandler,
+          onSuccess: onPaymentSuccessHandler,
+          onFailure: onPaymentFailureHandler
+        }
+      });
+      
+      function onButtonClick() {
+        Instamojo.open('https://imjo.in/8B7wEE');
+      }
+    </script>    
+        
     <script type="text/javascript" src="app.js"></script>
     
     

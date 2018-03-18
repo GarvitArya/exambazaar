@@ -1312,6 +1312,132 @@ router.get('/edit/:testId', function(req, res) {
     });
 });
 
+router.get('/clone/:testId', function(req, res) {
+    var testId = req.params.testId;
+    //console.log("Test is " + testId);
+    var existingTest = test
+        .findOne({ '_id': testId },{})
+        .exec(function (err, existingTest) {
+        if (!err){ 
+            if(existingTest){
+                var newTest = new test({});
+                var excludedProperties = ['id', '_created', '_v'];
+                var includedProperties = [
+                    "simulationactive",
+                    "resettable",
+                    "solutionkey",
+                    "simulate",
+                    "watermarked",
+                    "active",
+                    "verified",
+                    "downloadable",
+                    "analyzeable",
+                    "simulationrank",
+                    "questionWithAnswer",
+                    "solved",
+                    "mockPaper",
+                    "official",
+                    "institute",
+                    "exam",
+                    "screenshots",
+                    "url",
+                    "instructions",
+                    "maxScore",
+                    "duration",
+                    "nQuestions",
+                    "year",
+                    "description",
+                    "_actualdate",
+                    "name",
+                ];
+                var qincludedProperties = [
+                    "_createdBy",
+                    "_readyToPublish",
+                    "_answerExists",
+                    "active",
+                    "section",
+                    "exam",
+                    "test",
+                    "questions",
+                    "images",
+                    "context",
+                    "_hascontext",
+                    "_endnumber",
+                    "_startnumber",
+                    "_groupOfQuestions",
+
+                ];
+                for (var property in existingTest) {
+                    
+                    if(includedProperties.indexOf(property) != -1){
+                        //console.log(property);
+                        if(property == 'name'){
+                            newTest[property] = existingTest[property] + " - Clone";
+                        }else{
+                            newTest[property] = existingTest[property];
+                        }
+                    }
+                    
+                }
+                newTest.save(function(err, newTest) {
+                    if (err) return console.error(err);
+                    var newTestId = newTest._id;
+                    
+                    var allQuestions = question
+                    .find({ 'test': testId },{})
+                    .exec(function (err, allQuestions) {
+                    if (!err){ 
+                        if(allQuestions){
+                        var nQuestions = allQuestions.length;
+                        var counter = 0;
+                        allQuestions.forEach(function(thisQuestion, index){
+                            var newQuestion = new question({});
+                            
+                            for (var property in thisQuestion) {
+                                if(qincludedProperties.indexOf(property) != -1){
+                                    
+                                    if(property == 'test'){
+                                        newQuestion[property] = newTestId;
+                                    }else{
+                                        newQuestion[property] = thisQuestion[property];
+                                    }
+                                    
+                                }
+                                
+                            }
+                            newQuestion.save(function(err, newQuestion) {
+                            if (err) return     console.error(err);
+                                
+                            console.log('Question saved: ' + newQuestion._id); 
+                            counter += 1;
+                            if(counter == nQuestions){
+                                console.log('All questions copied');
+                                console.log('New test id: ' + newTest._id);
+                                res.json(newTest);
+                            }
+                                
+                            });
+                            
+                        });
+                            
+                            
+                        }else{
+                            console.log('Something went very wrong!');
+                        }
+                    }
+                    });
+                    
+                });
+            }else{
+                
+                console.log('Something went very wrong!');
+            }
+            
+            
+        } else {throw err;}
+    });
+});
+
 router.get('/testExam/:testId', function(req, res) {
     var testId = req.params.testId;
     var thisTest = test
