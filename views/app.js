@@ -21918,7 +21918,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var sessionuser = $cookies.getObject( 'sessionuser');
                 $scope.test = thistest.data;
                 $scope.testExam = thistestExam.data;
-                $scope.currURL = "https://www.exambazaar.com/questionpapers/" + $scope.testExam.name;
+                if($scope.testExam && $scope.testExam.name){
+                    $scope.currURL = "https://www.exambazaar.com/questionpapers/" + $scope.testExam.name;
+                }
+                
                 if($scope.test.instructions && $scope.test.instructions.length > 0){
                     $scope.instructions = $scope.test.instructions;    
                 }
