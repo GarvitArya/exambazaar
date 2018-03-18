@@ -60,7 +60,7 @@ router.post('/pbcAdmission', function(req, res) {
               buyer_name: existingUser.basic.name,
               redirect_url: 'http://www.exambazaar.com/pbcAdmission',
               send_email: false,
-              webhook: 'http://www.exambazaar.com/pbcAdmission/',
+              webhook: 'http://www.exambazaar.com/webhook/instamojo',
               send_sms: false,
               email: existingUser.email,
               allow_repeated_payments: false

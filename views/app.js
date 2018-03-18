@@ -22645,36 +22645,37 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     coaching: '5a97bde62aeebc5a97e8c70a',
                     details: $scope.admissionForm
                 };
-                Instamojo.configure({
-                    handlers: {
-                      onOpen: $scope.onOpenHandler,
-                      onClose: $scope.onCloseHandler,
-                      onSuccess: $scope.onPaymentSuccessHandler,
-                      onFailure: $scope.onPaymentFailureHandler
-                    }
-                });
-                $scope.onOpenHandler = function(){
+                
+                function onOpenHandler(){
                     console.log('Payments Modal is Opened');    
                 };
-                $scope.onCloseHandler = function(){
+                function onCloseHandler(){
                     console.log('Payments Modal is Closed');    
                 };
-                $scope.onPaymentSuccessHandler  = function(response){
+                function onPaymentSuccessHandler(response){
                     console.log('Payment Success');
                     console.log(response);
                 };
-                $scope.onPaymentFailureHandler  = function(response){
+                function onPaymentFailureHandler(response){
                     console.log('Payment Failure');
                     console.log(response);
                 };
+                Instamojo.configure({
+                    handlers: {
+                      onOpen: onOpenHandler,
+                      onClose: onCloseHandler,
+                      onSuccess: onPaymentSuccessHandler,
+                      onFailure: onPaymentFailureHandler
+                    }
+                });
+                
                 admissionService.pbcAdmission(admissionForm).success(function (data, status, headers) {
                     //console.log(data);
                     var instaQuery = data;
                     Notification.primary({message: "Thank you! All saved!",  positionY: 'top', positionX: 'right', delay: 3000});
-                    console.log(instaQuery);
-                    console.log(instaQuery.success);
-                    if(data.success){
-                        console.log(instaQuery.payment_request.longurl);
+                    
+                    if(instaQuery.success){
+                       
                         Instamojo.open(instaQuery.payment_request.longurl);
                     }
                     

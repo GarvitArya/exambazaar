@@ -86,6 +86,21 @@ app.get('/auth/facebook/callback',
     res.redirect('/');
   });
 
+var payment = require('./app/models/payment');
+app.get('/webhook/instamojo',function(req, res) {
+    //console.log(req);
+    console.log(req.body);
+    var newPayment = new payment({});
+    newPayment.details = {
+        body: req.body,
+        source: 'Instamojo',
+    };
+    newPayment.save(function(err, newPayment) {
+        if (err) return console.error(err);
+        console.log('New Payment Request saved: ' + newPayment._id);
+    }); 
+});
+
 
 app.use(morgan('dev'));
 app.set('views', path.join(__dirname, 'views'));

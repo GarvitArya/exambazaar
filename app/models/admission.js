@@ -10,7 +10,6 @@ var admissionSchema = mongoose.Schema({
     _created: { type: Date, default: Date.now },
 });
 
-admissionSchema.index({ loc: '2dsphere'});
 
 admissionSchema.plugin(deepPopulate);
 var admission = mongoose.model('admission', admissionSchema);
