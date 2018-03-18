@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
-
+var request= require('request');
 var config = require('../config/mydatabase.js');
 var admission = require('../app/models/admission');
+var user = require('../app/models/user');
 var mongoose = require('mongoose');
 
 var db = mongoose.connection;
@@ -42,18 +43,76 @@ router.post('/save', function(req, res) {
     });
 });
 
+router.post('/pbcAdmission', function(req, res) {
+    var thisAdmission = req.body;
+    var admissionCoaching = thisAdmission.coaching;
+    var admissionUser = thisAdmission.user;
+    var payment = thisAdmission.payment;
+    
+    
+    var existingUser = user.findOne({ _id: admissionUser}, {mobile:1, email:1, basic: 1},function (err, existingUser) {
+        if(existingUser){
+            var headers = { 'X-Api-Key': '23e3f27fe193706d864f99ba1cec0e86', 'X-Auth-Token': '367c4b36630a5a2a8807294abdf6e7cb'}
+            var payload = {
+              purpose: 'PBC 2018 Bulls Eye Admission',
+              amount: '50',
+              phone: existingUser.mobile,
+              buyer_name: existingUser.basic.name,
+              redirect_url: 'http://www.exambazaar.com/pbcAdmission',
+              send_email: false,
+              webhook: 'http://www.exambazaar.com/pbcAdmission/',
+              send_sms: false,
+              email: existingUser.email,
+              allow_repeated_payments: false
+            };
+            
+            /*https://www.instamojo.com/api/1.1/payment-requests/*/
+            request.post('https://www.instamojo.com/api/1.1/payment-requests/', {form: payload,  headers: headers}, function(error, response, body){
+              if(!error && response.statusCode == 201){
+                console.log(body);
+                  
+                res.json(JSON.parse(body));  
+              }
+            });
+
+
+
+
+        }else{
+           res.json(null);
+        }
+
+    });
+    
+});
+
 router.post('/userAdmission', function(req, res) {
     var thisAdmission = req.body;
     var admissionCoaching = thisAdmission.coaching;
     var admissionUser = thisAdmission.user;
-    var existingAdmission = admission.findOne({ coaching: admissionCoaching, user: admissionUser},function (err, existingAdmission) {
-        if(existingAdmission){
-            res.json(existingAdmission);
-        }else{
-           res.json(null);
-        }
-        
-    });
+    
+    
+    
+
+var headers = { 'X-Api-Key': 'd82016f839e13cd0a79afc0ef5b288b3', 'X-Auth-Token': '3827881f669c11e8dad8a023fd1108c2'}
+var payload = {
+  purpose: 'FIFA 16',
+  amount: '2500',
+  phone: '9999999999',
+  buyer_name: 'John Doe',
+  redirect_url: 'http://www.example.com/redirect/',
+  send_email: true,
+  webhook: 'http://www.example.com/webhook/',
+  send_sms: true,
+  email: 'foo@example.com',
+  allow_repeated_payments: false}
+
+request.post('https://www.instamojo.com/api/1.1/payment-requests/', {form: payload,  headers: headers}, function(error, response, body){
+  if(!error && response.statusCode == 201){
+    console.log(body);
+  }
+})
+    
 });
 
 router.get('/', function(req, res) {

@@ -3805,41 +3805,7 @@
     <!-- Instamojo-->    
     <script src="https://js.instamojo.com/v1/checkout.js"></script>
     <script src="https://js.instamojo.com/v1/button.js"></script>
-    <script>
-      /* Start client-defined Callback Handler Functions */
-      function onOpenHandler () {
-        alert('Payments Modal is Opened');
-      }
-
-      function onCloseHandler () {
-        alert('Payments Modal is Closed');
-      }
-
-      function onPaymentSuccessHandler (response) {
-        alert('Payment Success');
-        console.log('Payment Success Response', response);
-      }
-
-      function onPaymentFailureHandler (response) {
-        alert('Payment Failure');
-        console.log('Payment Failure Response', response);
-      }
-      /* End client-defined Callback Handler Functions */
-
-      /* Configuring Handlers */
-      Instamojo.configure({
-        handlers: {
-          onOpen: onOpenHandler,
-          onClose: onCloseHandler,
-          onSuccess: onPaymentSuccessHandler,
-          onFailure: onPaymentFailureHandler
-        }
-      });
       
-      function onButtonClick() {
-        Instamojo.open('https://imjo.in/hqG8g6');
-      }
-    </script>    
         
     <script type="text/javascript" src="app.js"></script>
     

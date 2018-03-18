@@ -1814,6 +1814,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.getUserAdmission = function(admissionForm) {
             return $http.post('/api/admissions/userAdmission', admissionForm);
         };
+        this.pbcAdmission = function(admissionForm) {
+            return $http.post('/api/admissions/pbcAdmission', admissionForm);
+        };
+        
         
     }]);
     
@@ -22633,6 +22637,54 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $scope.submitAdmission();
                 }
             };
+            
+            
+            $scope.pbcAdmission = function(){
+                var admissionForm = {
+                    user: $scope.user._id,
+                    coaching: '5a97bde62aeebc5a97e8c70a',
+                    details: $scope.admissionForm
+                };
+                Instamojo.configure({
+                    handlers: {
+                      onOpen: $scope.onOpenHandler,
+                      onClose: $scope.onCloseHandler,
+                      onSuccess: $scope.onPaymentSuccessHandler,
+                      onFailure: $scope.onPaymentFailureHandler
+                    }
+                });
+                $scope.onOpenHandler = function(){
+                    console.log('Payments Modal is Opened');    
+                };
+                $scope.onCloseHandler = function(){
+                    console.log('Payments Modal is Closed');    
+                };
+                $scope.onPaymentSuccessHandler  = function(response){
+                    console.log('Payment Success');
+                    console.log(response);
+                };
+                $scope.onPaymentFailureHandler  = function(response){
+                    console.log('Payment Failure');
+                    console.log(response);
+                };
+                admissionService.pbcAdmission(admissionForm).success(function (data, status, headers) {
+                    //console.log(data);
+                    var instaQuery = data;
+                    Notification.primary({message: "Thank you! All saved!",  positionY: 'top', positionX: 'right', delay: 3000});
+                    console.log(instaQuery);
+                    console.log(instaQuery.success);
+                    if(data.success){
+                        console.log(instaQuery.payment_request.longurl);
+                        Instamojo.open(instaQuery.payment_request.longurl);
+                    }
+                    
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+            };
+            
             $scope.submitAdmission = function(){
                 var admissionForm = {
                     user: $scope.user._id,
