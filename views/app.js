@@ -22648,7 +22648,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 }
             };
             
-            
+            $scope.forceShowForm = false;
+            $scope.flipForceShowForm = function(){
+                $scope.forceShowForm = !$scope.forceShowForm;
+            };
             $scope.pbcAdmission = function(){
                 var admissionForm = {
                     user: $scope.user._id,
@@ -22728,7 +22731,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log(data);
                     $scope.userAdmit = data;
                     $scope.admissionForm = $scope.userAdmit.details;
-                    
+                    if(!$scope.userAdmit.payment || !$scope.userAdmit.payment.payment_id){
+                        $scope.pbcAdmission();
+                    }
                 })
                 .error(function (data, status, header, config) {
                     Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});

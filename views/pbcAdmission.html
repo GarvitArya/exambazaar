@@ -56,6 +56,8 @@
                 <h1 class="h1Font width100 marginB10 subhheadingBottomBorder2 paddingB10 text-center">
                     Admission Form - Pooja Bansal Classes, Jaipur
                 </h1>
+                
+                <div layout="column" layout-align="center center" class="width100" ng-show="!userAdmit.payment.payment_id || forceShowForm" ng-disabled="userAdmit.payment.payment_id">
                 <div layout="row" layout-align="start center" class="width100 ">
                     <div flex="{{col1}}" class="column1 baseFont">
                         Name
@@ -146,13 +148,18 @@
                         <input type="text" class="width100" ng-model="admissionForm.school" placeholder="School Name">
                     </div>
                 </div>
+                    
+                </div>
                 
                 <div layout="row" layout-align="start center" class="width100 marginT10">
-                    <md-button class="md-next md-medium font16 tolowercase margin0 width100" ng-click="submitAdmissionHelper()">
+                    <md-button class="md-next md-medium font16 tolowercase margin0 width100" ng-click="submitAdmissionHelper()" ng-if="!userAdmit.payment.payment_id">
                         Buy Now
                     </md-button>
+                    <md-button class="md-saveNext md-medium font16 tolowercase margin0 width100" ng-if="userAdmit.payment.payment_id" ng-disabled>
+                        <i class="fa fa-check-circle marginR10" aria-hidden="true"></i> Already Bought
+                    </md-button>
                 </div>
-                <a ng-click="pbcAdmission()">Test</a>
+                <!--<a ng-click="pbcAdmission()">Test</a>-->
                 <!--<a href="https://www.instamojo.com/@exambazaar/la7288d286daa49b584bcde983570d6be/" rel="im-checkout" data-behaviour="remote" data-style="flat" data-text="Buy Admission Form">Buy Admission Form</a>-->
 
                 
@@ -161,8 +168,8 @@
                     <div layout="row" layout-align="start start" ng-repeat="startError in startErrors" class="width100">{{$index+1}}. {{startError}}
                     </div>
                 </div>
-                <div>
-                    {{$scope.userAdmit.payment}}
+                <div layout="column" layout-align="start center" class="width100 marginTB20 greyBorder padding20" ng-if="userAdmit.payment.payment_id">
+                    <div class="width100 h2Font">Next Steps</div>
                 </div>
             </div>
         </div>
