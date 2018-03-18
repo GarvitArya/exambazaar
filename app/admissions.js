@@ -104,6 +104,7 @@ router.post('/userAdmission', function(req, res) {
     
 });
 
+
 router.get('/', function(req, res) {
     //console.log('Here');
     admission.find({active: {$ne: false}}, function(err, docs) {

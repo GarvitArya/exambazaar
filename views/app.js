@@ -22666,28 +22666,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Payment Success');
                     console.log(response);
                     
-                    if(paramsObject.payment_id){
-                        console.log("Payment Id is: " + paramsObject.payment_id);
-                        console.log("Payment Request Id is: " + paramsObject.payment_request_id);
-                        var paymentIds = [];
-                        if(!$scope.admissionForm.details.payments){
-                            $scope.admissionForm.details.payments = [];
-                        }
-                        if($scope.admissionForm.details.payments.length > 0){
-                            paymentIds = $scope.admissionForm.details.payments.map(function(a) {return a.payment_id.toString();});
-                            
-                        }
-                        var pIndex = paymentIds.indexOf(paramsObject.payment_id);
-                        if(pIndex == -1){
-                            var newPayment = {
-                                payment_id: paramsObject.payment_id,
-                                payment_request_id: paramsObject.payment_request_id,
-                                details: JSON.parse(response),
-                            };
-                            console.log(newPayment);
-                            $scope.admissionForm.details.payments.push(newPayment);
-                            $scope.submitAdmissionHelper();
-                        }
+                    if(response.paymentId){
+                        console.log("Payment Id is: " + response.paymentId);
+                        
+                        var newPayment = {
+                            payment_id: response.paymentId,
+                            details: JSON.parse(response),
+                        };
+                        $scope.userAdmit.payment = newPayment;
+                        console.log(newPayment);
+                        $scope.submitAdmissionHelper();
 
                     }
                     
@@ -22707,12 +22695,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
                 admissionService.pbcAdmission(admissionForm).success(function (data, status, headers) {
                     //console.log(data);
-                    var instaQuery = data;
+                    $scope.instaQuery = data;
                     Notification.primary({message: "Thank you! All saved!",  positionY: 'top', positionX: 'right', delay: 3000});
                     
-                    if(instaQuery.success){
+                    if($scope.instaQuery.success){
                        
-                        Instamojo.open(instaQuery.payment_request.longurl);
+                        Instamojo.open($scope.instaQuery.payment_request.longurl);
                     }
                     
                 })
@@ -22731,9 +22719,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     details: $scope.admissionForm,
                     
                 };
+                if($scope.userAdmit && $scope.userAdmit.payment){
+                    admissionForm.payment = $scope.userAdmit.payment;
+                }
                 
                 admissionService.saveAdmission(admissionForm).success(function (data, status, headers) {
                     Notification.primary({message: "Thank you! All saved!",  positionY: 'top', positionX: 'right', delay: 3000});
+                    console.log(data);
+                    $scope.userAdmit = data;
+                    $scope.admissionForm = $scope.userAdmit.details;
+                    
                 })
                 .error(function (data, status, header, config) {
                     Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
@@ -22753,7 +22748,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     };
                     admissionService.getUserAdmission(admissionForm).success(function (data, status, headers) {
                         if(data){
-                            $scope.admissionForm = data.details;
+                            $scope.userAdmit = data;
+                            $scope.admissionForm = $scope.userAdmit.details;
                             Notification.primary({message: "Great! We have found your previous submission!",  positionY: 'top', positionX: 'right', delay: 3000});
                         }else{
                             $scope.admissionForm.name = $scope.user.basic.name;
