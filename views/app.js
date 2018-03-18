@@ -22682,7 +22682,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             var newPayment = {
                                 payment_id: paramsObject.payment_id,
                                 payment_request_id: paramsObject.payment_request_id,
-                                details: JSON.parse(response);
+                                details: JSON.parse(response),
                             };
                             $scope.admissionForm.payments.push(newPayment);
                             $scope.submitAdmissionHelper();
