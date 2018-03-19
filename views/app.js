@@ -22631,7 +22631,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             
             $rootScope.pageTitle = "IIT JEE Coaching in Jaipur at Pooja Bansal Classes";
             $rootScope.pageDescription = "Get upto 25% discount for admission at Pooja Bansal Classes, Jaipur, Elite Batch of 30 | IIT Coaching in Jaipur for Xth to XIth moving Students";
-            $rootScope.pageKeywords = "Pooja Bansal Classes, Bansal Classes Jaipur, Bansal Classes Jaipur 2018, Pooja Bansal Classes 2018, Pooja Bansal Classes Jaipur, Pooja Bansal Classes IIT JEE, IIT JEE Coaching in Jaipur, PBC Coaching, PBC Coaching 2018, PBC Coaching Discount";
+            $rootScope.pageKeywords = "IIT Coaching in jaipur, pooja bansal classes, bansal classes jaipur, coaching in jaipur, jee coaching in jaipur, iit coaching discount, pooja bansal classes admission, pbc discount";
     }]);
          
     exambazaar.controller("pbcAdmissionController", 
