@@ -35858,7 +35858,7 @@ function getLatLng(thisData) {
             }
         })
         .state('pbc', {
-            url: '/pbc',
+            url: '/pooja-bansal-classes-jaipur-admission-2018',
             views: {
                 'header':{
                     templateUrl: 'header.html',
