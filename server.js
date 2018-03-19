@@ -377,6 +377,7 @@ var allStates = [
 '/verifyClaim/:coachingId',
 '/verifyEmail/:userId',
 '/pbcAdmission',    
+'/pbc',
     
 ];
 

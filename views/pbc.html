@@ -1,0 +1,341 @@
+<style>
+    input[type="text"],input[type="email"], input[type="password"]
+    {
+        font-size: 14px;
+        color: #333333;
+        padding: 5px;
+        border: solid 1px #ccc;
+        transition: box-shadow 0.3s, border 0.3s;
+        box-shadow: 0 0 5px 1px white;
+    }
+    
+    input[type="text"]:hover,input[type="text"]:focus, input[type="email"]:hover, input[type="email"]:focus, input[type="password"]:hover, input[type="password"]:focus{
+        border: solid 1px #333333;
+        box-shadow: 0 0 5px 1px #969696;
+    }
+    .availText{
+        color: white;
+    }
+    .availText:hover{
+        color: #FF5A5F;
+    }
+    a.readLink{
+        color: black;
+    }
+    a.readLink:hover{
+        color: #20C39A;
+    }
+    .column1{
+        padding: 2px;
+    }
+    .column2{
+        padding: 2px;
+    }
+    .numberLogo{
+        height: 75px;
+    }
+    
+    .blogHeader{
+        min-height: 50vh;
+        width:100%;
+        position: relative;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+    .blogContent{
+        text-align: left;
+    }
+    .facultyPhoto{
+        height: 100px;
+    }
+</style>
+
+
+
+<div id="spacer1" class="hidden-xs whiteBackground">
+</div>
+<div id="spacerXS" class="hidden-sm hidden-md hidden-lg whiteBackground">
+</div>
+
+<div layout="column" layout-align="start start" class="textBlack whiteBackground p0baseFont width100">
+    <div layout="row" layout-align="center center" class="width100 blogHeader" ng-style="{'background-image':'url(images/pbc/pbc_banner.jpg)'}">
+        <div layout="row" layout-align="center center" class="width100">
+        <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="padding20 text-white text-center ">
+            <div layout="column" layout-align="center center" id="blogPostHeader" class="transaprentBackground padding20">
+                <h1 class="pageTitleFont margin0 text-white">
+                    Pooja Bansal Classes Elite 30
+                </h1>
+                <h2 class="text-white h2Font margin10 blogSubTitle">
+                    Exambazaar brings upto 25% off on fees
+                </h2>
+                
+            </div>
+            
+        </div>
+        </div>
+    </div>
+    
+    
+    <div layout="row" layout-align="start start" class="width100 greyBorder paddingTB10">
+        <div flex layout="column" layout-align="center center" class="greyRightBorder paddingLR10">
+            <div class=" h2Font">
+                Batch Starts
+            </div>
+            <div class="">22 April 2018 | 2 May 2018 | 6 June 2018 | 27 June 2018</div>
+        </div>
+        <div flex layout="column" layout-align="center center" class="greyRightBorder paddingLR10">
+            <div class=" h2Font">
+                Fees
+            </div>
+            <div class="">
+                Rs 1,12,000 per year + GST
+            </div>
+        </div>
+        <div flex layout="column" layout-align="center center" class="paddingLR10">
+            <div class="h2Font">
+                EB Price
+            </div>
+            <div class="">
+                Rs 85,000 per year + GST
+            </div>
+        </div>
+        
+        
+    </div>
+    <div layout="row" layout-align="center center" class="width100 paddingTB20">
+    <div flex-xs="100" flex-gt-xs="90" layout="row" layout-xs="column" layout-align="start start" class="width100 padding20">
+        <div layout="column" layout-align="start start" flex class="width100 padding20">
+            <h2 class="width100 h2Font margin0 paddingLR20 paddingB10 headingBottomBorder2">
+                Admission Steps to Elite 30 in Jaipur
+            </h2>
+            <div layout="row" layout-align="start center" class="width100 marginTB10 paddingTB10">
+                <div>
+                    <img src="icons/p0/s3/1.png" class="numberLogo"/>
+                </div>
+                <div flex layout="column" layout-align="start start" class="width100 paddingLR10">
+                    <h2 class="margin0 h2Font">
+                    Write the Scholarship Test
+                    </h2>
+                    <div>
+                    The scholarship test consists of Physics, Chemistry & Maths question of Class X level.
+                    </div>
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginTB10 paddingTB10">
+                <div>
+                    <img src="icons/p0/s3/2.png" class="numberLogo"/>
+                </div>
+                <div flex layout="column" layout-align="start start" class="width100 paddingLR10">
+                    <h2 class="margin0 h2Font">
+                    Receive the Discount
+                    </h2>
+                    <div>
+                    Based on the result of the test, Exambazaar will provide you a discount (upto 25% of the fee)
+                    </div>
+                </div>
+            </div>
+            <div layout="row" layout-align="start center" class="width100 marginTB10 paddingTB10">
+                <div>
+                    <img src="icons/p0/s3/3.png" class="numberLogo"/>
+                </div>
+                <div flex layout="column" layout-align="start start" class="width100 paddingLR10">
+                    <h2 class="margin0 h2Font">
+                    Fill the Admission Form
+                    </h2>
+                    <div>
+                    Student needs to fill the admission form within 15 days to avail the discount!
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div flex-gt-xs="40" flex-xs="100" layout="column" layout-align="start start" class="width100 boxShadow padding20" ng-controller="headerController">
+            <h2 class="width100 h2Font margin0 paddingLR10 headingBottomBorder2 paddingB10 text-center">
+                Attempt PBC 2018 Test Now
+            </h2>
+            <form  name="signupForm" class="width100 padding20" ng-if="!user">
+            <div layout="column" layout-align="start center" class="width100 marginTB5">
+                <div  layout="column" layout-align="start start" class="width100 paddingLR10">
+                    Name
+                </div>
+                <div layout="column" layout-align="start start" class="width100 paddingLR10">
+                    <input type="text" placeholder="Name" class="width100 loginInput" ng-model="signup.name"  only-letters required>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" class="width100 marginTB5">
+                <div  layout="column" layout-align="start start" class="width100 paddingLR10">
+                    Email
+                </div>
+                <div layout="column" layout-align="start start" class="width100 paddingLR10">
+                    <input type="email" placeholder="Email" class="width100 loginInput" ng-model="signup.email"  required>
+                </div>
+            </div>
+             
+            <div layout="column" layout-align="start center" class="width100 marginTB5">
+                <div  layout="column" layout-align="start start" class="width100 paddingLR10">
+                    Mobile
+                </div>
+                
+                <div layout="row" layout-align="start center"  class="width100 paddingLR10">
+                <div layout="column" flex>
+                    <input type="text" placeholder="Mobile" class="width100 loginInput" ng-model="signup.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits  required>
+
+                </div>
+                <div layout="row" layout-align="start center" flex ng-if="showVerifyOTP" class="paddingL10">
+                    <md-button class="md-saveNext md-small font10 margin0" ng-click="verifyPhone()" ng-if="!OTPsent">Verify by OTP</md-button>
+
+                    <input ng-if="OTPsent && !OTPVerified" type="text" placeholder="4 digit OTP" class="width100 loginInput" ng-model="signup.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits  required >
+
+
+                    <div ng-if="OTPsent && OTPVerified" class="text-primary font24 bold">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                </div>
+                </div>
+                <div layout="column" layout-align="end end" flex ng-if="showVerifyOTP" class="paddingLR10 width100">
+                <span ng-if="userExistMessage" class="danger font8 text-right">{{userExistMessage}}</span>
+                <span ng-if="OTPmessage" class="danger font8 text-right">{{OTPmessage}}</span>
+                <span ng-if="OTPsent && !OTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="verifyPhone()" id="dangerLink">Resend it</a></span>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" class="width100 marginTB5">
+                <div  layout="column" layout-align="start start" class="width100 paddingLR10">
+                    Password
+                </div>
+                <div layout="column" layout-align="start start" class="width100 paddingLR10">
+                    <input type="password" placeholder="Password" class="width100 loginInput" ng-model="signup.password"  ng-minlength="6" required>
+                </div>
+                <div layout="row" layout-align="end center" ng-messages="signupForm.signup.password.$error" class="danger font8 text-right width100 paddingLR10">
+                    Password should be at least 6 characters long
+                </div>
+            </div>    
+            <div layout="column" layout-align="start center" class="width100 marginTB20 padding10">
+                <md-button ng-disabled="checkSignupForm()" ng-click="signupUser()" class="md-small md-saveNext width100 tolowercase" >
+                    <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;Start Now
+                </md-button>
+                
+            </div>
+            </form>
+            
+            
+            <form  name="signupForm" class="padding20 width100" ng-if="user">
+            <div layout="column" layout-align="start center" class="width100 marginTB5">
+                <div  layout="column" layout-align="start start" class="width100 paddingLR10">
+                    Name
+                </div>
+                <div layout="column" layout-align="start start" class="width100 paddingLR10">
+                    <input type="text" placeholder="Name" class="width100 loginInput" ng-model="user.basic.name"  only-letters required>
+                </div>
+            </div>
+            <div layout="column" layout-align="start center" class="width100 marginTB5">
+                <div  layout="column" layout-align="start start" class="width100 paddingLR10">
+                    Email
+                </div>
+                <div layout="column" layout-align="start start" class="width100 paddingLR10">
+                    <input type="email" placeholder="Email" class="width100 loginInput" ng-model="user.email"  required>
+                </div>
+            </div>
+             
+            <div layout="column" layout-align="start center" class="width100 marginTB5">
+                <div  layout="column" layout-align="start start" class="width100 paddingLR10">
+                    Mobile
+                </div>
+                
+                <div layout="row" layout-align="start center"  class="width100 paddingLR10">
+                <div layout="column" flex>
+                    <input type="text" placeholder="Mobile" class="width100 loginInput" ng-model="user.mobile" limit-to="10" ng-minlength="10" ng-maxlength="10" only-digits  required>
+
+                </div>
+                <div layout="row" layout-align="start center" flex ng-if="showVerifyOTP" class="paddingL10">
+                    <md-button class="md-saveNext md-small font10 margin0" ng-click="verifyPhone()" ng-if="!OTPsent">Verify by OTP</md-button>
+
+                    <input ng-if="OTPsent && !OTPVerified" type="text" placeholder="4 digit OTP" class="width100 loginInput" ng-model="user.otp" limit-to="4" ng-minlength="4" ng-maxlength="4" only-digits  required >
+
+
+                    <div ng-if="OTPsent && OTPVerified" class="text-primary font24 bold">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                </div>
+                </div>
+                <div layout="column" layout-align="end end" flex ng-if="showVerifyOTP" class="paddingLR10 width100">
+                <span ng-if="userExistMessage" class="danger font8 text-right">{{userExistMessage}}</span>
+                <span ng-if="OTPmessage" class="danger font8 text-right">{{OTPmessage}}</span>
+                <span ng-if="OTPsent && !OTPVerified" class="font8 text-right">Did not receive OTP? <a ng-click="verifyPhone()" id="dangerLink">Resend it</a></span>
+                </div>
+            </div>
+              
+            <div layout="column" layout-align="start center" class="width100 marginTB20 padding10">
+                <md-button  ng-click="startPBCTest()" class="md-small md-saveNext width100 tolowercase" >
+                    <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;Start the Test
+                </md-button>
+                
+            </div>
+            </form>
+            
+        </div>
+    </div>
+        
+    </div>
+    <div layout="row" layout-xs="column" layout-align="center center" class="width100 padding10 h1Font headingBottomBorder2">
+        Faculty
+    </div>
+    <div layout="row" layout-xs="column" layout-align="start start" class="width100 paddingTB10">
+        <div flex-xs="100" flex-gt-xs layout="column" layout-align="center center" class=" padding10">
+            <img src="images/pbc/faculty/pooja-bansal.png" class="facultyPhoto"/>
+            <div layout="column" layout-align="center center" class="wideLine2 h2Font marginT10 paddingTB10">
+                <div>Pooja Bansal</div>
+                <div class="h3Font">Mathematics</div>
+            </div>
+            
+            <div layout="row" layout-align="center center" class="smallFont wideLine2 text-center width100">
+                <div flex-xs="80" flex-gt-xs="70" layout="row" layout-align="center center">
+                Pooja Bansal, the founder member of legendry Bansal Classes at Jaipur has illustrious track record of 23 years in mentoring students in Mathematics for IIT-JEE. She has personally trained more than 50 thousand many of whom have sucessfully cracked IIT-JEE with several AIRs in Top 100.
+                </div>
+            </div>
+        </div>
+        <div flex-xs="100" flex-gt-xs layout="column" layout-align="center center" class=" padding10">
+            <img src="images/pbc/faculty/pawan-barthwal.png" class="facultyPhoto"/>
+            <div layout="column" layout-align="center center" class="wideLine2 h2Font marginT10 paddingTB10">
+                <div>Pawan Barthwal</div>
+                <div class="h3Font">Chemistry</div>
+            </div>
+            
+            <div layout="row" layout-align="center center" class="smallFont wideLine2 text-center width100">
+                <div flex-xs="80" flex-gt-xs="70" layout="row" layout-align="center center">
+                Pawan Barathwal is B.Tech with 12 years of teaching experience in Chemistry for IIT-JEE. He holds a great command on the subject and expertise in International Olympiads and KVPY. Many of his students won Medals in International Chemistry Olympiads. Many of his students secured Ranks in Top-100 in IIT-JEE
+                </div>
+            </div>
+        </div>
+        <div flex-xs="100" flex-gt-xs layout="column" layout-align="center center" class=" padding10">
+            <img src="images/pbc/faculty/neeraj-sharma.png" class="facultyPhoto"/>
+            <div layout="column" layout-align="center center" class="wideLine2 h2Font marginT10 paddingTB10">
+                <div>Neeraj Sharma</div>
+                <div class="h3Font">Physics</div>
+            </div>
+            
+            <div layout="row" layout-align="center center" class="smallFont wideLine2 text-center width100">
+                <div flex-xs="80" flex-gt-xs="70" layout="row" layout-align="center center">
+                Neeraj Sharma is an IIT Delhi graduate with 16 years of teaching experience in Physics for IIT-JEE. He has helped thousands of students in Kota and Jaipur, who have sucessfully cleared IIT-JEE with Top all India Ranks like AIR-9, 10, 32, 34,48 and many more AIRs in Top 50. Many of his students have won medals in International Olympiads.
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+    <div layout="column" layout-align="center center" class="width100 padding10 headingBottomBorder2">
+        <div class="h1Font">Centre Address</div>
+        <div>C-39, Lajpat Marg, C-Scheme, Jaipur</div>
+    </div>
+    <div layout="row" layout-align="center start" class="width100 min60vh ">
+        <div class="width100">
+        <ng-map default-style="false" zoom-to-include-markers=true  scrollwheel="false" minimum-zoom="13"  maximum-zoom="15" class="min60vh">
+            <marker position="near St. Soldier School, C-39, Lajpat Marg, C-Scheme, Jaipur, Rajasthan 302001"
+              title="Pooja Bansal Classes"
+              animation="Animation.DROP"
+              centered="true">
+            </marker>
+        </ng-map>
+        </div>
+    </div>
+    
+</div>

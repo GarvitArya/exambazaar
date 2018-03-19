@@ -539,7 +539,7 @@
             <div flex layout="column" layout-align="start center " class=" paddingTB20 width100">
                 
                 <div layout="row" layout-align="center center" class="width100 paddingLR40 marginT20 paddingTB20 greyBorder">
-                <div flex="60" layout="column" layout-align="center center" class="width100 padding20">
+                <div flex layout="column" layout-align="center center" class="width100 padding20">
                     <div class="h2Font">
                         Good job on taking the test!
                     </div>
@@ -567,7 +567,7 @@
                     </div>    
                 </div>
                 
-                <div flex layout="column" layout-align="center center" class="smallFont greyLeftBorder paddingLR20">
+                <div flex="40" layout="column" layout-align="center center" class="smallFont greyLeftBorder paddingLR20" ng-if="suggestedTests.length > 0">
                     <div layout="column" layout-align="center center" class="width100"  ng-if="suggestedTests && suggestedTests.length > 0">
                     <div layout="column" layout-align="center center" class="width100" class="h3Font width100">
                         Other Tests For You

@@ -2259,6 +2259,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.step2 = false;
         $scope.step3 = false;
         $scope.verifyPhone = function(){
+            
             $scope.generateUserOTP();
             
         };
@@ -2301,7 +2302,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     var userExists = data;
                     console.log(userExists);
                     if(userExists){
-                        $scope.userExistMessage = "User with mobile " + $scope.newUser.contact.mobile + ' already exists!';    
+                        $rootScope.userExistMessage = "User with mobile " + $scope.newUser.contact.mobile + ' already exists!';    
                     }else{
                         var thisOTP = {
                             mobile:$scope.newUser.contact.mobile,
@@ -13518,6 +13519,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $state.go('partner-dashboard', {userId: $scope.sessionuser.userId});
                 }
             }else{
+                if($state.current.name == 'pbc'){
+                    console.log('Reloading');
+                    $state.reload();
+                }
                 if($state.current.name == 'exam'){
                     $state.reload();
                 }
@@ -13554,7 +13559,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             email: '',
             mobile: '',
             password: '',
-        }; 
+        };
         $scope.checkSignupForm = function(){
             var disabled = false;
             
@@ -13601,7 +13606,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //Change this back
                 //$scope.showVerifyOTP = false;
                 //$scope.OTPVerified = true;
-                //$scope.userExistMessage = null;
+                //$rootScope.userExistMessage = null;
             }
 
         }, true);
@@ -13615,10 +13620,10 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             newValue = newValue.toString();
             if(newValue && newValue.length == 10){
                 $scope.showResetVerifyOTP = true;
-                $scope.userExistMessage = null;
+                $rootScope.userExistMessage = null;
             }else{
                 $scope.showResetVerifyOTP = false;
-                $scope.userExistMessage = null;
+                $rootScope.userExistMessage = null;
             }
 
         }, true);      
@@ -13656,6 +13661,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         
             
         $scope.verifyPhone = function(){
+            $rootScope.userExistMessage = null;
             $scope.generateUserOTP();
         };
         $scope.resetPhone = function(){
@@ -13673,6 +13679,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         $scope.signupUser = function(){
             $scope.signup.userType = 'Student';
             $scope.signup.verified = true;
+            console.log($scope.signup);
             var saveUser = UserService.saveUser($scope.signup).success(function (data, status, headers) {
                 var fulluser = data;
                 
@@ -13690,8 +13697,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 };
                 $cookies.putObject('sessionuser', sessionuser);
                 $scope.sessionuser = sessionuser;
-                $mdDialog.hide();
-                $state.reload();
+                
+                
+                if($state.current.name == 'pbc'){
+                    $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});
+                }
                 
             })
             .error(function (data, status, header, config) {
@@ -13735,7 +13745,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 var userExists = data;
                 //console.log(userExists);
                 if(userExists){
-                    $scope.userExistMessage = "User with mobile " + $scope.signup.mobile + ' already exists!';    
+                    $rootScope.userExistMessage = "User with mobile " + $scope.signup.mobile + ' already exists!';    
                 }else{
                     var thisOTP = {
                         mobile:$scope.signup.mobile,
@@ -13745,7 +13755,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     OTPService.generateOTP(thisOTP).success(function (data, status, headers) {
                         $scope.OTPsent = true;
                         $scope.setOTP = data.otp;
-                        console.log("OTP sent to mobile " + thisOTP.mobile);
+                        //console.log("OTP sent to mobile " + thisOTP.mobile);
                     })
                     .error(function (data, status, header, config) {
 
@@ -21924,6 +21934,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.testExam = thistestExam.data;
                 if($scope.testExam && $scope.testExam.name){
                     $scope.currURL = "https://www.exambazaar.com/questionpapers/" + $scope.testExam.name;
+                }else{
+                    $scope.currURL = $location.absUrl();
                 }
                 
                 if($scope.test.instructions && $scope.test.instructions.length > 0){
@@ -22551,7 +22563,27 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });*/
 
     }]);
-        
+    
+    exambazaar.controller("pbcController", 
+        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'Notification', '$location', '$state', function($scope, $rootScope, $cookies, UserService, admissionService, Notification, $location, $state){
+            if($cookies.getObject('sessionuser')){
+            var sessionuser = $cookies.getObject( 'sessionuser');
+            if(sessionuser && sessionuser._id){
+                UserService.getUserBasic(sessionuser._id).success(function (data, status, headers) {
+                    $scope.user = data;
+                    $scope.signup = data;
+                });
+            }
+            }else{
+                
+            }
+            $scope.startPBCTest = function(){
+                $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});    
+            };
+            
+            $rootScope.pageTitle = "Exambazaar Discount on Pooja Bansal Classes Courses";
+    }]);
+         
     exambazaar.controller("pbcAdmissionController", 
         [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'Notification', '$location', function($scope, $rootScope, $cookies, UserService, admissionService, Notification, $location){
             $scope.userVariables ={
@@ -35819,6 +35851,22 @@ function getLatLng(thisData) {
                 'body':{
                     templateUrl: 'pbcAdmission.html',
                     controller: 'pbcAdmissionController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
+        .state('pbc', {
+            url: '/pbc',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+
+                },
+                'body':{
+                    templateUrl: 'pbc.html',
+                    controller: 'pbcController'
                 },
                 'footer': {
                     templateUrl: 'footer.html'
