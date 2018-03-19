@@ -1138,6 +1138,17 @@ router.get('/user/:userId', function(req, res) {
     
 });
 
+router.post('/usertest', function(req, res) {
+    var thisAssessment = req.body;
+    var userId = thisAssessment.userId;
+    var testId = thisAssessment.testId;
+    var assessmentId = '';
+    
+    var existingAssessment = assessment.findOne({user: userId, test: testId},function (err, existingAssessment) {
+        res.json(existingAssessment);
+    });
+});
+
 router.get('/', function(req, res) {
     var limit = 400;
     var allAssessments = assessment

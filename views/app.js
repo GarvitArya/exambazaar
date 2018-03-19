@@ -677,6 +677,9 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.saveAssessment = function(assessment) {
             return $http.post('/api/assessments/save', assessment);
         };
+        this.usertest = function(assessment) {
+            return $http.post('/api/assessments/usertest', assessment);
+        };
         this.recent = function() {
             return $http.post('/api/assessments/recent');
         };
@@ -792,6 +795,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
         this.suggestTests = function(testUserForm) {
             return $http.post('/api/tests/suggestTests', testUserForm);
         };
+        
         this.testpdf = function(test) {
             return $http.post('/api/tests/testpdf', test, { responseType : 'arraybuffer' });
         };
@@ -21286,7 +21290,8 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("assessmentController", 
     [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', 'moment', '$mdSidenav', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments, moment, $mdSidenav){
             
-        
+        $scope.congratulationsMessage = null;
+        $scope.sorryMessage = null;
         $scope.userRatingFeedbacks = [
             "Loved it",
             "Faced Tech Issue",
@@ -21300,16 +21305,11 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             });
         };
 
-        $scope.toggleLeft = buildToggler('left');
+        /*$scope.toggleLeft = buildToggler('left');
         //$scope.toggleRight = buildToggler('right');
         $scope.isOpenLeft = function(){
           return $mdSidenav('left').isOpen();
         };
-
-        /**
-         * Supplies a function that will continue to operate until the
-         * time is up.
-         */
         function debounce(func, wait, context) {
           var timer;
 
@@ -21323,11 +21323,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             }, wait || 10);
           };
         };
-
-        /**
-         * Build handler to open/close a SideNav; when animation finishes
-         * report completion in console
-         */
         function buildDelayedToggler(navID) {
           return debounce(function() {
             // Component lookup should always be available since we are not using `ng-if`
@@ -21348,7 +21343,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 //$log.debug("toggle " + navID + " is done");
               });
           };
-        };
+        };*/
         
         
         $scope.mobileSummary = false;
@@ -22187,14 +22182,18 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                    
                     if(!$scope.userAssessment.evaluation.questions.total){
                         $scope.userAssessment.evaluation.questions.total = Number($scope.userAssessment.evaluation.questions.attemped) + Number($scope.userAssessment.evaluation.questions.unattemped);
+                    }else{
+                        $scope.userAssessment.evaluation.questions.total = Number($scope.userAssessment.evaluation.questions.total);
                     }
                     
-                    if(!$scope.userAssessment.evaluation.questions.accuracy){
-                        $scope.userAssessment.evaluation.questions.accuracy = 0;
+                    if(!$scope.userAssessment.evaluation.accuracy){
+                        $scope.userAssessment.evaluation.accuracy = 0;
 
                         if($scope.userAssessment.evaluation.questions.attemped > 0){
-                            $scope.userAssessment.evaluation.questions.accuracy = Math.round(100 * $scope.userAssessment.evaluation.questions.correct / $scope.userAssessment.evaluation.questions.attemped);
+                            $scope.userAssessment.evaluation.accuracy = Math.round(100 * $scope.userAssessment.evaluation.questions.correct / $scope.userAssessment.evaluation.questions.attemped);
                         }
+                    }else{
+                        $scope.userAssessment.evaluation.questions.accuracy = Number($scope.userAssessment.evaluation.accuracy);
                     }
                    
                     if(!$scope.userAssessment.evaluation.questions.attemptedPercentage){
@@ -22203,7 +22202,22 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                             $scope.userAssessment.evaluation.questions.attemptedPercentage = Math.round(100 * $scope.userAssessment.evaluation.questions.attemped / $scope.userAssessment.evaluation.questions.total);
                         }
                     }
-                    console.log(newValue);
+                    if($scope.userAssessment.evaluation.percentageScore){
+                        $scope.userAssessment.evaluation.percentageScore = Number($scope.userAssessment.evaluation.percentageScore);
+                        
+                        if($scope.userAssessment.test == '5aae0cae3bacc109b0907d30'){
+                            if($scope.userAssessment.evaluation.percentageScore >= 75){
+                                $scope.congratulationsMessage = "Congratulations! You have earned a 25% discount on fees at Pooja Bansal Classes, Jaipur for Bull's Eye and Acme course 2018-2020. We have sent you an email with your coupon code and other details!";
+                            }else if($scope.userAssessment.evaluation.percentageScore >= 60){
+                                $scope.congratulationsMessage = "Congratulations! You have earned a 10% discount on fees at Pooja Bansal Classes, Jaipur for Bull's Eye and Acme course 2018-2020. We have sent you an email with your coupon code and other details!";
+                                
+                            }else{
+                                $scope.sorryMessage = "You have earned a 40% discount only on the admission form for Pooja Bansal Classes, Jaipur! Discounts on fees are only applicable if you score > 60% in the Exambazaar PBC Test. Please write PB-CAT on the schedules dates!";
+                                
+                            }
+                        }
+                    }
+                    
                 }
             }, true);
 
@@ -22615,11 +22629,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});    
             };
             
-            $rootScope.pageTitle = "Exambazaar Discount on Pooja Bansal Classes Courses";
+            $rootScope.pageTitle = "IIT JEE Coaching in Jaipur at Pooja Bansal Classes";
+            $rootScope.pageDescription = "Get upto 25% discount for admission at Pooja Bansal Classes, Jaipur, Elite Batch of 30 | IIT Coaching in Jaipur for Xth to XIth moving Students";
+            $rootScope.pageKeywords = "Pooja Bansal Classes, Bansal Classes Jaipur, Bansal Classes Jaipur 2018, Pooja Bansal Classes 2018, Pooja Bansal Classes Jaipur, Pooja Bansal Classes IIT JEE, IIT JEE Coaching in Jaipur, PBC Coaching, PBC Coaching 2018, PBC Coaching Discount";
     }]);
          
     exambazaar.controller("pbcAdmissionController", 
-        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'Notification', '$location', function($scope, $rootScope, $cookies, UserService, admissionService, Notification, $location){
+        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'assessmentService', 'Notification', '$location', function($scope, $rootScope, $cookies, UserService, admissionService, assessmentService, Notification, $location){
             $scope.userVariables ={
                 genders: [
                     "Male",
@@ -22648,7 +22664,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 dob: null,
                 gender: null,
                 category: null,
-                course: "Bull's Eye",
+                course: "Bull's Eye / Acme",
                 school: null,
                 address: {
                     line: null,
@@ -22812,33 +22828,59 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             if(sessionuser && sessionuser._id){
                 UserService.getUserBasic(sessionuser._id).success(function (data, status, headers) {
                     $scope.user = data;
-                    
-                    var admissionForm = {
-                        user: $scope.user._id,
-                        coaching: '5a97bde62aeebc5a97e8c70a',
-                    };
-                    admissionService.getUserAdmission(admissionForm).success(function (data, status, headers) {
-                        if(data){
-                            $scope.userAdmit = data;
-                            $scope.admissionForm = $scope.userAdmit.details;
-                            Notification.primary({message: "Great! We have found your previous submission!",  positionY: 'top', positionX: 'right', delay: 3000});
-                        }else{
-                            $scope.admissionForm.name = $scope.user.basic.name;
-                            $scope.admissionForm.email = $scope.user.email;
-                            $scope.admissionForm.mobile = $scope.user.mobile;
-                            if($scope.user.basic.dob){
-                                $scope.admissionForm.dob = moment($scope.user.basic.dob);
-                            }
-                            if(!$scope.admissionForm.dob){
-                                $scope.admissionForm.dob = moment($scope.defaultDate);
-                            }
-                        }
+                
+                var thisAssessment = {
+                    userId: $scope.user._id,
+                    testId: '5aae0cae3bacc109b0907d30'
+                };
+                
+                assessmentService.usertest(thisAssessment).success(function (assessmentdata, status, headers) {
+                    if(data){
+                        $scope.userAssessment = assessmentdata;
+                        //console.log($scope.userAssessment);
                         
-                    })
-                    .error(function (data, status, header, config) {
-                        Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
-                        console.log('Error ' + data + ' ' + status);
-                    });
+                        var admissionForm = {
+                            user: $scope.user._id,
+                            coaching: '5a97bde62aeebc5a97e8c70a',
+                        };
+                        admissionService.getUserAdmission(admissionForm).success(function (data, status, headers) {
+                            if(data){
+                                $scope.userAdmit = data;
+                                $scope.admissionForm = $scope.userAdmit.details;
+                                Notification.primary({message: "Great! We have found your previous submission!",  positionY: 'top', positionX: 'right', delay: 3000});
+                            }else{
+                                $scope.admissionForm.name = $scope.user.basic.name;
+                                $scope.admissionForm.email = $scope.user.email;
+                                $scope.admissionForm.mobile = $scope.user.mobile;
+                                if($scope.user.basic.dob){
+                                    $scope.admissionForm.dob = moment($scope.user.basic.dob);
+                                }
+                                if(!$scope.admissionForm.dob){
+                                    $scope.admissionForm.dob = moment($scope.defaultDate);
+                                }
+                            }
+
+                        })
+                        .error(function (data, status, header, config) {
+                            Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
+                            console.log('Error ' + data + ' ' + status);
+                        });
+                        
+                        
+                        
+                        
+                    }else{
+                        
+                    }
+
+                })
+                .error(function (data, status, header, config) {
+                    Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 3000});
+                    console.log('Error ' + data + ' ' + status);
+                });
+                
+                
+                    
                     
                     
                 })

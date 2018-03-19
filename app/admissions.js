@@ -57,7 +57,7 @@ router.post('/pbcAdmission', function(req, res) {
             var headers = { 'X-Api-Key': instamojo.xapikey, 'X-Auth-Token': instamojo.xauthtoken}
             var payload = {
               purpose: 'PBC 2018 Bulls Eye Admission',
-              amount: '10',
+              amount: '300',
               phone: existingUser.mobile,
               buyer_name: existingUser.basic.name,
               //redirect_url: 'http://www.exambazaar.com/pbcAdmission',

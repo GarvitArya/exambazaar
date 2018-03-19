@@ -1,5 +1,5 @@
 <style>
-    input[type="text"], input[type="number"]
+    input[type="text"], input[type="number"],input[type="email"]
     {
         padding: 5px;
         font-size: 13px;
@@ -7,9 +7,10 @@
         border: solid 1px #ccc;
         transition: box-shadow 0.3s, border 0.3s;
         box-shadow: 0 0 5px 1px white;
+        margin-bottom: 5px;
     }
     
-    input[type="text"]:hover,input[type="text"]:focus, input[type="number"]:hover, input[type="number"]:focus{
+    input[type="text"]:hover,input[type="text"]:focus, input[type="number"]:hover, input[type="number"]:focus, input[type="email"]:hover, input[type="email"]:focus{
         padding: 5px;
         font-size: 13px;
         border: solid 1px #333333;
@@ -77,7 +78,7 @@
         padding-right: 4px;
         padding-top: 1px;
         padding-bottom: 1px;
-        width:30px;
+        width:50px;
         height:30px;
         background: white;
         color: gray;
@@ -636,18 +637,28 @@
         <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start"  ng-if="testOver && test._id == '5aae0cae3bacc109b0907d30'" >
             <div flex="90" layout="column" layout-align="center start" class="">
             <div layout="row" layout-align="start center" class="width100 marginT10 padding5 greyBorder" >
-                Congratulations message
+                <div class="paddingR10">
+                    <img src="images/pbc/ribbon.png" class="height100px" ng-if="congratulationsMessage"/>
+                    <img src="images/pbc/pencil.png" class="height100px" ng-if="sorryMessage"/>
+                </div>
+                <div class="paddingL20" ng-if="congratulationsMessage">
+                    {{congratulationsMessage}}
+                </div>
+                <div class="paddingL20" ng-if="sorryMessage">
+                    {{sorryMessage}}
+                </div>
+                
             </div>    
                 
                 
             <div layout="row" layout-align="center start" class="width100">
                 
                 
-            <div flex-gt-xs="40" hide-xs layout="column" layout-align="start start " class="paddingTB20 paddingR20 width100 greyRightBorder">
+            <div flex-gt-xs="30" hide-xs layout="column" layout-align="start start " class="paddingTB20 paddingR20 width100">
                 <div class="h3Font">Test Performance</div>
                 
                 <div layout="column" layout-align="start start" class=" paddingTB5 width100" >
-                    <div layout="column" layout-align="center center" class="width80 padding10 exact20h smallFont" id="legendBox">
+                    <div layout="column" layout-align="center center" class="width100 padding10 exact20h smallFont" id="legendBox">
                         <div layout="row" layout-align="center center" class="width100 paddingTB5">
                             <div flex layout="row" layout-align="center center" class="">
                                 <div flex="25" >
@@ -689,16 +700,155 @@
                 <div layout="column" layout-align="start start" class=" paddingTB5 width100 smallFont" >
                     <div class="width100 h3Font">Candidate: {{userAssessment.info.name}}</div>
                     <div class="width100 h3Font">Score: {{userAssessment.evaluation.score}} out of {{test.maxScore}}</div>
-                    <div class="width100 h3Font">Percentage Score:  {{userAssessment.evaluation.percentageScore}} %</div>
+                    <div class="width100 h3Font">Percentage Score:  {{userAssessment.evaluation.percentageScore}}%</div>
                     <div class="width100">Total Questions: {{userAssessment.evaluation.questions.total}}</div>
                     <div class="width100">Correct: {{userAssessment.evaluation.questions.correct}} / {{userAssessment.evaluation.questions.total}}</div>
-                    <div class="width100">Accuracy: {{userAssessment.evaluation.questions.accuracy}} %</div>
-                    <div class="width100">Attempted: {{userAssessment.evaluation.questions.attemptedPercentage}} %</div>
+                    <div class="width100">Accuracy: {{userAssessment.evaluation.accuracy}}%</div>
+                    <div class="width100">Attempted: {{userAssessment.evaluation.questions.attemptedPercentage}}%</div>
                 </div>
             </div>
+            <div flex-gt-xs="5" class="min40vh greyRightBorder">
+            </div>
+            <div flex-gt-xs="5">
+            </div>
+            <div flex-gt-xs hide-xs layout="column" layout-align="start center " class="paddingT10 width100">
                 
-            <div flex-gt-xs hide-xs layout="column" layout-align="start center " class="paddingTB20 width100">
                 
+                <div layout="column" layout-align="start start" class="textBlack whiteBackground secondFont font13 width100" ng-controller="pbcAdmissionController">
+                
+                <div layout="row" layout-align="center start" class="width100">
+                <div layout="column" layout-align="center start" class="width100">
+
+
+                    <div layout="row" layout-align="center start" class="width100">
+                        <!--<div hide-xs flex-gt-xs="25" layout="row" layout-align="end start">
+                            <img src="images/pbc/pooja-bansal-classes-jaipur.jpg" class="maxWidth100"/>
+                        </div>-->
+                        <div flex class="paddingLR20">
+                            <h1 class="h2Font width100 marginB10 gainsboroBottomBorder paddingB10">
+                                Admission Form - Pooja Bansal Classes, Jaipur
+                            </h1>
+
+                            <div layout="column" layout-align="center center" class="width100" ng-show="!userAdmit.payment.payment_id || forceShowForm" ng-disabled="userAdmit.payment.payment_id">
+                            <div layout="row" layout-align="start center" class="width100 ">
+                                <div flex="{{col1}}" class="column1 baseFont">
+                                    Name
+                                </div>
+                                <div flex class="column2">
+                                    <input type="text" class="width100" ng-model="admissionForm.name" placeholder="Full Name">
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 ">
+                                <div flex="{{col1}}" class="column1 baseFont">
+                                    Course
+                                </div>
+                                <div flex class="column2">
+                                    <input type="text" class="width100" ng-model="admissionForm.course" placeholder="Course Name" disabled>
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 ">
+                                <div flex="{{col1}}" class="column1 baseFont">
+                                    Email
+                                </div>
+                                <div flex class="column2">
+                                    <input type="email" class="width100" ng-model="admissionForm.email" placeholder="Email Address">
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 ">
+                                <div flex="{{col1}}" class="column1 baseFont">
+                                    Mobile
+                                </div>
+                                <div flex class="column2">
+                                    <input type="text" class="width100" ng-model="admissionForm.mobile" placeholder="Mobile Number" only-digits>
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 marginB5">
+                                <div flex="{{col1}}" class="column1 baseFont">
+                                    Date of Birth
+                                </div>
+                                <div flex class="column2">
+                                    <md-datepicker ng-model="admissionForm.dob" md-placeholder="Date of Birth"></md-datepicker>
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 marginB5">
+                                <div flex="{{col1}}" class="column1 baseFont">
+                                    Gender
+                                </div>
+                                <div flex class="column2">
+                                    <md-select ng-model="admissionForm.gender" placeholder="Select Your Gender" class="margin0 font14">
+                                        <md-option ng-repeat="gender in userVariables.genders" ng-value="gender" class="font14">
+                                        {{gender}}
+                                        </md-option>
+                                    </md-select>
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 marginB5">
+                                <div flex="{{col1}}" class="column1 baseFont">
+                                    Category
+                                </div>
+                                <div flex class="column2">
+                                    <md-select ng-model="admissionForm.category" placeholder="Select Your Category" class="margin0 font14">
+                                        <md-option ng-repeat="category in userVariables.categories" ng-value="category" class="font14">
+                                        {{category}}
+                                        </md-option>
+                                    </md-select>
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start start" class="width100 ">
+                                <div flex="{{col1}}" class="column1 baseFont">
+                                    Address
+                                </div>
+                                <div layout="column" layout-align="start start" flex class="column2">
+                                    <input type="text" class="width100" ng-model="admissionForm.address.line" placeholder="Address">
+                                    <div layout="row" layout-align="start start" class="width100 paddingTB5">
+                                        <div flex class="paddingR5">
+                                            <input type="text" class="width100" ng-model="admissionForm.address.city" placeholder="City">
+                                        </div>
+                                        <div flex class="paddingL5">
+                                            <input type="text" class="width100 paddingL10" ng-model="admissionForm.address.state" placeholder="State">
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="width100 ">
+                                <div flex="{{col1}}" class="column1 baseFont">
+                                    School Name
+                                </div>
+                                <div flex class="column2">
+                                    <input type="text" class="width100" ng-model="admissionForm.school" placeholder="School Name">
+                                </div>
+                            </div>
+
+                            </div>
+
+                            <div layout="row" layout-align="start center" class="width100 marginT10">
+                                <md-button class="md-next md-medium font16 tolowercase margin0 width100" ng-click="submitAdmissionHelper()" ng-if="!userAdmit.payment.payment_id">
+                                    Buy Now
+                                </md-button>
+                                <md-button class="md-saveNext md-medium font16 tolowercase margin0 width100" ng-if="userAdmit.payment.payment_id" ng-disabled>
+                                    <i class="fa fa-check-circle marginR10" aria-hidden="true"></i> Already Bought
+                                </md-button>
+                            </div>
+                            <!--<a ng-click="pbcAdmission()">Test</a>-->
+                            <!--<a href="https://www.instamojo.com/@exambazaar/la7288d286daa49b584bcde983570d6be/" rel="im-checkout" data-behaviour="remote" data-style="flat" data-text="Buy Admission Form">Buy Admission Form</a>-->
+
+
+
+                            <div layout="column" layout-align="start center" class="paddingL20 font12 danger width100 marginTB10">
+                                <div layout="row" layout-align="start start" ng-repeat="startError in startErrors" class="width100">{{$index+1}}. {{startError}}
+                                </div>
+                            </div>
+                            <div layout="column" layout-align="start center" class="width100 marginTB20 greyBorder padding20" ng-if="userAdmit.payment.payment_id">
+                                <div class="width100 h2Font">Next Steps</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+            </div>
                 
                 
                 
