@@ -13519,7 +13519,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     $state.go('partner-dashboard', {userId: $scope.sessionuser.userId});
                 }
             }else{
-                if($state.current.name == 'pbc'){
+                if($state.current.name == 'pbc' || $state.current.name == 'pbc2'){
                     console.log('Reloading');
                     $state.reload();
                 }
@@ -13699,7 +13699,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 $scope.sessionuser = sessionuser;
                 
                 
-                if($state.current.name == 'pbc'){
+                if($state.current.name == 'pbc' || $state.current.name == 'pbc2'){
                     $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});
                 }
                 
@@ -22092,9 +22092,13 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     user: $scope.user._id,
                     test: $stateParams.testId,
                 };
-                assessmentService.submitAssessment(assessmentForm).success(function (adata, status, headers) {
+                assessmentService.userevaluate(assessmentForm).success(function (adata, status, headers) {
+                    
+                    
                     Notification.success({message: "Thank you, all done!",  positionY: 'top', positionX: 'right', delay: 1000});
                     $scope.userAssessment = adata;
+                    
+                    
                     $scope.testOver = false;
                     $scope.testStarted = false;
                     $scope.userevaluate();
@@ -22171,7 +22175,37 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     console.log('Error ' + data + ' ' + status);
                 });
             }
+            $scope.$watch('userAssessment', function (newValue, oldValue, scope) {
+                if(newValue != null && newValue.evaluation.score){
+                    
+                    $scope.userAssessment.score = Number($scope.userAssessment.score);
+                    $scope.userAssessment.evaluation.questions.correct = Number($scope.userAssessment.evaluation.questions.correct);
+                    $scope.userAssessment.evaluation.questions.incorrect = Number($scope.userAssessment.evaluation.questions.incorrect);
+                    $scope.userAssessment.evaluation.questions.attemped = Number($scope.userAssessment.evaluation.questions.attemped);
+                    $scope.userAssessment.evaluation.questions.unattemped = Number($scope.userAssessment.evaluation.questions.unattemped);
+                    
+                   
+                    if(!$scope.userAssessment.evaluation.questions.total){
+                        $scope.userAssessment.evaluation.questions.total = Number($scope.userAssessment.evaluation.questions.attemped) + Number($scope.userAssessment.evaluation.questions.unattemped);
+                    }
+                    
+                    if(!$scope.userAssessment.evaluation.questions.accuracy){
+                        $scope.userAssessment.evaluation.questions.accuracy = 0;
 
+                        if($scope.userAssessment.evaluation.questions.attemped > 0){
+                            $scope.userAssessment.evaluation.questions.accuracy = Math.round(100 * $scope.userAssessment.evaluation.questions.correct / $scope.userAssessment.evaluation.questions.attemped);
+                        }
+                    }
+                   
+                    if(!$scope.userAssessment.evaluation.questions.attemptedPercentage){
+                        $scope.userAssessment.evaluation.questions.attemptedPercentage = 0;
+                        if($scope.userAssessment.evaluation.questions.attemped > 0){
+                            $scope.userAssessment.evaluation.questions.attemptedPercentage = Math.round(100 * $scope.userAssessment.evaluation.questions.attemped / $scope.userAssessment.evaluation.questions.total);
+                        }
+                    }
+                    console.log(newValue);
+                }
+            }, true);
 
             $scope.$watch('subquestion', function (newValue, oldValue, scope) {
                 if(newValue != null){
@@ -35859,6 +35893,22 @@ function getLatLng(thisData) {
         })
         .state('pbc', {
             url: '/pooja-bansal-classes-jaipur-admission-2018',
+            views: {
+                'header':{
+                    templateUrl: 'header.html',
+
+                },
+                'body':{
+                    templateUrl: 'pbc.html',
+                    controller: 'pbcController'
+                },
+                'footer': {
+                    templateUrl: 'footer.html'
+                }
+            }
+        })
+        .state('pbc2', {
+            url: '/pbc',
             views: {
                 'header':{
                     templateUrl: 'header.html',

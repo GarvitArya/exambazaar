@@ -623,22 +623,40 @@ router.post('/userevaluate', function(req, res) {
                         });
                         score = Math.round(score * 100) / 100;
                         console.log('Score is: ' + score);
+                        
+                        var accuracy = 0;
+                        if(attempted > 0){
+                           accuracy = Math.round(100*correctAnswers / attempted, 2);
+                        }
+                        var attemptedPercentage = Math.round(100 * attempted / (attempted + unattempted));     
+                        var percentageScore = 0;
+                        if(existingAssessment.test.maxScore){
+                            percentageScore = Number( 100 * score / existingAssessment.test.maxScore);
+                        }    
                             
                         var evaluation = {
                             questions:{
                                 attemped: attempted,
                                 unattemped: unattempted,
                                 correct: correctAnswers,
-                                incorrect: incorrectAnswers
+                                incorrect: incorrectAnswers,
+                                total: correctAnswers + incorrectAnswers,
+                                attemptedPercentage: attemptedPercentage,
+                                
                             },
                             marked:{
                                 correct: correct,
                                 incorrect: incorrect,
                             },
-                            score: score
+                            score: score,
+                            percentageScore: percentageScore,
+                            accuracy: accuracy,
+                            
                         };
 
                         existingAssessment.evaluation = evaluation;
+                        existingAssessment.submitted = true;
+                        existingAssessment._submit = moment();
                         existingAssessment.save(function(err, existingAssessment){
                             if (err) return console.error(err);
                             console.log('Assessment saved: ' + existingAssessment._id);
@@ -1005,22 +1023,39 @@ router.post('/userevaluate', function(req, res) {
                         score = Math.round(score * 100) / 100;
                         console.log('Score is: ' + score);
                             
+                        var accuracy = 0;
+                        if(attempted > 0){
+                           accuracy = Math.round(100*correctAnswers / attempted, 2);
+                        }
+                        var attemptedPercentage = Math.round(100 * attempted / (attempted + unattempted)); 
+                        var percentageScore = 0;
+                        if(existingAssessment.test.maxScore){
+                            percentageScore = Number( 100 * score / existingAssessment.test.maxScore);
+                        }    
+                            
                         var evaluation = {
                             questions:{
                                 attemped: attempted,
                                 unattemped: unattempted,
                                 correct: correctAnswers,
-                                incorrect: incorrectAnswers
+                                incorrect: incorrectAnswers,
+                                total: correctAnswers + incorrectAnswers,
+                                attemptedPercentage: attemptedPercentage,
+                                
                             },
                             marked:{
                                 correct: correct,
                                 incorrect: incorrect,
-                                //partiallycorrect: partiallycorrect,
                             },
-                            score: score
+                            score: score,
+                            percentageScore: percentageScore,
+                            accuracy: accuracy,
+                            
                         };
 
                         existingAssessment.evaluation = evaluation;
+                        existingAssessment.submitted = true;
+                        existingAssessment._submit = moment();
                         existingAssessment.save(function(err, existingAssessment){
                             if (err) return console.error(err);
                             console.log('Assessment saved: ' + existingAssessment._id);

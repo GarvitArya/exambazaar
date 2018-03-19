@@ -378,6 +378,7 @@ var allStates = [
 '/verifyEmail/:userId',
 '/pbcAdmission',    
 '/pooja-bansal-classes-jaipur-admission-2018',
+'/pbc',
     
 ];
 

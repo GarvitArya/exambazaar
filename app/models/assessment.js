@@ -33,6 +33,8 @@ var assessmentSchema = mongoose.Schema({
             unattemped: {type: String},
             correct: {type: String},
             incorrect: {type: String},
+            total: {type: String},
+            attemptedPercentage: {type: String},
         },
         marked:{
             correct: [Schema.Types.Mixed],    
@@ -40,6 +42,8 @@ var assessmentSchema = mongoose.Schema({
             partiallycorrect: [Schema.Types.Mixed],    
         },
         score: {type: String},
+        percentageScore: {type: String},
+        accuracy: {type: String},
         _created: { type: Date, default: Date.now },
     },                           
 });
