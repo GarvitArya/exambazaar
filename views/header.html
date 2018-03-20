@@ -200,7 +200,7 @@
                     <a rel="nofollow" href="#">{{streamrank.stream}}</a>
                     <ul class="dropdown-menu">
                         <li ng-repeat="exam in streamexams[streamrank.stream] | orderBy:['-rank']" ng-if="exam.active">
-                            <a rel="nofollow" ui-sref="topCoaching({ categoryName:{{'streamrank.name'}}, subCategoryName:{{'exam.name'}} })">{{exam.seoname}}</a>
+                            <a rel="nofollow" ui-sref="bestCoaching({ top_coaching_urlslug:{{'exam.top_coaching_urlslug'}} })">{{exam.top_coaching_name}}</a>
                         </li>
 
                     </ul>

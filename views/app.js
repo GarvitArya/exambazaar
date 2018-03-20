@@ -2567,7 +2567,6 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.topCoachings = topCoachings.data;
             $scope.stream = $scope.exam.stream;
             
-            console.log($scope.exam);
             
             var tcURL = "https://www.exambazaar.com/reviews/" + $scope.exam.top_coaching_urlslug;
             $scope.canonicalFlip = true;
