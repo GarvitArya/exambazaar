@@ -351,6 +351,8 @@ router.get('/exambasic/:examName', function(req, res) {
         } else {throw err;}
     });
 });
+
+
 router.get('/exambasicByTCUrlslug/:top_coaching_urlslug', function(req, res) {
     var top_coaching_urlslug = req.params.top_coaching_urlslug;
     
