@@ -22626,7 +22626,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     exambazaar.controller("pbcController", 
-        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'viewService', 'Notification', '$location', '$state', 'mobileassessment', function($scope, $rootScope, $cookies, UserService, admissionService, viewService, Notification, $location, $state, mobileassessment){
+        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'viewService', 'Notification', '$location', '$state', 'screenSize', function($scope, $rootScope, $cookies, UserService, admissionService, viewService, Notification, $location, $state, screenSize){
             if($cookies.getObject('sessionuser')){
             var sessionuser = $cookies.getObject( 'sessionuser');
             if(sessionuser && sessionuser._id){
