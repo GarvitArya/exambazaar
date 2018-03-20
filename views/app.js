@@ -22626,7 +22626,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     exambazaar.controller("pbcController", 
-        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'viewService', 'Notification', '$location', '$state', function($scope, $rootScope, $cookies, UserService, admissionService, viewService, Notification, $location, $state){
+        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'viewService', 'Notification', '$location', '$state', 'mobileassessment', function($scope, $rootScope, $cookies, UserService, admissionService, viewService, Notification, $location, $state, mobileassessment){
             if($cookies.getObject('sessionuser')){
             var sessionuser = $cookies.getObject( 'sessionuser');
             if(sessionuser && sessionuser._id){
@@ -22677,7 +22677,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 
             }
             $scope.startPBCTest = function(){
-                $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});    
+                
+                if (screenSize.is('xs')){
+                    $state.go('mobileassessment', {testId: '5aae0cae3bacc109b0907d30'});
+
+                }else{
+                    $state.go('assessment', {testId: '5aae0cae3bacc109b0907d30'});
+                }
+                    
             };
             
             $rootScope.pageTitle = "IIT JEE Coaching in Jaipur at Pooja Bansal Classes";
