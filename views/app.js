@@ -21401,8 +21401,16 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
             $scope.testOver = false;
             if (screenSize.is('xs, sm')){
                 $scope.disabled = false;
+                
+                if($state.current.name == 'assessment'){
+                    $state.go('mobileassessment', {testId: $stateParams.testId});
+                }
+                
             }else{
                 $scope.disabled = false;
+                if($state.current.name == 'mobileassessment'){
+                    $state.go('assessment', {testId: $stateParams.testId});
+                }
             }
 
             var markView = function(question, subquestion){
