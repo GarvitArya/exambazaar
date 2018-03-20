@@ -2560,10 +2560,19 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     exambazaar.controller("topCoachingController", 
         [ '$scope', '$stateParams', '$cookies', '$state', '$rootScope','$mdDialog','thisExam', 'topCoachings',  function($scope, $stateParams, $cookies,$state, $rootScope, $mdDialog, thisExam, topCoachings){
         
+            
+            
+            
             $scope.exam = thisExam.data;
             $scope.topCoachings = topCoachings.data;
             $scope.stream = $scope.exam.stream;
             
+            console.log($scope.exam);
+            
+            var tcURL = "https://www.exambazaar.com/reviews/" + $scope.exam.top_coaching_urlslug;
+            $scope.canonicalFlip = true;
+            $scope.canonicalUrl = tcURL;
+            console.log("Canonical URL is: " + $scope.canonicalUrl);
             //console.log($scope.exam);
             //$scope.stream = thisStream.data;
             

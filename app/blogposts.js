@@ -441,6 +441,8 @@ router.get('/topCoachingByTCUrlslug/:top_coaching_urlslug', function(req, res) {
                 .find({active: true, exams:examId, blogSeries: 'Expert Reviews'}, {urlslug:1, title: 1, coachingGroups: 1})
                 .exec(function (err, examblogposts) {
                     if (!err){
+                        
+                    if(examblogposts && examblogposts.length > 0){    
                     var allowed = ['_id', 'title', 'coachingGroups', 'urlslug'];    
                     var nBlogs = examblogposts.length;
                     var bCounter = 0;
@@ -478,6 +480,10 @@ router.get('/topCoachingByTCUrlslug/:top_coaching_urlslug', function(req, res) {
                     });
 
 
+                    }else{
+                        res.json([]);
+                    }    
+                        
                     } else {throw err;}
                 });
             }else{

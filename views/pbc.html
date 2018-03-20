@@ -46,6 +46,14 @@
         background-position: center center;
         background-repeat: no-repeat;
     }
+    .blogHeaderxs{
+        min-height: 60vh;
+        width:100%;
+        position: relative;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
     .blogContent{
         text-align: left;
     }
@@ -63,7 +71,7 @@
 </div>
 
 <div layout="column" layout-align="start start" class="textBlack whiteBackground p0baseFont width100">
-    <div layout="row" layout-align="center center" class="width100 blogHeader" ng-style="{'background-image':'url(images/pbc/pbc-banner-1.jpg)'}">
+    <div hide-xs layout="row" layout-align="center center" class="width100 blogHeader" ng-style="{'background-image':'url(images/pbc/landing_page.jpg)'}">
         <!--<div layout="row" layout-align="center center" class="width100">
         <div flex-xs="100" flex-gt-xs="80" layout="column" layout-align="center center" class="padding20 text-white text-center ">
             <div layout="column" layout-align="center center" id="blogPostHeader" class="transaprentBackground padding20">
@@ -76,6 +84,8 @@
             
         </div>
         </div>-->
+    </div>
+    <div hide-gt-xs layout="row" layout-align="center center" class="width100 blogHeaderxs" ng-style="{'background-image':'url(images/pbc/landing_page_mobile.jpg)'}">
     </div>
     
     <div layout="row" layout-align="center center" class="width100">
