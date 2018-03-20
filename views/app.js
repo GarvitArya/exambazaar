@@ -21288,8 +21288,12 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
 
     }]); 
     exambazaar.controller("assessmentController", 
-    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', 'moment', '$mdSidenav', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments, moment, $mdSidenav){
-            
+    [ '$scope', '$rootScope', '$state', '$stateParams', '$cookies', '$mdDialog', '$timeout', 'questionService', 'questionresponseService', 'questionreporterrorService', 'qmarkforreviewService', 'qviewService', 'assessmentService', 'UserService', 'testService', 'thistest', 'thistestExam', 'thisTestQuestions', 'Notification', '$window', 'screenSize', 'viewService', '$location', 'Socialshare', 'recentAssessments', 'moment', '$mdSidenav', '$document', function($scope, $rootScope, $state, $stateParams, $cookies, $mdDialog, $timeout, questionService, questionresponseService, questionreporterrorService, qmarkforreviewService, qviewService, assessmentService, UserService, testService, thistest, thistestExam, thisTestQuestions, Notification, $window, screenSize, viewService, $location, Socialshare, recentAssessments, moment, $mdSidenav, $document){
+        
+        $scope.buyForm = function(){
+            var someElement = angular.element(document.getElementById('buyForm'));
+            $document.scrollToElement(someElement, -200, 1000);    
+        };
         $scope.congratulationsMessage = null;
         $scope.sorryMessage = null;
         $scope.userRatingFeedbacks = [
@@ -22089,14 +22093,14 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                 };
                 assessmentService.userevaluate(assessmentForm).success(function (adata, status, headers) {
                     
-                    
+                    $scope.userAssessment = adata;
                     Notification.success({message: "Thank you, all done!",  positionY: 'top', positionX: 'right', delay: 1000});
                     $scope.userAssessment = adata;
                     
                     
                     $scope.testOver = false;
                     $scope.testStarted = false;
-                    $scope.userevaluate();
+                    //$scope.userevaluate();
 
                     if($scope.userAssessment){
                         $scope.testStarted = true;
@@ -22169,7 +22173,7 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                     Notification.warning({message: "Something went wrong!",  positionY: 'top', positionX: 'right', delay: 1000});
                     console.log('Error ' + data + ' ' + status);
                 });
-            }
+            };
             $scope.$watch('userAssessment', function (newValue, oldValue, scope) {
                 if(newValue != null && newValue.evaluation.score){
                     
@@ -22203,16 +22207,17 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
                         }
                     }
                     if($scope.userAssessment.evaluation.percentageScore){
-                        $scope.userAssessment.evaluation.percentageScore = Number($scope.userAssessment.evaluation.percentageScore);
+                        $scope.userAssessment.evaluation.percentageScore = Math.round(Number($scope.userAssessment.evaluation.percentageScore));
                         
-                        if($scope.userAssessment.test == '5aae0cae3bacc109b0907d30'){
+                        if($scope.userAssessment.test == '5aae0cae3bacc109b0907d30' || $scope.userAssessment.test._id == '5aae0cae3bacc109b0907d30'){
+                            
                             if($scope.userAssessment.evaluation.percentageScore >= 75){
-                                $scope.congratulationsMessage = "Congratulations! You have earned a 25% discount on fees at Pooja Bansal Classes, Jaipur for Bull's Eye and Acme course 2018-2020. We have sent you an email with your coupon code and other details!";
+                                $scope.congratulationsMessage = "You have earned a 25% discount on fees at Pooja Bansal Classes, Jaipur";
                             }else if($scope.userAssessment.evaluation.percentageScore >= 60){
-                                $scope.congratulationsMessage = "Congratulations! You have earned a 10% discount on fees at Pooja Bansal Classes, Jaipur for Bull's Eye and Acme course 2018-2020. We have sent you an email with your coupon code and other details!";
+                                $scope.congratulationsMessage = "You have earned a 10% discount on fees at Pooja Bansal Classes, Jaipur";
                                 
                             }else{
-                                $scope.sorryMessage = "You have earned a 40% discount only on the admission form for Pooja Bansal Classes, Jaipur! Discounts on fees are only applicable if you score > 60% in the Exambazaar PBC Test. Please write PB-CAT on the schedules dates!";
+                                $scope.sorryMessage = "You have earned a 40% discount only on registration for Pooja Bansal Classes, Jaipur! Discounts on fees are only applicable if you score > 60% in the Exambazaar PBC Test. Please write PB-CAT on the scheduled dates!";
                                 
                             }
                         }
@@ -22613,16 +22618,54 @@ var exambazaar = angular.module('exambazaar', ['angular-clipboard','angular-goog
     }]);
     
     exambazaar.controller("pbcController", 
-        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'Notification', '$location', '$state', function($scope, $rootScope, $cookies, UserService, admissionService, Notification, $location, $state){
+        [ '$scope', '$rootScope', '$cookies', 'UserService', 'admissionService', 'viewService', 'Notification', '$location', '$state', function($scope, $rootScope, $cookies, UserService, admissionService, viewService, Notification, $location, $state){
             if($cookies.getObject('sessionuser')){
             var sessionuser = $cookies.getObject( 'sessionuser');
             if(sessionuser && sessionuser._id){
                 UserService.getUserBasic(sessionuser._id).success(function (data, status, headers) {
                     $scope.user = data;
                     $scope.signup = data;
+                    
+                    var viewForm = {
+                        state: $state.current.name,
+                        claim: false
+                    };
+                    if($scope.user && $scope.user.userId){
+                        viewForm.user = $scope.user.userId
+                    }
+                    //console.log(JSON.stringify(viewForm));
+                    if($cookies.getObject('ip')){
+                        var ip = $cookies.getObject('ip');
+                        viewForm.ip = ip;
+                    }
+                    viewService.saveview(viewForm).success(function (data, status, headers) {
+                        //console.log('View Marked');
+                    })
+                    .error(function (data, status, header, config) {
+                        console.log();
+                    });
+                    
                 });
             }
             }else{
+                var viewForm = {
+                    state: $state.current.name,
+                    claim: false
+                };
+                if($scope.user && $scope.user.userId){
+                    viewForm.user = $scope.user.userId
+                }
+                //console.log(JSON.stringify(viewForm));
+                if($cookies.getObject('ip')){
+                    var ip = $cookies.getObject('ip');
+                    viewForm.ip = ip;
+                }
+                viewService.saveview(viewForm).success(function (data, status, headers) {
+                    //console.log('View Marked');
+                })
+                .error(function (data, status, header, config) {
+                    console.log();
+                });
                 
             }
             $scope.startPBCTest = function(){

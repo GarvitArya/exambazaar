@@ -1,5 +1,5 @@
 <style>
-    input[type="text"], input[type="number"]
+    input[type="text"], input[type="number"],input[type="email"]
     {
         padding: 5px;
         font-size: 13px;
@@ -7,9 +7,10 @@
         border: solid 1px #ccc;
         transition: box-shadow 0.3s, border 0.3s;
         box-shadow: 0 0 5px 1px white;
+        margin-bottom: 5px;
     }
     
-    input[type="text"]:hover,input[type="text"]:focus, input[type="number"]:hover, input[type="number"]:focus{
+    input[type="text"]:hover,input[type="text"]:focus, input[type="number"]:hover, input[type="number"]:focus, input[type="email"]:hover, input[type="email"]:focus{
         padding: 5px;
         font-size: 13px;
         border: solid 1px #333333;
@@ -270,7 +271,14 @@
     .summarySection{
         background: #F1FFFA;
     }
-    
+    .coupon{
+        border: 3px dashed #bcbcbc;
+        border-radius: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
     
     
 </style>
@@ -521,7 +529,7 @@
             </div>
         </div>
 
-        <div flex-xs="100" hide-gt-xs layout="row" layout-align="center start"  ng-if="testOver">
+        <div flex-xs="100" hide-gt-xs layout="row" layout-align="center start"  ng-if="testOver && test._id != '5aae0cae3bacc109b0907d30'" >
             <div flex="90" layout="column" layout-align="center start" class="">
             <div flex layout="column" layout-align="start center " class=" paddingTB20 width100">
                 
@@ -634,6 +642,275 @@
             </div>    
         </div>
 
+        <div flex-xs="100" flex-gt-xs="{{pageWidth}}" layout="row" layout-align="center start"  ng-if="testOver && test._id == '5aae0cae3bacc109b0907d30'" class="paddingT20 paddingB40 marginB40 whiteBackground">
+            <div flex="90" layout="column" layout-align="center start" class="">
+            <div layout-xs="column" layout-align="center center" class="width100 marginB20 paddingB20 gainsboroBottomBorder" >
+                <div class="">
+                    <img src="images/pbc/ribbon.png" class="height80px paddingT10" ng-if="congratulationsMessage"/>
+                    <img src="images/pbc/pencil.png" class="height80px paddingT10" ng-if="sorryMessage"/>
+                </div>
+                <div layout="column" layout-align="center center" class="text-center" ng-if="congratulationsMessage">
+                    <div class="pageTitleFont">Congratulations!</div>
+                    <div class="h2Font">{{congratulationsMessage}}</div>
+                    <div class="baseFont">Bull's Eye & Acme, 2018 - 2020 (Xth to XIth moving). We have sent you an email with your coupon code and other details!</div>
+                    <div layout-xs="column" layout-align="center center" class=" marginT20" ng-if="userAssessment.pbc.coupon">
+                        <div class="coupon">Coupon Code: {{userAssessment.pbc.coupon}}</div>
+                        <div layout="column" layout-align="center center" flex class="paddingLR20 smallFont">
+                            <div>* To avail your discount at Pooja Bansal Classes, you need to register within 7 days of taking the test!</div>
+                            <div class="paddingLR10 baseFont bold marginT20">
+                                <a ng-click="buyForm()" id="link">Register Now for 40% off</a>    
+                                
+                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div layout="column" layout-align="center center" class="paddingLR20 text-center" ng-if="sorryMessage">
+                    <div class="pageTitleFont">Oops!</div>
+                    <div class="baseFont">{{sorryMessage}}</div>
+                    <div layout="row" layout-align="start start" class="marginT20">
+                        <div class="baseFont bold">
+                            <a ng-click="buyForm()" id="link">Register Now for 40% off</a>    
+
+
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>    
+                
+                
+            <div layout="column" layout-align="center start" class="width100 min90vh whiteBackground">
+                
+                
+            <div hide-gt-xs flex-xs="100" layout="column" layout-align="start start " class="paddingTB10 width100 whiteBackground">
+                <h1 class="h1Font width100 marginB20 gainsboroBottomBorder paddingB10">
+                    {{userAssessment.info.name}}
+                </h1>
+                <div class="width100 h3Font">Score: <span class="bold">{{userAssessment.evaluation.score}}</span> out of {{test.maxScore}} (Percentage: {{userAssessment.evaluation.percentageScore}}%)</div>
+                
+                <div layout="column" layout-align="start start" class=" paddingTB5 width100" >
+                    <div layout="column" layout-align="center center" class="width100 paddingTB10 paddingLR20 exact20h smallFont" id="legendBox">
+                        <div layout="row" layout-align="center center" class="width100 paddingTB5">
+                            <div flex layout="row" layout-align="center center" class="">
+                                <div flex="25" >
+                                    <div class="legendTag correctTag" layout="row" layout-align="center center">{{userAssessment.evaluation.questions.correct}}</div>
+
+                                </div>
+                                <div flex class="paddingL5 font10">Correct</div>
+                            </div>
+                            <div flex>
+                            <div flex layout="row" layout-align="center center">
+                                <div flex="25">
+                                    <div class="legendTag incorrectTag" layout="row" layout-align="center center">{{userAssessment.evaluation.questions.incorrect}}</div>
+                                </div>
+                                <div flex class="paddingL5 font10">Incorrect</div>
+                            </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="center center" class="width100 paddingTB5">
+                            <div flex layout="row" layout-align="center center" class="">
+                                <div flex="25">
+                                    <div class="legendTag seenTag" layout="row" layout-align="center center">{{userAssessment.evaluation.questions.attemped}}</div>
+                                </div>
+                                <div flex class="paddingL5 font10">Attempted</div>
+                            </div>
+                            <div flex>
+                            <div flex layout="row" layout-align="center center">
+                                <div flex="25">
+                                    <div class="legendTag" layout="row" layout-align="center center">{{userAssessment.evaluation.questions.unattemped}}</div>
+
+                                </div>
+                                <div flex class="paddingL5 font10">Not Attempted</div>
+                            </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                
+                <div layout="column" layout-align="start start" class=" paddingTB5 width100 smallFont" >
+            
+                    <div class="width100">Correct: {{userAssessment.evaluation.questions.correct}} / {{userAssessment.evaluation.questions.total}}</div>
+                    <div class="width100">Accuracy: {{userAssessment.evaluation.accuracy}}%</div>
+                    <div class="width100">Attempted: {{userAssessment.evaluation.questions.attemptedPercentage}}%</div>
+                </div>
+            </div>
+            
+            <div hide-gt-xs flex-xs="100" layout="column" layout-align="start center " class="paddingT10 width100">
+                
+                
+                <div layout="column" layout-align="center center" class="textBlack whiteBackground secondFont font13 width100" ng-controller="pbcAdmissionController">
+                
+                <div layout="column" layout-align="center start" class="width100">
+
+
+                <div layout="row" layout-align="center start" class="width100" id="buyForm">
+                    <!--<div hide-xs flex-gt-xs="25" layout="row" layout-align="end start">
+                        <img src="images/pbc/pooja-bansal-classes-jaipur.jpg" class="maxWidth100"/>
+                    </div>-->
+                    <div flex class="">
+                        <h1 class="h1Font width100 marginB20 gainsboroBottomBorder paddingB10">
+                            Registration for Pooja Bansal Classes, Jaipur
+                        </h1>
+                        <div class="smallFont marginTB10" ng-if="!userAdmit.payment.payment_id">
+                        Exambazaar offers a 40% discount on registration cost of Rs 500. However, no such discount can be availed if the form is directly bought at the centre.
+                        </div>
+                        <div layout="column" layout-align="center center" class="width100" ng-show="!userAdmit.payment.payment_id || forceShowForm" ng-disabled="userAdmit.payment.payment_id">
+                        <div layout="row" layout-align="start center" class="width100 ">
+                            <div flex="{{col1}}" class="column1 subBaseFont textGray">
+                                Name
+                            </div>
+                            <div flex class="column2">
+                                <input type="text" class="width100" ng-model="admissionForm.name" placeholder="Full Name">
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="width100 ">
+                            <div flex="{{col1}}" class="column1 subBaseFont textGray">
+                                Course
+                            </div>
+                            <div flex class="column2">
+                                <input type="text" class="width100" ng-model="admissionForm.course" placeholder="Course Name" disabled>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="width100 ">
+                            <div flex="{{col1}}" class="column1 subBaseFont textGray">
+                                Email
+                            </div>
+                            <div flex class="column2">
+                                <input type="email" class="width100" ng-model="admissionForm.email" placeholder="Email Address">
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="width100 ">
+                            <div flex="{{col1}}" class="column1 subBaseFont textGray">
+                                Mobile
+                            </div>
+                            <div flex class="column2">
+                                <input type="text" class="width100" ng-model="admissionForm.mobile" placeholder="Mobile Number" only-digits>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="width100 marginB5">
+                            <div flex="{{col1}}" class="column1 subBaseFont textGray">
+                                Date of Birth
+                            </div>
+                            <div flex class="column2">
+                                <md-datepicker ng-model="admissionForm.dob" md-placeholder="Date of Birth"></md-datepicker>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="width100 marginB5">
+                            <div flex="{{col1}}" class="column1 subBaseFont textGray">
+                                Gender
+                            </div>
+                            <div flex class="column2">
+                                <md-select ng-model="admissionForm.gender" placeholder="Select Your Gender" class="margin0 font14">
+                                    <md-option ng-repeat="gender in userVariables.genders" ng-value="gender" class="font14">
+                                    {{gender}}
+                                    </md-option>
+                                </md-select>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="width100 marginB5">
+                            <div flex="{{col1}}" class="column1 subBaseFont textGray">
+                                Category
+                            </div>
+                            <div flex class="column2">
+                                <md-select ng-model="admissionForm.category" placeholder="Select Your Category" class="margin0 font14">
+                                    <md-option ng-repeat="category in userVariables.categories" ng-value="category" class="font14">
+                                    {{category}}
+                                    </md-option>
+                                </md-select>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start start" class="width100 ">
+                            <div flex="{{col1}}" class="column1 subBaseFont textGray">
+                                Address
+                            </div>
+                            <div layout="column" layout-align="start start" flex class="column2">
+                                <input type="text" class="width100" ng-model="admissionForm.address.line" placeholder="Address">
+                                <div layout="row" layout-align="start start" class="width100 paddingTB5">
+                                    <div flex class="paddingR5">
+                                        <input type="text" class="width100" ng-model="admissionForm.address.city" placeholder="City">
+                                    </div>
+                                    <div flex class="paddingL5">
+                                        <input type="text" class="width100 paddingL10" ng-model="admissionForm.address.state" placeholder="State">
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center" class="width100 ">
+                            <div flex="{{col1}}" class="column1 subBaseFont textGray">
+                                School Name
+                            </div>
+                            <div flex class="column2">
+                                <input type="text" class="width100" ng-model="admissionForm.school" placeholder="School Name">
+                            </div>
+                        </div>
+
+                        </div>
+
+                        <div layout="row" layout-align="start center" class="width100 marginT10 marginB40">
+                            <md-button class="md-next md-medium font16 tolowercase margin0 width100" ng-click="submitAdmissionHelper()" ng-if="!userAdmit.payment.payment_id">
+                                Register Now for Rs 300
+                            </md-button>
+                            <md-button class="md-saveNext md-medium font16 tolowercase margin0 width100" ng-if="userAdmit.payment.payment_id" ng-disabled>
+                                <i class="fa fa-check-circle marginR10" aria-hidden="true"></i> Already Bought
+                            </md-button>
+                        </div>
+
+
+
+
+                        <!--<a ng-click="pbcAdmission()">Test</a>-->
+                        <!--<a href="https://www.instamojo.com/@exambazaar/la7288d286daa49b584bcde983570d6be/" rel="im-checkout" data-behaviour="remote" data-style="flat" data-text="Buy Admission Form">Buy Admission Form</a>-->
+
+
+
+                        <div layout="column" layout-align="start center" class="paddingLR20 font12 danger width100 marginTB10">
+                            <div layout="row" layout-align="start start" ng-repeat="startError in startErrors" class="width100">{{$index+1}}. {{startError}}
+                            </div>
+                        </div>
+                        <div layout="column" layout-align="start center" class="width100 marginTB10 greyBorder padding10" ng-if="userAdmit.payment.payment_id">
+                            <div class="width100 h2Font">Next Steps</div>
+                            <div layout="column" layout-align="start center" class="width100 basicFont">
+                                <div class="width100">
+                                    1. <a href="https://www.google.com/maps?ll=26.91058,75.808644&z=19&t=m&hl=en-GB&gl=IN&mapclient=embed&q=39,+Lajpat+Marg+C-Scheme,+Sangram+Colony,+Ashok+Nagar+Jaipur,+Rajasthan+302001" target="_blank" id="link">Visit Pooja Bansal Classes</a> with a print out of the email & coupon code
+                                </div>
+                                <div class="width100">
+                                2. Enrol yourself by paying the discounted fees
+                                </div>
+                                <div class="width100">
+                                3. In case of any queries, please feel free to connect with us at always@exambazaar.com or call us at +91-9587571215.
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            </div>
+                
+                
+                
+            </div>
+                
+                
+            
+                
+            </div>    
+            </div>    
+        </div>
+        
+        
+        
+        
         <div flex-xs="90" hide-gt-xs layout="column" layout-align="center start" class="blogFont paddingTB20" ng-if="!testStarted">
             
             <div layout="column" layout-align="start center" class="paddingLR10 width100">
@@ -680,7 +957,7 @@
                     </md-button>
                 </div>
             </div> 
-            <div layout="column" layout-align="start center" class="paddingL20 font14 danger width100  ">
+            <div layout="column" layout-align="start center" class="paddingLR20 font14 danger width100  ">
                 <div layout="row" layout-align="start start" ng-repeat="startError in startErrors">{{$index+1}}. {{startError}}
                 </div>
             </div>    

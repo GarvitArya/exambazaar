@@ -45,7 +45,12 @@ var assessmentSchema = mongoose.Schema({
         percentageScore: {type: String},
         accuracy: {type: String},
         _created: { type: Date, default: Date.now },
-    },                           
+    },
+    pbc:{
+        coupon: {type: String},
+        discountPercent: {type: String},
+        _created: { type: Date, default: Date.now },
+    }
 });
 assessmentSchema.plugin(deepPopulate);
 module.exports = mongoose.model('assessment', assessmentSchema);

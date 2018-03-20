@@ -667,7 +667,7 @@ var fromEmail = {
      
     
     var limit = 500;
-    var skip = 11500;
+    var skip = 12500;
     var allSchools = school
     .find({ "data.email": {$exists: true}, "data.email": {$ne: ""}}, { data: 1 })
     //.limit(1)

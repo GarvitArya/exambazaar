@@ -11,6 +11,10 @@ var qmarkforreview = require('../app/models/qmarkforreview');
 var qview = require('../app/models/qview');
 var question = require('../app/models/question');
 var cisaved = require('../app/models/cisaved');
+var sendGridCredential = require('../app/models/sendGridCredential');
+var helper = require('sendgrid').mail;
+var email = require('../app/models/email');
+
 var mongoose = require('mongoose');
 
 var moment = require('moment');
@@ -304,806 +308,1050 @@ router.post('/userevaluate', function(req, res) {
     if(thisAssessment._id){
         assessmentId = thisAssessment._id.toString();
     }
-    if(assessmentId){
-        var existingAssessment = assessment
-        .findOne({_id: assessmentId})
-        .deepPopulate('test')
-        .exec(function (err, existingAssessment) {
-            
-        if (!err){
-            if(existingAssessment){
-                var testId = existingAssessment.test._id.toString();
-                var testSimulate = existingAssessment.test.simulate;
-                
-                var solutionKey = [];
-                var testQuestions = question
-                    .find({test: testId}, {questions: 1})
-                    .deepPopulate('questions')
-                    .exec(function (err, testQuestions) {
-                    if(testQuestions){
-                    var nQuestions = 0;   
-                    var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
-                        
-                    var counter = 0;
-                        
-                    testQuestions.forEach(function(thisQuestion, qIndex){
-                        nQuestions += thisQuestion.questions.length;
-                    });
-                     testQuestions.forEach(function(thisQuestion, qIndex){
-                    var questionId = thisQuestion._id;
-                    thisQuestion.questions.forEach(function(subQuestion, sIndex){
-                        var subQuestionId = subQuestion._id;
-                        var correctOptionId = null;
-                        var correctNumericalAnswers = null;
-                       
-                        if(subQuestion.type == 'mcq'){
-                            if(subQuestion.mcqma){
-                            var thisKey = {
-                                question: questionId.toString(),
-                                subquestion: subQuestionId.toString(),
-                                marking: subQuestion.marking,
-                                type: subQuestion.type,
-                                mcqma: subQuestion.mcqma,
-                                options: [],
+    
+    var existingUser = user.findOne({_id: thisAssessment.user}, {basic: 1, mobile: 1, email: 1},function (err, existingUser) {
+        if(assessmentId){
+            var existingAssessment = assessment
+            .findOne({_id: assessmentId})
+            .deepPopulate('test')
+            .exec(function (err, existingAssessment) {
+
+            if (!err){
+                if(existingAssessment){
+                    var testId = existingAssessment.test._id.toString();
+                    var testSimulate = existingAssessment.test.simulate;
+
+                    var solutionKey = [];
+                    var testQuestions = question
+                        .find({test: testId}, {questions: 1})
+                        .deepPopulate('questions')
+                        .exec(function (err, testQuestions) {
+                        if(testQuestions){
+                        var nQuestions = 0;   
+                        var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
+
+                        var counter = 0;
+
+                        testQuestions.forEach(function(thisQuestion, qIndex){
+                            nQuestions += thisQuestion.questions.length;
+                        });
+                         testQuestions.forEach(function(thisQuestion, qIndex){
+                        var questionId = thisQuestion._id;
+                        thisQuestion.questions.forEach(function(subQuestion, sIndex){
+                            var subQuestionId = subQuestion._id;
+                            var correctOptionId = null;
+                            var correctNumericalAnswers = null;
+
+                            if(subQuestion.type == 'mcq'){
+                                if(subQuestion.mcqma){
+                                var thisKey = {
+                                    question: questionId.toString(),
+                                    subquestion: subQuestionId.toString(),
+                                    marking: subQuestion.marking,
+                                    type: subQuestion.type,
+                                    mcqma: subQuestion.mcqma,
+                                    options: [],
+                                };
+                                subQuestion.options.forEach(function(thisOption, oIndex){
+                                if(thisOption._correct){
+                                    correctOptionId = thisOption._id.toString();
+                                    thisKey.options.push(correctOptionId);
+
+
+                                    counter += 1;
+                                    if(oIndex == subQuestion.options.length - 1){
+                                        solutionKey.push(thisKey);
+                                    }
+                                }    
+                                });    
+
+
+                                }else{
+                                subQuestion.options.forEach(function(thisOption, oIndex){
+                                if(thisOption._correct){
+                                    correctOptionId = thisOption._id;
+
+                                    var thisKey = {
+                                        question: questionId.toString(),
+                                        subquestion: subQuestionId.toString(),
+                                        marking: subQuestion.marking,
+                                        type: subQuestion.type,
+                                        option: correctOptionId.toString(),
+                                    };
+                                    solutionKey.push(thisKey);
+                                    counter += 1;
+                                }
+
+
+                                });
+
+
+                                }
+
+                            }
+
+                            if(subQuestion.type == 'numerical'){
+
+                                if(subQuestion.numericalAnswerType == 'Exact'){
+                                    correctNumericalAnswers = subQuestion.numericalAnswers;
+                                    var thisKey = {
+                                        question: questionId.toString(),
+                                        subquestion: subQuestionId.toString(),
+                                        marking: subQuestion.marking,
+                                        type: subQuestion.type,
+                                        numericalAnswerType: subQuestion.numericalAnswerType,
+                                        numericalAnswers: correctNumericalAnswers,
+                                    };
+                                    solutionKey.push(thisKey);
+                                    counter += 1;
+                                }else if (subQuestion.numericalAnswerType == 'Range'){
+                                    numericalAnswerRange = subQuestion.numericalAnswerRange;
+                                    var thisKey = {
+                                        question: questionId.toString(),
+                                        subquestion: subQuestionId.toString(),
+                                        marking: subQuestion.marking,
+                                        type: subQuestion.type,
+                                        numericalAnswerType: subQuestion.numericalAnswerType,
+                                        numericalAnswerRange: numericalAnswerRange,
+                                    };
+                                    solutionKey.push(thisKey);
+                                    counter += 1;
+                                }
+
+                            }
+
+                            if(counter == nQuestions){
+
+
+                            var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
+                            if(userresponses){
+
+
+
+
+                            var correct = [];    
+                            var incorrect = [];    
+
+                            var solutionKeyQuestionIds =  solutionKey.map(function(a) {return a.question;});
+                            var solutionKeySubQuestionIds =  solutionKey.map(function(a) {return a.subquestion;});
+                            var pivoteduserresponses = [];
+
+                            userresponses.forEach(function(thisResponse, rIndex){
+                                var sqIds = [];
+                                if(pivoteduserresponses.length > 0){
+                                    sqIds = pivoteduserresponses.map(function(a) {return a.subquestion.toString();});
+                                }
+                                var thisIndex = sqIds.indexOf(thisResponse.subquestion.toString());
+                                if(thisIndex == -1){
+                                var newResponse = {
+                                    option: thisResponse.option,
+                                    subquestion: thisResponse.subquestion,
+                                    question: thisResponse.question,
+                                    user: thisResponse.user,
+                                };
+                                if(newResponse){
+                                    newResponse.numericalAnswer = thisResponse.numericalAnswer;
+                                }
+                                pivoteduserresponses.push(newResponse);
+                                }else{
+                                if(!pivoteduserresponses[thisIndex].options){
+                                    pivoteduserresponses[thisIndex].options = [pivoteduserresponses[thisIndex].option];
+                                }
+                                pivoteduserresponses[thisIndex].options.push(thisResponse.option);
+                                }
+
+
+                            });    
+                            //abcd1234
+
+                            var attempted = pivoteduserresponses.length;
+                            var unattempted = nQuestions - attempted;
+                            pivoteduserresponses.forEach(function(thisResponse, rIndex){
+
+                            var thisQuestionId = thisResponse.question.toString();
+                            var thisSubQuestionId = thisResponse.subquestion.toString();
+
+                            var k1Index = solutionKeyQuestionIds.indexOf(thisQuestionId);
+                            var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
+
+                            if(k2Index != -1){
+                            var subQuestionType = solutionKey[k2Index].type;
+                            var subQuestionMCQMA = solutionKey[k2Index].mcqma;
+                            var subQuestionMarking = solutionKey[k2Index].marking;
+
+                            var thisPair = {
+                                questionId: thisQuestionId,
+                                //question: question,
+                                //subquestionId: thisSubQuestionId,
+
+
+                                subquestion: thisSubQuestionId,
+                                subQuestionType: subQuestionType,
+                                marking: subQuestionMarking,
+                                //userresponse: thisResponse,
                             };
-                            subQuestion.options.forEach(function(thisOption, oIndex){
-                            if(thisOption._correct){
-                                correctOptionId = thisOption._id.toString();
-                                thisKey.options.push(correctOptionId);
+                            if(subQuestionType == 'mcq'){
+                                if(subQuestionMCQMA){
+
+                                    var thisOptions = [];
+                                    if(thisResponse.options){
+                                        thisOptions = thisResponse.options;
+                                    }else if(thisResponse.option){
+                                        thisOptions = [thisResponse.option];
+                                    }
+                                    var answerKeyOptions = [];
+
+                                    if(solutionKey[k2Index].options){
+                                        answerKeyOptions = solutionKey[k2Index].options;
+                                    }else if(solutionKey[k2Index].option){
+                                        answerKeyOptions = [solutionKey[k2Index].option];
+                                    }
+                                    var exactMatch = true;
+                                    if(thisOptions.length != answerKeyOptions.length){
+                                        exactMatch = false;
+                                    }
+                                    thisOptions.forEach(function(thisUserOption, aIndex){
+                                        var oIndex = answerKeyOptions.indexOf(thisUserOption.toString());
+                                        if(oIndex == -1){
+                                            exactMatch = false;
+                                        }else{
+                                            answerKeyOptions.splice(oIndex, 1);
+                                        }
+                                    });
+
+                                    if(answerKeyOptions.length > 0){
+                                        exactMatch = false;
+                                    }
+
+                                    if(exactMatch && thisOptions.length > 0){
+                                        correct.push(thisPair);
+                                    }else if(!exactMatch && thisOptions.length > 0){
+                                        incorrect.push(thisPair);
+                                    }
+
+
+
+                                }else{
+                                    var thisOptionId = null;
+                                    if(thisResponse.option){
+                                        thisOptionId = thisResponse.option.toString();
+
+                                        if(thisOptionId == solutionKey[k2Index].option){
+
+                                            correct.push(thisPair);
+                                        }else{
+                                            incorrect.push(thisPair);
+                                        }
+                                    }
+
+
+                                }
+
+
+                            }else if (subQuestionType == 'numerical'){
+                                var thisNumericalAnswer = null;
+                                if(thisResponse.numericalAnswer){
+                                    thisNumericalAnswer = Number(thisResponse.numericalAnswer);
+                                    var numericalType = solutionKey[k2Index].numericalAnswerType;
+
+                                    if(numericalType == 'Exact'){
+                                        var correctResponse = false;
+                                        var numericalAnswers = solutionKey[k2Index].numericalAnswers;
+                                        numericalAnswers.forEach(function(thisAnswer, aIndex){
+                                            if(thisNumericalAnswer == Number(thisAnswer)){
+                                                correctResponse = true;
+                                            }
+                                        });
+
+                                        if(correctResponse){
+                                            correct.push(thisPair);
+                                        }else{
+                                            incorrect.push(thisPair);
+                                        }
+                                    }else if(numericalType == 'Range'){
+                                        var numericalAnswerRange = solutionKey[k2Index].numericalAnswerRange;
+                                        var minRange = Number(numericalAnswerRange.min);
+                                        var maxRange = Number(numericalAnswerRange.max);
+
+                                        if(thisNumericalAnswer >= minRange && thisNumericalAnswer <= maxRange){
+                                            correct.push(thisPair);
+                                        }else{
+                                            incorrect.push(thisPair);
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                            }else{
+                                console.log('SOMETHING WENT VERY WRONG!!!');
+                            }
+
+
+
+
+
+                            });
+
+                            var correctAnswers = correct.length;
+                            var incorrectAnswers = incorrect.length;
+
+                            console.log('Attempted: ' + attempted);
+                            console.log('Unattempted: ' + unattempted);
+                            console.log('Correct: ' + correctAnswers);
+                            console.log('Incorrect: ' + incorrectAnswers);
+                            var score = 0;
+
+                            correct.forEach(function(thisSubQuestionAttempt, aIndex){
+                                var correctScore = 3;
+                                var incorrectScore = -1;
+                                if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.correct){
+                                    correctScore = Number(thisSubQuestionAttempt.marking.correct);
+                                }
+                                if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.incorrect){
+                                    incorrectScore = Number(thisSubQuestionAttempt.marking.incorrect);
+                                }
+
+                                score += correctScore;
+                            });
+                            incorrect.forEach(function(thisSubQuestionAttempt, aIndex){
+                                var correctScore = 3;
+                                var incorrectScore = -1;
+                                if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.correct){
+                                    correctScore = Number(thisSubQuestionAttempt.marking.correct);
+                                }
+                                if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.incorrect){
+                                    incorrectScore = Number(thisSubQuestionAttempt.marking.incorrect);
+                                }
+
+                                score += incorrectScore;
+                            });
+                            score = Math.round(score * 100) / 100;
+                            console.log('Score is: ' + score);
+
+                            var accuracy = 0;
+                            if(attempted > 0){
+                               accuracy = Math.round(100*correctAnswers / attempted, 2);
+                            }
+                            var attemptedPercentage = Math.round(100 * attempted / (attempted + unattempted));     
+                            var percentageScore = 0;
+                            if(existingAssessment.test.maxScore){
+                                percentageScore = Number( 100 * score / existingAssessment.test.maxScore);
+                            }    
+
+                            var evaluation = {
+                                questions:{
+                                    attemped: attempted,
+                                    unattemped: unattempted,
+                                    correct: correctAnswers,
+                                    incorrect: incorrectAnswers,
+                                    total: correctAnswers + incorrectAnswers,
+                                    attemptedPercentage: attemptedPercentage,
+
+                                },
+                                marked:{
+                                    correct: correct,
+                                    incorrect: incorrect,
+                                },
+                                score: score,
+                                percentageScore: percentageScore,
+                                accuracy: accuracy,
+
+                            };
+
+                            existingAssessment.evaluation = evaluation;
+                            existingAssessment.submitted = true;
+                            existingAssessment._submit = moment();
+                            
+                            if(testId == '5aae0cae3bacc109b0907d30'){
+                                if(percentageScore >= 75){
+                                var coupon = "25";
+                                    if(existingUser.basic.name){
+                                        coupon += existingUser.basic.name.substring(0,4).toUpperCase();
+                                    }
+                                    if(existingUser.mobile){
+                                        coupon += existingUser.mobile.substring(0,4);
+                                    }
+                                    existingAssessment.pbc = {
+                                        coupon: coupon,
+                                        discountPercent: '25',
+                                    };
+                                }else if(percentageScore >= 60){
+                                    var coupon = "10";
+                                    if(existingUser.basic.name){
+                                        coupon += existingUser.basic.name.substring(0,4).toUpperCase();
+                                    }
+                                    if(existingUser.mobile){
+                                        coupon += existingUser.mobile.substring(0,4);
+                                    }
+                                    existingAssessment.pbc = {
+                                        coupon: coupon,
+                                        discountPercent: '10',
+                                    };
+                                }
+                            }
+                            existingAssessment.save(function(err, existingAssessment){
+                                if (err) return console.error(err);
+                                console.log('Assessment saved: ' + existingAssessment._id);
                                 
-                                
-                                counter += 1;
+                                if(testId == '5aae0cae3bacc109b0907d30' && percentageScore >= 60){
+                                    console.log('Sending PBC Email 1');
+                                    sendPBCEmail(existingAssessment);
+                                }
+                                res.json(existingAssessment);
+                            });    
+
+                            }else{
+                                res.json(null);
+                            }
+                            });
+
+
+                            }     
+                        });
+
+                        });
+
+                        }else{
+                            res.json(null);
+                        }
+                    });
+                }else{
+                    res.json(null);
+                }
+            } else {throw err;}
+        });
+        }else{
+        var existingAssessment = assessment
+            .findOne({user: thisAssessment.user, test: thisAssessment.test})
+            .deepPopulate('test')
+            .exec(function (err, existingAssessment) {
+
+            if (!err){
+                if(existingAssessment){
+                    var testId = existingAssessment.test._id.toString();
+                    var testSimulate = existingAssessment.test.simulate;
+
+                    var solutionKey = [];
+                    var testQuestions = question
+                        .find({test: testId}, {questions: 1})
+                        .deepPopulate('questions')
+                        .exec(function (err, testQuestions) {
+                        if(testQuestions){
+                        var nQuestions = 0;   
+                        var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
+
+                        var counter = 0;
+
+                        testQuestions.forEach(function(thisQuestion, qIndex){
+                            nQuestions += thisQuestion.questions.length;
+                        });
+                        testQuestions.forEach(function(thisQuestion, qIndex){
+                        var questionId = thisQuestion._id;
+                        thisQuestion.questions.forEach(function(subQuestion, sIndex){
+                            var subQuestionId = subQuestion._id;
+                            var correctOptionId = null;
+                            var correctNumericalAnswers = null;
+
+                            if(subQuestion.type == 'mcq'){
+                                if(subQuestion.mcqma){
+                                var thisKey = {
+                                    question: questionId.toString(),
+                                    subquestion: subQuestionId.toString(),
+                                    marking: subQuestion.marking,
+                                    type: subQuestion.type,
+                                    mcqma: subQuestion.mcqma,
+                                    options: [],
+                                };
+                                subQuestion.options.forEach(function(thisOption, oIndex){
+
+                                if(thisOption._correct){
+                                    correctOptionId = thisOption._id.toString();
+                                    thisKey.options.push(correctOptionId);
+
+                                    counter += 1;
+
+                                }
                                 if(oIndex == subQuestion.options.length - 1){
                                     solutionKey.push(thisKey);
-                                }
-                            }    
-                            });    
-                                
-                                
-                            }else{
-                            subQuestion.options.forEach(function(thisOption, oIndex){
-                            if(thisOption._correct){
-                                correctOptionId = thisOption._id;
+                                }    
+                                });    
 
-                                var thisKey = {
-                                    question: questionId.toString(),
-                                    subquestion: subQuestionId.toString(),
-                                    marking: subQuestion.marking,
-                                    type: subQuestion.type,
-                                    option: correctOptionId.toString(),
-                                };
-                                solutionKey.push(thisKey);
-                                counter += 1;
+
+                                }else{
+                                subQuestion.options.forEach(function(thisOption, oIndex){
+                                if(thisOption._correct){
+                                    correctOptionId = thisOption._id;
+
+                                    var thisKey = {
+                                        question: questionId.toString(),
+                                        subquestion: subQuestionId.toString(),
+                                        marking: subQuestion.marking,
+                                        type: subQuestion.type,
+                                        option: correctOptionId.toString(),
+                                    };
+                                    solutionKey.push(thisKey);
+                                    counter += 1;
+                                }
+
+
+                                });
+
+
+                                }
+
                             }
+
+                            if(subQuestion.type == 'numerical'){
+
+                                if(subQuestion.numericalAnswerType == 'Exact'){
+                                    correctNumericalAnswers = subQuestion.numericalAnswers;
+                                    var thisKey = {
+                                        question: questionId.toString(),
+                                        subquestion: subQuestionId.toString(),
+                                        marking: subQuestion.marking,
+                                        type: subQuestion.type,
+                                        numericalAnswerType: subQuestion.numericalAnswerType,
+                                        numericalAnswers: correctNumericalAnswers,
+                                    };
+                                    solutionKey.push(thisKey);
+                                    counter += 1;
+                                }else if (subQuestion.numericalAnswerType == 'Range'){
+                                    numericalAnswerRange = subQuestion.numericalAnswerRange;
+                                    var thisKey = {
+                                        question: questionId.toString(),
+                                        subquestion: subQuestionId.toString(),
+                                        marking: subQuestion.marking,
+                                        type: subQuestion.type,
+                                        numericalAnswerType: subQuestion.numericalAnswerType,
+                                        numericalAnswerRange: numericalAnswerRange,
+                                    };
+                                    solutionKey.push(thisKey);
+                                    counter += 1;
+                                }
+
+                            }
+
+                            if(counter == nQuestions){
+
+
+                            var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
+                            if(userresponses){
+
+
+
+
+                            var correct = [];    
+                            var incorrect = [];
+
+                            var solutionKeyQuestionIds =  solutionKey.map(function(a) {return a.question.toString();});
+                            var solutionKeySubQuestionIds =  solutionKey.map(function(a) {return a.subquestion.toString();});
+                            var pivoteduserresponses = [];
+
+                            userresponses.forEach(function(thisResponse, rIndex){
+                                var sqIds = [];
+                                if(pivoteduserresponses.length > 0){
+                                    sqIds = pivoteduserresponses.map(function(a) {return a.subquestion.toString();});
+                                }
+                                var thisIndex = sqIds.indexOf(thisResponse.subquestion.toString());
+                                if(thisIndex == -1){
+                                var newResponse = {
+                                    option: thisResponse.option,
+                                    subquestion: thisResponse.subquestion,
+                                    question: thisResponse.question,
+                                    user: thisResponse.user,
+                                };
+                                if(newResponse){
+                                    newResponse.numericalAnswer = thisResponse.numericalAnswer;
+                                }
+                                pivoteduserresponses.push(newResponse);
+                                }else{
+                                if(!pivoteduserresponses[thisIndex].options){
+                                    pivoteduserresponses[thisIndex].options = [pivoteduserresponses[thisIndex].option];
+                                }
+                                pivoteduserresponses[thisIndex].options.push(thisResponse.option);
+                                }
+
+
+                            });    
+                            //abcd1234
+
+                            var attempted = pivoteduserresponses.length;
+                            var unattempted = nQuestions - attempted;
+                            pivoteduserresponses.forEach(function(thisResponse, rIndex){
+
+                            var thisQuestionId = thisResponse.question.toString();
+                            var thisSubQuestionId = thisResponse.subquestion.toString();
+
+                            var k1Index = solutionKeyQuestionIds.indexOf(thisQuestionId);
+                            var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
+
+                            if(k2Index != -1){
+                            var subQuestionType = solutionKey[k2Index].type;
+                            var subQuestionMCQMA = solutionKey[k2Index].mcqma;
+                            var subQuestionMarking = solutionKey[k2Index].marking;
+
+                            var thisPair = {
+                                questionId: thisQuestionId,
+                                //question: question,
+                                //subquestionId: thisSubQuestionId,
+
+
+                                subquestion: thisSubQuestionId,
+                                subQuestionType: subQuestionType,
+                                marking: subQuestionMarking,
+                                //userresponse: thisResponse,
+                            };
+                            if(subQuestionType == 'mcq'){
+                                if(subQuestionMCQMA){
+
+                                    var thisOptions = [];
+                                    if(thisResponse.options){
+                                        thisOptions = thisResponse.options;
+                                    }else if(thisResponse.option){
+                                        thisOptions = [thisResponse.option];
+                                    }
+                                    var answerKeyOptions = [];
+
+                                    if(solutionKey[k2Index].options){
+                                        answerKeyOptions = solutionKey[k2Index].options;
+                                    }else if(solutionKey[k2Index].option){
+                                        answerKeyOptions = [solutionKey[k2Index].option];
+                                    }
+                                    var exactMatch = true;
+                                    var countMatch = 0;
+                                    var anyIncorrect = false;
+                                    if(thisOptions.length != answerKeyOptions.length){
+                                        exactMatch = false;
+                                    }
+                                    thisOptions.forEach(function(thisUserOption, aIndex){
+                                        var oIndex = answerKeyOptions.indexOf(thisUserOption.toString());
+                                        if(oIndex == -1){
+                                            exactMatch = false;
+                                            anyIncorrect = true;
+                                        }else{
+                                            answerKeyOptions.splice(oIndex, 1);
+                                            countMatch += 1;
+                                        }
+                                    });
+
+                                    if(answerKeyOptions.length > 0){
+                                        exactMatch = false;
+                                    }
+
+                                    if(exactMatch && thisOptions.length > 0){
+                                        correct.push(thisPair);
+                                    }else if(!exactMatch && thisOptions.length > 0){
+                                        thisPair.countMatch = countMatch;
+                                        thisPair.anyIncorrect = anyIncorrect;
+                                        incorrect.push(thisPair);
+                                    }
+
+
+
+                                }else{
+                                    var thisOptionId = null;
+                                    if(thisResponse.option){
+                                        thisOptionId = thisResponse.option.toString();
+
+                                        if(thisOptionId == solutionKey[k2Index].option){
+
+                                            correct.push(thisPair);
+                                        }else{
+                                            incorrect.push(thisPair);
+                                        }
+                                    }
+
+
+                                }
+
+
+                            }else if (subQuestionType == 'numerical'){
+                                var thisNumericalAnswer = null;
+                                if(thisResponse.numericalAnswer){
+                                    thisNumericalAnswer = Number(thisResponse.numericalAnswer);
+                                    var numericalType = solutionKey[k2Index].numericalAnswerType;
+
+                                    if(numericalType == 'Exact'){
+                                        var correctResponse = false;
+                                        var numericalAnswers = solutionKey[k2Index].numericalAnswers;
+                                        numericalAnswers.forEach(function(thisAnswer, aIndex){
+                                            if(thisNumericalAnswer == Number(thisAnswer)){
+                                                correctResponse = true;
+                                            }
+                                        });
+
+                                        if(correctResponse){
+                                            correct.push(thisPair);
+                                        }else{
+                                            incorrect.push(thisPair);
+                                        }
+                                    }else if(numericalType == 'Range'){
+                                        var numericalAnswerRange = solutionKey[k2Index].numericalAnswerRange;
+                                        var minRange = Number(numericalAnswerRange.min);
+                                        var maxRange = Number(numericalAnswerRange.max);
+
+                                        if(thisNumericalAnswer >= minRange && thisNumericalAnswer <= maxRange){
+                                            correct.push(thisPair);
+                                        }else{
+                                            incorrect.push(thisPair);
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                            }else{
+                                console.log('SOMETHING WENT VERY WRONG!!!');
+                            }
+
+                            //console.log(correct);
+                            //console.log(incorrect);
+
+
+
 
 
                             });
-                                
-                                
-                            }
-                            
-                        }
-                        
-                        if(subQuestion.type == 'numerical'){
-                            
-                            if(subQuestion.numericalAnswerType == 'Exact'){
-                                correctNumericalAnswers = subQuestion.numericalAnswers;
-                                var thisKey = {
-                                    question: questionId.toString(),
-                                    subquestion: subQuestionId.toString(),
-                                    marking: subQuestion.marking,
-                                    type: subQuestion.type,
-                                    numericalAnswerType: subQuestion.numericalAnswerType,
-                                    numericalAnswers: correctNumericalAnswers,
-                                };
-                                solutionKey.push(thisKey);
-                                counter += 1;
-                            }else if (subQuestion.numericalAnswerType == 'Range'){
-                                numericalAnswerRange = subQuestion.numericalAnswerRange;
-                                var thisKey = {
-                                    question: questionId.toString(),
-                                    subquestion: subQuestionId.toString(),
-                                    marking: subQuestion.marking,
-                                    type: subQuestion.type,
-                                    numericalAnswerType: subQuestion.numericalAnswerType,
-                                    numericalAnswerRange: numericalAnswerRange,
-                                };
-                                solutionKey.push(thisKey);
-                                counter += 1;
-                            }
-                            
-                        }
-                        
-                        if(counter == nQuestions){
-                        
-                            
-                        var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
-                        if(userresponses){
-                            
-                            
-                            
-                        
-                        var correct = [];    
-                        var incorrect = [];    
 
-                        var solutionKeyQuestionIds =  solutionKey.map(function(a) {return a.question;});
-                        var solutionKeySubQuestionIds =  solutionKey.map(function(a) {return a.subquestion;});
-                        var pivoteduserresponses = [];
-                        
-                        userresponses.forEach(function(thisResponse, rIndex){
-                            var sqIds = [];
-                            if(pivoteduserresponses.length > 0){
-                                sqIds = pivoteduserresponses.map(function(a) {return a.subquestion.toString();});
+                            var correctAnswers = correct.length;
+                            var incorrectAnswers = incorrect.length;
+
+                            console.log('Attempted: ' + attempted);
+                            console.log('Unattempted: ' + unattempted);
+                            console.log('Correct: ' + correctAnswers);
+                            console.log('Incorrect: ' + incorrectAnswers);
+                            var score = 0;
+
+                            correct.forEach(function(thisSubQuestionAttempt, aIndex){
+                                var correctScore = 3;
+                                var incorrectScore = -1;
+                                if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.correct){
+                                    correctScore = Number(thisSubQuestionAttempt.marking.correct);
+                                }
+                                if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.incorrect){
+                                    incorrectScore = Number(thisSubQuestionAttempt.marking.incorrect);
+                                }
+                                thisSubQuestionAttempt.score = correctScore;
+                                score += correctScore;
+                            });
+                            incorrect.forEach(function(thisSubQuestionAttempt, aIndex){
+                                var correctScore = 3;
+                                var incorrectScore = -1;
+                                if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.correct){
+                                    correctScore = Number(thisSubQuestionAttempt.marking.correct);
+                                }
+                                if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.incorrect){
+                                    incorrectScore = Number(thisSubQuestionAttempt.marking.incorrect);
+                                }
+
+                                if(thisSubQuestionAttempt.anyIncorrect){
+                                    score += incorrectScore;
+                                    thisSubQuestionAttempt.score = incorrectScore;
+                                }else if(!thisSubQuestionAttempt.anyIncorrect && thisSubQuestionAttempt.countMatch &&  thisSubQuestionAttempt.countMatch > 0){
+                                    score += Number(thisSubQuestionAttempt.countMatch);
+                                    thisSubQuestionAttempt.score = Number(thisSubQuestionAttempt.countMatch);
+                                }else{
+                                    score += incorrectScore;
+                                    thisSubQuestionAttempt.score = incorrectScore;
+                                }
+
+                            });
+                            score = Math.round(score * 100) / 100;
+                            console.log('Score is: ' + score);
+
+                            var accuracy = 0;
+                            if(attempted > 0){
+                               accuracy = Math.round(100*correctAnswers / attempted, 2);
                             }
-                            var thisIndex = sqIds.indexOf(thisResponse.subquestion.toString());
-                            if(thisIndex == -1){
-                            var newResponse = {
-                                option: thisResponse.option,
-                                subquestion: thisResponse.subquestion,
-                                question: thisResponse.question,
-                                user: thisResponse.user,
+                            var attemptedPercentage = Math.round(100 * attempted / (attempted + unattempted)); 
+                            var percentageScore = 0;
+                            if(existingAssessment.test.maxScore){
+                                percentageScore = Number( 100 * score / existingAssessment.test.maxScore);
+                            }    
+
+                            var evaluation = {
+                                questions:{
+                                    attemped: attempted,
+                                    unattemped: unattempted,
+                                    correct: correctAnswers,
+                                    incorrect: incorrectAnswers,
+                                    total: correctAnswers + incorrectAnswers,
+                                    attemptedPercentage: attemptedPercentage,
+
+                                },
+                                marked:{
+                                    correct: correct,
+                                    incorrect: incorrect,
+                                },
+                                score: score,
+                                percentageScore: percentageScore,
+                                accuracy: accuracy,
+
                             };
-                            if(newResponse){
-                                newResponse.numericalAnswer = thisResponse.numericalAnswer;
-                            }
-                            pivoteduserresponses.push(newResponse);
+
+                            existingAssessment.evaluation = evaluation;
+                            existingAssessment.submitted = true;
+                            existingAssessment._submit = moment();
+                            
+                                
+                            if(testId == '5aae0cae3bacc109b0907d30'){
+                                if(percentageScore >= 75){
+                                var coupon = "25";
+                                    if(existingUser.basic.name){
+                                        coupon += existingUser.basic.name.substring(0,4).toUpperCase();
+                                    }
+                                    if(existingUser.mobile){
+                                        coupon += existingUser.mobile.substring(0,4);
+                                    }
+                                    existingAssessment.pbc = {
+                                        coupon: coupon,
+                                        discountPercent: '25',
+                                    };
+                                }else if(percentageScore >= 60){
+                                    var coupon = "10";
+                                    if(existingUser.basic.name){
+                                        coupon += existingUser.basic.name.substring(0,4).toUpperCase();
+                                    }
+                                    if(existingUser.mobile){
+                                        coupon += existingUser.mobile.substring(0,4);
+                                    }
+                                    existingAssessment.pbc = {
+                                        coupon: coupon,
+                                        discountPercent: '10',
+                                    };
+                                }
+                                
+                                //send email to student, eb and pbc
+                                
+                                
+                            }  
+                              
+                            existingAssessment.save(function(err, existingAssessment){
+                                if (err) return console.error(err);
+                                console.log('Assessment saved: ' + existingAssessment._id);
+                                if(testId == '5aae0cae3bacc109b0907d30' && percentageScore >= 60){
+                                    console.log('Sending PBC Email2');
+                                    sendPBCEmail(existingAssessment);
+                                } res.json(existingAssessment);
+                            });    
+
                             }else{
-                            if(!pivoteduserresponses[thisIndex].options){
-                                pivoteduserresponses[thisIndex].options = [pivoteduserresponses[thisIndex].option];
+                                res.json(null);
                             }
-                            pivoteduserresponses[thisIndex].options.push(thisResponse.option);
-                            }
-
-                            
-                        });    
-                        //abcd1234
-                            
-                        var attempted = pivoteduserresponses.length;
-                        var unattempted = nQuestions - attempted;
-                        pivoteduserresponses.forEach(function(thisResponse, rIndex){
-
-                        var thisQuestionId = thisResponse.question.toString();
-                        var thisSubQuestionId = thisResponse.subquestion.toString();
-
-                        var k1Index = solutionKeyQuestionIds.indexOf(thisQuestionId);
-                        var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
-                        
-                        if(k2Index != -1){
-                        var subQuestionType = solutionKey[k2Index].type;
-                        var subQuestionMCQMA = solutionKey[k2Index].mcqma;
-                        var subQuestionMarking = solutionKey[k2Index].marking;
-                            
-                        var thisPair = {
-                            questionId: thisQuestionId,
-                            //question: question,
-                            //subquestionId: thisSubQuestionId,
-                            
-                            
-                            subquestion: thisSubQuestionId,
-                            subQuestionType: subQuestionType,
-                            marking: subQuestionMarking,
-                            //userresponse: thisResponse,
-                        };
-                        if(subQuestionType == 'mcq'){
-                            if(subQuestionMCQMA){
-                                
-                                var thisOptions = [];
-                                if(thisResponse.options){
-                                    thisOptions = thisResponse.options;
-                                }else if(thisResponse.option){
-                                    thisOptions = [thisResponse.option];
-                                }
-                                var answerKeyOptions = [];
-                                
-                                if(solutionKey[k2Index].options){
-                                    answerKeyOptions = solutionKey[k2Index].options;
-                                }else if(solutionKey[k2Index].option){
-                                    answerKeyOptions = [solutionKey[k2Index].option];
-                                }
-                                var exactMatch = true;
-                                if(thisOptions.length != answerKeyOptions.length){
-                                    exactMatch = false;
-                                }
-                                thisOptions.forEach(function(thisUserOption, aIndex){
-                                    var oIndex = answerKeyOptions.indexOf(thisUserOption.toString());
-                                    if(oIndex == -1){
-                                        exactMatch = false;
-                                    }else{
-                                        answerKeyOptions.splice(oIndex, 1);
-                                    }
-                                });
-                                
-                                if(answerKeyOptions.length > 0){
-                                    exactMatch = false;
-                                }
-                                
-                                if(exactMatch && thisOptions.length > 0){
-                                    correct.push(thisPair);
-                                }else if(!exactMatch && thisOptions.length > 0){
-                                    incorrect.push(thisPair);
-                                }
-                                
-                                
-                                
-                            }else{
-                                var thisOptionId = null;
-                                if(thisResponse.option){
-                                    thisOptionId = thisResponse.option.toString();
-
-                                    if(thisOptionId == solutionKey[k2Index].option){
-
-                                        correct.push(thisPair);
-                                    }else{
-                                        incorrect.push(thisPair);
-                                    }
-                                }
-                                
-                                
-                            }
-                            
-                            
-                        }else if (subQuestionType == 'numerical'){
-                            var thisNumericalAnswer = null;
-                            if(thisResponse.numericalAnswer){
-                                thisNumericalAnswer = Number(thisResponse.numericalAnswer);
-                                var numericalType = solutionKey[k2Index].numericalAnswerType;
-
-                                if(numericalType == 'Exact'){
-                                    var correctResponse = false;
-                                    var numericalAnswers = solutionKey[k2Index].numericalAnswers;
-                                    numericalAnswers.forEach(function(thisAnswer, aIndex){
-                                        if(thisNumericalAnswer == Number(thisAnswer)){
-                                            correctResponse = true;
-                                        }
-                                    });
-                                    
-                                    if(correctResponse){
-                                        correct.push(thisPair);
-                                    }else{
-                                        incorrect.push(thisPair);
-                                    }
-                                }else if(numericalType == 'Range'){
-                                    var numericalAnswerRange = solutionKey[k2Index].numericalAnswerRange;
-                                    var minRange = Number(numericalAnswerRange.min);
-                                    var maxRange = Number(numericalAnswerRange.max);
-                                    
-                                    if(thisNumericalAnswer >= minRange && thisNumericalAnswer <= maxRange){
-                                        correct.push(thisPair);
-                                    }else{
-                                        incorrect.push(thisPair);
-                                    }
-                                    
-                                }
-
-                            }
-                        }
-                            
-                        }else{
-                            console.log('SOMETHING WENT VERY WRONG!!!');
-                        }
-                            
-                        
+                            });
 
 
-                        
+                            }     
                         });
-                            
-                        var correctAnswers = correct.length;
-                        var incorrectAnswers = incorrect.length;
 
-                        console.log('Attempted: ' + attempted);
-                        console.log('Unattempted: ' + unattempted);
-                        console.log('Correct: ' + correctAnswers);
-                        console.log('Incorrect: ' + incorrectAnswers);
-                        var score = 0;
-                            
-                        correct.forEach(function(thisSubQuestionAttempt, aIndex){
-                            var correctScore = 3;
-                            var incorrectScore = -1;
-                            if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.correct){
-                                correctScore = Number(thisSubQuestionAttempt.marking.correct);
-                            }
-                            if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.incorrect){
-                                incorrectScore = Number(thisSubQuestionAttempt.marking.incorrect);
-                            }
-                            
-                            score += correctScore;
                         });
-                        incorrect.forEach(function(thisSubQuestionAttempt, aIndex){
-                            var correctScore = 3;
-                            var incorrectScore = -1;
-                            if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.correct){
-                                correctScore = Number(thisSubQuestionAttempt.marking.correct);
-                            }
-                            if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.incorrect){
-                                incorrectScore = Number(thisSubQuestionAttempt.marking.incorrect);
-                            }
-                            
-                            score += incorrectScore;
-                        });
-                        score = Math.round(score * 100) / 100;
-                        console.log('Score is: ' + score);
-                        
-                        var accuracy = 0;
-                        if(attempted > 0){
-                           accuracy = Math.round(100*correctAnswers / attempted, 2);
-                        }
-                        var attemptedPercentage = Math.round(100 * attempted / (attempted + unattempted));     
-                        var percentageScore = 0;
-                        if(existingAssessment.test.maxScore){
-                            percentageScore = Number( 100 * score / existingAssessment.test.maxScore);
-                        }    
-                            
-                        var evaluation = {
-                            questions:{
-                                attemped: attempted,
-                                unattemped: unattempted,
-                                correct: correctAnswers,
-                                incorrect: incorrectAnswers,
-                                total: correctAnswers + incorrectAnswers,
-                                attemptedPercentage: attemptedPercentage,
-                                
-                            },
-                            marked:{
-                                correct: correct,
-                                incorrect: incorrect,
-                            },
-                            score: score,
-                            percentageScore: percentageScore,
-                            accuracy: accuracy,
-                            
-                        };
-
-                        existingAssessment.evaluation = evaluation;
-                        existingAssessment.submitted = true;
-                        existingAssessment._submit = moment();
-                        existingAssessment.save(function(err, existingAssessment){
-                            if (err) return console.error(err);
-                            console.log('Assessment saved: ' + existingAssessment._id);
-                            res.json(existingAssessment);
-                        });    
 
                         }else{
                             res.json(null);
                         }
-                        });
-                        
-
-                        }     
                     });
-                
-                    });
-                
-                    }else{
-                        res.json(null);
-                    }
-                });
-            }else{
-                res.json(null);
-            }
-        } else {throw err;}
-    });
-    }else{
-    var existingAssessment = assessment
-        .findOne({user: thisAssessment.user, test: thisAssessment.test})
-        .deepPopulate('test')
-        .exec(function (err, existingAssessment) {
-            
-        if (!err){
-            if(existingAssessment){
-                var testId = existingAssessment.test._id.toString();
-                var testSimulate = existingAssessment.test.simulate;
-                
-                var solutionKey = [];
-                var testQuestions = question
-                    .find({test: testId}, {questions: 1})
-                    .deepPopulate('questions')
-                    .exec(function (err, testQuestions) {
-                    if(testQuestions){
-                    var nQuestions = 0;   
-                    var testQuestionsIds = testQuestions.map(function(a) {return a._id.toString();});
-                        
-                    var counter = 0;
-                        
-                    testQuestions.forEach(function(thisQuestion, qIndex){
-                        nQuestions += thisQuestion.questions.length;
-                    });
-                    testQuestions.forEach(function(thisQuestion, qIndex){
-                    var questionId = thisQuestion._id;
-                    thisQuestion.questions.forEach(function(subQuestion, sIndex){
-                        var subQuestionId = subQuestion._id;
-                        var correctOptionId = null;
-                        var correctNumericalAnswers = null;
-                       
-                        if(subQuestion.type == 'mcq'){
-                            if(subQuestion.mcqma){
-                            var thisKey = {
-                                question: questionId.toString(),
-                                subquestion: subQuestionId.toString(),
-                                marking: subQuestion.marking,
-                                type: subQuestion.type,
-                                mcqma: subQuestion.mcqma,
-                                options: [],
-                            };
-                            subQuestion.options.forEach(function(thisOption, oIndex){
-                                
-                            if(thisOption._correct){
-                                correctOptionId = thisOption._id.toString();
-                                thisKey.options.push(correctOptionId);
-                                
-                                counter += 1;
-                                
-                            }
-                            if(oIndex == subQuestion.options.length - 1){
-                                solutionKey.push(thisKey);
-                            }    
-                            });    
-                                
-                                
-                            }else{
-                            subQuestion.options.forEach(function(thisOption, oIndex){
-                            if(thisOption._correct){
-                                correctOptionId = thisOption._id;
-
-                                var thisKey = {
-                                    question: questionId.toString(),
-                                    subquestion: subQuestionId.toString(),
-                                    marking: subQuestion.marking,
-                                    type: subQuestion.type,
-                                    option: correctOptionId.toString(),
-                                };
-                                solutionKey.push(thisKey);
-                                counter += 1;
-                            }
-
-
-                            });
-                                
-                                
-                            }
-                            
-                        }
-                        
-                        if(subQuestion.type == 'numerical'){
-                            
-                            if(subQuestion.numericalAnswerType == 'Exact'){
-                                correctNumericalAnswers = subQuestion.numericalAnswers;
-                                var thisKey = {
-                                    question: questionId.toString(),
-                                    subquestion: subQuestionId.toString(),
-                                    marking: subQuestion.marking,
-                                    type: subQuestion.type,
-                                    numericalAnswerType: subQuestion.numericalAnswerType,
-                                    numericalAnswers: correctNumericalAnswers,
-                                };
-                                solutionKey.push(thisKey);
-                                counter += 1;
-                            }else if (subQuestion.numericalAnswerType == 'Range'){
-                                numericalAnswerRange = subQuestion.numericalAnswerRange;
-                                var thisKey = {
-                                    question: questionId.toString(),
-                                    subquestion: subQuestionId.toString(),
-                                    marking: subQuestion.marking,
-                                    type: subQuestion.type,
-                                    numericalAnswerType: subQuestion.numericalAnswerType,
-                                    numericalAnswerRange: numericalAnswerRange,
-                                };
-                                solutionKey.push(thisKey);
-                                counter += 1;
-                            }
-                            
-                        }
-                        
-                        if(counter == nQuestions){
-                        
-                            
-                        var userresponses = questionresponse.find({user: thisAssessment.user, question : { $in : testQuestionsIds } },function (err, userresponses) {
-                        if(userresponses){
-                            
-                            
-                            
-                        
-                        var correct = [];    
-                        var incorrect = [];
-                            
-                        var solutionKeyQuestionIds =  solutionKey.map(function(a) {return a.question.toString();});
-                        var solutionKeySubQuestionIds =  solutionKey.map(function(a) {return a.subquestion.toString();});
-                        var pivoteduserresponses = [];
-                        
-                        userresponses.forEach(function(thisResponse, rIndex){
-                            var sqIds = [];
-                            if(pivoteduserresponses.length > 0){
-                                sqIds = pivoteduserresponses.map(function(a) {return a.subquestion.toString();});
-                            }
-                            var thisIndex = sqIds.indexOf(thisResponse.subquestion.toString());
-                            if(thisIndex == -1){
-                            var newResponse = {
-                                option: thisResponse.option,
-                                subquestion: thisResponse.subquestion,
-                                question: thisResponse.question,
-                                user: thisResponse.user,
-                            };
-                            if(newResponse){
-                                newResponse.numericalAnswer = thisResponse.numericalAnswer;
-                            }
-                            pivoteduserresponses.push(newResponse);
-                            }else{
-                            if(!pivoteduserresponses[thisIndex].options){
-                                pivoteduserresponses[thisIndex].options = [pivoteduserresponses[thisIndex].option];
-                            }
-                            pivoteduserresponses[thisIndex].options.push(thisResponse.option);
-                            }
-
-                            
-                        });    
-                        //abcd1234
-                            
-                        var attempted = pivoteduserresponses.length;
-                        var unattempted = nQuestions - attempted;
-                        pivoteduserresponses.forEach(function(thisResponse, rIndex){
-
-                        var thisQuestionId = thisResponse.question.toString();
-                        var thisSubQuestionId = thisResponse.subquestion.toString();
-
-                        var k1Index = solutionKeyQuestionIds.indexOf(thisQuestionId);
-                        var k2Index = solutionKeySubQuestionIds.indexOf(thisSubQuestionId);
-                        
-                        if(k2Index != -1){
-                        var subQuestionType = solutionKey[k2Index].type;
-                        var subQuestionMCQMA = solutionKey[k2Index].mcqma;
-                        var subQuestionMarking = solutionKey[k2Index].marking;
-                            
-                        var thisPair = {
-                            questionId: thisQuestionId,
-                            //question: question,
-                            //subquestionId: thisSubQuestionId,
-                            
-                            
-                            subquestion: thisSubQuestionId,
-                            subQuestionType: subQuestionType,
-                            marking: subQuestionMarking,
-                            //userresponse: thisResponse,
-                        };
-                        if(subQuestionType == 'mcq'){
-                            if(subQuestionMCQMA){
-                                
-                                var thisOptions = [];
-                                if(thisResponse.options){
-                                    thisOptions = thisResponse.options;
-                                }else if(thisResponse.option){
-                                    thisOptions = [thisResponse.option];
-                                }
-                                var answerKeyOptions = [];
-                                
-                                if(solutionKey[k2Index].options){
-                                    answerKeyOptions = solutionKey[k2Index].options;
-                                }else if(solutionKey[k2Index].option){
-                                    answerKeyOptions = [solutionKey[k2Index].option];
-                                }
-                                var exactMatch = true;
-                                var countMatch = 0;
-                                var anyIncorrect = false;
-                                if(thisOptions.length != answerKeyOptions.length){
-                                    exactMatch = false;
-                                }
-                                thisOptions.forEach(function(thisUserOption, aIndex){
-                                    var oIndex = answerKeyOptions.indexOf(thisUserOption.toString());
-                                    if(oIndex == -1){
-                                        exactMatch = false;
-                                        anyIncorrect = true;
-                                    }else{
-                                        answerKeyOptions.splice(oIndex, 1);
-                                        countMatch += 1;
-                                    }
-                                });
-                                
-                                if(answerKeyOptions.length > 0){
-                                    exactMatch = false;
-                                }
-                                
-                                if(exactMatch && thisOptions.length > 0){
-                                    correct.push(thisPair);
-                                }else if(!exactMatch && thisOptions.length > 0){
-                                    thisPair.countMatch = countMatch;
-                                    thisPair.anyIncorrect = anyIncorrect;
-                                    incorrect.push(thisPair);
-                                }
-                                
-                                
-                                
-                            }else{
-                                var thisOptionId = null;
-                                if(thisResponse.option){
-                                    thisOptionId = thisResponse.option.toString();
-
-                                    if(thisOptionId == solutionKey[k2Index].option){
-
-                                        correct.push(thisPair);
-                                    }else{
-                                        incorrect.push(thisPair);
-                                    }
-                                }
-                                
-                                
-                            }
-                            
-                            
-                        }else if (subQuestionType == 'numerical'){
-                            var thisNumericalAnswer = null;
-                            if(thisResponse.numericalAnswer){
-                                thisNumericalAnswer = Number(thisResponse.numericalAnswer);
-                                var numericalType = solutionKey[k2Index].numericalAnswerType;
-
-                                if(numericalType == 'Exact'){
-                                    var correctResponse = false;
-                                    var numericalAnswers = solutionKey[k2Index].numericalAnswers;
-                                    numericalAnswers.forEach(function(thisAnswer, aIndex){
-                                        if(thisNumericalAnswer == Number(thisAnswer)){
-                                            correctResponse = true;
-                                        }
-                                    });
-                                    
-                                    if(correctResponse){
-                                        correct.push(thisPair);
-                                    }else{
-                                        incorrect.push(thisPair);
-                                    }
-                                }else if(numericalType == 'Range'){
-                                    var numericalAnswerRange = solutionKey[k2Index].numericalAnswerRange;
-                                    var minRange = Number(numericalAnswerRange.min);
-                                    var maxRange = Number(numericalAnswerRange.max);
-                                    
-                                    if(thisNumericalAnswer >= minRange && thisNumericalAnswer <= maxRange){
-                                        correct.push(thisPair);
-                                    }else{
-                                        incorrect.push(thisPair);
-                                    }
-                                    
-                                }
-
-                            }
-                        }
-                            
-                        }else{
-                            console.log('SOMETHING WENT VERY WRONG!!!');
-                        }
-                            
-                        //console.log(correct);
-                        //console.log(incorrect);
-                            
-                        
-
-
-                        
-                        });
-                            
-                        var correctAnswers = correct.length;
-                        var incorrectAnswers = incorrect.length;
-
-                        console.log('Attempted: ' + attempted);
-                        console.log('Unattempted: ' + unattempted);
-                        console.log('Correct: ' + correctAnswers);
-                        console.log('Incorrect: ' + incorrectAnswers);
-                        var score = 0;
-                            
-                        correct.forEach(function(thisSubQuestionAttempt, aIndex){
-                            var correctScore = 3;
-                            var incorrectScore = -1;
-                            if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.correct){
-                                correctScore = Number(thisSubQuestionAttempt.marking.correct);
-                            }
-                            if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.incorrect){
-                                incorrectScore = Number(thisSubQuestionAttempt.marking.incorrect);
-                            }
-                            thisSubQuestionAttempt.score = correctScore;
-                            score += correctScore;
-                        });
-                        incorrect.forEach(function(thisSubQuestionAttempt, aIndex){
-                            var correctScore = 3;
-                            var incorrectScore = -1;
-                            if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.correct){
-                                correctScore = Number(thisSubQuestionAttempt.marking.correct);
-                            }
-                            if(thisSubQuestionAttempt.marking && thisSubQuestionAttempt.marking.incorrect){
-                                incorrectScore = Number(thisSubQuestionAttempt.marking.incorrect);
-                            }
-                           
-                            if(thisSubQuestionAttempt.anyIncorrect){
-                                score += incorrectScore;
-                                thisSubQuestionAttempt.score = incorrectScore;
-                            }else if(!thisSubQuestionAttempt.anyIncorrect && thisSubQuestionAttempt.countMatch &&  thisSubQuestionAttempt.countMatch > 0){
-                                score += Number(thisSubQuestionAttempt.countMatch);
-                                thisSubQuestionAttempt.score = Number(thisSubQuestionAttempt.countMatch);
-                            }else{
-                                score += incorrectScore;
-                                thisSubQuestionAttempt.score = incorrectScore;
-                            }
-                            
-                        });
-                        score = Math.round(score * 100) / 100;
-                        console.log('Score is: ' + score);
-                            
-                        var accuracy = 0;
-                        if(attempted > 0){
-                           accuracy = Math.round(100*correctAnswers / attempted, 2);
-                        }
-                        var attemptedPercentage = Math.round(100 * attempted / (attempted + unattempted)); 
-                        var percentageScore = 0;
-                        if(existingAssessment.test.maxScore){
-                            percentageScore = Number( 100 * score / existingAssessment.test.maxScore);
-                        }    
-                            
-                        var evaluation = {
-                            questions:{
-                                attemped: attempted,
-                                unattemped: unattempted,
-                                correct: correctAnswers,
-                                incorrect: incorrectAnswers,
-                                total: correctAnswers + incorrectAnswers,
-                                attemptedPercentage: attemptedPercentage,
-                                
-                            },
-                            marked:{
-                                correct: correct,
-                                incorrect: incorrect,
-                            },
-                            score: score,
-                            percentageScore: percentageScore,
-                            accuracy: accuracy,
-                            
-                        };
-
-                        existingAssessment.evaluation = evaluation;
-                        existingAssessment.submitted = true;
-                        existingAssessment._submit = moment();
-                        existingAssessment.save(function(err, existingAssessment){
-                            if (err) return console.error(err);
-                            console.log('Assessment saved: ' + existingAssessment._id);
-                            res.json(existingAssessment);
-                        });    
-
-                        }else{
-                            res.json(null);
-                        }
-                        });
-                        
-
-                        }     
-                    });
-                
-                    });
-                
-                    }else{
-                        res.json(null);
-                    }
-                });
-            }else{
-                res.json(null);
-            }
-        } else {throw err;}
-    });
-    }
-    /*var existingAssessment = assessment.findOne({user: thisAssessment.user, test: thisAssessment.test},function (err, existingAssessment) {
-    if(existingAssessment){
-        console.log(existingAssessment);
-        var userresponses = questionresponse.find({user: thisAssessment.user},function (err, userresponses) {
-            if(userresponses){
-                
-
-
-                //console.log(userresponses);
-
-                res.json(true);
-            }else{
-                res.json(false);
-            }
+                }else{
+                    res.json(null);
+                }
+            } else {throw err;}
         });
-
-    }else{
-        res.json(false);
-    }
-    });*/
+        }
+    
+    });
 });
+
+function sendPBCEmail(existingAssessment){
+    console.log('Sending PBC Email');
+    var templateName = 'Voucher Email';
+    var from = 'always@exambazaar.com';
+    var sender = 'Always Exambazaar';
+    var senderId = '59a7eb973d71f10170dbb468';
+    var userName = 'Student';
+    var userCode = 'N/A';
+    var userDetails = '';
+    var discountPercent = 'N/A';
+    if(existingAssessment.info && existingAssessment.info.name){
+        userName = existingAssessment.info.name;
+    }
+    if(existingAssessment.pbc && existingAssessment.pbc.coupon){
+        userCode = existingAssessment.pbc.coupon;
+    }
+    if(existingAssessment.pbc && existingAssessment.pbc.discountPercent){
+        discountPercent = existingAssessment.pbc.discountPercent + "% on Full Course Fees";
+    }
+    
+    var subject = '';
+    
+    if(!subject || subject == ''){
+        
+        if(existingAssessment.pbc && existingAssessment.pbc.discountPercent){
+            subject = userName + ", here's your Exambazaar " + existingAssessment.pbc.discountPercent + "% Discount Voucher for PBC Classes, Jaipur";
+        }else{
+            subject = userName + ", here's your Exambazaar Discount Voucher for PBC Classes Admission Form";
+        }
+        
+        
+    }
+    
+    if(existingAssessment.info && existingAssessment.info.name){
+        userDetails += existingAssessment.info.name + " | ";
+    }
+    if(existingAssessment.info && existingAssessment.info.mobile){
+        userDetails += existingAssessment.info.mobile + " | ";
+    }
+    if(existingAssessment.info && existingAssessment.info.email){
+        userDetails += existingAssessment.info.email;
+    }
+    //sender = 'Always Exambazaar';
+    var fromEmail = {
+        email: from,
+        name: sender
+    };
+    var to = existingAssessment.info.email;
+    
+    var html = '';
+    if(!html){
+        html = ' ';
+    }
+    console.log("To: " + to + " Subject: " + subject + " from: " + from);
+    
+    var existingSendGridCredential = sendGridCredential.findOne({ 'active': true},function (err, existingSendGridCredential) {
+        if (err) return handleError(err);
+        
+        if(existingSendGridCredential){
+            var apiKey = existingSendGridCredential.apiKey;
+            var sg = require("sendgrid")(apiKey);
+            
+            
+            var emailTemplate = existingSendGridCredential.emailTemplate;
+            var templateFound = false;
+            var nLength = emailTemplate.length;
+            var counter = 0;
+            var templateId;
+            emailTemplate.forEach(function(thisEmailTemplate, index){
+                if(thisEmailTemplate.name == templateName){
+                    templateFound = true;
+                    templateId = thisEmailTemplate.templateKey;
+                    
+                    var from_email = new helper.Email(fromEmail);
+                    var to_email = new helper.Email(to);
+                    var to_email2 = new helper.Email('team@exambazaar.com');
+                    var to_email3 = new helper.Email('gauravparashar294@gmail.com');
+                    //var subject = subject;
+                    var content = new helper.Content('text/html', html);
+                    
+                    
+                    var mail = new helper.Mail(fromEmail, subject, to_email, content);
+                    mail.setTemplateId(templateId);
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-userName-', userName));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-userCode-', userCode));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-discountPercent-', discountPercent));
+                    mail.personalizations[0].addSubstitution(new helper.Substitution('-userDetails-', userDetails));
+                    
+                    var request = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail.toJSON(),
+                    });
+                    
+                    var mail2 = new helper.Mail(fromEmail, subject, to_email2, content);
+                    mail2.setTemplateId(templateId);
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-userName-', userName));
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-userCode-', userCode));
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-discountPercent-', discountPercent));
+                    mail2.personalizations[0].addSubstitution(new helper.Substitution('-userDetails-', userDetails));
+                    
+                    var request2 = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail2.toJSON(),
+                    });
+                    
+                    var mail3 = new helper.Mail(fromEmail, subject, to_email3, content);
+                    mail3.setTemplateId(templateId);
+                    mail3.personalizations[0].addSubstitution(new helper.Substitution('-userName-', userName));
+                    mail3.personalizations[0].addSubstitution(new helper.Substitution('-userCode-', userCode));
+                    mail3.personalizations[0].addSubstitution(new helper.Substitution('-discountPercent-', discountPercent));
+                    mail3.personalizations[0].addSubstitution(new helper.Substitution('-userDetails-', userDetails));
+                    
+                    var request3 = sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: mail3.toJSON(),
+                    });
+
+                    sg.API(request, function(error, response) {
+                        if(error){
+                            res.json('Could not send email! ' + error);
+                        }else{
+                                                        
+                            var this_email = new email({
+                                user: senderId,
+                                templateId: templateId,
+                                fromEmail: {
+                                    email: from,
+                                    name: sender
+                                },
+                                to: to,
+                                response: {
+                                    status: response.statusCode,
+                                    _date: response.headers.date,
+                                    xMessageId: response.headers["x-message-id"]
+                                }
+                                
+                            });
+                            //console.log('This email is: ' + JSON.stringify(this_email));
+                            
+                            this_email.save(function(err, this_email) {
+                                if (err) return console.error(err);
+                                console.log('Email sent with id: ' + this_email._id);
+                                
+                                sg.API(request2, function(error, response2) {
+                                    if(error){
+                                        res.json('Could not send email! ' + error);
+                                    }else{
+                                        
+                                        /*sg.API(request3, function(error, response3) {
+                                            if(error){
+                                                res.json('Could not send email! ' + error);
+                                            }else{
+                                                //res.json(response);
+                                            }
+                                        });*/
+                                        
+                                        
+                                    }
+                                });
+                            });
+                            
+                        }
+
+                    });
+                    
+                }
+                if(counter == nLength){
+                    if(!templateFound){
+                        res.json('Could not send email as there is no template with name: ' + templateName);
+                    }
+                }
+            });
+            if(nLength == 0){
+                if(!templateFound){
+                    res.json('Could not send email as there is no template with name: ' + templateName);
+                }
+            }
+            
+            
+            
+        }else{
+            res.json('No Active SendGrid API Key');
+        }
+    });
+    
+};
 router.post('/submitted', function(req, res) {
     console.log('Starting assessment submission!');
     var thisAssessment = req.body;
